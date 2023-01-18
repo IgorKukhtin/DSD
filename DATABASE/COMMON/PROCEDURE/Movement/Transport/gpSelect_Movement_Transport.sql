@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StartStop TDateTime, EndStop TDateTime
              , HoursWork TFloat, HoursAdd TFloat
              , HoursStop TFloat, HoursMove TFloat
-             , PartnerCount TFloat
+             , PartnerCount TFloat, PartnerCount_no TFloat
              , AmountCost TFloat, AmountMemberCost TFloat
              , Comment TVarChar, CommentStop TVarChar
              , BranchCode_ProfitLoss Integer, BranchName_ProfitLoss TVarChar
@@ -103,6 +103,7 @@ BEGIN
            , COALESCE (MovementFloat_HoursStop.ValueData, 0) :: TFloat AS HoursStop
            , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)  AS TFloat) AS HoursMove
            , CAST (MovementFloat_PartnerCount.ValueData AS TFloat)     AS PartnerCount
+           , CAST (MovementFloat_PartnerCount_no.ValueData AS TFloat)  AS PartnerCount_no
 
            , MovementFloat_AmountCost.ValueData       AS AmountCost
            , MovementFloat_AmountMemberCost.ValueData AS AmountMemberCost
@@ -130,7 +131,7 @@ BEGIN
            , Object_CarModel.ValueData            AS CarModelName
            , Object_CarTrailer.ValueData          AS CarTrailerName
 
-           , (View_PersonalDriver.PersonalName || ' ' || View_PersonalDriver.PositionName) :: TVarChar AS PersonalDriverName 
+           , (View_PersonalDriver.PersonalName /*|| ' ' || View_PersonalDriver.PositionName*/) :: TVarChar AS PersonalDriverName 
            , View_PersonalDriver.PositionName       :: TVarChar AS PositionName
            , View_PersonalDriver.PositionLevelName  :: TVarChar AS PositionLevelName
            , (View_PersonalDriverMore.PersonalName || ' ' || View_PersonalDriverMore.PositionName) :: TVarChar AS PersonalDriverMoreName
@@ -185,6 +186,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_PartnerCount
                                     ON MovementFloat_PartnerCount.MovementId =  Movement.Id
                                    AND MovementFloat_PartnerCount.DescId = zc_MovementFloat_PartnerCount()
+            LEFT JOIN MovementFloat AS MovementFloat_PartnerCount_no
+                                    ON MovementFloat_PartnerCount_no.MovementId =  Movement.Id
+                                   AND MovementFloat_PartnerCount_no.DescId = zc_MovementFloat_PartnerCount_no()
 
              LEFT JOIN MovementFloat AS MovementFloat_AmountCost
                                      ON MovementFloat_AmountCost.MovementId = Movement.Id

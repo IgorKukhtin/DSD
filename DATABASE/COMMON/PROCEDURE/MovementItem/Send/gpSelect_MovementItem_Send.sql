@@ -495,9 +495,9 @@ BEGIN
                                                                     AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                       LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id        = CLO_PartionGoods.ObjectId
 
-                                      INNER JOIN ObjectLink AS ObjectLink_Unit
-                                                            ON ObjectLink_Unit.ObjectId = Object_PartionGoods.Id
-                                                           AND ObjectLink_Unit.DescId   = zc_ObjectLink_PartionGoods_Unit()
+                                      LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                           ON ObjectLink_Unit.ObjectId = Object_PartionGoods.Id
+                                                          AND ObjectLink_Unit.DescId   = zc_ObjectLink_PartionGoods_Unit()
                                       LEFT JOIN ObjectLink AS ObjectLink_Storage
                                                            ON ObjectLink_Storage.ObjectId = Object_PartionGoods.Id
                                                           AND ObjectLink_Storage.DescId   = zc_ObjectLink_PartionGoods_Storage()
@@ -563,7 +563,9 @@ BEGIN
            , tmpMI_Goods.Count                  AS Count
            , tmpMI_Goods.HeadCount              AS HeadCount
            , COALESCE (tmpMIContainer.PartionGoodsId, Object_PartionGoods.Id ) AS PartionGoodsId
-           , COALESCE (tmpMIContainer.PartionGoods, Object_PartionGoods.ValueData, CASE WHEN tmpMI_Goods.PartionGoodsId > 0 THEN '' ELSE tmpMI_Goods.PartionGoods END)    :: TVarChar  AS PartionGoods
+           , CASE WHEN COALESCE (tmpMI_Goods.PartionGoodsId, 0) = 0 AND tmpMI_Goods.PartionGoods <> '' THEN tmpMI_Goods.PartionGoods
+                  ELSE COALESCE (tmpMIContainer.PartionGoods, Object_PartionGoods.ValueData)
+             END :: TVarChar  AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_GoodsKindComplete.Id        AS GoodsKindId_Complete

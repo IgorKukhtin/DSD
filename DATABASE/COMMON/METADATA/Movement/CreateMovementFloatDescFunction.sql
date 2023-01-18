@@ -582,6 +582,10 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_PartnerCount() RETURNS Integer AS $B
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_PartnerCount', 'Количество ТТ' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PartnerCount');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_PartnerCount_no() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PartnerCount_no'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_PartnerCount_no', 'Количество ТТ с признаком Нет оплаты водителю за вес' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PartnerCount_no');
+
 CREATE OR REPLACE FUNCTION zc_MovementFloat_PartKg() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PartKg'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_PartKg', 'Доля продажи' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PartKg');
