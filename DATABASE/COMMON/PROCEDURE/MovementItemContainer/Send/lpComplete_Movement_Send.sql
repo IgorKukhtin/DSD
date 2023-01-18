@@ -488,6 +488,7 @@ BEGIN
                         THEN _tmp.PartionGoodsId_mi
                    ELSE 0
               END AS PartionGoodsId_From
+
             , CASE WHEN vbMovementDescId = zc_Movement_SendAsset() THEN _tmp.PartionGoodsId_asset ELSE 0 END AS PartionGoodsId_To
 
               -- Группы ОПиУ
@@ -503,7 +504,7 @@ BEGIN
 
         FROM tmpMI AS _tmp
              LEFT JOIN tmpContainer       ON tmpContainer.MovementItemId          = _tmp.MovementItemId
-                                         AND _tmp.InfoMoneyId <> zc_Enum_InfoMoney_20202() -- Спецодежда
+                                       --AND _tmp.InfoMoneyId <> zc_Enum_InfoMoney_20202() -- Спецодежда
              LEFT JOIN tmpContainer_asset ON tmpContainer_asset.ContainerId_asset = _tmp.ContainerId_asset
                                          AND tmpContainer_asset.Ord               = 1
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
@@ -580,6 +581,13 @@ BEGIN
                                                           )
                                                    -- AND _tmpItem.MemberId_From          > 0
                                                         THEN _tmpItem.PartionGoodsId_mi
+
+                                                    -- Спецодежда
+                                                    WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20202() AND _tmpItem.PartionGoods <> ''
+                                                         THEN lpInsertFind_Object_PartionGoods (inValue       := _tmpItem.PartionGoods
+                                                                                              , inOperDate    := zc_DateStart()
+                                                                                              , inInfoMoneyId := zc_Enum_InfoMoney_20202()
+                                                                                               )
 
                                                     WHEN _tmpItem.ObjectDescId     = zc_Object_Asset()
                                                       OR _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции

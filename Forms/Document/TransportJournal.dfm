@@ -104,6 +104,11 @@ object TransportJournalForm: TTransportJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = PartnerCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PartnerCount_no
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -145,6 +150,11 @@ object TransportJournalForm: TTransportJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = PartnerCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = PartnerCount_no
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -379,6 +389,17 @@ object TransportJournalForm: TTransportJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = 
+          #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1058#1058' - '#1092#1086#1088#1084#1080#1088#1091#1077#1090#1089#1103' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#171#1056#1077#1077#1089#1090#1088' '#1085 +
+          #1072#1082#1083#1072#1076#1085#1099#1093#187
+        Width = 45
+      end
+      object PartnerCount_no: TcxGridDBColumn
+        Caption = '***'#1050#1086#1083'-'#1074#1086' '#1058#1058
+        DataBinding.FieldName = 'PartnerCount_no'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1058#1058' '#1089' '#1087#1088#1080#1079#1085#1072#1082#1086#1084' "'#1053#1077#1090' '#1086#1087#1083#1072#1090#1099' '#1074#1086#1076#1080#1090#1077#1083#1102' '#1079#1072' '#1074#1077#1089'"'
         Width = 45
       end
       object HoursAdd: TcxGridDBColumn
