@@ -727,8 +727,9 @@ object SendJournalForm: TSendJournalForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
+          DataSet = PrintItemsCDS
           UserName = 'frxDBDHeader'
+          IndexFieldNames = 'ProductName;Article'
         end
         item
           DataSet = PrintItemsCDS

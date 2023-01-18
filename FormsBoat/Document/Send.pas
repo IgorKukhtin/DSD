@@ -259,6 +259,10 @@ type
     actPrint3: TdsdPrintAction;
     bbPrint3: TdxBarButton;
     spSelectPrint_Master: TdsdStoredProc;
+    actOrderInternalInsertForm_All: TOpenChoiceForm;
+    macInsert_MI_Send_byOrderInternal_All: TMultiAction;
+    bbInsert_MI_Send_byOrderInternal_All: TdxBarButton;
+    bbInsert: TdxBarSubItem;
   private
   public
   end;
