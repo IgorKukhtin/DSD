@@ -2238,7 +2238,7 @@ begin
 
      if Key = VK_F5 then Save_Movement_all;
      if Key = VK_F2 then GetParams_MovementDesc('');
-     if (Key = VK_SPACE) and (Shift = []) and ((ActiveControl <> EditPartionGoods) or (trim(EditPartionGoods.Text) = ''))
+     if (Key = VK_SPACE) and (Shift = []) and ((ActiveControl <> EditPartionGoods) or (trim(EditPartionGoods.Text) = '') or (Pos(' ', EditPartionGoods.Text) > 0))
      then
      begin Key := 0;
            Key2:= VK_SPACE;
@@ -2247,7 +2247,7 @@ begin
      end;//isRetail=FALSE
      //
      if (Key = VK_SPACE) and (Shift = [ssCtrl]) and (GetArrayList_Value_byName(Default_Array,'isCheckDelete') = AnsiUpperCase('TRUE'))
-         and ((ActiveControl <> EditPartionGoods) or (trim(EditPartionGoods.Text) = ''))
+         and ((ActiveControl <> EditPartionGoods) or (trim(EditPartionGoods.Text) = '') or (Pos(' ', EditPartionGoods.Text) > 0))
      then begin Key:= 0; GetParams_Goods (FALSE, '', FALSE); end;//isRetail=FALSE
      //
      // ּוםÿועסÿ רנטפע
@@ -2265,7 +2265,7 @@ end;
 procedure TMainForm.FormKeyPress(Sender: TObject; var Key: Char);
 begin
      if Key=#32 then
-        if (ActiveControl <> EditPartionGoods) or (trim(EditPartionGoods.Text) = '')
+        if (ActiveControl <> EditPartionGoods) or (trim(EditPartionGoods.Text) = '') or (Pos(' ', EditPartionGoods.Text) > 0)
         then Key:=#0;
 end;
 {------------------------------------------------------------------------}

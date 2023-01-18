@@ -129,6 +129,7 @@ type
     spSelectPrintCost: TdsdStoredProc;
     actPrintCost: TdsdPrintAction;
     bbPrintCost: TdxBarButton;
+    PartnerCount_no: TcxGridDBColumn;
   private
   public
   end;
