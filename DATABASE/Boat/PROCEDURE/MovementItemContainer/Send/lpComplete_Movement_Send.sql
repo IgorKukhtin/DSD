@@ -16,9 +16,6 @@ $BODY$
   DECLARE vbJuridicalId_Basis        Integer; -- значение пока НЕ определяется
   DECLARE vbBusinessId               Integer; -- значение пока НЕ определяется
 
-  DECLARE vbWhereObjectId_Analyzer_From Integer; -- Аналитика для проводок
-  DECLARE vbWhereObjectId_Analyzer_To   Integer; -- Аналитика для проводок
-
   DECLARE vbMovementItemId   Integer;
   DECLARE vbMovementId_order Integer;
   DECLARE vbGoodsId          Integer;
@@ -100,10 +97,6 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не определено значение <Подразделение (Кому)>.';
      END IF;
 
-     -- доопределили - Аналитику для проводок
-     vbWhereObjectId_Analyzer_From:= CASE WHEN vbUnitId_From <> 0 THEN vbUnitId_From END;
-     vbWhereObjectId_Analyzer_To  := CASE WHEN vbUnitId_To   <> 0 THEN vbUnitId_To   END;
-
 
      -- заполняем таблицу - элементы документа
      INSERT INTO _tmpItem (MovementItemId
@@ -114,55 +107,43 @@ BEGIN
                          , MovementId_order
                           )
         -- результат
-        SELECT tmp.MovementItemId
-             , tmp.GoodsId
-             , tmp.Amount
-             , tmp.PartNumber
-               -- УП
-             , tmp.InfoMoneyGroupId
-             , tmp.InfoMoneyDestinationId
-             , tmp.InfoMoneyId
+        SELECT MovementItem.Id                  AS MovementItemId
+             , MovementItem.ObjectId            AS GoodsId
+             , MovementItem.Amount              AS Amount
                --
-             , tmp.MovementId_order
+             , MIString_PartNumber.ValueData    AS PartNumber
+               -- Управленческая группа
+             , View_InfoMoney.InfoMoneyGroupId
+               -- Управленческие назначения
+             , View_InfoMoney.InfoMoneyDestinationId
+               -- Статьи назначения
+             , View_InfoMoney.InfoMoneyId
 
-        FROM (SELECT MovementItem.Id                  AS MovementItemId
-                   , MovementItem.ObjectId            AS GoodsId
-                   , MovementItem.Amount              AS Amount
-                     --
-                   , MIString_PartNumber.ValueData    AS PartNumber
-                     -- Управленческая группа
-                   , View_InfoMoney.InfoMoneyGroupId
-                     -- Управленческие назначения
-                   , View_InfoMoney.InfoMoneyDestinationId
-                     -- Статьи назначения
-                   , View_InfoMoney.InfoMoneyId
+              -- MovementId заказ Клиента
+            , COALESCE (MIFloat_MovementId.ValueData, 0) AS MovementId_order
 
-                    -- MovementId заказ Клиента
-                  , COALESCE (MIFloat_MovementId.ValueData, 0) AS MovementId_order
+        FROM Movement
+             JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                              AND MovementItem.DescId     = zc_MI_Master()
+                              AND MovementItem.isErased   = FALSE
+             -- ValueData - MovementId заказ Клиента
+             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                        AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+             LEFT JOIN MovementItemString AS MIString_PartNumber
+                                          ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                         AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
 
-              FROM Movement
-                   JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                    AND MovementItem.DescId     = zc_MI_Master()
-                                    AND MovementItem.isErased   = FALSE
-                   -- ValueData - MovementId заказ Клиента
-                   LEFT JOIN MovementItemFloat AS MIFloat_MovementId
-                                               ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                              AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
-                   LEFT JOIN MovementItemString AS MIString_PartNumber
-                                                ON MIString_PartNumber.MovementItemId = MovementItem.Id
-                                               AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                  ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                 AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+             -- !!!ВРЕМЕННО!!! Комплектующие
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101())
 
-                   LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                        ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
-                                       AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
-                   -- !!!ВРЕМЕННО!!! Комплектующие
-                   LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101())
-
-              WHERE Movement.Id       = inMovementId
-                AND Movement.DescId   = zc_Movement_Send()
-                AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
-             ) AS tmp
-            ;
+        WHERE Movement.Id       = inMovementId
+          AND Movement.DescId   = zc_Movement_Send()
+          AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+       ;
 
 
 
@@ -202,7 +183,7 @@ BEGIN
                                AND tmp.PartionId = Container.PartionId
 
         WHERE Container.ObjectId      = vbGoodsId
-          AND Container.WhereObjectId = vbWhereObjectId_Analyzer_From
+          AND Container.WhereObjectId = vbUnitId_From
           AND Container.Amount  - COALESCE (tmp.Amount, 0) > 0
         ORDER BY -- если MovementId_order совпадает
                  CASE WHEN MIFloat_MovementId.ValueData = vbMovementId_order AND vbMovementId_order <> 0 THEN 0 ELSE 1 END
@@ -527,7 +508,7 @@ BEGIN
             , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
             , _tmpItem_Child.GoodsId                  AS ObjectId_Analyzer      -- Товар
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
-            , vbWhereObjectId_Analyzer_From           AS WhereObjectId_Analyzer -- Место учета
+            , vbUnitId_From                           AS WhereObjectId_Analyzer -- Место учета
             , _tmpItem_Child.AccountId_To             AS AccountId_Analyzer     -- Счет - корреспондент - по ПРИХОДУ
             , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
             , _tmpItem_Child.ContainerId_SummTo       AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - по ПРИХОДУ
@@ -547,7 +528,7 @@ BEGIN
             , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
             , _tmpItem_Child.GoodsId                  AS ObjectId_Analyzer      -- Товар
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
-            , vbWhereObjectId_Analyzer_To             AS WhereObjectId_Analyzer -- Место учета
+            , vbUnitId_To                             AS WhereObjectId_Analyzer -- Место учета
             , _tmpItem_Child.AccountId_From           AS AccountId_Analyzer     -- Счет - корреспондент - по РАСХОДУ
             , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
             , _tmpItem_Child.ContainerId_SummFrom     AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - по РАСХОДУ
@@ -577,7 +558,7 @@ BEGIN
             , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
             , _tmpItem_Child.GoodsId                  AS ObjectId_Analyzer      -- Товар
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
-            , vbWhereObjectId_Analyzer_From           AS WhereObjectId_Analyzer -- Место учета
+            , vbUnitId_From                           AS WhereObjectId_Analyzer -- Место учета
             , _tmpItem_Child.AccountId_To             AS AccountId_Analyzer     -- Счет - корреспондент - по ПРИХОДУ
             , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
             , _tmpItem_Child.ContainerId_SummTo       AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - по ПРИХОДУ
@@ -602,7 +583,7 @@ BEGIN
             , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
             , _tmpItem_Child.GoodsId                  AS ObjectId_Analyzer      -- Товар
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
-            , vbWhereObjectId_Analyzer_To             AS WhereObjectId_Analyzer -- Место учета
+            , vbUnitId_To                             AS WhereObjectId_Analyzer -- Место учета
             , _tmpItem_Child.AccountId_From           AS AccountId_Analyzer     -- Счет - корреспондент - по РАСХОДУ
             , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
             , _tmpItem_Child.ContainerId_SummFrom     AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - по РАСХОДУ
