@@ -127,41 +127,6 @@ BEGIN
                                 , tmp_MI_Master_all.Ord
                            FROM tmp_MI_Master_all
                           )
-
-
-           -- 4.1. остаток для оплаты БН Грн - с накопительной суммой
-         , tmp_MI_Card AS (SELECT tmpMI.MovementItemId
-                                  -- сумма в ГРН с учетом Доп. скидки
-                                , tmpMI.Amount_all
-                                  --
-                                , tmpMI.Amount_calc AS Amount_calc
-                                  --
-                                , SUM (tmpMI.Amount_calc) OVER (ORDER BY tmpMI.Amount_calc ASC, tmpMI.MovementItemId ASC) AS Amount_SUM
-                           FROM (SELECT tmpMI.MovementItemId
-                                        -- сумма в ГРН с учетом Доп. скидки
-                                      , tmpMI.AmountToPay - tmpMI.AmountDiscount AS Amount_all
-                                        -- сумма в ГРН с учетом Доп. скидки
-                                      , tmpMI.AmountToPay - tmpMI.AmountDiscount AS Amount_calc
-
-                                 FROM tmp_MI_Master AS tmpMI
-                                ) AS tmpMI
-                          )
-       -- 4.2. оплата БН Грн результат
-     , tmp_MI_Card_res AS (SELECT DD.MovementItemId
-                                , CASE WHEN inAmountCard - DD.Amount_SUM > 0
-                                       -- оплатили полностью
-                                       THEN DD.Amount_calc
-                                       -- оплатили частично
-                                       ELSE inAmountCard - (DD.Amount_SUM - DD.Amount_calc)
-
-                                  END AS Amount
-                                , DD.Amount_SUM
-                           FROM tmp_MI_Card AS DD
-                           WHERE inAmountCard - (DD.Amount_SUM - DD.Amount_calc) > 0
-                             AND inAmountCard > 0
-                          )
-
-
             -- 1.1. остаток для оплаты EUR - с накопительной суммой
           , tmp_MI_EUR AS (SELECT tmpMI.MovementItemId
                                   -- сумма в ГРН с учетом Доп. скидки
@@ -172,18 +137,17 @@ BEGIN
                                 , SUM (tmpMI.Amount_calc) OVER (ORDER BY tmpMI.Amount_all ASC, tmpMI.MovementItemId ASC) AS Amount_SUM
                            FROM (SELECT tmpMI.MovementItemId
                                         -- сумма в ГРН с учетом Доп. скидки
-                                      , tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0) AS Amount_all
+                                      , tmpMI.AmountToPay - tmpMI.AmountDiscount AS Amount_all
                                         -- сумма в ГРН с учетом Доп. скидки - для расч. EUR
                                       , CASE WHEN inAmountGRN > 150 OR inAmountCard > 0
                                                   -- считаем что дробной части нет, т.е. она дополнится гривной
                                                   THEN zfCalc_CurrencyFrom (-- Переводим в Валюту + отбросили коп.
-                                                                            FLOOR (zfCalc_CurrencyTo (tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0), inCurrencyValueEUR, inParValueEUR))
+                                                                            FLOOR (zfCalc_CurrencyTo (tmpMI.AmountToPay - tmpMI.AmountDiscount, inCurrencyValueEUR, inParValueEUR))
                                                                           , inCurrencyValueEUR, inParValueEUR)
                                              -- иначе дробная часть будет в обмене
-                                             ELSE tmpMI.Amount_all - COALESCE (tmpRes.Amount, 0)
+                                             ELSE tmpMI.AmountToPay - tmpMI.AmountDiscount
                                         END AS Amount_calc
-                                 FROM tmp_MI_Card AS tmpMI
-                                      LEFT JOIN tmp_MI_Card_res AS tmpRes ON tmpRes.MovementItemId = tmpMI.MovementItemId
+                                 FROM tmp_MI_Master AS tmpMI
                                 ) AS tmpMI
                           )
         -- 1.2. оплата EUR результат - !!!в ГРН!!!
@@ -253,6 +217,27 @@ BEGIN
                            FROM tmp_MI_GRN AS DD
                            WHERE inAmountGRN - (DD.Amount_SUM - DD.Amount_calc) > 0
                              AND inAmountGRN > 0
+                          )
+           -- 4.1. остаток для оплаты БН Грн - с накопительной суммой
+         , tmp_MI_Card AS (SELECT tmpMI.MovementItemId
+                                , tmpMI.Amount_calc - COALESCE (tmpRes.Amount, 0) AS Amount_calc
+                                , SUM (tmpMI.Amount_calc - COALESCE (tmpRes.Amount, 0)) OVER (ORDER BY tmpMI.Amount_calc - COALESCE (tmpRes.Amount, 0) ASC, tmpMI.MovementItemId ASC) AS Amount_SUM
+                           FROM tmp_MI_GRN AS tmpMI
+                                LEFT JOIN tmp_MI_GRN_res AS tmpRes ON tmpRes.MovementItemId = tmpMI.MovementItemId
+                          )
+       -- 4.2. оплата БН Грн результат
+     , tmp_MI_Card_res AS (SELECT DD.MovementItemId
+                                , CASE WHEN inAmountCard - DD.Amount_SUM > 0
+                                       -- оплатили полностью
+                                       THEN DD.Amount_calc
+                                       -- оплатили частично
+                                       ELSE inAmountCard - (DD.Amount_SUM - DD.Amount_calc)
+
+                                  END AS Amount
+                                , DD.Amount_SUM
+                           FROM tmp_MI_Card AS DD
+                           WHERE inAmountCard - (DD.Amount_SUM - DD.Amount_calc) > 0
+                             AND inAmountCard > 0
                           )
             -- 5. Опллаты - результат - !!!все в ГРН!!!
           , tmp_MI_res AS (SELECT tmp_MI_Master.MovementItemId
