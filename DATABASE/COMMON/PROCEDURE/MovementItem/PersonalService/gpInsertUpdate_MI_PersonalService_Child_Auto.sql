@@ -289,7 +289,8 @@ end if;
                                                                         , inSummHospOthRecalc      := 0
                                                                         , inSummCompensationRecalc := 0
                                                                         , inSummAuditAdd           := 0
-                                                                        , inSummHouseAdd           := 0
+                                                                        , inSummHouseAdd           := 0 
+                                                                        , inSummAvanceRecalc       := 0
                                                                         , inNumber                 := ''
                                                                         , inComment                := ''
                                                                         , inInfoMoneyId            := vbInfoMoneyId_def
@@ -412,6 +413,7 @@ end if;
                                                           , inSummCompensationRecalc := COALESCE (MIFloat_SummCompensationRecalc.ValueData, 0)
                                                           , inSummAuditAdd           := COALESCE (MIFloat_SummAuditAdd.ValueData, 0)
                                                           , inSummHouseAdd           := COALESCE (MIFloat_SummHouseAdd.ValueData, 0)
+                                                          , inSummAvanceRecalc       := COALESCE (MIFloat_SummAvanceRecalc.ValueData,0)
                                                           , inNumber                 := ''
                                                           , inComment                := MIString_Comment.ValueData
                                                           , inInfoMoneyId            := MILinkObject_InfoMoney.ObjectId
@@ -491,6 +493,10 @@ end if;
             LEFT JOIN MovementItemFloat AS MIFloat_SummCompensationRecalc
                                         ON MIFloat_SummCompensationRecalc.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummCompensationRecalc.DescId = zc_MIFloat_SummCompensationRecalc()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_SummAvanceRecalc
+                                        ON MIFloat_SummAvanceRecalc.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummAvanceRecalc.DescId = zc_MIFloat_SummAvanceRecalc()
 
             LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = MovementItem.Id

@@ -2,7 +2,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   Left = 0
   Top = 0
   Caption = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1082#1072#1089#1089
-  ClientHeight = 641
+  ClientHeight = 663
   ClientWidth = 898
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -30,8 +30,8 @@ object CashSettingsEditForm: TCashSettingsEditForm
       #1077#1085#1086#1081
   end
   object cxButton1: TcxButton
-    Left = 230
-    Top = 604
+    Left = 240
+    Top = 630
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -40,8 +40,8 @@ object CashSettingsEditForm: TCashSettingsEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 604
-    Top = 604
+    Left = 614
+    Top = 630
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -600,6 +600,21 @@ object CashSettingsEditForm: TCashSettingsEditForm
     TabOrder = 79
     Width = 158
   end
+  object ceFixedPercent: TcxCurrencyEdit
+    Left = 404
+    Top = 596
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.EditFormat = ',0.00'
+    TabOrder = 80
+    Width = 121
+  end
+  object cxLabel36: TcxLabel
+    Left = 21
+    Top = 597
+    Hint = #9#1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072
+    Caption = #9#1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072
+  end
   object ActionList: TActionList
     Left = 344
     Top = 76
@@ -970,6 +985,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFixedPercent'
+        Value = Null
+        Component = ceFixedPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -1284,6 +1307,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Value = Null
         Component = cbShoresSUN
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FixedPercent'
+        Value = Null
+        Component = ceFixedPercent
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

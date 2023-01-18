@@ -116,6 +116,8 @@ type
     ceAddMarkupTabletki: TcxCurrencyEdit;
     cxLabel35: TcxLabel;
     cbShoresSUN: TcxCheckBox;
+    ceFixedPercent: TcxCurrencyEdit;
+    cxLabel36: TcxLabel;
   private
     { Private declarations }
   public

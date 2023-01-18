@@ -1,269 +1,270 @@
-﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-		<PropertyGroup>
-			<ProjectGuid>{BFA0C280-93AE-4B6D-9844-0B58ECAF149B}</ProjectGuid>
-			<ProjectVersion>19.2</ProjectVersion>
-			<FrameworkType>VCL</FrameworkType>
-			<MainSource>GetEmailMMO.dpr</MainSource>
-			<Base>True</Base>
-			<Config Condition="'$(Config)'==''">Debug</Config>
-			<Platform Condition="'$(Platform)'==''">Win32</Platform>
-			<TargetedPlatforms>1</TargetedPlatforms>
-			<AppType>Application</AppType>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
-			<Base>true</Base>
-		</PropertyGroup>
-		<PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
-			<Base_Win64>true</Base_Win64>
-			<CfgParent>Base</CfgParent>
-			<Base>true</Base>
-		</PropertyGroup>
-		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
-			<Base_Win32>true</Base_Win32>
-			<CfgParent>Base</CfgParent>
-			<Base>true</Base>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_1)'!=''">
-			<Cfg_1>true</Cfg_1>
-			<CfgParent>Base</CfgParent>
-			<Base>true</Base>
-		</PropertyGroup>
-		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
-			<Cfg_1_Win32>true</Cfg_1_Win32>
-			<CfgParent>Cfg_1</CfgParent>
-			<Cfg_1>true</Cfg_1>
-			<Base>true</Base>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
-			<Cfg_2>true</Cfg_2>
-			<CfgParent>Base</CfgParent>
-			<Base>true</Base>
-		</PropertyGroup>
-		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
-			<Cfg_2_Win32>true</Cfg_2_Win32>
-			<CfgParent>Cfg_2</CfgParent>
-			<Cfg_2>true</Cfg_2>
-			<Base>true</Base>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Base)'!=''">
-			<DCC_MapFile>3</DCC_MapFile>
-			<DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
-			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
-			<Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
-			<DCC_UsePackage>fmx;IndySystem;DBXInterBaseDriver;DataSnapCommon;DataSnapClient;DataSnapServer;DataSnapProviderClient;DbxCommonDriver;dbxcds;DBXOracleDriver;CustomIPTransport;dsnap;fmxase;IndyCore;inetdbxpress;bindcompfmx;rtl;dbrtl;DbxClientDriver;bindcomp;inetdb;xmlrtl;ibxpress;IndyProtocols;DBXMySQLDriver;bindengine;soaprtl;kbmMemRunDXE2Pro;DBXInformixDriver;DBXFirebirdDriver;inet;fmxobj;DBXSybaseASADriver;fmxdae;dbexpress;DataSnapIndy10ServerTransport;$(DCC_UsePackage)</DCC_UsePackage>
-			<DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
-			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
-			<SanitizedProjectName>GetEmailMMO</SanitizedProjectName>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Base_Win64)'!=''">
-			<DCC_UsePackage>dxTileControlRS16;dxdborRS16;dxPScxVGridLnkRS16;cxLibraryRS16;dxLayoutControlRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;dxBarRS16;dxSkinsdxNavBarPainterRS16;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;TeeDB;dxDBXServerModeRS16;dxPsPrVwAdvRS16;vclib;cxPivotGridOLAPRS16;dxPSCoreRS16;dxPScxGridLnkRS16;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;dxPScxTLLnkRS16;vclimg;cxTreeListRS16;dxComnRS16;vcldb;dxSkinsdxRibbonPainterRS16;dxADOServerModeRS16;vcldsnap;dxBarExtDBItemsRS16;DBXDb2Driver;dxSkinscxSchedulerPainterRS16;vcl;DBXMSSQLDriver;cxDataRS16;cxBarEditItemRS16;dxDockingRS16;cxPageControldxBarPopupMenuRS16;dxPSDBTeeChartRS16;cxSchedulerGridRS16;webdsnap;dxBarExtItemsRS16;dxtrmdRS16;dxSkinsdxDLPainterRS16;dxPSLnksRS16;dxPSTeeChartRS16;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;dxPScxExtCommonRS16;dxNavBarRS16;dxPSdxDBOCLnkRS16;dxSkinsdxBarPainterRS16;Tee;DBXOdbcDriver;dxdbtrRS16;dxSkinsCoreRS16;cxPivotGridChartRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;cxGridRS16;dxSkinscxPCPainterRS16;dxPScxSSLnkRS16;cxEditorsRS16;TeeUI;vclactnband;dxServerModeRS16;bindcompvcl;cxPivotGridRS16;dxPScxSchedulerLnkRS16;dxPSdxDBTVLnkRS16;vclie;dxPSPrVwRibbonRS16;cxSchedulerRS16;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;DataSnapConnectors;dxPSdxOCLnkRS16;dsnapcon;dxPSdxFCLnkRS16;dxThemeRS16;dcldxSkinsCoreRS16;dxPScxPCProdRS16;vclx;dxFlowChartRS16;dxBarDBNavRS16;dxGDIPlusRS16;$(DCC_UsePackage)</DCC_UsePackage>
-			<UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
-			<UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Base_Win32)'!=''">
-			<DCC_UsePackage>dxTileControlRS16;dxdborRS16;dxPScxVGridLnkRS16;cxLibraryRS16;dxLayoutControlRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;ZComponent;SysScales;dxBarRS16;dxSkinsdxNavBarPainterRS16;CasDb;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;TeeDB;dxDBXServerModeRS16;ProjectComponent;dxPsPrVwAdvRS16;Rave100VCL;vclib;inetdbbde;cxPivotGridOLAPRS16;dxPSCoreRS16;dxPScxGridLnkRS16;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;dxPScxTLLnkRS16;vclimg;fmi;cxTreeListRS16;dxComnRS16;ZLibEx;vcldb;dxSkinsdxRibbonPainterRS16;dxADOServerModeRS16;vcldsnap;dxBarExtDBItemsRS16;DBXDb2Driver;Intraweb_120_160;vclribbon;frxe16;dxSkinscxSchedulerPainterRS16;vcl;CloudService;DBXMSSQLDriver;CasBI;FmxTeeUI;cxDataRS16;cxBarEditItemRS16;dxDockingRS16;cxPageControldxBarPopupMenuRS16;dxPSDBTeeChartRS16;cxSchedulerGridRS16;webdsnap;dxBarExtItemsRS16;dxtrmdRS16;dxSkinsdxDLPainterRS16;dxPSLnksRS16;dxPSTeeChartRS16;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;ProjectDesignComponent;dxPScxExtCommonRS16;vcldbx;dxNavBarRS16;ZDbc;frx16;dxPSdxDBOCLnkRS16;dxSkinsdxBarPainterRS16;ZPlain;Tee;DBXOdbcDriver;dxdbtrRS16;dxSkinsCoreRS16;svnui;cxPivotGridChartRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;intrawebdb_120_160;cxGridRS16;dxSkinscxPCPainterRS16;dxPScxSSLnkRS16;cxEditorsRS16;TeeUI;FMXTee;vclactnband;dxServerModeRS16;bindcompvcl;cxPivotGridRS16;dxPScxSchedulerLnkRS16;dxPSdxDBTVLnkRS16;vclie;dxPSPrVwRibbonRS16;fs16;cxSchedulerRS16;frxDB16;ZCore;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;DataSnapConnectors;dxPSdxOCLnkRS16;dsnapcon;dxPSdxFCLnkRS16;dxThemeRS16;dcldxSkinsCoreRS16;dxPScxPCProdRS16;ZParseSql;vclx;svn;dxFlowChartRS16;bdertl;dxBarDBNavRS16;dxGDIPlusRS16;$(DCC_UsePackage)</DCC_UsePackage>
-			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
-			<VerInfo_Locale>1033</VerInfo_Locale>
-			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-			<VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-			<AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
-			<UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
-			<UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Cfg_1)'!=''">
-			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
-			<DCC_Optimize>false</DCC_Optimize>
-			<DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
-			<DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
-			<DCC_RemoteDebug>true</DCC_RemoteDebug>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<Debugger_RunParams>/realfarmacy /skipcheckconnect</Debugger_RunParams>
-			<DCC_UnitSearchPath>..\GetEmail\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
-			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-			<VerInfo_Locale>1033</VerInfo_Locale>
-			<DCC_DcuOutput>..\DCU\Farmacy</DCC_DcuOutput>
-			<DCC_RemoteDebug>false</DCC_RemoteDebug>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Cfg_2)'!=''">
-			<DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
-			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
-			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
-			<DCC_DebugInformation>0</DCC_DebugInformation>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-			<Debugger_HostApplication>/realfarmacy /skipcheckconnect</Debugger_HostApplication>
-			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-			<DCC_UnitSearchPath>..\GetEmail\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
-			<VerInfo_Locale>1033</VerInfo_Locale>
-			<DCC_DcuOutput>..\DCU\Farmacy</DCC_DcuOutput>
-			<BT_BuildType>Debug</BT_BuildType>
-			<Icon_MainIcon>mainicon.ico</Icon_MainIcon>
-			<AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
-		</PropertyGroup>
-		<ItemGroup>
-			<DelphiCompile Include="$(MainSource)">
-				<MainSource>MainSource</MainSource>
-			</DelphiCompile>
-			<DCCReference Include="..\SOURCE\Authentication.pas"/>
-			<DCCReference Include="..\SOURCE\CommonData.pas"/>
-			<DCCReference Include="..\SOURCE\DataModul.pas">
-				<Form>dmMain</Form>
-				<DesignClass>TDataModule</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
-			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
-			<DCCReference Include="..\SOURCE\UtilConvert.pas"/>
-			<DCCReference Include="..\SOURCE\MessagesUnit.pas">
-				<Form>MessagesForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\SOURCE\SimpleGauge.pas">
-				<Form>SimpleGaugeForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\SOURCE\Log.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdGuides.pas"/>
-			<DCCReference Include="..\SOURCE\ParentForm.pas">
-				<Form>ParentForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdAddOn.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdAction.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdDataSetDataLink.pas"/>
-			<DCCReference Include="..\SOURCE\Storage.pas"/>
-			<DCCReference Include="..\SOURCE\FormStorage.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\ChoicePeriod.pas">
-				<Form>PeriodChoiceForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\SOURCE\UnilWin.pas"/>
-			<DCCReference Include="..\SOURCE\dsdException.pas"/>
-			<DCCReference Include="..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\ExternalSave.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\ExternalData.pas"/>
-			<DCCReference Include="..\SOURCE\DBF\VKDBFCDX.pas"/>
-			<DCCReference Include="..\SOURCE\DBF\VKDBFCollate.pas"/>
-			<DCCReference Include="..\SOURCE\DBF\VKDBFCrypt.pas"/>
-			<DCCReference Include="..\SOURCE\DBF\VKDBFDataSet.pas"/>
-			<DCCReference Include="..\SOURCE\DBF\VKDBFGostCrypt.pas"/>
-			<DCCReference Include="..\SOURCE\DBF\VKDBFIndex.pas"/>
-			<DCCReference Include="..\SOURCE\DBF\VKDBFMemMgr.pas"/>
-			<DCCReference Include="..\SOURCE\DBF\VKDBFNTX.pas"/>
-			<DCCReference Include="..\SOURCE\DBF\VKDBFParser.pas"/>
-			<DCCReference Include="..\SOURCE\DBF\VKDBFPrx.pas"/>
-			<DCCReference Include="..\SOURCE\DBF\VKDBFSortedList.pas"/>
-			<DCCReference Include="..\SOURCE\DBF\VKDBFSorters.pas"/>
-			<DCCReference Include="..\SOURCE\DBF\VKDBFUtil.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\Defaults.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\Document.pas"/>
-			<DCCReference Include="..\SOURCE\EDI\ComDocXML.pas"/>
-			<DCCReference Include="..\SOURCE\EDI\DeclarXML.pas"/>
-			<DCCReference Include="..\SOURCE\EDI\DesadvXML.pas"/>
-			<DCCReference Include="..\SOURCE\EDI\EDI.pas"/>
-			<DCCReference Include="..\SOURCE\EDI\InvoiceXML.pas"/>
-			<DCCReference Include="..\SOURCE\EDI\OrderXML.pas"/>
-			<DCCReference Include="..\SOURCE\EDI\OrdrspXML.pas"/>
-			<DCCReference Include="..\SOURCE\EDI\RecadvXML.pas"/>
-			<DCCReference Include="..\SOURCE\EDI\StatusXML.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
-			<DCCReference Include="..\FormsFarmacy\MainUnitService\GetEmail\sevenzip.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\ExternalLoad.pas"/>
-			<DCCReference Include="..\FormsFarmacy\MainUnitService\GetEmail\Main.pas">
-				<Form>MainForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdPivotGrid.pas"/>
-			<DCCReference Include="..\TEST\SOURCE\zLibUtil.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdTranslator.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\PUSHMessage.pas">
-				<Form>PUSHMessageForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXMLAction.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201011.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201012.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201111.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201112.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201211.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201212.pas"/>
-			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas"/>
-			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\MeDocCOM.pas"/>
-			<DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
-			<DCCReference Include="..\SOURCE\EDI\IftminFozzXML.pas"/>
-			<DCCReference Include="..\SOURCE\EDI\DesadvFozzXML.pas"/>
-			<DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
-			<DCCReference Include="..\SOURCE\DialogPswSms.pas">
-				<Form>DialogPswSmsForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\SOURCE\MeDOC\MEDOC_TLB.pas"/>
-			<None Include="ModelSupport_GetEmailMMO\default.txaPackage"/>
-			<BuildConfiguration Include="Release">
-				<Key>Cfg_2</Key>
-				<CfgParent>Base</CfgParent>
-			</BuildConfiguration>
-			<BuildConfiguration Include="Base">
-				<Key>Base</Key>
-			</BuildConfiguration>
-			<BuildConfiguration Include="Debug">
-				<Key>Cfg_1</Key>
-				<CfgParent>Base</CfgParent>
-			</BuildConfiguration>
-		</ItemGroup>
-		<ProjectExtensions>
-			<Borland.Personality>Delphi.Personality.12</Borland.Personality>
-			<Borland.ProjectType/>
-			<BorlandProject>
-				<Delphi.Personality>
-					<VersionInfo>
-						<VersionInfo Name="IncludeVerInfo">False</VersionInfo>
-						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
-						<VersionInfo Name="MajorVer">1</VersionInfo>
-						<VersionInfo Name="MinorVer">0</VersionInfo>
-						<VersionInfo Name="Release">0</VersionInfo>
-						<VersionInfo Name="Build">0</VersionInfo>
-						<VersionInfo Name="Debug">False</VersionInfo>
-						<VersionInfo Name="PreRelease">False</VersionInfo>
-						<VersionInfo Name="Special">False</VersionInfo>
-						<VersionInfo Name="Private">False</VersionInfo>
-						<VersionInfo Name="DLL">False</VersionInfo>
-						<VersionInfo Name="Locale">1049</VersionInfo>
-						<VersionInfo Name="CodePage">1251</VersionInfo>
-					</VersionInfo>
-					<VersionInfoKeys>
-						<VersionInfoKeys Name="CompanyName"/>
-						<VersionInfoKeys Name="FileDescription"/>
-						<VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
-						<VersionInfoKeys Name="InternalName"/>
-						<VersionInfoKeys Name="LegalCopyright"/>
-						<VersionInfoKeys Name="LegalTrademarks"/>
-						<VersionInfoKeys Name="OriginalFilename"/>
-						<VersionInfoKeys Name="ProductName"/>
-						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
-						<VersionInfoKeys Name="Comments"/>
-					</VersionInfoKeys>
-					<Source>
-						<Source Name="MainSource">GetEmailMMO.dpr</Source>
-					</Source>
-					<Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k270.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dclofficexp270.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-					</Excluded_Packages>
-				</Delphi.Personality>
-				<Deployment Version="3"/>
-				<Platforms>
-					<Platform value="Win64">False</Platform>
-					<Platform value="Win32">True</Platform>
-				</Platforms>
-				<ModelSupport>True</ModelSupport>
-			</BorlandProject>
-			<ProjectFileVersion>12</ProjectFileVersion>
-		</ProjectExtensions>
-		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
-		<Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
-		<Import Condition="Exists('$(MSBuildProjectName).deployproj')" Project="$(MSBuildProjectName).deployproj"/>
-	</Project>
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{BFA0C280-93AE-4B6D-9844-0B58ECAF149B}</ProjectGuid>
+        <ProjectVersion>19.2</ProjectVersion>
+        <FrameworkType>VCL</FrameworkType>
+        <MainSource>GetEmailMMO.dpr</MainSource>
+        <Base>True</Base>
+        <Config Condition="'$(Config)'==''">Release</Config>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <TargetedPlatforms>1</TargetedPlatforms>
+        <AppType>Application</AppType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+        <Base_Win32>true</Base_Win32>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
+        <Base_Win64>true</Base_Win64>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_1)'!=''">
+        <Cfg_1>true</Cfg_1>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
+        <Cfg_1_Win32>true</Cfg_1_Win32>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
+        <Cfg_2>true</Cfg_2>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+        <Cfg_2_Win32>true</Cfg_2_Win32>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base)'!=''">
+        <DCC_MapFile>3</DCC_MapFile>
+        <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
+        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
+        <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
+        <DCC_UsePackage>fmx;IndySystem;DBXInterBaseDriver;DataSnapCommon;DataSnapClient;DataSnapServer;DataSnapProviderClient;DbxCommonDriver;dbxcds;DBXOracleDriver;CustomIPTransport;dsnap;fmxase;IndyCore;inetdbxpress;bindcompfmx;rtl;dbrtl;DbxClientDriver;bindcomp;inetdb;xmlrtl;ibxpress;IndyProtocols;DBXMySQLDriver;bindengine;soaprtl;kbmMemRunDXE2Pro;DBXInformixDriver;DBXFirebirdDriver;inet;fmxobj;DBXSybaseASADriver;fmxdae;dbexpress;DataSnapIndy10ServerTransport;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
+        <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
+        <SanitizedProjectName>GetEmailMMO</SanitizedProjectName>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win32)'!=''">
+        <DCC_UsePackage>dxTileControlRS16;dxdborRS16;dxPScxVGridLnkRS16;cxLibraryRS16;dxLayoutControlRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;ZComponent;SysScales;dxBarRS16;dxSkinsdxNavBarPainterRS16;CasDb;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;TeeDB;dxDBXServerModeRS16;ProjectComponent;dxPsPrVwAdvRS16;Rave100VCL;vclib;inetdbbde;cxPivotGridOLAPRS16;dxPSCoreRS16;dxPScxGridLnkRS16;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;dxPScxTLLnkRS16;vclimg;fmi;cxTreeListRS16;dxComnRS16;ZLibEx;vcldb;dxSkinsdxRibbonPainterRS16;dxADOServerModeRS16;vcldsnap;dxBarExtDBItemsRS16;DBXDb2Driver;Intraweb_120_160;vclribbon;frxe16;dxSkinscxSchedulerPainterRS16;vcl;CloudService;DBXMSSQLDriver;CasBI;FmxTeeUI;cxDataRS16;cxBarEditItemRS16;dxDockingRS16;cxPageControldxBarPopupMenuRS16;dxPSDBTeeChartRS16;cxSchedulerGridRS16;webdsnap;dxBarExtItemsRS16;dxtrmdRS16;dxSkinsdxDLPainterRS16;dxPSLnksRS16;dxPSTeeChartRS16;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;ProjectDesignComponent;dxPScxExtCommonRS16;vcldbx;dxNavBarRS16;ZDbc;frx16;dxPSdxDBOCLnkRS16;dxSkinsdxBarPainterRS16;ZPlain;Tee;DBXOdbcDriver;dxdbtrRS16;dxSkinsCoreRS16;svnui;cxPivotGridChartRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;intrawebdb_120_160;cxGridRS16;dxSkinscxPCPainterRS16;dxPScxSSLnkRS16;cxEditorsRS16;TeeUI;FMXTee;vclactnband;dxServerModeRS16;bindcompvcl;cxPivotGridRS16;dxPScxSchedulerLnkRS16;dxPSdxDBTVLnkRS16;vclie;dxPSPrVwRibbonRS16;fs16;cxSchedulerRS16;frxDB16;ZCore;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;DataSnapConnectors;dxPSdxOCLnkRS16;dsnapcon;dxPSdxFCLnkRS16;dxThemeRS16;dcldxSkinsCoreRS16;dxPScxPCProdRS16;ZParseSql;vclx;svn;dxFlowChartRS16;bdertl;dxBarDBNavRS16;dxGDIPlusRS16;$(DCC_UsePackage)</DCC_UsePackage>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+        <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win64)'!=''">
+        <DCC_UsePackage>dxTileControlRS16;dxdborRS16;dxPScxVGridLnkRS16;cxLibraryRS16;dxLayoutControlRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;dxBarRS16;dxSkinsdxNavBarPainterRS16;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;TeeDB;dxDBXServerModeRS16;dxPsPrVwAdvRS16;vclib;cxPivotGridOLAPRS16;dxPSCoreRS16;dxPScxGridLnkRS16;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;dxPScxTLLnkRS16;vclimg;cxTreeListRS16;dxComnRS16;vcldb;dxSkinsdxRibbonPainterRS16;dxADOServerModeRS16;vcldsnap;dxBarExtDBItemsRS16;DBXDb2Driver;dxSkinscxSchedulerPainterRS16;vcl;DBXMSSQLDriver;cxDataRS16;cxBarEditItemRS16;dxDockingRS16;cxPageControldxBarPopupMenuRS16;dxPSDBTeeChartRS16;cxSchedulerGridRS16;webdsnap;dxBarExtItemsRS16;dxtrmdRS16;dxSkinsdxDLPainterRS16;dxPSLnksRS16;dxPSTeeChartRS16;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;dxPScxExtCommonRS16;dxNavBarRS16;dxPSdxDBOCLnkRS16;dxSkinsdxBarPainterRS16;Tee;DBXOdbcDriver;dxdbtrRS16;dxSkinsCoreRS16;cxPivotGridChartRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;cxGridRS16;dxSkinscxPCPainterRS16;dxPScxSSLnkRS16;cxEditorsRS16;TeeUI;vclactnband;dxServerModeRS16;bindcompvcl;cxPivotGridRS16;dxPScxSchedulerLnkRS16;dxPSdxDBTVLnkRS16;vclie;dxPSPrVwRibbonRS16;cxSchedulerRS16;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;DataSnapConnectors;dxPSdxOCLnkRS16;dsnapcon;dxPSdxFCLnkRS16;dxThemeRS16;dcldxSkinsCoreRS16;dxPScxPCProdRS16;vclx;dxFlowChartRS16;dxBarDBNavRS16;dxGDIPlusRS16;$(DCC_UsePackage)</DCC_UsePackage>
+        <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1)'!=''">
+        <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+        <DCC_Optimize>false</DCC_Optimize>
+        <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
+        <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+        <DCC_RemoteDebug>true</DCC_RemoteDebug>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <Debugger_RunParams>/realfarmacy /skipcheckconnect</Debugger_RunParams>
+        <DCC_UnitSearchPath>..\GetEmail\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <DCC_DcuOutput>..\DCU\Farmacy</DCC_DcuOutput>
+        <DCC_RemoteDebug>false</DCC_RemoteDebug>
+        <BT_BuildType>Debug</BT_BuildType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2)'!=''">
+        <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+        <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+        <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+        <DCC_DebugInformation>0</DCC_DebugInformation>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <Debugger_HostApplication>/realfarmacy /skipcheckconnect</Debugger_HostApplication>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <DCC_UnitSearchPath>..\GetEmail\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_ExeOutput>..\BIN</DCC_ExeOutput>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <DCC_DcuOutput>..\DCU\Farmacy</DCC_DcuOutput>
+        <BT_BuildType>Debug</BT_BuildType>
+        <Icon_MainIcon>mainicon.ico</Icon_MainIcon>
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+    </PropertyGroup>
+    <ItemGroup>
+        <DelphiCompile Include="$(MainSource)">
+            <MainSource>MainSource</MainSource>
+        </DelphiCompile>
+        <DCCReference Include="..\SOURCE\Authentication.pas"/>
+        <DCCReference Include="..\SOURCE\CommonData.pas"/>
+        <DCCReference Include="..\SOURCE\DataModul.pas">
+            <Form>dmMain</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
+        <DCCReference Include="..\SOURCE\UtilConst.pas"/>
+        <DCCReference Include="..\SOURCE\UtilConvert.pas"/>
+        <DCCReference Include="..\SOURCE\MessagesUnit.pas">
+            <Form>MessagesForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\SOURCE\SimpleGauge.pas">
+            <Form>SimpleGaugeForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\SOURCE\Log.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\dsdGuides.pas"/>
+        <DCCReference Include="..\SOURCE\ParentForm.pas">
+            <Form>ParentForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\SOURCE\COMPONENT\dsdAddOn.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\dsdAction.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\dsdDataSetDataLink.pas"/>
+        <DCCReference Include="..\SOURCE\Storage.pas"/>
+        <DCCReference Include="..\SOURCE\FormStorage.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\ChoicePeriod.pas">
+            <Form>PeriodChoiceForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\SOURCE\UnilWin.pas"/>
+        <DCCReference Include="..\SOURCE\dsdException.pas"/>
+        <DCCReference Include="..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\ExternalSave.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\ExternalData.pas"/>
+        <DCCReference Include="..\SOURCE\DBF\VKDBFCDX.pas"/>
+        <DCCReference Include="..\SOURCE\DBF\VKDBFCollate.pas"/>
+        <DCCReference Include="..\SOURCE\DBF\VKDBFCrypt.pas"/>
+        <DCCReference Include="..\SOURCE\DBF\VKDBFDataSet.pas"/>
+        <DCCReference Include="..\SOURCE\DBF\VKDBFGostCrypt.pas"/>
+        <DCCReference Include="..\SOURCE\DBF\VKDBFIndex.pas"/>
+        <DCCReference Include="..\SOURCE\DBF\VKDBFMemMgr.pas"/>
+        <DCCReference Include="..\SOURCE\DBF\VKDBFNTX.pas"/>
+        <DCCReference Include="..\SOURCE\DBF\VKDBFParser.pas"/>
+        <DCCReference Include="..\SOURCE\DBF\VKDBFPrx.pas"/>
+        <DCCReference Include="..\SOURCE\DBF\VKDBFSortedList.pas"/>
+        <DCCReference Include="..\SOURCE\DBF\VKDBFSorters.pas"/>
+        <DCCReference Include="..\SOURCE\DBF\VKDBFUtil.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\Defaults.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\Document.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\ComDocXML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\DeclarXML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\DesadvXML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\EDI.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\InvoiceXML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\OrderXML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\OrdrspXML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\RecadvXML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\StatusXML.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
+        <DCCReference Include="..\FormsFarmacy\MainUnitService\GetEmail\sevenzip.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\ExternalLoad.pas"/>
+        <DCCReference Include="..\FormsFarmacy\MainUnitService\GetEmail\Main.pas">
+            <Form>MainForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\SOURCE\COMPONENT\dsdPivotGrid.pas"/>
+        <DCCReference Include="..\TEST\SOURCE\zLibUtil.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\dsdTranslator.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\PUSHMessage.pas">
+            <Form>PUSHMessageForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXMLAction.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201011.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201012.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201111.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201112.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201211.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201212.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\MeDocCOM.pas"/>
+        <DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\IftminFozzXML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\DesadvFozzXML.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
+        <DCCReference Include="..\SOURCE\DialogPswSms.pas">
+            <Form>DialogPswSmsForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\SOURCE\MeDOC\MEDOC_TLB.pas"/>
+        <None Include="ModelSupport_GetEmailMMO\default.txaPackage"/>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Base">
+            <Key>Base</Key>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Debug">
+            <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Delphi.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Delphi.Personality>
+                <VersionInfo>
+                    <VersionInfo Name="IncludeVerInfo">False</VersionInfo>
+                    <VersionInfo Name="AutoIncBuild">False</VersionInfo>
+                    <VersionInfo Name="MajorVer">1</VersionInfo>
+                    <VersionInfo Name="MinorVer">0</VersionInfo>
+                    <VersionInfo Name="Release">0</VersionInfo>
+                    <VersionInfo Name="Build">0</VersionInfo>
+                    <VersionInfo Name="Debug">False</VersionInfo>
+                    <VersionInfo Name="PreRelease">False</VersionInfo>
+                    <VersionInfo Name="Special">False</VersionInfo>
+                    <VersionInfo Name="Private">False</VersionInfo>
+                    <VersionInfo Name="DLL">False</VersionInfo>
+                    <VersionInfo Name="Locale">1049</VersionInfo>
+                    <VersionInfo Name="CodePage">1251</VersionInfo>
+                </VersionInfo>
+                <VersionInfoKeys>
+                    <VersionInfoKeys Name="CompanyName"/>
+                    <VersionInfoKeys Name="FileDescription"/>
+                    <VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+                    <VersionInfoKeys Name="InternalName"/>
+                    <VersionInfoKeys Name="LegalCopyright"/>
+                    <VersionInfoKeys Name="LegalTrademarks"/>
+                    <VersionInfoKeys Name="OriginalFilename"/>
+                    <VersionInfoKeys Name="ProductName"/>
+                    <VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+                    <VersionInfoKeys Name="Comments"/>
+                </VersionInfoKeys>
+                <Source>
+                    <Source Name="MainSource">GetEmailMMO.dpr</Source>
+                </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k270.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp270.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
+            </Delphi.Personality>
+            <Deployment Version="3"/>
+            <Platforms>
+                <Platform value="Win32">True</Platform>
+                <Platform value="Win64">False</Platform>
+            </Platforms>
+            <ModelSupport>True</ModelSupport>
+        </BorlandProject>
+        <ProjectFileVersion>12</ProjectFileVersion>
+    </ProjectExtensions>
+    <Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
+    <Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
+    <Import Condition="Exists('$(MSBuildProjectName).deployproj')" Project="$(MSBuildProjectName).deployproj"/>
+</Project>

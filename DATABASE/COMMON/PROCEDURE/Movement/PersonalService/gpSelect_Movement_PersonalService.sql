@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummHosp TFloat, TotalSummHospOth TFloat, TotalSummHospOthRecalc TFloat
              , TotalSummCompensation TFloat, TotalSummCompensationRecalc TFloat
              , TotalSummHouseAdd TFloat
+             , TotalAvance TFloat, TotalAvanceRecalc TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -245,6 +246,9 @@ BEGIN
            
            , COALESCE (MovementFloat_TotalSummHouseAdd.ValueData,0) ::TFloat AS TotalSummHouseAdd
 
+           , MovementFloat_TotalAvance.ValueData        :: TFloat AS TotalAvance
+           , MovementFloat_TotalAvanceRecalc.ValueData  :: TFloat AS TotalAvanceRecalc
+
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
@@ -399,6 +403,15 @@ BEGIN
                                     ON MovementFloat_TotalSummHouseAdd.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummHouseAdd.DescId = zc_MovementFloat_TotalSummHouseAdd()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalAvance
+                                    ON MovementFloat_TotalAvance.MovementId = Movement.Id
+                                   AND MovementFloat_TotalAvance.DescId = zc_MovementFloat_TotalAvance()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalAvanceRecalc
+                                    ON MovementFloat_TotalAvanceRecalc.MovementId = Movement.Id
+                                   AND MovementFloat_TotalAvanceRecalc.DescId = zc_MovementFloat_TotalAvanceRecalc()
+
+
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -438,6 +451,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 17.11.23         *
  18.11.21         * TotalSummHouseAdd
  16.11.21         * isMail
  27.09.21         * isExport

@@ -5,8 +5,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -57
-  ExplicitTop = -112
   ExplicitWidth = 1237
   ExplicitHeight = 744
   PixelsPerInch = 96
@@ -1012,6 +1010,27 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             Options.Editing = False
             Width = 75
           end
+          object SummAvance: TcxGridDBColumn
+            Caption = #1040#1074#1072#1085#1089' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
+            DataBinding.FieldName = 'SummAvance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummAvanceRecalc: TcxGridDBColumn
+            Caption = #1040#1074#1072#1085#1089' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'SummAvanceRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
           object DayCount_child: TcxGridDBColumn
             Caption = #1054#1090#1088#1072#1073'. '#1076#1085'. 1 '#1095#1077#1083' ('#1080#1085#1092'.) ('#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'DayCount_child'
@@ -1631,6 +1650,26 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
           object TotalSummChildRecalc: TcxGridDBColumn
             Caption = #1040#1083#1080#1084#1077#1085#1090#1099' - '#1091#1076#1077#1088#1078#1072#1085#1080#1077' ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'TotalSummChildRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalSummAvance: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1040#1074#1072#1085#1089' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
+            DataBinding.FieldName = 'TotalSummAvance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalSummAvanceRecalc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1040#1074#1072#1085#1089' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'TotalSummAvanceRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
@@ -2288,8 +2327,20 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
       Category = 'Export'
       MoveParams = <>
       dsdStoredProcName = spSelectExport
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
       FileExt = '.txt'
-      FilenamePrefix = 'Vostok_'
+      FileExtParam.Value = ''
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefix = 'Vostok_'
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
       Left = 1192
       Top = 216
     end
@@ -2495,7 +2546,19 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
       Category = 'Export_file'
       MoveParams = <>
       dsdStoredProcName = spSelect_Export
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
       FileExt = '.xml'
+      FileExtParam.Value = ''
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefixParam.Value = ''
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
       Left = 1072
       Top = 240
     end

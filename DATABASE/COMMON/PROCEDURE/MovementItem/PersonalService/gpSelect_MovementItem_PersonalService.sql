@@ -32,8 +32,10 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummSocialIn TFloat, SummSocialAdd TFloat
              , SummChild TFloat, SummChildRecalc TFloat, SummMinusExt TFloat, SummMinusExtRecalc TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
-             , Amount_avance TFloat
+             , Amount_avance TFloat 
+             , SummAvance TFloat, SummAvanceRecalc TFloat
              , TotalSummChild TFloat, SummDiff TFloat
+             
              , DayCount_child TFloat
              , WorkTimeHoursOne_child TFloat
              , Price_child TFloat
@@ -475,7 +477,10 @@ BEGIN
             , MIFloat_SummTransportAddLong.ValueData  AS SummTransportAddLong
             , MIFloat_SummTransportTaxi.ValueData     AS SummTransportTaxi
             , MIFloat_SummPhone.ValueData             AS SummPhone
-            , ( 1 * tmpMIContainer_pay.Amount_avance) :: TFloat AS Amount_avance
+            , ( 1 * tmpMIContainer_pay.Amount_avance) :: TFloat AS Amount_avance 
+
+            , MIFloat_SummAvance.ValueData        ::TFloat AS SummAvance
+            , MIFloat_SummAvanceRecalc.ValueData  ::TFloat AS SummAvanceRecalc
 
             , COALESCE (tmpMIChild.Amount, 0)                                                 :: TFloat AS TotalSummChild
             , (COALESCE (tmpMIChild.Amount, 0) - COALESCE (MIFloat_SummService.ValueData, 0)) :: TFloat AS SummDiff
@@ -656,6 +661,13 @@ BEGIN
                                         ON MIFloat_SummCompensationRecalc.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummCompensationRecalc.DescId = zc_MIFloat_SummCompensationRecalc()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_SummAvance
+                                        ON MIFloat_SummAvance.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummAvance.DescId = zc_MIFloat_SummAvance()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummAvanceRecalc
+                                        ON MIFloat_SummAvanceRecalc.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummAvanceRecalc.DescId = zc_MIFloat_SummAvanceRecalc()
+
             LEFT JOIN MovementItemFloat AS MIFloat_DayCompensation
                                         ON MIFloat_DayCompensation.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_DayCompensation.DescId = zc_MIFloat_DayCompensation()
@@ -758,6 +770,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 17.01.23         *
  09.06.22         *
  13.03.22         *
  17.11.21         *

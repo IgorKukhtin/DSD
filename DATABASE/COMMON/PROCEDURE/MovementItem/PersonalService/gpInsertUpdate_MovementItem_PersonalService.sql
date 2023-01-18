@@ -38,12 +38,19 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, In
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);*/
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar
                                                                    , Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
-                                                                 
+  */
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar
+                                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
@@ -78,7 +85,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inSummHospOthRecalc     TFloat    , -- больничный (ввод для распределения)
     IN inSummCompensationRecalc TFloat   , -- компенсация (ввод)
     IN inSummAuditAdd           TFloat   , -- Сумма доплаты за аудит
-    IN inSummHouseAdd           TFloat   , -- Сумма Компенсация жилья 
+    IN inSummHouseAdd           TFloat   , -- Сумма Компенсация жилья
+    IN inSummAvanceRecalc       TFloat    , --  Aванс
     IN inComment               TVarChar  , -- 
     IN inInfoMoneyId           Integer   , -- Статьи назначения
     IN inUnitId                Integer   , -- Подразделение
@@ -158,7 +166,8 @@ BEGIN
                                                      , inSummHospOthRecalc     := inSummHospOthRecalc
                                                      , inSummCompensationRecalc:= inSummCompensationRecalc
                                                      , inSummAuditAdd          := inSummAuditAdd
-                                                     , inSummHouseAdd          := inSummHouseAdd
+                                                     , inSummHouseAdd          := inSummHouseAdd   
+                                                     , inSummAvanceRecalc      := inSummAvanceRecalc
                                                      , inNumber                := inNumber
                                                      , inComment               := inComment
                                                      , inInfoMoneyId           := inInfoMoneyId
@@ -217,6 +226,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.01.23         *
  23.12.21         * add inNumber
  17.11.21         * inSummHouseAdd
  06.05.21         * inUnitFineSubjectId

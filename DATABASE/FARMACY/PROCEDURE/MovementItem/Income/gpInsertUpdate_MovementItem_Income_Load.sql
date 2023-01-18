@@ -64,6 +64,8 @@ BEGIN
                                        AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
               WHERE ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                 AND ObjectLink_Contract_Juridical.ChildObjectId = inJuridicalId_from;
+                
+     ANALYSE _tmpContract;
 
          -- Ищем подразделение и Договор. Два в одном
          SELECT tmp.ContractId, tmp.UnitId
@@ -393,6 +395,9 @@ BEGIN
                          WHERE MovementItem.MovementId = vbMovementId
                            AND MovementItem.DescId     = zc_MI_Master()
                            AND MovementItem.isErased = FALSE;
+                           
+    ANALYSE _tmpMI;
+    
     -- Если элементов документа > 1
     IF EXISTS (SELECT 1
                FROM _tmpMI
@@ -466,6 +471,11 @@ BEGIN
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
+
+     IF inSession = '3'
+     THEN
+        RAISE EXCEPTION 'Прошло.';
+     END IF;
      
 END;
 $BODY$
@@ -488,5 +498,7 @@ LANGUAGE PLPGSQL VOLATILE;
  25.12.14                        *   
  02.12.14                        *   
 */
+-- 
+
 --select * from gpInsertUpdate_MovementItem_Income_MMOLoad(inOKPOFrom := '36852896', inOKPOTo := '2591702304' , inInvNumber := '6612083' , inOperDate := ('15.02.2017')::TDateTime , inInvTaxNumber := '6612083' , inPaymentDate := ('27.02.2017')::TDateTime , inPriceWithVAT := 'False' , inSyncCode := 1 , inRemark := 'ЧП "Шапира И. А.", г.Днепропетровск, пр.Правды, 6' , inGoodsCode := '28036' , inGoodsName := 'Ліпримар табл. в/о 20мг №30' , inMakerCode := '292' , inMakerName := 'Пфайзер' , inCommonCode := 155344 , inVAT := 7 , inPartitionGoods := 'R71613' , inExpirationDate := ('01.05.2019')::TDateTime , inAmount := 10 , inPrice := 523.57 , inFea := '3004900000' , inMeasure := 'пак' , inSertificatNumber := 'UA/2377/01/01' , inSertificatStart := ('27.06.2014')::TDateTime , inSertificatEnd := ('27.06.2019')::TDateTime , inisLastRecord := 'True' ,  inSession := '1871720');
 

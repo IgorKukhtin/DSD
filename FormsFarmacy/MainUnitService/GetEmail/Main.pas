@@ -10,7 +10,7 @@ uses
   Data.DB, Datasnap.DBClient, Vcl.Samples.Gauges, Vcl.ExtCtrls, Vcl.ActnList,
   dsdAction, ExternalLoad, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack,
   IdSSL, IdSSLOpenSSL, IdIMAP4, dsdInternetAction, ZAbstractRODataset,
-  ZAbstractDataset, ZDataset, ZAbstractConnection, ZConnection;
+  ZAbstractDataset, ZDataset, ZAbstractConnection, ZConnection, System.Actions;
 
 const SAVE_LOG = true;
 
@@ -125,7 +125,6 @@ type
 
     function fError_SendEmail (inImportSettingsId, inContactPersonId:Integer; inByDate :TDateTime; inByMail, inByFileName : String) : Boolean;
 
-    function fBeginVACUUM : Boolean; // обработка VACUUM
     function fBeginAll  : Boolean; // обработка все
     function fInitArray : Boolean; // получает данные с сервера и на основании этих данных заполняет массивы
     function fBeginMail : Boolean; // обработка всей почты
@@ -156,17 +155,16 @@ begin
   else
     Rewrite(F);
   //
-  if (ALogMessage = '---- Start') or (ALogMessage = 'start all VACUUM') or (ALogMessage = 'end all VACUUM')
+  if (ALogMessage = '---- Start')
   then WriteLn(F, '');
   WriteLn(F, DateTimeToStr(Now) + ' : ' + ALogMessage);
-  if (ALogMessage = '---- Start') or (ALogMessage = 'start all VACUUM') or (ALogMessage = 'end all VACUUM')
+  if (ALogMessage = '---- Start')
   then WriteLn(F, '');
   CloseFile(F);
 
 
   //
   if (Pos('Error', ALogMessage) = 0) and (Pos('Exception', ALogMessage) = 0) and (Pos('---- Start', ALogMessage) = 0)
-    and (Pos('VACUUM', ALogMessage) = 0)
   then Exit;
   //
   AssignFile(F, ChangeFileExt(Application.ExeName,'.log'));
@@ -175,10 +173,10 @@ begin
   else
     Rewrite(F);
   //
-  if (ALogMessage = '---- Start') or (ALogMessage = 'start all VACUUM') or (ALogMessage = 'end all VACUUM')
+  if (ALogMessage = '---- Start')
   then WriteLn(F, '');
   WriteLn(F, DateTimeToStr(Now) + ' : ' + ALogMessage);
-  if (ALogMessage = '---- Start') or (ALogMessage = 'start all VACUUM') or (ALogMessage = 'end all VACUUM')
+  if (ALogMessage = '---- Start')
   then WriteLn(F, '');
   CloseFile(F);
 end;
@@ -1304,87 +1302,6 @@ begin
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.fBeginVACUUM : Boolean;
-var Second, MSec: word;
-    Hour_calc, Minute_calc: word;
-    ZConnection: TZConnection;
-    ZQuery: TZQuery;
-
-          function lVACUUM (lStr : String): Boolean;
-          begin
-               ZQuery.Sql.Clear;;
-               ZQuery.Sql.Add (lStr);
-               ZQuery.ExecSql;
-               AddToLog(lStr);
-               Sleep(500);
-          end;
-begin
-     //расчет начальные дата + время
-     DecodeTime(NOW, Hour_calc, Minute_calc, Second, MSec);
-     //
-     if (Hour_calc = 5)
-      //or(Hour_calc = 16)
-     then begin
-          try
-              ZConnection := TConnectionFactory.GetConnection;
-              ZConnection.Connected := true;
-              ZQuery := TZQuery.Create(nil);
-              ZQuery.Connection := ZConnection;
-              ZQuery.Sql.Clear;
-               //
-               AddToLog('start all VACUUM');
-               //
-               // Container
-{               lVACUUM ('VACUUM FULL Container');
-               lVACUUM ('VACUUM ANALYZE Container');
-               // CashSessionSnapShot - !!! 180 MIN !!!
-               lVACUUM ('delete from CashSessionSnapShot WHERE CashSessionId IN (select Id from CashSession WHERE lastConnect < CURRENT_TIMESTAMP - INTERVAL ' + chr(39) + '180 MIN' + chr(39) + ')');
-               lVACUUM ('delete from CashSession WHERE Id NOT IN (SELECT DISTINCT CashSessionId FROM CashSessionSnapShot) AND lastConnect < CURRENT_TIMESTAMP - INTERVAL ' + chr(39) + '180 MIN' + chr(39));
-               lVACUUM ('VACUUM FULL CashSession');
-               lVACUUM ('VACUUM ANALYZE CashSession');
-               lVACUUM ('VACUUM FULL CashSessionSnapShot');
-               lVACUUM ('VACUUM ANALYZE CashSessionSnapShot');
-               // LoadPriceList + LoadPriceListItem
-               lVACUUM ('VACUUM FULL LoadPriceList');
-               lVACUUM ('VACUUM ANALYZE LoadPriceList');
-               lVACUUM ('VACUUM FULL LoadPriceListItem');
-               lVACUUM ('VACUUM ANALYZE LoadPriceListItem');
-               // System - FULL
-               lVACUUM ('VACUUM FULL pg_catalog.pg_statistic');
-               lVACUUM ('VACUUM FULL pg_catalog.pg_attribute');
-               lVACUUM ('VACUUM FULL pg_catalog.pg_class');
-               lVACUUM ('VACUUM FULL pg_catalog.pg_type');
-               lVACUUM ('VACUUM FULL pg_catalog.pg_depend');
-               lVACUUM ('VACUUM FULL pg_catalog.pg_shdepend');
-               lVACUUM ('VACUUM FULL pg_catalog.pg_index');
-               lVACUUM ('VACUUM FULL pg_catalog.pg_attrdef');
-               lVACUUM ('VACUUM FULL pg_catalog.pg_proc');
-               // System - ANALYZE
-               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_statistic');
-               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_attribute');
-               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_class');
-               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_type');
-               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_depend');
-               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_shdepend');
-               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_index');
-               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_attrdef');
-               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_proc');
-               //
-               // !!!main!!!
-               lVACUUM ('VACUUM');}
-               lVACUUM ('VACUUM ANALYZE');
-               //
-               //
-               AddToLog('end all VACUUM');
-          finally
-                ZConnection.Connected := false;
-                ZQuery.Free;
-                ZConnection.Free;
-          end;
-     end;
-
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка все
 function TMainForm.fBeginAll : Boolean;
 var isErr, isErr_exit : Boolean;
@@ -1453,10 +1370,6 @@ begin
          isErr_exit:= true;
          exit;
        end;
-
-       // !!! VACUUM !!! - 1 раз после 2-х ночи - !!!Только если "Загрузка MMO"!!!
-       // перенес в отдельную программу
-       //try if vbEmailKindDesc= 'zc_Enum_EmailKind_IncomeMMO' then fBeginVACUUM;  except vbIsBegin:= false; AddToLog('!!! ERROR - VACUUM !!!'); isErr_exit:= true; exit; end;
 
      finally
        Timer.Enabled:= true;

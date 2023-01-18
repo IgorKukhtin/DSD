@@ -27,7 +27,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummFine TFloat, TotalSummFineOth TFloat, TotalSummFineOthRecalc TFloat
              , TotalSummHosp TFloat, TotalSummHospOth TFloat, TotalSummHospOthRecalc TFloat
              , TotalSummCompensation TFloat, TotalSummCompensationRecalc TFloat
-             , TotalSummHouseAdd TFloat
+             , TotalSummHouseAdd TFloat 
+             , TotalSummAvance TFloat, TotalSummAvanceRecalc TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -69,7 +70,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              --, Price_child TFloat
             
              , SummAddOth TFloat, SummAddOthRecalc TFloat
-             , SummHouseAdd TFloat
+             , SummHouseAdd TFloat 
+             
+             , SummAvance TFloat, SummAvanceRecalc TFloat
+
              , SummCompensation TFloat, SummCompensationRecalc TFloat
              , DayCompensation TFloat, PriceCompensation TFloat
              , DayVacation TFloat, DayHoliday TFloat, DayWork TFloat
@@ -413,6 +417,9 @@ BEGIN
            
            , COALESCE (MovementFloat_TotalSummHouseAdd.ValueData,0) ::TFloat AS TotalSummHouseAdd
 
+           , MovementFloat_TotalAvance.ValueData        :: TFloat AS TotalSummAvance
+           , MovementFloat_TotalAvanceRecalc.ValueData  :: TFloat AS TotalAvanceRecalc
+
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
@@ -529,6 +536,8 @@ BEGIN
             , MIFloat_SummAddOthRecalc.ValueData        AS SummAddOthRecalc
             , MIFloat_SummHouseAdd.ValueData  ::TFloat  AS SummHouseAdd
 
+            , MIFloat_SummAvance.ValueData        ::TFloat AS SummAvance
+            , MIFloat_SummAvanceRecalc.ValueData  ::TFloat AS SummAvanceRecalc
 
             , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensation.ValueData        ELSE 0 END ::TFloat AS SummCompensation
             , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensationRecalc.ValueData  ELSE 0 END ::TFloat AS SummCompensationRecalc
@@ -687,6 +696,13 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummHouseAdd
                                     ON MovementFloat_TotalSummHouseAdd.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummHouseAdd.DescId = zc_MovementFloat_TotalSummHouseAdd()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalAvance
+                                    ON MovementFloat_TotalAvance.MovementId = Movement.Id
+                                   AND MovementFloat_TotalAvance.DescId = zc_MovementFloat_TotalAvance()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalAvanceRecalc
+                                    ON MovementFloat_TotalAvanceRecalc.MovementId = Movement.Id
+                                   AND MovementFloat_TotalAvanceRecalc.DescId = zc_MovementFloat_TotalAvanceRecalc()
 
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -881,6 +897,13 @@ BEGIN
             LEFT JOIN tmpMovementItemFloat AS MIFloat_DayAudit
                                         ON MIFloat_DayAudit.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_DayAudit.DescId = zc_MIFloat_DayAudit()
+
+            LEFT JOIN tmpMovementItemFloat AS MIFloat_SummAvance
+                                        ON MIFloat_SummAvance.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummAvance.DescId = zc_MIFloat_SummAvance()
+            LEFT JOIN tmpMovementItemFloat AS MIFloat_SummAvanceRecalc
+                                        ON MIFloat_SummAvanceRecalc.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummAvanceRecalc.DescId = zc_MIFloat_SummAvanceRecalc()
 
             LEFT JOIN tmpMovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = tmpAll.MovementItemId

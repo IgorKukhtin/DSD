@@ -156,6 +156,7 @@ BEGIN
                                                         , inSummCompensationRecalc := COALESCE (_tmpMI.Day_diff * _tmpMI.AmountCompensation, 0.0)
                                                         , inSummAuditAdd       := 0
                                                         , inSummHouseAdd       := 0
+                                                        , inSummAvanceRecalc   := 0
                                                         , inNumber             := ''
                                                         , inComment            := ''
                                                         , inInfoMoneyId        := _tmpMI.InfoMoneyId
