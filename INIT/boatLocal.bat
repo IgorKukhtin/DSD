@@ -1,0 +1,1 @@
+copy /Y Boat_init_local.php Boat_init.php
