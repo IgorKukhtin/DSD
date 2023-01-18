@@ -2481,8 +2481,12 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCorrectWagesPercentageForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TCorrectWagesPercentageForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSurchargeWagesForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSurchargeWagesForm');
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSurchargeWagesForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TSurchargeWagesForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionDateWagesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionDateWagesForm');
+
 end;
 
 

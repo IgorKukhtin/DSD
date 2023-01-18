@@ -1271,7 +1271,8 @@ uses
   Medoc_J1201212 in '..\..\SOURCE\MeDOC\Medoc_J1201212.pas',
   DialogPswSms in '..\..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
   dsdPlaySound in '..\..\SOURCE\dsdPlaySound.pas',
-  CheckErrorInsertDate in '..\..\FormsFarmacy\Document\CheckErrorInsertDate.pas' {CheckErrorInsertDateForm: TParentForm};
+  CheckErrorInsertDate in '..\..\FormsFarmacy\Document\CheckErrorInsertDate.pas' {CheckErrorInsertDateForm: TParentForm},
+  PartionDateWages in '..\..\FormsFarmacy\Guides\PartionDateWages.pas' {PartionDateWagesForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
