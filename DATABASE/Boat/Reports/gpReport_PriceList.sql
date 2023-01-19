@@ -52,7 +52,8 @@ BEGIN
                                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
                                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
                        WHERE Movement.DescId = zc_Movement_PriceList()
-                         AND Movement.StatusId <> zc_Enum_Status_Erased()
+                         AND Movement.StatusId <> zc_Enum_Status_Erased()  
+                         AND (MovementLinkObject_Partner.ObjectId = inPartnerId OR inPartnerId = 0)
                        )
 
   , tmpMovement AS (SELECT tmp.*

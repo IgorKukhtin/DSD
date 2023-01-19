@@ -344,7 +344,9 @@ uses
   GoogleOTPDialogPsw in '..\..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
   GoogleOTPRegistration in '..\..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
   Report_Send in '..\..\FormsBoat\Report\Report_Send.pas' {Report_SendForm: TParentForm},
-  Report_SendDialog in '..\..\FormsBoat\Report\Report_SendDialog.pas' {Report_SendDialogForm: TParentForm};
+  Report_SendDialog in '..\..\FormsBoat\Report\Report_SendDialog.pas' {Report_SendDialogForm: TParentForm},
+  Report_PriceList in '..\..\FormsBoat\Report\Report_PriceList.pas' {Report_PriceListForm: TParentForm},
+  Report_PriceListDialog in '..\..\FormsBoat\Report\Report_PriceListDialog.pas' {Report_PriceListDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

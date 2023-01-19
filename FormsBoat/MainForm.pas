@@ -261,6 +261,8 @@ type
     miReceiptGoodsLine: TMenuItem;
     actReport_OrderInternal: TdsdOpenForm;
     miReport_OrderInternal: TMenuItem;
+    actReport_PriceList: TdsdOpenForm;
+    miReport_PriceList: TMenuItem;
   private
     { Private declarations }
   public

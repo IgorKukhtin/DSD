@@ -210,7 +210,7 @@ BEGIN
                                                         , inSummCompensationRecalc := COALESCE (gpSelect.SummCompensationRecalc, 0)
                                                         , inSummAuditAdd       := COALESCE (gpSelect.SummAuditAdd,0)
                                                         , inSummHouseAdd       := COALESCE (gpSelect.SummHouseAdd,0)
-                                                        , inSummAvanceRecalc   := COALESCE (gpSelect.SummAvanceRecalc)
+                                                        , inSummAvanceRecalc   := COALESCE (gpSelect.SummAvanceRecalc,0)::TFloat
                                                         , inNumber             := COALESCE (gpSelect.Number, '')
                                                         , inComment            := inComment ::TVarChar
                                                         , inInfoMoneyId        := COALESCE (gpSelect.InfoMoneyId, zc_Enum_InfoMoney_60101()) -- 60101 Заработная плата + Заработная плата
@@ -229,7 +229,10 @@ BEGIN
             FROM Object_Personal_View AS View_Personal
             WHERE View_Personal.PersonalId = vbPersonalId
            ) AS tmpPersonal
-           LEFT JOIN gpSelect_MovementItem_PersonalService (inMovementId, FALSE, FALSE, inSession) AS gpSelect ON gpSelect.PersonalId = tmpPersonal.PersonalId
+           LEFT JOIN gpSelect_MovementItem_PersonalService (inMovementId, FALSE, FALSE, inSession) AS gpSelect
+                                                                                                   ON gpSelect.PersonalId = tmpPersonal.PersonalId
+                                                                                                  AND gpSelect.FineSubjectId = vbFineSubjectId
+                                                                                                  AND gpSelect.UnitFineSubjectId = vbUnitFineSubjectId
       LIMIT 1;
 
 END;
