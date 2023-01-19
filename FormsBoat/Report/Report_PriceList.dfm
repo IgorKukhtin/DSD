@@ -876,6 +876,7 @@ inherited Report_PriceListForm: TReport_PriceListForm
         Component = GuidesPartner
       end
       item
+        Component = GuidesUnit
       end
       item
       end
@@ -1080,8 +1081,8 @@ inherited Report_PriceListForm: TReport_PriceListForm
     Column = Article_all
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 280
-    Top = 192
+    Left = 248
+    Top = 160
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
