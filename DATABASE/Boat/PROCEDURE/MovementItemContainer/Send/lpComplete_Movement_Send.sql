@@ -262,7 +262,7 @@ BEGIN
              , _tmpItem.MovementItemId AS ParentId
              , _tmpItem.GoodsId
                -- !!!ПАРТИЯ создается ?расходным документом?
-             , _tmpItem.MovementItemId AS PartionId
+             , _tmpItem_partion.MovementItemId AS PartionId
                -- сколько в этой партии осталось создать
              , _tmpItem.Amount - COALESCE (tmp.Amount, 0)
                --
@@ -274,6 +274,12 @@ BEGIN
                         GROUP BY _tmpItem_Child.ParentId
                        ) AS tmp
                          ON tmp.ParentId = _tmpItem.MovementItemId
+             -- партия !!!только!!! ОДНА
+             LEFT JOIN (SELECT MAX (_tmpItem.MovementItemId) AS MovementItemId, _tmpItem.GoodsId
+                        FROM _tmpItem
+                        GROUP BY _tmpItem.GoodsId
+                       ) AS _tmpItem_partion
+                         ON _tmpItem_partion.GoodsId = _tmpItem.GoodsId
         WHERE _tmpItem.Amount - COALESCE (tmp.Amount, 0) > 0
        ;
 
@@ -357,7 +363,7 @@ BEGIN
                                  LEFT JOIN ObjectFloat AS ObjectFloat_EmpfPrice
                                                        ON ObjectFloat_EmpfPrice .ObjectId = _tmpItem_Child.GoodsId
                                                       AND ObjectFloat_EmpfPrice .DescId   =  zc_ObjectFloat_Goods_EmpfPrice ()
-                            -- условие - тогда надо создать партии
+                            -- условие - когда надо создать партии
                             WHERE _tmpItem_Child.ParentId = _tmpItem_Child.PartionId
                            )
                 -- загруженные цены Поставщика
@@ -435,7 +441,7 @@ BEGIN
      WHERE _tmpItem_Child.ParentId = _tmpItem.MovementItemId
     ;
 
-     -- 2.1. определяется Счет(справочника) для проводок по суммовому учету
+     -- 2. определяется Счет(справочника) для проводок по суммовому учету
      UPDATE _tmpItem_Child SET AccountId_From = _tmpItem_byAccount.AccountId_From
                              , AccountId_To   = _tmpItem_byAccount.AccountId_To
      FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_10000() -- Запасы
@@ -458,7 +464,7 @@ BEGIN
     ;
 
 
-     -- 2.2. определяется ContainerId_Summ для проводок по суммовому учету
+     -- 3. определяется ContainerId_Summ для проводок по суммовому учету
      UPDATE _tmpItem_Child SET ContainerId_SummFrom = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
                                                                                         , inUnitId                 := vbUnitId_From
                                                                                         , inMemberId               := NULL
@@ -490,7 +496,7 @@ BEGIN
     ;
 
 
-     -- 3.1. формируются Проводки - остаток количество
+     -- 4.1. формируются Проводки - остаток количество
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
                                        , MovementItemId, ContainerId, ParentId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
@@ -509,11 +515,11 @@ BEGIN
             , _tmpItem_Child.GoodsId                  AS ObjectId_Analyzer      -- Товар
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
             , vbUnitId_From                           AS WhereObjectId_Analyzer -- Место учета
-            , _tmpItem_Child.AccountId_To             AS AccountId_Analyzer     -- Счет - корреспондент - по ПРИХОДУ
+            , _tmpItem_Child.AccountId_To             AS AccountId_Analyzer     -- Счет - корреспондент - ПРИХОД
             , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-            , _tmpItem_Child.ContainerId_SummTo       AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - по ПРИХОДУ
+            , _tmpItem_Child.ContainerId_GoodsTo      AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - ПРИХОД
             , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , vbUnitId_To                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение Кому
+            , vbUnitId_To                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение Кому - ПРИХОД
             , -1 * _tmpItem_Child.Amount              AS Amount
             , vbOperDate                              AS OperDate
             , FALSE                                   AS isActive
@@ -529,18 +535,18 @@ BEGIN
             , _tmpItem_Child.GoodsId                  AS ObjectId_Analyzer      -- Товар
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
             , vbUnitId_To                             AS WhereObjectId_Analyzer -- Место учета
-            , _tmpItem_Child.AccountId_From           AS AccountId_Analyzer     -- Счет - корреспондент - по РАСХОДУ
+            , _tmpItem_Child.AccountId_From           AS AccountId_Analyzer     -- Счет - корреспондент - РАСХОД
             , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-            , _tmpItem_Child.ContainerId_SummFrom     AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - по РАСХОДУ
+            , _tmpItem_Child.ContainerId_GoodsFrom    AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - РАСХОД
             , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , vbUnitId_From                           AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение От Кого
+            , vbUnitId_From                           AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение От Кого - РАСХОД
             , 1 * _tmpItem_Child.Amount               AS Amount
             , vbOperDate                              AS OperDate
             , TRUE                                    AS isActive
        FROM _tmpItem_Child;
 
 
-     -- 3.2. формируются Проводки - остаток сумма
+     -- 4.2. формируются Проводки - остаток сумма
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
                                        , MovementItemId, ContainerId, ParentId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
@@ -559,11 +565,11 @@ BEGIN
             , _tmpItem_Child.GoodsId                  AS ObjectId_Analyzer      -- Товар
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
             , vbUnitId_From                           AS WhereObjectId_Analyzer -- Место учета
-            , _tmpItem_Child.AccountId_To             AS AccountId_Analyzer     -- Счет - корреспондент - по ПРИХОДУ
+            , _tmpItem_Child.AccountId_To             AS AccountId_Analyzer     -- Счет - корреспондент - ПРИХОД
             , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-            , _tmpItem_Child.ContainerId_SummTo       AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - по ПРИХОДУ
+            , _tmpItem_Child.ContainerId_SummTo       AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - ПРИХОД
             , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , vbUnitId_To                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение Кому
+            , vbUnitId_To                             AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение Кому - ПРИХОД
             , -1 * CASE WHEN _tmpItem_Child.Amount = Container_Count.Amount
                              THEN Container_Summ.Amount
                         ELSE _tmpItem_Child.Amount * Object_PartionGoods.EKPrice
@@ -574,7 +580,9 @@ BEGIN
             JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = _tmpItem_Child.PartionId
             JOIN Container AS Container_Count ON Container_Count.Id = _tmpItem_Child.ContainerId_GoodsFrom
             JOIN Container AS Container_Summ  ON Container_Summ.Id  = _tmpItem_Child.ContainerId_SummFrom
+
       UNION ALL
+       -- проводки - ПРИХОД
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
             , _tmpItem_Child.MovementItemId
             , _tmpItem_Child.ContainerId_SummTo
@@ -584,11 +592,11 @@ BEGIN
             , _tmpItem_Child.GoodsId                  AS ObjectId_Analyzer      -- Товар
             , _tmpItem_Child.PartionId                AS PartionId              -- Партия
             , vbUnitId_To                             AS WhereObjectId_Analyzer -- Место учета
-            , _tmpItem_Child.AccountId_From           AS AccountId_Analyzer     -- Счет - корреспондент - по РАСХОДУ
+            , _tmpItem_Child.AccountId_From           AS AccountId_Analyzer     -- Счет - корреспондент - РАСХОД
             , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
-            , _tmpItem_Child.ContainerId_SummFrom     AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - по РАСХОДУ
+            , _tmpItem_Child.ContainerId_SummFrom     AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - РАСХОД
             , 0                                       AS ObjectIntId_Analyzer   -- Аналитический справочник
-            , vbUnitId_From                           AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение От Кого
+            , vbUnitId_From                           AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение От Кого - РАСХОД
             , 1 * CASE WHEN _tmpItem_Child.Amount = Container_Count.Amount
                             THEN Container_Summ.Amount
                        ELSE _tmpItem_Child.Amount * Object_PartionGoods.EKPrice

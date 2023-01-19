@@ -328,6 +328,8 @@ AND 1=0
               , MeasureId            = vbMeasureId
               , TaxKindId            = inTaxKindId
               , TaxValue             = inTaxKindValue
+              , isErased             = FALSE
+              , isArc                = FALSE
      WHERE Object_PartionGoods.MovementItemId = inMovementItemId;
 
 
@@ -349,7 +351,7 @@ AND 1=0
                                        , vbGoodsGroupId, zfConvert_IntToNull (vbGoodsTagId), zfConvert_IntToNull (vbGoodsTypeId)
                                        , zfConvert_IntToNull (vbGoodsSizeId), zfConvert_IntToNull (vbProdColorId), vbMeasureId
                                        , inTaxKindId, inTaxKindValue
-                                       , TRUE, TRUE
+                                       , FALSE, FALSE
                                         );
         -- сохранили партию
         IF vbMovementDescId = zc_Movement_Income()
