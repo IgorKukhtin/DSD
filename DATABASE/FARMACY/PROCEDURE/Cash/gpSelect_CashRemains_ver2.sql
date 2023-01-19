@@ -1127,7 +1127,7 @@ BEGIN
             CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END    AS isPromo,
             COALESCE(GoodsPromo.isPromoForSale, FALSE)                                AS isPromoForSale,
             COALESCE(GoodsPromo.RelatedProductId, ObjectFloat_RelatedProduct.ValueData)::Integer  AS RelatedProductId,
-            CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END :: Boolean  AS isSP,
+            CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END :: Boolean  AS isSP,
             Object_IntenalSP.ValueData AS IntenalSPName,
             CashSessionSnapShot.MinExpirationDate,
             NULLIF (CashSessionSnapShot.DiscountExternalID, 0) AS DiscountExternalID,

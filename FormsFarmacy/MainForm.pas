@@ -1005,6 +1005,8 @@ type
     N370: TMenuItem;
     actCheckErrorInsertDate: TdsdOpenForm;
     N371: TMenuItem;
+    actPartionDateWages: TdsdOpenForm;
+    N372: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

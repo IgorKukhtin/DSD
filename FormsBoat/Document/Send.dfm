@@ -1211,10 +1211,6 @@ object SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbUpdateActionMovement'
         end
         item
@@ -1260,31 +1256,7 @@ object SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsert_MI_Send_byOrder'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsert_MI_Send_byOrderDetail'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsert_MI_Send_byOrderDetail_2'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsert_MI_Send_byOrderInternal'
+          ItemName = 'bbInsert'
         end
         item
           Visible = True
@@ -1579,6 +1551,43 @@ object SendForm: TSendForm
       Action = actPrint3
       Category = 0
     end
+    object bbInsert_MI_Send_byOrderInternal_All: TdxBarButton
+      Action = macInsert_MI_Send_byOrderInternal_All
+      Category = 0
+    end
+    object bbInsert: TdxBarSubItem
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100
+      Category = 0
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert_MI_Send_byOrder'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_MI_Send_byOrderDetail'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_MI_Send_byOrderDetail_2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_MI_Send_byOrderInternal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_MI_Send_byOrderInternal_All'
+        end>
+    end
+    object TdxBarButton
+      Caption = '    '
+      Category = 0
+      Hint = '    '
+      Visible = ivAlways
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1790,6 +1799,7 @@ object SendForm: TSendForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'ProductName;Article'
         end>
       Params = <
         item
@@ -2099,6 +2109,26 @@ object SendForm: TSendForm
         end>
       isShowModal = True
     end
+    object actOrderInternalInsertForm_All: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TOrderInternalJournalChoiceForm'
+      ImageIndex = 69
+      FormName = 'TOrderInternalJournalChoiceForm'
+      FormNameParam.Value = 'TOrderInternalJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementId_OrderInternal'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actOrderInternalInsertForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2372,6 +2402,24 @@ object SendForm: TSendForm
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
       ImageIndex = 11
       Status = mtUncomplete
+    end
+    object macInsert_MI_Send_byOrderInternal_All: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOrderInternalInsertForm_All
+        end
+        item
+          Action = actInsert_MI_Send_byOrderInternal
+        end
+        item
+          Action = actRefreshMI
+        end>
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
+      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1057#1045' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1074#1099#1073#1086#1088' '#1091#1079#1083#1072') '#1080#1079' '#1047#1072#1082#1072#1079' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1057#1045' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1074#1099#1073#1086#1088' '#1091#1079#1083#1072') '#1080#1079' '#1047#1072#1082#1072#1079' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+      ImageIndex = 69
     end
     object macInsert_MI_Send_byOrderDetail: TMultiAction
       Category = 'DSDLib'
@@ -3146,7 +3194,7 @@ object SendForm: TSendForm
           StoredProc = spSelectMIChild
         end>
       Caption = 'actInsert_MI_Send_byOrderInternal'
-      ImageIndex = 49
+      ImageIndex = 68
     end
     object actPrint3: TdsdPrintAction
       Category = 'DSDLib'

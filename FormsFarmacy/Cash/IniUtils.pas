@@ -22,6 +22,7 @@ function iniPortSpeed:String;
 function iniLocalDataBaseHead: String;
 function iniLocalDataBaseBody: String;
 function iniLocalDataBaseDiff: String;
+function iniLocalDataBaseSQLite: String;
 //Возвращает код Аптеки
 function iniLocalUnitCodeGet: Integer;
 function iniLocalUnitCodeSave(AFarmacyCode: Integer): Integer;
@@ -100,6 +101,7 @@ const
   LocalDBNameHead: String = 'FarmacyCashHead.dbf';
   LocalDBNameBody: String = 'FarmacyCashBody.dbf';
   LocalDBNameDiff: String = 'FarmacyCashDiff.dbf';
+  LocalDBNameSQLite: String = 'FarmacyCashSQLite.db';
 
 
 
@@ -262,6 +264,23 @@ begin
     f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
     try
       f.WriteString('Common','LocalDataBaseDiff',Result);
+    finally
+      f.Free;
+    end;
+  End;
+end;
+
+function iniLocalDataBaseSQLite: String;
+var
+  f: TIniFile;
+begin
+  Result := GetValue('Common','LocalDataBaseSQLite','');
+  if Result = '' then
+  Begin
+    Result := ExtractFilePath(Application.ExeName)+LocalDBNameSQLite;
+    f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
+    try
+      f.WriteString('Common','LocalDataBaseSQLite',Result);
     finally
       f.Free;
     end;

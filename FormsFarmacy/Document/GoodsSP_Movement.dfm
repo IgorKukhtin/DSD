@@ -3,25 +3,26 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
   ClientHeight = 554
   ClientWidth = 1043
   AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'
-  ExplicitWidth = 1059
-  ExplicitHeight = 593
+  ExplicitWidth = 1061
+  ExplicitHeight = 601
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1043
-    Height = 468
+    Height = 467
+    ExplicitTop = 87
     ExplicitWidth = 1043
-    ExplicitHeight = 468
-    ClientRectBottom = 468
+    ExplicitHeight = 467
+    ClientRectBottom = 467
     ClientRectRight = 1043
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1043
-      ExplicitHeight = 444
+      ExplicitHeight = 443
       inherited cxGrid: TcxGrid
         Width = 1043
-        Height = 444
+        Height = 443
         ExplicitWidth = 1043
-        ExplicitHeight = 444
+        ExplicitHeight = 443
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -35,6 +36,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsView.CellAutoHeight = True
           OptionsView.GroupSummaryLayout = gslStandard
           Styles.Content = nil
           Styles.Inactive = nil
@@ -958,7 +960,7 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <

@@ -5390,6 +5390,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actPartionDateWages: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1099' '#1087#1088#1080' '#1087#1088#1086#1076#1072#1078#1077' '#1089#1088#1086#1082#1086#1074#1099#1093' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1047#1055' '#1082#1072#1089#1089#1080#1088#1086#1074
+      FormName = 'TPartionDateWagesForm'
+      FormNameParam.Value = 'TPartionDateWagesForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6768,6 +6779,9 @@
         end
         object N329: TMenuItem
           Action = actSurchargeWages
+        end
+        object N372: TMenuItem
+          Action = actPartionDateWages
         end
         object N314: TMenuItem
           Action = actPayrollTypeVIP
