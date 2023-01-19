@@ -1947,7 +1947,7 @@ BEGIN
                                                                      THEN Container_Summ_Alternative.Id
                                                                      ELSE COALESCE (lfContainerSumm_20901.ContainerId, Container_Summ_Alternative.Id, Container_Summ.Id) -- HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
                                                                 END
-                                  AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+                                  AND CASE WHEN vbOperDatePartner < vbOperDate AND 1=0 THEN vbOperDatePartner ELSE vbOperDate END BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
           AND vbIsHistoryCost= TRUE -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
           AND (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0                -- здесь нули !!!НЕ НУЖНЫ!!!
