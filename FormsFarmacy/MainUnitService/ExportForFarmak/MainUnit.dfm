@@ -250,11 +250,11 @@ object MainForm: TMainForm
     Connection = ZConnection1
     SQL.Strings = (
       'SELECT'
-      '    '#39'neboley_order@ukr.net'#39' AS Mail_From,'
-      '    '#39'smtp.ukr.net'#39' AS Mail_Host,'
-      '    465 AS Mail_Port,'
-      '    '#39'neboley_order@ukr.net'#39' AS Mail_User,'
-      '    '#39'tXhc1iruYVJjLYwk'#39' AS Mail_Password')
+      '    zc_Mail_From() AS Mail_From,'
+      '    zc_Mail_Host() AS Mail_Host,'
+      '    zc_Mail_Port() AS Mail_Port,'
+      '    zc_Mail_User() AS Mail_User,'
+      '    zc_Mail_Password() AS Mail_Password')
     Params = <>
     Left = 144
     Top = 328

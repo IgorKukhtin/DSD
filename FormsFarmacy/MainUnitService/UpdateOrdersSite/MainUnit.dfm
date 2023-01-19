@@ -174,6 +174,11 @@ object MainForm: TMainForm
             Format = ',0.####;-,0.####; ;'
             Kind = skSum
             Column = cxGridPharmOrderProducts_quantity
+          end
+          item
+            Format = ',0.####;-,0.####; ;'
+            Kind = skSum
+            Column = cxGridPharmOrderProducts_pharm_quantity
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsData.CancelOnExit = False
@@ -205,7 +210,7 @@ object MainForm: TMainForm
           DataBinding.FieldName = 'drug_name'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
-          Width = 192
+          Width = 159
         end
         object cxGridPharmOrderProducts_type_order: TcxGridDBColumn
           Caption = #1058#1080#1087' '#1079#1072#1082#1072#1079#1072
@@ -231,7 +236,15 @@ object MainForm: TMainForm
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
-          Width = 70
+          Width = 56
+        end
+        object cxGridPharmOrderProducts_pharm_quantity: TcxGridDBColumn
+          Caption = #1050#1086#1083'-'#1074#1086' '#1085#1072#1096#1077
+          DataBinding.FieldName = 'pharm_quantity'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 3
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Width = 54
         end
       end
       object cxGridPharmOrderProductsLevel1: TcxGridLevel
@@ -676,9 +689,9 @@ object MainForm: TMainForm
       DataBase.MultiSelectSeparator = ','
       SQLParam.Value = 
         'select pop.id, pd.postgres_drug_id, pop.drug_name, pop.type_orde' +
-        'r, pop.price, pop.quantity from pharm_order_products pop inner j' +
-        'oin pharm_drugs pd on pd.id = pop.drug_id where pop.order_id = :' +
-        'Id'
+        'r, pop.price, pop.quantity, pop.pharm_quantity from pharm_order_' +
+        'products pop inner join pharm_drugs pd on pd.id = pop.drug_id wh' +
+        'ere pop.order_id = :Id'
       SQLParam.DataType = ftString
       SQLParam.MultiSelectSeparator = ','
       DataSet = PharmOrderProductsCDS

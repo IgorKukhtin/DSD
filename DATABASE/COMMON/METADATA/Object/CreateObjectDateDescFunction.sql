@@ -663,9 +663,14 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_User(), 'zc_ObjectDate_User_InternshipCompleted', 'Дата признака стажировка проведена' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_InternshipCompleted');
 
+ CREATE OR REPLACE FUNCTION zc_ObjectDate_PartionDateWages_DateStart() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PartionDateWages_DateStart'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PartionDateWages(), 'zc_ObjectDate_PartionDateWages_DateStart', 'Дата начала действия' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PartionDateWages_DateStart');
+
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 18.01.23                                                                                     * zc_ObjectDate_PartionDateWages_DateStart
  26.09.22                                                                                     * zc_ObjectDate_User_InternshipConfirmation, zc_ObjectDate_User_InternshipCompleted
  06.09.22         * zc_ObjectDate_Unit_PersonalService
  05.09.22                                                                                     * zc_ObjectDate_Unit_SetDateRRO

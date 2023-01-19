@@ -2359,10 +2359,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_FixedPercent() RETURNS In
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_FixedPercent', 'Фиксированный процент выполнения плана' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_FixedPercent');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionDateWages_Percent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionDateWages_Percent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PartionDateWages(), 'zc_ObjectFloat_PartionDateWages_Percent', 'Поправочный коэффициент при начислении' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionDateWages_Percent');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.01.23                                                                                      * zc_ObjectFloat_PartionDateWages_Percent
  17.01.23                                                                                      * zc_ObjectFloat_CashSettings_FixedPercent
  12.01.23                                                                                      * zc_ObjectFloat_PayrollTypeVIP_Rate
  02.01.23                                                                                      * zc_ObjectFloat_CashSettings_AddMarkupTabletki
