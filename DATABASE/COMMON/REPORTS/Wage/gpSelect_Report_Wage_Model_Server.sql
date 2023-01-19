@@ -1288,7 +1288,7 @@ BEGIN
         --AND tmpMovement_Reestr_notWeight.MovementId IS NULL
           AND OB_NotPayForWeight.ObjectId IS NULL
 
-        GROUP BY Movement.OperDate, Movement.Id
+        GROUP BY Movement.OperDate --, Movement.Id
              --, tmpUnit_Reestr.FromId
                , CASE WHEN tmpUnit_Reestr.FromId > 0 THEN tmpUnit_Reestr.FromId ELSE 0 END
              --, Object_Unit.Id, Object_Unit.ObjectCode, Object_Unit.ValueData
