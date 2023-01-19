@@ -65,8 +65,8 @@ type
     spSelectPrintSticker: TdsdStoredProc;
     mactGoodsPrintList_Print: TMultiAction;
     bbGoodsPrintList_Print: TdxBarButton;
-    UnitName_in: TcxGridDBColumn;
-    Amount_in: TcxGridDBColumn;
+    UnitName_Partion: TcxGridDBColumn;
+    Amount_partion: TcxGridDBColumn;
     actRefreshIsPeriodYear: TdsdDataSetRefresh;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
@@ -87,7 +87,7 @@ type
     spGet_PrinterByUser: TdsdStoredProc;
     actGet_PrinterByUser: TdsdExecStoredProc;
     macPrintSticker: TMultiAction;
-    cbRemains: TcxCheckBox;
+    cbZero: TcxCheckBox;
     spUpdate_Goods_isOlapNo: TdsdExecStoredProc;
     spUpdate_Goods_isOlapYes: TdsdExecStoredProc;
     macUpdate_Goods_isOlapNo: TMultiAction;
@@ -140,7 +140,7 @@ type
     edGoodsGroup: TcxButtonEdit;
     cxLabel5: TcxLabel;
     GuidesGoodsGroup: TdsdGuides;
-    MovementItemId: TcxGridDBColumn;
+    PartionId: TcxGridDBColumn;
     cbPartNumber: TcxCheckBox;
     actOpenOrderClient_reserve: TdsdOpenForm;
     bbOpenOrderClient_reserve: TdxBarButton;
@@ -150,6 +150,8 @@ type
     FieldFilter_Article: TdsdFieldFilter;
     bblbSearchArticle: TdxBarControlContainerItem;
     bbedSearchArticle: TdxBarControlContainerItem;
+    cbOrderClient: TcxCheckBox;
+    InvNumberAll_Partion: TcxGridDBColumn;
   private
     { Private declarations }
   public
