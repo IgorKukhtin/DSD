@@ -8,7 +8,8 @@ RETURNS TVarChar
 AS
 $BODY$
 BEGIN
-      RETURN ('№ '
+      RETURN (CASE WHEN inDescName <> '' THEN '' ||inDescName||' ' ELSE '' END
+           || '№ '
            || CASE WHEN inStatusId = zc_Enum_Status_UnComplete() THEN zc_InvNumber_Status_UnComlete()
                    WHEN inStatusId = zc_Enum_Status_Erased()     THEN zc_InvNumber_Status_Erased()
                    ELSE ''
@@ -16,7 +17,6 @@ BEGIN
            ||' '
            || inInvNumber
            || ' от ' || zfConvert_DateToString (inOperDate)
-           || CASE WHEN inDescName <> '' THEN ' (' ||inDescName||' )' ELSE '' END
              );
 
 END;

@@ -58,11 +58,13 @@ BEGIN
 
    , tmpObject_PartionGoods AS (SELECT Object_PartionGoods.*
                                 FROM Object_PartionGoods
+                                     JOIN Container ON Container.PartionId      = Object_PartionGoods.MovementItemId
+                                                   AND Container.DescId         = zc_Container_Count()
+                                                   AND (Container.WhereObjectId = inUnitId OR inUnitId = 0)
+                                                   AND (Container.Amount        <> 0 OR inShowAll = TRUE)
                                 WHERE (Object_PartionGoods.ObjectId = inGoodsId OR inGoodsId = 0)
-                                  AND (Object_PartionGoods.UnitId = inUnitId OR inUnitId = 0)
-                                  AND (Object_PartionGoods.isErased = FALSE OR inShowAll = TRUE)
-                                )
---
+                               )
+     -- Результат
      SELECT  tmpObject_PartionGoods.MovementItemId AS Id
            , tmpObject_PartionGoods.MovementId AS MovementId
            , MovementDesc_Partion.ItemName     AS DescName
@@ -95,7 +97,7 @@ BEGIN
              -- Цена вх. с затратами без НДС
            , (tmpObject_PartionGoods.EKPrice / tmpObject_PartionGoods.CountForPrice + COALESCE (tmpObject_PartionGoods.CostPrice,0) ) ::TFloat AS OperPrice_cost
            , COALESCE (tmpPriceBasis.ValuePrice, tmpObject_PartionGoods.OperPriceList) AS OperPriceList
-           , tmpObject_PartionGoods.Amount     AS Amount_in
+           , CASE WHEN MovementItem.isErased = FALSE AND Movement_Partion.StatusId = zc_Enum_Status_Complete() THEN MovementItem.Amount ELSE 0 END :: TFloat AS Amount_in
            , tmpObject_PartionGoods.isErased
  
      FROM tmpObject_PartionGoods
@@ -124,6 +126,7 @@ BEGIN
 
             LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = tmpObject_PartionGoods.ObjectId
  
+            LEFT JOIN MovementItem ON MovementItem.Id = tmpObject_PartionGoods.MovementItemId
             LEFT JOIN MovementItemString AS MIString_PartNumber
                                          ON MIString_PartNumber.MovementItemId = tmpObject_PartionGoods.MovementItemId
                                         AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
@@ -142,4 +145,4 @@ $BODY$
 */
 
 -- тест
---  select * from gpSelect_Object_PartionGoods(inGoodsId := 19757 , inUnitId := 38874 , inShowAll := 'False' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Object_PartionGoods(inGoodsId := 19757 , inUnitId := 38874 , inShowAll := 'False' ,  inSession := '5');
