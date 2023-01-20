@@ -173,7 +173,9 @@ BEGIN
                                   AND REPLACE (REPLACE(TRIM (Object_Personal_View.PersonalName),'''',''),'`','') ILIKE REPLACE (REPLACE (TRIM (inFIO),'''',''),'`','')
                                 ) AS tmp
                           WHERE tmp.Ord = 1
-                          ); 
+                          );
+          vbPositionId:= vbPositionId_2; --если нашли по должности 2 переопределяем
+           
           IF COALESCE (vbPersonalId, 0) = 0
           THEN         
               RAISE EXCEPTION 'Ошибка.Сотрудник <%> не найден, должность = <%>, подразделение = <%> и суммой <%> .', inFIO, inPositionName, inUnitName, inSummAvance;
@@ -226,7 +228,10 @@ BEGIN
             FROM Object_Personal_View AS View_Personal
             WHERE View_Personal.PersonalId = vbPersonalId
            ) AS tmpPersonal
-           LEFT JOIN gpSelect_MovementItem_PersonalService (inMovementId, FALSE, FALSE, inSession) AS gpSelect ON gpSelect.PersonalId = tmpPersonal.PersonalId
+           LEFT JOIN gpSelect_MovementItem_PersonalService (inMovementId, FALSE, FALSE, inSession) AS gpSelect
+                                                                                                   ON gpSelect.PersonalId = tmpPersonal.PersonalId
+                                                                                                  AND gpSelect.PositionId = vbPositionId
+                                                                                                  AND gpSelect.UnitId = vbUnitId
       LIMIT 1;
 
 END;
