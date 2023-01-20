@@ -16,9 +16,11 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPersonalId Integer;
    DECLARE vbPositionId Integer;
+   DECLARE vbPositionId_2 Integer;
    DECLARE vbUnitId Integer; 
    DECLARE vbCodePersonal Integer;
    DECLARE vbMemberId Integer;
+   --DECLARE vbMemberId_2 Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
@@ -37,6 +39,11 @@ BEGIN
          RETURN;
      END IF;
 
+     IF TRIM(inFIO) = TRIM('ФИО') OR TRIM(inUnitName) = TRIM('Подразделение')
+     THEN
+         RETURN;
+     END IF;
+     
      -- проверка
      IF COALESCE (inPositionName, '') = ''
      THEN
@@ -48,7 +55,7 @@ BEGIN
      END IF;     
 
      -- проверка должности
-     IF 1 < (SELECT COUNT(*)
+    /* IF 1 < (SELECT COUNT(*)
              FROM Object
              WHERE Object.DescId = zc_Object_Position() AND TRIM (Object.ValueData) LIKE TRIM (inPositionName) AND Object.isErased = FALSE
             )
@@ -56,12 +63,21 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Должность <%> не уникальна в справочнике должностей.', inPositionName;
      END IF;
-
+     */
      -- поиск должности
-     vbPositionId := (SELECT MAX (Object.Id) FROM Object 
+     vbPositionId := (SELECT MIN (Object.Id) FROM Object 
                       WHERE Object.DescId = zc_Object_Position() 
                         AND Object.isErased = FALSE
-                        AND REPLACE(REPLACE(TRIM (Object.ValueData),'''',''),'`','') LIKE REPLACE(REPLACE(TRIM (inPositionName),'''',''),'`',''));
+                        AND REPLACE(REPLACE(TRIM (Object.ValueData),'''',''),'`','') LIKE REPLACE(REPLACE(TRIM (inPositionName),'''',''),'`','')
+                      );
+
+     -- поиск должности
+     vbPositionId_2 := (SELECT MAX (Object.Id) FROM Object 
+                        WHERE Object.DescId = zc_Object_Position() 
+                          AND Object.isErased = FALSE
+                          AND REPLACE(REPLACE(TRIM (Object.ValueData),'''',''),'`','') LIKE REPLACE(REPLACE(TRIM (inPositionName),'''',''),'`','')
+                        );
+
 
      -- проверка если не нашли должность
      IF COALESCE (vbPositionId, 0) = 0
@@ -69,18 +85,31 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.У <%> не найдена <Должность> = <%> в справочнике.', inFIO, inPositionName;
      END IF;
 
+
+  /*   IF 1 < (SELECT COUNT(*)
+             FROM Object
+             WHERE Object.DescId = zc_Object_Member() 
+               AND REPLACE (REPLACE(TRIM (Object.ValueData),'''',''),'`','') ILIKE REPLACE (REPLACE (TRIM (inFIO),'''',''),'`','')
+               AND Object.isErased = FALSE
+            )
+            AND 1=1
+     THEN
+         RAISE EXCEPTION 'Ошибка.Физ.лицо <%> не уникально в справочнике физ.лиц.', inFIO;
+     END IF;
+
      -- находим физ лицо
      vbMemberId := (SELECT Object.Id
                     FROM Object 
                     WHERE Object.DescId = zc_Object_Member() 
                       AND Object.isErased = FALSE
-                      AND REPLACE (REPLACE(TRIM (Object.ValueData),'''',''),'`','') ILIKE REPLACE (REPLACE (TRIM (inFIO),'''',''),'`','')
+                      AND REPLACE (REPLACE(TRIM (Object.ValueData),'''',''),'`','') ILIKE REPLACE (REPLACE (TRIM (inFIO),'''',''),'`','') 
+                    LIMIT 1
                     ); 
      IF COALESCE (vbMemberId,0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.<%> не найден в справочнике Физ лиц.', inFIO;
      END IF;
- 
+*/ 
       -- находим ПОдразделение
      vbUnitId := (SELECT Object.Id
                   FROM Object 
@@ -93,7 +122,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.<%> не найдено в справочнике Подразделений.', inUnitName;
      END IF;
 
-  
+     /*
      --  по физ лицу должности и подр - находим сотрудника
      IF 1 < (SELECT COUNT(*)
              FROM Object_Personal_View
@@ -104,19 +133,51 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Сотрудник <%> <%> <%> не уникален в справочнике Сотрудников.', inFIO, inPositionName, inUnitName;
      END IF;
-     
+     */
             
-     vbPersonalId := (SELECT Object_Personal_View.PersonalId
-                      FROM Object_Personal_View
-                      WHERE Object_Personal_View.PositionId = vbPositionId
-                        AND Object_Personal_View.UnitId = vbUnitId
-                        AND Object_Personal_View.MemberId = vbMemberId
+     vbPersonalId := (SELECT tmp.PersonalId
+                      FROM (SELECT Object_Personal_View.PersonalId
+                                 , ROW_NUMBER() OVER (PARTITION BY Object_Personal_View.MemberId
+                                                      -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
+                                                      ORDER BY CASE WHEN COALESCE (Object_Personal_View.DateOut, zc_DateEnd()) = zc_DateEnd() THEN 0 ELSE 1 END
+                                                             , CASE WHEN Object_Personal_View.isOfficial = TRUE THEN 0 ELSE 1 END
+                                                             , CASE WHEN Object_Personal_View.isMain = TRUE THEN 0 ELSE 1 END
+                                                             , Object_Personal_View.MemberId
+                                                     ) AS Ord
+                            FROM Object_Personal_View
+                            WHERE Object_Personal_View.PositionId = vbPositionId
+                              AND Object_Personal_View.UnitId = vbUnitId
+                              --AND Object_Personal_View.MemberId = vbMemberId
+                              AND REPLACE (REPLACE(TRIM (Object_Personal_View.PersonalName),'''',''),'`','') ILIKE REPLACE (REPLACE (TRIM (inFIO),'''',''),'`','')
+                            ) AS tmp
+                      WHERE tmp.Ord = 1
                       );
 
      -- проверка
      IF COALESCE (vbPersonalId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Сотрудник <%> не найден должность = <%> подразделение = <%> и суммой <%> .', inFIO, inPositionName, inUnitName, inSummAvance;
+         --- пробуем найти с должностью 2
+         vbPersonalId := (SELECT tmp.PersonalId
+                          FROM (SELECT Object_Personal_View.PersonalId
+                                     , ROW_NUMBER() OVER (PARTITION BY Object_Personal_View.MemberId
+                                                          -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
+                                                          ORDER BY CASE WHEN COALESCE (Object_Personal_View.DateOut, zc_DateEnd()) = zc_DateEnd() THEN 0 ELSE 1 END
+                                                                 , CASE WHEN Object_Personal_View.isOfficial = TRUE THEN 0 ELSE 1 END
+                                                                 , CASE WHEN Object_Personal_View.isMain = TRUE THEN 0 ELSE 1 END
+                                                                 , Object_Personal_View.MemberId
+                                                         ) AS Ord
+                                FROM Object_Personal_View
+                                WHERE Object_Personal_View.PositionId = vbPositionId_2
+                                  AND Object_Personal_View.UnitId = vbUnitId
+                                  --AND Object_Personal_View.MemberId = vbMemberId
+                                  AND REPLACE (REPLACE(TRIM (Object_Personal_View.PersonalName),'''',''),'`','') ILIKE REPLACE (REPLACE (TRIM (inFIO),'''',''),'`','')
+                                ) AS tmp
+                          WHERE tmp.Ord = 1
+                          ); 
+          IF COALESCE (vbPersonalId, 0) = 0
+          THEN         
+              RAISE EXCEPTION 'Ошибка.Сотрудник <%> не найден, должность = <%>, подразделение = <%> и суммой <%> .', inFIO, inPositionName, inUnitName, inSummAvance;
+          END IF;
      END IF;
 
 

@@ -114,7 +114,7 @@ BEGIN
                                                         , inSummCompensationRecalc := COALESCE (gpSelect.SummCompensationRecalc, 0)
                                                         , inSummAuditAdd       := COALESCE (gpSelect.SummAuditAdd,0)
                                                         , inSummHouseAdd       := COALESCE (gpSelect.SummHouseAdd,0) 
-                                                        , inSummAvanceRecalc   := COALESCE (gpSelect.SummAvanceRecalc)
+                                                        , inSummAvanceRecalc   := COALESCE (gpSelect.SummAvanceRecalc,0)  ::TFloat
                                                         , inNumber             := COALESCE (gpSelect.Number, '')
                                                         , inComment            := COALESCE (gpSelect.Comment, '')
                                                         , inInfoMoneyId        := COALESCE (gpSelect.InfoMoneyId, zc_Enum_InfoMoney_60101()) -- 60101 Заработная плата + Заработная плата
