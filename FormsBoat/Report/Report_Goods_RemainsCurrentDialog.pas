@@ -46,6 +46,9 @@ type
     edGoodsGroup: TcxButtonEdit;
     GuidesGoodsGroup: TdsdGuides;
     cbPartNumber: TcxCheckBox;
+    cxLabel1: TcxLabel;
+    edPartion: TcxButtonEdit;
+    GuidesPartion: TdsdGuides;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1054#1089#1090#1072#1090#1082#1080'>'
-  ClientHeight = 261
+  ClientHeight = 324
   ClientWidth = 340
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 37
-    Top = 228
+    Left = 38
+    Top = 284
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 211
-    Top = 228
+    Left = 212
+    Top = 284
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,8 +54,8 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Caption = #1057#1082#1083#1072#1076' / '#1043#1088#1091#1087#1087#1072':'
   end
   object cbPartion: TcxCheckBox
-    Left = 3
-    Top = 189
+    Left = 4
+    Top = 245
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1044#1086#1082'. '#1087#1072#1088#1090#1080#1103' '#8470
     ParentShowHint = False
@@ -64,8 +64,8 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Width = 103
   end
   object cbPartner: TcxCheckBox
-    Left = 114
-    Top = 189
+    Left = 115
+    Top = 245
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
     ParentShowHint = False
@@ -91,8 +91,8 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Width = 322
   end
   object cbRemains: TcxCheckBox
-    Left = 254
-    Top = 189
+    Left = 255
+    Top = 245
     Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089' '#1086#1089#1090#1072#1090#1082#1086#1084' = 0'
     Caption = #1054#1089#1090#1072#1090#1086#1082' = 0'
     ParentShowHint = False
@@ -118,14 +118,31 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
     Width = 322
   end
   object cbPartNumber: TcxCheckBox
-    Left = 203
-    Top = 189
+    Left = 204
+    Top = 245
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' S/N ('#1044#1072'/'#1053#1077#1090')'
     Caption = 'S/N'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 11
     Width = 42
+  end
+  object cxLabel1: TcxLabel
+    Left = 10
+    Top = 188
+    Caption = #1055#1072#1088#1090#1080#1103':'
+  end
+  object edPartion: TcxButtonEdit
+    Left = 10
+    Top = 207
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 322
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 277
@@ -228,9 +245,26 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionId'
+        Value = Null
+        Component = GuidesPartion
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionName'
+        Value = Null
+        Component = GuidesPartion
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 270
-    Top = 215
+    Left = 287
+    Top = 255
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -358,5 +392,61 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
       end>
     Left = 150
     Top = 126
+  end
+  object GuidesPartion: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartion
+    FormNameParam.Value = 'TPartionGoodsChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartionGoodsChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartion
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartion
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 208
+    Top = 199
   end
 end

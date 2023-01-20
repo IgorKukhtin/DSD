@@ -13,6 +13,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   inherited Panel: TPanel [0]
     Width = 1131
     Height = 60
+    ExplicitTop = -7
     ExplicitWidth = 1131
     ExplicitHeight = 60
     inherited deStart: TcxDateEdit
@@ -85,7 +86,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     end
     object cbPartner: TcxCheckBox
       Left = 881
-      Top = 5
+      Top = 6
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       ParentShowHint = False
@@ -139,6 +140,23 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ShowHint = True
       TabOrder = 12
       Width = 120
+    end
+    object cxLabel6: TcxLabel
+      Left = 375
+      Top = 33
+      Caption = #1055#1072#1088#1090#1080#1103':'
+    end
+    object edPartion: TcxButtonEdit
+      Left = 421
+      Top = 32
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 14
+      Width = 200
     end
   end
   inherited PageControl: TcxPageControl [1]
@@ -1046,6 +1064,23 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           Value = Null
           Component = cbPartNumber
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionId'
+          Value = Null
+          Component = GuidesPartion
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionName'
+          Value = Null
+          Component = GuidesPartion
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1961,6 +1996,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         Name = 'inGoodsGroupId'
         Value = Null
         Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionId'
+        Value = Null
+        Component = GuidesPartion
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2933,5 +2976,61 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
     CheckBoxList = <>
     Left = 280
     Top = 192
+  end
+  object GuidesPartion: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartion
+    FormNameParam.Value = 'TPartionGoodsChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartionGoodsChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartion
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartion
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 504
+    Top = 24
   end
 end

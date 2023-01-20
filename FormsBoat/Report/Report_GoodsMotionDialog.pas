@@ -47,6 +47,10 @@ type
     ceCode: TcxCurrencyEdit;
     edArticle: TcxTextEdit;
     cxLabel18: TcxLabel;
+    cbPartion: TcxCheckBox;
+    cbPartner: TcxCheckBox;
+    cbPartNumber: TcxCheckBox;
+    cbOrderClient: TcxCheckBox;
   private
     { Private declarations }
   public
