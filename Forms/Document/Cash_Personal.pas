@@ -107,6 +107,7 @@ type
     cxLabel7: TcxLabel;
     ceInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
+    SummAvance: TcxGridDBColumn;
   private
     { Private declarations }
   public
