@@ -75,6 +75,7 @@ type
     DocumentKindName: TcxGridDBColumn;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    DescName: TcxGridDBColumn;
   private
     { Private declarations }
   public

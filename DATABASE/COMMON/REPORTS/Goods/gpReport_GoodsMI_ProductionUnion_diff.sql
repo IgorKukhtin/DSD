@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion_diff (
     IN inToId               Integer   ,    -- кому
     IN inSession            TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, DescName TVarChar
              , isPeresort Boolean, DocumentKindName TVarChar
              , SubjectDocName  TVarChar
              , PartionGoods TVarChar
@@ -111,12 +111,12 @@ BEGIN
                              , CASE WHEN inIsPartion = FALSE THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0) ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END AS GoodsKindId
                              , SUM (MIContainer.Amount)           AS Amount
                         FROM MovementItemContainer AS MIContainer
-			     INNER JOIN _tmpFromGroup ON _tmpFromGroup.FromId = MIContainer.ObjectExtId_Analyzer
- 		             INNER JOIN _tmpToGroup   ON _tmpToGroup.ToId     = MIContainer.WhereObjectId_Analyzer
- 		             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
+                             INNER JOIN _tmpFromGroup ON _tmpFromGroup.FromId = MIContainer.ObjectExtId_Analyzer
+                             INNER JOIN _tmpToGroup   ON _tmpToGroup.ToId     = MIContainer.WhereObjectId_Analyzer
+                             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
                              LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
-                                                        ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
-                                                       AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+                                                       ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
+                                                      AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
                              LEFT JOIN MovementLinkObject AS MLO_DocumentKind
                                                           ON MLO_DocumentKind.MovementId = MIContainer.MovementId
                                                          AND MLO_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
@@ -329,6 +329,7 @@ BEGIN
       -- Результат 
       SELECT Movement.InvNumber
            , Movement.OperDate
+           , CAST (MovementDesc.ItemName AS TVarChar) AS DescName
            
            , tmpOperationGroup.isPeresort :: Boolean AS isPeresort
            , Object_DocumentKind.ValueData  AS DocumentKindName
@@ -388,6 +389,7 @@ BEGIN
       FROM tmpOperationGroup
 
              LEFT JOIN Movement ON Movement.Id = tmpOperationGroup.MovementId
+             LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
              LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpOperationGroup.GoodsId
              LEFT JOIN Object AS Object_GoodsChild on Object_GoodsChild.Id = tmpOperationGroup.GoodsId_out
@@ -435,6 +437,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.01.23         *
  17.02.20         * add SubjectDocName
  15.02.16                                        * ALL
  24.09.15         * add GoodsKind

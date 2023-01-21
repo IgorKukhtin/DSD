@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnionMD (
 )
 RETURNS SETOF refcursor
 /*
-RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, DescName TVarChar
              , PartionGoods  TVarChar, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, HeadCount TFloat, Summ TFloat
              , ChildPartionGoods TVarChar, ChildGoodsGroupName TVarChar, ChildGoodsCode Integer,  ChildGoodsName TVarChar
@@ -100,6 +100,7 @@ BEGIN
                               , Movement.InvNumber AS InvNumber
                               , Movement.OperDate  AS OperDate
                               , MovementLinkObject_From.ObjectId AS UnitId
+                              , Movement.DescId    AS MovementDescId
                          FROM Movement
                          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                       ON MovementLinkObject_From.MovementId = Movement.Id
@@ -117,19 +118,18 @@ BEGIN
                                 , Movement.InvNumber
                                 , Movement.OperDate
                                 , MovementLinkObject_From.ObjectId
+                                , Movement.DescId                                
                          )
 
     , tmpMI_Container1 AS (SELECT MIContainer.ContainerId
-                             , MIContainer.DescId
-                             , MIContainer.MovementId
-                             , MIContainer.MovementItemId
-                             , MIContainer.OperDate
-                             , (MIContainer.Amount)                             AS Amount
-
-
-                        FROM MovementItemContainer AS MIContainer
-                        WHERE MIContainer.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
-                        )
+                                , MIContainer.DescId
+                                , MIContainer.MovementId
+                                , MIContainer.MovementItemId
+                                , MIContainer.OperDate
+                                , (MIContainer.Amount)       AS Amount
+                           FROM MovementItemContainer AS MIContainer
+                           WHERE MIContainer.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                           )
   , tmpMI AS (SELECT MovementItem.*
               FROM MovementItem
               WHERE MovementItem.Id IN (SELECT DISTINCT tmpMI_Container1.MovementItemId FROM tmpMI_Container1)
@@ -163,6 +163,7 @@ BEGIN
   , tmpMI_Container AS (SELECT tmpMovement.MovementId                           AS MovementId
                              , tmpMovement.InvNumber                            AS InvNumber
                              , tmpMovement.OperDate                             AS OperDate
+                             , tmpMovement.MovementDescId                       AS MovementDescId
                              , MovementItem.ObjectId                            AS GoodsId
                              , (MIContainer.Amount)                             AS Amount
                              , MIFloat_HeadCount.ValueData                      AS HeadCount
@@ -209,6 +210,7 @@ BEGIN
      , tmpMI_Count AS (SELECT tmpMI_Container.MovementId
                              , tmpMI_Container.InvNumber
                              , tmpMI_Container.OperDate
+                             , tmpMI_Container.MovementDescId
                              , tmpMI_Container.PartionGoodsId
                              , tmpMI_Container.GoodsId
                              , 0                                        AS Summ
@@ -237,11 +239,13 @@ BEGIN
                              , tmpMI_Container.ReceiptId
                              , tmpMI_Container.GoodsKindId
                              , tmpMI_Container.UnitId
+                             , tmpMI_Container.MovementDescId
                         )
 
         , tmpMI_sum AS (SELECT tmpMI_Container.MovementId
                              , tmpMI_Container.InvNumber
                              , tmpMI_Container.OperDate
+                             , tmpMI_Container.MovementDescId
                              , tmpMI_Container.PartionGoodsId
                              , tmpMI_Container.GoodsId
                              , SUM (tmpMI_Container.Amount)             AS Summ
@@ -272,11 +276,13 @@ BEGIN
                              , tmpMI_Container.ReceiptId
                              , tmpMI_Container.GoodsKindId
                              , tmpMI_Container.UnitId
+                             , tmpMI_Container.MovementDescId
                            )
 
 
       SELECT CAST (tmpOperationGroup.InvNumber AS TVarChar)     AS InvNumber
            , CAST (tmpOperationGroup.OperDate AS TDateTime)     AS OperDate
+           , CAST (MovementDesc.ItemName AS TVarChar)           AS DescName
            , tmpOperationGroup.PartionGoodsId                   AS PartionGoodsId
            , CAST (Object_PartionGoods.ValueData AS TVarChar)   AS PartionGoods
            , Object_GoodsGroup.ValueData                        AS GoodsGroupName
@@ -306,6 +312,7 @@ BEGIN
       FROM (
             SELECT CASE WHEN inGroupMovement = TRUE THEN tmpMI.InvNumber ELSE '' END                        AS InvNumber
                  , CASE WHEN inGroupMovement = TRUE THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END   AS OperDate
+                 , CASE WHEN inGroupMovement = TRUE THEN tmpMI.MovementDescId ELSE 0 END                    AS MovementDescId
                  , CASE WHEN inGroupMovement = TRUE THEN tmpMI.MovementItemId ELSE 0 END                    AS MovementItemId
                  , CASE WHEN inGroupPartion = TRUE  THEN tmpMI.PartionGoodsId ELSE 0 END                    AS PartionGoodsId
                  , tmpMI.GoodsId                                                                            AS GoodsId
@@ -321,6 +328,7 @@ BEGIN
 
             FROM (SELECT  tmpMIMaster_Sum.InvNumber
                         , tmpMIMaster_Sum.OperDate
+                        , tmpMIMaster_Sum.MovementDescId
                         , tmpMIMaster_Sum.PartionGoodsId
                         , tmpMIMaster_Sum.GoodsId
                         , tmpMIMaster_Sum.Summ
@@ -336,6 +344,7 @@ BEGIN
                   UNION
                   SELECT  tmpMIMaster.InvNumber
                         , tmpMIMaster.OperDate
+                        , tmpMIMaster.MovementDescId
                         , tmpMIMaster.PartionGoodsId
                         , tmpMIMaster.GoodsId as GoodsId
                         , tmpMIMaster.Summ
@@ -352,6 +361,7 @@ BEGIN
                 ) AS tmpMI
             GROUP BY   CASE WHEN inGroupMovement = TRUE THEN tmpMI.InvNumber ELSE '' END
                  , CASE WHEN inGroupMovement = TRUE THEN tmpMI.OperDate ELSE CAST (Null AS TDateTime) END
+                 , CASE WHEN inGroupMovement = TRUE THEN tmpMI.MovementDescId ELSE 0 END
                  , CASE WHEN inGroupMovement = TRUE THEN tmpMI.MovementItemId ELSE 0 END
                  , CASE WHEN inGroupPartion = TRUE  THEN tmpMI.PartionGoodsId ELSE 0 END
                  , tmpMI.GoodsId
@@ -386,6 +396,8 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                    ON ObjectFloat_Weight.ObjectId = tmpOperationGroup.GoodsId
                                   AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
+             LEFT JOIN MovementDesc ON MovementDesc.Id = tmpOperationGroup.MovementDescId
 
       ORDER BY
               tmpOperationGroup.InvNumber
@@ -428,13 +440,13 @@ BEGIN
                          )
 
          , tmpMI_Container1 AS (SELECT MIContainer.ContainerId
-                                    , MIContainer.DescId
-                                    , MIContainer.MovementId
-                                    , MIContainer.MovementItemId
-                                    , MIContainer.OperDate
-                                    , (MIContainer.Amount)                             AS Amount
-                               FROM MovementItemContainer AS MIContainer
-                               WHERE MIContainer.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                                     , MIContainer.DescId
+                                     , MIContainer.MovementId
+                                     , MIContainer.MovementItemId
+                                     , MIContainer.OperDate
+                                     , (MIContainer.Amount)    AS Amount
+                                FROM MovementItemContainer AS MIContainer
+                                WHERE MIContainer.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
                                )
 
          , tmpMI AS (SELECT MovementItem.*
@@ -729,6 +741,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 21.01.23         *
  18.11.19         *
  04.12.14                                                       *
  02.12.14                                                       *
