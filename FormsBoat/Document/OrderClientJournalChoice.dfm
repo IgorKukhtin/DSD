@@ -1009,8 +1009,34 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'IsEnabled'
-          Value = 'true'
+          Name = 'ReceiptProdModelId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ReceiptProdModelId'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReceiptProdModelCode'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ReceiptProdModelCode'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReceiptProdModelName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ReceiptProdModelName'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isEnabled'
+          Value = True
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
