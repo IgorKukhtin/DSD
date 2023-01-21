@@ -166,6 +166,14 @@ type
     GuidesProductionDoc: TdsdGuides;
     actOpenProductionForm: TdsdOpenForm;
     bbOpenProductionForm: TdxBarButton;
+    cxTabSheetChild: TcxTabSheet;
+    ChildDS: TDataSource;
+    ChildCDS: TClientDataSet;
+    dsdDBViewAddOnChild: TdsdDBViewAddOn;
+    spSelectChild: TdsdStoredProc;
+    cxGridChild: TcxGrid;
+    cxGridDBTableViewChild: TcxGridDBTableView;
+    cxGridLevel1: TcxGridLevel;
   private
     { Private declarations }
   public
