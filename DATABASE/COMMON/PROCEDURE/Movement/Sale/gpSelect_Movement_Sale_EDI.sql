@@ -531,7 +531,7 @@ BEGIN
 
              -- 14781 - № 7183Р
            , CASE WHEN vbContractId = 4440485 -- для договора Id = 4440485 + доп страничка\
-                    OR vbUserId = 5
+                  --OR vbUserId = 5
                     OR (ObjectLink_Partner_Juridical.ChildObjectId = 862910 -- СІЛЬПО-ФУД ТОВ
                     AND vbUserId <> 1329039  -- Авто-Загрузка EDI
                        )

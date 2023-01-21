@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat, SummMinusExt TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , SummCompensation TFloat
+             , SummAvance TFloat
              , Amount_current TFloat, Amount_avance TFloat, Amount_avance_ret TFloat, Amount_service TFloat
              , SummRemains TFloat, SummCardSecondRemains TFloat
              , isCalculated Boolean
@@ -119,11 +120,13 @@ BEGIN
                                           , CLO_InfoMoney.ObjectId
                                   )
           , tmpParent_all AS (SELECT SUM (CASE WHEN Movement.DescId = zc_Movement_PersonalTransport() THEN MovementItem.Amount ELSE COALESCE (MIFloat_SummService.ValueData, 0) END) AS SummService
-                                   , SUM (CASE WHEN Movement.DescId = zc_Movement_PersonalTransport() THEN MovementItem.Amount
+                                   , SUM (CASE WHEN Movement.DescId = zc_Movement_PersonalTransport() THEN MovementItem.Amount + COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0)
                                           ELSE COALESCE (MIFloat_SummToPay.ValueData, 0) /*- COALESCE (tmpSummNalog.SummNalog, 0)*/ + COALESCE (MIFloat_SummNalog.ValueData, 0)
                                              - COALESCE (MIFloat_SummCard.ValueData, 0)
                                              - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
                                              - COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
+                                             - COALESCE (MIFloat_SummAvance.ValueData, 0)
+                                             + COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0)
                                           END
                                          ) AS SummToPay_cash
                                    , SUM (CASE WHEN Movement.DescId = zc_Movement_PersonalTransport() THEN MovementItem.Amount
@@ -151,6 +154,7 @@ BEGIN
                                    , SUM (COALESCE (MIFloat_SummTransportTaxi.ValueData, 0))    AS SummTransportTaxi
                                    , SUM (COALESCE (MIFloat_SummPhone.ValueData, 0))            AS SummPhone
                                    , SUM (COALESCE (MIFloat_SummCompensation.ValueData, 0))     AS SummCompensation
+                                   , SUM (COALESCE (MIFloat_SummAvance.ValueData, 0) + COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0)) AS SummAvance
                                    , MovementItem.ObjectId                                  AS PersonalId
                                    , MILinkObject_Unit.ObjectId                             AS UnitId
                                    , MILinkObject_Position.ObjectId                         AS PositionId
@@ -253,6 +257,13 @@ BEGIN
                                                                ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
 
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummAvance
+                                                               ON MIFloat_SummAvance.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummAvance.DescId = zc_MIFloat_SummAvance()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummAvanceRecalc
+                                                               ON MIFloat_SummAvanceRecalc.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummAvanceRecalc.DescId         = zc_MIFloat_SummAvanceRecalc()
+
                                    -- ограничение, если нужна только 1 запись
                                    LEFT JOIN (SELECT tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.InfoMoneyId
                                               FROM tmpMI
@@ -306,6 +317,8 @@ BEGIN
                                    , tmpParent_all.SummTransportTaxi
                                    , tmpParent_all.SummPhone
                                    , tmpParent_all.SummCompensation
+                                   , tmpParent_all.SummAvance
+
                                    , tmpParent_all.PersonalId
                                    , tmpParent_all.UnitId
                                    , tmpParent_all.PositionId
@@ -342,6 +355,8 @@ BEGIN
                                    , 0 AS SummTransportTaxi
                                    , 0 AS SummPhone
                                    , 0 AS SummCompensation
+                                   , 0 AS SummAvance
+
                                    , CLO_Personal.ObjectId  AS PersonalId
                                    , CLO_Unit.ObjectId      AS UnitId
                                    , CLO_Position.ObjectId  AS PositionId
@@ -473,6 +488,7 @@ BEGIN
                                    , SUM (tmpParent.SummTransportTaxi)            AS SummTransportTaxi
                                    , SUM (tmpParent.SummPhone)                    AS SummPhone
                                    , SUM (tmpParent.SummCompensation)             AS SummCompensation
+                                   , SUM (tmpParent.SummAvance)                   AS SummAvance
                                    , SUM (tmpMIContainer.Amount_current)          AS Amount_current
                                    , SUM (tmpMIContainer.Amount_avance)           AS Amount_avance
                                    , SUM (tmpMIContainer.Amount_avance_ret)       AS Amount_avance_ret
@@ -519,6 +535,7 @@ BEGIN
                                    , tmpService.SummTransportTaxi
                                    , tmpService.SummPhone
                                    , tmpService.SummCompensation
+                                   , tmpService.SummAvance
                                    , tmpService.Amount_current
                                    , tmpService.Amount_avance
                                    , tmpService.Amount_avance_ret
@@ -584,6 +601,7 @@ BEGIN
             , tmpData.SummTransportTaxi    :: TFloat AS SummTransportTaxi
             , tmpData.SummPhone            :: TFloat AS SummPhone
             , tmpData.SummCompensation     :: TFloat AS SummCompensation
+            , tmpData.SummAvance           :: TFloat AS SummAvance
 
             , tmpData.Amount_current     :: TFloat AS Amount_current
             , tmpData.Amount_avance      :: TFloat AS Amount_avance

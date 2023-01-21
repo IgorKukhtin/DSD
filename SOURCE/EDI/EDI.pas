@@ -2877,6 +2877,14 @@ begin
                   COUNTRYORIGIN := 'UA';
                   PRICE := StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('Price').AsFloat),
                     FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+                  // Öåíà ç ÏÄÂ
+                  PRICEWITHVAT := StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('PriceWVAT').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+                  // ÏÄÂ
+                  TAXRATE:= StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('VATPercent').AsFloat),
+                    FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
                 end;
                 inc(i);
                 Next;

@@ -66,7 +66,7 @@ BEGIN
                                                     , inObjectId   := tmpReceiptGoodsChild.GoodsId
                                                     , inAmount     := tmpReceiptGoodsChild.Value * inAmount
                                                     , inUserId     := inUserId
-                                                    )
+                                                     )
      FROM (WITH tmpReceiptGoodsChild AS (SELECT ObjectLink_Goods_master.ChildObjectId AS GoodsId_master
                                               , ObjectLink_Object.ChildObjectId       AS GoodsId
                                               , ObjectLink_GoodsChild.ChildObjectId   AS GoodsId_child
@@ -95,7 +95,7 @@ BEGIN
                                                                      ON ObjectFloat_Value.ObjectId  = Object_ReceiptGoodsChild.Id
                                                                     AND ObjectFloat_Value.DescId    = zc_ObjectFloat_ReceiptGoodsChild_Value()
                                                                     AND ObjectFloat_Value.ValueData > 0
-                                              -- первоначальный узел сборки
+                                              -- "виртуальный" узел сборки
                                               LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
                                                                    ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
                                                                   AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
@@ -103,7 +103,55 @@ BEGIN
                                          WHERE ObjectLink_ReceiptGoods.ChildObjectId = inReceiptProdModelId
                                            AND ObjectLink_ReceiptGoods.DescId        = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
                                         )
-           -- 1. если это первоначальный узел сборки
+               , tmpReceiptProdModel AS (SELECT ObjectLink_ProdModel.ChildObjectId    AS GoodsId_master
+                                              , ObjectLink_Object.ChildObjectId       AS GoodsId
+                                              , 0                                     AS GoodsId_child
+                                              , ObjectFloat_Value.ValueData           AS Value
+                                         FROM ObjectLink AS ObjectLink_ReceiptProdModel
+                                              -- какая лодка собирается
+                                              LEFT JOIN ObjectLink AS ObjectLink_ProdModel
+                                                                   ON ObjectLink_ProdModel.ObjectId = ObjectLink_ReceiptProdModel.ChildObjectId
+                                                                  AND ObjectLink_ProdModel.DescId   = zc_ObjectLink_ReceiptProdModel_Model()
+                                              INNER JOIN Object AS Object_ReceiptProdModel
+                                                                ON Object_ReceiptProdModel.Id       = ObjectLink_ReceiptProdModel.ObjectId
+                                                               -- не удален
+                                                               AND Object_ReceiptProdModel.isErased = FALSE
+
+                                              LEFT JOIN ObjectLink AS ObjectLink_Object
+                                                                   ON ObjectLink_Object.ObjectId = Object_ReceiptProdModel.Id
+                                                                  AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
+                                              INNER JOIN Object AS Object_Object
+                                                                ON Object_Object.Id     = ObjectLink_Object.ChildObjectId
+                                                               -- это НЕ услуги и НЕ пустой Boat Structure
+                                                               AND Object_Object.DescId = zc_Object_Goods()
+
+                                              -- значение в сборке
+                                              INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                                     ON ObjectFloat_Value.ObjectId  = Object_ReceiptProdModel.Id
+                                                                    AND ObjectFloat_Value.DescId    = zc_ObjectFloat_ReceiptProdModelChild_Value()
+                                                                    AND ObjectFloat_Value.ValueData > 0
+
+                                         WHERE ObjectLink_ReceiptProdModel.ChildObjectId = inReceiptProdModelId
+                                           AND ObjectLink_ReceiptProdModel.DescId        = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+                                        )
+                 -- Опции
+               , tmpProdOptItems AS (SELECT lpSelect.GoodsId
+                                            -- Кол-во опций
+                                          , lpSelect.Amount
+                                     FROM gpSelect_Object_ProdOptItems (inMovementId_OrderClient:= inMovementId_OrderClient
+                                                                      , inIsShowAll:= FALSE
+                                                                      , inIsErased := FALSE
+                                                                      , inIsSale   := TRUE
+                                                                      , inSession  := inUserId :: TVarChar
+                                                                       ) AS lpSelect
+                                     WHERE lpSelect.MovementId_OrderClient = inMovementId_OrderClient
+                                       AND lpSelect.ProductId              = inObjectId
+                                       AND lpSelect.GoodsId                > 0
+                                       -- БЕЗ этой Структуры
+                                       AND COALESCE (lpSelect.ProdColorPatternId, 0) = 0
+                                    )
+
+           -- 1. если это "виртуальный" узел сборки
            SELECT tmpReceiptGoodsChild.GoodsId
                 , tmpReceiptGoodsChild.Value
            FROM tmpReceiptGoodsChild
@@ -121,7 +169,7 @@ BEGIN
              AND tmpReceiptGoodsChild.GoodsId NOT IN (SELECT DISTINCT tmpCheck.GoodsId_child FROM tmpReceiptGoodsChild AS tmpCheck WHERE tmpCheck.GoodsId_child > 0)
 
          UNION ALL
-           -- 2.2. если это сборка узла
+           -- 2.2. если это "виртуальный" в сборке узла
            SELECT DISTINCT
                   tmpReceiptGoodsChild.GoodsId_child AS GoodsId
                   -- замена
@@ -131,35 +179,21 @@ BEGIN
               -- отюросили первоначальный узел сборки
              AND tmpReceiptGoodsChild.GoodsId_child > 0
 
+         UNION ALL
+           -- 3.1. если это сборка Лодки
+           SELECT tmpReceiptProdModel.GoodsId
+                  -- замена
+                , tmpReceiptProdModel.Value
+
+           FROM tmpReceiptProdModel
 
          UNION ALL
-           -- 3. если это сборка Лодки
-           SELECT ObjectLink_Object.ChildObjectId       AS GoodsId
-                  -- замена
-                , ObjectFloat_Value.ValueData AS Value
+           -- 3.2. добавили Опции, если это сборка Лодки
+           SELECT tmpReceiptProdModel.GoodsId
+                  -- Кол-во опций
+                , tmpReceiptProdModel.Amount
 
-           FROM ObjectLink AS ObjectLink_ReceiptProdModel
-                INNER JOIN Object AS Object_ReceiptProdModelChild
-                                  ON Object_ReceiptProdModelChild.Id       = ObjectLink_ReceiptProdModel.ObjectId
-                                 -- не удален
-                                 AND Object_ReceiptProdModelChild.isErased = FALSE
-
-                LEFT JOIN ObjectLink AS ObjectLink_Object
-                                     ON ObjectLink_Object.ObjectId = Object_ReceiptProdModelChild.Id
-                                    AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
-                INNER JOIN Object AS Object_Object
-                                  ON Object_Object.Id     = ObjectLink_Object.ChildObjectId
-                                 -- это НЕ услуги
-                                 AND Object_Object.DescId = zc_Object_Goods()
-
-                -- значение в сборке
-                INNER JOIN ObjectFloat AS ObjectFloat_Value
-                                       ON ObjectFloat_Value.ObjectId  = Object_ReceiptProdModelChild.Id
-                                      AND ObjectFloat_Value.DescId    = zc_ObjectFloat_ReceiptProdModelChild_Value()
-                                      AND ObjectFloat_Value.ValueData > 0
-
-           WHERE ObjectLink_ReceiptProdModel.ChildObjectId = inReceiptProdModelId
-             AND ObjectLink_ReceiptProdModel.DescId        = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+           FROM tmpReceiptProdModel
 
           ) AS tmpReceiptGoodsChild
            ;

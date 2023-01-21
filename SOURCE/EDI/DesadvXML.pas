@@ -101,6 +101,9 @@ type
     function Get_ORDEREDQUANTITY: UnicodeString;
     function Get_COUNTRYORIGIN: UnicodeString;
     function Get_PRICE: UnicodeString;
+    function Get_PRICEWITHVAT: UnicodeString;
+    function Get_TAXRATE: UnicodeString;
+
     procedure Set_POSITIONNUMBER(Value: Integer);
     procedure Set_PRODUCT(Value: UnicodeString);
     procedure Set_PRODUCTIDSUPPLIER(Value: UnicodeString);
@@ -111,6 +114,9 @@ type
     procedure Set_ORDEREDQUANTITY(Value: UnicodeString);
     procedure Set_COUNTRYORIGIN(Value: UnicodeString);
     procedure Set_PRICE(Value: UnicodeString);
+    procedure Set_PRICEWITHVAT(Value: UnicodeString);
+    procedure Set_TAXRATE(Value: UnicodeString);
+
     { Methods & Properties }
     property POSITIONNUMBER: Integer read Get_POSITIONNUMBER write Set_POSITIONNUMBER;
     property PRODUCT: UnicodeString read Get_PRODUCT write Set_PRODUCT;
@@ -122,6 +128,8 @@ type
     property ORDEREDQUANTITY: UnicodeString read Get_ORDEREDQUANTITY write Set_ORDEREDQUANTITY;
     property COUNTRYORIGIN: UnicodeString read Get_COUNTRYORIGIN write Set_COUNTRYORIGIN;
     property PRICE: UnicodeString read Get_PRICE write Set_PRICE;
+    property PRICEWITHVAT: UnicodeString read Get_PRICEWITHVAT write Set_PRICEWITHVAT;
+    property TAXRATE: UnicodeString read Get_TAXRATE write Set_TAXRATE;
   end;
 
 { IXMLPOSITIONTypeList }
@@ -219,6 +227,8 @@ type
     function Get_ORDEREDQUANTITY: UnicodeString;
     function Get_COUNTRYORIGIN: UnicodeString;
     function Get_PRICE: UnicodeString;
+    function Get_PRICEWITHVAT: UnicodeString;
+    function Get_TAXRATE: UnicodeString;
     procedure Set_POSITIONNUMBER(Value: Integer);
     procedure Set_PRODUCT(Value: UnicodeString);
     procedure Set_PRODUCTIDSUPPLIER(Value: UnicodeString);
@@ -229,6 +239,8 @@ type
     procedure Set_ORDEREDQUANTITY(Value: UnicodeString);
     procedure Set_COUNTRYORIGIN(Value: UnicodeString);
     procedure Set_PRICE(Value: UnicodeString);
+    procedure Set_PRICEWITHVAT(Value: UnicodeString);
+    procedure Set_TAXRATE(Value: UnicodeString);
   end;
 
 { TXMLPOSITIONTypeList }
@@ -550,10 +562,28 @@ function TXMLPOSITIONType.Get_PRICE: UnicodeString;
 begin
   Result := ChildNodes['PRICE'].Text;
 end;
+function TXMLPOSITIONType.Get_PRICEWITHVAT: UnicodeString;
+begin
+  Result := ChildNodes['PRICEWITHVAT'].Text;
+end;
+function TXMLPOSITIONType.Get_TAXRATE: UnicodeString;
+begin
+  Result := ChildNodes['TAXRATE'].Text;
+end;
 
 procedure TXMLPOSITIONType.Set_PRICE(Value: UnicodeString);
 begin
   ChildNodes['PRICE'].NodeValue := Value;
+end;
+
+procedure TXMLPOSITIONType.Set_PRICEWITHVAT(Value: UnicodeString);
+begin
+  ChildNodes['PRICEWITHVAT'].NodeValue := Value;
+end;
+
+procedure TXMLPOSITIONType.Set_TAXRATE(Value: UnicodeString);
+begin
+  ChildNodes['TAXRATE'].NodeValue := Value;
 end;
 
 { TXMLPOSITIONTypeList }

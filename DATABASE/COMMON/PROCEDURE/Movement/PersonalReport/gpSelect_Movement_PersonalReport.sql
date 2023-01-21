@@ -68,7 +68,7 @@ BEGIN
                            , CLO_Branch.ObjectId    AS BranchId
                            -- , 0 AS UnitId
                            , COALESCE (ContainerLO_Member_inf.ObjectId, COALESCE (ContainerLO_Cash_inf.ObjectId, COALESCE (ContainerLO_BankAccount_inf.ObjectId, ContainerLO_Juridical_inf.ObjectId))) AS MoneyPlaceId
-                           , CLO_Car.ObjectId       AS CarId
+                           , COALESCE (CLO_Car.ObjectId, MILinkObject_Car.ObjectId) AS CarId
                       FROM ContainerLinkObject AS CLO_Member
                            INNER JOIN MovementItemContainer AS MIContainer
                                                             ON MIContainer.ContainerId = CLO_Member.ContainerId
@@ -84,7 +84,8 @@ BEGIN
                                                         AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                            LEFT JOIN ContainerLinkObject AS CLO_Car
                                                          ON CLO_Car.ContainerId = CLO_Member.ContainerId
-                                                        AND CLO_Car.DescId = zc_ContainerLinkObject_Car()
+                                                        AND CLO_Car.DescId      = zc_ContainerLinkObject_Car()
+                                                        AND CLO_Car.ObjectId    > 0
                            LEFT JOIN ContainerLinkObject AS CLO_Branch
                                                          ON CLO_Branch.ContainerId = CLO_Member.ContainerId
                                                         AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
@@ -104,7 +105,10 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                             ON MILinkObject_InfoMoney.MovementItemId = MIContainer.MovementItemId
                                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-         
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Car
+                                                            ON MILinkObject_Car.MovementItemId = MIContainer.MovementItemId
+                                                           AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
+
                       WHERE CLO_Member.DescId = zc_ContainerLinkObject_Member()
                         AND (CLO_Member.ObjectId = inMemberId OR COALESCE (inMemberId, 0) = 0)
                         AND CLO_Goods.ContainerId IS NULL

@@ -360,7 +360,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHospOthRecalc(), ioId, inSummHospOthRecalc);
 
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAvanceRecalc(), ioId, inSummAvanceRecalc);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAvanceRecalc(), ioId, COALESCE (inSummAvanceRecalc, 0));
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Number(), ioId, inNumber);

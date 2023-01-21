@@ -221,6 +221,7 @@ BEGIN
 	          FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId, inShowAll := 'False', inIsErased := 'False',  inSession := inSession) AS gpSelect
                   WHERE gpSelect.SummCardRecalc <> 0
                     AND gpSelect.BankOutDate = inOperDate
+                  --AND gpSelect.BankOutDate_export = inOperDate
 	         )
 	LOOP
 		IF (char_length (r.card) < 14)
