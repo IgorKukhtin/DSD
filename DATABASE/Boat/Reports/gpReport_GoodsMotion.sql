@@ -2,15 +2,19 @@
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMotion (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMotion (TDateTime, TDateTime, Integer, Integer, Integer, Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMotion (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMotion (
-    IN inStartDate    TDateTime ,
-    IN inEndDate      TDateTime ,
-    IN inUnitGroupId  Integer   ,
-    IN inGoodsId      Integer   ,
-    IN inPartionId    Integer   ,
-    IN inisPartNumber Boolean   ,
-    IN inSession      TVarChar    -- сессия пользователя
+    IN inStartDate        TDateTime ,
+    IN inEndDate          TDateTime ,
+    IN inUnitGroupId      Integer   ,
+    IN inGoodsId          Integer   ,
+    IN inPartionId        Integer   ,
+    IN inisPartNumber     Boolean   ,  
+    IN inIsPartion        Boolean  ,  -- показать <Документ партия №> (Да/Нет)
+    IN inIsPartner        Boolean  ,  -- показать Поставщика (Да/Нет)
+    IN inIsOrderClient    Boolean  ,  -- Заказ клиента №
+    IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE  (LocationDescName TVarChar, LocationCode Integer, LocationName TVarChar
               --, ObjectByDescName TVarChar, ObjectByCode Integer, ObjectByName TVarChar
@@ -46,7 +50,14 @@ RETURNS TABLE  (LocationDescName TVarChar, LocationCode Integer, LocationName TV
               , TotalSummPrice_cost_in TFloat
               , tmpDate TDateTime             -- надо вернуть дату, тогда в гриде не будет кривых данных  
               
-              , InvNumberFull_OrderClient TVarChar, FromName_OrderClient TVarChar, ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar
+              , InvNumberFull_OrderClient TVarChar, FromName_OrderClient TVarChar, ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar   
+              
+              , PartionId            Integer
+              , MovementId_Partion   Integer
+              , InvNumber_Partion    TVarChar
+              , InvNumberAll_Partion TVarChar
+              , OperDate_Partion     TDateTime
+              , DescName_Partion     TVarChar
               )
 AS
 $BODY$
@@ -55,6 +66,11 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+
+    -- !!!замена!!!
+    IF inIsPartion = TRUE THEN
+       inIsPartner:= TRUE;
+    END IF;
 
 
     RETURN QUERY
@@ -92,7 +108,10 @@ BEGIN
                                      INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
                                                          AND Container.DescId = zc_Container_Count()
                                                          AND (Container.PartionId = inPartionId OR inPartionId = 0)
-                                     INNER JOIN tmpWhere ON tmpWhere.LocationId = Container.WhereObjectId
+                                     INNER JOIN tmpWhere ON tmpWhere.LocationId = Container.WhereObjectId 
+
+                                     LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
+                                                                  AND Object_PartionGoods.ObjectId       = Container.ObjectId
                                )
 
        , tmpMI_Count AS (SELECT tmpContainer_Count.ContainerId
@@ -371,6 +390,7 @@ BEGIN
 
                                WHERE MIFloat_MovementId.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.PartionId FROM tmpMIContainer_group)
                                  AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                                 AND inIsOrderClient = TRUE
                                )
 
    -- РЕЗУЛЬТАТ
@@ -397,7 +417,8 @@ BEGIN
                         , SUM (tmpDataAll.Summ)             ::TFloat  AS Summ
 
                         --из партии
-                        , tmpDataAll.PartnerId
+                        --, tmpDataAll.PartnerId 
+                        , CASE WHEN inIsPartner = TRUE THEN tmpDataAll.PartnerId ELSE 0 END AS PartnerId
                         , tmpDataAll.GoodsSizeId
                         , tmpDataAll.MeasureId
                         , tmpDataAll.GoodsGroupId
@@ -422,6 +443,8 @@ BEGIN
                         , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.ProductName ELSE '' END     AS ProductName_OrderClient
                         , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.CIN ELSE '' END             AS CIN_OrderClient
 
+                        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.PartionId        ELSE 0    END AS PartionId
+                        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementId       ELSE 0    END AS MovementId_Partion
                    FROM (SELECT ObjectDesc.ItemName            AS LocationDescName
                               , Object_Location.ObjectCode     AS LocationCode
                               , Object_Location.ValueData      AS LocationName
@@ -485,6 +508,8 @@ BEGIN
                                 --  № п/п - только для = 1 возьмем Amount_in
                               , ROW_NUMBER() OVER (PARTITION BY tmpMIContainer_group.PartionId ORDER BY CASE WHEN tmpMIContainer_group.LocationId = Object_PartionGoods.UnitId THEN 0 ELSE 1 END ASC) AS Ord
 
+                              , Object_PartionGoods.MovementId 
+
                          FROM tmpMIContainer_group
                               LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
                               LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -523,12 +548,15 @@ BEGIN
                           , tmpDataAll.TaxKindId
                           , tmpDataAll.TaxKindValue
                           , tmpDataAll.OperPriceList
-                          , tmpDataAll.PartnerId
+                          --, tmpDataAll.PartnerId
+                          , CASE WHEN inIsPartner = TRUE THEN tmpDataAll.PartnerId ELSE 0 END
                           , CASE WHEN inisPartNumber = TRUE THEN MIString_PartNumber.ValueData ELSE '' END
                           , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.InvNumberFull_OrderClient ELSE '' END
                           , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.FromName ELSE '' END
                           , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.ProductName ELSE '' END
                           , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.CIN ELSE '' END
+                          , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.PartionId  ELSE 0 END
+                          , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementId ELSE 0 END
                    HAVING SUM (tmpDataAll.AmountStart) <> 0
                        OR SUM (tmpDataAll.AmountIn)    <> 0
                        OR SUM (tmpDataAll.AmountOut)   <> 0
@@ -602,7 +630,14 @@ BEGIN
         , tmpDataAll.InvNumberFull_OrderClient   ::TVarChar
         , tmpDataAll.FromName_OrderClient        ::TVarChar
         , tmpDataAll.ProductName_OrderClient     ::TVarChar
-        , tmpDataAll.CIN_OrderClient             ::TVarChar
+        , tmpDataAll.CIN_OrderClient             ::TVarChar    
+
+        , tmpDataAll.PartionId                      AS PartionId
+        , tmpDataAll.MovementId_Partion             AS MovementId_Partion
+        , Movement_Partion.InvNumber             AS InvNumber_Partion
+        , zfCalc_InvNumber_isErased (MovementDesc_Partion.ItemName, Movement_Partion.InvNumber, Movement_Partion.OperDate, Movement_Partion.StatusId) AS InvNumberAll_Partion
+        , Movement_Partion.OperDate              AS OperDate_Partion
+        , MovementDesc_Partion.ItemName          AS DescName_Partion
    FROM tmpDataAll
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpDataAll.PartnerId
             INNER JOIN Object AS Object_Goods  ON Object_Goods.Id   = tmpDataAll.GoodsId
@@ -622,7 +657,10 @@ BEGIN
                                   AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = tmpDataAll.GoodsId
-                                  AND ObjectString_Article.DescId = zc_ObjectString_Article()
+                                  AND ObjectString_Article.DescId = zc_ObjectString_Article()  
+
+            LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = tmpDataAll.MovementId_Partion
+            LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId
    ;
 
 END;
@@ -636,4 +674,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMotion(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2022')::TDateTime , inUnitGroupId := 0 , inGoodsId := 5609 , inPartionId := 0, inisPartNumber:=False, inSession := '5');
+-- SELECT * FROM gpReport_GoodsMotion(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2023')::TDateTime , inUnitGroupId := 0, inGoodsId := 0 ,inPartionId := 0, inisPartNumber:=true, inIsPartion:=false, inIsPartner:=true, inIsOrderClient:=false, inSession := '5');
+ 

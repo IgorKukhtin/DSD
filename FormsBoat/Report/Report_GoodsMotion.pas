@@ -74,6 +74,9 @@ type
     bbedSearchArticle: TdxBarControlContainerItem;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    cbPartion: TcxCheckBox;
+    cbOrderClient: TcxCheckBox;
+    cbPartner: TcxCheckBox;
   private
     { Private declarations }
   public

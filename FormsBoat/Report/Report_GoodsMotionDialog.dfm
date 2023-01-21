@@ -3,7 +3,7 @@
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084'>'
-  ClientHeight = 233
+  ClientHeight = 250
   ClientWidth = 477
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 120
-    Top = 193
+    Left = 106
+    Top = 213
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 285
-    Top = 193
+    Left = 269
+    Top = 213
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -139,6 +139,46 @@
     Top = 117
     Caption = 'Artikel Nr'
   end
+  object cbPartion: TcxCheckBox
+    Left = 9
+    Top = 173
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1055#1072#1088#1090#1080#1103' '#8470
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 16
+    Width = 83
+  end
+  object cbPartner: TcxCheckBox
+    Left = 106
+    Top = 173
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082#1080
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 17
+    Width = 80
+  end
+  object cbPartNumber: TcxCheckBox
+    Left = 207
+    Top = 173
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' S/N ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' S/N'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 18
+    Width = 122
+  end
+  object cbOrderClient: TcxCheckBox
+    Left = 343
+    Top = 173
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072' '#8470
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 19
+    Width = 117
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -159,8 +199,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 208
-    Top = 158
+    Left = 192
+    Top = 190
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -246,9 +286,41 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOrderClient'
+        Value = Null
+        Component = cbOrderClient
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPartion'
+        Value = Null
+        Component = cbPartion
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPartner'
+        Value = Null
+        Component = cbPartner
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPartNumber'
+        Value = Null
+        Component = cbPartNumber
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 178
+    Left = 64
+    Top = 186
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -292,8 +364,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 344
-    Top = 143
+    Left = 368
+    Top = 111
   end
   object GuidesUnitGroup: TdsdGuides
     KeyField = 'Id'

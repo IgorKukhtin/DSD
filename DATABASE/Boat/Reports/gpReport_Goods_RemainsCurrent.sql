@@ -5,11 +5,13 @@ DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Boolean
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods_RemainsCurrent (Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods_RemainsCurrent(
     IN inUnitId           Integer  ,  -- Подразделение / группа
     IN inPartnerId        Integer  ,  -- Поставщик
-    IN inGoodsGroupId     Integer  ,  -- группа товара
+    IN inGoodsGroupId     Integer  ,  -- группа товара  
+    IN inPartionId        Integer   ,
     IN inIsPartion        Boolean  ,  -- показать <Документ партия №> (Да/Нет)
     IN inIsPartner        Boolean  ,  -- показать Поставщика (Да/Нет)
     IN inIsZero           Boolean  ,  -- Показать с остатком = 0
@@ -138,7 +140,8 @@ BEGIN
 
                            WHERE Container.DescId = zc_Container_Count()
                              -- только остатки или все
-                             AND (Container.Amount <> 0 OR inIsZero = TRUE)
+                             AND (Container.Amount <> 0 OR inIsZero = TRUE) 
+                             AND (Container.PartionId = inPartionId OR inPartionId = 0)
                          )
 
    , tmpContainer_Summ AS (SELECT tmpContainer_All.Id AS ContainerId_Count

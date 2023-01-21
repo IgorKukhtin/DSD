@@ -1,28 +1,29 @@
 ﻿inherited Report_GoodsMotionForm: TReport_GoodsMotionForm
   Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084'>'
   ClientHeight = 341
-  ClientWidth = 1071
+  ClientWidth = 1189
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1087
+  ExplicitLeft = 0
+  ExplicitWidth = 1205
   ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1071
+    Width = 1189
     Height = 261
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1071
     ExplicitHeight = 261
     ClientRectBottom = 261
-    ClientRectRight = 1071
+    ClientRectRight = 1189
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1071
       ExplicitHeight = 261
       inherited cxGrid: TcxGrid
-        Width = 1071
+        Width = 1189
         Height = 261
         ExplicitWidth = 1071
         ExplicitHeight = 261
@@ -487,7 +488,7 @@
     end
   end
   inherited Panel: TPanel
-    Width = 1071
+    Width = 1189
     Height = 54
     ExplicitWidth = 1071
     ExplicitHeight = 54
@@ -533,8 +534,8 @@
       Width = 239
     end
     object cxLabel5: TcxLabel
-      Left = 271
-      Top = 31
+      Left = 267
+      Top = 32
       Caption = #1055#1072#1088#1090#1080#1103':'
     end
     object edPartion: TcxButtonEdit
@@ -568,11 +569,11 @@
     end
     object cbPartNumber: TcxCheckBox
       Left = 874
-      Top = 5
+      Top = 32
       Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' S/N'
       Properties.ReadOnly = False
       TabOrder = 10
-      Width = 127
+      Width = 117
     end
     object Код: TcxLabel
       Left = 573
@@ -600,6 +601,16 @@
       Top = 31
       Caption = 'Artikel Nr'
     end
+    object cbPartner: TcxCheckBox
+      Left = 997
+      Top = 30
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 15
+      Width = 82
+    end
   end
   object lbSearchArticle: TcxLabel [2]
     Left = 155
@@ -621,6 +632,26 @@
       125
       21)
     Width = 125
+  end
+  object cbPartion: TcxCheckBox [4]
+    Left = 874
+    Top = 5
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1055#1072#1088#1090#1080#1103' '#8470
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 8
+    Width = 83
+  end
+  object cbOrderClient: TcxCheckBox [5]
+    Left = 963
+    Top = 5
+    Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072' '#8470
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 9
+    Width = 117
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -857,6 +888,38 @@
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOrderClient'
+          Value = Null
+          Component = cbOrderClient
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartion'
+          Value = Null
+          Component = cbPartion
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartner'
+          Value = Null
+          Component = cbPartner
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartNumber'
+          Value = Null
+          Component = cbPartNumber
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -995,6 +1058,7 @@
         end
         item
           Name = 'PartionId'
+          Value = Null
           Component = GuidesPartion
           ComponentItem = 'Key'
           ParamType = ptInput
@@ -1084,6 +1148,30 @@
         Name = 'inisPartNumber'
         Value = Null
         Component = cbPartNumber
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartion'
+        Value = Null
+        Component = cbPartion
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartner'
+        Value = Null
+        Component = cbPartner
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsOrderClient'
+        Value = Null
+        Component = cbOrderClient
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

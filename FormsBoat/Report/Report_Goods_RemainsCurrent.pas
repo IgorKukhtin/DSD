@@ -152,6 +152,9 @@ type
     bbedSearchArticle: TdxBarControlContainerItem;
     cbOrderClient: TcxCheckBox;
     InvNumberAll_Partion: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edPartion: TcxButtonEdit;
+    GuidesPartion: TdsdGuides;
   private
     { Private declarations }
   public
