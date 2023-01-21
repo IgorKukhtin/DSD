@@ -77,6 +77,8 @@ type
     cbPartion: TcxCheckBox;
     cbOrderClient: TcxCheckBox;
     cbPartner: TcxCheckBox;
+    bbPrint_OrderClientPartion: TdxBarButton;
+    actPrint_OrderClientPartion: TdsdPrintAction;
   private
     { Private declarations }
   public

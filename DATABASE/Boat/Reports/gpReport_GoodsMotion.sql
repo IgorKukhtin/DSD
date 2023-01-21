@@ -632,8 +632,8 @@ BEGIN
         , tmpDataAll.ProductName_OrderClient     ::TVarChar
         , tmpDataAll.CIN_OrderClient             ::TVarChar    
 
-        , tmpDataAll.PartionId                      AS PartionId
-        , tmpDataAll.MovementId_Partion             AS MovementId_Partion
+        , tmpDataAll.PartionId                   AS PartionId
+        , tmpDataAll.MovementId_Partion          AS MovementId_Partion
         , Movement_Partion.InvNumber             AS InvNumber_Partion
         , zfCalc_InvNumber_isErased (MovementDesc_Partion.ItemName, Movement_Partion.InvNumber, Movement_Partion.OperDate, Movement_Partion.StatusId) AS InvNumberAll_Partion
         , Movement_Partion.OperDate              AS OperDate_Partion

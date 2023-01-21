@@ -4,7 +4,6 @@
   ClientWidth = 1189
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = 0
   ExplicitWidth = 1205
   ExplicitHeight = 380
   PixelsPerInch = 96
@@ -15,17 +14,17 @@
     Height = 261
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1071
+    ExplicitWidth = 1189
     ExplicitHeight = 261
     ClientRectBottom = 261
     ClientRectRight = 1189
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1071
+      ExplicitWidth = 1189
       ExplicitHeight = 261
       inherited cxGrid: TcxGrid
         Width = 1189
         Height = 261
-        ExplicitWidth = 1071
+        ExplicitWidth = 1189
         ExplicitHeight = 261
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -490,7 +489,7 @@
   inherited Panel: TPanel
     Width = 1189
     Height = 54
-    ExplicitWidth = 1071
+    ExplicitWidth = 1189
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -736,6 +735,58 @@
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084' ('#1074#1093' '#1094#1077#1085#1072')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084' ('#1074#1093' '#1094#1077#1085#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint_OrderClientPartion: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1087#1072#1088#1090#1080#1103' '#1079#1072#1082#1072#1079')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1087#1072#1088#1090#1080#1103' '#1079#1072#1082#1072#1079')'
+      ImageIndex = 15
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'PartnerName;GoodsGroupNameFull;Article;GoodsName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 44562d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44562d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084' ('#1087#1072#1088#1090#1080#1103' '#1079#1072#1082#1072#1079')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084' ('#1087#1072#1088#1090#1080#1103' '#1079#1072#1082#1072#1079')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -1243,6 +1294,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbPrint_OrderClientPartion'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -1284,6 +1343,10 @@
     end
     object bbReport_Goods: TdxBarButton
       Action = actReport_Goods
+      Category = 0
+    end
+    object bbPrint_OrderClientPartion: TdxBarButton
+      Action = actPrint_OrderClientPartion
       Category = 0
     end
   end
@@ -1443,8 +1506,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 504
-    Top = 24
+    Left = 464
+    Top = 8
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
