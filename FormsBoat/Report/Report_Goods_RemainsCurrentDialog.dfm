@@ -412,7 +412,7 @@ object Report_Goods_RemainsCurrentDialogForm: TReport_Goods_RemainsCurrentDialog
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'InvNumberFull'
         Value = ''
         Component = GuidesPartion
         ComponentItem = 'TextValue'

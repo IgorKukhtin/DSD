@@ -2996,7 +2996,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'InvNumberFull'
         Value = ''
         Component = GuidesPartion
         ComponentItem = 'TextValue'

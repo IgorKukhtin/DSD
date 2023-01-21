@@ -1534,7 +1534,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'InvNumberFull'
         Value = ''
         Component = GuidesPartion
         ComponentItem = 'TextValue'
