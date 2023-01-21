@@ -511,4 +511,4 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM Object_PartionGoods limit 10
--- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId := 35139 , inPartnerId := 0 , inGoodsGroupId := 0 , inIsPartion := 'True' , inIsPartner := 'False' , inIsZero := 'False', inIsOrderClient:= TRUE, inIsPartNumber := 'False' ,  inSession := '5');
+-- SELECT * FROM gpReport_Goods_RemainsCurrent (inUnitId:= 35139, inPartnerId:= 0, inGoodsGroupId:= 0, inPartionId:= 0, inIsPartion:= TRUE, inIsPartner:= TRUE, inIsZero:= FALSE, inIsOrderClient:= TRUE, inIsPartNumber:= TRUE, inSession := '5');
