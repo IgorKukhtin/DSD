@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PartionGoods(
 RETURNS TABLE (Id  Integer
              , MovementId_ Integer
              , DescName TVarChar
-             , InvNumber TVarChar
+             , InvNumber TVarChar, InvNumberFull TVarChar
              , OperDate Tdatetime 
   
              , UnitId Integer
@@ -68,7 +68,8 @@ BEGIN
      SELECT  tmpObject_PartionGoods.MovementItemId AS Id
            , tmpObject_PartionGoods.MovementId AS MovementId
            , MovementDesc_Partion.ItemName     AS DescName
-           , Movement_Partion.InvNumber        AS InvNumber
+           , Movement_Partion.InvNumber        AS InvNumber 
+           , zfCalc_InvNumber_isErased ('', Movement_Partion.InvNumber, Movement_Partion.OperDate, Movement_Partion.StatusId) :: TVarChar AS InvNumberFull
            , Movement_Partion.OperDate         AS OperDate
            
            , Object_Unit.Id                 AS UnitId
