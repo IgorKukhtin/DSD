@@ -13,6 +13,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_export(
 RETURNS TABLE (RowData Text)
 AS
 $BODY$
+   DECLARE vbUserId Integer;
+
    DECLARE vbBankId    Integer;
    DECLARE vbTotalSumm TFloat;
 
@@ -20,6 +22,8 @@ $BODY$
    DECLARE i Integer; -- автонумерация
    DECLARE e Text;
    DECLARE er Text;
+
+   DECLARE vbOperDate TDateTime;
 
    DECLARE vbPSLExportKindId Integer;
    DECLARE vbBankName TVarChar;
@@ -30,11 +34,18 @@ $BODY$
    DECLARE vbOnFlowType TVarChar; 
    DECLARE vbKoeffSummCardSecond NUMERIC (16,10); 
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- определяется
+     vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+
      -- *** Временная таблица для сбора результата
      CREATE TEMP TABLE _tmpResult (NPP Integer, RowData Text, errStr TVarChar) ON COMMIT DROP;
 
      -- Проверка
-     IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Export() AND MB.ValueData = TRUE)
+     IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Export() AND MB.ValueData = TRUE) AND vbUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.<%> № <%> от <%> уже была выгружена.%Для повторной выгрузки необходимо перепровести документ.'
                        , lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList()))
@@ -293,6 +304,13 @@ BEGIN
                      || ' TOTAL_SHEDULE_AMOUNT="' || REPLACE (CAST (inAmount AS NUMERIC (16, 2)) :: TVarChar, '.', ',') || '"' 
                      -- Код зарплатного проекта. Обязательно указывается только для банков, использующих ЗКП
                      ||   ' CONTRAGENT_CODEZKP="' || '1011442' || '"'                       
+
+                               -- COMMENTS
+                     ||    ' COMMENTS="Заробітна плата за 1 половину' 
+                     ||' ' || zfCalc_MonthNameUkr_export (vbOperDate)
+                     ||' ' || EXTRACT (YEAR FROM vbOperDate) :: TVarChar
+                     ||' ' ||'року. ЕСВ,ПДФО,ВВ сплачені ' || zfConvert_DateToString (vbOperDate) || '"'
+
                      || '>'
                     ;
 
@@ -321,6 +339,13 @@ BEGIN
                                ||    ' MIDDLENAME="' || zfCalc_Word_Split (inValue:= gpSelect.PersonalName, inSep:= ' ', inIndex:= 3) || '"'
                                -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
                                ||        ' AMOUNT="' || REPLACE (CAST (COALESCE (gpSelect.SummCardRecalc, 0)  + COALESCE (gpSelect.SummHosp, 0) AS NUMERIC (16, 2)) :: TVarChar, '.', ',') || '"'
+
+                               -- COMMENTS
+                               --||    ' COMMENTS="Заробітна плата за 1 половину' 
+                               --||' ' || zfCalc_MonthNameUkr_export (vbOperDate)
+                               --||' ' || EXTRACT (YEAR FROM vbOperDate) :: TVarChar
+                               --||' ' ||'року"'
+
                                || '/>'
                    FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId
                                                              , inShowAll    := FALSE

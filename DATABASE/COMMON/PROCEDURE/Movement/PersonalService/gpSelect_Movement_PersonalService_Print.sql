@@ -314,6 +314,7 @@ BEGIN
                            , COALESCE (MIFloat_SummTransportTaxi.ValueData, 0) AS SummTransportTaxi
                            , COALESCE (MIFloat_SummPhone.ValueData, 0)         AS SummPhone
                            , COALESCE (MIFloat_SummHouseAdd.ValueData, 0)      AS SummHouseAdd
+                           , COALESCE (MIFloat_SummAvance.ValueData, 0) + COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0) AS SummAvance
 
                            , MIString_Comment.ValueData         AS Comment
 
@@ -430,6 +431,14 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_SummHouseAdd
                                                        ON MIFloat_SummHouseAdd.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummHouseAdd.DescId = zc_MIFloat_SummHouseAdd()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummAvance
+                                                       ON MIFloat_SummAvance.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummAvance.DescId = zc_MIFloat_SummAvance()
+                                                      AND 1=0
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummAvanceRecalc
+                                                       ON MIFloat_SummAvanceRecalc.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummAvanceRecalc.DescId         = zc_MIFloat_SummAvanceRecalc()
+                                                      AND 1=0
 
                            LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                                          ON MIBoolean_Main.MovementItemId = MovementItem.Id
@@ -488,6 +497,7 @@ BEGIN
                            , SUM (tmpMI_all.SummTransportTaxi) AS SummTransportTaxi
                            , SUM (tmpMI_all.SummPhone)         AS SummPhone
                            , SUM (tmpMI_all.SummHouseAdd)      AS SummHouseAdd
+                           , SUM (tmpMI_all.SummAvance)        AS SummAvance
                            , SUM (COALESCE (tmpMIChild.WorkTimeHoursOne, 0)) ::TFloat AS WorkTimeHoursOne_child
 
                       FROM tmpMI_all As tmpMI_all_find
@@ -539,6 +549,8 @@ BEGIN
                            , SUM (tmpMI_all.SummTransportTaxi) AS SummTransportTaxi
                            , SUM (tmpMI_all.SummPhone)         AS SummPhone
                            , SUM (tmpMI_all.SummHouseAdd)      AS SummHouseAdd
+                           , SUM (tmpMI_all.SummAvance)        AS SummAvance
+
                            , SUM (COALESCE (tmpMIChild.WorkTimeHoursOne, 0)) ::TFloat AS WorkTimeHoursOne_child
 
                       FROM tmpMI_all
@@ -651,6 +663,7 @@ BEGIN
                             , tmpMI.SummTransportTaxi
                             , tmpMI.SummPhone
                             , tmpMI.SummHouseAdd
+                            , tmpMI.SummAvance
                             , tmpMI.WorkTimeHoursOne_child
 
                             , ROW_NUMBER() OVER (PARTITION BY tmpMI.MemberId ORDER BY tmpMI.SummToPay DESC) AS Ord
@@ -687,6 +700,7 @@ BEGIN
                             , 0 AS SummTransportTaxi
                             , 0 AS SummPhone
                             , 0 AS SummHouseAdd
+                            , 0 AS SummAvance
                             , 0 AS WorkTimeHoursOne_child
 
                             , 1 AS Ord
@@ -726,6 +740,7 @@ BEGIN
                             , 0 AS SummTransportTaxi
                             , 0 AS SummPhone
                             , 0 AS SummHouseAdd
+                            , 0 AS SummAvance
                             , 0 AS WorkTimeHoursOne_child
 
                             , 1 AS Ord
@@ -790,7 +805,7 @@ BEGIN
              - tmpAll.SummCard
              - tmpAll.SummCardSecond
              - tmpAll.SummCardSecondCash
-             - COALESCE (tmpMIContainer_pay.Amount_avance, 0)
+             - COALESCE (tmpMIContainer_pay.Amount_avance, 0) - COALESCE (tmpAll.SummAvance, 0)
              - COALESCE (tmpMIContainer_pay.Amount_avance_ret, 0)
              - COALESCE (tmpMIContainer_pay.Amount_service, 0)
               ) :: TFloat AS AmountCash
@@ -811,7 +826,7 @@ BEGIN
               -- !!!временно!!!
             , (tmpAll.SummMinus + tmpAll.SummFine + tmpAll.SummFineOth) :: TFloat AS SummMinus
             , (tmpAll.SummFine + tmpAll.SummFineOth)                    :: TFloat AS SummFine
-            , (COALESCE (tmpAll.SummAdd,0) + COALESCE (tmpAll.SummAddOth,0) + COALESCE (tmpAll.SummHouseAdd,0) ) :: TFloat AS SummAdd  --суммируем комп. жилья с премией
+            , (COALESCE (tmpAll.SummAdd,0) + COALESCE (tmpAll.SummAddOth,0) + COALESCE (tmpAll.SummHouseAdd,0)) :: TFloat AS SummAdd  --суммируем комп. жилья с премией
             , tmpAll.SummAuditAdd           :: TFloat AS SummAuditAdd
 --            , tmpAll.SummSocialIn         :: TFloat AS SummSocialIn
 --            , tmpAll.SummSocialAdd        :: TFloat AS SummSocialAdd
@@ -823,7 +838,7 @@ BEGIN
             , tmpAll.SummTransportTaxi      :: TFloat AS SummTransportTaxi
             , tmpAll.SummPhone              :: TFloat AS SummPhone
 
-            , ( 1 * tmpMIContainer_pay.Amount_avance)      :: TFloat AS Amount_avance
+            , ( 1 * COALESCE (tmpMIContainer_pay.Amount_avance, 0) + COALESCE (tmpAll.SummAvance, 0)) :: TFloat AS Amount_avance
             , (-1 * tmpMIContainer_pay.Amount_avance_ret)  :: TFloat AS Amount_avance_ret
             , tmpMIContainer_pay.Amount_service :: TFloat AS Amount_pay_service
             , tmpAll.WorkTimeHoursOne_child ::TFloat
@@ -881,6 +896,7 @@ BEGIN
           OR 0 <> tmpAll.SummAddOth
           OR 0 <> tmpAll.SummAuditAdd
           OR 0 <> tmpAll.SummHouseAdd
+          OR 0 <> tmpAll.SummAvance
           -- OR 0 <> tmpAll.SummNalog
           -- OR 0 <> tmpAll.SummNalogRet
           OR tmpMIContainer_pay.Amount_avance      <> 0

@@ -1,4 +1,4 @@
- -- Function: gpSelect_MovementItem_PersonalService()
+-- Function: gpSelect_MovementItem_PersonalService()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean, TVarChar);
 
@@ -51,7 +51,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , isErased Boolean
              , isAuto Boolean
              , isBankOut Boolean
-             , BankOutDate TDateTime
+             , BankOutDate TDateTime, BankOutDate_export TDateTime
               )
 AS
 $BODY$
@@ -64,6 +64,7 @@ $BODY$
    DECLARE vbServiceDate TDateTime;
    DECLARE vbServiceDateId         Integer;
    DECLARE vbPersonalServiceListId Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_PersonalService());
@@ -73,6 +74,9 @@ BEGIN
      -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
      PERFORM lpCheck_UserRole_8813637 (vbUserId);
 
+
+     -- определяется
+     vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
      -- определяется Дефолт
      vbInfoMoneyId_def:= (SELECT Object_InfoMoney_View.InfoMoneyId FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_60101()); -- 60101 Заработная плата + Заработная плата
@@ -518,6 +522,7 @@ BEGIN
             , COALESCE (MIBoolean_isAuto.ValueData, FALSE)      :: Boolean   AS isAuto
             , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE) :: Boolean   AS isBankOut
             , MIDate_BankOut.ValueData                          :: TDateTime AS BankOutDate
+            , COALESCE (MIDate_BankOut.ValueData, vbOperDate)   :: TDateTime AS BankOutDate_export
        FROM tmpAll
             LEFT JOIN ObjectString AS ObjectString_Code1C
                                    ON ObjectString_Code1C.ObjectId = tmpAll.PersonalId

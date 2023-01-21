@@ -34,7 +34,9 @@ BEGIN
                                         , MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer
                                         , ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer
                                         , SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummCardSecondDiff TFloat, SummNalogRecalc TFloat, SummNalogRetRecalc TFloat
-                                        , SummChildRecalc TFloat, SummMinusExtRecalc TFloat, SummAddOthRecalc TFloat, SummFineOthRecalc TFloat, SummHospOthRecalc TFloat, SummCompensationRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
+                                        , SummChildRecalc TFloat, SummMinusExtRecalc TFloat, SummAddOthRecalc TFloat, SummFineOthRecalc TFloat, SummHospOthRecalc TFloat
+                                        , SummCompensationRecalc TFloat, SummAvanceRecalc TFloat
+                                        , isMovementComplete Boolean) ON COMMIT DROP;
      END IF;
 
      -- Нашли
@@ -1347,6 +1349,7 @@ BEGIN
                                                                   , inSummCompensationRecalc := 0 :: TFloat
                                                                   , inSummAuditAdd           := 0 :: TFloat
                                                                   , inSummHouseAdd           := 0 :: TFloat
+                                                                  , inSummAvanceRecalc       := 0 :: TFloat
                                                                   , inNumber                 := ''
                                                                   , inComment                := ''
                                                                   , inInfoMoneyId            := tmpMI.InfoMoneyId
