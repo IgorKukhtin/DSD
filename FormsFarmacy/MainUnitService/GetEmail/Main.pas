@@ -546,6 +546,9 @@ begin
                  PanelHost.Caption:= 'Start Mail (2) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                  PanelHost.Invalidate;
 
+                 AddToLog('------------');
+                 AddToLog('Подключение к ящику: ' + vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host);
+
                  //подключаемся к ящику
                  //***IdPOP3.Connect;          //POP3
                  try IdIMAP4.Connect(TRUE);     //IMAP
@@ -572,10 +575,12 @@ begin
                  GaugeMailFrom.MaxValue:=msgcnt;
                  Application.ProcessMessages;
                  //цикл по входящим письмам
+                 AddToLog('    цикл по входящим письмам: ' + IntToStr(msgcnt));
                  for I:= msgcnt downto 1 do
                  begin
                    PanelHost.Caption:= 'Start Mail (4) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                    PanelHost.Invalidate;
+                   AddToLog('       - : ' + IntToStr(I));
                    IdMessage.Clear; // очистка буфера для сообщения
                    flag:= false;
 
@@ -812,6 +817,8 @@ begin
                  PanelHost.Caption:= 'End Mail (6.3) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
                  PanelHost.Invalidate;
               end;
+
+              AddToLog('    конец обработки ящика.');
 
               PanelHost.Caption:= 'OK - End Mail (7.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
               PanelHost.Invalidate;

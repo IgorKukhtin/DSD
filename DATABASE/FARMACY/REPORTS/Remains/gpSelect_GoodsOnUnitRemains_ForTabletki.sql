@@ -448,7 +448,7 @@ BEGIN
 
                                WHERE Object_PriceChange.DescId = zc_Object_PriceChange()
                                  AND Object_PriceChange.isErased = FALSE
-                                 AND (COALESCE (PriceChange_Value_Retail.ValueData, 0) <> 0 OR COALESCE (PriceChange_Value_Unit.ValueData, 0) <> 0 OR
+                                 AND (COALESCE (PriceChange_Value_Unit.ValueData, PriceChange_Value_Retail.ValueData, 0) <> 0 OR
                                      COALESCE (PriceChange_FixPercent_Unit.ValueData, PriceChange_FixPercent_Retail.ValueData, 0) <> 0 OR
                                      COALESCE (PriceChange_FixDiscount_Unit.ValueData, PriceChange_FixDiscount_Retail.ValueData, 0) <> 0) -- выбираем только цены <> 0
                                  AND COALESCE (PriceChange_Multiplicity_Unit.ValueData, PriceChange_Multiplicity_Retail.ValueData, 0) IN (0, 1)

@@ -45,7 +45,8 @@ BEGIN
           FROM gpSelect_Calculation_WagesBoard(inOperDate, 0, inSession) AS Calculation
           WHERE Calculation.UserId = inUserID
           ORDER BY Calculation.OperDate;
-    ELSE
+    ELSEIF inOperDate < '01.01.2023'
+    THEN
       OPEN Cursor2 FOR
           SELECT
               Calculation.OperDate                   AS OperDate
@@ -55,6 +56,17 @@ BEGIN
             , Calculation.SummaCalc                  AS SummaCalc
             , Calculation.FormulaCalc                AS FormulaCalc
           FROM gpSelect_Calculation_Wages(inOperDate, inUserID, inSession) AS Calculation
+          ORDER BY Calculation.OperDate;
+    ELSE
+      OPEN Cursor2 FOR
+          SELECT
+              Calculation.OperDate                   AS OperDate
+            , Calculation.UnitName                   AS UnitName
+            , Calculation.ShortName                  AS ShortName
+            , Calculation.PayrollTypeName            AS PayrollTypeName
+            , Calculation.SummaCalc                  AS SummaCalc
+            , Calculation.FormulaCalc                AS FormulaCalc
+          FROM gpSelect_Calculation_WagesNew(inOperDate, inUserID, inSession) AS Calculation
           ORDER BY Calculation.OperDate;
     
     END IF;
