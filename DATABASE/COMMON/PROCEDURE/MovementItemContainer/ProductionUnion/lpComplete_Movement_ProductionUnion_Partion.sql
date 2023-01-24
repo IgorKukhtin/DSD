@@ -1,10 +1,12 @@
  -- Function: lpComplete_Movement_ProductionUnion_Partion (Integer, Integer, Integer)
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_ProductionUnion_Partion (Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpComplete_Movement_ProductionUnion_Partion (Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_ProductionUnion_Partion(
     IN inMovementId        Integer  , -- ключ Документа
     IN inFromId            Integer  , -- 
+    IN inToId              Integer  , -- 
     IN inUserId            Integer    -- Пользователь
 )                              
 RETURNS VOID
@@ -196,6 +198,25 @@ BEGIN
                               LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                                     ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
                                                    AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
+
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_ReceiptLevel
+                                                   ON ObjectLink_ReceiptChild_ReceiptLevel.ObjectId = Object_ReceiptChild.Id
+                                                  AND ObjectLink_ReceiptChild_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptChild_ReceiptLevel()
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_From
+                                                   ON ObjectLink_ReceiptLevel_From.ObjectId = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                  AND ObjectLink_ReceiptLevel_From.DescId   = zc_ObjectLink_ReceiptLevel_From()
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_To
+                                                   ON ObjectLink_ReceiptLevel_To.ObjectId = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                  AND ObjectLink_ReceiptLevel_To.DescId   = zc_ObjectLink_ReceiptLevel_To()
+                              LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptLevel_MovementDesc
+                                                    ON ObjectFloat_ReceiptLevel_MovementDesc.ObjectId  = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                   AND ObjectFloat_ReceiptLevel_MovementDesc.DescId    = zc_ObjectFloat_ReceiptLevel_MovementDesc()
+                         WHERE (ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId IS NULL
+                              OR (ObjectLink_ReceiptLevel_From.ChildObjectId      = inFromId
+                              AND ObjectLink_ReceiptLevel_To.ChildObjectId        = inToId
+                              AND ObjectFloat_ReceiptLevel_MovementDesc.ValueData = zc_Movement_ProductionUnion()
+                                 )
+                               )
                          GROUP BY _tmpItem_Partion.MovementItemId
                                 , _tmpItem_Partion.PartionGoodsDate
                                 , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, _tmpItem_Partion.GoodsId)

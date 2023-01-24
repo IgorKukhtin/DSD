@@ -311,7 +311,7 @@ BEGIN
              , COALESCE (MILinkObject_Unit.ObjectId, 0)     AS UnitId
              , COALESCE (MILinkObject_Position.ObjectId, 0) AS PositionId
              , CASE WHEN MI_Child.Id > 0
-                         THEN COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0))
+                         THEN COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, ObjectLink_PersonalServiceList_two.ChildObjectId, MILinkObject_MoneyPlace.ObjectId, 0)
                     ELSE COALESCE (MLO_PersonalServiceList.ObjectId, 0)
                END AS PersonalServiceListId
 
@@ -351,7 +351,7 @@ BEGIN
                -- Месяц начислений: есть
              , CASE WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000() -- Заработная плата
                          THEN lpInsertFind_Object_ServiceDate (inOperDate:= MIDate_ServiceDate.ValueData)
-                    WHEN COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0)) > 0
+                    WHEN COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, ObjectLink_PersonalServiceList_two.ChildObjectId, MILinkObject_MoneyPlace.ObjectId, 0) > 0
                      AND _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_21421()
                      AND MI_Child.Id > 0
                          THEN lpInsertFind_Object_ServiceDate (inOperDate:= MIDate_ServiceDate.ValueData)
@@ -380,11 +380,15 @@ BEGIN
                     ELSE 0
                END AS PartionMovementId
 
-             , CASE WHEN MI_Child.Id > 0 AND MI_Child.isCalculated = TRUE
+             , CASE WHEN inUserId = 5
+                         THEN zc_Enum_AnalyzerId_Cash_PersonalAvance() -- Выплата сотруднику - аванс
+                    WHEN MI_Child.Id > 0 AND MI_Child.isCalculated = TRUE
                          THEN zc_Enum_AnalyzerId_Cash_PersonalCardSecond() -- Выплата сотруднику - по ведомости Карта БН 2ф.
                     WHEN MI_Child.Id > 0
                          THEN zc_Enum_AnalyzerId_Cash_PersonalService() -- Выплата сотруднику - по ведомости
                     WHEN Object.DescId = zc_Object_Personal()
+                         THEN zc_Enum_AnalyzerId_Cash_PersonalAvance() -- Выплата сотруднику - аванс
+                    WHEN ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm() -- !!!вот он БН!!!
                          THEN zc_Enum_AnalyzerId_Cash_PersonalAvance() -- Выплата сотруднику - аванс
                     ELSE 0
                END AS AnalyzerId
@@ -478,6 +482,15 @@ BEGIN
                                   ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
                                  AND ObjectLink_Personal_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
 
+             LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                  ON ObjectLink_PersonalServiceList_PaidKind.ObjectId      = MILinkObject_MoneyPlace.ObjectId
+                                 AND ObjectLink_PersonalServiceList_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
+             LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_two
+                                  ON ObjectLink_PersonalServiceList_two.ObjectId = MI_Child.ObjectId
+                                 AND ObjectLink_PersonalServiceList_two.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
+                                  -- !!!вот он БН!!!
+                                 AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+
        UNION ALL
         -- 2. забаланс
         SELECT _tmpItem.MovementDescId
@@ -535,7 +548,7 @@ BEGIN
              , COALESCE (MILinkObject_Unit.ObjectId, 0)     AS UnitId
              , COALESCE (MILinkObject_Position.ObjectId, 0) AS PositionId
              , CASE WHEN MI_Child.Id > 0
-                         THEN COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0))
+                         THEN COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, ObjectLink_PersonalServiceList_two.ChildObjectId, MILinkObject_MoneyPlace.ObjectId, 0)
                     ELSE COALESCE (MLO_PersonalServiceList.ObjectId, 0)
                END AS PersonalServiceListId
 
@@ -687,6 +700,17 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                   ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
                                  AND ObjectLink_Personal_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
+
+             -- Замена
+             LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                  ON ObjectLink_PersonalServiceList_PaidKind.ObjectId      = MILinkObject_MoneyPlace.ObjectId
+                                 AND ObjectLink_PersonalServiceList_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
+             LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_two
+                                  ON ObjectLink_PersonalServiceList_two.ObjectId           = MI_Child.ObjectId
+                                 AND ObjectLink_PersonalServiceList_two.DescId             = zc_ObjectLink_Personal_PersonalServiceList()
+                                  -- !!!вот он БН!!!
+                                 AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+
         WHERE _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
           AND COALESCE (MI_Child.ObjectId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0))) > 0
        ;
@@ -975,7 +999,7 @@ BEGIN
      END IF; -- !!!Курсовая разница!!!
 
      -- Проверка
-     IF inUserId = 5 AND 1=1
+     IF inUserId = 5 AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Admin vbSumm_diff = <%> '
                         , vbSumm_diff

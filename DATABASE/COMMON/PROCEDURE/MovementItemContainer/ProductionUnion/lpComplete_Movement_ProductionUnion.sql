@@ -407,6 +407,7 @@ BEGIN
      THEN -- Расход партий П/Ф (ГП) по Рецептуре
           PERFORM lpComplete_Movement_ProductionUnion_Partion (inMovementId:= inMovementId
                                                              , inFromId    := vbUnitId_From
+                                                             , inToId      := vbUnitId_To
                                                              , inUserId    := inUserId
                                                               );
      END IF;
@@ -590,13 +591,90 @@ BEGIN
        ;
 
 
+     -- формируются Партии товара для Child(расход)-элементы, ЕСЛИ надо ...
+     UPDATE _tmpItemChild SET PartionGoodsId = CASE WHEN vbOperDate >= zc_DateStart_PartionGoods()
+                                                     AND vbAccountDirectionId_From = zc_Enum_AccountDirection_20200() -- Запасы + на складах
+                                                     AND (_tmpItemChild.isPartionCount = TRUE OR _tmpItemChild.isPartionSumm = TRUE)
+                                                        THEN lpInsertFind_Object_PartionGoods (_tmpItemChild.PartionGoods)
+
+                                                    -- Упаковка Мяса (тоже ПФ-ГП)
+                                                    WHEN vbIsPartionDate_Unit_From = TRUE
+                                                     AND vbUnitId_From <> vbUnitId_To
+                                                     AND _tmpItemChild.PartionGoodsDate <> zc_DateEnd()
+                                                     -- и это НЕ группа - ЦЕХ колбаса+дел-сы
+                                                      -- AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbUnitId_From AND OL.ChildObjectId = 8446 AND OL.DescId = zc_ObjectLink_Unit_Parent())
+                                                     -- AND EXISTS (SELECT 1 FROM _tmpItem_pr WHERE _tmpItem_pr.MovementItemId = _tmpItemChild.MovementItemId_Parent AND _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100())
+                                                     AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье
+                                                        THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItemChild.PartionGoodsDate
+                                                                                             , inGoodsKindId_complete := _tmpItemChild.GoodsKindId_complete
+                                                                                              )
+                                                    -- Производство ПФ-ГП
+                                                    WHEN vbIsPartionDate_Unit_From = TRUE
+                                                     AND _tmpItemChild.PartionGoodsDate <> zc_DateEnd()
+                                                     AND _tmpItemChild.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
+                                                                                                , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
+                                                                                                , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
+                                                                                                 )
+                                                        THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItemChild.PartionGoodsDate
+                                                                                             , inGoodsKindId_complete := _tmpItemChild.GoodsKindId_complete
+                                                                                              )
+                                                    WHEN _tmpItemChild.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
+                                                                                                , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
+                                                                                                , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
+                                                                                                 )
+                                                        THEN 0
+
+                                                    WHEN _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                      OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                      OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                         THEN _tmpItemChild.PartionGoodsId_Item
+                                                    ELSE lpInsertFind_Object_PartionGoods ('')
+                                               END
+     WHERE _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+        OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+        OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+        OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
+        OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+        OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
+        OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+     ;
+
+
+     -- определили
+     vbWhereObjectId_Analyzer_From:= CASE WHEN vbUnitId_From <> 0 THEN vbUnitId_From WHEN vbMemberId_From <> 0 THEN vbMemberId_From END;
+     vbWhereObjectId_Analyzer_To:= CASE WHEN vbUnitId_To <> 0 THEN vbUnitId_To WHEN vbMemberId_To <> 0 THEN vbMemberId_To END;
+
+
+     -- формируются Партии товара для Master(ПРИХОД)-элементы, ЕСЛИ надо ...
+     UPDATE _tmpItem_pr SET PartionGoodsId_child = tmpItemChild.PartionGoodsId
+     FROM (SELECT _tmpItemChild.MovementItemId_Parent, MAX (_tmpItemChild.PartionGoodsId) AS PartionGoodsId
+           FROM _tmpItemChild
+           WHERE _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+             AND _tmpItemChild.PartionGoodsId > 0
+           GROUP BY _tmpItemChild.MovementItemId_Parent HAVING COUNT(*) = 1
+          ) AS tmpItemChild
+     WHERE _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+       AND _tmpItem_pr.MovementItemId = tmpItemChild.MovementItemId_Parent
+    ;
+
+
      -- формируются Партии товара для Master(ПРИХОД)-элементы, ЕСЛИ надо ...
      UPDATE _tmpItem_pr SET PartionGoodsId = CASE -- Спецодежда
+                                                  WHEN _tmpItem_pr.InfoMoneyId = zc_Enum_InfoMoney_20202() AND _tmpItem_pr.PartionGoodsId_child > 0
+                                                       THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem_pr.PartionGoodsId_child AND OL.DescId  = zc_ObjectLink_PartionGoods_Unit())
+                                                                                            , inGoodsId       := _tmpItem_pr.GoodsId
+                                                                                            , inStorageId     := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem_pr.PartionGoodsId_child AND OL.DescId  = zc_ObjectLink_PartionGoods_Storage())
+                                                                                            , inInvNumber     := _tmpItem_pr.PartionGoods
+                                                                                            , inOperDate      := (SELECT OD.ValueData  FROM ObjectDate  AS OD  WHERE OD.ObjectId  = _tmpItem_pr.PartionGoodsId_child AND OD.DescId  = zc_ObjectDate_PartionGoods_Value())
+                                                                                            , inPrice         := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = _tmpItem_pr.PartionGoodsId_child AND OFl.DescId = zc_ObjectFloat_PartionGoods_Price())
+                                                                                             )
+                                                  -- Спецодежда
                                                   WHEN _tmpItem_pr.InfoMoneyId = zc_Enum_InfoMoney_20202()
                                                        THEN lpInsertFind_Object_PartionGoods (inValue       := _tmpItem_pr.PartionGoods
                                                                                             , inOperDate    := zc_DateStart()
                                                                                             , inInfoMoneyId := zc_Enum_InfoMoney_20202()
                                                                                              )
+
                                                WHEN vbOperDate >= zc_DateStart_PartionGoods()
                                                 AND vbAccountDirectionId_To = zc_Enum_AccountDirection_20200() -- Запасы + на складах
                                                 AND (_tmpItem_pr.isPartionCount = TRUE OR _tmpItem_pr.isPartionSumm = TRUE)
@@ -703,58 +781,6 @@ THEN
 END IF;
 */
 
-     -- формируются Партии товара для Child(расход)-элементы, ЕСЛИ надо ...
-     UPDATE _tmpItemChild SET PartionGoodsId = CASE WHEN vbOperDate >= zc_DateStart_PartionGoods()
-                                                     AND vbAccountDirectionId_From = zc_Enum_AccountDirection_20200() -- Запасы + на складах
-                                                     AND (_tmpItemChild.isPartionCount = TRUE OR _tmpItemChild.isPartionSumm = TRUE)
-                                                        THEN lpInsertFind_Object_PartionGoods (_tmpItemChild.PartionGoods)
-
-                                                    -- Упаковка Мяса (тоже ПФ-ГП)
-                                                    WHEN vbIsPartionDate_Unit_From = TRUE
-                                                     AND vbUnitId_From <> vbUnitId_To
-                                                     AND _tmpItemChild.PartionGoodsDate <> zc_DateEnd()
-                                                     -- и это НЕ группа - ЦЕХ колбаса+дел-сы
-                                                      -- AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbUnitId_From AND OL.ChildObjectId = 8446 AND OL.DescId = zc_ObjectLink_Unit_Parent())
-                                                     -- AND EXISTS (SELECT 1 FROM _tmpItem_pr WHERE _tmpItem_pr.MovementItemId = _tmpItemChild.MovementItemId_Parent AND _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100())
-                                                     AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье
-                                                        THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItemChild.PartionGoodsDate
-                                                                                             , inGoodsKindId_complete := _tmpItemChild.GoodsKindId_complete
-                                                                                              )
-                                                    -- Производство ПФ-ГП
-                                                    WHEN vbIsPartionDate_Unit_From = TRUE
-                                                     AND _tmpItemChild.PartionGoodsDate <> zc_DateEnd()
-                                                     AND _tmpItemChild.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
-                                                                                                , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
-                                                                                                , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
-                                                                                                 )
-                                                        THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItemChild.PartionGoodsDate
-                                                                                             , inGoodsKindId_complete := _tmpItemChild.GoodsKindId_complete
-                                                                                              )
-                                                    WHEN _tmpItemChild.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
-                                                                                                , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
-                                                                                                , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
-                                                                                                 )
-                                                        THEN 0
-
-                                                    WHEN _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
-                                                      OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                      OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
-                                                         THEN _tmpItemChild.PartionGoodsId_Item
-                                                    ELSE lpInsertFind_Object_PartionGoods ('')
-                                               END
-     WHERE _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
-        OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
-        OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-        OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
-        OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-        OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
-        OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
-     ;
-
-
-     -- определили
-     vbWhereObjectId_Analyzer_From:= CASE WHEN vbUnitId_From <> 0 THEN vbUnitId_From WHEN vbMemberId_From <> 0 THEN vbMemberId_From END;
-     vbWhereObjectId_Analyzer_To:= CASE WHEN vbUnitId_To <> 0 THEN vbUnitId_To WHEN vbMemberId_To <> 0 THEN vbMemberId_To END;
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

@@ -424,6 +424,7 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHospOth(),      MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCompensation(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalServiceList(), MovementItem.Id, CASE WHEN _tmpMovement_Recalc.PaidKindId = zc_Enum_PaidKind_FirstForm() THEN MILinkObject_PersonalServiceList.ObjectId ELSE NULL END)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAvance(),       MovementItem.Id, 0)
      FROM _tmpMovement_Recalc
           INNER JOIN MovementItem ON MovementItem.MovementId = _tmpMovement_Recalc.MovementId AND MovementItem.DescId = zc_MI_Master()
           LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList

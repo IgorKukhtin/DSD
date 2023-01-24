@@ -29,7 +29,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummHosp TFloat, TotalSummHospOth TFloat, TotalSummHospOthRecalc TFloat
              , TotalSummCompensation TFloat, TotalSummCompensationRecalc TFloat
              , TotalSummHouseAdd TFloat
-             , TotalAvance TFloat, TotalAvanceRecalc TFloat
+             , TotalSummAvance TFloat, TotalSummAvanceRecalc TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -246,8 +246,8 @@ BEGIN
            
            , COALESCE (MovementFloat_TotalSummHouseAdd.ValueData,0) ::TFloat AS TotalSummHouseAdd
 
-           , MovementFloat_TotalAvance.ValueData        :: TFloat AS TotalAvance
-           , MovementFloat_TotalAvanceRecalc.ValueData  :: TFloat AS TotalAvanceRecalc
+           , MovementFloat_TotalAvance.ValueData        :: TFloat AS TotalSummAvance
+           , MovementFloat_TotalAvanceRecalc.ValueData  :: TFloat AS TotalSummAvanceRecalc
 
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId

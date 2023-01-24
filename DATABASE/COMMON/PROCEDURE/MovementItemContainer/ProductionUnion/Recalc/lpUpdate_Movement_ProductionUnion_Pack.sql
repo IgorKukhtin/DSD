@@ -822,7 +822,7 @@ UNION
                                                                --AND tmpAll_all_2.ReceiptId_in  >= 0
                        WHERE _tmpResult_1.GoodsId IS NULL AND _tmpResult_2.GoodsId IS NULL
                          AND tmpAll_all.ReceiptId_in <> 5
-                         -- !!! дублирует ВСУ, ОТКЛЮЧИЛИ !!!
+                         -- !!! дублирует ВСE, ОТКЛЮЧИЛИ !!!
                          AND 1=0
 
 -- and tmpAll_all.GoodsId <> 2357 
@@ -1244,14 +1244,34 @@ UNION
                                                                 OR inUnitId = 8451 -- Цех Упаковки
                                                                   )
                                                               AND Object_InfoMoney_View.InfoMoneyDestinationId  <> zc_Enum_InfoMoneyDestination_20900() -- Общефирменные  + Ирна
-                             LEFT JOIN MovementItemBoolean AS MIB_Close ON MIB_Close.MovementItemId = _tmpResult.MovementItemId
-                                                                       AND MIB_Close.DescId         = zc_MIBoolean_Close()
-                                                                       AND MIB_Close.ValueData      = TRUE
+                              LEFT JOIN MovementItemBoolean AS MIB_Close ON MIB_Close.MovementItemId = _tmpResult.MovementItemId
+                                                                        AND MIB_Close.DescId         = zc_MIBoolean_Close()
+                                                                        AND MIB_Close.ValueData      = TRUE
+
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_ReceiptLevel
+                                                   ON ObjectLink_ReceiptChild_ReceiptLevel.ObjectId = Object_ReceiptChild.Id
+                                                  AND ObjectLink_ReceiptChild_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptChild_ReceiptLevel()
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_From
+                                                   ON ObjectLink_ReceiptLevel_From.ObjectId = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                  AND ObjectLink_ReceiptLevel_From.DescId   = zc_ObjectLink_ReceiptLevel_From()
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_To
+                                                   ON ObjectLink_ReceiptLevel_To.ObjectId = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                  AND ObjectLink_ReceiptLevel_To.DescId   = zc_ObjectLink_ReceiptLevel_To()
+                              LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptLevel_MovementDesc
+                                                    ON ObjectFloat_ReceiptLevel_MovementDesc.ObjectId  = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                   AND ObjectFloat_ReceiptLevel_MovementDesc.DescId    = zc_ObjectFloat_ReceiptLevel_MovementDesc()
+                             
 
      WHERE _tmpResult.DescId_mi = zc_MI_Master()
        AND _tmpResult.isDelete  = FALSE
        -- Закрыт для пересчета
        AND MIB_Close.MovementItemId IS NULL
+       AND (ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId IS NULL
+          OR (ObjectLink_ReceiptLevel_From.ChildObjectId      = inUnitId
+          AND ObjectLink_ReceiptLevel_To.ChildObjectId        = inUnitId
+          AND ObjectFloat_ReceiptLevel_MovementDesc.ValueData = zc_Movement_ProductionUnion()
+             )
+           )
       ;
 
      -- создаются временные таблицы - для формирование данных для проводок

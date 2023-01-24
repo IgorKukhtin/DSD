@@ -1,6 +1,6 @@
 -- Function: lpComplete_Movement_ProductionUnion_CreateTemp ()
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_ProductionUnion_CreateTemp ();
+DROP FUNCTION IF EXISTS lpComplete_Movement_ProductionUnion_CreateTemp();
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_ProductionUnion_CreateTemp()
 RETURNS VOID
@@ -12,13 +12,14 @@ BEGIN
 
      -- таблица - количественные Master(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem_pr (MovementItemId Integer
-                               , MIContainerId_To BigInt, MIContainerId_count BigInt, ContainerId_GoodsTo Integer, ContainerId_count Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
-                               , OperCount TFloat, OperCountCount TFloat
-                               , InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId_To Integer
-                               , UnitId_Item Integer, StorageId_Item Integer
-                               , isPartionCount Boolean, isPartionSumm Boolean
-                               , PartionGoodsId Integer) ON COMMIT DROP;
+                                  , MIContainerId_To BigInt, MIContainerId_count BigInt, ContainerId_GoodsTo Integer, ContainerId_count Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
+                                  , OperCount TFloat, OperCountCount TFloat
+                                  , InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                                  , BusinessId_To Integer
+                                  , UnitId_Item Integer, StorageId_Item Integer
+                                  , isPartionCount Boolean, isPartionSumm Boolean
+                                  , PartionGoodsId Integer, PartionGoodsId_child Integer
+                                   ) ON COMMIT DROP;
      -- таблица - суммовые Master(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItemSumm_pr (MovementItemId Integer, AccountGroupId_From Integer, AccountDirectionId_From Integer, AccountId_From Integer, ContainerId_From Integer, MIContainerId_To BigInt, ContainerId_To Integer, AccountId_To Integer, InfoMoneyId_Detail_To Integer, OperSumm TFloat) ON COMMIT DROP;
 
