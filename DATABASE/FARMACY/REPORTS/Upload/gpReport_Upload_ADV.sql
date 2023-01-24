@@ -61,6 +61,8 @@ BEGIN
           WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
             AND ObjectLink_Unit_Parent.ChildObjectId not in (2141104, 3031071, 5603546, 377601, 5778621, 5062813)
          );
+         
+      ANALYSE tmpUnit;
 
       -- список товаров поставщика
       CREATE TEMP TABLE tmpGoods ON COMMIT DROP
@@ -96,6 +98,8 @@ BEGIN
 
           WHERE Object_LinkGoods_View.goodsmaincode in (4718, 4719, 27953, 4800, 11826, 5181, 11776)
          );
+         
+      ANALYSE tmpGoods;
 
       -- продажи за указанную дату
       CREATE TEMP TABLE tmpSales ON COMMIT DROP
@@ -141,7 +145,8 @@ BEGIN
                  , MIFloat_PriceSale.ValueData
                  , MIFloat_ChangePercent.ValueData
          );
-
+         
+      ANALYSE tmpSales;
 
       -- Результат
       RETURN QUERY

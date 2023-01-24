@@ -104,10 +104,9 @@ BEGIN
       Cross Join Goods
     ;
     
-        
-    -- Результат
-    RETURN QUERY
-        WITH SaleAndRemains AS(
+    ANALYSE _Cross;
+    
+    CREATE TEMP TABLE SaleAndRemains ON COMMIT DROP AS(
             SELECT
                 10                                       AS OperCode
                ,MovementLinkObject_Unit.ObjectId         AS UnitId
@@ -125,18 +124,6 @@ BEGIN
                 INNER JOIN MovementItemContainer AS MIContainer
                                                  ON MIContainer.MovementItemId = MI_Check.Id
                                                 AND MIContainer.DescId = zc_MIContainer_Count() 
-                /*INNER JOIN containerlinkobject AS ContainerLinkObject_MovementItem 
-                                               ON ContainerLinkObject_MovementItem.containerid = MIContainer.ContainerId
-                                              AND ContainerLinkObject_MovementItem.descid = zc_ContainerLinkObject_PartionMovementItem()
-                INNER JOIN OBJECT AS Object_PartionMovementItem 
-                                  ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
-                INNER JOIN MovementItem AS MI_Income
-                                        ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
-                INNER JOIN MovementLinkObject AS MovementLinkObject_Income_From
-                                              ON MovementLinkObject_Income_From.MovementId = MI_Income.MovementId
-                                             AND MovementLinkObject_Income_From.DescId = zc_MovementLinkObject_From()
-                                             AND MovementLinkObject_Income_From.ObjectId = inObjectId */
-                                             
             WHERE
                 Movement_Check.DescId in (zc_Movement_Check(),zc_Movement_Sale())
                 AND
@@ -164,17 +151,6 @@ BEGIN
                         Container
                         LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.ID
                                                              AND date_trunc('day', MovementItemContainer.OperDate) > inDate
-                        /* INNER JOIN containerlinkobject AS ContainerLinkObject_MovementItem 
-                                                       ON ContainerLinkObject_MovementItem.containerid = Container.Id
-                                                      AND ContainerLinkObject_MovementItem.descid = zc_ContainerLinkObject_PartionMovementItem()
-                        INNER JOIN OBJECT AS Object_PartionMovementItem 
-                                          ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
-                        INNER JOIN MovementItem AS MI_Income
-                                                ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
-                        INNER JOIN MovementLinkObject AS MovementLinkObject_Income_From
-                                                      ON MovementLinkObject_Income_From.MovementId = MI_Income.MovementId
-                                                     AND MovementLinkObject_Income_From.DescId = zc_MovementLinkObject_From()
-                                                     AND MovementLinkObject_Income_From.ObjectId = inObjectId */
                     WHERE
                         Container.DescId = zc_Container_Count()
                     GROUP BY
@@ -189,7 +165,12 @@ BEGIN
                ,T0.GoodsId
             HAVING
                 COALESCE(SUM(T0.Amount),0) > 0
-        )
+        );
+    
+    ANALYSE SaleAndRemains;
+     
+    -- Результат
+    RETURN QUERY
         SELECT
             inDate                                    AS OperDate
            ,_Cross.JuridicalCode

@@ -227,6 +227,95 @@ BEGIN
                         WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
                           AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
                         )
+                -- Цена со скидкой
+          , tmpPriceChange AS (SELECT DISTINCT ObjectLink_PriceChange_Goods.ChildObjectId                                                    AS GoodsId
+                                    , COALESCE (PriceChange_Value_Unit.ValueData, PriceChange_Value_Retail.ValueData)                        AS PriceChange
+                                    , COALESCE (PriceChange_FixPercent_Unit.ValueData, PriceChange_FixPercent_Retail.ValueData)::TFloat      AS FixPercent
+                                    , COALESCE (PriceChange_FixDiscount_Unit.ValueData, PriceChange_FixDiscount_Retail.ValueData)::TFloat    AS FixDiscount
+                                    , COALESCE (PriceChange_Multiplicity_Unit.ValueData, PriceChange_Multiplicity_Retail.ValueData) ::TFloat AS Multiplicity
+                               FROM Object AS Object_PriceChange
+                                    -- скидка по подразд
+                                    LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Unit
+                                                         ON ObjectLink_PriceChange_Unit.ObjectId = Object_PriceChange.Id
+                                                        AND ObjectLink_PriceChange_Unit.DescId = zc_ObjectLink_PriceChange_Unit()
+                                                        AND ObjectLink_PriceChange_Unit.ChildObjectId = inUnitId
+                                    -- цена со скидкой по подразд.
+                                    LEFT JOIN ObjectFloat AS PriceChange_Value_Unit
+                                                          ON PriceChange_Value_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                         AND PriceChange_Value_Unit.DescId = zc_ObjectFloat_PriceChange_Value()
+                                                         AND COALESCE (PriceChange_Value_Unit.ValueData, 0) <> 0
+                                    -- процент скидки по подразд.
+                                    LEFT JOIN ObjectFloat AS PriceChange_FixPercent_Unit
+                                                          ON PriceChange_FixPercent_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                         AND PriceChange_FixPercent_Unit.DescId = zc_ObjectFloat_PriceChange_FixPercent()
+                                                         AND COALESCE (PriceChange_FixPercent_Unit.ValueData, 0) <> 0
+                                    -- сумма скидки по подразд.
+                                    LEFT JOIN ObjectFloat AS PriceChange_FixDiscount_Unit
+                                                          ON PriceChange_FixDiscount_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                         AND PriceChange_FixDiscount_Unit.DescId = zc_ObjectFloat_PriceChange_FixDiscount()
+                                                         AND COALESCE (PriceChange_FixDiscount_Unit.ValueData, 0) <> 0
+                                    -- Кратность отпуска
+                                    LEFT JOIN ObjectFloat AS PriceChange_Multiplicity_Unit
+                                                          ON PriceChange_Multiplicity_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                         AND PriceChange_Multiplicity_Unit.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
+                                                         AND COALESCE (PriceChange_Multiplicity_Unit.ValueData, 0) <> 0
+                                    -- Дата окончания действия скидки
+                                    LEFT JOIN ObjectDate AS PriceChange_FixEndDate_Unit
+                                                         ON PriceChange_FixEndDate_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                                        AND PriceChange_FixEndDate_Unit.DescId = zc_ObjectDate_PriceChange_FixEndDate()
+                                                            
+                                    LEFT JOIN ObjectLink AS ObjectLink_PriceChange_PartionDateKind_Unit
+                                                          ON ObjectLink_PriceChange_PartionDateKind_Unit.ObjectId  = ObjectLink_PriceChange_Unit.ObjectId
+                                                         AND ObjectLink_PriceChange_PartionDateKind_Unit.DescId    = zc_ObjectLink_PriceChange_PartionDateKind()
+                                                            
+
+                                    -- скидка по сети
+                                    LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Retail
+                                                         ON ObjectLink_PriceChange_Retail.ObjectId = Object_PriceChange.Id
+                                                        AND ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
+                                                        AND ObjectLink_PriceChange_Retail.ChildObjectId = vbObjectId
+                                    -- цена со скидкой по сети
+                                    LEFT JOIN ObjectFloat AS PriceChange_Value_Retail
+                                                          ON PriceChange_Value_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                         AND PriceChange_Value_Retail.DescId = zc_ObjectFloat_PriceChange_Value()
+                                                         AND COALESCE (PriceChange_Value_Retail.ValueData, 0) <> 0
+                                    -- процент скидки по сети.
+                                    LEFT JOIN ObjectFloat AS PriceChange_FixPercent_Retail
+                                                          ON PriceChange_FixPercent_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                         AND PriceChange_FixPercent_Retail.DescId = zc_ObjectFloat_PriceChange_FixPercent()
+                                                         AND COALESCE (PriceChange_FixPercent_Retail.ValueData, 0) <> 0
+                                    -- сумма скидки по сети.
+                                    LEFT JOIN ObjectFloat AS PriceChange_FixDiscount_Retail
+                                                          ON PriceChange_FixDiscount_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                         AND PriceChange_FixDiscount_Retail.DescId = zc_ObjectFloat_PriceChange_FixDiscount()
+                                                         AND COALESCE (PriceChange_FixDiscount_Retail.ValueData, 0) <> 0
+                                    -- Кратность отпуска по сети.
+                                    LEFT JOIN ObjectFloat AS PriceChange_Multiplicity_Retail
+                                                          ON PriceChange_Multiplicity_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                         AND PriceChange_Multiplicity_Retail.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
+                                                         AND COALESCE (PriceChange_Multiplicity_Retail.ValueData, 0) <> 0
+                                    -- Дата окончания действия скидки по сети.
+                                    LEFT JOIN ObjectDate AS PriceChange_FixEndDate_Retail
+                                                         ON PriceChange_FixEndDate_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                        AND PriceChange_FixEndDate_Retail.DescId = zc_ObjectDate_PriceChange_FixEndDate()
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_PriceChange_PartionDateKind_Retail
+                                                          ON ObjectLink_PriceChange_PartionDateKind_Retail.ObjectId  = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                         AND ObjectLink_PriceChange_PartionDateKind_Retail.DescId    = zc_ObjectLink_PriceChange_PartionDateKind()
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Goods
+                                                         ON ObjectLink_PriceChange_Goods.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                                        AND ObjectLink_PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
+
+                               WHERE Object_PriceChange.DescId = zc_Object_PriceChange()
+                                 AND Object_PriceChange.isErased = FALSE
+                                 AND (COALESCE (PriceChange_Value_Unit.ValueData, PriceChange_Value_Retail.ValueData, 0) <> 0 OR
+                                     COALESCE (PriceChange_FixPercent_Unit.ValueData, PriceChange_FixPercent_Retail.ValueData, 0) <> 0 OR
+                                     COALESCE (PriceChange_FixDiscount_Unit.ValueData, PriceChange_FixDiscount_Retail.ValueData, 0) <> 0) -- выбираем только цены <> 0
+                                 AND COALESCE (PriceChange_Multiplicity_Unit.ValueData, PriceChange_Multiplicity_Retail.ValueData, 0) IN (0, 1)
+                                 AND COALESCE (PriceChange_FixEndDate_Unit.ValueData, PriceChange_FixEndDate_Retail.ValueData, CURRENT_DATE) >= CURRENT_DATE   
+                                 AND COALESCE (ObjectLink_PriceChange_PartionDateKind_Unit.ChildObjectId, ObjectLink_PriceChange_PartionDateKind_Retail.ChildObjectId, 0) = 0 
+                              )
           , tmpContainerPD AS (SELECT Container.ObjectId           AS GoodsId
                                     , SUM(CASE WHEN ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE THEN Container.Amount ELSE 0 END)         AS Remains 
                                     , SUM(CASE WHEN NOT (ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE)  THEN Container.Amount ELSE 0 END)  AS RemainsPD 
@@ -415,7 +504,13 @@ BEGIN
                zfCalc_PriceCash(CASE WHEN COALESCE (inUnitId, 0) <> 0 AND COALESCE(tmpContainerAll.Remains - COALESCE (tmpContainerPD.Remains, 0), 0) <= 0
                                 THEN Null
                                 WHEN COALESCE (inUnitId, 0) <> 0
-                                THEN tmpObject_Price.Price
+                                THEN CASE WHEN COALESCE (PriceChange.PriceChange, 0) > 0 
+                                          THEN PriceChange.PriceChange
+                                          WHEN COALESCE (PriceChange.FixPercent, 0) > 0 
+                                          THEN tmpObject_Price.Price * (100.0 - PriceChange.FixPercent) / 100.0
+                                          WHEN COALESCE (PriceChange.FixDiscount, 0) > 0 AND tmpObject_Price.Price > PriceChange.FixDiscount
+                                          THEN tmpObject_Price.Price - PriceChange.FixDiscount
+                                          ELSE tmpObject_Price.Price END
                                 ELSE Price_Site.Price END, 
                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                                 COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)) ::TFloat    AS Price
@@ -439,6 +534,8 @@ BEGIN
              LEFT JOIN tmpContainerPD ON tmpContainerPD.GoodsId = Price_Site.GoodsId
              
              LEFT JOIN tmpObject_Price ON tmpObject_Price.GoodsId = Price_Site.GoodsId
+
+             LEFT JOIN tmpPriceChange AS PriceChange ON PriceChange.GoodsId = Price_Site.GoodsId
              
              -- Соц Проект
              LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = Price_Site.GoodsMainId
@@ -482,4 +579,5 @@ $BODY$
 -- тест
 --
  
-SELECT * FROM gpSelect_GoodsPrice_ForSite (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Гептрал', inUnitId := 13711869, inisDiscountExternal := True , inSession:= zfCalc_UserSite());
+SELECT * FROM gpSelect_GoodsPrice_ForSite (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Гептрал', inUnitId := 16240371, inisDiscountExternal := True , inSession:= zfCalc_UserSite());
+

@@ -61,13 +61,48 @@ BEGIN
                INNER JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Member_Unit.ChildObjectId
 
           ORDER BY Object_Member.ValueData;
-    ELSE
+    ELSEIF inOperDate < '01.01.2023'
+    THEN
       OPEN Cursor2 FOR
           WITH tmpCalculation AS (SELECT
                                          Calculation.UserId                                                       AS UserId
                                        , Calculation.UnitUserId                                                   AS UnitId
                                        , Sum(Calculation.SummaCalc)                                               AS SummaCalc
                                   FROM gpSelect_Calculation_Wages(inOperDate, 0, inSession) AS Calculation
+                                   GROUP BY Calculation.UserId, Calculation.UnitUserId)
+            
+            
+          SELECT
+              COALESCE(Object_Member.ValueData, Object_User.ValueData)          AS PersonalName
+            , Object_Position.ValueData                                         AS PositionName
+            , Calculation.UserId                                                AS UserId
+            , Object_Unit.ValueData                                             AS UnitName
+            , Calculation.SummaCalc                                             AS SummaCalc
+          FROM tmpCalculation AS Calculation
+
+               INNER JOIN Object AS Object_User ON Object_User.Id = Calculation.UserId
+
+               LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                    ON ObjectLink_User_Member.ObjectId = Calculation.UserId
+                                   AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+               LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
+               
+        
+               LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                                    ON ObjectLink_Member_Position.ObjectId = Object_Member.Id
+                                   AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+               LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+
+               INNER JOIN Object AS Object_Unit ON Object_Unit.Id = Calculation.UnitId
+                                   
+          ORDER BY Object_Member.ValueData;
+    ELSE
+      OPEN Cursor2 FOR
+          WITH tmpCalculation AS (SELECT
+                                         Calculation.UserId                                                       AS UserId
+                                       , Calculation.UnitUserId                                                   AS UnitId
+                                       , Sum(Calculation.SummaCalc)                                               AS SummaCalc
+                                  FROM gpSelect_Calculation_WagesNew(inOperDate, 0, inSession) AS Calculation
                                    GROUP BY Calculation.UserId, Calculation.UnitUserId)
             
             

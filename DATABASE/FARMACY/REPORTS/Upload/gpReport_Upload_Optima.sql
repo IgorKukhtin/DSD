@@ -133,6 +133,7 @@ BEGIN
     INSERT INTO _Cross (GoodsId,GoodsCode)
       SELECT Goods.GoodsId, Goods.GoodsCode FROM  Goods;
     
+    ANALYSE _Cross;
 
     -- Остатки
     WITH Remains AS(
@@ -203,6 +204,8 @@ BEGIN
                                       ON MIString_PartionGoods.MovementItemId = Remains.MovementItemId
                                      AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
    ;
+   
+   ANALYSE _Result;
  
     -- Продажи
     WITH Sale AS(
@@ -281,6 +284,8 @@ BEGIN
         ;
     INSERT INTO _Result (RowData) Values ('</PReport>');
 
+    ANALYSE _Result;
+    
     -- РЕЗУЛЬТАТ
     RETURN QUERY
         SELECT _Result.RowData from _Result;

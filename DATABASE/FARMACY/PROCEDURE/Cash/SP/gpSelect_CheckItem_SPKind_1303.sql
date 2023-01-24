@@ -84,7 +84,7 @@ BEGIN
                outError2 :=  Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Telegram своему менеджеру для  исправления Цены реализации'||Chr(13)||Chr(10)||'(после исправления - препарат можно отпустить по рецепту)';
 
                outPrice := trunc(vbPriceCalc * 10) / 10;
-               outSentence :=  'Применить максимально допустимую цену - '||to_char(outPrice, 'G999G999G999G999D99');
+               outSentence :=  'Применить максимально допустимую цену - '||zfConvert_FloatToString(outPrice);
             END IF;
 
              -- raise notice 'Value 05: % % % %', vbPriceSale, vbPriceCalc, outPrice, (CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END / vbPriceSale * 100 - 100);
@@ -101,14 +101,14 @@ BEGIN
               IF (CASE WHEN COALESCE(outPrice, 0) = 0 THEN inPriceSale ELSE outPrice END / vbPriceSale * 100 - 100) <= COALESCE(vbDeviationsPrice1303, 1.0)
               THEN
                 outPrice := vbPriceSale;
-                outSentence :=  'Применить максимально допустимую цену - '||to_char(outPrice, 'G999G999G999G999D99');
+                outSentence :=  'Применить максимально допустимую цену - '||zfConvert_FloatToString(outPrice);
               ELSE
                 outSentence := '';
                 outPrice := 0;               
               END IF;
             END IF;
     END IF;
-
+    
 
 END;
 $BODY$
@@ -121,4 +121,5 @@ $BODY$
 
 -- SELECT * FROM gpSelect_CheckItem_SPKind_1303(inSPKindId := zc_Enum_SPKind_1303(), inGoodsId := 36643, inPriceSale := 1000, inSession := '3');
 
-select * from gpSelect_CheckItem_SPKind_1303(inSPKindId := 4823010 , inGoodsId :=  817, inPriceSale := 159.5,  inSession := '3');
+
+select * from gpSelect_CheckItem_SPKind_1303(inSPKindId := 4823010 , inGoodsId := 37309 , inPriceSale := 1185.5 ,  inSession := '3');

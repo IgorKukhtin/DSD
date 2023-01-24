@@ -3,11 +3,12 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
   ClientHeight = 405
   ClientWidth = 668
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 684
-  ExplicitHeight = 444
+  ExplicitWidth = 686
+  ExplicitHeight = 452
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 26
     Width = 668
     Height = 379
     ExplicitWidth = 668
@@ -747,6 +748,7 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
     object actDeleteCheck: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = acteSputnikSendSMS
       StoredProc = spMovementSetErased
       StoredProcList = <
         item
@@ -790,6 +792,7 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
     object actDeleteCheckSite: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = acteSputnikSendSMS
       BeforeAction = actChoiceCancelReason
       StoredProc = spMovementSetErasedSite
       StoredProcList = <
@@ -852,6 +855,53 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1076#1083#1103' '#1053#1058#1047'"'
       ImageIndex = 36
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1076#1083#1103' '#1053#1058#1047'"?'
+    end
+    object actExeceSputnikSMSParams: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = speSputnikSMSParams
+      StoredProcList = <
+        item
+          StoredProc = speSputnikSMSParams
+        end>
+      Caption = 'actExeceSputnikSMSParams'
+    end
+    object acteSputnikSendSMS: TdsdeSputnikSendSMS
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actExeceSputnikSMSParams
+      UserNameParam.Value = Null
+      UserNameParam.Component = FormParams
+      UserNameParam.ComponentItem = 'UserName'
+      UserNameParam.DataType = ftString
+      UserNameParam.MultiSelectSeparator = ','
+      PasswordParam.Value = Null
+      PasswordParam.Component = FormParams
+      PasswordParam.ComponentItem = 'Password'
+      PasswordParam.DataType = ftString
+      PasswordParam.MultiSelectSeparator = ','
+      FromParam.Value = Null
+      FromParam.Component = FormParams
+      FromParam.ComponentItem = 'FromName'
+      FromParam.DataType = ftString
+      FromParam.MultiSelectSeparator = ','
+      TextParam.Value = Null
+      TextParam.Component = FormParams
+      TextParam.ComponentItem = 'SMSText'
+      TextParam.DataType = ftString
+      TextParam.MultiSelectSeparator = ','
+      PhoneParam.Value = Null
+      PhoneParam.Component = FormParams
+      PhoneParam.ComponentItem = 'BayerPhone'
+      PhoneParam.DataType = ftString
+      PhoneParam.MultiSelectSeparator = ','
+      SendParam.Value = Null
+      SendParam.Component = FormParams
+      SendParam.ComponentItem = 'isSend'
+      SendParam.DataType = ftBoolean
+      SendParam.MultiSelectSeparator = ','
+      Caption = 'acteSputnikSendSMS'
     end
   end
   inherited MasterDS: TDataSource
@@ -1191,6 +1241,42 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
         Name = 'CancelReasonId'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSend'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BayerPhone'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SMSText'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 144
@@ -1262,5 +1348,70 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
     PackSize = 1
     Left = 354
     Top = 304
+  end
+  object speSputnikSMSParams: TdsdStoredProc
+    StoredProcName = 'gpSelect_Check_eSputnikSMSParams'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSend'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isSend'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Password'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FromName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BayerPhone'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BayerPhone'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SMSText'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SMSText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 216
+    Top = 264
   end
 end

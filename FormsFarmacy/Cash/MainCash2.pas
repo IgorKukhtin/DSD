@@ -3617,7 +3617,9 @@ begin
           CheckCDS.FieldByName('Amount').asCurrency, -2)) +
           ' единиц'#13#10'Проверьте количество товара, опущенного в чек.');
         exit;
-      end else if MessageDlg('В рецепте выписано: ' + FormatCurr('0.####',
+      end else if Round(RoundTo(CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
+        ('Amount').asCurrency, -2) * 100) < Round(FormParams.ParamByName('HelsiQty').Value * 100) then
+        if MessageDlg('В рецепте выписано: ' + FormatCurr('0.####',
           FormParams.ParamByName('HelsiQty').Value) + ' единиц'#13#10'В чеке: ' +
           FormatCurr('0.####', RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
           CheckCDS.FieldByName('Amount').asCurrency, -2)) +
