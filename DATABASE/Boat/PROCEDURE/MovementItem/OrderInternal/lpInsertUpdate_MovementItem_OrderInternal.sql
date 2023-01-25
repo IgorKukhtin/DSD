@@ -126,9 +126,69 @@ BEGIN
            WHERE MovementItem.MovementId = inMovementId_OrderClient
              AND MovementItem.DescId     = zc_MI_Detail()
              AND MovementItem.isErased    = FALSE
-             AND ((MILinkObject_Goods.ObjectId       = inGoodsId AND MILinkObject_Goods_basis.ObjectId IS NULL)
+             AND ((MILinkObject_Goods.ObjectId      = inGoodsId AND MILinkObject_Goods_basis.ObjectId IS NULL)
                OR MILinkObject_Goods_basis.ObjectId = inGoodsId
                  )
+
+          UNION
+           SELECT 
+                  MovementItem.ObjectId
+                  --
+                , 0 AS ReceiptLevelId
+                  --
+                , 0 AS ColorPatternId
+                  --
+                , 0 AS ProdColorPatternId
+                  --
+                , MovementItem.Amount
+                  --
+                , MIFloat_ForCount.ValueData AS ForCount
+
+           FROM MovementItem
+                -- какой узел был в ReceiptProdModel, заполняется если была замена
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsBasis
+                                                 ON MILinkObject_GoodsBasis.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_GoodsBasis.DescId         = zc_MILinkObject_GoodsBasis()
+                                              --AND MILinkObject_GoodsBasis.ObjectId       = inGoodsId
+                LEFT JOIN MovementItemFloat AS MIFloat_ForCount
+                                            ON MIFloat_ForCount.MovementItemId = MovementItem.Id
+                                           AND MIFloat_ForCount.DescId         = zc_MIFloat_ForCount()
+                -- Опция
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdOptions
+                                                 ON MILinkObject_ProdOptions.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
+           WHERE MovementItem.MovementId = inMovementId_OrderClient
+             AND MovementItem.DescId     = zc_MI_Child()
+             AND MovementItem.isErased    = FALSE
+             -- не опция
+             AND MILinkObject_ProdOptions.ObjectId IS NULL
+
+          UNION
+           SELECT lpSelect.GoodsId
+                  --
+                , 0 AS ReceiptLevelId
+                  --
+                , 0 AS ColorPatternId
+                  --
+                , 0 AS ProdColorPatternId
+                  --
+                  -- Кол-во опций
+                , lpSelect.Amount
+                  --
+                , 1 AS ForCount
+
+           FROM gpSelect_Object_ProdOptItems (inMovementId_OrderClient:= inMovementId_OrderClient
+                                            , inIsShowAll:= FALSE
+                                            , inIsErased := FALSE
+                                            , inIsSale   := TRUE
+                                            , inSession  := inUserId :: TVarChar
+                                             ) AS lpSelect
+           WHERE lpSelect.MovementId_OrderClient = inMovementId_OrderClient
+             AND lpSelect.ProductId              = inGoodsId
+             AND lpSelect.GoodsId                > 0
+             -- БЕЗ этой Структуры
+             AND COALESCE (lpSelect.ProdColorPatternId, 0) = 0
+           
           ) AS tmpMI
     ;
 

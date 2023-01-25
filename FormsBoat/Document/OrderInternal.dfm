@@ -1497,7 +1497,6 @@ object OrderInternalForm: TOrderInternalForm
     object bbSetErasedChild: TdxBarButton
       Action = SetErasedChild
       Category = 0
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
     end
     object bbOpenDocument: TdxBarButton
       Action = actOpenForm
@@ -1523,7 +1522,6 @@ object OrderInternalForm: TOrderInternalForm
     object bbSetUnErasedChild: TdxBarButton
       Action = SetUnErasedChild
       Category = 0
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
     end
     object bbb: TdxBarButton
       Action = InsertRecordBoat
@@ -1531,7 +1529,6 @@ object OrderInternalForm: TOrderInternalForm
     end
     object bbUpdateRecordBoat: TdxBarButton
       Action = actOrderClientInsertBoatForm
-      Caption = #1080#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
       Category = 0
     end
     object bbChoiceFormOrderClientItem: TdxBarButton
@@ -1627,6 +1624,9 @@ object OrderInternalForm: TOrderInternalForm
       StoredProcList = <
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMI_Detail
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -1756,8 +1756,8 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
-      isSetErased = False
       DataSource = DetailDS
     end
     object GridToExcel: TdsdGridToExcel
@@ -1783,11 +1783,11 @@ object OrderInternalForm: TOrderInternalForm
         item
           StoredProc = spSelectMI_Child
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
-      isSetErased = False
       DataSource = ChildDS
     end
     object SetUnErasedDetail: TdsdUpdateErased
@@ -1804,6 +1804,7 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS
@@ -1819,9 +1820,10 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1079#1077#1083'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1079#1077#1083'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1836,9 +1838,10 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -2427,8 +2430,8 @@ object OrderInternalForm: TOrderInternalForm
       View = cxGridDBTableView
       Action = actOrderClientInsertBoatForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
       ImageIndex = 0
     end
     object actOpenForm: TdsdOpenForm
@@ -2499,7 +2502,7 @@ object OrderInternalForm: TOrderInternalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = #1080#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
       ImageIndex = 1
       FormName = 'TOrderClientJournalChoiceItemForm'
@@ -2647,9 +2650,10 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS
@@ -2710,8 +2714,8 @@ object OrderInternalForm: TOrderInternalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
-      Hint = #1080#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
       ImageIndex = 1
       FormName = 'TOrderClientJournalChoiceForm'
       FormNameParam.Value = 'TOrderClientJournalChoiceForm'
