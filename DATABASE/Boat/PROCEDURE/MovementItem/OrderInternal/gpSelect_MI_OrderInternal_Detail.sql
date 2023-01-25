@@ -1,9 +1,11 @@
 -- Function: gpSelect_MI_OrderInternal_Detail()
 
 DROP FUNCTION IF EXISTS gpSelect_MI_OrderInternal_Detail (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_OrderInternal_Detail (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_OrderInternal_Detail(
     IN inMovementId       Integer      , -- ключ Документа
+    IN inShowAll          Boolean      , --
     IN inIsErased         Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
 )
@@ -30,10 +32,36 @@ BEGIN
      RETURN QUERY
      WITH
      tmpIsErased AS (SELECT FALSE AS isErased
-                      UNION ALL
+                    UNION ALL
                      SELECT inIsErased AS isErased WHERE inIsErased = TRUE
                     )
+        -- Результат
+        SELECT 0  :: Integer   AS Id
+             , MovementItem.Id AS ParentId
+             , 0  :: Integer   AS ReceiptServiceId
+             , 0  :: Integer   AS ReceiptServiceCode
+             , ('Работа № ' || tmp.Num) :: TVarChar  AS ReceiptServiceName
+             , '' :: TVarChar    AS Article_ReceiptService
 
+             , 0  :: Integer  AS PersonalId
+             , 0  :: Integer  AS PersonalCode
+             , '' :: TVarChar AS PersonalName
+             , '' :: TVarChar AS Comment
+
+             , 0  :: TFloat   AS Amount
+             , 0  :: TFloat   AS OperPrice
+             , 0  :: TFloat   AS Hours
+             , 0  :: TFloat   AS Summ
+
+             , FALSE :: Boolean isErased
+
+        FROM (SELECT '1' AS Num UNION SELECT '2' AS Num) AS tmp
+             INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                                    AND MovementItem.isErased   = FALSE
+        WHERE inShowAll = TRUE
+
+       UNION ALL
         -- Результат
         SELECT MovementItem.Id
              , MovementItem.ParentId
@@ -95,6 +123,4 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * from gpSelect_MI_OrderInternal_Detail (inMovementId:= 224, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
-
+-- SELECT * from gpSelect_MI_OrderInternal_Detail (inMovementId:= 224, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

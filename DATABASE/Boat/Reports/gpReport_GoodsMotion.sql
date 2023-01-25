@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMotion (
     IN inIsOrderClient    Boolean  ,  -- Заказ клиента №
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE  (LocationDescName TVarChar, LocationCode Integer, LocationName TVarChar
+RETURNS TABLE  (LocationId Integer, LocationDescName TVarChar, LocationCode Integer, LocationName TVarChar
               --, ObjectByDescName TVarChar, ObjectByCode Integer, ObjectByName TVarChar
               , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
               --, PartionId Integer
@@ -394,7 +394,8 @@ BEGIN
                                )
 
    -- РЕЗУЛЬТАТ
-  , tmpDataAll AS (SELECT tmpDataAll.LocationDescName
+  , tmpDataAll AS (SELECT tmpDataAll.LocationId
+                        , tmpDataAll.LocationDescName
                         , tmpDataAll.LocationCode
                         , tmpDataAll.LocationName
 
@@ -445,9 +446,10 @@ BEGIN
 
                         , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.PartionId        ELSE 0    END AS PartionId
                         , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementId       ELSE 0    END AS MovementId_Partion
-                   FROM (SELECT ObjectDesc.ItemName            AS LocationDescName
-                              , Object_Location.ObjectCode     AS LocationCode
-                              , Object_Location.ValueData      AS LocationName
+                   FROM (SELECT tmpMIContainer_group.LocationId AS LocationId
+                              , ObjectDesc.ItemName             AS LocationDescName
+                              , Object_Location.ObjectCode      AS LocationCode
+                              , Object_Location.ValueData       AS LocationName
 
                               , Object_Goods.Id         AS GoodsId
                               , Object_Goods.ObjectCode AS GoodsCode
@@ -533,7 +535,8 @@ BEGIN
                      LEFT JOIN tmpMIFloat_OrderClient AS MIFloat_MovementId
                                                       ON MIFloat_MovementId.MovementItemId = tmpDataAll.PartionId
                                                      AND COALESCE (MIFloat_MovementId.ValueData,0) <> 0
-                   GROUP BY tmpDataAll.LocationDescName
+                   GROUP BY tmpDataAll.LocationId
+                          , tmpDataAll.LocationDescName
                           , tmpDataAll.LocationCode
                           , tmpDataAll.LocationName
                           , tmpDataAll.GoodsId
@@ -569,7 +572,8 @@ BEGIN
 
 
    -- РЕЗУЛЬТАТ
-   SELECT tmpDataAll.LocationDescName
+   SELECT tmpDataAll.LocationId
+        , tmpDataAll.LocationDescName
         , tmpDataAll.LocationCode
         , tmpDataAll.LocationName
         , tmpDataAll.GoodsId
@@ -602,7 +606,7 @@ BEGIN
         , CAST (tmpDataAll.Amount AS NUMERIC (16,2))      ::TFloat  AS Amount
         , CAST (tmpDataAll.SummStart AS NUMERIC (16,2))   ::TFloat  AS SummStart
         , CAST (tmpDataAll.SummIn AS NUMERIC (16,2))      ::TFloat  AS SummIn
-        , CAST (tmpDataAll.SummOut AS NUMERIC (16,2))     ::TFloat  AS SummOut
+        , CAST (COALESCE (tmpDataAll.SummOut, 0) AS NUMERIC (16,2))     ::TFloat  AS SummOut
         , CAST (tmpDataAll.SummEnd AS NUMERIC (16,2))     ::TFloat  AS SummEnd
         , CAST (tmpDataAll.Summ AS NUMERIC (16,2))        ::TFloat  AS Summ
 

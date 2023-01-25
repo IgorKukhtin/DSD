@@ -69,7 +69,7 @@ BEGIN
            , tmpObject_PartionGoods.MovementId AS MovementId
            , MovementDesc_Partion.ItemName     AS DescName
            , Movement_Partion.InvNumber        AS InvNumber 
-           , zfCalc_InvNumber_isErased ('', Movement_Partion.InvNumber, Movement_Partion.OperDate, Movement_Partion.StatusId) :: TVarChar AS InvNumberFull
+           , zfCalc_InvNumber_isErased (MovementDesc_Partion.ItemName, Movement_Partion.InvNumber, Movement_Partion.OperDate, Movement_Partion.StatusId) :: TVarChar AS InvNumberFull
            , Movement_Partion.OperDate         AS OperDate
            
            , Object_Unit.Id                 AS UnitId
