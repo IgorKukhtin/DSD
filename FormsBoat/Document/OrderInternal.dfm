@@ -1198,6 +1198,10 @@ object OrderInternalForm: TOrderInternalForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMovement'
         end
         item
@@ -1756,7 +1760,6 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DetailDS
     end
@@ -1786,7 +1789,6 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
@@ -1804,7 +1806,6 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS
@@ -1823,7 +1824,6 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1079#1077#1083'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1079#1077#1083'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1841,7 +1841,6 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -2653,7 +2652,6 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS

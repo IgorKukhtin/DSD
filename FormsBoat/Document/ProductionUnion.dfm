@@ -1154,11 +1154,19 @@ object ProductionUnionForm: TProductionUnionForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMovement'
         end
         item
           Visible = True
           ItemName = 'bbShowErasedCost'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAllChild'
         end
         item
           BeginGroup = True
@@ -1211,14 +1219,6 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
-          ItemName = 'bbShowAllChild'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbInsertRecordChild'
         end
         item
@@ -1228,14 +1228,6 @@ object ProductionUnionForm: TProductionUnionForm
         item
           Visible = True
           ItemName = 'bbSetUnErasedChild'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_MI_Child'
         end
         item
           Visible = True
@@ -1255,6 +1247,14 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_MI_Child'
+        end
+        item
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -1457,7 +1457,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object bbSetUnErasedDetail: TdxBarButton
       Action = SetUnErasedDetail
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1091'>'
       Category = 0
     end
     object bbInsertRecordOrderClientItem: TdxBarButton
@@ -1466,7 +1465,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object bbChoiceFormOrderClientItem: TdxBarButton
       Action = actChoiceFormOrderClientItem
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
       Category = 0
     end
     object bbInsertRecordBoat: TdxBarButton
@@ -1714,10 +1712,9 @@ object ProductionUnionForm: TProductionUnionForm
         item
           StoredProc = spSelectMI
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1056#1072#1089#1093#1086#1076'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1056#1072#1089#1093#1086#1076'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1734,7 +1731,6 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1748,10 +1744,9 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080'>'
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -1769,7 +1764,6 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -2401,12 +2395,10 @@ object ProductionUnionForm: TProductionUnionForm
         item
           StoredProc = spSelectMI_Detail
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
-      isSetErased = False
       DataSource = DetailDS
     end
     object SetUnErasedDetail: TdsdUpdateErased
@@ -2420,10 +2412,9 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS
@@ -2437,15 +2428,15 @@ object ProductionUnionForm: TProductionUnionForm
       View = cxGridDBTableView_Det
       Action = actReceiptServiceChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1091'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1091'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 0
     end
     object actChoiceFormOrderClientItem: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = #1080#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
       ImageIndex = 1
       FormName = 'TOrderClientJournalChoiceItemForm'
