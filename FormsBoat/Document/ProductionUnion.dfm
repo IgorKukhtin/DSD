@@ -1112,8 +1112,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
-    Top = 303
+    Left = 72
+    Top = 183
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -1546,6 +1546,9 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           StoredProc = spSelectMIChild
+        end
+        item
+          StoredProc = spSelectMI_Detail
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -3643,6 +3646,13 @@ object ProductionUnionForm: TProductionUnionForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAllChild
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item

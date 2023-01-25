@@ -728,6 +728,10 @@ object ProductionPersonalForm: TProductionPersonalForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMovement'
         end
         item
