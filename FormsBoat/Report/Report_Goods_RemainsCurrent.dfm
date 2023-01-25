@@ -13,7 +13,6 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
   inherited Panel: TPanel [0]
     Width = 1131
     Height = 60
-    ExplicitTop = -7
     ExplicitWidth = 1131
     ExplicitHeight = 60
     inherited deStart: TcxDateEdit
@@ -1270,16 +1269,16 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         item
           Name = 'UnitGroupId'
           Value = ''
-          Component = GuidesUnit
-          ComponentItem = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName'
           Value = ''
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1305,7 +1304,7 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
           Name = 'PartionId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MovementItemId'
+          ComponentItem = 'PartionId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end

@@ -1142,8 +1142,7 @@ object OrderInternalForm: TOrderInternalForm
       item
         Name = 'inShowAll'
         Value = False
-        Component = FormParams
-        ComponentItem = 'ShowAll'
+        Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1295,7 +1294,6 @@ object OrderInternalForm: TOrderInternalForm
           ItemName = 'bbSetUnErasedDetail'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -1516,14 +1514,11 @@ object OrderInternalForm: TOrderInternalForm
     end
     object bbSetErasedDetail: TdxBarButton
       Action = SetErasedDetail
-      Caption = #1059#1076#1072#1083#1080#1090#1100
       Category = 0
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1056#1072#1073#1086#1090#1091
     end
     object bbSetUnErasedDetail: TdxBarButton
       Action = SetUnErasedDetail
       Category = 0
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1088#1072#1073#1086#1090#1091
     end
     object bbSetUnErasedChild: TdxBarButton
       Action = SetUnErasedChild
@@ -1758,10 +1753,9 @@ object OrderInternalForm: TOrderInternalForm
         item
           StoredProc = spSelectMI_Detail
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS
@@ -1792,9 +1786,9 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
+      DataSource = ChildDS
     end
     object SetUnErasedDetail: TdsdUpdateErased
       Category = 'Detail'
@@ -1807,10 +1801,9 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS
@@ -1829,7 +1822,6 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1847,7 +1839,6 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -2055,8 +2046,8 @@ object OrderInternalForm: TOrderInternalForm
       View = cxGridDBTableView_Det
       Action = actReceiptServiceChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1091'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1091'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 0
     end
     object actReceiptServiceChoiceForm: TOpenChoiceForm
@@ -2443,8 +2434,8 @@ object OrderInternalForm: TOrderInternalForm
     object actOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
       ImageIndex = 28
       FormName = 'TOrderClientForm'
       FormNameParam.Value = 'TOrderClientForm'
@@ -2659,7 +2650,6 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS
@@ -3380,8 +3370,8 @@ object OrderInternalForm: TOrderInternalForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 760
-    Top = 72
+    Left = 752
+    Top = 24
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -3906,6 +3896,14 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
@@ -3914,8 +3912,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 696
-    Top = 407
+    Left = 160
+    Top = 535
   end
   object spInsertUpdateMIDetail: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_OrderInternal_Detail'
@@ -4035,8 +4033,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 742
-    Top = 479
+    Left = 310
+    Top = 543
   end
   object spUnErasedMIDetail: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderInternal_SetUnErased_Child'
@@ -4061,8 +4059,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 670
-    Top = 503
+    Left = 238
+    Top = 511
   end
   object spErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderInternal_SetErased_Child'
@@ -4086,8 +4084,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 638
-    Top = 391
+    Left = 606
+    Top = 383
   end
   object spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderInternal_SetUnErased_Child'

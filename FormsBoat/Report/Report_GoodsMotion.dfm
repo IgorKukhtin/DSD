@@ -493,14 +493,14 @@
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 44562d
+      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
-      EditValue = 44562d
+      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 30
@@ -1076,16 +1076,16 @@
         item
           Name = 'UnitGroupId'
           Value = ''
-          Component = GuidesUnitGroup
-          ComponentItem = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'LocationId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'UnitGroupName'
           Value = ''
-          Component = GuidesUnitGroup
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'LocationName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1110,16 +1110,16 @@
         item
           Name = 'PartionId'
           Value = Null
-          Component = GuidesPartion
-          ComponentItem = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'PartionId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'InvNumber'
           Value = Null
-          Component = GuidesPartion
-          ComponentItem = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'InvNumberAll_Partion'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
