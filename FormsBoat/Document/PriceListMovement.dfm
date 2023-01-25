@@ -686,9 +686,8 @@ inherited PriceListMovementForm: TPriceListMovementForm
       StoredProcList = <
         item
           StoredProc = spErasedMIMaster
-        end
-        item
         end>
+      ShortCut = 0
     end
     object mactStartLoad_Uflex3: TMultiAction [13]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -779,9 +778,8 @@ inherited PriceListMovementForm: TPriceListMovementForm
       StoredProcList = <
         item
           StoredProc = spUnErasedMIMaster
-        end
-        item
         end>
+      ShortCut = 0
     end
     object actDoLoad_ASGEMEA: TExecuteImportSettingsAction [18]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
