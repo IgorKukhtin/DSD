@@ -1,9 +1,11 @@
 -- Function: gpSelect_MI_ProductionUnion_Detail()
 
 DROP FUNCTION IF EXISTS gpSelect_MI_ProductionUnion_Detail (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_ProductionUnion_Detail (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionUnion_Detail(
     IN inMovementId       Integer      , -- ключ Документа
+    IN inShowAll          Boolean      , --
     IN inIsErased         Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
 )
