@@ -987,7 +987,7 @@ object OrderPartnerForm: TOrderPartnerForm
     Top = 87
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_OrderPartner'
+    StoredProcName = 'gpSelect_MI_OrderPartner_Master'
     DataSet = MasterCDS
     DataSets = <
       item

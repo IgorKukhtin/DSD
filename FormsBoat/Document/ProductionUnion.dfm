@@ -1088,7 +1088,7 @@ object ProductionUnionForm: TProductionUnionForm
     Top = 343
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_ProductionUnion'
+    StoredProcName = 'gpSelect_MI_ProductionUnion_Master'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -1565,6 +1565,9 @@ object ProductionUnionForm: TProductionUnionForm
       StoredProcList = <
         item
           StoredProc = spSelectMIChild
+        end
+        item
+          StoredProc = spSelectMI_Detail
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' ('#1088#1072#1089#1093#1086#1076')'
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' ('#1088#1072#1089#1093#1086#1076')'

@@ -1485,7 +1485,7 @@ object IncomeForm: TIncomeForm
     Top = 343
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_Income'
+    StoredProcName = 'gpSelect_MI_Income_Master'
     DataSet = MasterCDS
     DataSets = <
       item

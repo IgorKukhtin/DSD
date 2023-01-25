@@ -662,7 +662,7 @@ object ProductionPersonalForm: TProductionPersonalForm
     Top = 375
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_ProductionPersonal'
+    StoredProcName = 'gpSelect_MI_ProductionPersonal_Master'
     DataSet = MasterCDS
     DataSets = <
       item

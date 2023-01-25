@@ -1117,7 +1117,7 @@ object OrderInternalForm: TOrderInternalForm
     Top = 103
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_OrderInternal'
+    StoredProcName = 'gpSelect_MI_OrderInternal_Master'
     DataSet = MasterCDS
     DataSets = <
       item
