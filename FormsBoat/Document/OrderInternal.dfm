@@ -1030,7 +1030,7 @@ object OrderInternalForm: TOrderInternalForm
               Width = 80
             end
             object Hours_ch4: TcxGridDBColumn
-              Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074
+              Caption = #1055#1083#1072#1085' '#1095#1072#1089#1086#1074
               DataBinding.FieldName = 'Hours'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
@@ -1040,11 +1040,12 @@ object OrderInternalForm: TOrderInternalForm
               Width = 95
             end
             object Summ_ch4: TcxGridDBColumn
-              Caption = #1057#1091#1084#1084#1072' ('#1074#1074#1086#1076')'
+              Caption = #1057#1091#1084#1084#1072' '#1055#1083#1072#1085
               DataBinding.FieldName = 'Summ'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 88
@@ -3834,8 +3835,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 576
-    Top = 512
+    Left = 584
+    Top = 528
   end
   object DetailCDS: TClientDataSet
     Aggregates = <>
@@ -4009,8 +4010,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 574
-    Top = 471
+    Left = 486
+    Top = 527
   end
   object spErasedMIDetail: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderInternal_SetErased_Child'

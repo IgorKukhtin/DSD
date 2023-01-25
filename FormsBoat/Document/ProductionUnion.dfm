@@ -695,7 +695,7 @@ object ProductionUnionForm: TProductionUnionForm
               Width = 80
             end
             object Hours_ch4: TcxGridDBColumn
-              Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074
+              Caption = #1060#1072#1082#1090' '#1095#1072#1089#1086#1074
               DataBinding.FieldName = 'Hours'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
@@ -705,7 +705,7 @@ object ProductionUnionForm: TProductionUnionForm
               Width = 95
             end
             object Summ_ch4: TcxGridDBColumn
-              Caption = #1057#1091#1084#1084#1072' ('#1074#1074#1086#1076')'
+              Caption = #1057#1091#1084#1084#1072' '#1060#1072#1082#1090
               DataBinding.FieldName = 'Summ'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
