@@ -1153,6 +1153,10 @@ BEGIN
              , ContainerCountPD_1.Remains              AS Remains_1
              , CASE WHEN COALESCE (ContainerCountPD_1.Remains, 0) <=  0
                     THEN Null
+                    WHEN COALESCE (Price_Unit.PriceChange, 0) <> 0 
+                    THEN zfCalc_PriceCash(Price_Unit.PriceChange,
+                                          CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                          COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
                     WHEN COALESCE (RemainsDiscount.GoodsId, 0) <> 0 AND COALESCE(Price_Unit.Price, 0) > 0 AND 
                          COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 AND GoodsDiscount.isDiscountSite = TRUE
                     THEN ROUND(CASE WHEN COALESCE(GoodsDiscount.MaxPrice, 0) = 0 OR Price_Unit.Price < GoodsDiscount.MaxPrice
@@ -1199,6 +1203,10 @@ BEGIN
              , ContainerCountPD_3.Remains              AS Remains_3
              , CASE WHEN COALESCE (ContainerCountPD_3.Remains, 0) <=  0
                     THEN Null
+                    WHEN COALESCE (Price_Unit.PriceChange, 0) <> 0 
+                    THEN zfCalc_PriceCash(Price_Unit.PriceChange,
+                                          CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                          COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
                     WHEN COALESCE (RemainsDiscount.GoodsId, 0) <> 0 AND COALESCE(Price_Unit.Price, 0) > 0 AND 
                          COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 AND GoodsDiscount.isDiscountSite = TRUE
                     THEN ROUND(CASE WHEN COALESCE(GoodsDiscount.MaxPrice, 0) = 0 OR Price_Unit.Price < GoodsDiscount.MaxPrice
@@ -1245,6 +1253,10 @@ BEGIN
              , ContainerCountPD_6.Remains              AS Remains_6
              , CASE WHEN COALESCE (ContainerCountPD_6.Remains, 0) <=  0
                     THEN Null
+                    WHEN COALESCE (Price_Unit.PriceChange, 0) <> 0 
+                    THEN zfCalc_PriceCash(Price_Unit.PriceChange,
+                                          CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                          COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
                     WHEN COALESCE (RemainsDiscount.GoodsId, 0) <> 0 AND COALESCE(Price_Unit.Price, 0) > 0 AND 
                          COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 AND GoodsDiscount.isDiscountSite = TRUE
                     THEN ROUND(CASE WHEN COALESCE(GoodsDiscount.MaxPrice, 0) = 0 OR Price_Unit.Price < GoodsDiscount.MaxPrice
@@ -1368,5 +1380,5 @@ $BODY$
 
 -- тест
  
-SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '5925154,2326315,18308538', zfCalc_UserSite()) AS p
+SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '4357, 6607, 12345271', zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId

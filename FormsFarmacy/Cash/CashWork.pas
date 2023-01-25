@@ -72,8 +72,8 @@ begin
       ZReportLogCDS.FieldDefs.Add('ZReport', ftInteger);
       ZReportLogCDS.FieldDefs.Add('FiscalNumber', ftString, 20);
       ZReportLogCDS.FieldDefs.Add('Date', ftDateTime);
-      ZReportLogCDS.FieldDefs.Add('SummaCash', ftCurrency);
-      ZReportLogCDS.FieldDefs.Add('SummaCard', ftCurrency);
+      ZReportLogCDS.FieldDefs.Add('SummaCash', ftFloat);
+      ZReportLogCDS.FieldDefs.Add('SummaCard', ftFloat);
       ZReportLogCDS.FieldDefs.Add('UserId', ftInteger);
       ZReportLogCDS.FieldDefs.Add('isSend', ftBoolean);
       ZReportLogCDS.CreateDataSet;

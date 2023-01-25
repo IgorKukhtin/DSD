@@ -23,16 +23,23 @@ BEGIN
    -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Income());
    vbUserId := inSession;
 
+   IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpContainer'))
+   THEN
+     DROP TABLE tmpContainer;
+   END IF;
+   
+   CREATE TEMP TABLE tmpContainer ON COMMIT DROP AS (
+      SELECT Object_Movement.ObjectCode AS MovementId, Container.Amount, Container.KeyValue
+      FROM Container
+           LEFT JOIN Object AS Object_Movement ON Object_Movement.Id = Container.ObjectId
+                                              AND Object_Movement.DescId = zc_Object_PartionMovement()
+      WHERE Container.DescId = zc_Container_SummIncomeMovementPayment()
+        AND Object_Movement.ObjectCode > 15000000);
+                              
+   ANALYSE tmpContainer;
+   
    RETURN QUERY
-   WITH tmpContainer AS
-                           (SELECT Object_Movement.ObjectCode AS MovementId, Container.Amount, Container.KeyValue
-                            FROM Container
-                                 LEFT JOIN Object AS Object_Movement ON Object_Movement.Id = Container.ObjectId
-                                                                    AND Object_Movement.DescId = zc_Object_PartionMovement()
-                            WHERE Container.DescId = zc_Container_SummIncomeMovementPayment()
-                              AND Object_Movement.ObjectCode > 15000000
-                           ),
-        tmpContainerPartialPay AS
+   WITH tmpContainerPartialPay AS
                            (SELECT tmpContainer.MovementId, tmpContainer.Amount, tmpContainer.KeyValue
                             FROM tmpContainer
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract

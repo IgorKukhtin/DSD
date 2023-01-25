@@ -393,10 +393,10 @@ begin
 
   WaitForSingleObject(MutexDiffCDS, INFINITE);
   try
+    CheckListDiffCDS;
     ListDiffCDS.Filtered := False;
     if FileExists(ListDiff_lcl) then
     begin
-      LoadLocalData(ListDiffCDS, ListDiff_lcl);
       if not ListDiffCDS.Active then
       begin
         DeleteLocalData(ListDiff_lcl);

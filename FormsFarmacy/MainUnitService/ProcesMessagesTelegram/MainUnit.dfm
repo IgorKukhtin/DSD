@@ -32,6 +32,7 @@ object MainForm: TMainForm
       Height = 31
       Align = alTop
       TabOrder = 0
+      ExplicitTop = -6
       object btnSendTelegram: TButton
         Left = 635
         Top = 0
@@ -84,6 +85,15 @@ object MainForm: TMainForm
         Caption = #1055#1086#1083#1091#1095#1080#1090#1100' '#1085#1086#1074#1099#1077' '#1089#1086#1086#1073#1097#1077#1085#1080#1103
         TabOrder = 5
         OnClick = btnGetMessagesTelegramClick
+      end
+      object btnProcesTimer2: TButton
+        Left = 391
+        Top = 0
+        Width = 138
+        Height = 25
+        Caption = #1054#1073#1088#1072#1073#1086#1090#1072#1090#1100' '#1087#1088#1086#1074#1077#1088#1082#1080
+        TabOrder = 6
+        OnClick = btnProcesTimer2Click
       end
     end
     object grChatId: TcxGrid
@@ -632,5 +642,12 @@ object MainForm: TMainForm
       Caption = #1047#1072#1082#1088#1099#1090#1100' '#1086#1073#1088#1072#1073#1086#1090#1095#1080#1082' '#1089#1086#1086#1073#1097#1077#1085#1080#1081' '#1080#1079' '#1090#1077#1083#1077#1075#1088#1072#1084
       OnClick = pmCloseClick
     end
+  end
+  object Timer2: TTimer
+    Enabled = False
+    Interval = 60000
+    OnTimer = Timer2Timer
+    Left = 128
+    Top = 160
   end
 end

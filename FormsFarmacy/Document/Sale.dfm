@@ -1530,6 +1530,15 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftFloat
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 0
+      end>
     SearchAsFilter = False
     Top = 241
   end

@@ -75,6 +75,43 @@ BEGIN
                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
                                      
     WHERE Movement.ID = inMovementId;
+    
+    CREATE TEMP TABLE MovementItem_Sale ON COMMIT DROP AS
+     (SELECT MovementItem.Id                    AS Id
+           , MovementItem.ObjectId              AS GoodsId
+           , MovementItem.Amount                AS Amount
+           , MIFloat_Price.ValueData            AS Price
+           , COALESCE (MIFloat_PriceSale.ValueData, MIFloat_Price.ValueData) AS PriceSale
+           , MIFloat_ChangePercent.ValueData    AS ChangePercent
+           , MIFloat_Summ.ValueData             AS Summ
+           , CASE WHEN COALESCE(vbInsuranceCompaniesId, 0) = 0
+                  THEN Null
+                  ELSE ROUND(MovementItem.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0), 2) -
+                       COALESCE (MIFloat_Summ.ValueData, 0) END::TFloat AS SummIC
+           , MIBoolean_Sp.ValueData             AS isSp
+           , MovementItem.isErased              AS isErased
+      FROM  MovementItem
+          LEFT JOIN MovementItemBoolean AS MIBoolean_SP
+                                        ON MIBoolean_SP.MovementItemId = MovementItem.Id
+                                       AND MIBoolean_SP.DescId = zc_MIBoolean_SP()
+          LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+          LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                      ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
+                                     AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+          LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                      ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                     AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                      ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                     AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+      WHERE MovementItem.MovementId = inMovementId
+        AND MovementItem.DescId = zc_MI_Master()
+        AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+      );
+                                      
+    ANALYSE MovementItem_Sale;    
 
     -- Результат
     IF inShowAll THEN
@@ -90,62 +127,12 @@ BEGIN
                               GROUP BY Container.ObjectId
                               HAVING SUM(Container.Amount)<>0
                               )
-               , MovementItem_Sale AS (SELECT
-                                          MovementItem.Id                    AS Id
-                                        , MovementItem.ObjectId              AS GoodsId
-                                        , MovementItem.Amount                AS Amount
-                                        , MIFloat_Price.ValueData            AS Price
-                                        , COALESCE (MIFloat_PriceSale.ValueData, MIFloat_Price.ValueData) AS PriceSale
-                                        , MIFloat_ChangePercent.ValueData    AS ChangePercent
-                                        , MIFloat_Summ.ValueData             AS Summ
-                                        , CASE WHEN COALESCE(vbInsuranceCompaniesId, 0) = 0
-                                               THEN NULL
-                                               ELSE ROUND(MovementItem.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0), 2) - 
-                                                          COALESCE(MIFloat_Summ.ValueData , 0) END::TFloat AS SummIC
-                                        , MIBoolean_Sp.ValueData             AS isSp
-                                        , MovementItem.isErased              AS isErased
-                                     FROM  MovementItem
-                                          LEFT JOIN MovementItemBoolean AS MIBoolean_SP
-                                                                        ON MIBoolean_SP.MovementItemId = MovementItem.Id
-                                                                       AND MIBoolean_SP.DescId = zc_MIBoolean_SP()
-
-                                          LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                          LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                                                      ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
-                                                                     AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-                                          LEFT JOIN MovementItemFloat AS MIFloat_Summ
-                                                                      ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                                                                     AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
-                                          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                                      ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
-                                                                     AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
-                                     WHERE MovementItem.MovementId = inMovementId
-                                       AND MovementItem.DescId = zc_MI_Master()
-                                       AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
-                                    )
               , MovementItemContainer AS (SELECT MovementItemContainer.MovementItemId     AS Id
                                                , SUM(-MovementItemContainer.Amount)       AS Amount
---                                               , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) AS M_IncomeId
                                       FROM  MovementItemContainer
-/*                                           LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
-                                                                         ON ContainerLinkObject_MovementItem.ContainerId = MovementItemContainer.ContainerId
-                                                                        AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                                           LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
-                                           -- элемент прихода
-                                           LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
-                                           -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-                                           LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                                                       ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
-                                                                      AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                                           -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                                           LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
-*/                                     
                                       WHERE MovementItemContainer.MovementId = inMovementId
                                         AND vbStatusId = zc_Enum_Status_UnComplete() 
                                       GROUP BY MovementItemContainer.MovementItemId
---                                             , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId)
                                       )
                                       
               , tmpPrice AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
@@ -284,40 +271,7 @@ BEGIN
         -- Результат другой
         RETURN QUERY
             WITH
-                MovementItem_Sale AS (SELECT MovementItem.Id                    AS Id
-                                           , MovementItem.ObjectId              AS GoodsId
-                                           , MovementItem.Amount                AS Amount
-                                           , MIFloat_Price.ValueData            AS Price
-                                           , COALESCE (MIFloat_PriceSale.ValueData, MIFloat_Price.ValueData) AS PriceSale
-                                           , MIFloat_ChangePercent.ValueData    AS ChangePercent
-                                           , MIFloat_Summ.ValueData             AS Summ
-                                           , CASE WHEN COALESCE(vbInsuranceCompaniesId, 0) = 0
-                                                  THEN Null
-                                                  ELSE ROUND(MovementItem.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0), 2) -
-                                                       COALESCE (MIFloat_Summ.ValueData, 0) END::TFloat AS SummIC
-                                           , MIBoolean_Sp.ValueData             AS isSp
-                                           , MovementItem.isErased              AS isErased
-                                      FROM  MovementItem
-                                          LEFT JOIN MovementItemBoolean AS MIBoolean_SP
-                                                                        ON MIBoolean_SP.MovementItemId = MovementItem.Id
-                                                                       AND MIBoolean_SP.DescId = zc_MIBoolean_SP()
-                                          LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                          LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                                                      ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
-                                                                     AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-                                          LEFT JOIN MovementItemFloat AS MIFloat_Summ
-                                                                      ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                                                                     AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
-                                          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                                      ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
-                                                                     AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
-                                      WHERE MovementItem.MovementId = inMovementId
-                                        AND MovementItem.DescId = zc_MI_Master()
-                                        AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
-                                      )
-              , tmpRemains AS (SELECT Container.ObjectId                  AS GoodsId
+                tmpRemains AS (SELECT Container.ObjectId                  AS GoodsId
                                     , SUM(Container.Amount)::TFloat       AS Amount
                                FROM Container
                                WHERE Container.DescId = zc_Container_Count()
@@ -329,24 +283,10 @@ BEGIN
                               )
               , MovementItemContainer AS (SELECT MovementItemContainer.MovementItemID     AS Id
                                                , SUM(-MovementItemContainer.Amount)       AS Amount
---                                               , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) AS M_IncomeId
                                       FROM MovementItemContainer
-/*                                           LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
-                                                                         ON ContainerLinkObject_MovementItem.ContainerId = MovementItemContainer.ContainerId
-                                                                        AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                                           LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
-                                           -- элемент прихода
-                                           LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
-                                           -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-                                           LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                                                       ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
-                                                                      AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                                           -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                                           LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
-*/                                      WHERE MovementItemContainer.MovementId = inMovementId
+                                      WHERE MovementItemContainer.MovementId = inMovementId
                                         AND vbStatusId = zc_Enum_Status_UnComplete() 
                                       GROUP BY MovementItemContainer.MovementItemID
---                                             , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId)
                                       )
 
               , tmpObjectLink_GoodsGroup AS (SELECT ObjectLink.ObjectId AS GoodsId
@@ -449,4 +389,4 @@ $BODY$
 */
 -- 
 
-select * from gpSelect_MovementItem_Sale(inMovementId := 30678777   , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_Sale(inMovementId := 30678777 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

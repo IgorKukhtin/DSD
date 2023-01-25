@@ -1,27 +1,25 @@
 inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEmployeeAllForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084
   ClientHeight = 504
-  ClientWidth = 824
+  ClientWidth = 1062
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 840
-  ExplicitHeight = 543
+  ExplicitWidth = 1080
+  ExplicitHeight = 551
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 824
+    Width = 1062
     Height = 447
     ExplicitWidth = 824
     ExplicitHeight = 447
     ClientRectBottom = 447
-    ClientRectRight = 824
+    ClientRectRight = 1062
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 824
       ExplicitHeight = 447
       inherited cxGrid: TcxGrid
-        Width = 824
+        Width = 1062
         Height = 447
-        ExplicitLeft = 101
-        ExplicitTop = 16
         ExplicitWidth = 824
         ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -45,6 +43,16 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = UserName
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = FixedPercent
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = AddBonusPercentTab
             end>
           OptionsData.Editing = False
           Styles.Content = nil
@@ -162,12 +170,30 @@ inherited Report_ImplementationPlanEmployeeAllForm: TReport_ImplementationPlanEm
             Options.Editing = False
             Width = 76
           end
+          object FixedPercent: TcxGridDBColumn
+            Caption = #1044#1086#1087'. '#1087#1088#1086#1094#1077#1085#1090
+            DataBinding.FieldName = 'FixedPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 76
+          end
+          object AddBonusPercentTab: TcxGridDBColumn
+            Caption = #1044#1086#1087'. '#1073#1086#1085#1091#1089
+            DataBinding.FieldName = 'AddBonusPercentTab'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 76
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 824
+    Width = 1062
     ExplicitWidth = 824
     inherited deStart: TcxDateEdit
       EditValue = 43344d

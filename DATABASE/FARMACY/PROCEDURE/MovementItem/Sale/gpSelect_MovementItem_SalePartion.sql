@@ -47,6 +47,38 @@ BEGIN
     IF vbStatusId <> zc_Enum_Status_Complete() THEN
         -- Результат такой
         IF inShowAll THEN
+
+          CREATE TEMP TABLE tmpRemains ON COMMIT DROP AS (
+                WITH
+                    tmpMovementItemContainer AS (SELECT MovementItemContainer.ContainerID        AS Id
+                                                      , SUM(-MovementItemContainer.Amount)       AS Amount
+                                                 FROM  MovementItemContainer
+                                                 WHERE MovementItemContainer.MovementId = inMovementId
+                                                   AND vbStatusId = zc_Enum_Status_UnComplete()
+                                                 GROUP BY MovementItemContainer.ContainerID
+                                                 )
+                   ,tmpRemainsAll AS(
+                                    SELECT
+                                         Container.Id
+                                       , Container.ObjectId
+                                       , Container.Amount
+                                    FROM Container
+                                    WHERE Container.DescId = zc_Container_Count()
+                                      AND Container.WhereObjectId = vbUnitId
+                                      AND Container.Amount > 0
+                                 )
+                  
+                      SELECT
+                           Container.Id
+                         , Container.ObjectId
+                         , Container.Amount + COALESCE (tmpMovementItemContainer.Amount, 0) AS Amount
+                      FROM tmpRemainsAll AS Container
+                           LEFT JOIN tmpMovementItemContainer ON tmpMovementItemContainer.ID = Container.Id
+                      WHERE (Container.Amount + COALESCE (tmpMovementItemContainer.Amount, 0)) > 0
+                   );
+          ANALYSE tmpRemains;
+
+
             RETURN QUERY
                 WITH
                     tmpMovementItemContainer AS (SELECT MovementItemContainer.ContainerID        AS Id
@@ -212,7 +244,8 @@ BEGIN
                     LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpRemainsInfo.GoodsId
                     ;
         ELSE
-            RETURN QUERY
+
+          CREATE TEMP TABLE tmpRemains ON COMMIT DROP AS (
                 WITH
                     tmpSale AS (SELECT
                                     MovementItem.ObjectId
@@ -230,18 +263,23 @@ BEGIN
                                                    AND vbStatusId = zc_Enum_Status_UnComplete()
                                                  GROUP BY MovementItemContainer.ContainerID
                                                  )
-                  , tmpRemains AS(SELECT
-                                      Container.Id                                                     AS ContainerId
-                                     ,Container.ObjectId                                               AS GoodsId
-                                     ,Container.Amount + COALESCE (tmpMovementItemContainer.Amount, 0) AS Amount
-                                  FROM Container
-                                       LEFT JOIN tmpMovementItemContainer ON tmpMovementItemContainer.ID = Container.Id
-                                  WHERE Container.ObjectId in (SELECT DISTINCT tmpSale.ObjectId FROM tmpSale)
-                                    AND Container.DescId = zc_Container_Count()
-                                    AND Container.WhereObjectId = vbUnitId
-                                    AND (Container.Amount + COALESCE (tmpMovementItemContainer.Amount, 0)) > 0
-                                 )
-                  , tmpRemainsInfoAll AS (
+                  SELECT
+                        Container.Id                                                     AS ContainerId
+                       ,Container.ObjectId                                               AS GoodsId
+                       ,Container.Amount + COALESCE (tmpMovementItemContainer.Amount, 0) AS Amount
+                  FROM Container
+                       LEFT JOIN tmpMovementItemContainer ON tmpMovementItemContainer.ID = Container.Id
+                  WHERE Container.ObjectId in (SELECT DISTINCT tmpSale.ObjectId FROM tmpSale)
+                      AND Container.DescId = zc_Container_Count()
+                      AND Container.WhereObjectId = vbUnitId
+                      AND (Container.Amount + COALESCE (tmpMovementItemContainer.Amount, 0)) > 0
+                   );
+                                 
+            ANALYSE tmpRemains;
+
+            RETURN QUERY
+                WITH
+                     tmpRemainsInfoAll AS (
                                  SELECT
                                       tmpRemains.ContainerId
                                     , tmpRemains.GoodsId
@@ -593,4 +631,4 @@ $BODY$
 */
 -- select * from gpSelect_MovementItem_SalePartion(inMovementId := 19240372   , inShowAll := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_SalePartion(inMovementId := 23745396 , inShowAll := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_SalePartion(inMovementId := 30678777 , inShowAll := 'True' ,  inSession := '3');

@@ -82,7 +82,7 @@ begin
     ListGoodsKeywordCDS.FieldDefs.Add('ID', ftInteger);
     ListGoodsKeywordCDS.FieldDefs.Add('GoodsCode', ftInteger);
     ListGoodsKeywordCDS.FieldDefs.Add('GoodsName', ftString, 200);
-    ListGoodsKeywordCDS.FieldDefs.Add('Amount', ftCurrency);
+    ListGoodsKeywordCDS.FieldDefs.Add('Amount', ftFloat);
     ListGoodsKeywordCDS.FieldDefs.Add('AccommodationName', ftString, 80);
     ListGoodsKeywordCDS.CreateDataSet;
 

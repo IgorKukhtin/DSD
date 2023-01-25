@@ -69,15 +69,17 @@ begin
       LoadLocalData(ListDiffCDS, ListDiff_lcl);
       if not ListDiffCDS.Active then Exit;
 
-      if not Assigned(ListDiffCDS.FindField('DiffKindId')) then
+      if not Assigned(ListDiffCDS.FindField('DiffKindId')) or
+         (ListDiffCDS.FindField('Amount').DataType <> ftFloat) or
+         TRUE then
       begin
         ListDiffNewCDS.FieldDefs.Add('ID', ftInteger);
         ListDiffNewCDS.FieldDefs.Add('Code', ftInteger);
-        ListDiffNewCDS.FieldDefs.Add('Name', ftString, 200);
-        ListDiffNewCDS.FieldDefs.Add('Amount', ftCurrency);
-        ListDiffNewCDS.FieldDefs.Add('Price', ftCurrency);
+        ListDiffNewCDS.FieldDefs.Add('Name', ftString, 255);
+        ListDiffNewCDS.FieldDefs.Add('Amount', ftFloat);
+        ListDiffNewCDS.FieldDefs.Add('Price', ftFloat);
         ListDiffNewCDS.FieldDefs.Add('DiffKindId', ftInteger);
-        ListDiffNewCDS.FieldDefs.Add('Comment', ftString, 400);
+        ListDiffNewCDS.FieldDefs.Add('Comment', ftString, 255);
         ListDiffNewCDS.FieldDefs.Add('UserID', ftInteger);
         ListDiffNewCDS.FieldDefs.Add('UserName', ftString, 80);
         ListDiffNewCDS.FieldDefs.Add('DateInput', ftDateTime);
@@ -94,7 +96,7 @@ begin
           ListDiffNewCDS.FieldByName('Name').AsVariant := ListDiffCDS.FieldByName('Name').AsVariant;
           ListDiffNewCDS.FieldByName('Amount').AsVariant := ListDiffCDS.FieldByName('Amount').AsVariant;
           ListDiffNewCDS.FieldByName('Price').AsVariant := ListDiffCDS.FieldByName('Price').AsVariant;
-          ListDiffNewCDS.FieldByName('DiffKindId').AsVariant := Null;
+          ListDiffNewCDS.FieldByName('DiffKindId').AsVariant := ListDiffCDS.FieldByName('DiffKindId').AsVariant;
           ListDiffNewCDS.FieldByName('Comment').AsVariant := ListDiffCDS.FieldByName('Comment').AsVariant;
           ListDiffNewCDS.FieldByName('UserID').AsVariant := ListDiffCDS.FieldByName('UserID').AsVariant;
           ListDiffNewCDS.FieldByName('UserName').AsVariant := ListDiffCDS.FieldByName('UserName').AsVariant;
@@ -122,21 +124,22 @@ function CheckListDiffCDS : boolean;
   var ListDiffCDS : TClientDataSet;
 begin
   Result := FileExists(ListDiff_lcl);
-  if Result then Exit;
-//  begin
-//    Result := CheckListDiffStrucnureCDS;
-//    Exit;
-//  end;
+  if Result then
+  begin
+    Result := CheckListDiffStrucnureCDS;
+    Exit;
+  end;
+
   ListDiffCDS :=  TClientDataSet.Create(Nil);
   try
     try
       ListDiffCDS.FieldDefs.Add('ID', ftInteger);
       ListDiffCDS.FieldDefs.Add('Code', ftInteger);
-      ListDiffCDS.FieldDefs.Add('Name', ftString, 200);
-      ListDiffCDS.FieldDefs.Add('Amount', ftCurrency);
-      ListDiffCDS.FieldDefs.Add('Price', ftCurrency);
+      ListDiffCDS.FieldDefs.Add('Name', ftString, 255);
+      ListDiffCDS.FieldDefs.Add('Amount', ftFloat);
+      ListDiffCDS.FieldDefs.Add('Price', ftFloat);
       ListDiffCDS.FieldDefs.Add('DiffKindId', ftInteger);
-      ListDiffCDS.FieldDefs.Add('Comment', ftString, 400);
+      ListDiffCDS.FieldDefs.Add('Comment', ftString, 255);
       ListDiffCDS.FieldDefs.Add('UserID', ftInteger);
       ListDiffCDS.FieldDefs.Add('UserName', ftString, 80);
       ListDiffCDS.FieldDefs.Add('DateInput', ftDateTime);
