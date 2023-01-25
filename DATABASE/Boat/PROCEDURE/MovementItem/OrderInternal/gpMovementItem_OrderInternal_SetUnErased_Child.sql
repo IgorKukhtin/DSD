@@ -7,18 +7,16 @@ CREATE OR REPLACE FUNCTION gpMovementItem_OrderInternal_SetUnErased_Child(
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
 )
-  RETURNS Boolean
+RETURNS Boolean
 AS
 $BODY$
-   DECLARE vbMovementId Integer;
-   DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
 BEGIN
-  --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_OrderInternal());
-  vbUserId := lpGetUserBySession (inSession);
+     --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_OrderInternal());
+     vbUserId := lpGetUserBySession (inSession);
 
-  -- устанавливаем новое значение
-  outIsErased:= lpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
+     -- устанавливаем новое значение
+     outIsErased:= lpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inUserId:= vbUserId);
 
 END;
 $BODY$
