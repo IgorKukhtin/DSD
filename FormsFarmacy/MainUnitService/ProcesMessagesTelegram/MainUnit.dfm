@@ -32,7 +32,6 @@ object MainForm: TMainForm
       Height = 31
       Align = alTop
       TabOrder = 0
-      ExplicitTop = -6
       object btnSendTelegram: TButton
         Left = 635
         Top = 0

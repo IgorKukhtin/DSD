@@ -322,7 +322,8 @@ begin
 
   try
     // ѕровер€ем дату обработки заказов с таблеток
-    if (FBookingsTabletkiLog <> '') and FileExists(FBookingsTabletkiLog) then
+    if (FBookingsTabletkiLog <> '') and FileExists(FBookingsTabletkiLog) and
+       (HourOf(Now) >= 8) and (HourOf(Now) < 21) then
     begin
       try
         if FileGetDateTimeInfo(FBookingsTabletkiLog, DateTime) and

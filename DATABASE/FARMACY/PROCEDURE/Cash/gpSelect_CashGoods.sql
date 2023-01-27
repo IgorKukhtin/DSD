@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer,
                isResolution_224 Boolean,
                isSPRegistry_1303 Boolean,
                PriceOOC1303 TFloat, 
+               MinimumLot TFloat, 
                AmoutDiffUser TFloat,
                AmoutDiff TFloat,
                AmountDiffPrev TFloat)
@@ -427,11 +428,19 @@ BEGIN
                                   _GoodsPriceAll.isClose           AS isClose,
                                   _GoodsPriceAll.isFirst           AS isFirst,
                                   _GoodsPriceAll.isSecond          AS isSecond,
-                                  _GoodsPriceAll.isResolution_224  AS isResolution_224
+                                  _GoodsPriceAll.isResolution_224  AS isResolution_224,
+                                  ObjectFloat_Goods_MinimumLot.ValueData AS MinimumLot
                             FROM _GoodsPriceAll
                             
                                  INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = _GoodsPriceAll.GoodsId
                                  INNER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+                                 LEFT JOIN Object_Goods_Juridical AS Object_Goods_Juridical ON Object_Goods_Juridical.GoodsMainId = Object_Goods_Retail.GoodsMainId
+                                                                                           AND Object_Goods_Juridical.JuridicalId =  _GoodsPriceAll.JuridicalId  
+
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_Goods_MinimumLot
+                                                       ON ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
+                                                      AND ObjectFloat_Goods_MinimumLot.ValueData <> 0
+                                                      AND ObjectFloat_Goods_MinimumLot.ObjectId  = Object_Goods_Juridical.Id
                             );
                             
      ANALYSE GoodsPriceAll;
@@ -503,6 +512,7 @@ BEGIN
               GoodsPriceAll.isResolution_224    AS isResolution_224,
               COALESCE (tmpGoodsSP_1303.GoodsId, 0) <> 0          AS isSPRegistry_1303,
               Round(tmpGoodsSP_1303.PriceOptSP * 1.1, 2)::TFloat  AS PriceOOC1303,
+              GoodsPriceAll.MinimumLot          AS MinimumLot,
               NULL::TFloat                      AS AmoutDiffUser,
               NULL::TFloat                      AS AmoutDiff,
               NULL::TFloat                      AS AmountDiffPrev

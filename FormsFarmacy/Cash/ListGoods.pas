@@ -77,6 +77,7 @@ type
     colAreaName: TcxGridDBColumn;
     colisResolution_224: TcxGridDBColumn;
     colPriceOOC1303: TcxGridDBColumn;
+    colMinimumLot: TcxGridDBColumn;
     procedure ParentFormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure edt1Exit(Sender: TObject);
