@@ -883,7 +883,8 @@ BEGIN
             , _Result_Master.GoodsId_basis
             , _Result_Master.GoodsCode_basis
             , _Result_Master.GoodsName_basis
-            , _Result_Master.GoodsKindId
+--            , _Result_Master.GoodsKindId
+            , Object.Id AS GoodsKindId
             , _Result_Master.GoodsKindName
             , _Result_Master.MeasureName
             , _Result_Master.MeasureName_basis
@@ -1000,6 +1001,7 @@ BEGIN
            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                          ON MIBoolean_Calculated.MovementItemId = _Result_Master.Id
                                         AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
+           LEFT JOIN Object ON Object.Id = COALESCE (_Result_Master.GoodsKindId, zc_GoodsKind_Basis())
        ;
        RETURN NEXT Cursor1;
 

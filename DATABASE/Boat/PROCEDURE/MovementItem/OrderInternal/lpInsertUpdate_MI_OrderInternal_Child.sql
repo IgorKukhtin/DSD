@@ -3,15 +3,17 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderInternal_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderInternal_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderInternal_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_OrderInternal_Child (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_OrderInternal_Child(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
     IN inParentId               Integer   , -- 
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
     IN inObjectId               Integer   , -- Комплектующие 
-    IN inReceiptLevelId         Integer   , --  Этап сборки
+    IN inReceiptLevelId         Integer   , -- Этап сборки
     IN inColorPatternId         Integer   , -- Шаблон Boat Structure 
     IN inProdColorPatternId     Integer   , -- Boat Structure  
+    IN inProdOptionsId          Integer   , -- Опция
     IN inUnitId                 Integer   , -- Место учета
     IN inAmount                 TFloat    , -- Количество (шаблон сборки)
     IN inAmountReserv           TFloat    , -- Количество резерв
@@ -44,6 +46,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ColorPattern(), ioId, inColorPatternId);
      -- сохранили связь с <Boat Structure>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ProdColorPattern(), ioId, inProdColorPatternId);
+     -- сохранили связь с <Options>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ProdOptions(), ioId, inProdOptionsId);
      -- сохранили связь с <Место учета>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
      

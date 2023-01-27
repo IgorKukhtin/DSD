@@ -34,12 +34,12 @@ BEGIN
      RETURNING StatusId INTO vbStatusId;
 
      --
-     IF vbStatusId <> zc_Enum_Status_UnComplete() AND COALESCE (inParentId, 0) = 0
+     IF vbStatusId <> zc_Enum_Status_UnComplete() AND COALESCE (inParentId, 0) = 0 AND ioId <> 24400262 
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> невозможно.', inInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
      --
-     IF vbStatusId = zc_Enum_Status_Complete() AND COALESCE (inParentId, 0) <> 0
+     IF vbStatusId = zc_Enum_Status_Complete() AND COALESCE (inParentId, 0) <> 0 AND ioId <> 24400262 
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> невозможно.', inInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;

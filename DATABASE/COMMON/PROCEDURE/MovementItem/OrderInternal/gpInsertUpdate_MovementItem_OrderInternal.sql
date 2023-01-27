@@ -50,7 +50,7 @@ BEGIN
                                                                                           OR (ObjectId = 8451 AND vbToId = 8455))   --  8451 "ЦЕХ упаковки"  8455 склад специй - нет вида товара
                                                        )
      THEN
-         RAISE EXCEPTION 'Ошибка.Не определено значение <Вид товара>.';
+         RAISE EXCEPTION 'Ошибка.Не определено значение <Вид товара> для <%>.', lfGet_Object_ValueData (inGoodsId);
      END IF;
      -- проверка
      IF ioId > 0 AND inIsPack = FALSE

@@ -18,12 +18,16 @@ BEGIN
      vbUserId := lpGetUserBySession (inSession);
 
      -- автоматом формируем zc_MI_Child - по значениям план
-     PERFORM lpInsertUpdate_MI_ProductionUnion_Child (ioId         := COALESCE (tmp.Id) :: Integer
-                                                    , inParentId   := inParentId
-                                                    , inMovementId := inMovementId
-                                                    , inObjectId   := tmp.ObjectId
-                                                    , inAmount     := COALESCE (tmp.Value,0) :: TFloat
-                                                    , inUserId     := vbUserId
+     PERFORM lpInsertUpdate_MI_ProductionUnion_Child (ioId                := COALESCE (tmp.Id) :: Integer
+                                                    , inParentId          := inParentId
+                                                    , inMovementId        := inMovementId
+                                                    , inObjectId          := tmp.ObjectId
+                                                    , inReceiptLevelId    := tmp.ReceiptLevelId
+                                                    , inColorPatternId    := tmp.ColorPatternId
+                                                    , inProdColorPatternId:= tmp.ProdColorPatternId
+                                                    , inProdOptionsId     := tmp.ProdOptionsId
+                                                    , inAmount            := COALESCE (tmp.Value,0) :: TFloat
+                                                    , inUserId            := vbUserId
                                                     )
      FROM gpSelect_MI_ProductionUnion_Child (inMovementId, TRUE, FALSE, inSession) AS tmp
      WHERE tmp.ParentId = inParentId;
