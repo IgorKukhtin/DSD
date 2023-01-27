@@ -275,11 +275,13 @@ BEGIN
                        ) AS tmp
                          ON tmp.ParentId = _tmpItem.MovementItemId
              -- партия !!!только!!! ОДНА
-             LEFT JOIN (SELECT MAX (_tmpItem.MovementItemId) AS MovementItemId, _tmpItem.GoodsId
+             LEFT JOIN (SELECT MAX (_tmpItem.MovementItemId) AS MovementItemId, _tmpItem.GoodsId, _tmpItem.MovementId_order
                         FROM _tmpItem
-                        GROUP BY _tmpItem.GoodsId
+                        GROUP BY _tmpItem.GoodsId, _tmpItem.MovementId_order
                        ) AS _tmpItem_partion
                          ON _tmpItem_partion.GoodsId = _tmpItem.GoodsId
+                        -- здесь еще условие Id_order
+                        AND _tmpItem_partion.MovementId_order = _tmpItem.MovementId_order
         WHERE _tmpItem.Amount - COALESCE (tmp.Amount, 0) > 0
        ;
 

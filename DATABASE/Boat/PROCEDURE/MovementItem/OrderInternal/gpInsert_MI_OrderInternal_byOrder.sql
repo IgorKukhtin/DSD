@@ -4,10 +4,10 @@ DROP FUNCTION IF EXISTS gpInsert_MI_OrderInternal_byOrder(Integer, Integer, Inte
 DROP FUNCTION IF EXISTS gpInsert_MI_OrderInternal_byOrderClient(Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_MI_OrderInternal_byOrderClient(
-    IN inMovementId            Integer   , -- Ключ объекта <Документ> 
+    IN inMovementId             Integer   , -- Ключ объекта <Документ> 
     IN inMovementId_OrderClient Integer   , -- Заказ Клиента
-    IN inReceiptGoodsId        Integer   , -- узел
-    IN inSession               TVarChar    -- сессия пользователя
+    IN inReceiptGoodsId         Integer   , -- узел
+    IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
 $BODY$

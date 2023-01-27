@@ -12,13 +12,11 @@ BEGIN
 
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem'))
      THEN
-         DELETE FROM _tmpItem;
+         DELETE FROM _tmpItem_pr;
+         DELETE FROM _tmpItem_Child_mi;
          DELETE FROM _tmpItem_Child;
-         --
-         DELETE FROM _tmpReserveDiff;
-         DELETE FROM _tmpReserveRes;
      ELSE
-         -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+         -- таблица - элементы Master
          CREATE TEMP TABLE _tmpItem_pr (MovementItemId Integer
                                       , GoodsId Integer, PartionId Integer
                                       , ContainerId_Summ Integer, ContainerId_Goods Integer
@@ -28,7 +26,7 @@ BEGIN
                                       , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                       , MovementId_order Integer
                                        ) ON COMMIT DROP;
-         -- таблица - партии
+         -- таблица - элементы Child
          CREATE TEMP TABLE _tmpItem_Child_mi (MovementItemId Integer, ParentId Integer
                                             , GoodsId Integer
                                             , Amount TFloat
@@ -43,6 +41,7 @@ BEGIN
                                          , AccountId Integer
                                          , Amount TFloat
                                          , MovementId_order Integer
+                                         , isId_order Boolean
                                           ) ON COMMIT DROP;
 
      END IF;

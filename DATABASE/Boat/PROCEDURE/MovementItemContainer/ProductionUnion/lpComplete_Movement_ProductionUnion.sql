@@ -305,16 +305,30 @@ BEGIN
                        ) AS tmp
                          ON tmp.MovementItemId = _tmpItem.MovementItemId
              -- партия !!!только!!! ОДНА
-             LEFT JOIN (SELECT MAX (_tmpItem_Child_mi.MovementItemId) AS MovementItemId, _tmpItem_Child_mi.GoodsId
+             LEFT JOIN (SELECT MAX (_tmpItem_Child_mi.MovementItemId) AS MovementItemId, _tmpItem_Child_mi.GoodsId, _tmpItem_Child_mi.MovementId_order
                         FROM _tmpItem_Child_mi
-                        GROUP BY _tmpItem_Child_mi.GoodsId
+                        GROUP BY _tmpItem_Child_mi.GoodsId, _tmpItem_Child_mi.MovementId_order
                        ) AS _tmpItem_partion
-                         ON _tmpItem_partion.GoodsId = _tmpItem.GoodsId
+                         ON _tmpItem_partion.GoodsId          = _tmpItem.GoodsId
+                       -- здесь еще условие Id_order
+                       AND _tmpItem_partion.MovementId_order = _tmpItem.MovementId_order
         WHERE _tmpItem.Amount - COALESCE (tmp.Amount, 0) > 0
        ;
 
+
+     -- проверка - если партия создается, тогда она ОДНА для GoodsId + MovementId_order
+     IF EXISTS (SELECT _tmpItem_Child.GoodsId, _tmpItem_Child.MovementId_order
+                FROM _tmpItem_Child
+                WHERE _tmpItem_Child.MovementItemId = _tmpItem_Child.PartionId
+                GROUP BY _tmpItem_Child.GoodsId, _tmpItem_Child.MovementId_order
+                HAVING COUNT(*) > 1
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Партия создается, но она НЕ ОДНА для GoodsId + MovementId_order.';
+     END IF;
+
+
      -- RAISE EXCEPTION 'test.<%> <%>', (SELECT SUM (_tmpItem_Child_mi.Amount) FROM _tmpItem_Child_mi), (SELECT SUM (_tmpItem_Child.Amount) FROM _tmpItem_Child);
-     
 
      -- проверка - одинаковое кол-во _tmpItem_Child_mi + _tmpItem_Child
      IF EXISTS (SELECT 1
@@ -354,6 +368,149 @@ BEGIN
                                                , inUserId            := inUserId
                                                 )
      FROM _tmpItem_pr
+    ;
+
+
+     -- определили - !!!нужна ли партия MovementId_order!!!
+     UPDATE _tmpItem_Child SET isId_order = tmpItem_Child.isId_order
+
+     FROM (WITH tmpItem AS (SELECT DISTINCT _tmpItem_Child.GoodsId FROM _tmpItem_Child)
+              , tmpMI AS (SELECT DISTINCT _tmpItem_Child.GoodsId
+                          FROM _tmpItem_Child
+                               INNER JOIN MovementItem ON MovementItem.ObjectId = _tmpItem_Child.GoodsId
+                                                      AND MovementItem.DescId   = zc_MI_Master()
+                                                      AND MovementItem.isErased = FALSE
+                               INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                  AND Movement.OperDate BETWEEN vbOperDate - INTERVAL '1 YEAR' AND vbOperDate + INTERVAL '1 YEAR'
+                                                  AND Movement.DescId   IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
+                         UNION ALL
+                          -- виртуальные" узлы
+                          SELECT DISTINCT
+                                 OL.ChildObjectId
+                          FROM ObjectLink AS OL
+                               -- Не удален
+                               INNER JOIN Object AS Object_ReceiptGoodsChild ON Object_ReceiptGoodsChild.Id       = OL.ObjectId
+                                                                            AND Object_ReceiptGoodsChild.isErased = FALSE
+
+                               INNER JOIN ObjectLink AS OL_ReceiptGoodsChild_ReceiptGoods
+                                                     ON OL_ReceiptGoodsChild_ReceiptGoods.ObjectId = OL.ObjectId
+                                                    AND OL_ReceiptGoodsChild_ReceiptGoods.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                               -- Не удален
+                               INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id       = OL_ReceiptGoodsChild_ReceiptGoods.ChildObjectId
+                                                                       AND Object_ReceiptGoods.isErased = FALSE
+                          WHERE OL.DescId        = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+                            AND OL.ChildObjectId > 0
+                         )
+           --
+           SELECT tmpItem.GoodsId
+                , CASE WHEN tmpMI.GoodsId > 0 THEN TRUE ELSE FALSE END AS isId_order
+           FROM tmpItem
+                LEFT JOIN tmpMI ON tmpMI.GoodsId = tmpItem.GoodsId
+          ) AS tmpItem_Child
+     WHERE _tmpItem_Child.GoodsId = tmpItem_Child.GoodsId
+    ;
+
+     -- если партия не нужна - !!!подставляем абсолютно любую - без партии Заказ Клиента!!!
+     UPDATE _tmpItem_Child SET PartionId = tmpItem_Child.PartionId_new
+     FROM (WITH tmpPartion AS (SELECT _tmpItem_Child.GoodsId             AS GoodsId
+                                    , _tmpItem_Child.PartionId           AS PartionId_old
+                                      -- нашли Партию
+                                    , Object_PartionGoods.MovementItemId AS PartionId_new
+                                      -- № п/п
+                                    , ROW_NUMBER() OVER (PARTITION BY _tmpItem_Child.GoodsId
+                                                         ORDER BY CASE WHEN MovementItem.Amount > 0 THEN 0 ELSE 1 END
+                                                                , CASE WHEN Movement.Id > 0 THEN 0 ELSE 1 END
+                                                                , COALESCE (Movement.OperDate, zc_DateStart()) DESC
+                                                                , Object_PartionGoods.MovementItemId ASC
+                                                        ) AS Ord
+                               FROM _tmpItem_Child
+                                    -- если это "текущая" партия - она может стать приоритетной
+                                    -- LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = _tmpItem_Child.PartionId
+
+                                    -- если это "любая" партия
+                                    INNER JOIN Object_PartionGoods ON Object_PartionGoods.ObjectId = _tmpItem_Child.GoodsId
+                                    -- без партии Заказ Клиента
+                                    LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                ON MIFloat_MovementId.MovementItemId = Object_PartionGoods.MovementItemId
+                                                               AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                                               AND MIFloat_MovementId.ValueData      > 0
+                                    -- если это партия Приход
+                                    LEFT JOIN MovementItem ON MovementItem.Id       = Object_PartionGoods.MovementItemId
+                                                          AND MovementItem.isErased = FALSE
+                                                          AND MovementItem.Amount   > 0
+                                    -- если это "любая" партия не равная 0
+                                    LEFT JOIN MovementItem AS MovementItem_two
+                                                           ON MovementItem_two.Id       = Object_PartionGoods.MovementItemId
+                                                          AND MovementItem_two.isErased = FALSE
+                                                          AND MovementItem_two.Amount   <> 0
+                                    -- Документ - Проведен
+                                    LEFT JOIN Movement ON Movement.Id       = COALESCE (MovementItem.MovementId, MovementItem_two.MovementId)
+                                                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                               -- условие - когда создаются партии
+                               WHERE _tmpItem_Child.MovementItemId = _tmpItem_Child.PartionId
+                                 AND _tmpItem_Child.isId_order     = FALSE
+                                 -- без партии Заказ Клиента
+                                 AND MIFloat_MovementId.MovementItemId IS NULL
+                              )
+           -- Результат
+           SELECT tmpPartion.PartionId_old, tmpPartion.PartionId_new
+           FROM tmpPartion
+           -- взяли только первую
+           WHERE tmpPartion.Ord = 1
+          ) AS tmpItem_Child
+
+     WHERE _tmpItem_Child.PartionId = tmpItem_Child.PartionId_old
+    ;
+
+
+     -- если партия !!!нужна!!!подставляем любую - с учетом Заказ Клиента!!!
+     UPDATE _tmpItem_Child SET PartionId = tmpItem_Child.PartionId_new
+     FROM (WITH tmpPartion AS (SELECT _tmpItem_Child.MovementId_order    AS MovementId_order
+                                    , _tmpItem_Child.PartionId           AS PartionId_old
+                                      -- нашли Партию
+                                    , Object_PartionGoods.MovementItemId AS PartionId_new
+                                      -- № п/п
+                                    , ROW_NUMBER() OVER (PARTITION BY _tmpItem_Child.GoodsId
+                                                         ORDER BY CASE WHEN MovementItem.Amount > 0 THEN 0 ELSE 1 END
+                                                                , CASE WHEN Movement.Id > 0 THEN 0 ELSE 1 END
+                                                                , COALESCE (Movement.OperDate, zc_DateStart()) DESC
+                                                                , Object_PartionGoods.MovementItemId ASC
+                                                        ) AS Ord
+                               FROM _tmpItem_Child
+                                    -- если это "любая" партия
+                                    INNER JOIN Object_PartionGoods ON Object_PartionGoods.ObjectId = _tmpItem_Child.GoodsId
+                                    -- партия Заказ Клиента
+                                    LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                ON MIFloat_MovementId.MovementItemId = Object_PartionGoods.MovementItemId
+                                                               AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                    -- если это партия Приход
+                                    LEFT JOIN MovementItem ON MovementItem.Id       = Object_PartionGoods.MovementItemId
+                                                          AND MovementItem.isErased = FALSE
+                                                          AND MovementItem.Amount   > 0
+                                    -- если это "любая" партия не равная 0
+                                    LEFT JOIN MovementItem AS MovementItem_two
+                                                           ON MovementItem_two.Id       = Object_PartionGoods.MovementItemId
+                                                          AND MovementItem_two.isErased = FALSE
+                                                          AND MovementItem_two.Amount   <> 0
+                                    -- Документ - Проведен
+                                    LEFT JOIN Movement ON Movement.Id       = COALESCE (MovementItem.MovementId, MovementItem_two.MovementId)
+                                                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                               -- условие - когда создаются партии
+                               WHERE _tmpItem_Child.MovementItemId = _tmpItem_Child.PartionId
+                                 AND _tmpItem_Child.isId_order     = TRUE
+                                 -- партия Заказ Клиента
+                                 AND COALESCE (MIFloat_MovementId.ValueData, 0) = COALESCE (_tmpItem_Child.MovementId_order, 0)
+                              )
+           -- Результат
+           SELECT tmpPartion.MovementId_order, tmpPartion.PartionId_old, tmpPartion.PartionId_new
+           FROM tmpPartion
+           -- взяли только первую
+           WHERE tmpPartion.Ord = 1
+          ) AS tmpItem_Child
+
+     WHERE _tmpItem_Child.PartionId        = tmpItem_Child.PartionId_old
+       AND _tmpItem_Child.MovementId_order = tmpItem_Child.MovementId_order
     ;
 
      -- Создали партии - !!!РАСХОД!!!
@@ -421,8 +578,9 @@ BEGIN
                                       AND tmpItemPrice.Ord     = 1
           ) AS tmpItem
     ;
+
      -- Создали св-во у партии - !!!РАСХОД!!!
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), _tmpItem_Child.MovementItemId, _tmpItem_Child.MovementId_order)
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), _tmpItem_Child.MovementItemId, CASE WHEN _tmpItem_Child.isId_order = TRUE THEN _tmpItem_Child.MovementId_order ELSE 0 END)
      FROM _tmpItem_Child
      WHERE _tmpItem_Child.MovementItemId = _tmpItem_Child.PartionId
     ;

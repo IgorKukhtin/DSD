@@ -21,6 +21,24 @@ BEGIN
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
      
+     -- Проверка
+     IF EXISTS (SELECT 1
+                FROM MovementItem
+                     LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                 ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.ObjectId   = inObjectId
+                  AND MovementItem.isErased   = FALSE
+                  AND MovementItem.Id         <> COALESCE (ioId, 0)
+                  --
+                  AND COALESCE (MIFloat_MovementId.ValueData, 0) = zc_MIFloat_MovementId()
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Элемент <%> уже существует для <%>.', lfGet_Object_ValueData_article (inObjectId), lfGet_Movement_Data (inMovementId_OrderClient);
+     END IF;
+
      -- !Замена!
      IF inAmount = 0
      THEN
@@ -191,7 +209,7 @@ BEGIN
            -- 3.2. добавили Опции, если это сборка Лодки
            SELECT tmpReceiptProdModel.GoodsId
                   -- Кол-во опций
-                , tmpReceiptProdModel.Amount
+                , tmpReceiptProdModel.Value
 
            FROM tmpReceiptProdModel
 

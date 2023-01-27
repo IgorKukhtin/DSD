@@ -101,9 +101,28 @@ BEGIN
             -- ñêîëüêî îñòàëîñü
           , tmpMI_Child.Amount
      FROM tmpMI_Child
+          -- !!!íå ÏÔ!!!
+          INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpMI_Child.ObjectId
+                                           AND Object_Goods.ValueData NOT ILIKE 'ÏÔ%'
      WHERE tmpMI_Child.Amount >= 0
        -- !!!òîëüêî öåëûå êîë-âî!!!
        AND tmpMI_Child.Amount :: Integer = tmpMI_Child.Amount
+       -- !!!íå "âèğòóàëüíûå" óçëû!!!
+       AND tmpMI_Child.ObjectId NOT IN (SELECT OL.ChildObjectId
+                                        FROM ObjectLink AS OL
+                                             -- Íå óäàëåí
+                                             INNER JOIN Object AS Object_ReceiptGoodsChild ON Object_ReceiptGoodsChild.Id       = OL.ObjectId
+                                                                                          AND Object_ReceiptGoodsChild.isErased = FALSE
+
+                                             INNER JOIN ObjectLink AS OL_ReceiptGoodsChild_ReceiptGoods
+                                                                   ON OL_ReceiptGoodsChild_ReceiptGoods.ObjectId = OL.ObjectId
+                                                                  AND OL_ReceiptGoodsChild_ReceiptGoods.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                             -- Íå óäàëåí
+                                             INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id       = OL_ReceiptGoodsChild_ReceiptGoods.ChildObjectId
+                                                                                     AND Object_ReceiptGoods.isErased = FALSE
+                                        WHERE OL.DescId        = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+                                          AND OL.ChildObjectId > 0
+                                       )
     ;
 
     -- test

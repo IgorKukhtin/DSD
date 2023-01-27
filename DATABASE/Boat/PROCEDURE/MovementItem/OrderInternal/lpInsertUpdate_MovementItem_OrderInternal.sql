@@ -19,6 +19,30 @@ BEGIN
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
+     -- Проверка
+     IF EXISTS (SELECT 1
+                FROM MovementItem
+                     LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                 ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.ObjectId   = inGoodsId
+                  AND MovementItem.isErased   = FALSE
+                  AND MovementItem.Id         <> COALESCE (ioId, 0)
+                  --
+                  AND COALESCE (MIFloat_MovementId.ValueData, 0) = inMovementId_OrderClient
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Элемент <%> уже существует для <%>.', lfGet_Object_ValueData_article (inGoodsId), lfGet_Movement_Data (inMovementId_OrderClient);
+     END IF;
+
+     -- !Замена!
+     IF inAmount = 0
+     THEN
+         inAmount:= 1;
+     END IF;
+
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, NULL, inMovementId, CASE WHEN vbIsInsert = TRUE AND inAmount = 0 THEN 1 ELSE inAmount END, NULL,inUserId);
 
@@ -162,6 +186,8 @@ BEGIN
              AND MovementItem.isErased    = FALSE
              -- не опция
              AND MILinkObject_ProdOptions.ObjectId IS NULL
+             -- это Лодка
+             AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inGoodsId AND Object.DescId = zc_Object_Product())
 
           UNION
            SELECT lpSelect.GoodsId
@@ -188,6 +214,8 @@ BEGIN
              AND lpSelect.GoodsId                > 0
              -- БЕЗ этой Структуры
              AND COALESCE (lpSelect.ProdColorPatternId, 0) = 0
+             -- это Лодка
+             AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inGoodsId AND Object.DescId = zc_Object_Product())
            
           ) AS tmpMI
     ;

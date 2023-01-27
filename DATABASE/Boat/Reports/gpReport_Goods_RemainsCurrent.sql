@@ -81,8 +81,10 @@ BEGIN
     vbPriceListName_Basis := (SELECT Object.ValueData FROM Object WHERE Object.Id = zc_PriceList_Basis()) ::TVarChar;
 
     -- !!!замена!!!
-    IF inIsPartion = TRUE THEN
-       inIsPartner:= TRUE;
+    IF inIsPartion = TRUE
+    THEN
+        inIsPartner:= TRUE;
+        inIsOrderClient:= TRUE;
     END IF;
 
     -- список подразделений

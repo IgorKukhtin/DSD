@@ -68,8 +68,10 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
     -- !!!замена!!!
-    IF inIsPartion = TRUE THEN
-       inIsPartner:= TRUE;
+    IF inIsPartion = TRUE
+    THEN
+        inIsPartner    := TRUE;
+        inIsOrderClient:= TRUE;
     END IF;
 
 
