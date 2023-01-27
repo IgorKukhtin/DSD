@@ -109,16 +109,17 @@ BEGIN
     ;
     
     CREATE TEMP TABLE _tmpOrder_Detail (MovementId_order Integer, ObjectId Integer, PartionId Integer
-                                      , ReceiptLevelId Integer, ColorPatternId Integer, ProdColorPatternId Integer
+                                      , ReceiptLevelId Integer, ColorPatternId Integer, ProdColorPatternId Integer, ProdOptionsId Integer
                                       , ObjectId_master Integer, Amount TFloat) ON COMMIT DROP;
-    INSERT INTO _tmpOrder_Detail (MovementId_order, ObjectId, PartionId, ReceiptLevelId, ColorPatternId, ProdColorPatternId, ObjectId_master, Amount)
+    INSERT INTO _tmpOrder_Detail (MovementId_order, ObjectId, PartionId, ReceiptLevelId, ColorPatternId, ProdColorPatternId, ProdOptionsId, ObjectId_master, Amount)
        -- Заказы клиента - zc_MI_Detail - детализация по Резервам
        SELECT MI_Detail.MovementId   AS MovementId_order
             , MI_Detail.ObjectId
             , MI_Detail.PartionId
-            , MILO_ReceiptLevel.ObjectId AS ReceiptLevelId
-            , MILO_ColorPattern.ObjectId AS ColorPatternId
+            , MILO_ReceiptLevel.ObjectId     AS ReceiptLevelId
+            , MILO_ColorPattern.ObjectId     AS ColorPatternId
             , MILO_ProdColorPattern.ObjectId AS ProdColorPatternId
+            , MILO_ProdOptions.ObjectId      AS ProdOptionsId
             
             --, MovementItem.ObjectId AS ObjectId_master
             , COALESCE (MovementItem.ObjectId, MILinkObject_Goods.ObjectId) AS ObjectId_master
@@ -135,10 +136,10 @@ BEGIN
                                              ON MILinkObject_Goods.MovementItemId = MI_Detail.Id
                                             AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
 
-           LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                 AND MovementItem.DescId     = zc_MI_Child()
-                                 AND MovementItem.isErased   = FALSE
-                                 AND MovementItem.Id = MI_Detail.ParentId    ---537385
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                  AND MovementItem.DescId     = zc_MI_Child()
+                                  AND MovementItem.isErased   = FALSE
+                                  AND MovementItem.Id = MI_Detail.ParentId    ---537385
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods
                                  ON ObjectLink_Goods.ChildObjectId = COALESCE (MovementItem.ObjectId, MILinkObject_Goods.ObjectId)
@@ -153,6 +154,9 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILO_ProdColorPattern
                                              ON MILO_ProdColorPattern.MovementItemId = MovementItem.Id
                                             AND MILO_ProdColorPattern.DescId = zc_MILinkObject_ProdColorPattern()
+            LEFT JOIN MovementItemLinkObject AS MILO_ProdOptions
+                                             ON MILO_ProdOptions.MovementItemId = MovementItem.Id
+                                            AND MILO_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
       WHERE Movement.Id = inMovementId_OrderClient 
          AND Movement.DescId   = zc_Movement_OrderClient()
          -- все НЕ удаленные
@@ -197,7 +201,7 @@ BEGIN
                             AND tmp.MovementId_order = _tmpMI_Master.MovementId_order
     ;   
 
-  -- место учета
+    -- место учета
     CREATE TEMP TABLE _tmpUnit (ObjectId Integer, UnitId Integer) ON COMMIT DROP;
     INSERT INTO _tmpUnit (ObjectId, UnitId)
        SELECT DISTINCT _tmpOrder_Detail.ObjectId
@@ -210,9 +214,9 @@ BEGIN
             INNER JOIN ObjectLink AS ObjectLink_Object
                                  ON ObjectLink_Object.ChildObjectId = _tmpOrder_Detail.ObjectId
                                 AND ObjectLink_Object.DescId        = zc_ObjectLink_ReceiptGoodsChild_Object()
-           LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
-                                 ON ObjectLink_GoodsChild.ObjectId = ObjectLink_Object.ObjectId
-                                AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
+                                  ON ObjectLink_GoodsChild.ObjectId = ObjectLink_Object.ObjectId
+                                 AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
             LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
                                  ON ObjectLink_ReceiptGoods.ObjectId = ObjectLink_Object.ObjectId
                                 AND ObjectLink_ReceiptGoods.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
@@ -226,8 +230,8 @@ BEGIN
                                 AND ObjectLink_Unit.DescId   = zc_ObjectLink_ReceiptGoods_Unit()
      ; 
 
-    --записанные строки мастера
-        CREATE TEMP TABLE _tmpMI_New (Id Integer, ObjectId Integer, Amount TFloat, MovementId_order Integer) ON COMMIT DROP;
+    -- записанные строки мастера
+    CREATE TEMP TABLE _tmpMI_New (Id Integer, ObjectId Integer, Amount TFloat, MovementId_order Integer) ON COMMIT DROP;
     INSERT INTO _tmpMI_New (Id, ObjectId, Amount, MovementId_order)
           SELECT MovementItem.Id
                , MovementItem.ObjectId 
@@ -251,6 +255,7 @@ BEGIN
                                                  , inReceiptLevelId     := _tmpOrder_Detail.ReceiptLevelId
                                                  , inColorPatternId     := _tmpOrder_Detail.ColorPatternId
                                                  , inProdColorPatternId := _tmpOrder_Detail.ProdColorPatternId
+                                                 , inProdOptionsId      := _tmpOrder_Detail.ProdOptionsId
                                                  , inUnitId             := _tmpUnit.UnitId
                                                  , inAmount             := _tmpOrder_Detail.Amount  ::TFloat
                                                  , inAmountReserv       := 0 ::TFloat

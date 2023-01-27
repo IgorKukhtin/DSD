@@ -90,7 +90,7 @@ BEGIN
 
              LEFT JOIN MovementItemLinkObject AS MILO_ReceiptLevel
                                               ON MILO_ReceiptLevel.MovementItemId = MovementItem.Id
-                                             AND MILO_ReceiptLevel.DescId = zc_MILinkObject_ReceiptLevel()
+                                             AND MILO_ReceiptLevel.DescId          = zc_MILinkObject_ReceiptLevel()
              LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = MILO_ReceiptLevel.ObjectId
 
              LEFT JOIN MovementItemLinkObject AS MILO_ColorPattern

@@ -78,16 +78,21 @@ BEGIN
 
 
      -- ВСЕГДА автоматом формировать zc_MI_Child
-     PERFORM lpInsertUpdate_MI_ProductionUnion_Child (ioId         := 0
-                                                    , inParentId   := ioId
-                                                    , inMovementId := inMovementId
-                                                    , inObjectId   := tmpReceiptGoodsChild.GoodsId
-                                                    , inAmount     := tmpReceiptGoodsChild.Value * inAmount
-                                                    , inUserId     := inUserId
+     PERFORM lpInsertUpdate_MI_ProductionUnion_Child (ioId                := 0
+                                                    , inParentId          := ioId
+                                                    , inMovementId        := inMovementId
+                                                    , inObjectId          := tmpReceiptGoodsChild.GoodsId
+                                                    , inReceiptLevelId    := tmpReceiptGoodsChild.ReceiptLevelId
+                                                    , inColorPatternId    := NULL
+                                                    , inProdColorPatternId:= NULL
+                                                    , inProdOptionsId     := tmpReceiptGoodsChild.ProdOptionsId
+                                                    , inAmount            := tmpReceiptGoodsChild.Value * inAmount
+                                                    , inUserId            := inUserId
                                                      )
      FROM (WITH tmpReceiptGoodsChild AS (SELECT ObjectLink_Goods_master.ChildObjectId AS GoodsId_master
                                               , ObjectLink_Object.ChildObjectId       AS GoodsId
                                               , ObjectLink_GoodsChild.ChildObjectId   AS GoodsId_child
+                                              , ObjectLink_ReceiptLevel.ChildObjectId AS ReceiptLevelId
                                               , ObjectFloat_Value.ValueData           AS Value
                                          FROM ObjectLink AS ObjectLink_ReceiptGoods
                                               -- какой узел собирается
@@ -107,6 +112,10 @@ BEGIN
                                                                 ON Object_Object.Id     = ObjectLink_Object.ChildObjectId
                                                                -- это НЕ услуги и НЕ пустой Boat Structure
                                                                AND Object_Object.DescId = zc_Object_Goods()
+
+                                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                                                                   ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
+                                                                  AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
 
                                               -- значение в сборке
                                               INNER JOIN ObjectFloat AS ObjectFloat_Value
@@ -154,6 +163,7 @@ BEGIN
                                         )
                  -- Опции
                , tmpProdOptItems AS (SELECT lpSelect.GoodsId
+                                          , lpSelect.ProdOptionsId
                                             -- Кол-во опций
                                           , lpSelect.Amount
                                      FROM gpSelect_Object_ProdOptItems (inMovementId_OrderClient:= inMovementId_OrderClient
@@ -171,6 +181,8 @@ BEGIN
 
            -- 1. если это "виртуальный" узел сборки
            SELECT tmpReceiptGoodsChild.GoodsId
+                , tmpReceiptGoodsChild.ReceiptLevelId
+                , 0 AS ProdOptionsId
                 , tmpReceiptGoodsChild.Value
            FROM tmpReceiptGoodsChild
            WHERE tmpReceiptGoodsChild.GoodsId_child = inObjectId
@@ -178,6 +190,8 @@ BEGIN
          UNION ALL
            -- 2.1. если это сборка узла
            SELECT tmpReceiptGoodsChild.GoodsId
+                , tmpReceiptGoodsChild.ReceiptLevelId
+                , 0 AS ProdOptionsId
                 , tmpReceiptGoodsChild.Value
            FROM tmpReceiptGoodsChild
            WHERE tmpReceiptGoodsChild.GoodsId_master = inObjectId
@@ -190,6 +204,8 @@ BEGIN
            -- 2.2. если это "виртуальный" в сборке узла
            SELECT DISTINCT
                   tmpReceiptGoodsChild.GoodsId_child AS GoodsId
+                , 0                                  AS ReceiptLevelId
+                , 0                                  AS ProdOptionsId
                   -- замена
                 , 1 AS Value
            FROM tmpReceiptGoodsChild
@@ -200,18 +216,22 @@ BEGIN
          UNION ALL
            -- 3.1. если это сборка Лодки
            SELECT tmpReceiptProdModel.GoodsId
-                  -- замена
+                , 0 AS ReceiptLevelId
+                , 0 AS ProdOptionsId
+                  -- 
                 , tmpReceiptProdModel.Value
 
            FROM tmpReceiptProdModel
 
          UNION ALL
            -- 3.2. добавили Опции, если это сборка Лодки
-           SELECT tmpReceiptProdModel.GoodsId
+           SELECT tmpProdOptItems.GoodsId
+                , 0 AS ReceiptLevelId
+                , tmpProdOptItems.ProdOptionsId
                   -- Кол-во опций
-                , tmpReceiptProdModel.Value
+                , tmpProdOptItems.Amount
 
-           FROM tmpReceiptProdModel
+           FROM tmpProdOptItems
 
           ) AS tmpReceiptGoodsChild
            ;

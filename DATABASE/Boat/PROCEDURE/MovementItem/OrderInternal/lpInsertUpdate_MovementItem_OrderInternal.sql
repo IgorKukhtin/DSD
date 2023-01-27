@@ -77,6 +77,7 @@ BEGIN
                                                   , inReceiptLevelId         := tmpMI.ReceiptLevelId
                                                   , inColorPatternId         := tmpMI.ColorPatternId
                                                   , inProdColorPatternId     := tmpMI.ProdColorPatternId
+                                                  , inProdOptionsId          := tmpMI.ProdOptionsId
                                                   , inUnitId                 := 0 -- !!!
                                                   , inAmount                 := tmpMI.Amount
                                                   , inAmountReserv           := 0
@@ -97,6 +98,13 @@ BEGIN
                             THEN 0
                         ELSE MILinkObject_ReceiptLevel.ObjectId
                   END AS ReceiptLevelId
+                  --
+                , CASE WHEN MILinkObject_Goods.ObjectId = inGoodsId
+                        AND MILinkObject_Goods_basis.ObjectId > 0
+                            THEN 0
+                        ELSE MILinkObject_ProdOptions.ObjectId
+                  END AS ProdOptionsId
+                  
                   --
                 , CASE WHEN MILinkObject_Goods.ObjectId = inGoodsId
                         AND MILinkObject_Goods_basis.ObjectId > 0
@@ -143,6 +151,9 @@ BEGIN
                 LEFT JOIN MovementItemLinkObject AS MILinkObject_ReceiptLevel
                                                  ON MILinkObject_ReceiptLevel.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_ReceiptLevel.DescId         = zc_MILinkObject_ReceiptLevel()
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdOptions
+                                                 ON MILinkObject_ProdOptions.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
                 LEFT JOIN MovementItemFloat AS MIFloat_ForCount
                                             ON MIFloat_ForCount.MovementItemId = MovementItem.Id
                                            AND MIFloat_ForCount.DescId         = zc_MIFloat_ForCount()
