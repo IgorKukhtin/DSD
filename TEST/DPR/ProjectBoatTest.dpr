@@ -334,7 +334,6 @@ uses
   GoodsGroupChoice in '..\..\FormsBoat\Guides\GoodsGroupChoice.pas' {GoodsGroupChoiceForm: TParentForm},
   MaterialOptionsChoice in '..\..\FormsBoat\Guides\MaterialOptionsChoice.pas' {MaterialOptionsChoiceForm: TParentForm},
   OrderInternalJournal in '..\..\FormsBoat\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
-  OrderInternal in '..\..\FormsBoat\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
   OrderClientJournalChoiceItem in '..\..\FormsBoat\Document\OrderClientJournalChoiceItem.pas' {OrderClientJournalChoiceItemForm: TParentForm},
   ReceiptGoodsLine in '..\..\FormsBoat\Guides\ReceiptGoodsLine.pas' {ReceiptGoodsLineForm: TParentForm},
   OrderInternalJournalChoice in '..\..\FormsBoat\Document\OrderInternalJournalChoice.pas' {OrderInternalJournalChoiceForm: TParentForm},
@@ -346,7 +345,8 @@ uses
   Report_Send in '..\..\FormsBoat\Report\Report_Send.pas' {Report_SendForm: TParentForm},
   Report_SendDialog in '..\..\FormsBoat\Report\Report_SendDialog.pas' {Report_SendDialogForm: TParentForm},
   Report_PriceList in '..\..\FormsBoat\Report\Report_PriceList.pas' {Report_PriceListForm: TParentForm},
-  Report_PriceListDialog in '..\..\FormsBoat\Report\Report_PriceListDialog.pas' {Report_PriceListDialogForm: TParentForm};
+  Report_PriceListDialog in '..\..\FormsBoat\Report\Report_PriceListDialog.pas' {Report_PriceListDialogForm: TParentForm},
+  OrderInternalMasterChoice in '..\..\FormsBoat\Document\OrderInternalMasterChoice.pas' {OrderInternalMasterChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

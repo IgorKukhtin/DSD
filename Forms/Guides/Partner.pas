@@ -183,6 +183,7 @@ type
     macUpdateGoodsBox: TMultiAction;
     bbUpdateGoodsBox: TdxBarButton;
     isGoodsBox: TcxGridDBColumn;
+    MovementComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

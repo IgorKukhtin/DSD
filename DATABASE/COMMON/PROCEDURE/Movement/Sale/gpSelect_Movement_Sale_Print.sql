@@ -778,6 +778,7 @@ BEGIN
                                     , inGLNCodeCorporate_retail  := ObjectString_Retail_GLNCodeCorporate.ValueData
                                     , inGLNCodeCorporate_main    := ObjectString_JuridicalFrom_GLNCode.ValueData
                                      ) AS SenderGLNCode
+           , ObjectString_Partner_Movement.ValueData ::TVarChar AS MovementComment
 
            , OH_JuridicalDetails_From.JuridicalId       AS JuridicalId_From
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
@@ -1036,6 +1037,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Partner_GLNCodeCorporate
                                    ON ObjectString_Partner_GLNCodeCorporate.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
                                   AND ObjectString_Partner_GLNCodeCorporate.DescId = zc_ObjectString_Partner_GLNCodeCorporate()
+
+            LEFT JOIN ObjectString AS ObjectString_Partner_Movement
+                                   ON ObjectString_Partner_Movement.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
+                                  AND ObjectString_Partner_Movement.DescId = zc_ObjectString_Partner_Movement()
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
                                                                 ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id)

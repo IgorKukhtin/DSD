@@ -3,21 +3,21 @@
   ClientHeight = 532
   ClientWidth = 727
   ExplicitWidth = 733
-  ExplicitHeight = 560
+  ExplicitHeight = 561
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 439
-    Top = 486
+    Left = 440
+    Top = 502
     TabOrder = 2
-    ExplicitLeft = 439
-    ExplicitTop = 486
+    ExplicitLeft = 440
+    ExplicitTop = 502
   end
   inherited bbCancel: TcxButton
     Left = 590
-    Top = 486
+    Top = 502
     ExplicitLeft = 590
-    ExplicitTop = 486
+    ExplicitTop = 502
   end
   object edAddress: TcxTextEdit [2]
     Left = 158
@@ -760,6 +760,17 @@
     TabOrder = 100
     Width = 212
   end
+  object cxLabel41: TcxLabel [101]
+    Left = 366
+    Top = 469
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077'('#1076#1083#1103' '#1087#1088#1086#1076#1072#1078#1080')'
+  end
+  object edMovementComment: TcxTextEdit [102]
+    Left = 509
+    Top = 467
+    TabOrder = 102
+    Width = 210
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 355
     Top = 331
@@ -1220,6 +1231,14 @@
         Value = Null
         Component = cbValue7
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementComment'
+        Value = Null
+        Component = edMovementComment
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1799,6 +1818,13 @@
         Value = Null
         Component = GuidesUnitMobile
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementComment'
+        Value = Null
+        Component = edMovementComment
         DataType = ftString
         MultiSelectSeparator = ','
       end>

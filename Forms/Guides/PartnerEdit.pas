@@ -143,6 +143,8 @@ type
     cxLabel47: TcxLabel;
     edUnitMobile: TcxButtonEdit;
     GuidesUnitMobile: TdsdGuides;
+    cxLabel41: TcxLabel;
+    edMovementComment: TcxTextEdit;
 
   private
     { Private declarations }

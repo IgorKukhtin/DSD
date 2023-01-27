@@ -48,6 +48,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
                Delivery1 Boolean, Delivery2 Boolean, Delivery3 Boolean, Delivery4 Boolean, 
                Delivery5 Boolean, Delivery6 Boolean, Delivery7 Boolean
              , UnitMobileId Integer, UnitMobileName TVarChar
+             , MovementComment TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -163,6 +164,7 @@ BEGIN
 
            , CAST (0 as Integer)    AS UnitMobileId
            , CAST ('' as TVarChar)  AS UnitMobileName
+           , CAST ('' as TVarChar)  AS MovementComment
 
            ;
    ELSE
@@ -271,7 +273,9 @@ BEGIN
            , CASE WHEN COALESCE(ObjectString_Delivery.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Delivery.ValueData, inSep:= ';', inIndex:= 7) AS Boolean) END  ::Boolean   AS Value7
 
            , Object_UnitMobile.Id        AS UnitMobileId
-           , Object_UnitMobile.ValueData AS UnitMobileName
+           , Object_UnitMobile.ValueData AS UnitMobileName 
+           
+           , ObjectString_Movement.ValueData ::TVarChar AS MovementComment
        FROM Object AS Object_Partner
            LEFT JOIN ObjectString AS Partner_GLNCode 
                                   ON Partner_GLNCode.ObjectId = Object_Partner.Id
@@ -314,6 +318,10 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_Delivery
                                   ON ObjectString_Delivery.ObjectId = Object_Partner.Id
                                  AND ObjectString_Delivery.DescId = zc_ObjectString_Partner_Delivery()
+
+           LEFT JOIN ObjectString AS ObjectString_Movement
+                                  ON ObjectString_Movement.ObjectId = Object_Partner.Id
+                                 AND ObjectString_Movement.DescId = zc_ObjectString_Partner_Movement()
 
            LEFT JOIN ObjectFloat AS Partner_PrepareDayCount 
                                  ON Partner_PrepareDayCount.ObjectId = Object_Partner.Id
@@ -463,6 +471,7 @@ ALTER FUNCTION gpGet_Object_Partner (Integer, Integer, Integer, TVarChar) OWNER 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.01.23         * MovementComment
  25.05.21         *
  19.06.17         * add PersonalMerch
  25.12.15         * add GoodsProperty

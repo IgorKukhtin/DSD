@@ -239,6 +239,29 @@ type
     actUpdateRecordBoat: TdsdInsertUpdateAction;
     bbUpdateRecordBoat: TdxBarButton;
     bbChoiceFormOrderClientItem: TdxBarButton;
+    cxTabSheet1: TcxTabSheet;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView_DetAll: TcxGridDBTableView;
+    Amount_ch5: TcxGridDBColumn;
+    isErased_ch5: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    DetailCDS_All: TClientDataSet;
+    DetailDS_All: TDataSource;
+    DetailViewAddOn_All: TdsdDBViewAddOn;
+    spSelectMI_DetailAll: TdsdStoredProc;
+    actMasterChoiceForm: TOpenChoiceForm;
+    InsertRecordDetailAll: TInsertRecord;
+    actPersonalChoiceForm_DetAll: TOpenChoiceForm;
+    actReceiptServiceChoiceForm_DetAll: TOpenChoiceForm;
+    spInsertUpdateMIDetailAll: TdsdStoredProc;
+    bbInsertRecordDetailAll: TdxBarButton;
+    actUpdateDetailrDS_All: TdsdUpdateDataSet;
+    spErasedMIDetailAll: TdsdStoredProc;
+    SetErasedDetail_All: TdsdUpdateErased;
+    SetUnErasedDetail_All: TdsdUpdateErased;
+    spUnErasedMIDetail_All: TdsdStoredProc;
+    bbSetErasedDetail_All: TdxBarButton;
+    bbSetUnErasedDetail_All: TdxBarButton;
 
   private
   public

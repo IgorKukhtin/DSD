@@ -50,7 +50,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isPromo Boolean
              , isPav Boolean
              , MovementPromo TVarChar
-             , InsertDate TDateTime
+             , InsertDate TDateTime 
+             , InsertDate_order TDateTime
+             , InsertDatediff_min TFloat
              , Comment TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
@@ -512,16 +514,24 @@ end if;
                                                       )
                        )
 
+       , tmpMovementDate_Order AS (SELECT MovementDate.*
+                                   FROM MovementDate
+                                   WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMLM.MovementChildId FROM tmpMLM)
+                                     AND MovementDate.DescId = zc_MovementDate_Insert()
+                                   )
+
        , tmpMLO_To AS (SELECT MovementLinkObject.*
                        FROM MovementLinkObject
                        WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMLM.MovementChildId FROM tmpMLM)
                          AND MovementLinkObject.DescId = zc_MovementLinkObject_To()
                        )
+
        , tmpMLO_Contract AS (SELECT MovementLinkObject.*
                              FROM MovementLinkObject
                              WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMLM.MovementChildId FROM tmpMLM)
                                AND MovementLinkObject.DescId = zc_MovementLinkObject_Contract()
                              )
+
        , tmpMLO_Partner AS (SELECT MovementLinkObject.*
                             FROM MovementLinkObject
                             WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMLM.MovementChildId FROM tmpMLM)
@@ -818,8 +828,13 @@ end if;
            , CASE WHEN tmpOL_Partner_Unit.ChildObjectId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPav
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
-           , MovementDate_Insert.ValueData    AS InsertDate
-           , MovementString_Comment.ValueData AS Comment
+           , MovementDate_Insert.ValueData       AS InsertDate
+           , MovementDate_Insert_order.ValueData AS InsertDate_order
+           , CASE WHEN COALESCE (MovementDate_Insert.ValueData, zc_DateStart()) = zc_DateStart() OR COALESCE (MovementDate_Insert_order.ValueData, zc_DateStart()) = zc_DateStart() THEN 0
+                  ELSE CAST (EXTRACT (EPOCH FROM (MovementDate_Insert.ValueData - MovementDate_Insert_order.ValueData) :: INTERVAL ) / 60 AS NUMERIC (16,2)) 
+             END  :: TFloat AS InsertDatediff_min
+
+           , MovementString_Comment.ValueData    AS Comment
 
            , Object_ReestrKind.Id             AS ReestrKindId
            , Object_ReestrKind.ValueData      AS ReestrKindName
@@ -1044,6 +1059,10 @@ end if;
             LEFT JOIN tmpPartner AS Object_Partner_order ON Object_Partner_order.MovementId = MovementLinkMovement_Order.MovementChildId
 
             LEFT JOIN tmpRetail AS Object_Retail_order ON Object_Retail_order.MovementId = MovementLinkMovement_Order.MovementChildId
+
+            LEFT JOIN tmpMovementDate_Order AS MovementDate_Insert_order
+                                            ON MovementDate_Insert_order.MovementId = MovementLinkMovement_Order.MovementChildId
+                                           AND MovementDate_Insert_order.DescId = zc_MovementDate_Insert()
 
             LEFT JOIN tmpObjectBoolean_To AS ObjectBoolean_EdiOrdspr
                                           ON ObjectBoolean_EdiOrdspr.ObjectId = Object_To.Id

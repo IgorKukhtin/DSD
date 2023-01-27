@@ -52,6 +52,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isPav Boolean
              , MovementPromo TVarChar
              , InsertDate TDateTime
+             , InsertDate_order TDateTime
+             , InsertDatediff_min TFloat
              , Comment TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar

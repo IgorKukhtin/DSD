@@ -58,7 +58,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
 
                GUID TVarChar, isGUID Boolean,
                isIrna Boolean,
-               isGoodsBox Boolean
+               isGoodsBox Boolean, 
+               MovementComment TVarChar
               )
 AS
 $BODY$
@@ -235,7 +236,7 @@ BEGIN
          , CASE WHEN ObjectString_GUID.ValueData <> '' THEN TRUE ELSE FALSE END :: Boolean AS isGUID
          , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)       :: Boolean AS isIrna
          , COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE) :: Boolean AS isGoodsBox
-
+         , ObjectString_Movement.ValueData ::TVarChar AS MovementComment
      FROM tmpIsErased
          INNER JOIN Object AS Object_Partner
                            ON Object_Partner.isErased = tmpIsErased.isErased
@@ -283,6 +284,10 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_Delivery
                                 ON ObjectString_Delivery.ObjectId = Object_Partner.Id
                                AND ObjectString_Delivery.DescId = zc_ObjectString_Partner_Delivery()
+
+         LEFT JOIN ObjectString AS ObjectString_Movement
+                                ON ObjectString_Movement.ObjectId = Object_Partner.Id
+                                AND ObjectString_Movement.DescId = zc_ObjectString_Partner_Movement()
 
          LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount
                                ON ObjectFloat_PrepareDayCount.ObjectId = Object_Partner.Id

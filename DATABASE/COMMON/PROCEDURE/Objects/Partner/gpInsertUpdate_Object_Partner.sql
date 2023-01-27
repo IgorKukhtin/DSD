@@ -26,11 +26,17 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 */
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
                                                      , TFloat, TFloat, TFloat, Boolean, Boolean, Boolean
                                                      , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer
+                                                     , TFloat, TFloat, TFloat, Boolean, Boolean, Boolean
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -93,7 +99,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inValue4              Boolean  ,  -- четверг
     IN inValue5              Boolean  ,  -- пятница
     IN inValue6              Boolean  ,  -- суббота
-    IN inValue7              Boolean  ,  -- воскресенье
+    IN inValue7              Boolean  ,  -- воскресенье 
+    
+    IN inMovementComment     TVarChar ,  -- примечание для док продажи
     
     IN inSession             TVarChar       -- сессия пользователя
 )
@@ -214,7 +222,10 @@ BEGIN
                                           , inIsCheckUnique     := FALSE -- TRUE
                                           , inSession           := inSession
                                           , inUserId            := vbUserId
-                                           ) AS tmp;
+                                           ) AS tmp;   
+   --
+   -- сохранили свойство <примечание для Накладной продажи>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Movement(), ioId, inMovementComment);
 
 END;
 $BODY$
@@ -223,6 +234,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.01.23         *
  25.05.21         *
  29.04.21         * inCategory
  19.06.17         * add inPersonalMerchId

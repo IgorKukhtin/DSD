@@ -745,6 +745,27 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object InsertDate_order: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'. '#1079#1072#1103#1074#1082#1072')'
+            DataBinding.FieldName = 'InsertDate_order'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object InsertDatediff_min: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1084#1080#1085' ('#1089#1086#1079#1076'. '#1087#1088#1086#1076'. '#1080' '#1079#1072#1103#1074#1082#1072')'
+            DataBinding.FieldName = 'InsertDatediff_min'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1074'  '#1084#1080#1085#1091#1090#1072#1093' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1087#1088#1086#1076#1072#1078#1080' '#1080' '#1079#1072#1103#1074#1082#1080')'
+            Options.Editing = False
+            Width = 107
+          end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
@@ -3784,6 +3805,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       FilePathParam.Value = ''
       FilePathParam.DataType = ftString
       FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
       FileNameParam.Component = FormParams
       FileNameParam.ComponentItem = 'FileName'
       FileNameParam.DataType = ftString
@@ -4627,6 +4649,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end
       item
         Name = 'FileName'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
