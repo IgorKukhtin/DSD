@@ -66,6 +66,9 @@ BEGIN
           , tmpBankAccount.BankName  ::TVarChar AS BankName
           , tmpBankAccount.MFO ::TVarChar AS MFO
           , inInvoiceNDS                  AS NDS  
+          , CASE WHEN COALESCE(Object_InsuranceCompanies.Id, 0) > 0 
+                 THEN COALESCE(MovementFloat_ChangePercent.ValueData, 100)
+                 ELSE NULL END :: TFloat                          AS ChangePercent
         FROM
             Movement_Sale_View AS Movement_Sale
 
@@ -85,6 +88,10 @@ BEGIN
                                  ON ObjectLink_Unit_Juridical.ObjectId = Movement_Sale.UnitId
                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+            
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                    ON MovementFloat_ChangePercent.MovementId = Movement_Sale.Id
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()       
                                   
             LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := Object_Juridical.Id, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
 
@@ -106,8 +113,15 @@ BEGIN
           , MI_Sale.PriceSale
           , ROUND(MI_Sale.PriceSale * 100.0 / (100.0 + MI_Sale.NDS), 2) AS PriceWithVAT
           , ROUND(MI_Sale.Amount * MI_Sale.PriceSale, 2)::TFloat AS SummSale
+
           , ROUND(MI_Sale.Amount * MI_Sale.PriceSale * 100.0 / (100.0 + MI_Sale.NDS), 2)::TFloat AS SummSaleWithVAT
           , MI_Sale.Amount * (MI_Sale.PriceSale * MI_Sale.NDS / (100.0 + MI_Sale.NDS)) AS SummNDS
+
+          , ROUND((MI_Sale.Amount * MI_Sale.PriceSale-
+                       COALESCE (MI_Sale.Summ, 0)) * 100.0 / (100.0 + MI_Sale.NDS), 2)::TFloat AS SummSaleWithVATIC
+          , MI_Sale.Amount * ((MI_Sale.PriceSale - COALESCE (MI_Sale.Price, 0)) * MI_Sale.NDS / (100.0 + MI_Sale.NDS)) AS SummNDSIC
+          , ROUND(MI_Sale.Amount * MI_Sale.PriceSale - COALESCE (MI_Sale.Summ, 0), 2)::TFloat AS SummSaleIC
+
           , ROW_NUMBER()OVER(ORDER BY MI_Sale.GoodsName)::Integer as ORD
           , Object_Measure.ValueData            AS MeasureName
         FROM
@@ -139,4 +153,5 @@ ALTER FUNCTION gpSelect_Movement_Sale_PrintInvoiceIC (Integer, TFloat, TVarChar)
 */
 
 -- 
-SELECT * FROM gpSelect_Movement_Sale_PrintInvoiceIC (inMovementId := 25365702, inInvoiceNDS := 0, inSession:= '5');
+
+select * from gpSelect_Movement_Sale_PrintInvoiceIC(inMovementId := 30678777 , inInvoiceNDS := 0 ,  inSession := '3');

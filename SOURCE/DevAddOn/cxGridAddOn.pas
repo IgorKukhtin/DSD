@@ -224,7 +224,8 @@ end;
 
 procedure TcxViewToMemTable.CreateFields3(PivotGrid: TcxDBPivotGrid; MemData: TClientDataSet);
 var i: integer;
-    AField: TField;begin
+    AField: TField;
+begin
   with PivotGrid.DataSource.DataSet do
   begin
     for i := 0 to FieldCount - 1 do

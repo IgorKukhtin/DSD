@@ -21,19 +21,28 @@ BEGIN
     END IF;
 
     SELECT 
-        SUM(COALESCE(MI_Sale.Amount,0))
-       ,SUM(COALESCE(MI_Sale.Summ,0)) 
-       ,SUM(COALESCE(MI_Sale.Amount,0) * COALESCE(MI_Sale.PriceSale,0))
+         SUM(COALESCE(MI_Sale.Amount,0))
+       , CASE WHEN MovementLinkObject_SPKind.ObjectId = zc_Enum_SPKind_InsuranceCompanies()
+              THEN FLOOR(SUM(COALESCE(MI_Sale.Summ,0)) * 10) / 10
+              ELSE SUM(COALESCE(MI_Sale.Summ,0)) END
+       , SUM(COALESCE(MI_Sale.Amount,0) * COALESCE(MI_Sale.PriceSale,0))
     INTO 
         vbTotalCountSale
        ,vbTotalSumm
        ,vbTotalSummSale
     FROM 
         MovementItem_Sale_View AS MI_Sale
+        
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                     ON MovementLinkObject_SPKind.MovementId = MI_Sale.MovementId
+                                    AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+        LEFT JOIN Object AS Object_SPKind ON Object_SPKind.Id = MovementLinkObject_SPKind.ObjectId
+        
     WHERE 
         MI_Sale.MovementId = inMovementId 
         AND 
-        MI_Sale.isErased = false;
+        MI_Sale.isErased = false
+    GROUP BY  MovementLinkObject_SPKind.ObjectId;
 
     -- Сохранили свойство <Итого количество>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbTotalCountSale);
@@ -81,3 +90,5 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSummSaleExactly (Integer) OWNER
  04.07.17         *
  13.10.15                                                         * 
 */
+
+select * from lpInsertUpdate_MovementFloat_TotalSummSaleExactly (30678777);

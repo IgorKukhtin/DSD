@@ -65,6 +65,8 @@ type
     tiServise: TTrayIcon;
     pmServise: TPopupMenu;
     pmClose: TMenuItem;
+    Timer2: TTimer;
+    btnProcesTimer2: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnProcesMessagesClick(Sender: TObject);
@@ -75,6 +77,8 @@ type
     procedure btnUpdateClick(Sender: TObject);
     procedure btnGetMessagesTelegramClick(Sender: TObject);
     procedure pmCloseClick(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
+    procedure btnProcesTimer2Click(Sender: TObject);
   private
     { Private declarations }
 
@@ -82,6 +86,9 @@ type
     SavePath: String;
     Token : String;
     TelegramBot : TTelegramBot;
+
+    FBookingsTabletkiLog : string;
+    FBookingsTabletkiTelegramId : string;
 
     FMessage : TStringList;
 
@@ -176,6 +183,11 @@ begin
 
 end;
 
+procedure TMainForm.btnProcesTimer2Click(Sender: TObject);
+begin
+  Timer2Timer(Sender);
+end;
+
 procedure TMainForm.btnTestSendManualTelegramClick(Sender: TObject);
   var AValues: array[0..1] of string;
 begin
@@ -233,6 +245,12 @@ begin
     Token := Ini.ReadString('Telegram', 'Token', '');
     Ini.WriteString('Telegram', 'Token', Token);
 
+    FBookingsTabletkiLog := Ini.ReadString('BookingsForTabletki', 'BookingsTabletkiLog', '');
+    Ini.WriteString('BookingsForTabletki', 'BookingsTabletkiLog', FBookingsTabletkiLog);
+
+    FBookingsTabletkiTelegramId := Ini.ReadString('BookingsForTabletki', 'BookingsTabletkiTelegramId', '');
+    Ini.WriteString('BookingsForTabletki', 'BookingsTabletkiTelegramId', FBookingsTabletkiTelegramId);
+
   finally
     Ini.free;
   end;
@@ -267,7 +285,9 @@ begin
     btnTestSendTelegram.Enabled := false;
     btnTestSendManualTelegram.Enabled := false;
     btnUpdate.Enabled := false;
+    btnProcesTimer2.Enabled := false;
     Timer1.Enabled := true;
+    Timer2.Enabled := true;
   end;
 end;
 
@@ -293,6 +313,34 @@ begin
   finally
     timer1.Enabled := True;
   end;
+end;
+
+procedure TMainForm.Timer2Timer(Sender: TObject);
+  var DateTime: TDateTimeInfoRec; Res : TArray<string>; i : Integer;
+begin
+  Timer2.Enabled := False;
+
+  try
+    // ѕровер€ем дату обработки заказов с таблеток
+    if (FBookingsTabletkiLog <> '') and FileExists(FBookingsTabletkiLog) and
+       (HourOf(Now) >= 8) and (HourOf(Now) < 21) then
+    begin
+      try
+        if FileGetDateTimeInfo(FBookingsTabletkiLog, DateTime) and
+          (MinutesBetween(DateTime.TimeStamp, Now) > 15) then
+        begin
+          Res := TRegEx.Split(FBookingsTabletkiTelegramId, ',');
+          for I := 0 to High(Res) do
+            TelegramBot.SendMessage(Res[I], 'Ќе работает обработка заказов с таблеток - ' + FormatCurr(',0', MinutesBetween(DateTime.TimeStamp, Now)) + ' мин.')
+        end;
+      except
+        on E:Exception do Add_Log(E.Message);
+      end;
+    end;
+  finally
+    Timer2.Enabled := true;
+  end;
+
 end;
 
 end.

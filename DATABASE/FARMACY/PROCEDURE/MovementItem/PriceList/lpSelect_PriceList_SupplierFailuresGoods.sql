@@ -18,8 +18,8 @@ AS
 $BODY$
 BEGIN
 
-    RETURN QUERY
-    WITH tmpMovementAll AS (SELECT 
+    CREATE TEMP TABLE tmpMovementAll_SFG ON COMMIT DROP AS 
+                          (SELECT 
                                    Movement.OperDate                                  AS OperDate
                                  , Movement.Id                                        AS MovementId
                                  , MovementLinkObject_Juridical.ObjectId              AS JuridicalId
@@ -40,26 +40,35 @@ BEGIN
                                                               ON MovementLinkObject_Area.MovementId = Movement.Id
                                                              AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area()
                             WHERE Movement.DescId = zc_Movement_PriceList()
-                              AND Movement.StatusId = zc_Enum_Status_UnComplete()),
-        tmpJuridicalArea AS (SELECT DISTINCT
+                              AND Movement.StatusId = zc_Enum_Status_UnComplete());
+                              
+    ANALYSE tmpMovementAll_SFG;
+    
+    CREATE TEMP TABLE tmpJuridicalArea_SFG ON COMMIT DROP AS 
+                            (SELECT DISTINCT
                                     tmp.UnitId                   AS UnitId
                                   , tmp.JuridicalId              AS JuridicalId
                                   , tmp.AreaId_Juridical         AS AreaId
                              FROM lpSelect_Object_JuridicalArea_byUnit (inUnitId , 0) AS tmp
-                             ),
-        tmpMovement AS (SELECT PriceList.OperDate
+                             );
+                              
+    ANALYSE tmpJuridicalArea_SFG;
+            
+            
+    RETURN QUERY
+    WITH tmpMovement AS (SELECT PriceList.OperDate
                              , COALESCE (PriceListNext.OperDate, zc_DateEnd()) AS DateFinal
                              , PriceList.JuridicalId
                              , PriceList.ContractId
                              , PriceList.AreaId
                              , PriceList.MovementId
-                        FROM tmpMovementAll AS PriceList
+                        FROM tmpMovementAll_SFG AS PriceList
                             
-                             LEFT JOIN tmpMovementAll AS PriceListNext 
-                                                      ON PriceListNext.JuridicalId  = PriceList.JuridicalId
-                                                     AND PriceListNext.ContractId   = PriceList.ContractId
-                                                     AND PriceListNext.AreaId       = PriceList.AreaId
-                                                     AND PriceListNext.Ord          = PriceList.Ord + 1
+                             LEFT JOIN tmpMovementAll_SFG AS PriceListNext 
+                                                          ON PriceListNext.JuridicalId  = PriceList.JuridicalId
+                                                         AND PriceListNext.ContractId   = PriceList.ContractId
+                                                         AND PriceListNext.AreaId       = PriceList.AreaId
+                                                         AND PriceListNext.Ord          = PriceList.Ord + 1
                             
                         WHERE COALESCE (PriceListNext.OperDate, zc_DateEnd()) >= '20.02.2022'                            
                         ),
@@ -87,8 +96,9 @@ BEGIN
     
     FROM tmpMovementGoods AS Movement
 
-         INNER JOIN tmpJuridicalArea ON tmpJuridicalArea.JuridicalId = Movement.JuridicalId
-                                    AND tmpJuridicalArea.AreaId = Movement.AreaId 
+         INNER JOIN tmpJuridicalArea_SFG AS tmpJuridicalArea 
+                                         ON tmpJuridicalArea.JuridicalId = Movement.JuridicalId
+                                        AND tmpJuridicalArea.AreaId = Movement.AreaId 
                                     
     WHERE COALESCE (tmpJuridicalArea.UnitId, 0) <> 0
     ;

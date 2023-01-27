@@ -14,16 +14,23 @@ $BODY$
   DECLARE vbParentId Integer;
   DECLARE vbUnitKey TVarChar;
   DECLARE vbUserUnitId Integer;
+  DECLARE vbStatusId Integer;
 BEGIN
    vbUserId:= inSession;
   
-   SELECT MLO_Unit.ObjectId, Movement.ParentId
-   INTO vbUnitId, vbParentId
+   SELECT MLO_Unit.ObjectId, Movement.ParentId, Movement.StatusId
+   INTO vbUnitId, vbParentId, vbStatusId
    FROM  Movement
          INNER JOIN MovementLinkObject AS MLO_Unit
                                        ON MLO_Unit.MovementId = Movement.Id
                                       AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
    WHERE Movement.Id = inMovementId;
+
+   -- Если Проведен, то сразу ругнемся.
+   IF vbStatusId = zc_Enum_Status_Complete()
+   THEN
+       RAISE EXCEPTION 'Документ уже Проведен.';
+   END IF;
 
    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
@@ -129,4 +136,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 29207, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 30776064 , inSession:= '2')

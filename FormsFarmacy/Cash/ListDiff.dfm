@@ -15,8 +15,6 @@ inherited ListDiffForm: TListDiffForm
     Height = 333
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 26
-    ExplicitHeight = 335
     object ListDiffGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ListDiffDS

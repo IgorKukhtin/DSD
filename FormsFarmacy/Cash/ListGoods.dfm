@@ -18,6 +18,8 @@ inherited ListGoodsForm: TListGoodsForm
     BiDiMode = bdLeftToRight
     ParentBiDiMode = False
     TabOrder = 1
+    ExplicitLeft = -1
+    ExplicitTop = 82
     object ListGoodsGridDBTableView: TcxGridDBTableView
       OnDblClick = ListGoodsGridDBTableViewDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -79,6 +81,14 @@ inherited ListGoodsForm: TListGoodsForm
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Width = 61
+      end
+      object colMinimumLot: TcxGridDBColumn
+        Caption = #1052#1080#1085'. '#1086#1082#1088#1091#1075#1083'.'
+        DataBinding.FieldName = 'MinimumLot'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        Width = 59
       end
       object colAmoutDayUser: TcxGridDBColumn
         Caption = #1053#1072#1073#1080#1090#1086' '#1074#1072#1084#1080' '#1089#1077#1075#1086#1076#1085#1103

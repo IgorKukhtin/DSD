@@ -73,25 +73,34 @@ BEGIN
         vbRetailId:= 0;
     END IF;
 
-    RETURN QUERY
-    WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_NDSKind_NDS.valuedata FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+-- raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+    
+    CREATE TEMP TABLE tmpGoods ON COMMIT DROP AS (  
+       WITH tmpOF_NDSKind_NDS AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId, ObjectFloat_NDSKind_NDS.valuedata FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
                                   WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
-                                 ),
-     tmpGoods AS (-- ???временно захардкодил, будет всегда товар сети???
-                  SELECT Object_Goods_Retail.Id                   AS GoodsId
-                        , Object_Goods_Main.ObjectCode             AS Code
-                        , Object_Goods_Main.Name                   AS Name
-                        , Object_NDSKind.ValueData                 AS NDSKindName
-                        , ObjectFloat_NDSKind_NDS.ValueData        AS NDS
-                   FROM Object_Goods_Retail AS Object_Goods_4
-                        LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_4.GoodsMainId
-                        LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods_4.GoodsMainId
-                        LEFT JOIN tmpOF_NDSKind_NDS AS ObjectFloat_NDSKind_NDS
-                                                    ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
-                        LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = Object_Goods_Main.NDSKindId
-                   WHERE Object_Goods_4.Id = inGoodsId
-                       ),
-     tmpMovementItem AS (SELECT MovementItem.MovementId AS MovementId
+                                 )
+                                 
+        -- ???временно захардкодил, будет всегда товар сети???
+        SELECT Object_Goods_Retail.Id                   AS GoodsId
+              , Object_Goods_Main.ObjectCode             AS Code
+              , Object_Goods_Main.Name                   AS Name
+              , Object_NDSKind.ValueData                 AS NDSKindName
+              , ObjectFloat_NDSKind_NDS.ValueData        AS NDS
+         FROM Object_Goods_Retail AS Object_Goods_4
+              LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_4.GoodsMainId
+              LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods_4.GoodsMainId
+              LEFT JOIN tmpOF_NDSKind_NDS AS ObjectFloat_NDSKind_NDS
+                                          ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods_Main.NDSKindId
+              LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = Object_Goods_Main.NDSKindId
+         WHERE Object_Goods_4.Id = inGoodsId
+         );
+                   
+    ANALYSE tmpGoods;    
+
+-- raise notice 'Value 2: %', CLOCK_TIMESTAMP();
+    
+    CREATE TEMP TABLE tmpMovementItem ON COMMIT DROP AS (  
+                         SELECT MovementItem.MovementId AS MovementId
                               , MovementItem.Id         AS MovementItemId
                               , MovementItem.ParentId   AS ParentId
                               , MovementItem.ObjectId
@@ -99,7 +108,24 @@ BEGIN
                          FROM MovementItem
                          WHERE MovementItem.isErased = FALSE
                            AND MovementItem.DescId = zc_MI_Master()
-                           AND MovementItem.ObjectId in (SELECT tmpGoods.GoodsId FROM tmpGoods)),
+                           AND MovementItem.ObjectId in (SELECT tmpGoods.GoodsId FROM tmpGoods));
+
+-- raise notice 'Value 3: %', CLOCK_TIMESTAMP();
+
+    CREATE TEMP TABLE tmpSupplierFailures ON COMMIT DROP AS (  
+                           SELECT DISTINCT 
+                                    tmp.OperDate
+                                  , tmp.DateFinal
+                                  , tmp.UnitId
+                                  , tmp.JuridicalId
+                             FROM lpSelect_PriceList_SupplierFailuresGoods (inGoodsId := inGoodsId, inUnitId := 0, inUserId := vbUserId) AS tmp);
+
+    ANALYSE tmpSupplierFailures;
+
+-- raise notice 'Value 10: %', CLOCK_TIMESTAMP();
+
+    RETURN QUERY
+    WITH 
      tmpMovement AS (SELECT Movement.Id
                           , Movement.DescId
                           , Movement.OperDate
@@ -204,13 +230,8 @@ BEGIN
                                                                WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                                                  AND Object_BarCode.isErased = False
                                                                  AND Object_Object.isErased = False)
-                      ),
-     tmpSupplierFailures AS (SELECT DISTINCT 
-                                    tmp.OperDate
-                                  , tmp.DateFinal
-                                  , tmp.UnitId
-                                  , tmp.JuridicalId
-                             FROM lpSelect_PriceList_SupplierFailuresGoods (inGoodsId := inGoodsId, inUnitId := 0, inUserId := vbUserId) AS tmp)
+                      )
+
 
       --
       SELECT Movement.Id                              AS MovementId
@@ -393,6 +414,9 @@ BEGIN
       AND (ObjectLink_Juridical_Retail.ChildObjectId = vbRetailId OR vbRetailId = 0)
       -- AND Object.Id = inGoodsId
      ;
+     
+-- raise notice 'Value 20: %', CLOCK_TIMESTAMP();
+     
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -420,4 +444,7 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 --SELECT * FROM gpReport_OrderGoodsSearch (inGoodsId:= 9247, inStartDate:= '01.01.2019', inEndDate:= '01.12.2019', inSession:= '183242')
 --select * from gpReport_OrderGoodsSearch(inGoodsId := 2848982 , inStartDate := ('01.10.2020')::TDateTime , inEndDate := ('31.10.2020')::TDateTime ,  inSession := '3');
 
-select * from gpReport_OrderGoodsSearch(inGoodsId := 22306 , inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('25.03.2022')::TDateTime ,  inSession := '3');
+--select * from gpReport_OrderGoodsSearch(inGoodsId := 22306 , inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('25.03.2022')::TDateTime ,  inSession := '3');
+
+
+select * from gpReport_OrderGoodsSearch(inGoodsId := 4940212 , inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('25.03.2022')::TDateTime ,  inSession := '3');
