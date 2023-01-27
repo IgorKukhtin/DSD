@@ -4,6 +4,7 @@
   ClientWidth = 1189
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -295
   ExplicitWidth = 1205
   ExplicitHeight = 380
   PixelsPerInch = 96
@@ -186,9 +187,15 @@
           object Article: TcxGridDBColumn
             Caption = 'Artikel Nr'
             DataBinding.FieldName = 'Article'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object Article_all: TcxGridDBColumn
@@ -201,17 +208,29 @@
           object GoodsCode: TcxGridDBColumn
             Caption = 'Interne Nr'
             DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 55
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
             DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 150
           end
           object PartNumber: TcxGridDBColumn
@@ -242,9 +261,15 @@
           object CIN_OrderClient: TcxGridDBColumn
             Caption = 'CIN Nr.'
             DataBinding.FieldName = 'CIN_OrderClient'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 100
           end
           object ProductName_OrderClient: TcxGridDBColumn
@@ -479,7 +504,30 @@
           end
           object GoodsId: TcxGridDBColumn
             DataBinding.FieldName = 'GoodsId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object PartionId: TcxGridDBColumn
+            DataBinding.FieldName = 'PartionId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
         end
@@ -568,7 +616,7 @@
     end
     object cbPartNumber: TcxCheckBox
       Left = 874
-      Top = 32
+      Top = 30
       Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' S/N'
       Properties.ReadOnly = False
       TabOrder = 10
@@ -643,7 +691,7 @@
     Width = 83
   end
   object cbOrderClient: TcxCheckBox [5]
-    Left = 963
+    Left = 997
     Top = 5
     Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
     Caption = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072' '#8470
@@ -751,7 +799,7 @@
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'PartnerName;GoodsGroupNameFull;Article;GoodsName'
+          IndexFieldNames = 'InvNumberFull_OrderClient;GoodsGroupNameFull;GoodsName;Article'
           GridView = cxGridDBTableView
         end>
       Params = <
