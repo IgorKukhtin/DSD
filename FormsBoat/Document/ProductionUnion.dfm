@@ -2,7 +2,7 @@ object ProductionUnionForm: TProductionUnionForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1073#1086#1088#1082#1072'>'
-  ClientHeight = 549
+  ClientHeight = 563
   ClientWidth = 936
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -183,12 +183,12 @@ object ProductionUnionForm: TProductionUnionForm
     Left = 0
     Top = 123
     Width = 936
-    Height = 426
+    Height = 440
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 426
+    ClientRectBottom = 440
     ClientRectRight = 936
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -196,7 +196,7 @@ object ProductionUnionForm: TProductionUnionForm
       ImageIndex = 0
       object Panel2: TPanel
         Left = 0
-        Top = 131
+        Top = 145
         Width = 936
         Height = 271
         Align = alBottom
@@ -750,7 +750,7 @@ object ProductionUnionForm: TProductionUnionForm
         Left = 0
         Top = 0
         Width = 936
-        Height = 123
+        Height = 137
         Align = alClient
         Caption = 'Panel3'
         TabOrder = 1
@@ -758,7 +758,7 @@ object ProductionUnionForm: TProductionUnionForm
           Left = 1
           Top = 1
           Width = 934
-          Height = 121
+          Height = 135
           Align = alClient
           TabOrder = 0
           object cxGridDBTableView: TcxGridDBTableView
@@ -1058,13 +1058,329 @@ object ProductionUnionForm: TProductionUnionForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 123
+        Top = 137
         Width = 936
         Height = 8
         HotZoneClassName = 'TcxSimpleStyle'
         HotZone.Visible = False
         AlignSplitter = salBottom
         Control = Panel2
+      end
+    end
+    object cxTabSheetDetail: TcxTabSheet
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086
+      ImageIndex = 1
+      object cxGrid2: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 936
+        Height = 416
+        Align = alClient
+        TabOrder = 0
+        object cxGridDBTableView_DetAll: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DetailDS_All
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object ReceiptServiceName_ch5: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1072#1073#1086#1090
+            DataBinding.FieldName = 'ReceiptServiceName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actReceiptServiceChoiceForm_DetAll
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 141
+          end
+          object PersonalCode_ch5: TcxGridDBColumn
+            Caption = 'Interne Nr'
+            DataBinding.FieldName = 'PersonalCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
+          end
+          object PersonalName_ch5: TcxGridDBColumn
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+            DataBinding.FieldName = 'PersonalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPersonalChoiceForm_DetAll
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 149
+          end
+          object Amount_ch5: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object OperPrice_ch5: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1079#1072' '#1095'.'
+            DataBinding.FieldName = 'OperPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object Hours_ch5: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1095#1072#1089#1086#1074
+            DataBinding.FieldName = 'Hours'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 95
+          end
+          object Summ_ch54: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1060#1072#1082#1090
+            DataBinding.FieldName = 'Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 88
+          end
+          object Comment_ch5: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object isErased_ch5: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object DescName_master_ch5: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'DescName_master'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 64
+          end
+          object Article_master_ch5: TcxGridDBColumn
+            Caption = 'Artikel Nr'
+            DataBinding.FieldName = 'Article_master'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object GoodsCode_master_ch5: TcxGridDBColumn
+            Caption = 'Interne Nr'
+            DataBinding.FieldName = 'GoodsCode_master'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object GoodsName_master_ch5: TcxGridDBColumn
+            Caption = #1059#1079#1077#1083'/'#1051#1086#1076#1082#1072
+            DataBinding.FieldName = 'GoodsName_master'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormOrderClientItem
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 200
+          end
+          object Amount_master_ch5: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'Amount_master'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.########;-,0.########; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object InvNumberFull_OrderClient_ch5: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumberFull_OrderClient'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object CIN_OrderClient_ch5: TcxGridDBColumn
+            Caption = 'CIN Nr.'
+            DataBinding.FieldName = 'CIN_OrderClient'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object ProductName_OrderClient_ch5: TcxGridDBColumn
+            Caption = 'Boat'
+            DataBinding.FieldName = 'ProductName_OrderClient'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object FromName_OrderClient_ch5: TcxGridDBColumn
+            Caption = 'Kunden'
+            DataBinding.FieldName = 'FromName_OrderClient'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090' '#1082#1086#1075#1086
+            Options.Editing = False
+            Width = 120
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView_DetAll
+        end
       end
     end
   end
@@ -1084,8 +1400,8 @@ object ProductionUnionForm: TProductionUnionForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 246
-    Top = 343
+    Left = 222
+    Top = 295
   end
   object spSelectMI: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_ProductionUnion_Master'
@@ -1191,6 +1507,10 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1231,6 +1551,10 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
+          ItemName = 'bbChildProtocol'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1244,6 +1568,30 @@ object ProductionUnionForm: TProductionUnionForm
         item
           Visible = True
           ItemName = 'bbSetUnErasedDetail'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIDetailProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordDetailAll'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedDetail_All'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedDetail_All'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIDetailAllProtocolOpenForm'
         end
         item
           BeginGroup = True
@@ -1281,14 +1629,6 @@ object ProductionUnionForm: TProductionUnionForm
         item
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChildProtocol'
         end
         item
           Visible = True
@@ -1475,6 +1815,26 @@ object ProductionUnionForm: TProductionUnionForm
       Action = actOrderClientInsertBoatForm
       Category = 0
     end
+    object bbInsertRecordDetailAll: TdxBarButton
+      Action = InsertRecordDetailAll
+      Category = 0
+    end
+    object bbSetErasedDetail_All: TdxBarButton
+      Action = SetErasedDetail_All
+      Category = 0
+    end
+    object bbSetUnErasedDetail_All: TdxBarButton
+      Action = SetUnErasedDetail_All
+      Category = 0
+    end
+    object bbMIDetailAllProtocolOpenForm: TdxBarButton
+      Action = MIDetailAllProtocolOpenForm
+      Category = 0
+    end
+    object bbMIDetailProtocolOpenForm: TdxBarButton
+      Action = MIDetailProtocolOpenForm
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1549,6 +1909,9 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           StoredProc = spSelectMI_Detail
+        end
+        item
+          StoredProc = spSelectMI_DetailAll
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -1571,6 +1934,12 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           StoredProc = spSelectMI_Detail
+        end
+        item
+          StoredProc = spSelectMI_DetailAll
+        end
+        item
+          StoredProc = spSelectMIChild
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' ('#1088#1072#1089#1093#1086#1076')'
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' ('#1088#1072#1089#1093#1086#1076')'
@@ -1638,6 +2007,7 @@ object ProductionUnionForm: TProductionUnionForm
           StoredProc = spSelectMI_Detail
         end
         item
+          StoredProc = spSelectMI_DetailAll
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1709,6 +2079,7 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object SetErasedChild: TdsdUpdateErased
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spErasedMIchild
       StoredProcList = <
@@ -1718,11 +2089,13 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spErasedMIMaster
       StoredProcList = <
@@ -1732,26 +2105,30 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
     object SetUnErasedChild: TdsdUpdateErased
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spUnErasedMIchild
       StoredProcList = <
         item
           StoredProc = spUnErasedMIchild
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080'>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080'>'
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS
     end
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
@@ -1761,6 +2138,7 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -1841,7 +2219,8 @@ object ProductionUnionForm: TProductionUnionForm
       isShowModal = False
     end
     object MovementItemChildProtocolOpenForm: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'Protocol'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080'>'
       Hint = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080'>'
@@ -1871,7 +2250,8 @@ object ProductionUnionForm: TProductionUnionForm
       isShowModal = False
     end
     object MovementItemProtocolOpenForm: TdsdOpenForm
-      Category = 'DSDLib'
+      Category = 'Protocol'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -2008,6 +2388,7 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object InsertRecordChild: TInsertRecord
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
@@ -2033,6 +2414,7 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object InsertRecordReceiptGoods: TInsertRecord
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
@@ -2198,6 +2580,7 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object actOrderClientInsertBoatForm: TOpenChoiceForm
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
@@ -2383,6 +2766,7 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object SetErasedDetail: TdsdUpdateErased
       Category = 'Detail'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spErasedMIDetail
       StoredProcList = <
@@ -2392,6 +2776,7 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DetailDS
     end
@@ -2404,9 +2789,10 @@ object ProductionUnionForm: TProductionUnionForm
         item
           StoredProc = spUnErasedMIDetail
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DetailDS
@@ -2426,6 +2812,7 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object actChoiceFormOrderClientItem: TOpenChoiceForm
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
@@ -2541,6 +2928,337 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
       ImageIndex = 0
+    end
+    object SetErasedDetail_All: TdsdUpdateErased
+      Category = 'Detail'
+      TabSheet = cxTabSheetDetail
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spErasedMIDetailAll
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIDetailAll
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = DetailDS_All
+    end
+    object SetUnErasedDetail_All: TdsdUpdateErased
+      Category = 'Detail'
+      TabSheet = cxTabSheetDetail
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spUnErasedMIDetail_All
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIDetail_All
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DetailDS_All
+    end
+    object actUpdateDetailrDS_All: TdsdUpdateDataSet
+      Category = 'Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIDetailAll
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIDetailAll
+        end
+        item
+          StoredProc = spSelectMI_DetailAll
+        end
+        item
+          StoredProc = spSelectMI_Detail
+        end>
+      Caption = 'actUpdateMasterDS'
+      DataSource = DetailDS_All
+    end
+    object actPersonalChoiceForm_DetAll: TOpenChoiceForm
+      Category = 'Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PersonalFormAll'
+      FormName = 'TPersonalForm'
+      FormNameParam.Value = 'TPersonalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'PersonalCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object InsertRecordDetailAll: TInsertRecord
+      Category = 'Detail'
+      TabSheet = cxTabSheetDetail
+      MoveParams = <>
+      Enabled = False
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView_DetAll
+      Action = actMasterChoiceForm
+      Params = <>
+      Caption = 'InsertRecordNew'
+      ImageIndex = 0
+    end
+    object actReceiptServiceChoiceForm_DetAll: TOpenChoiceForm
+      Category = 'Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsForm'
+      FormName = 'TReceiptServiceForm'
+      FormNameParam.Value = 'TReceiptServiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'ReceiptServiceId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'ReceiptServiceName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'ReceiptServiceCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actMasterChoiceForm: TOpenChoiceForm
+      Category = 'Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'MasterChoiceForm'
+      FormName = 'TProductionUnionMasterChoiceForm'
+      FormNameParam.Value = 'TProductionUnionMasterChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_OrderClient'
+          Value = '0'
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_OrderClient'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 42160d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParentId'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'ParentId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'GoodsName_master'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'Amount_master'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberFull_OrderClient'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'InvNumberFull_OrderClient'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CIN'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'CIN_OrderClient'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'ProductName_OrderClient'
+          DataType = ftString
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'FromName_OrderClient'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'Article_master'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DescName'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'DescName_master'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object MIDetailAllProtocolOpenForm: TdsdOpenForm
+      Category = 'Protocol'
+      TabSheet = cxTabSheetDetail
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'ReceiptServiceName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object MIDetailProtocolOpenForm: TdsdOpenForm
+      Category = 'Protocol'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ReceiptServiceName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object MasterDS: TDataSource
@@ -2689,8 +3407,8 @@ object ProductionUnionForm: TProductionUnionForm
     Top = 177
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 326
-    Top = 367
+    Left = 342
+    Top = 263
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ProductionUnion'
@@ -2912,8 +3630,8 @@ object ProductionUnionForm: TProductionUnionForm
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 438
-    Top = 418
+    Left = 478
+    Top = 274
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -2956,8 +3674,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 638
-    Top = 225
+    Left = 574
+    Top = 201
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_SetUnErased'
@@ -2981,8 +3699,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 726
-    Top = 224
+    Left = 622
+    Top = 200
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
@@ -3023,14 +3741,14 @@ object ProductionUnionForm: TProductionUnionForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 652
-    Top = 297
+    Left = 736
+    Top = 201
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 548
-    Top = 350
+    Left = 732
+    Top = 254
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionUnion_Print'
@@ -3053,7 +3771,7 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 567
+    Left = 815
     Top = 208
   end
   object spInsertMaskMIMaster: TdsdStoredProc
@@ -3120,12 +3838,12 @@ object ProductionUnionForm: TProductionUnionForm
       end>
     PackSize = 1
     Left = 150
-    Top = 343
+    Top = 311
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 606
-    Top = 301
+    Left = 566
+    Top = 333
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
@@ -3134,8 +3852,8 @@ object ProductionUnionForm: TProductionUnionForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 569
-    Top = 301
+    Left = 537
+    Top = 341
   end
   object ChildViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3170,8 +3888,8 @@ object ProductionUnionForm: TProductionUnionForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 312
-    Top = 456
+    Left = 328
+    Top = 360
   end
   object spSelectMIChild: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_ProductionUnion_Child'
@@ -3206,7 +3924,7 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 650
+    Left = 386
     Top = 357
   end
   object spErasedMIchild: TdsdStoredProc
@@ -3231,8 +3949,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 438
-    Top = 344
+    Left = 278
+    Top = 360
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -3305,8 +4023,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 590
-    Top = 392
+    Left = 446
+    Top = 352
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionUnion_Child'
@@ -3355,8 +4073,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 150
-    Top = 463
+    Left = 206
+    Top = 359
   end
   object GuidesParent: TdsdGuides
     KeyField = 'Id'
@@ -3424,8 +4142,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 182
-    Top = 407
+    Left = 158
+    Top = 367
   end
   object DetailCDS: TClientDataSet
     Aggregates = <>
@@ -3434,13 +4152,13 @@ object ProductionUnionForm: TProductionUnionForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 768
-    Top = 463
+    Left = 104
+    Top = 455
   end
   object DetailDS: TDataSource
     DataSet = DetailCDS
-    Left = 830
-    Top = 471
+    Left = 142
+    Top = 455
   end
   object DetailViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3468,8 +4186,8 @@ object ProductionUnionForm: TProductionUnionForm
       end>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 883
-    Top = 449
+    Left = 67
+    Top = 505
   end
   object spInsertUpdateMIDetail: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionUnion_Detail'
@@ -3563,11 +4281,11 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 582
-    Top = 487
+    Left = 182
+    Top = 495
   end
   object spUnErasedMIDetail: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_ProductionUnion_SetUnErased_Child'
+    StoredProcName = 'gpMovementItem_ProductionUnion_SetUnErased_Detail'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3589,11 +4307,11 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 782
-    Top = 423
+    Left = 246
+    Top = 479
   end
   object spErasedMIDetail: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_ProductionUnion_SetErased_Child'
+    StoredProcName = 'gpMovementItem_ProductionUnion_SetErased_Detail'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3615,8 +4333,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 878
-    Top = 407
+    Left = 374
+    Top = 471
   end
   object spSelectMI_Detail: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_ProductionUnion_Detail'
@@ -3639,6 +4357,7 @@ object ProductionUnionForm: TProductionUnionForm
         Value = Null
         Component = actShowAllChild
         DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -3650,7 +4369,232 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 456
-    Top = 487
+    Left = 128
+    Top = 511
+  end
+  object spSelectMI_DetailAll: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_ProductionUnion_Detail'
+    DataSet = DetailCDS_All
+    DataSets = <
+      item
+        DataSet = DetailCDS_All
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 383
+  end
+  object DetailViewAddOn_All: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView_DetAll
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 6
+      end>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 867
+    Top = 425
+  end
+  object DetailDS_All: TDataSource
+    DataSet = DetailCDS_All
+    Left = 846
+    Top = 343
+  end
+  object DetailCDS_All: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 808
+    Top = 335
+  end
+  object spUnErasedMIDetail_All: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_ProductionUnion_SetUnErased_Detail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = DetailCDS_All
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = DetailCDS_All
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 718
+    Top = 431
+  end
+  object spErasedMIDetailAll: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_ProductionUnion_SetErased_Detail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = DetailCDS_All
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = DetailCDS_All
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 782
+    Top = 431
+  end
+  object spInsertUpdateMIDetailAll: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_ProductionUnion_Detail'
+    DataSet = DetailCDS_All
+    DataSets = <
+      item
+        DataSet = DetailCDS_All
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = DetailCDS_All
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = DetailCDS_All
+        ComponentItem = 'ParentId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = DetailCDS_All
+        ComponentItem = 'PersonalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptServiceName'
+        Value = Null
+        Component = DetailCDS_All
+        ComponentItem = 'ReceiptServiceName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmount'
+        Value = Null
+        Component = DetailCDS_All
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperPrice'
+        Value = Null
+        Component = DetailCDS_All
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inHours'
+        Value = Null
+        Component = DetailCDS_All
+        ComponentItem = 'Hours'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSumm'
+        Value = Null
+        Component = DetailCDS_All
+        ComponentItem = 'Summ'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = DetailCDS_All
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 750
+    Top = 343
   end
 end
