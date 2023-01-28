@@ -1190,9 +1190,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -1608,7 +1605,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbactSetUnErased'
         end
         item
           Visible = True
@@ -1649,6 +1646,10 @@ object IncomeForm: TIncomeForm
         item
           Visible = True
           ItemName = 'bbSetErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedChild'
         end
         item
           BeginGroup = True
@@ -1916,10 +1917,14 @@ object IncomeForm: TIncomeForm
       Action = mactAdd_limit
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbactSetUnErased: TdxBarButton
       Action = macInsertMask
       Category = 0
       ImageIndex = 54
+    end
+    object bbSetUnErasedChild: TdxBarButton
+      Action = actSetUnErasedChild
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -2184,7 +2189,27 @@ object IncomeForm: TIncomeForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
+    object actSetUnErasedChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      StoredProc = spUnErasedMIchild
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIchild
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
       DataSource = MasterDS
     end
     object actSetUnErased: TdsdUpdateErased
@@ -2202,6 +2227,7 @@ object IncomeForm: TIncomeForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -4613,8 +4639,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 760
-    Top = 440
+    Left = 800
+    Top = 448
   end
   object spErasedMIchild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Income_SetErased_Child'
@@ -4753,5 +4779,30 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 735
     Top = 304
+  end
+  object spUnErasedMIchild: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Income_SetUnErased_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'IsErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 742
+    Top = 496
   end
 end

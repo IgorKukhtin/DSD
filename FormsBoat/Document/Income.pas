@@ -259,7 +259,10 @@ type
     ceTotalSumm: TcxCurrencyEdit;
     macInsertMask: TMultiAction;
     actInsertMaskAction: TdsdInsertUpdateAction;
-    bb: TdxBarButton;
+    bbactSetUnErased: TdxBarButton;
+    spUnErasedMIchild: TdsdStoredProc;
+    actSetUnErasedChild: TdsdUpdateErased;
+    bbSetUnErasedChild: TdxBarButton;
   private
   public
   end;

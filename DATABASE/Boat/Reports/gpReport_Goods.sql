@@ -2,14 +2,16 @@
 
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
-
+DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inStartDate        TDateTime ,
     IN inEndDate          TDateTime ,
     IN inUnitGroupId      Integer   ,
     IN inGoodsId          Integer   ,
     IN inPartionId        Integer   , 
-    IN inisPartNumber     Boolean  ,  -- по серийным номерам
+    IN inisPartNumber     Boolean  ,  -- по серийным номерам 
+    IN inIsPartion        Boolean  ,  -- показать <Документ партия №> (Да/Нет) 
+    IN inIsOrderClient    Boolean  ,  -- Заказ клиента №
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime

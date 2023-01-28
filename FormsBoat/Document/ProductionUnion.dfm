@@ -3928,7 +3928,7 @@ object ProductionUnionForm: TProductionUnionForm
     Top = 357
   end
   object spErasedMIchild: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_ProductionUnion_SetErased'
+    StoredProcName = 'gpMovementItem_ProductionUnion_SetErased_Child'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3949,8 +3949,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 278
-    Top = 360
+    Left = 462
+    Top = 408
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -4002,7 +4002,7 @@ object ProductionUnionForm: TProductionUnionForm
     Left = 304
   end
   object spUnErasedMIchild: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_ProductionUnion_SetUnErased'
+    StoredProcName = 'gpMovementItem_ProductionUnion_SetUnErased_Child'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -4023,7 +4023,7 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 446
+    Left = 470
     Top = 352
   end
   object spInsertUpdateMIChild: TdsdStoredProc
