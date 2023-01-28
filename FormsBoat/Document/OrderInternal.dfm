@@ -827,8 +827,6 @@ object OrderInternalForm: TOrderInternalForm
           Height = 170
           Align = alBottom
           TabOrder = 0
-          ExplicitLeft = -8
-          ExplicitTop = 217
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -1272,7 +1270,6 @@ object OrderInternalForm: TOrderInternalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 88
@@ -2048,6 +2045,21 @@ object OrderInternalForm: TOrderInternalForm
       ErasedFieldName = 'isErased'
       DataSource = DetailDS_All
     end
+    object actUpdateDetailDS: TdsdUpdateDataSet
+      Category = 'Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIDetail
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIDetail
+        end
+        item
+          StoredProc = spSelectMI_Detail
+        end>
+      Caption = 'actUpdateMasterDS'
+      DataSource = DetailDS
+    end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
@@ -2062,6 +2074,9 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           StoredProc = spSelectMI_DetailAll
+        end
+        item
+          StoredProc = spSelectMI_Child
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -2114,6 +2129,9 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           StoredProc = spSelectMI_DetailAll
+        end
+        item
+          StoredProc = spSelectMI_Detail
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = DetailDS_All
@@ -2151,21 +2169,6 @@ object OrderInternalForm: TOrderInternalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-    end
-    object actUpdateDetailDS: TdsdUpdateDataSet
-      Category = 'Detail'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMIDetail
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMIDetail
-        end
-        item
-          StoredProc = spSelectMI_Detail
-        end>
-      Caption = 'actUpdateMasterDS'
-      DataSource = DetailDS
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
