@@ -81,6 +81,11 @@ type
     bbPrint_OrderClientPartion: TdxBarButton;
     actPrint_OrderClientPartion: TdsdPrintAction;
     PartionId: TcxGridDBColumn;
+    getMovementFormPartion: TdsdStoredProc;
+    actGetFormPartion: TdsdExecStoredProc;
+    actOpenFormPartion: TdsdOpenForm;
+    macOpenDocumentPartion: TMultiAction;
+    bbOpenDocumentPartion: TdxBarButton;
   private
     { Private declarations }
   public

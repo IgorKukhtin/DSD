@@ -972,6 +972,20 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object macOpenDocumentPartion: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetFormPartion
+        end
+        item
+          Action = actOpenFormPartion
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1072#1088#1090#1080#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1072#1088#1090#1080#1080
+      ImageIndex = 28
+    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -1202,6 +1216,42 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1042#1067#1041#1056#1040#1053#1053#1067#1045' '#1058#1086#1074#1072#1088#1099' '#1080#1079' "'#1057#1087#1080#1089#1086#1082' '#1076#1083#1103' OLAP"'
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1067#1041#1056#1040#1053#1053#1067#1045' '#1058#1086#1074#1072#1088#1099' '#1080#1079' "'#1057#1087#1080#1089#1086#1082' '#1076#1083#1103' OLAP"'
       ImageIndex = 50
+    end
+    object actOpenFormPartion: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      FormName = 'NULL'
+      FormNameParam.Value = ''
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Partion'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate_Partion'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = 0.000000000000000000
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object actRefreshIsPeriodYear: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1963,6 +2013,17 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       ImageIndex = 7
       DataSource = MasterDS
     end
+    object actGetFormPartion: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementFormPartion
+      StoredProcList = <
+        item
+          StoredProc = getMovementFormPartion
+        end>
+      Caption = 'actGetForm'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2106,6 +2167,14 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenDocumentPartion'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbOpenOrderClient_reserve'
         end
         item
@@ -2219,6 +2288,10 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       Hint = 'edSearchArticle'
       Visible = ivAlways
       Control = edSearchArticle
+    end
+    object bbOpenDocumentPartion: TdxBarButton
+      Action = macOpenDocumentPartion
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2853,8 +2926,8 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 200
-    Top = 464
+    Left = 352
+    Top = 488
   end
   object spSelect_Export: TdsdStoredProc
     StoredProcName = 'gpSelect_GoodsRemains_File'
@@ -3031,5 +3104,30 @@ inherited Report_Goods_RemainsCurrentForm: TReport_Goods_RemainsCurrentForm
       end>
     Left = 504
     Top = 24
+  end
+  object getMovementFormPartion: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Partion'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 288
   end
 end

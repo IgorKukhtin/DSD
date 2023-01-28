@@ -155,6 +155,11 @@ type
     cxLabel6: TcxLabel;
     edPartion: TcxButtonEdit;
     GuidesPartion: TdsdGuides;
+    getMovementFormPartion: TdsdStoredProc;
+    actGetFormPartion: TdsdExecStoredProc;
+    actOpenFormPartion: TdsdOpenForm;
+    macOpenDocumentPartion: TMultiAction;
+    bbOpenDocumentPartion: TdxBarButton;
   private
     { Private declarations }
   public

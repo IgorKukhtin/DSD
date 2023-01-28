@@ -72,10 +72,10 @@ type
     getMovementForm: TdsdStoredProc;
     actGetForm: TdsdExecStoredProc;
     actOpenForm: TdsdOpenForm;
-    actOpenDocument: TMultiAction;
+    macOpenDocument: TMultiAction;
     bbOpenDocument: TdxBarButton;
     FormParams: TdsdFormParams;
-    cbPapty: TcxCheckBox;
+    cbPartion: TcxCheckBox;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
     edArticle: TcxTextEdit;
@@ -87,6 +87,12 @@ type
     bbedSearchArticle: TdxBarControlContainerItem;
     bblbSearchArticle: TdxBarControlContainerItem;
     cbPartNumber: TcxCheckBox;
+    cbOrderClient: TcxCheckBox;
+    macOpenDocumentPartion: TMultiAction;
+    actGetFormPartion: TdsdExecStoredProc;
+    getMovementFormPartion: TdsdStoredProc;
+    actOpenFormPartion: TdsdOpenForm;
+    bbOpenDocumentPartion: TdxBarButton;
   private
     { Private declarations }
   public

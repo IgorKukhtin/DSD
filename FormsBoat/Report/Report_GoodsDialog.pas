@@ -48,6 +48,8 @@ type
     edArticle: TcxTextEdit;
     cxLabel18: TcxLabel;
     cbPartNumber: TcxCheckBox;
+    cbPartion: TcxCheckBox;
+    cbOrderClient: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -4,7 +4,6 @@
   ClientWidth = 1189
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -295
   ExplicitWidth = 1205
   ExplicitHeight = 380
   PixelsPerInch = 96
@@ -529,6 +528,50 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object InvNumberAll_Partion: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103'  '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'InvNumberAll_Partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object OperDate_Partion: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'OperDate_Partion'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1072#1088#1090#1080#1103'  '#1087#1088#1080#1093#1086#1076#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object InvNumber_Partion: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'InvNumber_Partion'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1072#1088#1090#1080#1103'  '#1087#1088#1080#1093#1086#1076#1072
+            Width = 55
+          end
+          object DescName_Partion: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'. ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'DescName_Partion'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1055#1072#1088#1090#1080#1103'  '#1087#1088#1080#1093#1086#1076#1072
+            Options.Editing = False
+            Width = 80
           end
         end
       end
@@ -1191,6 +1234,67 @@
         end>
       isShowModal = False
     end
+    object macOpenDocumentPartion: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetFormPartion
+        end
+        item
+          Action = actOpenFormPartion
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1072#1088#1090#1080#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1072#1088#1090#1080#1080
+      ImageIndex = 28
+    end
+    object actOpenFormPartion: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      FormName = 'NULL'
+      FormNameParam.Value = ''
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Partion'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate_Partion'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = 0.000000000000000000
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actGetFormPartion: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementFormPartion
+      StoredProcList = <
+        item
+          StoredProc = getMovementFormPartion
+        end>
+      Caption = 'actGetForm'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1322,6 +1426,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbOpenDocumentPartion'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_Goods'
         end
         item
@@ -1395,6 +1507,10 @@
     end
     object bbPrint_OrderClientPartion: TdxBarButton
       Action = actPrint_OrderClientPartion
+      Category = 0
+    end
+    object bbOpenDocumentPartion: TdxBarButton
+      Action = macOpenDocumentPartion
       Category = 0
     end
   end
@@ -1713,5 +1829,30 @@
     CheckBoxList = <>
     Left = 224
     Top = 184
+  end
+  object getMovementFormPartion: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Partion'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 224
   end
 end

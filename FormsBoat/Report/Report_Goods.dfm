@@ -805,6 +805,50 @@
             VisibleForCustomization = False
             Width = 55
           end
+          object InvNumberAll_Partion: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103'  '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'InvNumberAll_Partion'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object OperDate_Partion: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'OperDate_Partion'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1072#1088#1090#1080#1103'  '#1087#1088#1080#1093#1086#1076#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object InvNumber_Partion: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'InvNumber_Partion'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1072#1088#1090#1080#1103'  '#1087#1088#1080#1093#1086#1076#1072
+            Width = 55
+          end
+          object DescName_Partion: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'. ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'DescName_Partion'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1055#1072#1088#1090#1080#1103'  '#1087#1088#1080#1093#1086#1076#1072
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end
@@ -889,13 +933,12 @@
       TabOrder = 9
       Width = 210
     end
-    object cbPapty: TcxCheckBox
-      Left = 1018
-      Top = 6
+    object cbPartion: TcxCheckBox
+      Left = 886
+      Top = 30
       Caption = #1055#1086' '#1087#1072#1088#1090#1080#1103#1084
       Properties.ReadOnly = False
       TabOrder = 10
-      Visible = False
       Width = 95
     end
     object Код: TcxLabel
@@ -933,6 +976,16 @@
       ShowHint = True
       TabOrder = 15
       Width = 46
+    end
+    object cbOrderClient: TcxCheckBox
+      Left = 947
+      Top = 5
+      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072' '#8470
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 16
+      Width = 120
     end
   end
   object lbSearchArticle: TcxLabel [2]
@@ -987,7 +1040,7 @@
           'TextValue')
       end
       item
-        Component = cbPapty
+        Component = cbPartion
         Properties.Strings = (
           'Checked')
       end>
@@ -1174,10 +1227,37 @@
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOrderClient'
+          Value = Null
+          Component = cbOrderClient
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartion'
+          Value = Null
+          Component = cbPartion
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actGetFormPartion: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementFormPartion
+      StoredProcList = <
+        item
+          StoredProc = getMovementFormPartion
+        end>
+      Caption = 'actGetForm'
     end
     object actGetForm: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1226,7 +1306,21 @@
         end>
       isShowModal = False
     end
-    object actOpenDocument: TMultiAction
+    object macOpenDocumentPartion: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetFormPartion
+        end
+        item
+          Action = actOpenFormPartion
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1072#1088#1090#1080#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1072#1088#1090#1080#1080
+      ImageIndex = 28
+    end
+    object macOpenDocument: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1264,6 +1358,42 @@
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
       DataSource = MasterDS
+    end
+    object actOpenFormPartion: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      FormName = 'NULL'
+      FormNameParam.Value = ''
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Partion'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate_Partion'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = 0.000000000000000000
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -1324,6 +1454,22 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartion'
+        Value = Null
+        Component = cbPartion
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOrderClient'
+        Value = Null
+        Component = cbOrderClient
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 208
@@ -1376,6 +1522,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbOpenDocumentPartion'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1398,7 +1552,7 @@
       Category = 0
     end
     object bbOpenDocument: TdxBarButton
-      Action = actOpenDocument
+      Action = macOpenDocument
       Category = 0
     end
     object bbedSearchArticle: TdxBarControlContainerItem
@@ -1414,6 +1568,10 @@
       Hint = 'lbSearchArticle'
       Visible = ivAlways
       Control = lbSearchArticle
+    end
+    object bbOpenDocumentPartion: TdxBarButton
+      Action = macOpenDocumentPartion
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1731,5 +1889,30 @@
     CheckBoxList = <>
     Left = 248
     Top = 152
+  end
+  object getMovementFormPartion: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Partion'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 224
   end
 end

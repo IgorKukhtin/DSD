@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inStartDate        TDateTime ,
     IN inEndDate          TDateTime ,
@@ -48,17 +49,27 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , Summ_Cost TFloat
               , TotalSummPrice_cost_in TFloat
              
-              , InvNumberFull_OrderClient TVarChar, FromName_OrderClient TVarChar, ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar
+              , InvNumberFull_OrderClient TVarChar, FromName_OrderClient TVarChar, ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar  
+              , MovementId_Partion   Integer
+              , InvNumber_Partion    TVarChar
+              , InvNumberAll_Partion TVarChar
+              , OperDate_Partion     TDateTime
+              , DescName_Partion     TVarChar
               )
 AS
 $BODY$
  DECLARE vbUserId Integer;
 BEGIN
 
-     -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Goods());
-     vbUserId:= lpGetUserBySession (inSession);
+    -- проверка прав пользователя на вызов процедуры
+    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Goods());
+    vbUserId:= lpGetUserBySession (inSession);
 
+    -- !!!замена!!!
+    IF inIsPartion = TRUE
+    THEN
+        inIsOrderClient:= TRUE;
+    END IF;
 
     RETURN QUERY
     WITH tmpWhere AS (SELECT lfSelect.UnitId               AS LocationId
@@ -436,6 +447,7 @@ BEGIN
 
                                WHERE MIFloat_MovementId.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.PartionId FROM tmpMIContainer_group)
                                  AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                                 AND inIsOrderClient = TRUE
                                )
 
 
@@ -466,7 +478,7 @@ BEGIN
                         , tmpDataAll.GoodsId
                         , tmpDataAll.GoodsCode
                         , tmpDataAll.GoodsName
-                        , tmpDataAll.PartionId
+                        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.PartionId ELSE 0 END AS PartionId
                         , tmpDataAll.GoodsCode_parent
                         , tmpDataAll.GoodsName_parent
 
@@ -485,7 +497,8 @@ BEGIN
                         , SUM (tmpDataAll.Summ)             ::TFloat  AS Summ
 
                         --из партии
-                        , tmpDataAll.PartnerId
+                        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementId_Partion ELSE -1 END AS MovementId_Partion
+                        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.PartnerId ELSE 0 END AS PartnerId
                         , tmpDataAll.GoodsSizeId
                         , tmpDataAll.MeasureId
                         , tmpDataAll.GoodsGroupId
@@ -494,7 +507,7 @@ BEGIN
                         , tmpDataAll.ProdColorId
                         , tmpDataAll.TaxKindId
                         , tmpDataAll.TaxKindValue
-                        , tmpDataAll.OperPriceList
+                        , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.OperPriceList ELSE 0 END AS OperPriceList
                         , SUM (tmpDataAll.CostPrice) AS CostPrice_summ
                         --, tmpDataAll.CountForPrice
                         --, tmpDataAll.UnitId_in
@@ -622,8 +635,8 @@ BEGIN
                         , Object_PartionGoods.GoodsTypeId
                         , Object_PartionGoods.ProdColorId
                         , Object_PartionGoods.TaxKindId
-                        , Object_PartionGoods.TaxValue AS TaxKindValue
-                        --, Object_PartionGoods.MovementId  -- приход
+                        , Object_PartionGoods.TaxValue   AS TaxKindValue
+                        , Object_PartionGoods.MovementId AS MovementId_Partion -- приход
                         , Object_PartionGoods.EKPrice
                         , Object_PartionGoods.CountForPrice
                         , COALESCE (tmpPriceBasis.ValuePrice, Object_PartionGoods.OperPriceList) AS OperPriceList
@@ -706,7 +719,7 @@ BEGIN
                           , tmpDataAll.GoodsId
                           , tmpDataAll.GoodsCode
                           , tmpDataAll.GoodsName
-                          , tmpDataAll.PartionId
+                          --, tmpDataAll.PartionId
                           , tmpDataAll.GoodsCode_parent
                           , tmpDataAll.GoodsName_parent
 
@@ -718,13 +731,18 @@ BEGIN
                           , tmpDataAll.ProdColorId
                           , tmpDataAll.TaxKindId
                           , tmpDataAll.TaxKindValue
-                          , tmpDataAll.OperPriceList
-                          , tmpDataAll.PartnerId
+                          --, tmpDataAll.OperPriceList
+                          --, tmpDataAll.PartnerId
                           , CASE WHEN inisPartNumber = TRUE THEN MIString_PartNumber.ValueData ELSE '' END
                           , MIFloat_MovementId.InvNumberFull_OrderClient
                           , MIFloat_MovementId.FromName
                           , MIFloat_MovementId.ProductName
                           , MIFloat_MovementId.CIN
+                          --, tmpDataAll.MovementId_Partion 
+                          , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.PartionId ELSE 0 END
+                          , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.MovementId_Partion ELSE -1 END
+                          , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.PartnerId ELSE 0 END
+                          , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.OperPriceList ELSE 0 END
                    )
 
 
@@ -809,13 +827,19 @@ BEGIN
            , tmpDataAll.InvNumberFull_OrderClient   ::TVarChar
            , tmpDataAll.FromName_OrderClient        ::TVarChar
            , tmpDataAll.ProductName_OrderClient     ::TVarChar
-           , tmpDataAll.CIN_OrderClient             ::TVarChar
+           , tmpDataAll.CIN_OrderClient             ::TVarChar 
+           
+           , tmpDataAll.MovementId_Partion          AS MovementId_Partion
+           , Movement_Partion.InvNumber             AS InvNumber_Partion
+           , zfCalc_InvNumber_isErased (MovementDesc_Partion.ItemName, Movement_Partion.InvNumber, Movement_Partion.OperDate, Movement_Partion.StatusId) AS InvNumberAll_Partion
+           , Movement_Partion.OperDate              AS OperDate_Partion
+           , MovementDesc_Partion.ItemName          AS DescName_Partion
    FROM tmpDataAll
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpDataAll.PartnerId
+            LEFtmpDataAllT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpDataAll.PartnerId
             LEFT JOIN Object AS Object_Goods   ON Object_Goods.Id   = tmpDataAll.GoodsId
 
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = tmpDataAll.GoodsGroupId
-            LEFT JOIN Object AS Object_Measure    ON Object_Measure.Id    = tmpDataAll.MeasureId
+            LEFT JOIN Object AS Object_Measure    ON Object_Measure.Id    = .MeasureId
             LEFT JOIN Object AS Object_GoodsTag   ON Object_GoodsTag.Id   = tmpDataAll.GoodsTagId
             LEFT JOIN Object AS Object_GoodsType  ON Object_GoodsType.Id  = tmpDataAll.GoodsTypeId
             LEFT JOIN Object AS Object_ProdColor  ON Object_ProdColor.Id  = tmpDataAll.ProdColorId
@@ -828,6 +852,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = tmpDataAll.GoodsId
                                   AND ObjectString_Article.DescId = zc_ObjectString_Article()
+
+            LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = tmpDataAll.MovementId_Partion
+            LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId
+
    ;
 
 END;
@@ -841,4 +869,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Goods(inStartDate := ('02.03.2020')::TDateTime , inEndDate := ('03.03.2021')::TDateTime , inUnitGroupId := 0 , inGoodsId := 3780 , inPartionId := 28494, inisPartNumber := 'False', inSession := '5');
+-- SELECT * FROM gpReport_Goods(inStartDate := ('02.03.2021')::TDateTime , inEndDate := ('03.03.2021')::TDateTime , inUnitGroupId := 0 , inGoodsId := 3780 , inPartionId := 28494, inisPartNumber := 'False', inIsPartion:= False, inIsOrderClient:= False, inSession := '5');
