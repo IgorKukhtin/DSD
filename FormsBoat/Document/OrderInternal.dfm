@@ -827,8 +827,6 @@ object OrderInternalForm: TOrderInternalForm
           Height = 170
           Align = alBottom
           TabOrder = 0
-          ExplicitLeft = -8
-          ExplicitTop = 217
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -2227,6 +2225,9 @@ object OrderInternalForm: TOrderInternalForm
       StoredProcList = <
         item
           StoredProc = spSelectPrint
+        end
+        item
+          StoredProc = spSelectPrint_detail
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -2237,6 +2238,11 @@ object OrderInternalForm: TOrderInternalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'InvNumber_OrderClient;NPP_1;NPP_2'
+        end
+        item
+          DataSet = PrintDetailCDS
+          UserName = 'frxDBDDetail'
+          IndexFieldNames = 'ReceiptServiceCode'
         end>
       Params = <>
       ReportName = 'PrintMovement_OrderInternal'
@@ -4111,8 +4117,8 @@ object OrderInternalForm: TOrderInternalForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 956
-    Top = 65
+    Left = 924
+    Top = 137
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -4120,17 +4126,13 @@ object OrderInternalForm: TOrderInternalForm
     Left = 1028
     Top = 86
   end
-  object spSelectPrintOld: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderInternal_Print'
-    DataSet = PrintHeaderCDS
+  object spSelectPrint_detail: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternal_detail_Print'
+    DataSet = PrintDetailCDS
     DataSets = <
       item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
+        DataSet = PrintDetailCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
@@ -4141,8 +4143,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 975
-    Top = 216
+    Left = 911
+    Top = 208
   end
   object spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_OrderInternal'
@@ -4568,8 +4570,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 584
-    Top = 528
+    Left = 848
+    Top = 192
   end
   object DetailCDS: TClientDataSet
     Aggregates = <>
@@ -5068,5 +5070,11 @@ object OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 846
     Top = 391
+  end
+  object PrintDetailCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 956
+    Top = 97
   end
 end
