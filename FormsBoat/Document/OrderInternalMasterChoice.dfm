@@ -95,6 +95,8 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = -120
+    ExplicitTop = 37
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1060,6 +1062,61 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
           ComponentItem = 'GoodsName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'FromName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberFull_OrderClient'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumberFull_OrderClient'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Amount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CIN'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CIN'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Article'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParentId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DescName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'DescName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -1078,7 +1135,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
         Name = 'inMovementId'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'Id'
+        ComponentItem = 'MovementId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1300,6 +1357,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
       item
         Name = 'InvNumber'
         Value = Null
+        Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1318,6 +1376,20 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
         Component = GuidesOrderClient
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

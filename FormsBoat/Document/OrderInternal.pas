@@ -87,7 +87,7 @@ type
     GuidesFrom: TdsdGuides;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
-    MovementItemProtocolOpenForm: TdsdOpenForm;
+    MIMasterProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocol: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
@@ -156,8 +156,7 @@ type
     actUpdateDataSetInfoDS: TdsdUpdateDataSet;
     bbInsertRecordInfo: TdxBarButton;
     actRefreshInfo: TdsdDataSetRefresh;
-    actMovementProtocolInfoOpenForm: TdsdOpenForm;
-    bbProtocolInfoOpen: TdxBarButton;
+    bbMIChildProtocolOpenForm: TdxBarButton;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     Article_ch3: TcxGridDBColumn;
@@ -223,7 +222,6 @@ type
     SetErasedDetail: TdsdUpdateErased;
     SetUnErasedDetail: TdsdUpdateErased;
     spUnErasedMIDetail: TdsdStoredProc;
-    bbInsertRecordDetail: TdxBarButton;
     bbSetErasedDetail: TdxBarButton;
     bbSetUnErasedDetail: TdxBarButton;
     cxTopSplitter: TcxSplitter;
@@ -250,7 +248,6 @@ type
     DetailViewAddOn_All: TdsdDBViewAddOn;
     spSelectMI_DetailAll: TdsdStoredProc;
     actMasterChoiceForm: TOpenChoiceForm;
-    InsertRecordDetailAll: TInsertRecord;
     actPersonalChoiceForm_DetAll: TOpenChoiceForm;
     actReceiptServiceChoiceForm_DetAll: TOpenChoiceForm;
     spInsertUpdateMIDetailAll: TdsdStoredProc;
@@ -262,6 +259,14 @@ type
     spUnErasedMIDetail_All: TdsdStoredProc;
     bbSetErasedDetail_All: TdxBarButton;
     bbSetUnErasedDetail_All: TdxBarButton;
+    InsertRecordDetailAll: TInsertRecord;
+    actPersonal_ObjectChoiceForm: TOpenChoiceForm;
+    MIChildProtocolOpenForm: TdsdOpenForm;
+    MIDetailProtocolOpenForm: TdsdOpenForm;
+    MIDetailAllProtocolOpenForm: TdsdOpenForm;
+    bbInsertRecordDetail: TdxBarButton;
+    bbMIDetailProtocolOpenForm: TdxBarButton;
+    bbMIDetailAllProtocolOpenForm: TdxBarButton;
 
   private
   public

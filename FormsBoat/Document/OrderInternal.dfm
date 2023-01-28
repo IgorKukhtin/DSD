@@ -827,6 +827,8 @@ object OrderInternalForm: TOrderInternalForm
           Height = 170
           Align = alBottom
           TabOrder = 0
+          ExplicitLeft = -8
+          ExplicitTop = 217
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -1188,7 +1190,6 @@ object OrderInternalForm: TOrderInternalForm
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Appending = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
@@ -1225,7 +1226,7 @@ object OrderInternalForm: TOrderInternalForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actPersonalChoiceForm_DetAll
+                Action = actPersonal_ObjectChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1570,6 +1571,10 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1606,6 +1611,10 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbMIChildProtocolOpenForm'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1626,6 +1635,10 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbMIDetailProtocolOpenForm'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1639,6 +1652,10 @@ object OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbSetUnErasedDetail_All'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIDetailAllProtocolOpenForm'
         end
         item
           Visible = True
@@ -1675,10 +1692,6 @@ object OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemProtocol'
         end
         item
           Visible = True
@@ -1741,7 +1754,7 @@ object OrderInternalForm: TOrderInternalForm
       Category = 0
     end
     object bbMovementItemProtocol: TdxBarButton
-      Action = MovementItemProtocolOpenForm
+      Action = MIMasterProtocolOpenForm
       Category = 0
     end
     object bbCalcAmountPartner: TdxBarControlContainerItem
@@ -1833,8 +1846,8 @@ object OrderInternalForm: TOrderInternalForm
       Action = InsertRecordInfo
       Category = 0
     end
-    object bbProtocolInfoOpen: TdxBarButton
-      Action = actMovementProtocolInfoOpenForm
+    object bbMIChildProtocolOpenForm: TdxBarButton
+      Action = MIChildProtocolOpenForm
       Category = 0
     end
     object bbInsert_MI_byOrderClient: TdxBarButton
@@ -1853,10 +1866,6 @@ object OrderInternalForm: TOrderInternalForm
       Action = macErasedMI_Master
       Category = 0
       ImageIndex = 52
-    end
-    object bbInsertRecordDetail: TdxBarButton
-      Action = InsertRecordDetail
-      Category = 0
     end
     object bbSetErasedDetail: TdxBarButton
       Action = SetErasedDetail
@@ -1892,6 +1901,18 @@ object OrderInternalForm: TOrderInternalForm
     end
     object bbSetUnErasedDetail_All: TdxBarButton
       Action = SetUnErasedDetail_All
+      Category = 0
+    end
+    object bbInsertRecordDetail: TdxBarButton
+      Action = InsertRecordDetail
+      Category = 0
+    end
+    object bbMIDetailProtocolOpenForm: TdxBarButton
+      Action = MIDetailProtocolOpenForm
+      Category = 0
+    end
+    object bbMIDetailAllProtocolOpenForm: TdxBarButton
+      Action = MIDetailAllProtocolOpenForm
       Category = 0
     end
   end
@@ -1931,6 +1952,38 @@ object OrderInternalForm: TOrderInternalForm
       ImageIndex = 14
       ShortCut = 113
     end
+    object MIDetailAllProtocolOpenForm: TdsdOpenForm
+      Category = 'Protocol'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'ReceiptServiceName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actShowErasedCost: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1951,8 +2004,8 @@ object OrderInternalForm: TOrderInternalForm
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -1963,6 +2016,9 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           StoredProc = spSelectMI_Detail
+        end
+        item
+          StoredProc = spSelectMI_DetailAll
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -2003,6 +2059,9 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           StoredProc = spSelectMI_Detail
+        end
+        item
+          StoredProc = spSelectMI_DetailAll
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -2031,7 +2090,7 @@ object OrderInternalForm: TOrderInternalForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DetailDS
+      DataSource = DetailDS_All
     end
     object actUpdateDataSetInfoDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -2063,7 +2122,7 @@ object OrderInternalForm: TOrderInternalForm
       Category = 'Detail'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'PersonalForm'
+      Caption = 'PersonalFormAll'
       FormName = 'TPersonalForm'
       FormNameParam.Value = 'TPersonalForm'
       FormNameParam.DataType = ftString
@@ -2246,6 +2305,68 @@ object OrderInternalForm: TOrderInternalForm
       isSetErased = False
       DataSource = DetailDS
     end
+    object MIChildProtocolOpenForm: TdsdOpenForm
+      Category = 'Protocol'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object MIDetailProtocolOpenForm: TdsdOpenForm
+      Category = 'Protocol'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ReceiptServiceName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
@@ -2296,6 +2417,40 @@ object OrderInternalForm: TOrderInternalForm
       ImageIndex = 11
       Status = mtUncomplete
       Guides = StatusGuides
+    end
+    object actPersonal_ObjectChoiceForm: TOpenChoiceForm
+      Category = 'Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Personal_ObjectForm'
+      FormName = 'TPersonalForm'
+      FormNameParam.Value = 'TPersonalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'PersonalCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object CompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
@@ -2355,51 +2510,8 @@ object OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = False
     end
-    object actMovementProtocolInfoOpenForm: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1048#1085#1092#1086#1088#1084#1072#1094#1080#1080'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1048#1085#1092#1086#1088#1084#1072#1094#1080#1080'>'
-      ImageIndex = 34
-      FormName = 'TMovementProtocol_InfoForm'
-      FormNameParam.Value = 'TMovementProtocol_InfoForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumber'
-          Value = Null
-          Component = edInvNumber
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inCodeInfo'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inDescInfo'
-          Value = Null
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object MovementItemProtocolOpenForm: TdsdOpenForm
-      Category = 'DSDLib'
+    object MIMasterProtocolOpenForm: TdsdOpenForm
+      Category = 'Protocol'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -3076,20 +3188,6 @@ object OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = True
     end
-    object InsertRecordDetailAll: TInsertRecord
-      Category = 'Detail'
-      TabSheet = cxTabSheet1
-      MoveParams = <>
-      Enabled = False
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      View = cxGridDBTableView_Det
-      Action = actMasterChoiceForm
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
-      ImageIndex = 0
-    end
     object actMasterChoiceForm: TOpenChoiceForm
       Category = 'Detail'
       MoveParams = <>
@@ -3105,6 +3203,7 @@ object OrderInternalForm: TOrderInternalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'MovementItemId'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -3129,6 +3228,7 @@ object OrderInternalForm: TOrderInternalForm
           Value = Null
           Component = GuidesOrderClient
           ComponentItem = 'Key'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -3136,6 +3236,90 @@ object OrderInternalForm: TOrderInternalForm
           Value = Null
           Component = GuidesOrderClient
           ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParentId'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'ParentId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'GoodsName_master'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'Amount_master'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberFull_OrderClient'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'InvNumberFull_OrderClient'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CIN'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'CIN_OrderClient'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'ProductName_OrderClient'
+          DataType = ftString
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'FromName_OrderClient'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'Article_master'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DescName'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'DescName_master'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -3362,6 +3546,18 @@ object OrderInternalForm: TOrderInternalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object InsertRecordDetailAll: TInsertRecord
+      Category = 'Detail'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView_DetAll
+      Action = actMasterChoiceForm
+      Params = <>
+      Caption = 'InsertRecordNew'
+      ImageIndex = 0
     end
   end
   object MasterDS: TDataSource
@@ -4551,7 +4747,7 @@ object OrderInternalForm: TOrderInternalForm
     Top = 511
   end
   object spErasedMIDetail: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_OrderInternal_SetErased_Child'
+    StoredProcName = 'gpMovementItem_OrderInternal_SetErased_Detail'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -4577,7 +4773,7 @@ object OrderInternalForm: TOrderInternalForm
     Top = 511
   end
   object spUnErasedMIDetail: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_OrderInternal_SetUnErased_Child'
+    StoredProcName = 'gpMovementItem_OrderInternal_SetUnErased_Detail'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -4669,9 +4865,7 @@ object OrderInternalForm: TOrderInternalForm
     OnDblClickActionList = <
       item
       end>
-    ActionItemList = <
-      item
-      end>
+    ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
@@ -4872,7 +5066,7 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 830
-    Top = 367
+    Left = 846
+    Top = 391
   end
 end

@@ -183,7 +183,7 @@ BEGIN
              --данные из мастера
              LEFT JOIN MovementItem AS MI_Master
                                     ON MI_Master.MovementId = inMovementId
-                                   AND MI_Master.MovementItemId = MovementItem.ParentId
+                                   AND MI_Master.Id = MovementItem.ParentId
                                    AND MI_Master.DescId     = zc_MI_Master()
                                    AND MI_Master.isErased   = FALSE --tmpIsErased.isErased
 

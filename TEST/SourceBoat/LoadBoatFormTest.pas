@@ -440,6 +440,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalMasterChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalMasterChoiceForm');
 end;
 
  procedure TLoadFormTest.LoadOrderPartnerFormTest;
