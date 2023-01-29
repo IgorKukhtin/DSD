@@ -1107,9 +1107,6 @@ object OrderInternalForm: TOrderInternalForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2254,9 +2251,6 @@ object OrderInternalForm: TOrderInternalForm
       StoredProcList = <
         item
           StoredProc = spSelectPrint
-        end
-        item
-          StoredProc = spSelectPrint_detail
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -2267,11 +2261,6 @@ object OrderInternalForm: TOrderInternalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'InvNumber_OrderClient;NPP_1;NPP_2'
-        end
-        item
-          DataSet = PrintDetailCDS
-          UserName = 'frxDBDDetail'
-          IndexFieldNames = 'ReceiptServiceCode'
         end>
       Params = <>
       ReportName = 'PrintMovement_OrderInternal'
@@ -4155,26 +4144,6 @@ object OrderInternalForm: TOrderInternalForm
     Left = 1028
     Top = 86
   end
-  object spSelectPrint_detail: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderInternal_detail_Print'
-    DataSet = PrintDetailCDS
-    DataSets = <
-      item
-        DataSet = PrintDetailCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 911
-    Top = 208
-  end
   object spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_OrderInternal'
     DataSets = <>
@@ -5099,11 +5068,5 @@ object OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 846
     Top = 391
-  end
-  object PrintDetailCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 956
-    Top = 97
   end
 end

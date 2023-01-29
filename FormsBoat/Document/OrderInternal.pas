@@ -91,7 +91,6 @@ type
     bbMovementItemProtocol: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    spSelectPrint_detail: TdsdStoredProc;
     bbCalcAmountPartner: TdxBarControlContainerItem;
     actGoodsKindChoice: TOpenChoiceForm;
     spInsertMaskMIMaster: TdsdStoredProc;
@@ -267,7 +266,6 @@ type
     bbInsertRecordDetail: TdxBarButton;
     bbMIDetailProtocolOpenForm: TdxBarButton;
     bbMIDetailAllProtocolOpenForm: TdxBarButton;
-    PrintDetailCDS: TClientDataSet;
 
   private
   public
