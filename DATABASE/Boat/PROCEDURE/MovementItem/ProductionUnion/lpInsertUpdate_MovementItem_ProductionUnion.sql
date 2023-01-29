@@ -83,22 +83,28 @@ BEGIN
                                                     , inMovementId        := inMovementId
                                                     , inObjectId          := tmpReceiptGoodsChild.GoodsId
                                                     , inReceiptLevelId    := tmpReceiptGoodsChild.ReceiptLevelId
-                                                    , inColorPatternId    := NULL
-                                                    , inProdColorPatternId:= NULL
+                                                    , inColorPatternId    := tmpReceiptGoodsChild.ColorPatternId
+                                                    , inProdColorPatternId:= tmpReceiptGoodsChild.ProdColorPatternId
                                                     , inProdOptionsId     := tmpReceiptGoodsChild.ProdOptionsId
                                                     , inAmount            := tmpReceiptGoodsChild.Value * inAmount
                                                     , inUserId            := inUserId
                                                      )
-     FROM (WITH tmpReceiptGoodsChild AS (SELECT ObjectLink_Goods_master.ChildObjectId AS GoodsId_master
-                                              , ObjectLink_Object.ChildObjectId       AS GoodsId
-                                              , ObjectLink_GoodsChild.ChildObjectId   AS GoodsId_child
-                                              , ObjectLink_ReceiptLevel.ChildObjectId AS ReceiptLevelId
-                                              , ObjectFloat_Value.ValueData           AS Value
+     FROM (WITH tmpReceiptGoodsChild AS (SELECT ObjectLink_Goods_master.ChildObjectId      AS GoodsId_master
+                                              , ObjectLink_Object.ChildObjectId            AS GoodsId
+                                              , ObjectLink_GoodsChild.ChildObjectId        AS GoodsId_child
+                                              , ObjectLink_ReceiptLevel.ChildObjectId      AS ReceiptLevelId
+                                              , ObjectLink_ColorPattern.ChildObjectId      AS ColorPatternId
+                                              , ObjectLink_ProdColorPattern.ChildObjectId  AS ProdColorPatternId
+                                              , ObjectFloat_Value.ValueData                AS Value
                                          FROM ObjectLink AS ObjectLink_ReceiptGoods
                                               -- какой узел собирается
                                               LEFT JOIN ObjectLink AS ObjectLink_Goods_master
                                                                    ON ObjectLink_Goods_master.ObjectId = ObjectLink_ReceiptGoods.ChildObjectId
                                                                   AND ObjectLink_Goods_master.DescId   = zc_ObjectLink_ReceiptGoods_Object()
+                                              -- Шаблон
+                                              LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                                                                   ON ObjectLink_ColorPattern.ObjectId = ObjectLink_ReceiptGoods.ChildObjectId
+                                                                  AND ObjectLink_ColorPattern.DescId   = zc_ObjectLink_ReceiptGoods_ColorPattern()
 
                                               INNER JOIN Object AS Object_ReceiptGoodsChild
                                                                 ON Object_ReceiptGoodsChild.Id       = ObjectLink_ReceiptGoods.ObjectId
@@ -126,6 +132,10 @@ BEGIN
                                               LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
                                                                    ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
                                                                   AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+                                              -- Boat Structure
+                                              LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                                                   ON ObjectLink_ProdColorPattern.ObjectId      = Object_ReceiptGoodsChild.Id
+                                                                  AND ObjectLink_ProdColorPattern.DescId        = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
 
                                          WHERE ObjectLink_ReceiptGoods.ChildObjectId = inReceiptProdModelId
                                            AND ObjectLink_ReceiptGoods.DescId        = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
@@ -182,6 +192,8 @@ BEGIN
            -- 1. если это "виртуальный" узел сборки
            SELECT tmpReceiptGoodsChild.GoodsId
                 , tmpReceiptGoodsChild.ReceiptLevelId
+                , tmpReceiptGoodsChild.ColorPatternId
+                , tmpReceiptGoodsChild.ProdColorPatternId
                 , 0 AS ProdOptionsId
                 , tmpReceiptGoodsChild.Value
            FROM tmpReceiptGoodsChild
@@ -191,6 +203,8 @@ BEGIN
            -- 2.1. если это сборка узла
            SELECT tmpReceiptGoodsChild.GoodsId
                 , tmpReceiptGoodsChild.ReceiptLevelId
+                , tmpReceiptGoodsChild.ColorPatternId
+                , tmpReceiptGoodsChild.ProdColorPatternId
                 , 0 AS ProdOptionsId
                 , tmpReceiptGoodsChild.Value
            FROM tmpReceiptGoodsChild
@@ -205,6 +219,8 @@ BEGIN
            SELECT DISTINCT
                   tmpReceiptGoodsChild.GoodsId_child AS GoodsId
                 , 0                                  AS ReceiptLevelId
+                , 0                                  AS ColorPatternId
+                , 0                                  AS ProdColorPatternId
                 , 0                                  AS ProdOptionsId
                   -- замена
                 , 1 AS Value
@@ -217,6 +233,8 @@ BEGIN
            -- 3.1. если это сборка Лодки
            SELECT tmpReceiptProdModel.GoodsId
                 , 0 AS ReceiptLevelId
+                , 0 AS ColorPatternId
+                , 0 AS ProdColorPatternId
                 , 0 AS ProdOptionsId
                   -- 
                 , tmpReceiptProdModel.Value
@@ -227,6 +245,8 @@ BEGIN
            -- 3.2. добавили Опции, если это сборка Лодки
            SELECT tmpProdOptItems.GoodsId
                 , 0 AS ReceiptLevelId
+                , 0 AS ColorPatternId
+                , 0 AS ProdColorPatternId
                 , tmpProdOptItems.ProdOptionsId
                   -- Кол-во опций
                 , tmpProdOptItems.Amount
@@ -250,4 +270,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
---
+-- SELECT * FROM

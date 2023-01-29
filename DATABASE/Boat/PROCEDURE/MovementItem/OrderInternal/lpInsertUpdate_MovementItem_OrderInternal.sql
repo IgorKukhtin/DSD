@@ -81,7 +81,7 @@ BEGIN
                                                   , inUnitId                 := 0 -- !!!
                                                   , inAmount                 := tmpMI.Amount
                                                   , inAmountReserv           := 0
-                                                  , inAmountSend             := tmpMI.Amount
+                                                  , inAmountSend             := 0
                                                   , inForCount               := tmpMI.ForCount
                                                   , inUserId                 := inUserId
                                                    )
@@ -92,31 +92,31 @@ BEGIN
                             THEN MILinkObject_Goods_basis.ObjectId
                         ELSE MovementItem.ObjectId
                   END AS ObjectId
-                  --
+                  -- ReceiptLevel
                 , CASE WHEN MILinkObject_Goods.ObjectId = inGoodsId
                         AND MILinkObject_Goods_basis.ObjectId > 0
                             THEN 0
                         ELSE MILinkObject_ReceiptLevel.ObjectId
                   END AS ReceiptLevelId
-                  --
+                  -- Шаблон Boat Structure
+                , CASE WHEN MILinkObject_Goods.ObjectId = inGoodsId
+                        AND MILinkObject_Goods_basis.ObjectId > 0
+                            THEN 0
+                        ELSE MILinkObject_ColorPattern.ObjectId
+                  END AS ColorPatternId
+                  -- Boat Structure
+                , CASE WHEN MILinkObject_Goods.ObjectId = inGoodsId
+                        AND MILinkObject_Goods_basis.ObjectId > 0
+                            THEN 0
+                        ELSE MILinkObject_ProdColorPattern.ObjectId
+                  END AS ProdColorPatternId
+                  -- Options
                 , CASE WHEN MILinkObject_Goods.ObjectId = inGoodsId
                         AND MILinkObject_Goods_basis.ObjectId > 0
                             THEN 0
                         ELSE MILinkObject_ProdOptions.ObjectId
                   END AS ProdOptionsId
                   
-                  --
-                , CASE WHEN MILinkObject_Goods.ObjectId = inGoodsId
-                        AND MILinkObject_Goods_basis.ObjectId > 0
-                            THEN 0
-                        ELSE MILinkObject_ColorPattern.ObjectId
-                  END AS ColorPatternId
-                  --
-                , CASE WHEN MILinkObject_Goods.ObjectId = inGoodsId
-                        AND MILinkObject_Goods_basis.ObjectId > 0
-                            THEN 0
-                        ELSE MILinkObject_ProdColorPattern.ObjectId
-                  END AS ProdColorPatternId
                   --
                 , CASE WHEN MILinkObject_Goods.ObjectId = inGoodsId
                         AND MILinkObject_Goods_basis.ObjectId > 0
@@ -175,6 +175,8 @@ BEGIN
                   --
                 , 0 AS ProdColorPatternId
                   --
+                , 0 AS ProdOptionsId
+                  --
                 , MovementItem.Amount
                   --
                 , MIFloat_ForCount.ValueData AS ForCount
@@ -209,6 +211,7 @@ BEGIN
                   --
                 , 0 AS ProdColorPatternId
                   --
+                , lpSelect.ProdOptionsId
                   -- Кол-во опций
                 , lpSelect.Amount
                   --
@@ -244,4 +247,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
---
+-- SELECT * FROM

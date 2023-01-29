@@ -283,14 +283,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- select * from gpInsert_MI_OrderInternal_byOrder(inMovementId := 663 , inMovementId_OrderClient := 662 , inReceiptGoodsId := 253170 ,  inSession := '5');
-
-      /*   , tmpReceiptGoods AS (SELECT DISTINCT ObjectLink_Goods.ChildObjectId AS GoodsId
-                               FROM Object AS Object_ReceiptGoods
-                                    LEFT JOIN ObjectLink AS ObjectLink_Goods
-                                                         ON ObjectLink_Goods.ObjectId = Object_ReceiptGoods.Id
-                                                        AND ObjectLink_Goods.DescId = zc_ObjectLink_ReceiptGoods_Object()
-                               WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
-                                 AND Object_ReceiptGoods.isErased = FALSE
-
-                        */
+-- SELECT * FROM gpInsert_MI_OrderInternal_byOrder(inMovementId := 663 , inMovementId_OrderClient := 662 , inReceiptGoodsId := 253170 ,  inSession := '5');
