@@ -712,7 +712,7 @@ object OrderInternalForm: TOrderInternalForm
               Width = 124
             end
             object ProdColorPatternName_ch3: TcxGridDBColumn
-              Caption = #1069#1083#1077#1084#1077#1085#1090
+              Caption = 'Boat Structure'
               DataBinding.FieldName = 'ProdColorPatternName'
               Visible = False
               HeaderAlignmentHorz = taCenter
@@ -983,7 +983,7 @@ object OrderInternalForm: TOrderInternalForm
               Options.Editing = False
               Width = 80
             end
-            object ReceiptServiceCode: TcxGridDBColumn
+            object ReceiptServiceCode_ch4: TcxGridDBColumn
               Caption = 'Interne Nr'
               DataBinding.FieldName = 'ReceiptServiceCode'
               HeaderAlignmentHorz = taCenter
@@ -1173,6 +1173,21 @@ object OrderInternalForm: TOrderInternalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Hours_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_ch54
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1202,6 +1217,21 @@ object OrderInternalForm: TOrderInternalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Hours_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_ch54
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1216,6 +1246,23 @@ object OrderInternalForm: TOrderInternalForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object Article_ReceiptService_ch5: TcxGridDBColumn
+            Caption = 'Artikel Nr'
+            DataBinding.FieldName = 'Article_ReceiptService'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ReceiptServiceCode_ch5: TcxGridDBColumn
+            Caption = 'Interne Nr'
+            DataBinding.FieldName = 'ReceiptServiceCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object ReceiptServiceName_ch5: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1072#1073#1086#1090
             DataBinding.FieldName = 'ReceiptServiceName'
@@ -1231,7 +1278,7 @@ object OrderInternalForm: TOrderInternalForm
             Width = 141
           end
           object PersonalCode_ch5: TcxGridDBColumn
-            Caption = 'Interne Nr'
+            Caption = #1050#1086#1076
             DataBinding.FieldName = 'PersonalCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

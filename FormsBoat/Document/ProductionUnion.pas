@@ -197,7 +197,7 @@ type
     cxGrid_Detail: TcxGrid;
     cxGridDBTableView_Det: TcxGridDBTableView;
     Article_ch4: TcxGridDBColumn;
-    GoodsName_ch4: TcxGridDBColumn;
+    ReceiptServiceCode_ch4: TcxGridDBColumn;
     ReceiptServiceName_ch4: TcxGridDBColumn;
     PersonalCode_ch4: TcxGridDBColumn;
     PersonalName_ch4: TcxGridDBColumn;
@@ -273,6 +273,10 @@ type
     MIDetailProtocolOpenForm: TdsdOpenForm;
     bbMIDetailAllProtocolOpenForm: TdxBarButton;
     bbMIDetailProtocolOpenForm: TdxBarButton;
+    Hours_plan_ch4: TcxGridDBColumn;
+    Article_ReceiptService_ch5: TcxGridDBColumn;
+    ReceiptServiceCode_ch5: TcxGridDBColumn;
+    Hours_plan_ch5: TcxGridDBColumn;
   private
   public
   end;
