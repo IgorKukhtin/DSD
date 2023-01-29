@@ -203,7 +203,7 @@ type
     cxGrid_Detail: TcxGrid;
     cxGridDBTableView_Det: TcxGridDBTableView;
     Article_ch4: TcxGridDBColumn;
-    GoodsName_ch4: TcxGridDBColumn;
+    ReceiptServiceCode: TcxGridDBColumn;
     ReceiptServiceName_ch4: TcxGridDBColumn;
     PersonalCode_ch4: TcxGridDBColumn;
     PersonalName_ch4: TcxGridDBColumn;

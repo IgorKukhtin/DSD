@@ -983,14 +983,13 @@ object OrderInternalForm: TOrderInternalForm
               Options.Editing = False
               Width = 80
             end
-            object GoodsName_ch4: TcxGridDBColumn
-              Caption = #1059#1079#1077#1083'/'#1051#1086#1076#1082#1072
-              DataBinding.FieldName = 'GoodsName'
-              Visible = False
+            object ReceiptServiceCode: TcxGridDBColumn
+              Caption = 'Interne Nr'
+              DataBinding.FieldName = 'ReceiptServiceCode'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 132
+              Width = 70
             end
             object ReceiptServiceName_ch4: TcxGridDBColumn
               Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1072#1073#1086#1090
@@ -1007,12 +1006,12 @@ object OrderInternalForm: TOrderInternalForm
               Width = 141
             end
             object PersonalCode_ch4: TcxGridDBColumn
-              Caption = 'Interne Nr'
+              Caption = #1050#1086#1076
               DataBinding.FieldName = 'PersonalCode'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 85
+              Width = 55
             end
             object PersonalName_ch4: TcxGridDBColumn
               Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
@@ -2260,7 +2259,7 @@ object OrderInternalForm: TOrderInternalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'InvNumber_OrderClient;NPP_1;NPP_2'
+          IndexFieldNames = 'InvNumber_OrderClient;NPP_1;NPP_2;NPP_3'
         end>
       Params = <>
       ReportName = 'PrintMovement_OrderInternal'
