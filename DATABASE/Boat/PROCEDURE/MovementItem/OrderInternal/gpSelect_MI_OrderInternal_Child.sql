@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , ReceiptLevelId Integer, ReceiptLevelName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
+             , ProdOptionsId Integer, ProdOptionsName TVarChar
              , isErased Boolean
               )
 AS
@@ -57,6 +58,8 @@ BEGIN
              , Object_ColorPattern.ValueData        AS ColorPatternName
              , Object_ProdColorPattern.Id           AS ProdColorPatternId
              , Object_ProdColorPattern.ValueData    AS ProdColorPatternName
+             , Object_ProdOptions.Id                AS ProdOptionsId
+             , Object_ProdOptions.ValueData         AS ProdOptionsName
              , MovementItem.isErased
 
         FROM tmpIsErased
@@ -102,6 +105,11 @@ BEGIN
                                               ON MILO_ProdColorPattern.MovementItemId = MovementItem.Id
                                              AND MILO_ProdColorPattern.DescId = zc_MILinkObject_ProdColorPattern()
              LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = MILO_ProdColorPattern.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILO_ProdOptions
+                                              ON MILO_ProdOptions.MovementItemId = MovementItem.Id
+                                             AND MILO_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
+             LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = MILO_ProdOptions.ObjectId
 
              LEFT JOIN ObjectString AS ObjectString_Goods_Comment
                                     ON ObjectString_Goods_Comment.ObjectId = Object_Goods.Id

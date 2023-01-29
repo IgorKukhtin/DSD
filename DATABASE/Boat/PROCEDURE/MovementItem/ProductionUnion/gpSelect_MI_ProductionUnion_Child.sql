@@ -11,7 +11,10 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionUnion_Child(
 RETURNS TABLE (Id Integer, NPP Integer, ParentId Integer
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar
              , DescName TVarChar
-             , ReceiptLevelName TVarChar
+             , ReceiptLevelName     TVarChar
+             , ProdOptionsName      TVarChar
+             , ProdColorPatternName TVarChar
+             , ColorPatternName     TVarChar
              , Amount TFloat
              , isErased Boolean
              , GoodsGroupNameFull TVarChar
@@ -75,6 +78,9 @@ BEGIN
           , Object_Object.ValueData        AS ObjectName
           , ObjectDesc.ItemName            AS DescName
           , Object_ReceiptLevel.ValueData  AS ReceiptLevelName
+          , Object_ProdOptions.ValueData       AS ProdOptionsName
+          , Object_ProdColorPattern.ValueData  AS ProdColorPatternName
+          , Object_ColorPattern.ValueData      AS ColorPatternName
           , MovementItem.Amount           ::TFloat
           , MovementItem.isErased
 
@@ -103,6 +109,21 @@ BEGIN
                                              AND MILO_ReceiptLevel.DescId         = zc_MILinkObject_ReceiptLevel()
              LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = MILO_ReceiptLevel.ObjectId
 
+             LEFT JOIN MovementItemLinkObject AS MILO_ProdOptions
+                                              ON MILO_ProdOptions.MovementItemId = MovementItem.Id
+                                             AND MILO_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
+             LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = MILO_ProdOptions.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILO_ProdColorPattern
+                                              ON MILO_ProdColorPattern.MovementItemId = MovementItem.Id
+                                             AND MILO_ProdColorPattern.DescId         = zc_MILinkObject_ProdColorPattern()
+             LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = MILO_ProdColorPattern.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILO_ColorPattern
+                                              ON MILO_ColorPattern.MovementItemId = MovementItem.Id
+                                             AND MILO_ColorPattern.DescId         = zc_MILinkObject_ColorPattern()
+             LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = MILO_ColorPattern.ObjectId
+
              LEFT JOIN ObjectString AS ObjectString_Article
                                     ON ObjectString_Article.ObjectId = MovementItem.ObjectId
                                    AND ObjectString_Article.DescId   = zc_ObjectString_Article()
@@ -127,7 +148,8 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId  
+
         ;
 
 END;
