@@ -153,10 +153,10 @@ type
     MeasureName_ch1: TcxGridDBColumn;
     Value_ch1: TcxGridDBColumn;
     Value_service_ch1: TcxGridDBColumn;
-    Amount_ch2: TcxGridDBColumn;
-    Amount_diff_ch2: TcxGridDBColumn;
+    Amount_ch1: TcxGridDBColumn;
+    Amount_diff_ch1: TcxGridDBColumn;
     Comment_ch1: TcxGridDBColumn;
-    IsErased_ch2: TcxGridDBColumn;
+    IsErased_ch1: TcxGridDBColumn;
     Color_value_ch1: TcxGridDBColumn;
     Color_Level_ch1: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
@@ -190,7 +190,7 @@ type
     EngineName: TcxGridDBColumn;
     ProdColorName: TcxGridDBColumn;
     Comment_goods: TcxGridDBColumn;
-    cxGridDBTableViewChildColumn1: TcxGridDBColumn;
+    Comment_goods_ch1: TcxGridDBColumn;
     DetailCDS: TClientDataSet;
     DetailDS: TDataSource;
     DetailViewAddOn: TdsdDBViewAddOn;
