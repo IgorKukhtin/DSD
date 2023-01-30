@@ -574,8 +574,6 @@ object OrderInternalForm: TOrderInternalForm
           Height = 117
           Align = alBottom
           TabOrder = 2
-          ExplicitLeft = 2
-          ExplicitTop = 391
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ChildDS
@@ -840,8 +838,6 @@ object OrderInternalForm: TOrderInternalForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGrid1
-          ExplicitLeft = 0
-          ExplicitTop = 193
         end
         object cxGrid_Detail: TcxGrid
           Left = 1
@@ -850,7 +846,6 @@ object OrderInternalForm: TOrderInternalForm
           Height = 170
           Align = alBottom
           TabOrder = 0
-          ExplicitTop = 215
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -1103,8 +1098,6 @@ object OrderInternalForm: TOrderInternalForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGrid_Detail
-          ExplicitLeft = 0
-          ExplicitTop = 201
         end
       end
     end
@@ -4613,6 +4606,7 @@ object OrderInternalForm: TOrderInternalForm
       item
         DataSet = PrintItemsCDS
       end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'

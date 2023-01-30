@@ -57,7 +57,6 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    Properties.ReadOnly = True
     TabOrder = 5
     Width = 127
   end
@@ -229,8 +228,8 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 120
-    Top = 40
+    Left = 56
+    Top = 24
   end
   object FormParams: TdsdFormParams
     Params = <
