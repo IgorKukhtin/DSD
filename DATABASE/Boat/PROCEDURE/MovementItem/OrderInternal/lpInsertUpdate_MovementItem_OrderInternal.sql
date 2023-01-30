@@ -85,7 +85,8 @@ BEGIN
                                                   , inForCount               := tmpMI.ForCount
                                                   , inUserId                 := inUserId
                                                    )
-     FROM (SELECT DISTINCT
+     FROM (-- 1. Узел или "виртуальный" узел
+           SELECT DISTINCT
                   CASE WHEN MILinkObject_Goods.ObjectId = inGoodsId
                         AND MILinkObject_Goods_basis.ObjectId > 0
                             -- собираем в одну строчку "виртуальный" узел
@@ -161,11 +162,12 @@ BEGIN
            WHERE MovementItem.MovementId = inMovementId_OrderClient
              AND MovementItem.DescId     = zc_MI_Detail()
              AND MovementItem.isErased    = FALSE
-             AND ((MILinkObject_Goods.ObjectId      = inGoodsId AND MILinkObject_Goods_basis.ObjectId IS NULL)
+             AND (MILinkObject_Goods.ObjectId       = inGoodsId
                OR MILinkObject_Goods_basis.ObjectId = inGoodsId
                  )
 
           UNION
+           -- Лодка
            SELECT 
                   MovementItem.ObjectId
                   --
@@ -203,6 +205,7 @@ BEGIN
              AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inGoodsId AND Object.DescId = zc_Object_Product())
 
           UNION
+           -- Опции
            SELECT lpSelect.GoodsId AS ObjectId
                   --
                 , 0 AS ReceiptLevelId
