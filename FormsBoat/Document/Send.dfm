@@ -1575,7 +1575,15 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert_MI_Send_byOrderInternal'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator2'
         end
         item
           Visible = True
@@ -1587,6 +1595,16 @@ object SendForm: TSendForm
       Category = 0
       Hint = '    '
       Visible = ivAlways
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Category = 0
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object dxBarSeparator2: TdxBarSeparator
+      Category = 0
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1854,6 +1872,7 @@ object SendForm: TSendForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1056#1077#1079#1077#1088#1074'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1056#1077#1079#1077#1088#1074'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
@@ -1869,6 +1888,7 @@ object SendForm: TSendForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -1884,6 +1904,7 @@ object SendForm: TSendForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS
@@ -1900,6 +1921,7 @@ object SendForm: TSendForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -2404,8 +2426,12 @@ object SendForm: TSendForm
           Action = actRefreshMI
         end>
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
-      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1057#1045' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1074#1099#1073#1086#1088' '#1091#1079#1083#1072') '#1080#1079' '#1047#1072#1082#1072#1079' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
-      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1057#1045' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1074#1099#1073#1086#1088' '#1091#1079#1083#1072') '#1080#1079' '#1047#1072#1082#1072#1079' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+      Caption = 
+        #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1057#1045' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1086#1074') '#1080#1079' '#1047#1072#1082#1072#1079' '#1055#1088#1086#1080#1079#1074#1086#1076 +
+        #1089#1090#1074#1072
+      Hint = 
+        #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1057#1045' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1086#1074') '#1080#1079' '#1047#1072#1082#1072#1079' '#1055#1088#1086#1080#1079#1074#1086#1076 +
+        #1089#1090#1074#1072
       ImageIndex = 69
     end
     object macInsert_MI_Send_byOrderDetail: TMultiAction
@@ -3212,7 +3238,7 @@ object SendForm: TSendForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsCode;GoodsName;ProductName'
+          IndexFieldNames = 'InvNumber_order;GoodsName'
         end>
       Params = <
         item
