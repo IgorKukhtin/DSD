@@ -1817,7 +1817,7 @@ object SendForm: TSendForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'ProductName;Article'
+          IndexFieldNames = 'InvNumber_order;GoodsName'
         end>
       Params = <
         item
@@ -3227,8 +3227,8 @@ object SendForm: TSendForm
         item
           StoredProc = spSelectPrint_Master
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091
-      Hint = #1055#1077#1095#1072#1090#1100' '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      Caption = #1055#1077#1095#1072#1090#1100' '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1097#1080#1084
+      Hint = #1055#1077#1095#1072#1090#1100' '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1097#1080#1084
       ImageIndex = 15
       DataSets = <
         item
@@ -3238,7 +3238,7 @@ object SendForm: TSendForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'InvNumber_order;GoodsName'
+          IndexFieldNames = 'GoodsName;InvNumber_order'
         end>
       Params = <
         item
