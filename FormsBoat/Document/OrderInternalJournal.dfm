@@ -1299,10 +1299,8 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     DataSets = <
       item
         DataSet = PrintItemsCDS
-      end
-      item
-        DataSet = PrintItemsCDS
       end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
@@ -1313,8 +1311,8 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 336
-    Top = 264
+    Left = 408
+    Top = 280
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

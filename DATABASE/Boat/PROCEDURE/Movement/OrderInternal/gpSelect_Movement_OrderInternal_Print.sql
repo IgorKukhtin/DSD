@@ -7,59 +7,17 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternal_Print(
     IN inMovementId  Integer  , -- ключ Документа
     IN inSession     TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (NPP_1 Integer, NPP_2 Integer, NPP_3 Integer
-               --
-             , InvNumber_OrderClient     Integer
-             , InvNumberFull_OrderClient TVarChar
-             , FromName                  TVarChar
-             , ProductName               TVarChar
-             , CIN                       TVarChar
-             , BarCode_OrderClient       TVarChar
-               --
-             , InvNumber Integer
-             , OperDate TDateTime
-             , Comment TVarChar
-             , InsertName TVarChar
-             , InsertDate TDateTime
-             , BarCode_OrderInternal TVarChar
-               -- мастер
-             , BarCode_mi                TVarChar
-             , MovementItemId            Integer
-             , GoodsCode                 Integer
-             , GoodsName                 TVarChar
-             , Article                   TVarChar
-             , ProdColorName             TVarChar
-             , Comment_mi                TVarChar
-             , UnitName                  TVarChar
-             , PersonalName              TVarChar
-               -- чайлд
-             , GoodsCode_ch             Integer
-             , GoodsName_ch             TVarChar
-             , Article_ch               TVarChar
-             , ProdColorName_ch         TVarChar
-               --
-             , Amount_ch                NUMERIC (16, 8)
-             , AmountReserv_ch          NUMERIC (16, 8)
-             , AmountSend_ch            NUMERIC (16, 8)
-               --
-             , UnitName_ch              TVarChar
-             , ReceiptLevelName_ch      TVarChar
-             , ColorPatternName_ch      TVarChar
-             , ProdColorPatternName_ch  TVarChar
-             , ProdColorPatternId_ch    Integer
-
-             , mi_child_count Integer
-              )
+RETURNS SETOF refcursor
 AS
 $BODY$
     DECLARE vbUserId Integer;
-
+    DECLARE Cursor1  refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+OPEN Cursor1 FOR
      -- Результат
-     RETURN QUERY
      WITH -- все MovementItem
           tmpMI_all AS (SELECT MovementItem.*
                              , MIFloat_MovementId.ValueData AS MovementId_order
@@ -388,8 +346,10 @@ BEGIN
          LEFT JOIN tmpMI_Detail        ON tmpMI_Detail.ParentId        = tmpMI_Master.MovementItemId
 
     ORDER BY 4
-           , 1, 2, 3
-   ;
+           , 1, 2, 3;
+
+RETURN NEXT Cursor1;
+
 
 
 END;
@@ -399,7 +359,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.01.23         * Cursor
  26.12.22         *
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderInternal_Print (inMovementId:= 680, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_OrderInternal_Print (inMovementId:= 680, inSession:= zfCalc_UserAdmin());   -- FETCH ALL "<unnamed portal 1>";

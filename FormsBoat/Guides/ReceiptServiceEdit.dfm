@@ -228,8 +228,8 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 120
-    Top = 40
+    Left = 56
+    Top = 24
   end
   object FormParams: TdsdFormParams
     Params = <

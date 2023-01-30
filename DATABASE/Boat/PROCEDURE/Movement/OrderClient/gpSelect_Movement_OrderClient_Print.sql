@@ -92,4 +92,4 @@ $BODY$
  15.02.21         *
 */
 -- тест
---select * from gpSelect_Movement_OrderClient_Print(inMovementId := 3897397 ,  inSession := '3');
+--select * from gpSelect_Movement_OrderClient_Print(inMovementId := 3897397 ,  inSession := '3');  -- FETCH ALL "<unnamed portal 1>";

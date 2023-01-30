@@ -1393,10 +1393,8 @@ object OrderInternalJournalChoiceForm: TOrderInternalJournalChoiceForm
     DataSets = <
       item
         DataSet = PrintItemsCDS
-      end
-      item
-        DataSet = PrintItemsCDS
       end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
