@@ -27,7 +27,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     object deStart: TcxDateEdit
       Left = 103
       Top = 5
-      EditValue = 44562d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -37,7 +37,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 44562d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
