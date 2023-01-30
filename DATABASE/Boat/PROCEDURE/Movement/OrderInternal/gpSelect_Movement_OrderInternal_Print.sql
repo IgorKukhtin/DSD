@@ -83,6 +83,7 @@ OPEN Cursor1 FOR
                              , ObjectDesc.ItemName            AS DescName
                              , ObjectString_Article.ValueData AS Article
                              , Object_ProdColor.ValueData     AS ProdColorName
+                             , Object_Measure.ValueData       AS MeasureName
                              , MIString_Comment.ValueData     AS Comment_mi
                              , Object_Unit.ValueData          AS UnitName
                                --
@@ -135,6 +136,10 @@ OPEN Cursor1 FOR
                                                     ON ObjectString_CIN.ObjectId = Object_Product.Id
                                                    AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
 
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI_all.ObjectId
+                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
                         WHERE tmpMI_all.DescId = zc_MI_Master()
                        )
 
@@ -260,6 +265,7 @@ OPEN Cursor1 FOR
          , tmpMI_Master.GoodsName
          , tmpMI_Master.Article
          , tmpMI_Master.ProdColorName
+         , tmpMI_Master.MeasureName
          , tmpMI_Master.Comment_mi
          , tmpMI_Master.UnitName
          , tmpMI_Detail_group.PersonalName :: TVarChar AS PersonalName
@@ -319,6 +325,7 @@ OPEN Cursor1 FOR
          , tmpMI_Master.GoodsName
          , tmpMI_Master.Article
          , tmpMI_Master.ProdColorName
+         , tmpMI_Master.MeasureName
          , tmpMI_Master.Comment_mi
          , tmpMI_Master.UnitName
          , tmpMI_Detail_group.PersonalName :: TVarChar AS PersonalName

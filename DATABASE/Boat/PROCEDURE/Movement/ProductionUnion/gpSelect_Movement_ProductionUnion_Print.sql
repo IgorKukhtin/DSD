@@ -82,6 +82,7 @@ BEGIN
                              , ObjectDesc.ItemName            AS DescName
                              , ObjectString_Article.ValueData AS Article 
                              , Object_ProdColor.ValueData     AS ProdColorName
+                             , Object_Measure.ValueData       AS MeasureName
                              , Object_ReceiptProdModel.ObjectCode AS ReceiptProdModelCode
                              , Object_ReceiptProdModel.ValueData  AS ReceiptProdModelName
                              , MIString_Comment.ValueData     AS Comment_mi
@@ -137,6 +138,11 @@ BEGIN
                                                   ON ObjectLink_ProdColor.ObjectId = tmpMI_all.ObjectId
                                                  AND ObjectLink_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
                              LEFT JOIN Object AS Object_ProdColor  ON Object_ProdColor.Id  = ObjectLink_ProdColor.ChildObjectId
+
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI_all.ObjectId
+                                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
                         WHERE tmpMI_all.DescId = zc_MI_Master()
                        )
 
@@ -160,9 +166,102 @@ BEGIN
                             LEFT JOIN Object AS Object_ProdColor  ON Object_ProdColor.Id  = ObjectLink_ProdColor.ChildObjectId
                        WHERE tmpMI_all.DescId = zc_MI_Child()
                       )
+
+     -- OrderInternal - Detail
+   , tmpMI_OrderInternal AS (SELECT tmpMI_Master.MovementItemId                 AS ParentId
+                                  , MovementItem.ObjectId                       AS ReceiptServiceId
+                                  , MILinkObject_Personal.ObjectId              AS PersonalId
+                                  , SUM (COALESCE (MIFloat_Hours.ValueData, 0)) AS Hours_plan
+                             FROM tmpMI_Master
+                                  LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                              ON MIFloat_MovementId.ValueData = tmpMI_Master.MovementId_OrderClient
+                                                             AND MIFloat_MovementId.DescId    = zc_MIFloat_MovementId()
+                                  LEFT JOIN MovementItem AS MI_Master
+                                                         ON MI_Master.Id       = MIFloat_MovementId.MovementItemId
+                                                        AND MI_Master.DescId   = zc_MI_Master()
+                                                        AND MI_Master.isErased = FALSE
+                                  LEFT JOIN MovementItem ON MovementItem.ParentId = MI_Master.Id
+                                                        AND MovementItem.DescId   = zc_MI_Detail()
+                                                        AND MovementItem.isErased = FALSE
+                                  INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                     AND Movement.DescId   = zc_Movement_OrderInternal()
+                                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Personal
+                                                                   ON MILinkObject_Personal.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_Personal.DescId         = zc_MILinkObject_Personal()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_Hours
+                                                              ON MIFloat_Hours.MovementItemId = MovementItem.Id
+                                                             AND MIFloat_Hours.DescId = zc_MIFloat_Hours()
+                             GROUP BY tmpMI_Master.MovementItemId
+                                    , MovementItem.ObjectId
+                                    , MILinkObject_Personal.ObjectId
+                            )
+                            
+  -- ProductionUnion - Detail
+    , tmpMI_Detail_all AS (SELECT MovementItem.Id                AS MovementItemId
+                                , MovementItem.ParentId          AS ParentId
+                                , MovementItem.ObjectId          AS ReceiptServiceId
+                                , MILinkObject_Personal.ObjectId AS PersonalId
+                                , MovementItem.Amount            AS Amount
+                                , MovementItem.isErased          AS isErased
+                           FROM MovementItem ON 
+                                INNER JOIN MovementItem AS MI_Master
+                                                        ON MI_Master.MovementId = inMovementId
+                                                       AND MI_Master.DescId     = zc_MI_Master()
+                                                       AND MI_Master.Id         = MovementItem.ParentId
+                                                       AND (MI_Master.isErased   = FALSE OR inIsErased = TRUE)
+                                LEFT JOIN MovementItemLinkObject AS MILinkObject_Personal
+                                                                 ON MILinkObject_Personal.MovementItemId = MovementItem.Id
+                                                                AND MILinkObject_Personal.DescId         = zc_MILinkObject_Personal()
+                           WHERE MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId     = zc_MI_Detail()
+                             AND MovementItem.isErased   = FALSE
+                          )
+      -- union
+    , tmpMI_Detail AS (SELECT tmp.MovementItemId
+                            , tmp.ParentId
+                            , Object_ReceiptService.ObjectCode  AS ReceiptServiceCode
+                            , Object_ReceiptService.ValueData   AS ReceiptServiceName
+                            , Object_Personal.Id                AS PersonalId
+                            , Object_Personal.ObjectCode        AS PersonalCode
+                            , Object_Personal.ValueData         AS PersonalName
+                            , MIString_Comment.ValueData        AS Comment
+                            , tmp.Amount               ::TFloat AS Amount
+                            , MIFloat_Hours.ValueData  ::TFloat AS Hours
+                            , tmp.Hours_plan           ::TFloat AS Hours_plan
+                       FROM (SELECT tmpMI_Detail_all.MovementItemId                                                     AS MovementItemId
+                                  , COALESCE (tmpMI_Detail_all.ParentId,         tmpMI_OrderInternal.ParentId)          AS ParentId
+                                  , COALESCE (tmpMI_Detail_all.ReceiptServiceId, tmpMI_OrderInternal.ReceiptServiceId)  AS ReceiptServiceId
+                                  , COALESCE (tmpMI_Detail_all.PersonalId,       tmpMI_OrderInternal.PersonalId)        AS PersonalId
+                                  , tmpMI_Detail_all.Amount                                                             AS Amount
+                                  , tmpMI_OrderInternal.Hours_plan                                                      AS Hours_plan
+                                  , COALESCE (tmpMI_Detail_all.isErased, FALSE)                                         AS isErased
+                             FROM tmpMI_Detail_all
+                                  FULL JOIN tmpMI_OrderInternal ON tmpMI_OrderInternal.ParentId         = tmpMI_Detail_all.ParentId
+                                                               AND tmpMI_OrderInternal.ReceiptServiceId = tmpMI_Detail_all.ReceiptServiceId
+                                                               AND tmpMI_OrderInternal.PersonalId       = tmpMI_Detail_all.PersonalId
+                            ) AS tmp
+                            LEFT JOIN Object AS Object_ReceiptService ON Object_ReceiptService.Id = tmpMI_Detail.ReceiptServiceId
+                            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpMI_Detail.PersonalId
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_Hours
+                                                        ON MIFloat_Hours.MovementItemId = tmp.MovementItemId
+                                                       AND MIFloat_Hours.DescId         = zc_MIFloat_Hours()
+                            LEFT JOIN MovementItemString AS MIString_Comment
+                                                         ON MIString_Comment.MovementItemId = tmp.MovementItemId
+                                                        AND MIString_Comment.DescId         = zc_MIString_Comment()
+                      )
+
+
+  , tmpMI_Detail_group AS (SELECT tmpMI_Detail.ParentId
+                                , STRING_AGG (DISTINCT tmpMI_Detail.PersonalName, ';') AS PersonalName
+                           FROM tmpMI_Detail
+                           GROUP BY tmpMI_Detail.ParentId
+                          )
+
     -- Результат
     SELECT
-           tmpMI_Master.NPP_1 :: Integer AS NPP_1
+           tmpMI_Master.NPP_1 :: Integer AS NPP_1 
          , ROW_NUMBER() OVER (PARTITION BY tmpMI_Master.InvNumber_OrderClient, tmpMI_Master.GoodsName
                               ORDER BY tmpMI_Child.GoodsName
                              ) :: Integer AS NPP_2
@@ -173,6 +272,7 @@ BEGIN
          , tmpMI_Master.GoodsName
          , tmpMI_Master.Article
          , tmpMI_Master.ProdColorName
+         , tmpMI_Master.MeasureName
          , tmpMI_Master.ReceiptProdModelName
          , tmpMI_Master.Comment_mi
            --
@@ -182,6 +282,8 @@ BEGIN
          , tmpMI_Master.ProductName
          , tmpMI_Master.CIN
          , zfFormat_BarCode (zc_BarCodePref_Movement(), tmpMI_Master.MovementId_OrderClient) AS BarCode_OrderClient
+
+         , tmpMI_Detail_group.PersonalName :: TVarChar AS PersonalName
            -- чайлд
          , tmpMI_Child.GoodsCode            AS GoodsCode_ch
          , tmpMI_Child.GoodsName            AS GoodsName_ch
@@ -189,13 +291,61 @@ BEGIN
          , tmpMI_Child.ProdColorName        AS ProdColorName_ch
          , ''  ::TVarChar                   AS ReceiptLevelName_ch
          , tmpMI_Child.Amount               AS Amount_ch
+         , 0                       ::TFloat AS Amount_plan_ch
 
          , (SELECT COUNT(*) FROM tmpMI_Child WHERE tmpMI_Child.ParentId = tmpMI_Master.MovementItemId) ::Integer AS mi_child_count
 
     FROM tmpMI_Master
          LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI_Master.MovementItemId
+         LEFT JOIN tmpMI_Detail_group ON tmpMI_Detail_group.ParentId = tmpMI_Master.MovementItemId
     ORDER BY tmpMI_Master.InvNumber_OrderClient :: Integer
            , 1 , 2
+
+  UNION 
+    SELECT
+           tmpMI_Master.NPP_1 :: Integer AS NPP_1
+         , ROW_NUMBER() OVER (PARTITION BY tmpMI_Master.InvNumber_OrderClient, tmpMI_Master.GoodsName
+                              ORDER BY tmpMI_Detail.ReceiptServiceCode
+                                     , tmpMI_Detail.PersonalName
+                             ) :: Integer AS NPP_2
+           -- мастер
+         , zfFormat_BarCode (zc_BarCodePref_MI(), tmpMI_Master.MovementItemId) AS BarCode_mi
+         , tmpMI_Master.MovementItemId
+         , tmpMI_Master.GoodsCode
+         , tmpMI_Master.GoodsName
+         , tmpMI_Master.Article
+         , tmpMI_Master.ProdColorName
+         , tmpMI_Master.MeasureName
+         , tmpMI_Master.ReceiptProdModelName
+         , tmpMI_Master.Comment_mi
+           --
+         , tmpMI_Master.InvNumber_OrderClient      :: Integer AS InvNumber_OrderClient
+         , tmpMI_Master.InvNumberFull_OrderClient             AS InvNumberFull_OrderClient
+         , tmpMI_Master.FromName
+         , tmpMI_Master.ProductName
+         , tmpMI_Master.CIN
+         , zfFormat_BarCode (zc_BarCodePref_Movement(), tmpMI_Master.MovementId_OrderClient) AS BarCode_OrderClient
+
+         , tmpMI_Detail_group.PersonalName :: TVarChar AS PersonalName
+
+           -- работы
+         , tmpMI_Detail.ReceiptServiceCode        AS GoodsCode_ch
+         , tmpMI_Detail.ReceiptServiceName        AS GoodsName_ch
+           -- Сотрудник
+         , tmpMI_Detail.PersonalCode  :: TVarChar AS Article_ch
+         , tmpMI_Detail.PersonalName  :: TVarChar AS ProdColorName_ch
+         , ''  ::TVarChar                         AS ReceiptLevelName_ch
+
+         , COALESCE (tmpMI_Detail.Hours, 0)      :: NUMERIC (16, 8)  AS Amount_ch
+         , COALESCE (tmpMI_Detail.Hours_plan, 0) :: NUMERIC (16, 8)  AS Amount_plan_ch        
+         , (SELECT COUNT(*) FROM tmpMI_Detail WHERE tmpMI_Detail.ParentId = tmpMI_Master.MovementItemId) ::Integer AS mi_child_count
+
+    FROM tmpMI_Master
+         LEFT JOIN tmpMI_Detail_group  ON tmpMI_Detail_group.ParentId  = tmpMI_Master.MovementItemId
+         LEFT JOIN tmpMI_Detail        ON tmpMI_Detail.ParentId        = tmpMI_Master.MovementItemId
+    ORDER BY tmpMI_Master.InvNumber_OrderClient :: Integer
+           , 1 , 2
+
    ;
    RETURN NEXT Cursor2;
 
