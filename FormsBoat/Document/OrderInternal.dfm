@@ -1660,6 +1660,10 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErasedMI_Master'
         end
         item
