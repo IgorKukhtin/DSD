@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
              , UpdateName TVarChar, UpdateDate TDateTime 
                --
              , MovementItemId Integer
-             , GoodsId Integer, GoodsCode Integer, Article TVarChar, GoodsName TVarChar, GoodsName_all TVarChar, Comment_goods TVarChar
+             , GoodsId Integer, GoodsCode Integer, Article TVarChar, GoodsName TVarChar, GoodsName_all TVarChar, ItemName_goods TVarChar, Comment_goods TVarChar
              , Amount TFloat
              , UnitId Integer
              , UnitName TVarChar 
@@ -101,10 +101,10 @@ BEGIN
              , zfCalc_InvNumber_isErased ('', Movement_OrderInternal.InvNumber, Movement_OrderInternal.OperDate, Movement_OrderInternal.StatusId) AS InvNumber_Full
              , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_OrderInternal.Id) AS BarCode
              , Movement_OrderInternal.OperDate
-             , Object_Status.ObjectCode                   AS StatusCode
-             , Object_Status.ValueData                    AS StatusName
+             , Object_Status.ObjectCode                     AS StatusCode
+             , Object_Status.ValueData                      AS StatusName
 
-             , MovementFloat_TotalCount.ValueData         AS TotalCount
+             , MovementFloat_TotalCount.ValueData           AS TotalCount
              , MovementString_Comment.ValueData :: TVarChar AS Comment
 
              , Object_Insert.ValueData              AS InsertName
@@ -112,13 +112,14 @@ BEGIN
              , Object_Update.ValueData              AS UpdateName
              , MovementDate_Update.ValueData        AS UpdateDate
 
-             -- строки 
+               -- строки 
              , MovementItem.Id                      AS MovementItemId
              , MovementItem.GoodsId                 AS GoodsId
              , Object_Goods.ObjectCode              AS GoodsCode
              , ObjectString_Article.ValueData       AS Article
              , Object_Goods.ValueData               AS GoodsName
              , zfCalc_GoodsName_all (ObjectString_Article.ValueData, Object_Goods.ValueData) AS GoodsName_all
+             , CASE WHEN Object_Goods.DescId = zc_Object_Product() THEN 'Лодка' WHEN Object_Goods.DescId = zc_Object_Goods() THEN 'Узел' ELSE ObjectDesc_Goods.ItemName END :: TVarChar AS ItemName_goods
              , ObjectString_Comment.ValueData       AS Comment_goods
              , MovementItem.Amount ::TFloat         AS Amount
              , Object_Unit.Id                       AS UnitId
@@ -166,6 +167,8 @@ BEGIN
              --- 
              LEFT JOIN tmpMI_Master AS MovementItem ON MovementItem.MovementId = Movement_OrderInternal.Id
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId
+             LEFT JOIN ObjectDesc AS ObjectDesc_Goods ON ObjectDesc_Goods.Id = Object_Goods.DescId
+
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.UnitId
 
              LEFT JOIN ObjectString AS ObjectString_Article

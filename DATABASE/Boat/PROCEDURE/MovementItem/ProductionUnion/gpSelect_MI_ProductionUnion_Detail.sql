@@ -102,6 +102,11 @@ BEGIN
                             INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                    AND MovementItem.DescId     = zc_MI_Detail()
                                                    AND MovementItem.isErased   = tmpIsErased.isErased
+                            INNER JOIN MovementItem AS MI_Master
+                                                    ON MI_Master.MovementId = inMovementId
+                                                   AND MI_Master.DescId     = zc_MI_Master()
+                                                   AND MI_Master.Id         = MovementItem.ParentId
+                                                   AND (MI_Master.isErased   = FALSE OR inIsErased = TRUE)
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Personal
                                                              ON MILinkObject_Personal.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_Personal.DescId         = zc_MILinkObject_Personal()

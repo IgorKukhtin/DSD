@@ -203,7 +203,7 @@ BEGIN
              AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inGoodsId AND Object.DescId = zc_Object_Product())
 
           UNION
-           SELECT lpSelect.GoodsId
+           SELECT lpSelect.GoodsId AS ObjectId
                   --
                 , 0 AS ReceiptLevelId
                   --

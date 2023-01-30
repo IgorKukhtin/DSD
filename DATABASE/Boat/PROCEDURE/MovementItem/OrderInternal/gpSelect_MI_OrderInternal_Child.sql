@@ -31,7 +31,7 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH tmpIsErased AS (SELECT FALSE AS isErased
-                           UNION ALL
+                         UNION ALL
                           SELECT inIsErased AS isErased WHERE inIsErased = TRUE
                          )
       -- Master
@@ -62,6 +62,23 @@ BEGIN
                        GROUP BY tmpMI_Master.MovementItemId
                               , MovementItem.ObjectId
                       )
+     -- Факт ProductionUnion - приход
+   , tmpMI_Production AS (SELECT tmpMI_Master.MovementItemId  AS ParentId
+                               , MovementItem.ObjectId        AS GoodsId
+                               , SUM (MovementItem.Amount)    AS Amount
+                          FROM tmpMI_Master
+                               LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                           ON MIFloat_MovementId.ValueData = tmpMI_Master.MovementId_order
+                                                          AND MIFloat_MovementId.DescId    = zc_MIFloat_MovementId()
+                               LEFT JOIN MovementItem ON MovementItem.Id       = MIFloat_MovementId.MovementItemId
+                                                     AND MovementItem.DescId   = zc_MI_Master()
+                                                     AND MovementItem.isErased = FALSE
+                               INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                  AND Movement.DescId   = zc_Movement_ProductionUnion()
+                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                          GROUP BY tmpMI_Master.MovementItemId
+                                 , MovementItem.ObjectId
+                         )
         -- Результат
         SELECT MovementItem.Id
              , MovementItem.ParentId
@@ -75,7 +92,9 @@ BEGIN
 
              , zfCalc_Value_ForCount (MovementItem.Amount, MIFloat_ForCount.ValueData) AS Amount
              , zfCalc_Value_ForCount (MIFloat_AmountReserv.ValueData, MIFloat_ForCount.ValueData) AS AmountReserv
-             , CASE WHEN tmpMI_Send.Amount >= zfCalc_Value_ForCount (MovementItem.Amount, MIFloat_ForCount.ValueData)
+             , CASE WHEN tmpMI_Production.Amount > 0
+                         THEN tmpMI_Production.Amount
+                    WHEN tmpMI_Send.Amount >= zfCalc_Value_ForCount (MovementItem.Amount, MIFloat_ForCount.ValueData)
                          THEN zfCalc_Value_ForCount (MovementItem.Amount, MIFloat_ForCount.ValueData)
                     ELSE 0
                END :: NUMERIC (16, 8) AS AmountSend
@@ -105,6 +124,8 @@ BEGIN
                                         AND MIFloat_AmountReserv.DescId = zc_MIFloat_AmountReserv()
              LEFT JOIN tmpMI_Send ON tmpMI_Send.ParentId = MovementItem.ParentId
                                  AND tmpMI_Send.GoodsId  = MovementItem.ObjectId
+             LEFT JOIN tmpMI_Production ON tmpMI_Production.ParentId = MovementItem.ParentId
+                                       AND tmpMI_Production.GoodsId  = MovementItem.ObjectId
 
              LEFT JOIN MovementItemFloat AS MIFloat_ForCount
                                          ON MIFloat_ForCount.MovementItemId = MovementItem.Id
