@@ -48,7 +48,7 @@ OPEN Cursor1 FOR
                        )
 
         -- Факт перемещения
-      , tmpMI_Send AS (SELECT tmpMI_Master.Id              AS MovementItemId
+      , tmpMI_Send AS (SELECT tmpMI_Master.Id              AS ParentId
                             , MovementItem.ObjectId        AS GoodsId
                             , SUM (MovementItem.Amount)    AS Amount
                        FROM tmpMI_all AS tmpMI_Master
@@ -65,6 +65,24 @@ OPEN Cursor1 FOR
                        GROUP BY tmpMI_Master.Id
                               , MovementItem.ObjectId
                       )
+     -- Факт ProductionUnion - приход
+   , tmpMI_Production AS (SELECT tmpMI_Master.Id              AS ParentId
+                               , MovementItem.ObjectId        AS GoodsId
+                               , SUM (MovementItem.Amount)    AS Amount
+                          FROM tmpMI_all AS tmpMI_Master
+                               LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                           ON MIFloat_MovementId.ValueData = tmpMI_Master.MovementId_order
+                                                          AND MIFloat_MovementId.DescId    = zc_MIFloat_MovementId()
+                               LEFT JOIN MovementItem ON MovementItem.Id       = MIFloat_MovementId.MovementItemId
+                                                     AND MovementItem.DescId   = zc_MI_Master()
+                                                     AND MovementItem.isErased = FALSE
+                               INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                  AND Movement.DescId   = zc_Movement_ProductionUnion()
+                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                          WHERE tmpMI_Master.DescId = zc_MI_Master()
+                          GROUP BY tmpMI_Master.Id
+                                 , MovementItem.ObjectId
+                         )
      , tmpMI_Master AS (SELECT ROW_NUMBER() OVER (PARTITION BY MIFloat_MovementId.ValueData
                                                   ORDER BY CASE WHEN ObjectString_Article.ValueData ILIKE '%ПФ' THEN 0 ELSE 1 END
                                                          , Object_Goods.ValueData
@@ -277,7 +295,9 @@ OPEN Cursor1 FOR
 
          , COALESCE (tmpMI_Child.Amount, 0) :: NUMERIC (16, 8) AS Amount_ch
          , tmpMI_Child.AmountReserv         AS AmountReserv_ch
-         , CASE WHEN tmpMI_Send.Amount >= tmpMI_Child.Amount
+         , CASE WHEN tmpMI_Production.Amount > 0
+                     THEN tmpMI_Production.Amount
+                WHEN tmpMI_Send.Amount >= tmpMI_Child.Amount
                      THEN tmpMI_Child.Amount
                 ELSE 0
            END :: NUMERIC (16, 8) AS AmountSend_ch
@@ -293,8 +313,10 @@ OPEN Cursor1 FOR
     FROM tmpMI_Master
          LEFT JOIN tmpMI_Child        ON tmpMI_Child.ParentId        = tmpMI_Master.MovementItemId
          LEFT JOIN tmpMI_Detail_group ON tmpMI_Detail_group.ParentId = tmpMI_Master.MovementItemId
-         LEFT JOIN tmpMI_Send ON tmpMI_Send.MovementItemId = tmpMI_Child.ParentId
-                             AND tmpMI_Send.GoodsId        = tmpMI_Child.GoodsId
+         LEFT JOIN tmpMI_Send ON tmpMI_Send.ParentId = tmpMI_Child.ParentId
+                             AND tmpMI_Send.GoodsId   = tmpMI_Child.GoodsId
+         LEFT JOIN tmpMI_Production ON tmpMI_Production.ParentId = tmpMI_Child.ParentId
+                                   AND tmpMI_Production.GoodsId  = tmpMI_Child.GoodsId
 
    UNION ALL
     SELECT
