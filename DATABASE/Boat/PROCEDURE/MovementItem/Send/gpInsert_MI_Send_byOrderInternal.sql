@@ -123,6 +123,15 @@ BEGIN
                                         WHERE OL.DescId        = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
                                           AND OL.ChildObjectId > 0
                                        )
+       -- !!!не узлы!!!
+       AND tmpMI_Child.ObjectId NOT IN (SELECT OL.ChildObjectId
+                                        FROM ObjectLink AS OL
+                                             -- Не удален
+                                             INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id       = OL.ObjectId
+                                                                                     AND Object_ReceiptGoods.isErased = FALSE
+                                        WHERE OL.DescId        = zc_ObjectLink_ReceiptGoods_Object()
+                                          AND OL.ChildObjectId > 0
+                                       )
     ;
 
     -- test
