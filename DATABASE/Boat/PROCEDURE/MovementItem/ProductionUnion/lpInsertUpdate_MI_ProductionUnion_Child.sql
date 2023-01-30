@@ -59,4 +59,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
---
+-- SELECT * FROM

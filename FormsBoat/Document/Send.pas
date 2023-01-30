@@ -263,6 +263,8 @@ type
     macInsert_MI_Send_byOrderInternal_All: TMultiAction;
     bbInsert_MI_Send_byOrderInternal_All: TdxBarButton;
     bbInsert: TdxBarSubItem;
+    dxBarSeparator1: TdxBarSeparator;
+    dxBarSeparator2: TdxBarSeparator;
   private
   public
   end;

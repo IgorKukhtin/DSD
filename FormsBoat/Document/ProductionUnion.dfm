@@ -225,7 +225,7 @@ object ProductionUnionForm: TProductionUnionForm
               item
                 Format = ',0.####'
                 Kind = skSum
-                Column = Amount_ch2
+                Column = Amount_ch1
               end
               item
                 Format = ',0.####'
@@ -240,7 +240,7 @@ object ProductionUnionForm: TProductionUnionForm
               item
                 Format = ',0.####'
                 Kind = skSum
-                Column = Amount_diff_ch2
+                Column = Amount_diff_ch1
               end>
             DataController.Summary.FooterSummaryItems = <
               item
@@ -250,7 +250,7 @@ object ProductionUnionForm: TProductionUnionForm
               item
                 Format = ',0.####'
                 Kind = skSum
-                Column = Amount_ch2
+                Column = Amount_ch1
               end
               item
                 Format = ',0.####'
@@ -265,7 +265,7 @@ object ProductionUnionForm: TProductionUnionForm
               item
                 Format = ',0.####'
                 Kind = skSum
-                Column = Amount_diff_ch2
+                Column = Amount_diff_ch1
               end>
             DataController.Summary.SummaryGroups = <>
             Images = dmMain.SortImageList
@@ -282,14 +282,6 @@ object ProductionUnionForm: TProductionUnionForm
             OptionsView.HeaderHeight = 40
             OptionsView.Indicator = True
             Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-            object ReceiptLevelName_ch1: TcxGridDBColumn
-              Caption = 'Level'
-              DataBinding.FieldName = 'ReceiptLevelName'
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Options.Editing = False
-              Width = 75
-            end
             object NPP_ch1: TcxGridDBColumn
               Caption = #8470' '#1087'/'#1087
               DataBinding.FieldName = 'NPP'
@@ -301,14 +293,13 @@ object ProductionUnionForm: TProductionUnionForm
               Options.Editing = False
               Width = 40
             end
-            object DescName_ch1: TcxGridDBColumn
-              Caption = #1069#1083#1077#1084#1077#1085#1090
-              DataBinding.FieldName = 'DescName'
-              Visible = False
+            object ReceiptLevelName_ch1: TcxGridDBColumn
+              Caption = 'Level'
+              DataBinding.FieldName = 'ReceiptLevelName'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 70
+              Width = 75
             end
             object GoodsGroupNameFull_ch1: TcxGridDBColumn
               Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -367,6 +358,15 @@ object ProductionUnionForm: TProductionUnionForm
               HeaderAlignmentVert = vaCenter
               Width = 200
             end
+            object DescName_ch1: TcxGridDBColumn
+              Caption = #1069#1083#1077#1084#1077#1085#1090
+              DataBinding.FieldName = 'DescName'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 70
+            end
             object ProdColorName_ch1: TcxGridDBColumn
               Caption = 'Farbe'
               DataBinding.FieldName = 'ProdColorName'
@@ -374,55 +374,6 @@ object ProductionUnionForm: TProductionUnionForm
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
               Width = 70
-            end
-            object Amount_ch2: TcxGridDBColumn
-              Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
-              DataBinding.FieldName = 'Amount'
-              PropertiesClassName = 'TcxCurrencyEditProperties'
-              Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Width = 80
-            end
-            object ProdColorPatternName_ch1: TcxGridDBColumn
-              Caption = #1069#1083#1077#1084#1077#1085#1090
-              DataBinding.FieldName = 'ProdColorPatternName'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderGlyphAlignmentHorz = taCenter
-              Options.Editing = False
-              Width = 58
-            end
-            object ColorPatternName_ch1: TcxGridDBColumn
-              Caption = #1064#1072#1073#1083#1086#1085
-              DataBinding.FieldName = 'ColorPatternName'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderGlyphAlignmentHorz = taCenter
-              HeaderHint = #1064#1072#1073#1083#1086#1085' Boat Structure'
-              Options.Editing = False
-              Width = 58
-            end
-            object ProdOptionName_ch1: TcxGridDBColumn
-              Caption = #1054#1087#1094#1080#1103
-              DataBinding.FieldName = 'ProdOptionName'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderGlyphAlignmentHorz = taCenter
-              Options.Editing = False
-              Width = 58
-            end
-            object cxGridDBTableViewChildColumn1: TcxGridDBColumn
-              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
-              DataBinding.FieldName = 'Comment_goods'
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-              Options.Editing = False
-              Width = 100
             end
             object MeasureName_ch1: TcxGridDBColumn
               Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -432,6 +383,15 @@ object ProductionUnionForm: TProductionUnionForm
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
               Width = 55
+            end
+            object Amount_ch1: TcxGridDBColumn
+              Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
+              DataBinding.FieldName = 'Amount'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 80
             end
             object Value_ch1: TcxGridDBColumn
               DataBinding.FieldName = 'Value'
@@ -458,7 +418,7 @@ object ProductionUnionForm: TProductionUnionForm
               Options.Editing = False
               Width = 63
             end
-            object Amount_diff_ch2: TcxGridDBColumn
+            object Amount_diff_ch1: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' ('#1086#1090#1082'.)'
               DataBinding.FieldName = 'Amount_diff'
               PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -470,6 +430,35 @@ object ProductionUnionForm: TProductionUnionForm
               Options.Editing = False
               Width = 133
             end
+            object ProdOptionsName_ch1: TcxGridDBColumn
+              Caption = #1054#1087#1094#1080#1103
+              DataBinding.FieldName = 'ProdOptionsName'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderGlyphAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 58
+            end
+            object ProdColorPatternName_ch1: TcxGridDBColumn
+              Caption = 'Boat Structure'
+              DataBinding.FieldName = 'ProdColorPatternName'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderGlyphAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 58
+            end
+            object Comment_goods_ch1: TcxGridDBColumn
+              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
+              DataBinding.FieldName = 'Comment_goods'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+              Options.Editing = False
+              Width = 100
+            end
             object Comment_ch1: TcxGridDBColumn
               Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
               DataBinding.FieldName = 'Comment'
@@ -480,7 +469,18 @@ object ProductionUnionForm: TProductionUnionForm
               Options.Editing = False
               Width = 167
             end
-            object IsErased_ch2: TcxGridDBColumn
+            object ColorPatternName_ch1: TcxGridDBColumn
+              Caption = #1064#1072#1073#1083#1086#1085
+              DataBinding.FieldName = 'ColorPatternName'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderGlyphAlignmentHorz = taCenter
+              HeaderHint = #1064#1072#1073#1083#1086#1085' Boat Structure'
+              Options.Editing = False
+              Width = 58
+            end
+            object IsErased_ch1: TcxGridDBColumn
               Caption = #1059#1076#1072#1083#1077#1085
               DataBinding.FieldName = 'isErased'
               Visible = False
@@ -594,6 +594,11 @@ object ProductionUnionForm: TProductionUnionForm
                 Format = ',0.####'
                 Kind = skSum
                 Column = Summ_ch4
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = Hours_plan_ch4
               end>
             DataController.Summary.FooterSummaryItems = <
               item
@@ -635,6 +640,11 @@ object ProductionUnionForm: TProductionUnionForm
                 Format = ',0.####'
                 Kind = skSum
                 Column = Summ_ch4
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = Hours_plan_ch4
               end>
             DataController.Summary.SummaryGroups = <>
             Images = dmMain.SortImageList
@@ -658,14 +668,13 @@ object ProductionUnionForm: TProductionUnionForm
               Options.Editing = False
               Width = 80
             end
-            object GoodsName_ch4: TcxGridDBColumn
-              Caption = #1059#1079#1077#1083'/'#1051#1086#1076#1082#1072
-              DataBinding.FieldName = 'GoodsName'
-              Visible = False
+            object ReceiptServiceCode_ch4: TcxGridDBColumn
+              Caption = 'Interne Nr'
+              DataBinding.FieldName = 'ReceiptServiceCode'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 132
+              Width = 80
             end
             object ReceiptServiceName_ch4: TcxGridDBColumn
               Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1072#1073#1086#1090
@@ -682,12 +691,12 @@ object ProductionUnionForm: TProductionUnionForm
               Width = 141
             end
             object PersonalCode_ch4: TcxGridDBColumn
-              Caption = 'Interne Nr'
+              Caption = #1050#1086#1076
               DataBinding.FieldName = 'PersonalCode'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 85
+              Width = 70
             end
             object PersonalName_ch4: TcxGridDBColumn
               Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
@@ -734,6 +743,14 @@ object ProductionUnionForm: TProductionUnionForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 95
+            end
+            object Hours_plan_ch4: TcxGridDBColumn
+              Caption = #1055#1083#1072#1085' '#1095#1072#1089#1086#1074
+              DataBinding.FieldName = 'Hours_plan'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 70
             end
             object Summ_ch4: TcxGridDBColumn
               Caption = #1057#1091#1084#1084#1072' '#1060#1072#1082#1090
@@ -1101,9 +1118,6 @@ object ProductionUnionForm: TProductionUnionForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -1171,6 +1185,26 @@ object ProductionUnionForm: TProductionUnionForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Hours_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Hours_plan_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_ch54
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1200,6 +1234,26 @@ object ProductionUnionForm: TProductionUnionForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Hours_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Hours_plan_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_ch54
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1214,6 +1268,23 @@ object ProductionUnionForm: TProductionUnionForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object Article_ReceiptService_ch5: TcxGridDBColumn
+            Caption = 'Artikel Nr'
+            DataBinding.FieldName = 'Article_ReceiptService'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ReceiptServiceCode_ch5: TcxGridDBColumn
+            Caption = 'Interne Nr'
+            DataBinding.FieldName = 'ReceiptServiceCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object ReceiptServiceName_ch5: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1072#1073#1086#1090
             DataBinding.FieldName = 'ReceiptServiceName'
@@ -1229,8 +1300,9 @@ object ProductionUnionForm: TProductionUnionForm
             Width = 141
           end
           object PersonalCode_ch5: TcxGridDBColumn
-            Caption = 'Interne Nr'
+            Caption = #1050#1086#1076
             DataBinding.FieldName = 'PersonalCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1281,6 +1353,17 @@ object ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 95
+          end
+          object Hours_plan_ch5: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1095#1072#1089#1086#1074
+            DataBinding.FieldName = 'Hours_plan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object Summ_ch54: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1060#1072#1082#1090
@@ -1529,7 +1612,11 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordCost'
+          ItemName = 'bbInsertRecordOrderClientItem'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceFormOrderClientItem'
         end
         item
           Visible = True
@@ -1549,14 +1636,6 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordOrderClientItem'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChoiceFormOrderClientItem'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1566,6 +1645,22 @@ object ProductionUnionForm: TProductionUnionForm
         item
           Visible = True
           ItemName = 'bbOrderClientInsertBoatForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordCost'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True

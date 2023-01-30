@@ -91,7 +91,6 @@ type
     bbMovementItemProtocol: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    spSelectPrint_detail: TdsdStoredProc;
     bbCalcAmountPartner: TdxBarControlContainerItem;
     actGoodsKindChoice: TOpenChoiceForm;
     spInsertMaskMIMaster: TdsdStoredProc;
@@ -204,7 +203,7 @@ type
     cxGrid_Detail: TcxGrid;
     cxGridDBTableView_Det: TcxGridDBTableView;
     Article_ch4: TcxGridDBColumn;
-    GoodsName_ch4: TcxGridDBColumn;
+    ReceiptServiceCode_ch4: TcxGridDBColumn;
     ReceiptServiceName_ch4: TcxGridDBColumn;
     PersonalCode_ch4: TcxGridDBColumn;
     PersonalName_ch4: TcxGridDBColumn;
@@ -267,7 +266,8 @@ type
     bbInsertRecordDetail: TdxBarButton;
     bbMIDetailProtocolOpenForm: TdxBarButton;
     bbMIDetailAllProtocolOpenForm: TdxBarButton;
-    PrintDetailCDS: TClientDataSet;
+    Article_ReceiptService_ch5: TcxGridDBColumn;
+    ReceiptServiceCode_ch5: TcxGridDBColumn;
 
   private
   public

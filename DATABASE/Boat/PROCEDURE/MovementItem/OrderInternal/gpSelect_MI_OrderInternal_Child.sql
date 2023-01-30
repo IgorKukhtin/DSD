@@ -30,26 +30,74 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-     WITH
-     tmpIsErased AS (SELECT FALSE AS isErased
-                      UNION ALL
-                     SELECT inIsErased AS isErased WHERE inIsErased = TRUE
-                    )
-
+     WITH tmpIsErased AS (SELECT FALSE AS isErased
+                         UNION ALL
+                          SELECT inIsErased AS isErased WHERE inIsErased = TRUE
+                         )
+      -- Master
+    , tmpMI_Master AS (SELECT MovementItem.Id              AS MovementItemId
+                            , MIFloat_MovementId.ValueData AS MovementId_order
+                       FROM MovementItem
+                            LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                        ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                       WHERE MovementItem.MovementId = inMovementId
+                         AND MovementItem.DescId     = zc_MI_Master()
+                         AND MovementItem.isErased   = FALSE
+                      )
+        -- Факт перемещения
+      , tmpMI_Send AS (SELECT tmpMI_Master.MovementItemId  AS ParentId
+                            , MovementItem.ObjectId        AS GoodsId
+                            , SUM (MovementItem.Amount)    AS Amount
+                       FROM tmpMI_Master
+                            LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                        ON MIFloat_MovementId.ValueData = tmpMI_Master.MovementId_order
+                                                       AND MIFloat_MovementId.DescId    = zc_MIFloat_MovementId()
+                            LEFT JOIN MovementItem ON MovementItem.Id       = MIFloat_MovementId.MovementItemId
+                                                  AND MovementItem.DescId   = zc_MI_Master()
+                                                  AND MovementItem.isErased = FALSE
+                            INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                               AND Movement.DescId   = zc_Movement_Send()
+                                               AND Movement.StatusId = zc_Enum_Status_Complete()
+                       GROUP BY tmpMI_Master.MovementItemId
+                              , MovementItem.ObjectId
+                      )
+     -- Факт ProductionUnion - приход
+   , tmpMI_Production AS (SELECT tmpMI_Master.MovementItemId  AS ParentId
+                               , MovementItem.ObjectId        AS GoodsId
+                               , SUM (MovementItem.Amount)    AS Amount
+                          FROM tmpMI_Master
+                               LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                           ON MIFloat_MovementId.ValueData = tmpMI_Master.MovementId_order
+                                                          AND MIFloat_MovementId.DescId    = zc_MIFloat_MovementId()
+                               LEFT JOIN MovementItem ON MovementItem.Id       = MIFloat_MovementId.MovementItemId
+                                                     AND MovementItem.DescId   = zc_MI_Master()
+                                                     AND MovementItem.isErased = FALSE
+                               INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                  AND Movement.DescId   = zc_Movement_ProductionUnion()
+                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                          GROUP BY tmpMI_Master.MovementItemId
+                                 , MovementItem.ObjectId
+                         )
         -- Результат
         SELECT MovementItem.Id
              , MovementItem.ParentId
-             , MovementItem.ObjectId           AS GoodsId
-             , Object_Goods.ObjectCode         AS GoodsCode
-             , Object_Goods.ValueData          AS GoodsName
-             , ObjectString_Article.ValueData  AS Article
-             , Object_Measure.ValueData        AS MeasureName
-             , Object_ProdColor.ValueData            AS ProdColorName_goods
-             , ObjectString_Goods_Comment.ValueData  AS Comment_goods
+             , MovementItem.ObjectId                AS GoodsId
+             , Object_Goods.ObjectCode              AS GoodsCode
+             , Object_Goods.ValueData               AS GoodsName
+             , ObjectString_Article.ValueData       AS Article
+             , Object_Measure.ValueData             AS MeasureName
+             , Object_ProdColor.ValueData           AS ProdColorName_goods
+             , ObjectString_Goods_Comment.ValueData AS Comment_goods
 
-             , zfCalc_Value_ForCount (MovementItem.Amount,            MIFloat_ForCount.ValueData) AS Amount
+             , zfCalc_Value_ForCount (MovementItem.Amount, MIFloat_ForCount.ValueData) AS Amount
              , zfCalc_Value_ForCount (MIFloat_AmountReserv.ValueData, MIFloat_ForCount.ValueData) AS AmountReserv
-             , zfCalc_Value_ForCount (MIFloat_AmountSend.ValueData,   MIFloat_ForCount.ValueData) AS AmountSend
+             , CASE WHEN tmpMI_Production.Amount > 0
+                         THEN tmpMI_Production.Amount
+                    WHEN tmpMI_Send.Amount >= zfCalc_Value_ForCount (MovementItem.Amount, MIFloat_ForCount.ValueData)
+                         THEN zfCalc_Value_ForCount (MovementItem.Amount, MIFloat_ForCount.ValueData)
+                    ELSE 0
+               END :: NUMERIC (16, 8) AS AmountSend
              , Object_Unit.Id                       AS UnitId
              , Object_Unit.ValueData                AS UnitName
              , Object_ReceiptLevel.Id               AS ReceiptLevelId
@@ -57,7 +105,7 @@ BEGIN
              , Object_ColorPattern.Id               AS ColorPatternId
              , Object_ColorPattern.ValueData        AS ColorPatternName
              , Object_ProdColorPattern.Id           AS ProdColorPatternId
-             , Object_ProdColorPattern.ValueData    AS ProdColorPatternName
+             , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData, Object_ProdColorPattern.ValueData, Object_Model_pcp.ValueData, Object_ProdColorPattern.isErased) :: TVarChar AS ProdColorPatternName
              , Object_ProdOptions.Id                AS ProdOptionsId
              , Object_ProdOptions.ValueData         AS ProdOptionsName
              , MovementItem.isErased
@@ -74,9 +122,11 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_AmountReserv
                                          ON MIFloat_AmountReserv.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountReserv.DescId = zc_MIFloat_AmountReserv()
-             LEFT JOIN MovementItemFloat AS MIFloat_AmountSend
-                                         ON MIFloat_AmountSend.MovementItemId = MovementItem.Id
-                                        AND MIFloat_AmountSend.DescId = zc_MIFloat_AmountSend()
+             LEFT JOIN tmpMI_Send ON tmpMI_Send.ParentId = MovementItem.ParentId
+                                 AND tmpMI_Send.GoodsId  = MovementItem.ObjectId
+             LEFT JOIN tmpMI_Production ON tmpMI_Production.ParentId = MovementItem.ParentId
+                                       AND tmpMI_Production.GoodsId  = MovementItem.ObjectId
+
              LEFT JOIN MovementItemFloat AS MIFloat_ForCount
                                          ON MIFloat_ForCount.MovementItemId = MovementItem.Id
                                         AND MIFloat_ForCount.DescId         = zc_MIFloat_ForCount()
@@ -96,16 +146,28 @@ BEGIN
                                              AND MILO_ReceiptLevel.DescId          = zc_MILinkObject_ReceiptLevel()
              LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = MILO_ReceiptLevel.ObjectId
 
+             -- Шаблон Boat Structure
              LEFT JOIN MovementItemLinkObject AS MILO_ColorPattern
                                               ON MILO_ColorPattern.MovementItemId = MovementItem.Id
                                              AND MILO_ColorPattern.DescId = zc_MILinkObject_ColorPattern()
              LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = MILO_ColorPattern.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Model_pcp
+                                  ON ObjectLink_Model_pcp.ObjectId = Object_ColorPattern.Id
+                                 AND ObjectLink_Model_pcp.DescId   = zc_ObjectLink_ColorPattern_Model()
+             LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_Model_pcp.ChildObjectId
 
+             -- Boat Structure
              LEFT JOIN MovementItemLinkObject AS MILO_ProdColorPattern
                                               ON MILO_ProdColorPattern.MovementItemId = MovementItem.Id
                                              AND MILO_ProdColorPattern.DescId = zc_MILinkObject_ProdColorPattern()
              LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = MILO_ProdColorPattern.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                  ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                                 AND ObjectLink_ProdColorGroup.DescId   = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+             LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
 
+
+             -- Options
              LEFT JOIN MovementItemLinkObject AS MILO_ProdOptions
                                               ON MILO_ProdOptions.MovementItemId = MovementItem.Id
                                              AND MILO_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
@@ -132,4 +194,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * from gpSelect_MI_OrderInternal_Child (inMovementId:= 224, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MI_OrderInternal_Child (inMovementId:= 224, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

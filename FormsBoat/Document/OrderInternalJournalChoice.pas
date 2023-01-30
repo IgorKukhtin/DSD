@@ -101,6 +101,7 @@ type
     Comment_goods: TcxGridDBColumn;
     actChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
+    ItemName_goods: TcxGridDBColumn;
   private
   public
   end;

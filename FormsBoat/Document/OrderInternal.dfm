@@ -569,11 +569,13 @@ object OrderInternalForm: TOrderInternalForm
         end
         object cxGrid1: TcxGrid
           Left = 1
-          Top = 393
+          Top = 215
           Width = 1086
           Height = 117
           Align = alBottom
           TabOrder = 2
+          ExplicitLeft = 2
+          ExplicitTop = 391
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ChildDS
@@ -705,42 +707,10 @@ object OrderInternalForm: TOrderInternalForm
             object Article_ch3: TcxGridDBColumn
               Caption = 'Artikel Nr'
               DataBinding.FieldName = 'Article'
-              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 124
-            end
-            object ProdColorPatternName_ch3: TcxGridDBColumn
-              Caption = #1069#1083#1077#1084#1077#1085#1090
-              DataBinding.FieldName = 'ProdColorPatternName'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderGlyphAlignmentHorz = taCenter
-              Options.Editing = False
-              Width = 58
-            end
-            object ColorPatternName_ch3: TcxGridDBColumn
-              Caption = #1064#1072#1073#1083#1086#1085
-              DataBinding.FieldName = 'ColorPatternName'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderGlyphAlignmentHorz = taCenter
-              HeaderHint = #1064#1072#1073#1083#1086#1085' Boat Structure'
-              Options.Editing = False
-              Width = 58
-            end
-            object ProdOptionName_ch3: TcxGridDBColumn
-              Caption = #1054#1087#1094#1080#1103
-              DataBinding.FieldName = 'ProdOptionName'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderGlyphAlignmentHorz = taCenter
-              Options.Editing = False
-              Width = 58
+              Width = 100
             end
             object GoodsName_ch3: TcxGridDBColumn
               Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
@@ -764,25 +734,6 @@ object OrderInternalForm: TOrderInternalForm
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
               Width = 80
-            end
-            object Comment_goods_ch3: TcxGridDBColumn
-              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
-              DataBinding.FieldName = 'Comment_goods'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-              Options.Editing = False
-              Width = 100
-            end
-            object UnitName_ch3: TcxGridDBColumn
-              Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
-              DataBinding.FieldName = 'UnitName'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Options.Editing = False
-              Width = 108
             end
             object Amount_ch3: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086
@@ -818,6 +769,55 @@ object OrderInternalForm: TOrderInternalForm
               Options.Editing = False
               Width = 100
             end
+            object ProdOptionsName_ch3: TcxGridDBColumn
+              Caption = #1054#1087#1094#1080#1103
+              DataBinding.FieldName = 'ProdOptionsName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderGlyphAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 100
+            end
+            object ProdColorPatternName_ch3: TcxGridDBColumn
+              Caption = 'Boat Structure'
+              DataBinding.FieldName = 'ProdColorPatternName'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderGlyphAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 58
+            end
+            object Comment_goods_ch3: TcxGridDBColumn
+              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
+              DataBinding.FieldName = 'Comment_goods'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+              Options.Editing = False
+              Width = 100
+            end
+            object ColorPatternName_ch3: TcxGridDBColumn
+              Caption = #1064#1072#1073#1083#1086#1085
+              DataBinding.FieldName = 'ColorPatternName'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderGlyphAlignmentHorz = taCenter
+              HeaderHint = #1064#1072#1073#1083#1086#1085' Boat Structure'
+              Options.Editing = False
+              Width = 58
+            end
+            object UnitName_ch3: TcxGridDBColumn
+              Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
+              DataBinding.FieldName = 'UnitName'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 108
+            end
             object isErased_ch3: TcxGridDBColumn
               Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
               DataBinding.FieldName = 'isErased'
@@ -834,20 +834,23 @@ object OrderInternalForm: TOrderInternalForm
         end
         object cxTopSplitter: TcxSplitter
           Left = 1
-          Top = 385
+          Top = 207
           Width = 1086
           Height = 8
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGrid1
+          ExplicitLeft = 0
+          ExplicitTop = 193
         end
         object cxGrid_Detail: TcxGrid
           Left = 1
-          Top = 215
+          Top = 340
           Width = 1086
           Height = 170
           Align = alBottom
           TabOrder = 0
+          ExplicitTop = 215
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -983,14 +986,13 @@ object OrderInternalForm: TOrderInternalForm
               Options.Editing = False
               Width = 80
             end
-            object GoodsName_ch4: TcxGridDBColumn
-              Caption = #1059#1079#1077#1083'/'#1051#1086#1076#1082#1072
-              DataBinding.FieldName = 'GoodsName'
-              Visible = False
+            object ReceiptServiceCode_ch4: TcxGridDBColumn
+              Caption = 'Interne Nr'
+              DataBinding.FieldName = 'ReceiptServiceCode'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 132
+              Width = 70
             end
             object ReceiptServiceName_ch4: TcxGridDBColumn
               Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1072#1073#1086#1090
@@ -1007,12 +1009,12 @@ object OrderInternalForm: TOrderInternalForm
               Width = 141
             end
             object PersonalCode_ch4: TcxGridDBColumn
-              Caption = 'Interne Nr'
+              Caption = #1050#1086#1076
               DataBinding.FieldName = 'PersonalCode'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 85
+              Width = 55
             end
             object PersonalName_ch4: TcxGridDBColumn
               Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
@@ -1095,21 +1097,20 @@ object OrderInternalForm: TOrderInternalForm
         end
         object cxSplitter2: TcxSplitter
           Left = 1
-          Top = 207
+          Top = 332
           Width = 1086
           Height = 8
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGrid_Detail
+          ExplicitLeft = 0
+          ExplicitTop = 201
         end
       end
     end
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -1177,6 +1178,21 @@ object OrderInternalForm: TOrderInternalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Hours_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_ch54
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1206,6 +1222,21 @@ object OrderInternalForm: TOrderInternalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Hours_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_ch54
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1220,6 +1251,23 @@ object OrderInternalForm: TOrderInternalForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object Article_ReceiptService_ch5: TcxGridDBColumn
+            Caption = 'Artikel Nr'
+            DataBinding.FieldName = 'Article_ReceiptService'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ReceiptServiceCode_ch5: TcxGridDBColumn
+            Caption = 'Interne Nr'
+            DataBinding.FieldName = 'ReceiptServiceCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object ReceiptServiceName_ch5: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1072#1073#1086#1090
             DataBinding.FieldName = 'ReceiptServiceName'
@@ -1235,7 +1283,7 @@ object OrderInternalForm: TOrderInternalForm
             Width = 141
           end
           object PersonalCode_ch5: TcxGridDBColumn
-            Caption = 'Interne Nr'
+            Caption = #1050#1086#1076
             DataBinding.FieldName = 'PersonalCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1605,6 +1653,10 @@ object OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'bbUpdateRecordBoat'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -2254,9 +2306,6 @@ object OrderInternalForm: TOrderInternalForm
       StoredProcList = <
         item
           StoredProc = spSelectPrint
-        end
-        item
-          StoredProc = spSelectPrint_detail
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -2266,12 +2315,7 @@ object OrderInternalForm: TOrderInternalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'InvNumber_OrderClient;NPP_1;NPP_2'
-        end
-        item
-          DataSet = PrintDetailCDS
-          UserName = 'frxDBDDetail'
-          IndexFieldNames = 'ReceiptServiceCode'
+          IndexFieldNames = 'InvNumber_OrderClient;NPP_1;NPP_2;NPP_3'
         end>
       Params = <>
       ReportName = 'PrintMovement_OrderInternal'
@@ -4155,26 +4199,6 @@ object OrderInternalForm: TOrderInternalForm
     Left = 1028
     Top = 86
   end
-  object spSelectPrint_detail: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderInternal_detail_Print'
-    DataSet = PrintDetailCDS
-    DataSets = <
-      item
-        DataSet = PrintDetailCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 911
-    Top = 208
-  end
   object spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_OrderInternal'
     DataSets = <>
@@ -5099,11 +5123,5 @@ object OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 846
     Top = 391
-  end
-  object PrintDetailCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 956
-    Top = 97
   end
 end

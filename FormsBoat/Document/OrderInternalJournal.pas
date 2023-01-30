@@ -99,6 +99,7 @@ type
     bbPrint2: TdxBarButton;
     Article: TcxGridDBColumn;
     Comment_goods: TcxGridDBColumn;
+    ItemName_goods: TcxGridDBColumn;
   private
   public
   end;

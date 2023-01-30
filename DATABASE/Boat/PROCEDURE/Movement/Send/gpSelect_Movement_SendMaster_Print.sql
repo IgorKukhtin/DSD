@@ -78,7 +78,7 @@ OPEN Cursor1 FOR
      , tmpOrderClient AS (SELECT MovementItem.Id
                                , MIFloat_MovementId.ValueData :: Integer AS MovementId_order
                                , Movement_OrderClient.OperDate AS OperDate
-                               , ('№ ' || Movement_OrderClient.InvNumber || ' от ' || zfConvert_DateToString (Movement_OrderClient.OperDate) :: TVarChar ) :: TVarChar  AS InvNumber_order
+                               , zfCalc_InvNumber_isErased (MovementDesc_OrderClient.ItemName, Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumber_order
                                , Object_Product.Id                          AS ProductId
                                , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
                                , Object_Brand.Id                            AS BrandId
@@ -97,6 +97,7 @@ OPEN Cursor1 FOR
                                                            ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                           AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                                LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = MIFloat_MovementId.ValueData :: Integer
+                               LEFT JOIN MovementDesc AS MovementDesc_OrderClient ON MovementDesc_OrderClient.Id = Movement_OrderClient.DescId
    
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
                                                             ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
@@ -134,7 +135,7 @@ OPEN Cursor1 FOR
    
                           GROUP BY MovementItem.Id
                                , MIFloat_MovementId.ValueData
-                               , ('№ ' || Movement_OrderClient.InvNumber || ' от ' || zfConvert_DateToString (Movement_OrderClient.OperDate) :: TVarChar )
+                               , zfCalc_InvNumber_isErased (MovementDesc_OrderClient.ItemName, Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId)
                                , Object_Product.Id
                                , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)
                                , Object_Brand.Id

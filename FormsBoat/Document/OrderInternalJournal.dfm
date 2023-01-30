@@ -24,11 +24,10 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 817
     object deStart: TcxDateEdit
       Left = 103
       Top = 5
-      EditValue = 44562d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -38,7 +37,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 44562d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -65,7 +64,6 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 817
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -177,6 +175,13 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 100
+      end
+      object ItemName_goods: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090
+        DataBinding.FieldName = 'ItemName_goods'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object Article: TcxGridDBColumn
         Caption = 'Artikel Nr'

@@ -79,7 +79,7 @@ BEGIN
           , ObjectDesc.ItemName            AS DescName
           , Object_ReceiptLevel.ValueData  AS ReceiptLevelName
           , Object_ProdOptions.ValueData       AS ProdOptionsName
-          , Object_ProdColorPattern.ValueData  AS ProdColorPatternName
+          , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData, Object_ProdColorPattern.ValueData, Object_Model_pcp.ValueData, Object_ProdColorPattern.isErased) :: TVarChar AS ProdColorPatternName
           , Object_ColorPattern.ValueData      AS ColorPatternName
           , MovementItem.Amount           ::TFloat
           , MovementItem.isErased
@@ -114,16 +114,6 @@ BEGIN
                                              AND MILO_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
              LEFT JOIN Object AS Object_ProdOptions ON Object_ProdOptions.Id = MILO_ProdOptions.ObjectId
 
-             LEFT JOIN MovementItemLinkObject AS MILO_ProdColorPattern
-                                              ON MILO_ProdColorPattern.MovementItemId = MovementItem.Id
-                                             AND MILO_ProdColorPattern.DescId         = zc_MILinkObject_ProdColorPattern()
-             LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = MILO_ProdColorPattern.ObjectId
-
-             LEFT JOIN MovementItemLinkObject AS MILO_ColorPattern
-                                              ON MILO_ColorPattern.MovementItemId = MovementItem.Id
-                                             AND MILO_ColorPattern.DescId         = zc_MILinkObject_ColorPattern()
-             LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = MILO_ColorPattern.ObjectId
-
              LEFT JOIN ObjectString AS ObjectString_Article
                                     ON ObjectString_Article.ObjectId = MovementItem.ObjectId
                                    AND ObjectString_Article.DescId   = zc_ObjectString_Article()
@@ -131,6 +121,27 @@ BEGIN
                                   ON ObjectLink_Goods_ProdColor.ObjectId = MovementItem.ObjectId
                                  AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
              LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+
+             -- Шаблон Boat Structure
+             LEFT JOIN MovementItemLinkObject AS MILO_ColorPattern
+                                              ON MILO_ColorPattern.MovementItemId = MovementItem.Id
+                                             AND MILO_ColorPattern.DescId         = zc_MILinkObject_ColorPattern()
+             LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = MILO_ColorPattern.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Model_pcp
+                                  ON ObjectLink_Model_pcp.ObjectId = Object_ColorPattern.Id
+                                 AND ObjectLink_Model_pcp.DescId   = zc_ObjectLink_ColorPattern_Model()
+             LEFT JOIN Object AS Object_Model_pcp ON Object_Model_pcp.Id = ObjectLink_Model_pcp.ChildObjectId
+
+             -- Boat Structure
+             LEFT JOIN MovementItemLinkObject AS MILO_ProdColorPattern
+                                              ON MILO_ProdColorPattern.MovementItemId = MovementItem.Id
+                                             AND MILO_ProdColorPattern.DescId         = zc_MILinkObject_ProdColorPattern()
+             LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = MILO_ProdColorPattern.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                  ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                                 AND ObjectLink_ProdColorGroup.DescId   = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+             LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+
 
              LEFT JOIN ObjectString AS ObjectString_Goods_Comment
                                     ON ObjectString_Goods_Comment.ObjectId = Object_Object.Id
