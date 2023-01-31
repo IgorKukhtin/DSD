@@ -263,6 +263,8 @@ type
     miReport_OrderInternal: TMenuItem;
     actReport_PriceList: TdsdOpenForm;
     miReport_PriceList: TMenuItem;
+    actProductionUnionMaster: TdsdOpenForm;
+    miProductionUnionMaster: TMenuItem;
   private
     { Private declarations }
   public

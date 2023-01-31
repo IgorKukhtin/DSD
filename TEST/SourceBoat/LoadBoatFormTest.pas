@@ -455,6 +455,9 @@ end;
 
 procedure TLoadFormTest.LoadProductionUnionFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionMasterJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProductionUnionMasterJournalForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionForm'));
