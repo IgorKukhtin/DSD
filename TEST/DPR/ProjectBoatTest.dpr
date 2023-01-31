@@ -348,7 +348,8 @@ uses
   Report_PriceListDialog in '..\..\FormsBoat\Report\Report_PriceListDialog.pas' {Report_PriceListDialogForm: TParentForm},
   OrderInternalMasterChoice in '..\..\FormsBoat\Document\OrderInternalMasterChoice.pas' {OrderInternalMasterChoiceForm: TParentForm},
   OrderInternal in '..\..\FormsBoat\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
-  ProductionUnionMasterChoice in '..\..\FormsBoat\Document\ProductionUnionMasterChoice.pas' {ProductionUnionMasterChoiceForm: TParentForm};
+  ProductionUnionMasterChoice in '..\..\FormsBoat\Document\ProductionUnionMasterChoice.pas' {ProductionUnionMasterChoiceForm: TParentForm},
+  ProductionUnionMasterJournal in '..\..\FormsBoat\Document\ProductionUnionMasterJournal.pas' {ProductionUnionMasterJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

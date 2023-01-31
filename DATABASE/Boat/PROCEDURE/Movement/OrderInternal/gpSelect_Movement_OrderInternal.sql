@@ -95,6 +95,7 @@ BEGIN
                                                                AND MILO_Insert.DescId = zc_MILinkObject_Insert()
                                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
                           )
+
         -- Результат
         SELECT Movement_OrderInternal.Id
              , zfConvert_StringToNumber (Movement_OrderInternal.InvNumber) AS InvNumber
@@ -126,11 +127,11 @@ BEGIN
              , Object_Unit.ValueData                AS UnitName
              , MovementItem.Comment ::TVarChar      AS Comment_mi
 
-             , Movement_OrderClient.Id                                   AS MovementId_OrderClient
+             , Movement_OrderClient.Id              AS MovementId_OrderClient
              , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
              , Object_From.Id                       AS FromId 
              , Object_From.ValueData                AS FromName 
-             , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
+             , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)  AS ProductName
              , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,Object_Product.isErased) AS CIN
 
              , MovementItem.InsertName AS InsertName_mi
