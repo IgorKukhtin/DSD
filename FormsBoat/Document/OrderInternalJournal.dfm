@@ -441,14 +441,6 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbMIContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1300,7 +1292,6 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
       item
         DataSet = PrintItemsCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'

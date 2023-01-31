@@ -31,7 +31,6 @@ type
     cxLabel3: TcxLabel;
     edGoods: TcxButtonEdit;
     GuidesGoods: TdsdGuides;
-    LocationDescName: TcxGridDBColumn;
     LocationName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
@@ -40,7 +39,7 @@ type
     SummOut: TcxGridDBColumn;
     SummEnd: TcxGridDBColumn;
     AmountStart: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
+    Price_start: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     Price_end: TcxGridDBColumn;
@@ -86,6 +85,7 @@ type
     actOpenFormPartion: TdsdOpenForm;
     macOpenDocumentPartion: TMultiAction;
     bbOpenDocumentPartion: TdxBarButton;
+    DescName_goods: TcxGridDBColumn;
   private
     { Private declarations }
   public

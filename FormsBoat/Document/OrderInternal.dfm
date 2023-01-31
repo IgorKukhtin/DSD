@@ -4606,7 +4606,6 @@ object OrderInternalForm: TOrderInternalForm
       item
         DataSet = PrintItemsCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
