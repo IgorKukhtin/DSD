@@ -50,6 +50,7 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , TotalSummPrice_cost_in TFloat
              
               , InvNumberFull_OrderClient TVarChar, FromName_OrderClient TVarChar, ProductName_OrderClient TVarChar, CIN_OrderClient TVarChar  
+              
               , MovementId_Partion   Integer
               , InvNumber_Partion    TVarChar
               , InvNumberAll_Partion TVarChar
@@ -518,13 +519,13 @@ BEGIN
                         , SUM (zfCalc_SummPriceList (tmpDataAll.AmountIn, tmpDataAll.CostPrice))                         AS TotalSumm_cost_in
                         , SUM (zfCalc_SummPriceList (tmpDataAll.AmountIn, tmpDataAll.OperPrice_cost))                    AS TotalSummPrice_cost_in
 
-                        , STRING_AGG (MIString_PartNumber.ValueData, ' ;') ::TVarChar AS PartNumber
+                        , STRING_AGG (DISTINCT MIString_PartNumber.ValueData, ' ;') ::TVarChar AS PartNumber
 
                         --OrderClient
-                        , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.InvNumberFull_OrderClient ELSE '' END AS InvNumberFull_OrderClient
-                        , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.FromName ELSE '' END        AS FromName_OrderClient
-                        , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.ProductName ELSE '' END     AS ProductName_OrderClient
-                        , CASE WHEN inisPartNumber = TRUE THEN MIFloat_MovementId.CIN ELSE '' END             AS CIN_OrderClient
+                        , MIFloat_MovementId.InvNumberFull_OrderClient  AS InvNumberFull_OrderClient
+                        , MIFloat_MovementId.FromName                   AS FromName_OrderClient
+                        , MIFloat_MovementId.ProductName                AS ProductName_OrderClient
+                        , MIFloat_MovementId.CIN                        AS CIN_OrderClient
                    FROM (SELECT Movement.Id AS MovementId
                         , Movement.InvNumber
                         , Movement.OperDate
@@ -835,11 +836,11 @@ BEGIN
            , Movement_Partion.OperDate              AS OperDate_Partion
            , MovementDesc_Partion.ItemName          AS DescName_Partion
    FROM tmpDataAll
-            LEFtmpDataAllT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpDataAll.PartnerId
+            LEFt JOIN Object AS Object_Partner ON Object_Partner.Id = tmpDataAll.PartnerId
             LEFT JOIN Object AS Object_Goods   ON Object_Goods.Id   = tmpDataAll.GoodsId
 
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = tmpDataAll.GoodsGroupId
-            LEFT JOIN Object AS Object_Measure    ON Object_Measure.Id    = .MeasureId
+            LEFT JOIN Object AS Object_Measure    ON Object_Measure.Id    = tmpDataAll.MeasureId
             LEFT JOIN Object AS Object_GoodsTag   ON Object_GoodsTag.Id   = tmpDataAll.GoodsTagId
             LEFT JOIN Object AS Object_GoodsType  ON Object_GoodsType.Id  = tmpDataAll.GoodsTypeId
             LEFT JOIN Object AS Object_ProdColor  ON Object_ProdColor.Id  = tmpDataAll.ProdColorId
