@@ -2070,7 +2070,6 @@ object OrderInternalForm: TOrderInternalForm
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
