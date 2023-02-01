@@ -411,6 +411,26 @@ BEGIN
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_Goods_isColdSUN', True, text_var1::TVarChar, vbUserId);
     END;
 
+    -- Создание графиков менеджеров по текущему месяцу
+    IF date_part('DAY',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 1 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
+    THEN
+
+      BEGIN
+         IF NOT EXISTS(SELECT 1 FROM Movement WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE) AND Movement.DescId = zc_Movement_EmployeeScheduleVIP())
+         THEN
+           PERFORM gpInsertUpdate_Movement_EmployeeScheduleVIP (ioId := 0
+                                                              , inInvNumber := CAST (NEXTVAL ('movement_EmployeeScheduleVIP_seq')  AS TVarChar)
+                                                              , ioOperDate := date_trunc('month', CURRENT_DATE)
+                                                              , inSession:=  zfCalc_UserAdmin());
+         END IF;
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_EmployeeScheduleVIP', True, text_var1::TVarChar, vbUserId);
+      END;
+          
+    END IF;    
+      
     -- Создание ЗП менеджеров по текущему месяцу
     IF date_part('DAY',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 1 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
     THEN

@@ -95,7 +95,7 @@ BEGIN
                  , MI_PromoUnit.Summ              ::TFloat   AS Summ
                  , MI_PromoUnit.SummPlanMax       ::TFloat   AS SummPlanMax
                  , COALESCE(MI_PromoUnit.Comment, '') ::TVarChar AS Comment
-                 , COALESCE(MI_PromoUnit.isFixedPercent, False) ::TVarChar AS isFixedPercent
+                 , COALESCE(MI_PromoUnit.isFixedPercent, False) ::BOOLEAN AS isFixedPercent
                  , MI_PromoUnit.AddBonusPercent              AS AddBonusPercent
                  , COALESCE(MI_PromoUnit.IsErased,FALSE)     AS isErased
             FROM tmpPrice
@@ -155,5 +155,6 @@ $BODY$
  04.02.17         *
 */
 
---select * from gpSelect_MovementItem_PromoUnit(inMovementId := 0 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+--
+select * from gpSelect_MovementItem_PromoUnit(inMovementId := 0 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
 --select * from gpSelect_MovementItem_PromoUnitChild(inMovementId := 0 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

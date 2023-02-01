@@ -267,9 +267,9 @@ BEGIN
                OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr::TVarChar || '%' AND vbisShoresSUN = TRUE AND Object_Driver.ObjectCode = 4 OR
                OS_ListDaySUN.ValueData ILIKE '%' || CASE WHEN vbDOW_curr - 1 = 0 THEN 7 ELSE vbDOW_curr - 1 END::TVarChar || '%' AND vbisShoresSUN = TRUE AND Object_Driver.ObjectCode = 3)
 
-          AND ((COALESCE (ObjectBoolean_SUN_Supplement_in.ValueData, FALSE) = TRUE 
+          AND (/*(COALESCE (ObjectBoolean_SUN_Supplement_in.ValueData, FALSE) = TRUE 
             OR COALESCE (ObjectBoolean_SUN_Supplement_out.ValueData, FALSE) = TRUE) 
-            AND COALESCE (ObjectBoolean_SUN.ValueData, FALSE) = TRUE
+            AND*/ COALESCE (ObjectBoolean_SUN.ValueData, FALSE) = TRUE
             --OR Object_Unit.ID IN (SELECT DISTINCT Object_Goods_Main.UnitSupplementSUN1InId FROM Object_Goods_Main WHERE Object_Goods_Main.UnitSupplementSUN1InId IS NOT NULL)
             )         
        ;
@@ -586,7 +586,8 @@ BEGIN
                
         ANALYSE _tmpGoods_SUN_Supplement;
 
---raise notice 'Value 10: %', CLOCK_TIMESTAMP();
+--raise notice 'Value 10: % %', CLOCK_TIMESTAMP(), (SELECT count(*) FROM _tmpGoods_SUN_Supplement where _tmpGoods_SUN_Supplement.GoodsId = 21185549);
+
 
 /*     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, UnitOutId, UnitOut2Id)
         SELECT Object_Goods_Retail.ID
@@ -1025,6 +1026,7 @@ BEGIN
                                      
 --raise notice 'Value 14: %', CLOCK_TIMESTAMP();
 
+
      IF EXISTS (SELECT 1
                 FROM _tmpGoods_SUN_Supplement 
                      INNER JOIN _tmpGoodsUnit_SUN_Supplement ON _tmpGoodsUnit_SUN_Supplement.GoodsId = _tmpGoods_SUN_Supplement.GoodsId
@@ -1169,11 +1171,11 @@ BEGIN
                -- реализация
              , tmpResult.AmountSalesDay
 
-             , CASE WHEN tmpResult.AmountSalesDay > 0
-                    THEN (tmpResult.AmountRemains - tmpResult.MCS)/ tmpResult.AmountSalesDay
+             , CASE WHEN (tmpResult.AmountRemains - tmpResult.MCS) > 0
+                    THEN tmpResult.AmountSalesDay / (tmpResult.AmountRemains - tmpResult.MCS)
                     ELSE 0 END ::TFloat AS  AverageSales
-             , CASE WHEN tmpResult.AmountSalesDay > 0
-                    THEN (tmpResult.AmountRemains - tmpResult.MCS)/ tmpResult.AmountSalesDay * tmpUnit.DeySupplSun1
+             , CASE WHEN (tmpResult.AmountRemains - tmpResult.MCS) > 0
+                    THEN tmpResult.AmountSalesDay / (tmpResult.AmountRemains - tmpResult.MCS) * tmpUnit.DeySupplSun1
                     ELSE 0 END ::TFloat AS  StockRatio
 
         FROM tmpResult
@@ -1185,6 +1187,7 @@ BEGIN
        ANALYSE _tmpStockRatio_all_Supplement;
 
 --raise notice 'Value 15: %', CLOCK_TIMESTAMP();
+
 
      -- 2.1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      UPDATE _tmpRemains_all_Supplement SET AverageSalesMonth =(COALESCE (_tmpRemains_all_Supplement.AmountSalesMonth, 0) / extract('DAY' from CURRENT_DATE -
@@ -1217,7 +1220,8 @@ BEGIN
        WHERE COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0
          AND _tmpRemains_all_Supplement.AmountRemains < COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0)
          AND _tmpRemains_all_Supplement.Need < ceil(COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) + _tmpRemains_all_Supplement.AmountRemains)
-         AND _tmpRemains_all_Supplement.UnitId IN (SELECT _tmpUnit_SUN_Supplement.UnitId FROM _tmpUnit_SUN_Supplement WHERE _tmpUnit_SUN_Supplement.isSUN_Supplement_in = TRUE);
+         AND (_tmpRemains_all_Supplement.UnitId IN (SELECT _tmpUnit_SUN_Supplement.UnitId FROM _tmpUnit_SUN_Supplement WHERE _tmpUnit_SUN_Supplement.isSUN_Supplement_in = TRUE) OR
+              _tmpRemains_all_Supplement.GoodsId IN (SELECT DISTINCT _tmpGoods_SUN_Supplement.GoodsId FROM _tmpGoods_SUN_Supplement WHERE _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE));
 
         UPDATE _tmpRemains_all_Supplement SET Need = CASE WHEN Need - T1.Amount < 0 THEN 0 ELSE Need - T1.Amount END
         FROM (WITH tmpNeedSum AS (SELECT _tmpRemains_all_Supplement.GoodsId
@@ -1460,7 +1464,9 @@ BEGIN
                              END / COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)) * COALESCE (_tmpGoods_SUN_Supplement.KoeffSUN, 0)
                  END END > 0
                  
-         AND _tmpUnit_SUN_Supplement.isSUN_Supplement_out = True
+         AND (_tmpUnit_SUN_Supplement.isSUN_Supplement_out = True OR 
+             COALESCE(_tmpGoods_SUN_Supplement.isSupplementMarkSUN1, FALSE) = TRUE AND 
+             COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0)
          AND (COALESCE(_tmpGoodsUnit_SUN_Supplement_All.GoodsId, 0) = 0 
            OR COALESCE(_tmpGoodsUnit_SUN_Supplement.UnitOutId, 0) = _tmpRemains_all_Supplement.UnitId)
          AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
@@ -1591,7 +1597,9 @@ BEGIN
 
                         END END) > 0
          AND _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority = False
-         AND _tmpUnit_SUN_Supplement.isSUN_Supplement_in = True
+         AND (_tmpUnit_SUN_Supplement.isSUN_Supplement_in = True OR 
+             COALESCE(_tmpGoods_SUN_Supplement.isSupplementMarkSUN1, FALSE) = TRUE AND 
+             COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) > 0)
          AND (COALESCE(_tmpGoodsUnit_SUN_Supplement_All.GoodsId, 0) = 0 
            OR COALESCE(_tmpGoodsUnit_SUN_Supplement.UnitOutId, 0) = 0)
          AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
@@ -1610,6 +1618,8 @@ BEGIN
                   
 --raise notice 'Value 19: %', CLOCK_TIMESTAMP();
     
+-- raise notice 'Value 10: % %', CLOCK_TIMESTAMP(), (SELECT count(*) FROM _tmpRemains_all_Supplement  where _tmpRemains_all_Supplement.GoodsId = 21185549 and _tmpRemains_all_Supplement.NeedCalc > 0);
+
                       
      -- 3. распределяем
      --
@@ -1842,4 +1852,5 @@ $BODY$
 
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inDriverId:= 0, inUserId:= 3);
+-- 
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inDriverId:= 0, inUserId:= 3);

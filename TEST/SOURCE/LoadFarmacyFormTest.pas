@@ -1992,12 +1992,12 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SoldForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SoldForm');
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sold_DayUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Sold_DayUserForm');
- {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ByPartionGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ByPartionGoodsForm');
 
