@@ -10,11 +10,12 @@ BEGIN
      -- таблица - Проводки
      PERFORM lpComplete_Movement_All_CreateTemp();
 
-     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem'))
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpItem')
      THEN
          DELETE FROM _tmpItem_pr;
          DELETE FROM _tmpItem_Child_mi;
          DELETE FROM _tmpItem_Child;
+         DELETE FROM _tmpItem_Detail;
      ELSE
          -- таблица - элементы Master
          CREATE TEMP TABLE _tmpItem_pr (MovementItemId Integer
@@ -44,6 +45,13 @@ BEGIN
                                          , MovementId_order Integer
                                          , isId_order Boolean
                                           ) ON COMMIT DROP;
+         -- таблица - ЗП
+         CREATE TEMP TABLE _tmpItem_Detail (MovementItemId Integer, ParentId Integer
+                                          , ReceiptServiceId Integer, PersonalId Integer
+                                          , ContainerId_Summ Integer
+                                          , AccountId Integer
+                                          , Amount TFloat
+                                           ) ON COMMIT DROP;
 
      END IF;
 

@@ -183,6 +183,28 @@ BEGIN
           AND MovementItem.isErased   = FALSE
        ;
 
+     -- заполняем таблицу - элементы документа - ЗП
+     INSERT INTO _tmpItem_Detail (MovementItemId, ParentId
+                                , ReceiptServiceId, PersonalId
+                                , Amount
+                                 )
+        -- результат
+        SELECT MovementItem.Id                  AS MovementItemId
+             , MovementItem.ParentId            AS ParentId
+             , MovementItem.ObjectId            AS ReceiptServiceId
+             , MILinkObject_Personal.ObjectId   AS PersonalId
+             , MovementItem.Amount              AS Amount
+        FROM MovementItem
+             INNER JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId = MovementItem.ParentId
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Personal
+                                              ON MILinkObject_Personal.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Personal.DescId         = zc_MILinkObject_Personal()
+
+        WHERE MovementItem.MovementId = inMovementId
+          AND MovementItem.DescId     = zc_MI_Detail()
+          AND MovementItem.isErased   = FALSE
+       ;
+
 
      -- определили - !!!нужна ли партия MovementId_order!!!
      UPDATE _tmpItem_Child_mi SET isId_order = tmpItem_Child_mi.isId_order
@@ -649,7 +671,7 @@ BEGIN
      WHERE _tmpItem_Child.MovementItemId = _tmpItem_Child_mi.MovementItemId
     ;
 
-     -- 2.1. определяется Счет(справочника) для проводок по суммовому учету - ПРИХОД
+     -- 2.1. определяется AccountId для проводок по суммовому учету - ПРИХОД
      UPDATE _tmpItem_pr SET AccountId = _tmpItem_byAccount.AccountId
      FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_10000() -- Запасы
                                              , inAccountDirectionId     := vbAccountDirectionId_To
@@ -661,7 +683,7 @@ BEGIN
            FROM (SELECT DISTINCT _tmpItem_pr.InfoMoneyDestinationId FROM _tmpItem_pr) AS _tmpItem_group
           ) AS _tmpItem_byAccount
     ;
-     -- 2.2. определяется Счет(справочника) для проводок по суммовому учету - РАСХОД
+     -- 2.2. определяется AccountId для проводок по суммовому учету - РАСХОД
      UPDATE _tmpItem_Child SET AccountId = _tmpItem_byAccount.AccountId
      FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_10000() -- Запасы
                                              , inAccountDirectionId     := vbAccountDirectionId_From
@@ -675,6 +697,16 @@ BEGIN
           JOIN _tmpItem_Child_mi ON _tmpItem_Child_mi.InfoMoneyDestinationId  = _tmpItem_byAccount.InfoMoneyDestinationId
      WHERE _tmpItem_Child.MovementItemId = _tmpItem_Child_mi.MovementItemId
     ;
+     -- 2.3. определяется AccountId для проводок по суммовому учету - ЗП
+     UPDATE _tmpItem_Detail SET AccountId = _tmpAccount.AccountId
+     FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_60000()         -- Кредиторы
+                                             , inAccountDirectionId     := zc_Enum_AccountDirection_60200()     -- Сотрудники
+                                             , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_60100() -- Заработная плата
+                                             , inInfoMoneyId            := NULL
+                                             , inUserId                 := inUserId
+                                              ) AS AccountId
+          ) AS _tmpAccount
+     WHERE _tmpAccount.AccountId > 0;
 
 
      -- 3.1. определяется ContainerId_Summ для проводок по суммовому учету - ПРИХОД
@@ -708,6 +740,22 @@ BEGIN
      FROM _tmpItem_Child_mi
      WHERE _tmpItem_Child.MovementItemId = _tmpItem_Child_mi.MovementItemId
     ;
+     -- 3.3. определяется ContainerId_Summ для проводок по суммовому учету - ЗП
+     UPDATE _tmpItem_Detail SET ContainerId_Summ = lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                         , inParentId          := NULL
+                                                                         , inObjectId          := _tmpItem_Detail.AccountId
+                                                                         , inPartionId         := NULL
+                                                                         , inIsReserve         := FALSE
+                                                                         , inJuridicalId_basis := vbJuridicalId_Basis
+                                                                         , inBusinessId        := vbBusinessId
+                                                                         , inDescId_1          := zc_ContainerLinkObject_Personal()
+                                                                         , inObjectId_1        := _tmpItem_Detail.PersonalId
+                                                                         , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
+                                                                         , inObjectId_2        := zc_Enum_InfoMoney_60101() -- Заработная плата
+                                                                         , inDescId_3          := zc_ContainerLinkObject_ServiceDate()
+                                                                         , inObjectId_3        := lpInsertFind_Object_ServiceDate (vbOperDate)
+                                                                          );
+     
 
      -- 4.1. формируются Проводки - остаток количество
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
@@ -833,8 +881,61 @@ BEGIN
             JOIN _tmpItem_Child ON _tmpItem_Child.MovementItemId = _tmpMIContainer_insert.MovementItemId
             JOIN _tmpItem_pr    ON _tmpItem_pr.MovementItemId    = _tmpItem_Child.ParentId
        WHERE _tmpMIContainer_insert.DescId = zc_MIContainer_Summ()
+
+      UNION ALL
+       -- проводки - ЗП
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
+            , _tmpItem_pr.MovementItemId
+            , _tmpItem_pr.ContainerId_Summ
+            , 0                                       AS ParentId
+            , _tmpItem_pr.AccountId                   AS AccountId              -- счет
+            , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
+            , _tmpItem_pr.GoodsId                     AS ObjectId_Analyzer      -- Товар
+            , _tmpItem_pr.PartionId                   AS PartionId              -- Партия
+            , vbUnitId_To                             AS WhereObjectId_Analyzer -- Место учета
+            , _tmpItem_Detail.AccountId               AS AccountId_Analyzer     -- Счет - корреспондент - РАСХОД
+            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
+            , _tmpItem_Detail.ContainerId_Summ        AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - РАСХОД
+            , _tmpItem_Detail.ReceiptServiceId        AS ObjectIntId_Analyzer   -- Аналитический справочник
+            , _tmpItem_Detail.PersonalId              AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение Personal
+            , _tmpItem_Detail.Amount                  AS Amount
+            , vbOperDate                              AS OperDate
+            , TRUE                                    AS isActive
+       FROM _tmpItem_Detail
+            JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId  = _tmpItem_Detail.ParentId
       ;
 
+
+     -- 4.2.3. формируются Проводки - долг по ЗП
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
+                                       , MovementItemId, ContainerId, ParentId
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
+                                       , AccountId_Analyzer
+                                       , ContainerId_Analyzer, ContainerExtId_Analyzer
+                                       , ObjectIntId_Analyzer, ObjectExtId_Analyzer
+                                       , Amount, OperDate, IsActive
+                                        )
+       -- проводки - ЗП
+       SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
+            , _tmpItem_Detail.MovementItemId
+            , _tmpItem_Detail.ContainerId_Summ
+            , 0                                       AS ParentId
+            , _tmpItem_Detail.AccountId               AS AccountId              -- счет
+            , 0                                       AS AnalyzerId             -- нет - Типы аналитик (проводки)
+            , _tmpItem_Detail.PersonalId              AS ObjectId_Analyzer      -- Товар
+            , 0                                       AS PartionId              -- Партия
+            , vbUnitId_To                             AS WhereObjectId_Analyzer -- Место учета
+            , _tmpItem_Detail.AccountId               AS AccountId_Analyzer     -- Счет - корреспондент - РАСХОД
+            , 0                                       AS ContainerId_Analyzer   -- нет - Контейнер ОПиУ - статья ОПиУ или Покупатель в продаже/возврат
+            , _tmpItem_pr.ContainerId_Summ            AS ContainerExtId_Analyzer-- Контейнер - Корреспондент - РАСХОД
+            , _tmpItem_Detail.ReceiptServiceId        AS ObjectIntId_Analyzer   -- Аналитический справочник
+            , _tmpItem_pr.GoodsId                     AS ObjectExtId_Analyzer   -- Аналитический справочник - Подразделение Personal
+            , _tmpItem_Detail.Amount                  AS Amount
+            , vbOperDate                              AS OperDate
+            , TRUE                                    AS isActive
+       FROM _tmpItem_Detail
+            JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId  = _tmpItem_Detail.ParentId
+      ;
 
      -- 5.0. получили цену партии - !!!ПРИХОД!!!
      UPDATE Object_PartionGoods SET -- Цена вх. без НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка = inEKPrice_discount + inCostPrice
