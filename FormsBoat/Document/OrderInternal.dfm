@@ -1240,7 +1240,6 @@ object OrderInternalForm: TOrderInternalForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
-          OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
