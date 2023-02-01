@@ -180,10 +180,12 @@ BEGIN
                                   LEFT JOIN MovementItem AS MI_Master
                                                          ON MI_Master.Id       = MIFloat_MovementId.MovementItemId
                                                         AND MI_Master.DescId   = zc_MI_Master()
+                                                        AND MI_Master.ObjectId = tmpMI_Master.GoodsId
                                                         AND MI_Master.isErased = FALSE
-                                  LEFT JOIN MovementItem ON MovementItem.ParentId = MI_Master.Id
-                                                        AND MovementItem.DescId   = zc_MI_Detail()
-                                                        AND MovementItem.isErased = FALSE
+                                  LEFT JOIN MovementItem ON MovementItem.MovementId = MI_Master.MovementId
+                                                        AND MovementItem.DescId     = zc_MI_Detail()
+                                                        AND MovementItem.ParentId   = MI_Master.Id
+                                                        AND MovementItem.isErased   = FALSE
                                   INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                      AND Movement.DescId   = zc_Movement_OrderInternal()
                                                      AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -197,8 +199,7 @@ BEGIN
                                     , MovementItem.ObjectId
                                     , MILinkObject_Personal.ObjectId
                             )
-                            
-  -- ProductionUnion - Detail
+      -- ProductionUnion - Detail
     , tmpMI_Detail_all AS (SELECT MovementItem.Id                AS MovementItemId
                                 , MovementItem.ParentId          AS ParentId
                                 , MovementItem.ObjectId          AS ReceiptServiceId

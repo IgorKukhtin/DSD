@@ -64,6 +64,7 @@ BEGIN
                       )
      -- OrderInternal - Detail
    , tmpMI_OrderInternal AS (SELECT tmpMI_Master.MovementItemId                 AS ParentId
+                                  , MovementItem.MovementId                     AS MovementId
                                   , MovementItem.ObjectId                       AS ReceiptServiceId
                                   , MILinkObject_Personal.ObjectId              AS PersonalId
                                   , SUM (COALESCE (MIFloat_Hours.ValueData, 0)) AS Hours_plan
@@ -71,13 +72,15 @@ BEGIN
                                   LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                               ON MIFloat_MovementId.ValueData = tmpMI_Master.MovementId_order
                                                              AND MIFloat_MovementId.DescId    = zc_MIFloat_MovementId()
-                                  LEFT JOIN MovementItem AS MI_Master
-                                                         ON MI_Master.Id       = MIFloat_MovementId.MovementItemId
-                                                        AND MI_Master.DescId   = zc_MI_Master()
-                                                        AND MI_Master.isErased = FALSE
-                                  LEFT JOIN MovementItem ON MovementItem.ParentId = MI_Master.Id
-                                                        AND MovementItem.DescId   = zc_MI_Detail()
-                                                        AND MovementItem.isErased = FALSE
+                                  INNER JOIN MovementItem AS MI_Master
+                                                          ON MI_Master.Id       = MIFloat_MovementId.MovementItemId
+                                                         AND MI_Master.DescId   = zc_MI_Master()
+                                                         AND MI_Master.ObjectId = tmpMI_Master.ObjectId
+                                                         AND MI_Master.isErased = FALSE
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = MI_Master.MovementId
+                                                         AND MovementItem.DescId     = zc_MI_Detail()
+                                                         AND MovementItem.ParentId   = MI_Master.Id
+                                                         AND MovementItem.isErased   = FALSE
                                   INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                      AND Movement.DescId   = zc_Movement_OrderInternal()
                                                      AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -90,6 +93,7 @@ BEGIN
                              GROUP BY tmpMI_Master.MovementItemId
                                     , MovementItem.ObjectId
                                     , MILinkObject_Personal.ObjectId
+                                    , MovementItem.MovementId
                             )
   -- ProductionUnion - Detail
 , tmpMI_Detail_all AS (SELECT MovementItem.Id                AS MovementItemId
@@ -113,6 +117,7 @@ BEGIN
                       )
       -- union
     , tmpMI_Detail AS (SELECT tmpMI_Detail_all.MovementItemId                                                     AS MovementItemId
+                            , tmpMI_OrderInternal.MovementId                                                      AS MovementId_OrderInternal
                             , COALESCE (tmpMI_Detail_all.ParentId,         tmpMI_OrderInternal.ParentId)          AS ParentId
                             , COALESCE (tmpMI_Detail_all.ReceiptServiceId, tmpMI_OrderInternal.ReceiptServiceId)  AS ReceiptServiceId
                             , COALESCE (tmpMI_Detail_all.PersonalId,       tmpMI_OrderInternal.PersonalId)        AS PersonalId
@@ -124,7 +129,6 @@ BEGIN
                                                          AND tmpMI_OrderInternal.ReceiptServiceId = tmpMI_Detail_all.ReceiptServiceId
                                                          AND tmpMI_OrderInternal.PersonalId       = tmpMI_Detail_all.PersonalId
                       )
-
         -- Результат
         SELECT tmpMI_Detail.MovementItemId       :: Integer AS Id
              , tmpMI_Detail.ParentId             :: Integer AS ParentId
@@ -149,7 +153,9 @@ BEGIN
                --
              , Object_Goods.Id           AS GoodsId_master
              , Object_Goods.ObjectCode   AS GoodsCode_master
-             , Object_Goods.ValueData    AS GoodsName_master
+             , (Object_Goods.ValueData
+      || ' ' || zfCalc_InvNumber_isErased ('', Movement_OrderInternal.InvNumber, Movement_OrderInternal.OperDate, Movement_OrderInternal.StatusId)  
+               ) :: TVarChar AS GoodsName_master
              , ObjectDesc.ItemName       AS DescName_master
              , MI_Master.Amount ::TFloat AS Amount_master
              , ObjectString_Article_master.ValueData AS Article_master
@@ -163,6 +169,7 @@ BEGIN
              , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,Object_Product.isErased) AS CIN_OrderClient
 
         FROM tmpMI_Detail
+             LEFT JOIN Movement AS Movement_OrderInternal ON Movement_OrderInternal.Id = tmpMI_Detail.MovementId_OrderInternal
 
              LEFT JOIN Object AS Object_ReceiptService ON Object_ReceiptService.Id = tmpMI_Detail.ReceiptServiceId
              LEFT JOIN ObjectString AS ObjectString_Article
@@ -210,7 +217,6 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_CIN
                                     ON ObjectString_CIN.ObjectId = Object_Product.Id
                                    AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
-
     ;
 
 END;
