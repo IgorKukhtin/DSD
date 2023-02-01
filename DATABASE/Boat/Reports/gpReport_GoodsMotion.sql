@@ -70,7 +70,34 @@ BEGIN
 
 
     RETURN QUERY
-    WITH tmpWhere AS (SELECT lfSelect.UnitId               AS LocationId
+    WITH tmpReceiptGoods AS (-- "виртуальные" узлы
+                             SELECT OL.ChildObjectId AS GoodsId
+                             FROM ObjectLink AS OL
+                                  -- Не удален
+                                  INNER JOIN Object AS Object_ReceiptGoodsChild ON Object_ReceiptGoodsChild.Id       = OL.ObjectId
+                                                                               AND Object_ReceiptGoodsChild.isErased = FALSE
+
+                                  INNER JOIN ObjectLink AS OL_ReceiptGoodsChild_ReceiptGoods
+                                                        ON OL_ReceiptGoodsChild_ReceiptGoods.ObjectId = OL.ObjectId
+                                                       AND OL_ReceiptGoodsChild_ReceiptGoods.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                  -- Не удален
+                                  INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id       = OL_ReceiptGoodsChild_ReceiptGoods.ChildObjectId
+                                                                          AND Object_ReceiptGoods.isErased = FALSE
+                             WHERE OL.DescId        = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+                               AND OL.ChildObjectId > 0
+
+                            UNION
+                             -- Узлы
+                             SELECT OL.ChildObjectId AS GoodsId
+                             FROM ObjectLink AS OL
+                                  -- Не удален
+                                  INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id       = OL.ObjectId
+                                                                          AND Object_ReceiptGoods.isErased = FALSE
+                             WHERE OL.DescId        = zc_ObjectLink_ReceiptGoods_Object()
+                               AND OL.ChildObjectId > 0
+                             
+                     )
+       , tmpWhere AS (SELECT lfSelect.UnitId               AS LocationId
                       FROM lfSelect_Object_Unit_byGroup (inUnitGroupId) AS lfSelect
                       wHERE COALESCE (inUnitGroupId,0) <> 0
                      UNION
@@ -83,9 +110,15 @@ BEGIN
        , tmpGoods AS (SELECT inGoodsId AS GoodsId
                       WHERE COALESCE (inGoodsId,0) <> 0
                      UNION
-                      SELECT Object.Id  AS LocationId
+                      SELECT Object.Id AS LocationId
                       FROM Object
                       WHERE Object.DescId = zc_Object_Goods()
+                        AND Object.isErased = FALSE
+                        AND COALESCE (inGoodsId,0) = 0
+                     UNION
+                      SELECT Object.Id  AS LocationId
+                      FROM Object
+                      WHERE Object.DescId = zc_Object_Product()
                         AND Object.isErased = FALSE
                         AND COALESCE (inGoodsId,0) = 0
                      )
@@ -190,7 +223,8 @@ BEGIN
   , tmpMIString AS (SELECT *
                     FROM MovementItemString AS MIString_PartNumber
                     WHERE MIString_PartNumber.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.PartionId FROM tmpMIContainer_group)
-                      AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                      AND MIString_PartNumber.DescId    = zc_MIString_PartNumber()
+                      AND MIString_PartNumber.ValueData <> ''
                    )
     -- Заказ Клиента
   , tmpMIFloat_OrderClient AS (SELECT MIFloat_MovementId.MovementItemId
@@ -236,7 +270,7 @@ BEGIN
                               , CASE WHEN inIsPartner = TRUE THEN Object_PartionGoods.FromId ELSE 0 END AS FromId_partion
 
                                 -- S/N
-                              , STRING_AGG (MIString_PartNumber.ValueData, '; ') AS PartNumber
+                              , STRING_AGG (DISTINCT MIString_PartNumber.ValueData, '; ') AS PartNumber
 
                                 -- Заказ Клиента
                               , MIFloat_MovementId.InvNumberFull_OrderClient
@@ -315,7 +349,7 @@ BEGIN
             , Object_Location.ValueData    AS LocationName
 
             , tmpDataAll.GoodsId           AS GoodsId
-            , ObjectDesc_Goods.ItemName    AS DescName_goods
+            , CASE WHEN tmpReceiptGoods.GoodsId > 0 THEN 'Узел' ELSE ObjectDesc_Goods.ItemName END :: TVarChar AS DescName_goods
             , Object_Goods.ObjectCode      AS GoodsCode
             , Object_Goods.ValueData       AS GoodsName
             , Object_Partner.ValueData     AS PartnerName
@@ -389,6 +423,9 @@ BEGIN
             , CURRENT_TIMESTAMP :: TDateTime   AS tmpDate
 
        FROM tmpDataAll
+            -- партия
+            LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = tmpDataAll.GoodsId
+       
             -- партия
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpDataAll.PartionId
                                          AND Object_PartionGoods.ObjectId       = tmpDataAll.GoodsId
