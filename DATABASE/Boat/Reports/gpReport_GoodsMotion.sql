@@ -179,8 +179,9 @@ BEGIN
                                     INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId
                                                         AND Container.DescId   = zc_Container_Summ()
                                 )
-         -- проводки Container_summ
-       , tmpMI_Summ AS (SELECT tmpContainer_Summ.ContainerId_Count
+      -- проводки Container_summ
+    , tmpMI_Summ_all AS (SELECT tmpContainer_Summ.ContainerId_Count
+                              , tmpContainer_Summ.ContainerId
                                 -- за период
                               , SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0
                                                THEN 1 * MIContainer.Amount
@@ -199,7 +200,21 @@ BEGIN
                              LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Summ.ContainerId
                                                                            AND MIContainer.OperDate    >= inStartDate
                         GROUP BY tmpContainer_Summ.ContainerId_Count
+                               , tmpContainer_Summ.ContainerId
                                , tmpContainer_Summ.Amount
+                       )
+         -- проводки Container_summ
+        , tmpMI_Summ AS (SELECT tmpMI_Summ_all.ContainerId_Count
+                                -- за период
+                              , SUM (tmpMI_Summ_all.AmountIn)    AS AmountIn
+                                -- за период
+                              , SUM (tmpMI_Summ_all.AmountOut)   AS AmountOut
+                                -- Остаток начальный
+                              , SUM (tmpMI_Summ_all.AmountStart) AS AmountStart
+                                -- Остаток конечный
+                              , SUM (tmpMI_Summ_all.AmountEnd)   AS AmountEnd
+                        FROM tmpMI_Summ_all
+                        GROUP BY tmpMI_Summ_all.ContainerId_Count
                        )
       -- кол-во + суммы
     , tmpMIContainer_group AS (SELECT tmpMI_Count.ContainerId

@@ -244,7 +244,7 @@
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 150
+            Width = 200
           end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -793,13 +793,13 @@
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1074#1093'.'#1094#1077#1085#1072')'
-      Hint = #1055#1077#1095#1072#1090#1100' ('#1074#1093'.'#1094#1077#1085#1072')'
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1082#1086#1083'-'#1074#1086' '#1080' '#1089#1091#1084#1084#1072')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1082#1086#1083'-'#1074#1086' '#1080' '#1089#1091#1084#1084#1072')'
       ImageIndex = 16
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'PartnerName;GoodsGroupNameFull;Article;GoodsName'
+          IndexFieldNames = 'LocationName;GoodsGroupNameFull;GoodsName;Article'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -845,13 +845,15 @@
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1087#1072#1088#1090#1080#1103' '#1079#1072#1082#1072#1079')'
-      Hint = #1055#1077#1095#1072#1090#1100' ('#1087#1072#1088#1090#1080#1103' '#1079#1072#1082#1072#1079')'
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1087#1086' '#1087#1072#1088#1090#1080#1103#1084' '#1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1087#1086' '#1087#1072#1088#1090#1080#1103#1084' '#1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072')'
       ImageIndex = 15
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'InvNumberFull_OrderClient;GoodsGroupNameFull;GoodsName;Article'
+          IndexFieldNames = 
+            'InvNumberFull_OrderClient;LocationName;GoodsGroupNameFull;GoodsN' +
+            'ame;Article'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -897,14 +899,14 @@
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1082#1086#1083'-'#1074#1086')'
-      Hint = #1055#1077#1095#1072#1090#1100' ('#1082#1086#1083'-'#1074#1086')'
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1090#1086#1083#1100#1082#1086' '#1082#1086#1083'-'#1074#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1090#1086#1083#1100#1082#1086' '#1082#1086#1083'-'#1074#1086')'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'PartnerName;GoodsGroupNameFull;Article;GoodsName'
+          IndexFieldNames = 'LocationName;GoodsGroupNameFull;GoodsName;Article'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -1452,6 +1454,10 @@
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

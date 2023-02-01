@@ -123,11 +123,17 @@ BEGIN
                                           ON MIString_PartNumber.MovementItemId = MovementItem.Id
                                          AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
 
+             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                   ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                  AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
-             -- !!!ВРЕМЕННО!!! Комплектующие
-             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101())
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney
+                                             ON View_InfoMoney.InfoMoneyId = CASE WHEN Object_Goods.DescId   = zc_Object_Product()
+                                                                                  -- Продажа лодки
+                                                                                  THEN zc_Enum_InfoMoney_30101()
+                                                                                  -- !!!ВРЕМЕННО!!! Комплектующие
+                                                                                  ELSE COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101())
+                                                                             END
 
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.DescId     = zc_MI_Master()
@@ -646,7 +652,7 @@ BEGIN
      -- 2.1. определяется Счет(справочника) для проводок по суммовому учету - ПРИХОД
      UPDATE _tmpItem_pr SET AccountId = _tmpItem_byAccount.AccountId
      FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_10000() -- Запасы
-                                             , inAccountDirectionId     := vbAccountDirectionId_From
+                                             , inAccountDirectionId     := vbAccountDirectionId_To
                                              , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
                                              , inInfoMoneyId            := NULL
                                              , inUserId                 := inUserId
@@ -673,7 +679,7 @@ BEGIN
 
      -- 3.1. определяется ContainerId_Summ для проводок по суммовому учету - ПРИХОД
      UPDATE _tmpItem_pr SET ContainerId_Summ = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
-                                                                                 , inUnitId                 := vbUnitId_From
+                                                                                 , inUnitId                 := vbUnitId_To
                                                                                  , inMemberId               := NULL
                                                                                  , inJuridicalId_basis      := vbJuridicalId_Basis
                                                                                  , inBusinessId             := vbBusinessId
@@ -759,7 +765,7 @@ BEGIN
                  ) AS tmpItem_Child ON tmpItem_Child.ParentId = _tmpItem_pr.MovementItemId
       ;
 
-     -- 4.2. формируются Проводки - остаток сумма
+     -- 4.2.1. формируются Проводки - остаток сумма
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
                                        , MovementItemId, ContainerId, ParentId
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
@@ -794,8 +800,17 @@ BEGIN
             JOIN Container AS Container_Count ON Container_Count.Id = _tmpItem_Child.ContainerId_Goods
             JOIN Container AS Container_Summ  ON Container_Summ.Id  = _tmpItem_Child.ContainerId_Summ
             JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId = _tmpItem_Child.ParentId
+           ;
 
-      UNION ALL
+     -- 4.2.2. формируются Проводки - остаток сумма
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId
+                                       , MovementItemId, ContainerId, ParentId
+                                       , AccountId, AnalyzerId, ObjectId_Analyzer, PartionId, WhereObjectId_Analyzer
+                                       , AccountId_Analyzer
+                                       , ContainerId_Analyzer, ContainerExtId_Analyzer
+                                       , ObjectIntId_Analyzer, ObjectExtId_Analyzer
+                                       , Amount, OperDate, IsActive
+                                        )
        -- проводки - ПРИХОД
        SELECT 0, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId
             , _tmpItem_pr.MovementItemId
@@ -822,9 +837,12 @@ BEGIN
 
 
      -- 5.0. получили цену партии - !!!ПРИХОД!!!
-     UPDATE Object_PartionGoods SET EKPrice           = tmpMIContainer.EKPrice / Object_PartionGoods.Amount    -- Цена вх. без НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка = inEKPrice_discount + inCostPrice
-                                  , EKPrice_orig      = tmpMIContainer.EKPrice / Object_PartionGoods.Amount    -- Цена вх. без НДС, с учетом ТОЛЬКО скидки по элементу
-                                  , EKPrice_discount  = tmpMIContainer.EKPrice / Object_PartionGoods.Amount    -- Цена вх. без НДС, с учетом ВСЕХ скидок (затрат здесь нет)
+     UPDATE Object_PartionGoods SET -- Цена вх. без НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка = inEKPrice_discount + inCostPrice
+                                    EKPrice           = tmpMIContainer.EKPrice / COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = Object_PartionGoods.MovementItemId AND MovementItem.Amount > 0), 1)
+                                    -- Цена вх. без НДС, с учетом ТОЛЬКО скидки по элементу
+                                  , EKPrice_orig      = tmpMIContainer.EKPrice / COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = Object_PartionGoods.MovementItemId AND MovementItem.Amount > 0), 1)
+                                    -- Цена вх. без НДС, с учетом ВСЕХ скидок (затрат здесь нет)
+                                  , EKPrice_discount  = tmpMIContainer.EKPrice / COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = Object_PartionGoods.MovementItemId AND MovementItem.Amount > 0), 1)
                                   , CostPrice         = 0
      FROM (SELECT _tmpMIContainer_insert.MovementItemId
                 , SUM (_tmpMIContainer_insert.Amount) AS EKPrice

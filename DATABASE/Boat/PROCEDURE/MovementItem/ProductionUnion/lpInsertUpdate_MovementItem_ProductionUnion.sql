@@ -140,36 +140,33 @@ BEGIN
                                          WHERE ObjectLink_ReceiptGoods.ChildObjectId = inReceiptProdModelId
                                            AND ObjectLink_ReceiptGoods.DescId        = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
                                         )
-               , tmpReceiptProdModel AS (SELECT ObjectLink_ProdModel.ChildObjectId    AS GoodsId_master
-                                              , ObjectLink_Object.ChildObjectId       AS GoodsId
-                                              , 0                                     AS GoodsId_child
-                                              , ObjectFloat_Value.ValueData           AS Value
-                                         FROM ObjectLink AS ObjectLink_ReceiptProdModel
-                                              -- какая лодка собирается
-                                              LEFT JOIN ObjectLink AS ObjectLink_ProdModel
-                                                                   ON ObjectLink_ProdModel.ObjectId = ObjectLink_ReceiptProdModel.ChildObjectId
-                                                                  AND ObjectLink_ProdModel.DescId   = zc_ObjectLink_ReceiptProdModel_Model()
-                                              INNER JOIN Object AS Object_ReceiptProdModel
-                                                                ON Object_ReceiptProdModel.Id       = ObjectLink_ReceiptProdModel.ObjectId
-                                                               -- не удален
-                                                               AND Object_ReceiptProdModel.isErased = FALSE
+               , tmpReceiptProdModel AS (SELECT 0                           AS GoodsId_master
+                                              , MovementItem.ObjectId       AS GoodsId
+                                              , 0                           AS GoodsId_child
+                                              , MILO_ReceiptLevel.ObjectId  AS ReceiptLevelId
+                                              , MovementItem.Amount         AS Amount
+                                         FROM MovementItem
+                                              /*JOIN MovementItem AS MI_Master
+                                                                ON MI_Master.MovementId = inMovementId_OrderClient
+                                                               AND MI_Master.isErased   = FALSE
+                                                               AND MI_Master.DescId     = zc_MI_Master()
+                                                               AND MI_Master.Id         = MovementItem.ParentId
+                                                               AND MI_Master.ObjectId   = inObjectId*/
+                                              LEFT JOIN MovementItemLinkObject AS MILO_ReceiptLevel
+                                                                               ON MILO_ReceiptLevel.MovementItemId = MovementItem.Id
+                                                                              AND MILO_ReceiptLevel.DescId         = zc_MILinkObject_ReceiptLevel()
 
-                                              LEFT JOIN ObjectLink AS ObjectLink_Object
-                                                                   ON ObjectLink_Object.ObjectId = Object_ReceiptProdModel.Id
-                                                                  AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
-                                              INNER JOIN Object AS Object_Object
-                                                                ON Object_Object.Id     = ObjectLink_Object.ChildObjectId
-                                                               -- это НЕ услуги и НЕ пустой Boat Structure
-                                                               AND Object_Object.DescId = zc_Object_Goods()
+                                              LEFT JOIN MovementItemLinkObject AS MILO_ProdOptions
+                                                                               ON MILO_ProdOptions.MovementItemId = MovementItem.Id
+                                                                              AND MILO_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
 
-                                              -- значение в сборке
-                                              INNER JOIN ObjectFloat AS ObjectFloat_Value
-                                                                     ON ObjectFloat_Value.ObjectId  = Object_ReceiptProdModel.Id
-                                                                    AND ObjectFloat_Value.DescId    = zc_ObjectFloat_ReceiptProdModelChild_Value()
-                                                                    AND ObjectFloat_Value.ValueData > 0
-
-                                         WHERE ObjectLink_ReceiptProdModel.ChildObjectId = inReceiptProdModelId
-                                           AND ObjectLink_ReceiptProdModel.DescId        = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+                                         WHERE MovementItem.MovementId = inMovementId_OrderClient
+                                           AND MovementItem.isErased   = FALSE
+                                           AND MovementItem.DescId     = zc_MI_Child()
+                                           -- !!!не опция!!!
+                                           AND MILO_ProdOptions.ObjectId IS NULL
+                                           -- !!!
+                                           AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId = zc_Object_Product())
                                         )
                  -- Опции
                , tmpProdOptItems AS (SELECT lpSelect.GoodsId
@@ -232,12 +229,12 @@ BEGIN
          UNION ALL
            -- 3.1. если это сборка Лодки
            SELECT tmpReceiptProdModel.GoodsId
-                , 0 AS ReceiptLevelId
+                , tmpReceiptProdModel.ReceiptLevelId
                 , 0 AS ColorPatternId
                 , 0 AS ProdColorPatternId
                 , 0 AS ProdOptionsId
                   -- 
-                , tmpReceiptProdModel.Value
+                , tmpReceiptProdModel.Amount
 
            FROM tmpReceiptProdModel
 
