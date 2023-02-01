@@ -362,7 +362,7 @@ BEGIN
          , COALESCE (tmpMI_Detail.Hours_plan, 0) :: NUMERIC (16, 8)  AS Amount_plan_ch        
          , (SELECT COUNT(*) FROM tmpMI_Detail WHERE tmpMI_Detail.ParentId = tmpMI_Master.MovementItemId) ::Integer AS mi_child_count
          -- 
-         , tmpMI_Detail.Amount :: TFloat AS Amount
+         , COALESCE (tmpMI_Detail.Hours, 0)  :: TFloat AS Amount
          , (tmpMIContainer.Summa / CASE WHEN tmpMI_Detail.Amount > 0 THEN tmpMI_Detail.Amount ELSE 1 END) ::TFloat AS Price
          , COALESCE (tmpMIContainer.Summa,0)  :: TFloat AS Summ
          , (tmpMIContainer_master.Summa *(-1) )      ::TFloat  AS Summ_master
