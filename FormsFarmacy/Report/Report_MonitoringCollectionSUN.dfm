@@ -58,9 +58,9 @@ object Report_MonitoringCollectionSUNForm: TReport_MonitoringCollectionSUNForm
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 57
+    Top = 61
     Width = 982
-    Height = 383
+    Height = 379
     Align = alClient
     TabOrder = 5
     object cxGridDBTableView: TcxGridDBTableView
@@ -242,7 +242,7 @@ object Report_MonitoringCollectionSUNForm: TReport_MonitoringCollectionSUNForm
         Width = 59
       end
       object CountDeferred: TcxGridDBColumn
-        Caption = #1054#1090#1083#1072#1078'.'
+        Caption = #1054#1090#1083#1086#1078'.'
         DataBinding.FieldName = 'CountDeferred'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -266,7 +266,7 @@ object Report_MonitoringCollectionSUNForm: TReport_MonitoringCollectionSUNForm
         Width = 64
       end
       object DateSent: TcxGridDBColumn
-        Caption = #1055#1086#1089#1083#1102' '#1086#1090#1087#1088#1072#1074#1083'.'
+        Caption = #1055#1086#1089#1083'. '#1086#1090#1087#1088#1072#1074#1083'.'
         DataBinding.FieldName = 'DateSent'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -339,7 +339,7 @@ object Report_MonitoringCollectionSUNForm: TReport_MonitoringCollectionSUNForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -15
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -358,7 +358,7 @@ object Report_MonitoringCollectionSUNForm: TReport_MonitoringCollectionSUNForm
     DockControlHeights = (
       0
       0
-      26
+      30
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'

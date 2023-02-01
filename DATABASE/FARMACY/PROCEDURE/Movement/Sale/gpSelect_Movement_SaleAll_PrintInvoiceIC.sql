@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_SaleAll_PrintInvoiceIC(
     IN inJuridicalId          Integer  ,  -- Юр.лицо
     IN inUnitId               Integer  ,  -- Аптека
     IN inInsuranceCompaniesId Integer  ,  -- Cтраховая компания
-    IN inInvoiceNDS           TFloat   , -- НДС     
+    IN inInvoiceNDS           TFloat   ,  -- НДС     
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -68,6 +68,7 @@ BEGIN
             , tmpBankAccount.BankName  ::TVarChar AS BankName
             , tmpBankAccount.MFO ::TVarChar AS MFO
             , inInvoiceNDS                  AS NDS  
+            , 100:: TFloat                  AS ChangePercent
             , CURRENT_DATE::TDateTime       AS OperDate
           FROM Object AS Object_InsuranceCompanies
 
@@ -80,6 +81,7 @@ BEGIN
 
               LEFT JOIN tmpBankAccount ON tmpBankAccount.JuridicalId = Object_Juridical.Id
                                       AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
+            
           WHERE Object_InsuranceCompanies.Id = inInsuranceCompaniesId;
       RETURN NEXT Cursor1;
     ELSEIF COALESCE (inJuridicalId, 0) <> 0
@@ -122,6 +124,7 @@ BEGIN
             , tmpBankAccount.BankName  ::TVarChar AS BankName
             , tmpBankAccount.MFO ::TVarChar AS MFO
             , inInvoiceNDS                  AS NDS
+            , 100 :: TFloat                 AS ChangePercent
             , CURRENT_DATE::TDateTime       AS OperDate  
           FROM Object AS Object_InsuranceCompanies
 
@@ -131,6 +134,7 @@ BEGIN
 
               LEFT JOIN tmpBankAccount ON tmpBankAccount.JuridicalId = Object_Juridical.Id
                                       AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
+
           WHERE Object_InsuranceCompanies.Id = inInsuranceCompaniesId;
       RETURN NEXT Cursor1;
     
@@ -164,6 +168,8 @@ BEGIN
                              AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
                   WHERE OL_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
     END IF;
+    
+    ANALYSE tmpUnit;
     
     OPEN Cursor2 FOR
       WITH
@@ -204,6 +210,8 @@ BEGIN
        -- выбираем продажи по товарам соц.проекта
     ,  tmpMI AS (SELECT MI_Sale.ObjectId            AS GoodsId
                       , SUM(MI_Sale.Amount)::TFloat AS Amount
+                      , COALESCE (MIFloat_Price.ValueData, 0)                                                                               AS Price
+                      , COALESCE (MIFloat_PriceSale.ValueData, 0)                                                                           AS PriceSale
                       , ROUND(COALESCE (MIFloat_PriceSale.ValueData, 0) * 100.0 / (100.0 + inInvoiceNDS), 2)                                AS PriceWithVAT
                       , SUM(ROUND(MI_Sale.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0), 2)::TFloat)::TFloat                           AS SummSale
                       , SUM(ROUND(MI_Sale.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0) * 100.0 / (100.0 + inInvoiceNDS), 2))::TFloat  AS SummSaleWithVAT
@@ -218,6 +226,10 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
                                 ON MIFloat_PriceSale.MovementItemId = MI_Sale.Id
                                AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+
+                         LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                ON MIFloat_Price.MovementItemId = MI_Sale.Id
+                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
                         
                          LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MI_Sale.ObjectId
                          LEFT JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
@@ -228,7 +240,8 @@ BEGIN
                     WHERE ObjectFloat_NDSKind_NDS.ValueData = inInvoiceNDS
 
                     GROUP BY MI_Sale.ObjectId
-                           , ROUND(COALESCE (MIFloat_PriceSale.ValueData, 0) * 100.0 / (100.0 + inInvoiceNDS), 2))
+                           , MIFloat_Price.ValueData
+                           , MIFloat_PriceSale.ValueData)
 
 
         SELECT
@@ -241,6 +254,12 @@ BEGIN
           , MI_Sale.SummNDS
           , ROW_NUMBER()OVER(ORDER BY Object_Name.ValueData)::Integer as ORD
           , Object_Measure.ValueData            AS MeasureName
+
+          , ROUND((MI_Sale.Amount * MI_Sale.PriceSale-
+                       COALESCE (MI_Sale.SummSale, 0)) * 100.0 / (100.0 + inInvoiceNDS), 2)::TFloat AS SummSaleWithVATIC
+          , MI_Sale.Amount * ((MI_Sale.PriceSale - COALESCE (MI_Sale.Price, 0)) * inInvoiceNDS / (100.0 + inInvoiceNDS)) AS SummNDSIC
+          , ROUND(MI_Sale.Amount * MI_Sale.PriceSale - COALESCE (MI_Sale.SummSale, 0), 2)::TFloat AS SummSaleIC
+
         FROM tmpMI AS MI_Sale
         
             LEFT JOIN Object AS Object_Name ON Object_Name.Id = MI_Sale.GoodsId
@@ -267,5 +286,6 @@ ALTER FUNCTION gpSelect_Movement_SaleAll_PrintInvoiceIC (TDateTime, TDateTime, I
 
 -- 
 
-select * from gpSelect_Movement_SaleAll_PrintInvoiceIC(inStartDate := ('01.11.2021')::TDateTime , inEndDate := ('30.11.2021')::TDateTime , inJuridicalId := 472115 , inUnitId := 0 , inInsuranceCompaniesId := 17988780 , inInvoiceNDS := 0 ,  inSession := '3');
+
+select * from gpSelect_Movement_SaleAll_PrintInvoiceIC(inStartDate := ('16.01.2023')::TDateTime , inEndDate := ('31.01.2023')::TDateTime , inJuridicalId := 393054 , inUnitId := 0 , inInsuranceCompaniesId := 18616031 , inInvoiceNDS := 7 ,  inSession := '3');
 

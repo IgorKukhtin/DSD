@@ -2181,7 +2181,7 @@ inherited SendJournalForm: TSendJournalForm
     Top = 435
   end
   object spUpdate_isDeferred_Yes: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Send_Deferred'
+    StoredProcName = 'gpUpdate_Movement_Send_DeferredNoExcept'
     DataSets = <>
     OutputType = otResult
     Params = <

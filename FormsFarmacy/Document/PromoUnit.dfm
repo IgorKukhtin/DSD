@@ -459,6 +459,23 @@ inherited PromoUnitForm: TPromoUnitForm
       Hint = #1042#1085#1077#1089#1090#1080' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1082#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1072
       ImageIndex = 40
     end
+    object actUpdateBonus: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateBonus
+      StoredProcList = <
+        item
+          StoredProc = spUpdateBonus
+        end>
+      Caption = #1057#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072
+      Hint = #1057#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072
+      ImageIndex = 80
+      QuestionBeforeExecute = 
+        #1057#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072'? '#1042#1089#1077' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1074#1074#1077#1076 +
+        #1077#1085#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' '#1073#1091#1076#1091#1090' '#1091#1090#1077#1088#1103#1085#1099'. '
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_PromoUnit'
@@ -534,6 +551,14 @@ inherited PromoUnitForm: TPromoUnitForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -543,10 +568,6 @@ inherited PromoUnitForm: TPromoUnitForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end>
     end
     inherited bbMovementItemProtocol: TdxBarButton
@@ -558,6 +579,10 @@ inherited PromoUnitForm: TPromoUnitForm
     end
     object bbUpdateKoeff: TdxBarButton
       Action = mactUpdateKoeff
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actUpdateBonus
       Category = 0
     end
   end
@@ -1126,5 +1151,22 @@ inherited PromoUnitForm: TPromoUnitForm
     PackSize = 1
     Left = 798
     Top = 248
+  end
+  object spUpdateBonus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_PromoUnit_Bonus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 798
+    Top = 312
   end
 end

@@ -477,6 +477,14 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintCalc'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -546,8 +554,8 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
       Action = actShowErased
       Category = 0
     end
-    object bbPrintSticker: TdxBarButton
-      Action = actPrintSticker
+    object bbPrintCalc: TdxBarButton
+      Action = actPrintCalc
       Category = 0
     end
     object bbPrintStickerTermo: TdxBarButton
@@ -947,6 +955,55 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
           StoredProc = spMovementSetErased
         end>
       Caption = 'spErased'
+    end
+    object actPrintCalc: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103
+      Hint = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103
+      ImageIndex = 17
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'InvNumber_OrderClient;NPP_1;NPP_2;NPP_3'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_ProductionUnionCalc'
+      ReportNameParam.Value = 'PrintMovement_ProductionUnionCalc'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'

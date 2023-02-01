@@ -917,9 +917,11 @@ BEGIN
      
    END IF;
 
-   IF date_part('DOW', CURRENT_DATE)::Integer in (1, 4)
+   IF date_part('DOW', CURRENT_DATE)::Integer in (1, 4)  
+      AND DATE_PART('HOUR', CURRENT_TIME)::Integer >= 9
+      AND vbDatePUSH < CURRENT_DATE + INTERVAL '9 HOUR'
    THEN
-     IF inSession::Integer IN (3, 4183126, 374171, 3004360, 10885303, 10885233) AND inNumberPUSH IN (1, 8, 16, 24, 32)
+     IF inSession::Integer IN (4183126, 269777) -- AND inNumberPUSH IN (1, 8, 16, 24, 32)
      THEN
        vbText := '';
 
@@ -937,8 +939,7 @@ BEGIN
 
           OR PartialSale.JuridicalId in (10106457) AND vbUserId = 10885303        -- Грабченко Татьяна
 
-          OR PartialSale.JuridicalId in (13310756) 
-         AND PartialSale.JuridicalId NOT IN (9526799) AND vbUserId = 10885303     -- Грабченко Татьяна
+          OR PartialSale.JuridicalId in (13310756) AND vbUserId = 269777          -- Мельник Елена
          ;
          
        IF COALESCE (vbText, '') <> ''
