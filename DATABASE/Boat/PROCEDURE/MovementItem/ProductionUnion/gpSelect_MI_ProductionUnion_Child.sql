@@ -16,6 +16,8 @@ RETURNS TABLE (Id Integer, NPP Integer, ParentId Integer
              , ProdColorPatternName TVarChar
              , ColorPatternName     TVarChar
              , Amount TFloat
+             , Price TFloat
+             , Summ TFloat
              , isErased Boolean
              , GoodsGroupNameFull TVarChar
              , GoodsGroupName TVarChar
@@ -56,7 +58,13 @@ BEGIN
                                                                ON MILO_ReceiptProdModel.MovementItemId = MovementItem.Id
                                                               AND MILO_ReceiptProdModel.DescId = zc_MILinkObject_ReceiptProdModel()
                         )
-
+      , tmpMIContainer AS (SELECT MIContainer.MovementItemId
+                                , SUM (-1 * MIContainer.Amount) AS Amount
+                           FROM MovementItemContainer AS MIContainer
+                           WHERE MIContainer.MovementId = inMovementId
+                             AND MIContainer.DescId     = zc_MIContainer_Summ()
+                           GROUP BY MIContainer.MovementItemId
+                          )
       , tmpMI AS (SELECT MovementItem.ObjectId   AS ObjectId
                        , MovementItem.Amount
                        , MovementItem.Id
@@ -67,8 +75,7 @@ BEGIN
                                         AND MovementItem.DescId     = zc_MI_Child()
                                         AND MovementItem.isErased   = tmpIsErased.isErased
                  )
-
-
+        -- результат
         SELECT
             MovementItem.Id
           , ROW_NUMBER() OVER (PARTITION BY MovementItem.ParentId ORDER BY MovementItem.Id ASC) :: Integer AS NPP
@@ -81,7 +88,11 @@ BEGIN
           , Object_ProdOptions.ValueData       AS ProdOptionsName
           , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData, Object_ProdColorPattern.ValueData, Object_Model_pcp.ValueData, Object_ProdColorPattern.isErased) :: TVarChar AS ProdColorPatternName
           , Object_ColorPattern.ValueData      AS ColorPatternName
-          , MovementItem.Amount           ::TFloat
+
+          , MovementItem.Amount   :: TFloat AS Amount
+          , (tmpMIContainer.Amount / CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount ELSE 1 END) ::TFloat AS Price
+          , tmpMIContainer.Amount :: TFloat AS Summ
+
           , MovementItem.isErased
 
           , ObjectString_GoodsGroupFull.ValueData                                                           ::TVarChar  AS GoodsGroupNameFull
@@ -99,6 +110,8 @@ BEGIN
           , Null                                                                                            :: Integer AS Color_Level
 
         FROM tmpMI AS MovementItem
+             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
+
              LEFT JOIN Object AS Object_Object ON Object_Object.Id = MovementItem.ObjectId
              LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
 

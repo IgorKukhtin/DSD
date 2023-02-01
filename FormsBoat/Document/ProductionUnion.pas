@@ -277,6 +277,10 @@ type
     Article_ReceiptService_ch5: TcxGridDBColumn;
     ReceiptServiceCode_ch5: TcxGridDBColumn;
     Hours_plan_ch5: TcxGridDBColumn;
+    Price_ch1: TcxGridDBColumn;
+    Summ_ch1: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    Summ: TcxGridDBColumn;
   private
   public
   end;

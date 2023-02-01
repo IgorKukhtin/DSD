@@ -241,6 +241,11 @@ object ProductionUnionForm: TProductionUnionForm
                 Format = ',0.####'
                 Kind = skSum
                 Column = Amount_diff_ch1
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = Summ_ch1
               end>
             DataController.Summary.FooterSummaryItems = <
               item
@@ -266,6 +271,11 @@ object ProductionUnionForm: TProductionUnionForm
                 Format = ',0.####'
                 Kind = skSum
                 Column = Amount_diff_ch1
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = Summ_ch1
               end>
             DataController.Summary.SummaryGroups = <>
             Images = dmMain.SortImageList
@@ -388,10 +398,33 @@ object ProductionUnionForm: TProductionUnionForm
               Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
               DataBinding.FieldName = 'Amount'
               PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 2
               Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 80
+            end
+            object Price_ch1: TcxGridDBColumn
+              Caption = #1062#1077#1085#1072' '#1089'/'#1089
+              DataBinding.FieldName = 'Price'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 2
+              Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 70
+            end
+            object Summ_ch1: TcxGridDBColumn
+              Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089
+              DataBinding.FieldName = 'Summ'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 2
+              Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 70
             end
             object Value_ch1: TcxGridDBColumn
               DataBinding.FieldName = 'Value'
@@ -870,6 +903,11 @@ object ProductionUnionForm: TProductionUnionForm
               item
                 Format = ',0.####'
                 Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = Summ
               end>
             DataController.Summary.FooterSummaryItems = <
               item
@@ -901,6 +939,11 @@ object ProductionUnionForm: TProductionUnionForm
               item
                 Format = ',0.####'
                 Kind = skSum
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = Summ
               end>
             DataController.Summary.SummaryGroups = <>
             Images = dmMain.SortImageList
@@ -1001,6 +1044,28 @@ object ProductionUnionForm: TProductionUnionForm
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Width = 70
+            end
+            object Price: TcxGridDBColumn
+              Caption = #1062#1077#1085#1072' '#1089'/'#1089
+              DataBinding.FieldName = 'Price'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 70
+            end
+            object Summ: TcxGridDBColumn
+              Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089
+              DataBinding.FieldName = 'Summ'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
               Width = 70
             end
             object MeasureName: TcxGridDBColumn
@@ -1118,6 +1183,9 @@ object ProductionUnionForm: TProductionUnionForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
