@@ -49,6 +49,36 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Элемент документа не сохранен.';
      END IF;
 
+    -- таблица
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE 'tmpMI_TotalSumm')
+    THEN
+        DROP TABLE tmpMI_TotalSumm;
+    END IF;
+
+    CREATE TEMP TABLE tmpMI_TotalSumm ON COMMIT DROP AS
+      (SELECT * 
+       FROM MovementItem 
+       WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.isErased = FALSE
+         -- AND MovementItem.DescId = zc_MI_Master()
+       );
+       
+    ANALYSE tmpMI_TotalSumm;
+                  
+    -- таблица
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE 'tmpMIF_TotalSumm')
+    THEN
+        DROP TABLE tmpMIF_TotalSumm;
+    END IF;
+
+    CREATE TEMP TABLE tmpMIF_TotalSumm ON COMMIT DROP AS
+       (SELECT *
+        FROM MovementItemFloat
+        WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_TotalSumm.Id FROM tmpMI_TotalSumm)
+       );
+                   
+    ANALYSE tmpMIF_TotalSumm;
+                                    
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту и Заготовителю
      SELECT Movement.DescId
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)
@@ -354,95 +384,96 @@ BEGIN
                              , SUM (COALESCE (MIFloat_AmountPlanMax.ValueData, 0))  AS OperCount_PlanMax -- 
                              
                         FROM Movement
-                             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                    AND MovementItem.isErased = FALSE
-                                                   -- AND MovementItem.DescId = zc_MI_Master()
+                             INNER JOIN tmpMI_TotalSumm AS MovementItem 
+                                                        ON MovementItem.MovementId = Movement.Id
+                                                       AND MovementItem.isErased = FALSE
+                                                    -- AND MovementItem.DescId = zc_MI_Master()
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
-                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_AmountPartner
                                                          ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPacker
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_AmountPacker
                                                          ON MIFloat_AmountPacker.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountPacker.DescId = zc_MIFloat_AmountPacker()
-                             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_AmountSecond
                                                          ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
                                                         AND Movement.DescId IN (zc_Movement_OrderExternal(), zc_Movement_OrderInternal()) 
 
-                             LEFT JOIN MovementItemFloat AS MIFloat_Price
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_Price
                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                         AND MIFloat_Price.DescId = CASE WHEN Movement.DescId = zc_Movement_OrderInternal() THEN zc_MIFloat_PriceFrom() ELSE zc_MIFloat_Price() END
-                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_CountForPrice
                                                          ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                         AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
-                             LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_Summ
                                                          ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                                         AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
 
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummToPay
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_SummToPay
                                                          ON MIFloat_SummToPay.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummToPay.DescId = zc_MIFloat_SummToPay()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummService
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_SummService
                                                          ON MIFloat_SummService.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummCard
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_SummCard
                                                          ON MIFloat_SummCard.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_SummMinus
                                                          ON MIFloat_SummMinus.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_SummAdd
                                                          ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
 
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_SummHoliday
                                                          ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_SummCardRecalc
                                                          ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_SummSocialIn
                                                          ON MIFloat_SummSocialIn.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummSocialIn.DescId = zc_MIFloat_SummSocialIn()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_SummSocialAdd
                                                          ON MIFloat_SummSocialAdd.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SummChild
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_SummChild
                                                          ON MIFloat_SummChild.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
 
-                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPlanMax
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_AmountPlanMax
                                                          ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
                                                         AND Movement.DescId = zc_Movement_PromoUnit()
 
-                             LEFT JOIN MovementItemFloat AS MIFloat_AmountManual   
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_AmountManual   
                                                          ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                                         AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
                                                         AND Movement.DescId = zc_Movement_OrderInternal()
-                             LEFT JOIN MovementItemFloat AS MIFloat_ListDiff     
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_ListDiff     
                                                          ON MIFloat_ListDiff.MovementItemId    = MovementItem.Id
                                                         AND MIFloat_ListDiff.DescId = zc_MIFloat_ListDiff() 
                                                         AND Movement.DescId = zc_Movement_OrderInternal()
-                             LEFT JOIN MovementItemFloat AS MIFloat_SupplierFailures     
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_SupplierFailures     
                                                          ON MIFloat_SupplierFailures.MovementItemId    = MovementItem.Id
                                                         AND MIFloat_SupplierFailures.DescId = zc_MIFloat_SupplierFailures() 
                                                         AND Movement.DescId = zc_Movement_OrderInternal()
-                             LEFT JOIN MovementItemFloat AS MIFloat_AmountSUA     
+                             LEFT JOIN tmpMIF_TotalSumm AS MIFloat_AmountSUA     
                                                          ON MIFloat_AmountSUA.MovementItemId    = MovementItem.Id
                                                         AND MIFloat_AmountSUA.DescId = zc_MIFloat_AmountSUA() 
                                                         AND Movement.DescId = zc_Movement_OrderInternal()
@@ -538,6 +569,8 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAdd(), inMovementId, vbTotalSummAdd);
      END IF;
      END IF;
+     
+     --RAISE EXCEPTION 'Прошло. % % % ', vbOperCount_Master, vbOperSumm_MVAT, vbOperSumm_Partner;
 
 
 END;
@@ -569,4 +602,6 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 */
 -- select lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= id) from gpSelect_Movement_WeighingPartner (inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('30.06.2014')::TDateTime ,  inSession := '5') as a
 -- тест
--- SELECT * FROM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= 162323)
+-- 
+
+--SELECT * FROM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= 30834746  )
