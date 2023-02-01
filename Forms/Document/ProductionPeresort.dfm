@@ -10,19 +10,19 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Top = 126
     Width = 1128
     Height = 376
-    ExplicitTop = 100
+    ExplicitTop = 126
     ExplicitWidth = 1128
-    ExplicitHeight = 402
+    ExplicitHeight = 376
     ClientRectBottom = 376
     ClientRectRight = 1128
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1128
-      ExplicitHeight = 378
+      ExplicitHeight = 352
       inherited cxGrid: TcxGrid
         Width = 1128
         Height = 352
         ExplicitWidth = 1128
-        ExplicitHeight = 378
+        ExplicitHeight = 352
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -96,6 +96,11 @@ inherited ProductionPeresortForm: TProductionPeresortForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountIn
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -314,7 +319,6 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     Width = 1128
     Height = 100
     TabOrder = 3
-    ExplicitTop = -6
     ExplicitWidth = 1128
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
@@ -911,7 +915,6 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-      Visible = True
     end
     object bbOpenDocument: TdxBarButton
       Action = macOpenDocument

@@ -1407,7 +1407,9 @@ uses
   GoodsByGoodsKind in '..\..\Forms\Guides\GoodsByGoodsKind.pas' {GoodsByGoodsKindForm: TParentForm},
   GoogleOTPDialogPsw in '..\..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
   GoogleOTP in '..\..\SOURCE\GoogleOTP.pas',
-  GoogleOTPRegistration in '..\..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm};
+  GoogleOTPRegistration in '..\..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
+  Report_StaffList in '..\..\Forms\Report\Report_StaffList.pas' {Report_StaffListForm: TParentForm},
+  Report_StaffListDialog in '..\..\Forms\Report\Report_StaffListDialog.pas' {Report_StaffListDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -2,11 +2,11 @@
 -- Function: gpReport_StaffList ()
 
 DROP FUNCTION IF EXISTS gpReport_StaffList (Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_StaffList (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_StaffList(
     IN inUnitId         Integer,   --подразделение
     IN inModelServiceId Integer,   --модель начисления
-    IN inMemberId       Integer,   --сотрудник
     IN inPositionId     Integer,   --должность
     IN inSession        TVarChar   --сессия пользователя
 )
@@ -22,17 +22,10 @@ RETURNS TABLE(
     ,Count_Member                   Integer   -- Кол-во человек (все)
     ,HoursPlan                      TFloat
     ,HoursDay                       TFloat
-    ,PersonalGroupId                Integer
-    ,PersonalGroupName              TVarChar
-    ,MemberId                       Integer
-    ,MemberName                     TVarChar
-    ,SheetWorkTime_Date             TDateTime
-    ,SUM_MemberHours                TFloat     -- итого часов всех сотрудников (с этой должностью+...) - !!!инф.!!!
-    ,SheetWorkTime_Amount           TFloat     -- итого часов сотрудника - !!!инф.!!!
-    ,Ord_SheetWorkTime              Integer    -- № п/п - SheetWorkTime
     ,ServiceModelId                 Integer
     ,ServiceModelCode               Integer
     ,ServiceModelName               TVarChar
+    
     ,Price                          TFloat
     ,FromId                         Integer
     ,FromName                       TVarChar
@@ -41,8 +34,10 @@ RETURNS TABLE(
     ,MovementDescId                 Integer
     ,MovementDescName               TVarChar
     ,SelectKindId                   Integer
+    ,SelectKindCode                 Integer
     ,SelectKindName                 TVarChar
     ,Ratio                          TFloat
+    
     ,ModelServiceItemChild_FromId   Integer
     ,ModelServiceItemChild_FromDescId Integer
     ,ModelServiceItemChild_FromName TVarChar
@@ -61,9 +56,14 @@ RETURNS TABLE(
     ,GoodsKind_ToId                 Integer
     ,GoodsKind_ToName               TVarChar
     ,GoodsKindComplete_ToId         Integer
-    ,GoodsKindComplete_ToName       TVarChar
+    ,GoodsKindComplete_ToName       TVarChar  
+    , StaffListSummKindId           Integer
+    , StaffListSummKindName         TVarChar 
 
-
+    , UpdateName_ModelServiceItemChild  TVarChar
+    , UpdateDate_ModelServiceItemChild  TDateTime
+    , UpdateName_StaffListCost TVarChar
+    , UpdateDate_StaffListCost TDateTime
 )
 AS
 $BODY$
@@ -78,26 +78,35 @@ BEGIN
     RETURN QUERY
 
     WITH 
-    tmpProtocol_ModelServiceItemChild AS (SELECT *
+    tmpProtocol_ModelServiceItemChild AS (SELECT tmp.ObjectId
+                                               , tmp.UserId
+                                               , Object_User.ValueData AS UserName
+                                               , tmp.OperDate
                                           FROM (SELECT ObjectProtocol.*
                                                        -- № п/п
                                                      , ROW_NUMBER() OVER (PARTITION BY ObjectProtocol.ObjectId ORDER BY ObjectProtocol.OperDate DESC) AS Ord
                                                 FROM ObjectProtocol
-                                                WHERE ObjectProtocol.ObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = Object_ModelServiceItemChild())  --(SELECT DISTINCT StaffList.ModelServiceItemChildId FROM StaffList)
+                                                WHERE ObjectProtocol.ObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ModelServiceItemChild())  --(SELECT DISTINCT StaffList.ModelServiceItemChildId FROM StaffList)
                                                 ) AS tmp
+                                                LEFT JOIN Object AS Object_User ON Object_User.Id = tmp.UserId
                                           WHERE tmp.Ord = 1
                                           ) 
 
-  , tmpProtocol_StaffListCost AS (SELECT *
+  , tmpProtocol_StaffListCost AS (SELECT tmp.ObjectId
+                                               , tmp.UserId
+                                               , Object_User.ValueData AS UserName
+                                               , tmp.OperDate
                                   FROM (SELECT ObjectProtocol.*
                                                -- № п/п
                                              , ROW_NUMBER() OVER (PARTITION BY ObjectProtocol.ObjectId ORDER BY ObjectProtocol.OperDate DESC) AS Ord
                                         FROM ObjectProtocol
-                                        WHERE ObjectProtocol.ObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = Object_StaffListCost()) --(SELECT DISTINCT StaffList.StaffListCostId FROM StaffList)
-                                        ) AS tmp
+                                        WHERE ObjectProtocol.ObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_StaffListCost()) --(SELECT DISTINCT StaffList.StaffListCostId FROM StaffList)
+                                        ) AS tmp 
+                                        LEFT JOIN Object AS Object_User ON Object_User.Id = tmp.UserId
                                   WHERE tmp.Ord = 1
                                   )
-   tmpStaffList AS (                      
+
+  -- результат                      
     SELECT
         Object_StaffList.Id                                 AS StaffListId            -- Штатное расписание
        ,COALESCE (ObjectLink_ModelServiceItemMaster_DocumentKind.ChildObjectId, 0) AS DocumentKindId
@@ -105,16 +114,17 @@ BEGIN
        ,Object_Unit.ValueData                               AS UnitName
        ,ObjectLink_StaffList_Position.ChildObjectId         AS PositionId             -- Должность
        ,Object_Position.ValueData                           AS PositionName
-       ,COALESCE (ObjectBoolean_PositionLevel.ValueData, FALSE) AS isPositionLevel_all
+       --,COALESCE (ObjectBoolean_PositionLevel.ValueData, FALSE) AS isPositionLevel_all
        ,CASE WHEN ObjectBoolean_PositionLevel.ValueData = TRUE THEN 0 ELSE ObjectLink_StaffList_PositionLevel.ChildObjectId END AS PositionLevelId -- Разряд должности
        ,Object_PositionLevel.ValueData                      AS PositionLevelName
        ,ObjectFloat_PersonalCount.ValueData::Integer        AS Count_Member          -- !!!информативно!!! кол-во сотрудников (из справочника Штатное расписание)
        ,ObjectFloat_HoursPlan.ValueData                     AS HoursPlan              -- !!!информативно!!! 1.Общий план часов в месяц на человека (из справочника Штатное расписание)
        ,ObjectFloat_HoursDay.ValueData                      AS HoursDay               -- !!!информативно!!! 2.Дневной план часов на человека (из справочника Штатное расписание)
-       ,ObjectLink_ModelService_ModelServiceKind.ChildObjectId AS ServiceModelKindId  -- Тип модели начисления
+       --,ObjectLink_ModelService_ModelServiceKind.ChildObjectId AS ServiceModelKindId  -- Тип модели начисления
        ,ObjectLink_StaffListCost_ModelService.ChildObjectId    AS ServiceModelId      -- Модель начисления
        ,Object_ModelService.ObjectCode::Integer                AS ServiceModelCode
        ,Object_ModelService.ValueData                          AS ServiceModelName
+      
        ,ObjectFloat_StaffListCost_Price.ValueData           AS Price                  -- Расценка грн./кг. (из справочника Расценки штатного расписания для Модель начисления)
        ,Object_From.Id                                      AS FromId                 -- Подразделение(От кого) (из справочника Главные элементы Модели начисления)
        ,Object_From.ValueData                               AS FromName
@@ -125,13 +135,14 @@ BEGIN
        ,Object_SelectKind.Id                                AS SelectKindId           -- Тип выбора данных (из справочника Главные элементы Модели начисления)
        ,Object_SelectKind.ObjectCode                        AS SelectKindCode
        ,Object_SelectKind.ValueData                         AS SelectKindName
-       ,CASE WHEN MovementDesc.Id IN (zc_Movement_Send(), zc_Movement_SendAsset())
+       /*,CASE WHEN MovementDesc.Id IN (zc_Movement_Send(), zc_Movement_SendAsset())
                   THEN FALSE
              WHEN Object_SelectKind.Id IN (zc_Enum_SelectKind_InAmount(), zc_Enum_SelectKind_InWeight(), zc_Enum_SelectKind_InHead()) -- Кол-во приход
                   THEN TRUE
               WHEN Object_SelectKind.Id IN (zc_Enum_SelectKind_OutAmount(), zc_Enum_SelectKind_OutWeight(), zc_Enum_SelectKind_OutHead()) -- Кол-во расход
                   THEN FALSE
-        END                                                 AS isActive              -- Тип выбора данных
+        END                                                 AS isActive              -- Тип выбора данных 
+        */
        ,ObjectFloat_Ratio.ValueData                         AS Ratio                 -- Коэффициент для выбора данных
        ,ModelServiceItemChild_From.Id                       AS ModelServiceItemChild_FromId       -- Товар,Группа(От кого) (из справочника Подчиненные элементы Модели начисления)
        ,ModelServiceItemChild_From.DescId                   AS ModelServiceItemChild_FromDescId
@@ -154,11 +165,18 @@ BEGIN
        , Object_GoodsKindComplete_To.Id          AS GoodsKindComplete_ToId
        , Object_GoodsKindComplete_To.ValueData   AS GoodsKindComplete_ToName
 
-       , Object_ModelServiceItemChild.Id         AS ModelServiceItemChildId
-       , Object_StaffListCost.Id                 AS StaffListCostId
+       --, Object_ModelServiceItemChild.Id         AS ModelServiceItemChildId
+       --, Object_StaffListCost.Id                 AS StaffListCostId
 
-       , Object_StaffListSummKind.Id          AS StaffListSummKindId
-       , Object_StaffListSummKind.ValueData   AS StaffListSummKindName
+       , Object_StaffListSummKind.Id             AS StaffListSummKindId
+       , Object_StaffListSummKind.ValueData      AS StaffListSummKindName
+
+       --протоколы
+       , tmpProtocol_ModelServiceItemChild.UserName AS UpdateName_ModelServiceItemChild
+       , tmpProtocol_ModelServiceItemChild.OperDate AS UpdateDate_ModelServiceItemChild
+
+       , tmpProtocol_StaffListCost.UserName         AS UpdateName_StaffListCost
+       , tmpProtocol_StaffListCost.OperDate         AS UpdateDate_StaffListCost       
 
     FROM Object as Object_StaffList
         LEFT JOIN ObjectBoolean AS ObjectBoolean_PositionLevel
@@ -329,8 +347,8 @@ BEGIN
         LEFT JOIN Object AS Object_StaffListSummKind ON Object_StaffListSummKind.Id = ObjectLink_StaffListSumm_StaffListSummKind.ChildObjectId
         
         --  протоколы
-        LEFT JOIN tmpProtocol_ModelServiceItemChild AS tmpProtocol_ModelServiceItemChild.ObjectId = Object_ModelServiceItemChild.Id
-        LEFT JOIN tmpProtocol_StaffListCost AS tmpProtocol_StaffListCost.ObjectId = Object_StaffListCost.Id
+        LEFT JOIN tmpProtocol_ModelServiceItemChild ON tmpProtocol_ModelServiceItemChild.ObjectId = Object_ModelServiceItemChild.Id
+        LEFT JOIN tmpProtocol_StaffListCost ON tmpProtocol_StaffListCost.ObjectId = Object_StaffListCost.Id
 
     WHERE Object_StaffList.DescId = zc_Object_StaffList()
         AND (ObjectLink_StaffList_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
@@ -351,10 +369,10 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-/*-------------------------------------------------------------------------------
+/* -------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  01.02.23         *
-
+*/
 -- тест
--- select * from gpReport_StaffList(inUnitId := 8395 , inModelServiceId := 3363159 , inMemberId := 0 , inPositionId := 0 , inDetailDay := 'True' , inDetailModelService := 'True' , inDetailModelServiceItemMaster := 'True' , inDetailModelServiceItemChild := 'True' ,  inSession := '5');
+-- select * from gpReport_StaffList(inUnitId := 8395 , inModelServiceId := 0 , inPositionId := 0,  inSession := '5');

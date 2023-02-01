@@ -114,6 +114,11 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalCountChild
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colInvNumber
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False

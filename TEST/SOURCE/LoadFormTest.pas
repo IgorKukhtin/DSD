@@ -1831,7 +1831,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortJournalForm');
-  exit;
+  //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortForm');
   //
@@ -3055,6 +3055,11 @@ end;
 procedure TLoadFormTest.LoadReportWageFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListDialogForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageDialogForm'));
