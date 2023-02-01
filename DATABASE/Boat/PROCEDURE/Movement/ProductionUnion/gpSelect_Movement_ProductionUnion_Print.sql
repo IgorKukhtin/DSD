@@ -260,6 +260,15 @@ BEGIN
                            FROM tmpMI_Detail
                            GROUP BY tmpMI_Detail.ParentId
                           )
+   --данные по кол-ву и сумме из проводок
+  , tmpMIContainer AS (SELECT MIContainer.MovementItemId
+                            , SUM (CASE WHEN MIContainer.DescId = zc_Container_Count() THEN MIContainer.Amount * (-1) ELSE 0 END) AS Amount
+                            , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() THEN MIContainer.Amount * (-1) ELSE 0 END)  AS Summa
+                            --, SUM (CASE WHEN Container.DescId = zc_MIContainer_Summ() AND MIContainer.isActive = true THEN MIContainer.Amount ELSE 0 END) AS SummaOut
+                       FROM MovementItemContainer AS MIContainer
+                       WHERE MIContainer.MovementId = inMovementId
+                       GROUP BY MIContainer.MovementItemId
+                      )
 
     -- Результат
     SELECT
@@ -299,11 +308,18 @@ BEGIN
          , 0                       ::TFloat AS Amount_plan_ch
 
          , (SELECT COUNT(*) FROM tmpMI_Child WHERE tmpMI_Child.ParentId = tmpMI_Master.MovementItemId) ::Integer AS mi_child_count
-
+         -- 
+         , tmpMIContainer.Amount :: TFloat AS Amount
+         , (tmpMIContainer.Summa / CASE WHEN tmpMIContainer.Amount > 0 THEN tmpMIContainer.Amount ELSE 1 END) ::TFloat AS Price
+         , COALESCE (tmpMIContainer.Summa,0)  :: TFloat AS Summ
+         , (tmpMIContainer_master.Summa *(-1) )      ::TFloat  AS Summ_master
     FROM tmpMI_Master
-         LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI_Master.MovementItemId
+         LEFT JOIN tmpMI_Child        ON tmpMI_Child.ParentId = tmpMI_Master.MovementItemId
          LEFT JOIN tmpMI_Detail_group ON tmpMI_Detail_group.ParentId = tmpMI_Master.MovementItemId
-
+         
+         LEFT JOIN tmpMIContainer     ON tmpMIContainer.MovementItemId = tmpMI_Child.MovementItemId
+         LEFT JOIN tmpMIContainer AS tmpMIContainer_master ON tmpMIContainer_master.MovementItemId = tmpMI_Master.MovementItemId
+         
   UNION ALL
     SELECT
            tmpMI_Master.NPP_1 :: Integer AS NPP_1
@@ -345,10 +361,18 @@ BEGIN
          , COALESCE (tmpMI_Detail.Hours, 0)      :: NUMERIC (16, 8)  AS Amount_ch
          , COALESCE (tmpMI_Detail.Hours_plan, 0) :: NUMERIC (16, 8)  AS Amount_plan_ch        
          , (SELECT COUNT(*) FROM tmpMI_Detail WHERE tmpMI_Detail.ParentId = tmpMI_Master.MovementItemId) ::Integer AS mi_child_count
-
+         -- 
+         , tmpMI_Detail.Amount :: TFloat AS Amount
+         , (tmpMIContainer.Summa / CASE WHEN tmpMI_Detail.Amount > 0 THEN tmpMI_Detail.Amount ELSE 1 END) ::TFloat AS Price
+         , COALESCE (tmpMIContainer.Summa,0)  :: TFloat AS Summ
+         , (tmpMIContainer_master.Summa *(-1) )      ::TFloat  AS Summ_master
     FROM tmpMI_Master
          LEFT JOIN tmpMI_Detail_group  ON tmpMI_Detail_group.ParentId  = tmpMI_Master.MovementItemId
          LEFT JOIN tmpMI_Detail        ON tmpMI_Detail.ParentId        = tmpMI_Master.MovementItemId
+                                                                                                          
+         LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = tmpMI_Detail.MovementItemId
+         LEFT JOIN tmpMIContainer AS tmpMIContainer_master ON tmpMIContainer_master.MovementItemId = tmpMI_Master.MovementItemId
+         
     ORDER BY 12
            , 1 , 2
 

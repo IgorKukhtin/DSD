@@ -59,6 +59,8 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+    LoadReportFromFile('PrintMovement_ProductionUnionCalc', ReportPath + '\PrintMovement_ProductionUnionCalc.fr3');
+    exit;
      {
     LoadReportFromFile('PrintMovement_ProductionUnion', ReportPath + '\PrintMovement_ProductionUnion.fr3');
     //exit;
