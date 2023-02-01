@@ -378,11 +378,13 @@ BEGIN
                      THEN Res.MovementDescName
                 ELSE NULL::TVarChar END                         AS MovementDescName
 
+                -- вот товар
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
-                     THEN Res.ModelServiceItemChild_FromName
+                     THEN COALESCE (Object_Goods_from.ValueData, Res.ModelServiceItemChild_FromName)
                 ELSE NULL::TVarChar END                         AS ModelServiceItemChild_FromName
+                -- вот товар
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
-                     THEN Res.ModelServiceItemChild_ToName
+                     THEN COALESCE (Object_Goods_to.ValueData, Res.ModelServiceItemChild_ToName)
                 ELSE NULL::TVarChar END                         AS ModelServiceItemChild_ToName
 
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
@@ -433,6 +435,10 @@ BEGIN
                , Res.KoeffHoursWork_car
 
             FROM Res
+                 LEFT JOIN Object AS Object_Goods_from ON Object_Goods_from.Id = Res.ModelServiceItemChild_FromId
+                                                      AND inDetailModelServiceItemChild = TRUE
+                 LEFT JOIN Object AS Object_Goods_to   ON Object_Goods_to.Id   = Res.ModelServiceItemChild_ToId
+                                                      AND inDetailModelServiceItemChild = TRUE
             WHERE Res.MemberId > 0
             GROUP BY
                 Res.StaffListId
@@ -476,11 +482,13 @@ BEGIN
                      THEN Res.MovementDescName
                 ELSE NULL::TVarChar END
 
+                -- вот товар
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
-                     THEN Res.ModelServiceItemChild_FromName
+                     THEN COALESCE (Object_Goods_from.ValueData, Res.ModelServiceItemChild_FromName)
                 ELSE NULL::TVarChar END
+                -- вот товар
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
-                     THEN Res.ModelServiceItemChild_ToName
+                     THEN COALESCE (Object_Goods_to.ValueData, Res.ModelServiceItemChild_ToName)
                 ELSE NULL::TVarChar END
 
                ,CASE WHEN inDetailModelServiceItemChild = TRUE

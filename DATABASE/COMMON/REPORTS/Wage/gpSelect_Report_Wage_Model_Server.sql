@@ -688,6 +688,8 @@ BEGIN
            ,Setting.ModelServiceItemChild_ToId
            , COALESCE (tmpMovement.StorageLineId_From, COALESCE (tmpMovement_HeadCount.StorageLineId_From, Setting.StorageLineId_From)) AS StorageLineId_From
            , COALESCE (tmpMovement.StorageLineId_To,   COALESCE (tmpMovement_HeadCount.StorageLineId_To,   Setting.StorageLineId_To))   AS StorageLineId_To
+           , COALESCE (tmpMovement_HeadCount.GoodsId_from, tmpMovement.GoodsId_from) AS GoodsId_from
+           , COALESCE (tmpMovement_HeadCount.GoodsId_to, tmpMovement.GoodsId_to)     AS GoodsId_to
            ,Setting.GoodsKind_FromId
            ,Setting.GoodsKindComplete_FromId
            ,Setting.GoodsKind_ToId
@@ -798,6 +800,8 @@ BEGIN
            , Setting.ModelServiceItemChild_ToId
            , COALESCE (tmpMovement.StorageLineId_From, COALESCE (tmpMovement_HeadCount.StorageLineId_From, Setting.StorageLineId_From))
            , COALESCE (tmpMovement.StorageLineId_To,   COALESCE (tmpMovement_HeadCount.StorageLineId_To,   Setting.StorageLineId_To))
+           , COALESCE (tmpMovement_HeadCount.GoodsId_from, tmpMovement.GoodsId_from)
+           , COALESCE (tmpMovement_HeadCount.GoodsId_to, tmpMovement.GoodsId_to)
            , Setting.GoodsKind_FromId
            , Setting.GoodsKindComplete_FromId
            , Setting.GoodsKind_ToId
@@ -1398,10 +1402,14 @@ BEGIN
        ,Setting.SelectKindId
        ,Setting.SelectKindName
        ,Setting.Ratio
-       ,Setting.ModelServiceItemChild_FromId
+        -- вот товар
+       ,COALESCE (ServiceModelMovement.GoodsId_from, Setting.ModelServiceItemChild_FromId) AS ModelServiceItemChild_FromId
+        -- 
        ,Setting.ModelServiceItemChild_FromDescId
        ,Setting.ModelServiceItemChild_FromName
-       ,Setting.ModelServiceItemChild_ToId
+        -- вот товар
+       ,COALESCE (ServiceModelMovement.GoodsId_to, Setting.ModelServiceItemChild_ToId) AS ModelServiceItemChild_ToId
+        -- 
        ,Setting.ModelServiceItemChild_ToDescId
        ,Setting.ModelServiceItemChild_ToName
 
