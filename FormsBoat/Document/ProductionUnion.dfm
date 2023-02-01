@@ -2164,6 +2164,7 @@ object ProductionUnionForm: TProductionUnionForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'InvNumber_OrderClient;NPP_1;NPP_2;NPP_3'
         end>
       Params = <
         item
