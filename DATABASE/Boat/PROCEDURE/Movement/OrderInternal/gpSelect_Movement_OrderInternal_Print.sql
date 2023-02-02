@@ -58,7 +58,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- Результат
+
      RETURN QUERY
      -- Результат
      WITH -- все MovementItem

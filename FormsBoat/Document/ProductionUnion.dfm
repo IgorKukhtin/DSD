@@ -26,7 +26,6 @@ object ProductionUnionForm: TProductionUnionForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 936
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -189,14 +188,12 @@ object ProductionUnionForm: TProductionUnionForm
     TabOrder = 5
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 936
     ClientRectBottom = 440
     ClientRectRight = 1084
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 936
       object Panel2: TPanel
         Left = 0
         Top = 145
@@ -205,7 +202,6 @@ object ProductionUnionForm: TProductionUnionForm
         Align = alBottom
         Caption = 'Panel2'
         TabOrder = 0
-        ExplicitWidth = 936
         object cxGridChild: TcxGrid
           Left = 1
           Top = 19
@@ -216,7 +212,6 @@ object ProductionUnionForm: TProductionUnionForm
           LookAndFeel.Kind = lfStandard
           LookAndFeel.NativeStyle = False
           LookAndFeel.SkinName = ''
-          ExplicitWidth = 934
           object cxGridDBTableViewChild: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ChildDS
@@ -553,7 +548,6 @@ object ProductionUnionForm: TProductionUnionForm
           Color = clAqua
           ParentBackground = False
           TabOrder = 1
-          ExplicitWidth = 934
         end
         object cxGrid_Detail: TcxGrid
           Left = 1
@@ -562,7 +556,6 @@ object ProductionUnionForm: TProductionUnionForm
           Height = 128
           Align = alBottom
           TabOrder = 2
-          ExplicitWidth = 934
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -832,7 +825,6 @@ object ProductionUnionForm: TProductionUnionForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGrid_Detail
-          ExplicitWidth = 934
         end
       end
       object Panel3: TPanel
@@ -843,7 +835,6 @@ object ProductionUnionForm: TProductionUnionForm
         Align = alClient
         Caption = 'Panel3'
         TabOrder = 1
-        ExplicitWidth = 936
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
@@ -851,7 +842,6 @@ object ProductionUnionForm: TProductionUnionForm
           Height = 135
           Align = alClient
           TabOrder = 0
-          ExplicitWidth = 934
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -1188,13 +1178,11 @@ object ProductionUnionForm: TProductionUnionForm
         HotZone.Visible = False
         AlignSplitter = salBottom
         Control = Panel2
-        ExplicitWidth = 936
       end
     end
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitWidth = 936
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -1202,7 +1190,6 @@ object ProductionUnionForm: TProductionUnionForm
         Height = 416
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 936
         object cxGridDBTableView_DetAll: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS_All
@@ -2232,10 +2219,6 @@ object ProductionUnionForm: TProductionUnionForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'InvNumber_OrderClient;NPP_1;NPP_2;NPP_3'
@@ -2285,10 +2268,6 @@ object ProductionUnionForm: TProductionUnionForm
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
@@ -4018,7 +3997,6 @@ object ProductionUnionForm: TProductionUnionForm
       item
         DataSet = PrintItemsCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'

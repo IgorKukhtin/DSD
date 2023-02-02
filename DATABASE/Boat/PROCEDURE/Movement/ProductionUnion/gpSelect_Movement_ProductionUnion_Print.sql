@@ -6,18 +6,60 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnion_Print(
     IN inMovementId  Integer  , -- ключ Документа
     IN inSession     TVarChar   -- сессия пользователя
 )
-RETURNS SETOF refcursor
+RETURNS TABLE (NPP_1 Integer
+             , NPP_2 Integer
+             , NPP_3 Integer  
+              --
+             , InvNumber Integer
+             , OperDate TDateTime
+             , Comment TVarChar
+             , InsertName TVarChar
+             , InsertDate TDateTime
+             , BarCode_ProductionUnion TVarChar
+              -- мастер
+             , BarCode_mi                TVarChar
+             , MovementItemId            Integer
+             , GoodsCode                 Integer
+             , GoodsName                 TVarChar
+             , Article                   TVarChar
+             , ProdColorName             TVarChar
+             , MeasureName               TVarChar
+             , ReceiptProdModelName      TVarChar
+             , Comment_mi                TVarChar
+               
+             , InvNumber_OrderClient     Integer
+             , InvNumberFull_OrderClient TVarChar
+             , FromName                  TVarChar
+             , ProductName               TVarChar
+             , CIN                       TVarChar
+             , BarCode_OrderClient       TVarChar
+             , PersonalName              TVarChar
+               -- чайлд
+             , GoodsCode_ch              Integer
+             , GoodsName_ch              TVarChar
+             , Article_ch                TVarChar
+             , ProdColorName_ch          TVarChar
+             , ReceiptLevelName_ch       TVarChar
+             , ProdColorPatternName_ch   TVarChar
+             , ProdColorPatternId_ch     Integer
+             , Amount_ch                 NUMERIC (16, 8)
+             , Amount_plan_ch            NUMERIC (16, 8)
+             , mi_child_count            Integer
+             -- 
+             , Amount                    TFloat
+             , Price                     TFloat
+             , Summ                      TFloat
+             , Summ_master               TFloat
+             )
+
 AS
 $BODY$
     DECLARE vbUserId Integer;
-
-    DECLARE Cursor1 refcursor;
-    DECLARE Cursor2 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-    OPEN Cursor1 FOR
+/*    OPEN Cursor1 FOR
 
         SELECT 
             Movement.Id
@@ -58,14 +100,35 @@ BEGIN
           AND Movement.DescId = zc_Movement_ProductionUnion();
 
     RETURN NEXT Cursor1;
-
-    OPEN Cursor2 FOR
+*/
+     RETURN QUERY
+     -- Результат
      WITH -- все MovementItem
-          tmpMI_all AS (SELECT MovementItem.*
+          tmpMI_all AS (SELECT MovementItem.* 
+                             , MIFloat_MovementId.ValueData AS MovementId_order
+                             , Movement.InvNumber
+                             , Movement.OperDate
+                             , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
+                             , Object_Insert.ValueData              AS InsertName
+                             , MovementDate_Insert.ValueData        AS InsertDate
                         FROM Movement
                              LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                    AND MovementItem.isErased   = FALSE
                                                    AND MovementItem.DescId     IN (zc_MI_Master(), zc_MI_Child())
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                             LEFT JOIN MovementString AS MovementString_Comment
+                                                      ON MovementString_Comment.MovementId = Movement.Id
+                                                     AND MovementString_Comment.DescId     = zc_MovementString_Comment()
+                             LEFT JOIN MovementDate AS MovementDate_Insert
+                                                    ON MovementDate_Insert.MovementId = Movement.Id
+                                                   AND MovementDate_Insert.DescId     = zc_MovementDate_Insert()
+                             LEFT JOIN MovementLinkObject AS MLO_Insert
+                                                          ON MLO_Insert.MovementId = Movement.Id
+                                                         AND MLO_Insert.DescId     = zc_MovementLinkObject_Insert()
+                             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
                         WHERE Movement.Id     = inMovementId
                           AND Movement.DescId = zc_Movement_ProductionUnion()
                        )
@@ -74,7 +137,14 @@ BEGIN
                                                   ORDER BY CASE WHEN ObjectString_Article.ValueData ILIKE '%ПФ' THEN 0 ELSE 1 END
                                                          , Object_Goods.ValueData
                                                  ) AS NPP_1
-                               --
+                               -- 
+                             , tmpMI_all.MovementId
+                             , tmpMI_all.InvNumber
+                             , tmpMI_all.OperDate
+                             , tmpMI_all.Comment
+                             , tmpMI_all.InsertName
+                             , tmpMI_all.InsertDate
+                             --
                              , tmpMI_all.Id                   AS MovementItemId
                              , tmpMI_all.ObjectId             AS GoodsId
                              , Object_Goods.ObjectCode        AS GoodsCode
@@ -305,7 +375,14 @@ BEGIN
                                             ELSE 1
                                        END
                                      , tmpMI_Child.GoodsName
-                             ) :: Integer AS NPP_3
+                             ) :: Integer AS NPP_3 
+           --
+         , tmpMI_Master.InvNumber :: Integer AS InvNumber
+         , tmpMI_Master.OperDate
+         , tmpMI_Master.Comment
+         , tmpMI_Master.InsertName
+         , tmpMI_Master.InsertDate
+         , zfFormat_BarCode (zc_BarCodePref_Movement(), inMovementId) AS BarCode_ProductionUnion
            -- мастер
          , zfFormat_BarCode (zc_BarCodePref_MI(), tmpMI_Master.MovementItemId) AS BarCode_mi
          , tmpMI_Master.MovementItemId
@@ -333,8 +410,8 @@ BEGIN
          , ''  ::TVarChar                   AS ReceiptLevelName_ch
          , tmpMI_Child.ProdColorName        AS ProdColorPatternName_ch
          , tmpMI_Child.ProdColorId          AS ProdColorPatternId_ch
-         , tmpMI_Child.Amount               AS Amount_ch
-         , 0                       ::TFloat AS Amount_plan_ch
+         , tmpMI_Child.Amount      :: NUMERIC (16, 8) AS Amount_ch
+         , 0                       :: NUMERIC (16, 8) AS Amount_plan_ch
 
          , (SELECT COUNT(*) FROM tmpMI_Child WHERE tmpMI_Child.ParentId = tmpMI_Master.MovementItemId) ::Integer AS mi_child_count
          -- 
@@ -358,6 +435,12 @@ BEGIN
                               ORDER BY tmpMI_Detail.ReceiptServiceCode
                                      , tmpMI_Detail.PersonalName
                              ) :: Integer AS NPP_3
+         , tmpMI_Master.InvNumber :: Integer AS InvNumber
+         , tmpMI_Master.OperDate
+         , tmpMI_Master.Comment
+         , tmpMI_Master.InsertName
+         , tmpMI_Master.InsertDate
+         , zfFormat_BarCode (zc_BarCodePref_Movement(), inMovementId) AS BarCode_ProductionUnion
            -- мастер
          , zfFormat_BarCode (zc_BarCodePref_MI(), tmpMI_Master.MovementItemId) AS BarCode_mi
          , tmpMI_Master.MovementItemId
@@ -408,7 +491,6 @@ BEGIN
            , 1 , 2
 
    ;
-   RETURN NEXT Cursor2;
 
 END;
 $BODY$
@@ -417,7 +499,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.02.23         *
  10.01.23         *
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_ProductionUnion_Print (inMovementId:= 3897397, inSession:= zfCalc_UserAdmin());
+--   SELECT * FROM gpSelect_Movement_ProductionUnion_Print (inMovementId:= 693, inSession:= zfCalc_UserAdmin());

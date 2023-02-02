@@ -1030,10 +1030,6 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'InvNumber_OrderClient;NPP_1;NPP_2;NPP_3'
@@ -1078,10 +1074,6 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
@@ -1377,7 +1369,6 @@ object ProductionUnionMasterJournalForm: TProductionUnionMasterJournalForm
       item
         DataSet = PrintItemsCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
