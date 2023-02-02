@@ -23,7 +23,7 @@ inherited Report_StaffListForm: TReport_StaffListForm
       inherited cxGrid: TcxGrid
         Width = 998
         Height = 322
-        ExplicitLeft = 24
+        ExplicitLeft = 3
         ExplicitWidth = 998
         ExplicitHeight = 322
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -238,6 +238,8 @@ inherited Report_StaffListForm: TReport_StaffListForm
           object Value_StaffListSummKind: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Value_StaffListSummKind'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1076#1083#1103' '#1096#1090#1072#1090#1085#1086#1075#1086' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1103
