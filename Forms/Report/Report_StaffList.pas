@@ -39,7 +39,6 @@ type
     UnitName: TcxGridDBColumn;
     PositionName: TcxGridDBColumn;
     PositionLevelName: TcxGridDBColumn;
-    MemberName: TcxGridDBColumn;
     ServiceModelName: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
@@ -51,7 +50,6 @@ type
     dxBarButton1: TdxBarButton;
     actPrint2: TdsdPrintAction;
     dxBarButton2: TdxBarButton;
-    PersonalGroupName: TcxGridDBColumn;
     StaffListCode: TcxGridDBColumn;
     StaffListName: TcxGridDBColumn;
     PriceName: TcxGridDBColumn;
@@ -77,6 +75,7 @@ type
     UpdateDate_ModelServiceItemChild: TcxGridDBColumn;
     UpdateName_StaffListCost: TcxGridDBColumn;
     UpdateDate_StaffListCost: TcxGridDBColumn;
+    Value_StaffListSummKind: TcxGridDBColumn;
   private
     { Private declarations }
   public

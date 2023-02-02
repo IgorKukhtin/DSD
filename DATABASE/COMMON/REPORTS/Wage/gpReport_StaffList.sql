@@ -1,7 +1,6 @@
 -- По штатному расписанию
 -- Function: gpReport_StaffList ()
 
-DROP FUNCTION IF EXISTS gpReport_StaffList (Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_StaffList (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_StaffList(
@@ -12,6 +11,8 @@ CREATE OR REPLACE FUNCTION gpReport_StaffList(
 )
 RETURNS TABLE(
      StaffListId                    Integer
+    ,StaffListCode                  Integer
+    ,StaffListName                  TVarChar
     ,DocumentKindId                 Integer
     ,UnitId                         Integer
     ,UnitName                       TVarChar
@@ -39,10 +40,12 @@ RETURNS TABLE(
     ,Ratio                          TFloat
     
     ,ModelServiceItemChild_FromId   Integer
-    ,ModelServiceItemChild_FromDescId Integer
+    ,ModelServiceItemChild_FromDescId Integer  
+    ,ModelServiceItemChild_FromCode Integer
     ,ModelServiceItemChild_FromName TVarChar
     ,ModelServiceItemChild_ToId     Integer
     ,ModelServiceItemChild_ToDescId Integer
+    ,ModelServiceItemChild_ToCode   Integer
     ,ModelServiceItemChild_ToName   TVarChar
 
     ,StorageLineId_From             Integer
@@ -58,7 +61,8 @@ RETURNS TABLE(
     ,GoodsKindComplete_ToId         Integer
     ,GoodsKindComplete_ToName       TVarChar  
     , StaffListSummKindId           Integer
-    , StaffListSummKindName         TVarChar 
+    , StaffListSummKindName         TVarChar
+    , Value_StaffListSummKind       TFloat 
 
     , UpdateName_ModelServiceItemChild  TVarChar
     , UpdateDate_ModelServiceItemChild  TDateTime
@@ -109,6 +113,8 @@ BEGIN
   -- результат                      
     SELECT
         Object_StaffList.Id                                 AS StaffListId            -- Штатное расписание
+       ,Object_StaffList.ObjectCode                         AS StaffListCode
+       ,Object_StaffList.ValueData                          AS StaffListName
        ,COALESCE (ObjectLink_ModelServiceItemMaster_DocumentKind.ChildObjectId, 0) AS DocumentKindId
        ,ObjectLink_StaffList_Unit.ChildObjectId             AS UnitId                 -- Поразделение
        ,Object_Unit.ValueData                               AS UnitName
@@ -146,9 +152,11 @@ BEGIN
        ,ObjectFloat_Ratio.ValueData                         AS Ratio                 -- Коэффициент для выбора данных
        ,ModelServiceItemChild_From.Id                       AS ModelServiceItemChild_FromId       -- Товар,Группа(От кого) (из справочника Подчиненные элементы Модели начисления)
        ,ModelServiceItemChild_From.DescId                   AS ModelServiceItemChild_FromDescId
+       ,ModelServiceItemChild_From.ObjectCode               AS ModelServiceItemChild_FromCode
        ,ModelServiceItemChild_From.ValueData                AS ModelServiceItemChild_FromName
        ,ModelServiceItemChild_To.Id                         AS ModelServiceItemChild_ToId         -- Товар,Группа(Кому) (из справочника Подчиненные элементы Модели начисления)
        ,ModelServiceItemChild_To.DescId                     AS ModelServiceItemChild_ToDescId
+       ,ModelServiceItemChild_To.ObjectCode                 AS ModelServiceItemChild_ToCode
        ,ModelServiceItemChild_To.ValueData                  AS ModelServiceItemChild_ToName
 
        , Object_StorageLine_From.Id              AS StorageLineId_From
@@ -168,8 +176,9 @@ BEGIN
        --, Object_ModelServiceItemChild.Id         AS ModelServiceItemChildId
        --, Object_StaffListCost.Id                 AS StaffListCostId
 
-       , Object_StaffListSummKind.Id             AS StaffListSummKindId
+       , Object_StaffListSummKind.Id             AS StaffListSummKindId              -- Типы сумм для штатного расписания
        , Object_StaffListSummKind.ValueData      AS StaffListSummKindName
+       , ObjectFloat_Value.ValueData   ::TFloat  AS Value_StaffListSummKind          -- Суммы для штатного расписания
 
        --протоколы
        , tmpProtocol_ModelServiceItemChild.UserName AS UpdateName_ModelServiceItemChild
@@ -345,7 +354,11 @@ BEGIN
                              ON ObjectLink_StaffListSumm_StaffListSummKind.ObjectId = ObjectLink_StaffListSumm_StaffList.ObjectId 
                             AND ObjectLink_StaffListSumm_StaffListSummKind.DescId = zc_ObjectLink_StaffListSumm_StaffListSummKind()
         LEFT JOIN Object AS Object_StaffListSummKind ON Object_StaffListSummKind.Id = ObjectLink_StaffListSumm_StaffListSummKind.ChildObjectId
-        
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_Value 
+                              ON ObjectFloat_Value.ObjectId = Object_StaffListSumm.Id 
+                             AND ObjectFloat_Value.DescId = zc_ObjectFloat_StaffListSumm_Value()
+
         --  протоколы
         LEFT JOIN tmpProtocol_ModelServiceItemChild ON tmpProtocol_ModelServiceItemChild.ObjectId = Object_ModelServiceItemChild.Id
         LEFT JOIN tmpProtocol_StaffListCost ON tmpProtocol_StaffListCost.ObjectId = Object_StaffListCost.Id

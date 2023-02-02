@@ -52,8 +52,10 @@ inherited Report_StaffListForm: TReport_StaffListForm
           object StaffListName: TcxGridDBColumn
             Caption = #1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077
             DataBinding.FieldName = 'StaffListName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 80
           end
           object UnitName: TcxGridDBColumn
@@ -69,13 +71,6 @@ inherited Report_StaffListForm: TReport_StaffListForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object PersonalGroupName: TcxGridDBColumn
-            Caption = #1041#1088#1080#1075#1072#1076#1072
-            DataBinding.FieldName = 'PersonalGroupName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
           end
           object PositionName: TcxGridDBColumn
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
@@ -98,12 +93,25 @@ inherited Report_StaffListForm: TReport_StaffListForm
             HeaderAlignmentVert = vaCenter
             Width = 131
           end
-          object MemberName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
-            DataBinding.FieldName = 'MemberName'
-            HeaderAlignmentHorz = taCenter
+          object HoursPlan: TcxGridDBColumn
+            Caption = '1.'#1054#1073#1097'.'#1087#1083'.'#1095'.'#1074' '#1084#1077#1089'. '#1085#1072' '#1095#1077#1083#1086#1074#1077#1082#1072
+            DataBinding.FieldName = 'HoursPlan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentVert = vaCenter
-            Width = 102
+            Width = 99
+          end
+          object HoursDay: TcxGridDBColumn
+            Caption = '2.'#1044#1085#1077#1074#1085#1086#1081' '#1087#1083'.'#1095'. '#1085#1072' '#1095#1077#1083#1086#1074#1077#1082#1072
+            DataBinding.FieldName = 'HoursDay'
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
+          object Count_Member: TcxGridDBColumn
+            Caption = '3.'#1050#1086#1083'. '#1095#1077#1083#1086#1074#1077#1082
+            DataBinding.FieldName = 'Count_Member'
+            HeaderAlignmentVert = vaCenter
+            Width = 61
           end
           object Price: TcxGridDBColumn
             Caption = #1075#1088#1085'./'#1079#1072' '#1082#1075' '#1048#1051#1048' '#1075#1088#1085'./'#1089#1090#1072#1074#1082#1072
@@ -118,8 +126,10 @@ inherited Report_StaffListForm: TReport_StaffListForm
           object PriceName: TcxGridDBColumn
             Caption = #1080#1085#1092#1086' ('#1089#1090#1072#1074#1082#1072')'
             DataBinding.FieldName = 'PriceName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 80
           end
           object FromName: TcxGridDBColumn
@@ -142,6 +152,13 @@ inherited Report_StaffListForm: TReport_StaffListForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 118
+          end
+          object ModelServiceItemChild_FromCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072': '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'ModelServiceItemChild_FromCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 105
           end
           object ModelServiceItemChild_FromName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088': '#1088#1072#1089#1093#1086#1076
@@ -179,6 +196,13 @@ inherited Report_StaffListForm: TReport_StaffListForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object ModelServiceItemChild_ToCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072': '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'ModelServiceItemChild_ToCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 112
+          end
           object ModelServiceItemChild_ToName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088': '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'ModelServiceItemChild_ToName'
@@ -208,6 +232,14 @@ inherited Report_StaffListForm: TReport_StaffListForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1058#1080#1087#1099' '#1089#1091#1084#1084' '#1076#1083#1103' '#1096#1090#1072#1090#1085#1086#1075#1086' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1103
+            Width = 80
+          end
+          object Value_StaffListSummKind: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'Value_StaffListSummKind'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1076#1083#1103' '#1096#1090#1072#1090#1085#1086#1075#1086' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1103
             Width = 80
           end
           object UpdateName_ModelServiceItemChild: TcxGridDBColumn
