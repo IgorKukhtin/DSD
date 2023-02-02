@@ -154,6 +154,10 @@ BEGIN
                             , ObjectString_Article.ValueData  AS Article
                             , Object_ProdColor.Id             AS ProdColorId
                             , Object_ProdColor.ValueData      AS ProdColorName
+                            , Object_ReceiptLevel.ValueData           AS ReceiptLevelName
+                            , Object_ColorPattern.ValueData           AS ColorPatternName
+                            , Object_ProdColorPattern.Id              AS ProdColorPatternId
+                            , Object_ProdColorPattern.ValueData       AS ProdColorPatternName
                             , tmpMI_all.Amount                AS Amount
                        FROM tmpMI_all
                             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_all.ObjectId
@@ -165,6 +169,22 @@ BEGIN
                                                  ON ObjectLink_ProdColor.ObjectId = tmpMI_all.ObjectId
                                                 AND ObjectLink_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
                             LEFT JOIN Object AS Object_ProdColor  ON Object_ProdColor.Id  = ObjectLink_ProdColor.ChildObjectId
+
+                            LEFT JOIN MovementItemLinkObject AS MILO_ReceiptLevel
+                                                             ON MILO_ReceiptLevel.MovementItemId = tmpMI_all.Id
+                                                            AND MILO_ReceiptLevel.DescId = zc_MILinkObject_ReceiptLevel()
+                            LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = MILO_ReceiptLevel.ObjectId
+
+                            LEFT JOIN MovementItemLinkObject AS MILO_ColorPattern
+                                                             ON MILO_ColorPattern.MovementItemId = tmpMI_all.Id
+                                                            AND MILO_ColorPattern.DescId = zc_MILinkObject_ColorPattern()
+                            LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = MILO_ColorPattern.ObjectId
+
+                            LEFT JOIN MovementItemLinkObject AS MILO_ProdColorPattern
+                                                             ON MILO_ProdColorPattern.MovementItemId = tmpMI_all.Id
+                                                            AND MILO_ProdColorPattern.DescId = zc_MILinkObject_ProdColorPattern()
+                            LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = MILO_ProdColorPattern.ObjectId
+
                        WHERE tmpMI_all.DescId = zc_MI_Child()
                       )
 
@@ -263,7 +283,7 @@ BEGIN
    -- данные по кол-ву и сумме из проводок
   , tmpMIContainer AS (SELECT MIContainer.MovementItemId
                             , SUM (CASE WHEN MIContainer.DescId = zc_Container_Count()  THEN ABS (MIContainer.Amount) ELSE 0 END) AS Amount
-                            , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() THEN ABS (MIContainer.Amount) ELSE 0 END)  AS Summa
+                            , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() THEN ABS (MIContainer.Amount) ELSE 0 END) AS Summa
                             --, SUM (CASE WHEN Container.DescId = zc_MIContainer_Summ() AND MIContainer.isActive = true THEN MIContainer.Amount ELSE 0 END) AS SummaOut
                        FROM MovementItemContainer AS MIContainer
                        WHERE MIContainer.MovementId = inMovementId
@@ -275,7 +295,16 @@ BEGIN
            tmpMI_Master.NPP_1 :: Integer AS NPP_1 
          , 1                  :: Integer AS NPP_2
          , ROW_NUMBER() OVER (PARTITION BY tmpMI_Master.InvNumber_OrderClient, tmpMI_Master.GoodsName
-                              ORDER BY tmpMI_Child.GoodsName
+                              ORDER BY tmpMI_Child.ReceiptLevelName
+                                     , CASE WHEN tmpMI_Child.ProdColorPatternId > 0
+                                            THEN 0
+                                            ELSE 1
+                                       END
+                                     , CASE WHEN tmpMI_Child.Article ILIKE '%ПФ'
+                                            THEN 0
+                                            ELSE 1
+                                       END
+                                     , tmpMI_Child.GoodsName
                              ) :: Integer AS NPP_3
            -- мастер
          , zfFormat_BarCode (zc_BarCodePref_MI(), tmpMI_Master.MovementItemId) AS BarCode_mi
@@ -362,11 +391,12 @@ BEGIN
          , COALESCE (tmpMI_Detail.Hours, 0)      :: NUMERIC (16, 8)  AS Amount_ch
          , COALESCE (tmpMI_Detail.Hours_plan, 0) :: NUMERIC (16, 8)  AS Amount_plan_ch        
          , (SELECT COUNT(*) FROM tmpMI_Detail WHERE tmpMI_Detail.ParentId = tmpMI_Master.MovementItemId) ::Integer AS mi_child_count
-         -- 
+          -- 
          , COALESCE (tmpMI_Detail.Hours, 0)   :: TFloat AS Amount
          , (tmpMIContainer.Summa / CASE WHEN tmpMI_Detail.Amount > 0 THEN tmpMI_Detail.Amount ELSE 1 END) ::TFloat AS Price
          , COALESCE (tmpMIContainer.Summa,0)  :: TFloat AS Summ
          , tmpMIContainer_master.Summa        :: TFloat AS Summ_master
+
     FROM tmpMI_Master
          LEFT JOIN tmpMI_Detail_group  ON tmpMI_Detail_group.ParentId  = tmpMI_Master.MovementItemId
          LEFT JOIN tmpMI_Detail        ON tmpMI_Detail.ParentId        = tmpMI_Master.MovementItemId
@@ -374,7 +404,7 @@ BEGIN
          LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = tmpMI_Detail.MovementItemId
          LEFT JOIN tmpMIContainer AS tmpMIContainer_master ON tmpMIContainer_master.MovementItemId = tmpMI_Master.MovementItemId
          
-    ORDER BY 12
+    ORDER BY 14
            , 1 , 2
 
    ;
