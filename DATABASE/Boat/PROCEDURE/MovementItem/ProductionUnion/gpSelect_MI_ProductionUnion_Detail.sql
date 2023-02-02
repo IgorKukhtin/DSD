@@ -154,7 +154,7 @@ BEGIN
              , Object_Goods.Id           AS GoodsId_master
              , Object_Goods.ObjectCode   AS GoodsCode_master
              , (Object_Goods.ValueData
-      || ' ' || zfCalc_InvNumber_isErased ('', Movement_OrderInternal.InvNumber, Movement_OrderInternal.OperDate, Movement_OrderInternal.StatusId)  
+--      || ' ' || zfCalc_InvNumber_isErased ('', Movement_OrderInternal.InvNumber, Movement_OrderInternal.OperDate, Movement_OrderInternal.StatusId)  
                ) :: TVarChar AS GoodsName_master
              , ObjectDesc.ItemName       AS DescName_master
              , MI_Master.Amount ::TFloat AS Amount_master
