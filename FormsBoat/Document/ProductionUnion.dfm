@@ -3,7 +3,7 @@ object ProductionUnionForm: TProductionUnionForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1073#1086#1088#1082#1072'>'
   ClientHeight = 563
-  ClientWidth = 936
+  ClientWidth = 1084
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object ProductionUnionForm: TProductionUnionForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 936
+    Width = 1084
     Height = 97
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 936
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -182,36 +183,40 @@ object ProductionUnionForm: TProductionUnionForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 123
-    Width = 936
+    Width = 1084
     Height = 440
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 936
     ClientRectBottom = 440
-    ClientRectRight = 936
+    ClientRectRight = 1084
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 936
       object Panel2: TPanel
         Left = 0
         Top = 145
-        Width = 936
+        Width = 1084
         Height = 271
         Align = alBottom
         Caption = 'Panel2'
         TabOrder = 0
+        ExplicitWidth = 936
         object cxGridChild: TcxGrid
           Left = 1
           Top = 19
-          Width = 934
+          Width = 1082
           Height = 115
           Align = alClient
           TabOrder = 0
           LookAndFeel.Kind = lfStandard
           LookAndFeel.NativeStyle = False
           LookAndFeel.SkinName = ''
+          ExplicitWidth = 934
           object cxGridDBTableViewChild: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ChildDS
@@ -541,21 +546,23 @@ object ProductionUnionForm: TProductionUnionForm
         object Panel1: TPanel
           Left = 1
           Top = 1
-          Width = 934
+          Width = 1082
           Height = 18
           Align = alTop
           Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
           Color = clAqua
           ParentBackground = False
           TabOrder = 1
+          ExplicitWidth = 934
         end
         object cxGrid_Detail: TcxGrid
           Left = 1
           Top = 142
-          Width = 934
+          Width = 1082
           Height = 128
           Align = alBottom
           TabOrder = 2
+          ExplicitWidth = 934
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -820,28 +827,31 @@ object ProductionUnionForm: TProductionUnionForm
         object cxSplitter2: TcxSplitter
           Left = 1
           Top = 134
-          Width = 934
+          Width = 1082
           Height = 8
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
           Control = cxGrid_Detail
+          ExplicitWidth = 934
         end
       end
       object Panel3: TPanel
         Left = 0
         Top = 0
-        Width = 936
+        Width = 1084
         Height = 137
         Align = alClient
         Caption = 'Panel3'
         TabOrder = 1
+        ExplicitWidth = 936
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
-          Width = 934
+          Width = 1082
           Height = 135
           Align = alClient
           TabOrder = 0
+          ExplicitWidth = 934
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -1172,24 +1182,27 @@ object ProductionUnionForm: TProductionUnionForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 137
-        Width = 936
+        Width = 1084
         Height = 8
         HotZoneClassName = 'TcxSimpleStyle'
         HotZone.Visible = False
         AlignSplitter = salBottom
         Control = Panel2
+        ExplicitWidth = 936
       end
     end
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitWidth = 936
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
-        Width = 936
+        Width = 1084
         Height = 416
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 936
         object cxGridDBTableView_DetAll: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS_All
@@ -1821,7 +1834,7 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'bbPrintCalc'
         end
         item
           Visible = True
@@ -1922,12 +1935,9 @@ object ProductionUnionForm: TProductionUnionForm
       Action = InsertRecordProduct
       Category = 0
     end
-    object bbPrintSticker: TdxBarButton
-      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+    object bbPrintCalc: TdxBarButton
+      Action = actPrintCalc
       Category = 0
-      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      Visible = ivAlways
-      ImageIndex = 18
     end
     object bbPrintStickerTermo: TdxBarButton
       Caption = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
@@ -2207,6 +2217,60 @@ object ProductionUnionForm: TProductionUnionForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actPrintCalc: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103
+      Hint = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103
+      ImageIndex = 17
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'InvNumber_OrderClient;NPP_1;NPP_2;NPP_3'
+        end>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'From'
+          Value = ''
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 42160d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_ProductionUnionCalc'
+      ReportNameParam.Value = 'PrintMovement_ProductionUnionCalc'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
