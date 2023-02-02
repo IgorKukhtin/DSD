@@ -36,7 +36,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isSupplementAddCash Boolean, isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, isShowActiveAlerts Boolean,
                MinPriceSale TFloat, DeviationsPrice1303 TFloat, LimitCash TFloat, 
                SetDateRRO TDateTime, isSetDateRRO boolean, SetDateRROList TVarChar,
-               isReplaceSte2ListDif Boolean
+               isReplaceSte2ListDif Boolean, MobMessSum TFloat, MobMessCount Integer
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -193,6 +193,8 @@ BEGIN
                                   , COALESCE(ObjectFloat_CashSettings_MinPriceSale.ValueData, 0)::TFLoat         AS MinPriceSale
                                   , COALESCE(ObjectFloat_CashSettings_DeviationsPrice1303.ValueData, 1)::TFLoat  AS DeviationsPrice1303
                                   , COALESCE(ObjectFloat_CashSettings_LimitCash.ValueData, 0)::TFLoat            AS LimitCash
+                                  , COALESCE(ObjectFloat_CashSettings_MobMessSum.ValueData, 0)::TFLoat           AS MobMessSum
+                                  , COALESCE(ObjectFloat_CashSettings_MobMessCount.ValueData, 0)::Integer        AS MobMessCount
                              FROM Object AS Object_CashSettings
                                   LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                                          ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id
@@ -224,6 +226,12 @@ BEGIN
                                   LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_LimitCash
                                                         ON ObjectFloat_CashSettings_LimitCash.ObjectId = Object_CashSettings.Id 
                                                        AND ObjectFloat_CashSettings_LimitCash.DescId = zc_ObjectFloat_CashSettings_LimitCash()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_MobMessSum
+                                                        ON ObjectFloat_CashSettings_MobMessSum.ObjectId = Object_CashSettings.Id 
+                                                       AND ObjectFloat_CashSettings_MobMessSum.DescId = zc_ObjectFloat_CashSettings_MobMessSum()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_MobMessCount
+                                                        ON ObjectFloat_CashSettings_MobMessCount.ObjectId = Object_CashSettings.Id 
+                                                       AND ObjectFloat_CashSettings_MobMessCount.DescId = zc_ObjectFloat_CashSettings_MobMessCount()
                              WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
                              LIMIT 1)
        , tmpPromoCodeDoctor AS (SELECT PromoUnit.ID
@@ -426,6 +434,8 @@ BEGIN
        , ObjectString_SetDateRROList.ValueData                                            AS SetDateRROList 
 
        , COALESCE (ObjectBoolean_ReplaceSte2ListDif.ValueData, FALSE):: Boolean           AS isReplaceSte2ListDif
+       , tmpCashSettings.MobMessSum
+       , tmpCashSettings.MobMessCount
 
    FROM Object AS Object_Unit
 

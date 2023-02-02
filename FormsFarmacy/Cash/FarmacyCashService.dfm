@@ -169,25 +169,6 @@ object MainCashForm2: TMainCashForm2
     Left = 88
     Top = 224
   end
-  object AlternativeCDS: TClientDataSet
-    Aggregates = <>
-    Filtered = True
-    FieldDefs = <>
-    IndexDefs = <
-      item
-        Name = 'AlternativeCDSIndexId'
-        Fields = 'Id'
-      end>
-    Params = <>
-    StoreDefs = True
-    Left = 304
-    Top = 136
-  end
-  object AlternativeDS: TDataSource
-    DataSet = AlternativeCDS
-    Left = 344
-    Top = 104
-  end
   object spSelectRemains: TdsdStoredProc
     StoredProcName = 'gpSelect_CashRemains_ver2'
     DataSet = RemainsCDS

@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, B
                                                            TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, Boolean, 
                                                            Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TFloat, Integer, 
                                                            Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, Integer, TFloat, TFloat, Boolean, 
-                                                           TVarChar);
+                                                           TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -51,6 +51,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inAddMarkupTabletki          TFloat    ,     -- Доп наценка на Таблетки на поз по выставленным наценкам
     IN inisShoresSUN                Boolean   ,     -- Берега отдельно по СУН
     IN inFixedPercent               TFloat    ,     -- Фиксированный процент выполнения плана
+    IN inMobMessSum                 TFloat    ,     -- Сообщение по созданию заказа по приложению от суммы чека
+    IN inMobMessCount               Integer   ,     -- 	Сообщение по созданию заказа по приложению после чека
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -177,6 +179,12 @@ BEGIN
    
     -- Фиксированный процент выполнения плана
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_FixedPercent(), vbID, inFixedPercent);
+   
+    -- Сообщение по созданию заказа по приложению от суммы чека
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_MobMessSum(), vbID, inMobMessSum);
+    -- 	Сообщение по созданию заказа по приложению после чека
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_MobMessCount(), vbID, inMobMessCount);
+   
 
    -- Контроль сдачи экзамен при выдача зарплаты
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_WagesCheckTesting(), vbID, inisWagesCheckTesting);

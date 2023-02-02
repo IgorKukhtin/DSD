@@ -118,6 +118,11 @@ type
     cbShoresSUN: TcxCheckBox;
     ceFixedPercent: TcxCurrencyEdit;
     cxLabel36: TcxLabel;
+    cxLabel37: TcxLabel;
+    ceMobMessSum: TcxCurrencyEdit;
+    cxLabel38: TcxLabel;
+    ceMobMessCount: TcxCurrencyEdit;
+    cxLabel39: TcxLabel;
   private
     { Private declarations }
   public

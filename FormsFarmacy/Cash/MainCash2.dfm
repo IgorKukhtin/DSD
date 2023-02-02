@@ -26,7 +26,7 @@ inherited MainCashForm2: TMainCashForm2
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 499
+      Width = 750
       Height = 153
       Align = alClient
       TabOrder = 0
@@ -173,83 +173,8 @@ inherited MainCashForm2: TMainCashForm2
         GridView = CheckGridDBTableView
       end
     end
-    object AlternativeGrid: TcxGrid
-      Left = 713
-      Top = 0
-      Width = 251
-      Height = 153
-      Align = alRight
-      TabOrder = 1
-      Visible = False
-      object AlternativeGridDBTableView: TcxGridDBTableView
-        Navigator.Buttons.CustomButtons = <>
-        DataController.DataSource = AlternativeDS
-        DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <>
-        DataController.Summary.SummaryGroups = <>
-        OptionsData.CancelOnExit = False
-        OptionsData.Deleting = False
-        OptionsData.DeletingConfirmation = False
-        OptionsData.Editing = False
-        OptionsData.Inserting = False
-        OptionsView.GridLineColor = clBtnFace
-        OptionsView.GroupByBox = False
-        OptionsView.Indicator = True
-        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object AlternativeGridColLinkType: TcxGridDBColumn
-          Caption = '*'
-          DataBinding.FieldName = 'LinkType'
-          PropertiesClassName = 'TcxImageComboBoxProperties'
-          Properties.Images = dmMain.ImageList
-          Properties.Items = <
-            item
-              Description = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1077
-              ImageIndex = 54
-              Value = 0
-            end
-            item
-              Description = #1040#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1072
-              ImageIndex = 27
-              Value = 1
-            end>
-          Properties.ShowDescriptions = False
-          Width = 21
-        end
-        object AlternativeGridColGoodsCode: TcxGridDBColumn
-          Caption = #1050#1086#1076
-          DataBinding.FieldName = 'GoodsCode'
-          Visible = False
-          Width = 52
-        end
-        object AlternativeGridColGoodsName: TcxGridDBColumn
-          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-          DataBinding.FieldName = 'GoodsName'
-          Width = 139
-        end
-        object AlternativeGridColTypeColor: TcxGridDBColumn
-          DataBinding.FieldName = 'TypeColor'
-          Visible = False
-        end
-        object AlternativeGridDColPrice: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072
-          DataBinding.FieldName = 'Price'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = ',0.00'
-          Width = 40
-        end
-        object AlternativeGridColRemains: TcxGridDBColumn
-          Caption = #1054#1089#1090'.'
-          DataBinding.FieldName = 'Remains'
-          Width = 33
-        end
-      end
-      object AlternativeGridLevel: TcxGridLevel
-        Caption = #1040#1083#1100#1090' (24 '#1087#1086#1079') "*"'
-        GridView = AlternativeGridDBTableView
-      end
-    end
     object cxSplitter1: TcxSplitter
-      Left = 499
+      Left = 750
       Top = 0
       Width = 3
       Height = 153
@@ -257,12 +182,12 @@ inherited MainCashForm2: TMainCashForm2
       Control = ExpirationDateGrid
     end
     object ExpirationDateGrid: TcxGrid
-      Left = 502
+      Left = 753
       Top = 0
       Width = 211
       Height = 153
       Align = alRight
-      TabOrder = 3
+      TabOrder = 2
       object ExpirationDateView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ExpirationDateDS
@@ -2909,11 +2834,6 @@ inherited MainCashForm2: TMainCashForm2
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = AlternativeGrid
-        Properties.Strings = (
-          'Width')
-      end
-      item
         Component = BottomPanel
         Properties.Strings = (
           'Height')
@@ -3086,7 +3006,6 @@ inherited MainCashForm2: TMainCashForm2
         item
         end
         item
-          StoredProc = spSelect_Alternative
         end>
       ShortCut = 0
     end
@@ -8415,75 +8334,6 @@ inherited MainCashForm2: TMainCashForm2
     PropertiesCellList = <>
     Left = 496
     Top = 312
-  end
-  object AlternativeCDS: TClientDataSet
-    Aggregates = <>
-    Filtered = True
-    FieldDefs = <>
-    IndexDefs = <
-      item
-        Name = 'AlternativeCDSIndexId'
-        Fields = 'Id'
-      end>
-    Params = <>
-    StoreDefs = True
-    Left = 584
-    Top = 264
-  end
-  object AlternativeDS: TDataSource
-    DataSet = AlternativeCDS
-    Left = 616
-    Top = 264
-  end
-  object spSelect_Alternative: TdsdStoredProc
-    StoredProcName = 'gpSelect_Cash_Goods_Alternative_ver2'
-    DataSet = AlternativeCDS
-    DataSets = <
-      item
-        DataSet = AlternativeCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CheckId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    AutoWidth = True
-    Left = 552
-    Top = 264
-  end
-  object dsdDBViewAddOnAlternative: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = AlternativeGridDBTableView
-    OnDblClickActionList = <
-      item
-        Action = actChoiceGoodsInRemainsGrid
-      end>
-    ActionItemList = <
-      item
-        Action = actChoiceGoodsInRemainsGrid
-        ShortCut = 13
-      end>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ChartList = <>
-    ColorRuleList = <
-      item
-        BackGroundValueColumn = AlternativeGridColTypeColor
-        ColorValueList = <>
-      end>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
-    ShowFieldImageList = <>
-    SearchAsFilter = False
-    PropertiesCellList = <>
-    Left = 592
-    Top = 336
   end
   object spGetMoneyInCash: TdsdStoredProc
     StoredProcName = 'gpGet_Money_in_Cash'

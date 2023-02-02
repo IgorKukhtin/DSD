@@ -145,8 +145,6 @@ type
     FormParams: TdsdFormParams;
     spDelete_CashSession: TdsdStoredProc;
     spUpdate_Log_CashRemains: TdsdStoredProc;
-    AlternativeCDS: TClientDataSet;
-    AlternativeDS: TDataSource;
     spSelectRemains: TdsdStoredProc;
     RemainsCDS: TClientDataSet;
     RemainsDS: TDataSource;
@@ -220,6 +218,8 @@ type
     FirstRemainsReceived: boolean;
     FHasError: boolean;
     FisShowPlanEmployeeUser: boolean;
+
+    FSaveLocalVIP: Integer;
 
     function SetFarmacyNameByUser : boolean;
 
@@ -439,15 +439,6 @@ begin
               Add_Log('End MutexRemains 302');
               ReleaseMutex(MutexRemains);
             end;
-
-  //          Add_Log('Start MutexAlternative 311');
-  //          WaitForSingleObject(MutexAlternative, INFINITE);
-  //          try
-  //            SaveLocalData(AlternativeCDS,Alternative_lcl);
-  //          finally
-  //            Add_Log('End MutexAlternative 311');
-  //            ReleaseMutex(MutexAlternative);
-  //          end;
           end;
         Except
         end;
@@ -485,8 +476,6 @@ begin
       if not gc_User.Local then SaveImplementationPlanEmployeeUser;
       //Получение акционных товаров
       if not gc_User.Local then SaveSalePromoGoods;
-      //Получение справочника аналогов
-//      if not gc_User.Local then SaveGoodsAnalog;
       // Отправляем логи
       if not gc_User.Local then SendPickUpLogsAndDBF;
       // Отправка сообщения приложению про надобность обновить остатки из файла
@@ -624,6 +613,8 @@ begin
   if ParamStr(1) = 'Админ' then  // показываем меню только для Админа
     tiServise.PopupMenu:=pmServise
   else tiServise.PopupMenu:=nil;
+
+  FSaveLocalVIP := 0;
 
   Application.OnMessage := AppMsgHandler;
   InitMutex;
@@ -793,55 +784,6 @@ begin
   end;
 end;
 
-//function TMainCashForm2.SaveCashRemains : boolean;
-//  var nRemainsFieldCount, nAlternativeFieldCount: integer;
-//begin
-//  Result := False;
-//  tiServise.Hint := 'Получение остатков';
-//  Add_Log('Start MutexRemains 390');
-//  WaitForSingleObject(MutexRemains, INFINITE);
-//  Add_Log('Start MutexAlternative 393');
-//  WaitForSingleObject(MutexAlternative, INFINITE);
-//  RemainsCDS.DisableControls;
-//  AlternativeCDS.DisableControls;
-//  try
-//    try
-//      nRemainsFieldCount := -1;
-//      if RemainsCDS.Active then
-//        nRemainsFieldCount := RemainsCDS.Fields.Count;
-//      nAlternativeFieldCount := -1;
-//      if AlternativeCDS.Active then
-//        nAlternativeFieldCount := AlternativeCDS.Fields.Count;
-//      //Получение остатков
-//      actRefresh.Execute;
-//      //Проверка количества столбцов в новом наборе
-//      if (nRemainsFieldCount > RemainsCDS.Fields.Count)
-//         or
-//         (nAlternativeFieldCount > AlternativeCDS.Fields.Count) then
-//      begin
-//        tiServise.BalloonHint:='Ошибка при получении остатков - были получены неполные данные.';
-//        tiServise.ShowBalloonHint;
-//        Result := true;
-//        Add_Log('Ошибка при получении остатков');
-//        Add_Log('Remains: было столбцов: '+ IntToStr(nRemainsFieldCount) + ', получено: '+ IntToStr(RemainsCDS.Fields.Count));
-//        Add_Log('Alternative: было столбцов: '+ IntToStr(nAlternativeFieldCount) + ', получено: '+ IntToStr(AlternativeCDS.Fields.Count));
-//        Exit;
-//      end;
-//      //Сохранение остатков в локальной базе
-//      SaveLocalData(RemainsCDS,Remains_lcl);
-//      SaveLocalData(AlternativeCDS,Alternative_lcl);
-//    Except ON E:Exception do
-//      Add_Log('Ошибка при получении остатков:' + E.Message);
-//    end;
-//  finally
-//    RemainsCDS.EnableControls;
-//    AlternativeCDS.EnableControls;
-//    Add_Log('End MutexRemains 390');
-//    ReleaseMutex(MutexRemains);
-//    Add_Log('End MutexAlternative 393');
-//    ReleaseMutex(MutexAlternative);
-//  end;
-//end;
 
 procedure TMainCashForm2.SaveCashRemainsDif;
   var I : integer;
@@ -945,7 +887,7 @@ begin  //+
           ReleaseMutex(MutexVip);
         end;
       Except ON E:Exception do
-        Add_Log('Ошибка отправки листа отказов:' + E.Message);
+        Add_Log('Ошибка получения отложенных чеков:' + E.Message);
       end;
     finally
       ds.free;
@@ -1131,6 +1073,8 @@ procedure TMainCashForm2.TimerNeedRemainsDiffTimer(Sender: TObject);
 begin
   TimerNeedRemainsDiff.Enabled := False;
   TimerNeedRemainsDiff.Interval := 120000;
+  Inc(FSaveLocalVIP);
+
   try
 
     bRun := False;
@@ -1161,8 +1105,17 @@ begin
       CashRemainsDiffExecute;
       Add_Log('End CashRemainsDiffExecute');
     end;
+
+    if FSaveLocalVIP > 3 then
+    begin
+      Add_Log('Start SaveLocalVIP');
+      if not gc_User.Local then SaveLocalVIP;
+      Add_Log('End SaveLocalVIP');
+      FSaveLocalVIP := 0;
+    end;
+
   finally
-    TimerNeedRemainsDiff.Enabled := True;
+    TimerNeedRemainsDiff.Enabled := not TimerGetRemains.Enabled;
   end;
 end;
 
@@ -1604,6 +1557,7 @@ begin
                   dsdSave.Params.Clear;
                   if Head.ID > 0 then dsdSave.Params.AddParam('ioId', ftInteger, ptInputOutput, Head.ID)
                   else dsdSave.Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
+                  dsdSave.Params.AddParam('inUID', ftString, ptInput, Head.UID);
                   dsdSave.Params.AddParam('inDate', ftDateTime, ptInput, Head.DATE);
                   dsdSave.Params.AddParam('inCashRegister', ftString, ptInput, Head.CASH);
                   dsdSave.Params.AddParam('inPaidType', ftInteger, ptInput, Head.PAIDTYPE);

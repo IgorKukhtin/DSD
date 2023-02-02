@@ -64,6 +64,8 @@ end;
 
 procedure TUpdaterTest.UpdateFarmacyCash;
 begin
+  if FileExists(ExtractFileDir(ParamStr(0)) + '\sqlite3.dll')
+  then SaveFile(ExtractFileDir(ParamStr(0)) + '\sqlite3.dll');
   SaveFile(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe');
 end;
 

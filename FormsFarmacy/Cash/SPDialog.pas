@@ -88,7 +88,7 @@ implementation
 
 {$R *.dfm}
 
-uses IniUtils, DiscountService, RegularExpressions, MainCash, MainCash2, Helsi, LikiDniproeHealth;
+uses IniUtils, DiscountService, RegularExpressions, MainCash2, Helsi, LikiDniproeHealth;
 
 function TSPDialogForm.CheckInvNumberSP(ASPKind : integer; ANumber : string) : boolean;
   var Res: TArray<string>; I, J : Integer; bCheck : boolean;
@@ -128,9 +128,7 @@ begin
     end;
 
     //Сначала ищем в текущем ДБФ
-    if isMainForm_OLD = TRUE
-    then bCheck := MainCash.MainCashForm.pCheck_InvNumberSP (ASPKind, ANumber)
-    else bCheck := MainCash2.MainCashForm.pCheck_InvNumberSP (ASPKind, ANumber);
+    bCheck := MainCash2.MainCashForm.pCheck_InvNumberSP (ASPKind, ANumber);
 
     if bCheck then
     begin
@@ -274,9 +272,7 @@ begin
           end;
       //
       //Сначала ищем в текущем ДБФ
-      if isMainForm_OLD = TRUE
-      then MainCash.MainCashForm.pGet_OldSP (APartnerMedicalId, APartnerMedicalName, AMedicSP, AOperDateSP)
-      else MainCash2.MainCashForm.pGet_OldSP (APartnerMedicalId, APartnerMedicalName, AMedicSP, AOperDateSP);
+      MainCash2.MainCashForm.pGet_OldSP (APartnerMedicalId, APartnerMedicalName, AMedicSP, AOperDateSP);
 
       //если не нашли - попробуем в базе
       if APartnerMedicalId = 0 then

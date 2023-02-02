@@ -46,7 +46,7 @@ uses
   LoginForm in '..\SOURCE\LoginForm.pas' {LoginForm},
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
   Updater in '..\SOURCE\COMPONENT\Updater.pas',
-  MainCash in '..\FormsFarmacy\Cash\MainCash.pas' {MainCashForm: TParentForm},
+  MainCash2 in '..\FormsFarmacy\Cash\MainCash2.pas' {MainCashForm2: TParentForm},
   AncestorBase in '..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
   UtilConvert in '..\SOURCE\UtilConvert.pas',
   CashInterface in '..\FormsFarmacy\Cash\CashInterface.pas',
@@ -68,7 +68,6 @@ uses
   VIPDialog in '..\FormsFarmacy\Cash\VIPDialog.pas' {VIPDialogForm: TParentForm},
   DiscountService in '..\FormsFarmacy\DiscountService\DiscountService.pas' {DiscountServiceForm},
   uCardService in '..\FormsFarmacy\DiscountService\uCardService.pas',
-  MainCash2 in '..\FormsFarmacy\Cash\MainCash2.pas' {MainCashForm2: TParentForm},
   LoginFormInh in '..\FormsFarmacy\Cash\LoginFormInh.pas' {LoginForm1},
   DiscountDialog in '..\FormsFarmacy\Cash\DiscountDialog.pas' {DiscountDialogForm: TParentForm},
   LocalStorage in '..\FormsFarmacy\Cash\LocalStorage.pas',
@@ -171,17 +170,8 @@ begin
     //Если все хорошо создаем главную форму Application.CreateForm();
 
    //  Выбор формы для запуска
-     case 2 of   // 1 для MainCash;  2 для MainCash2
-     1: begin
-          AllowLocalConnect := False;  //от режима зависит создание файла 'users.local' и переход приложения в автономный режим при обрыве звязи
-          isMainForm_OLD:= True;
-        end;
-     2: begin
-          AllowLocalConnect := True;  //от режима зависит создание файла 'users.local' и переход приложения в автономный режим при обрыве звязи
-          isMainForm_OLD:= False;
-          gc_User.LocalMaxAtempt:=2;
-        end;
-    end;
+    AllowLocalConnect := True;  //от режима зависит создание файла 'users.local' и переход приложения в автономный режим при обрыве звязи
+    gc_User.LocalMaxAtempt:=2;
 
     if FindCmdLineSwitch('autologin', True)
     then begin
@@ -214,14 +204,9 @@ begin
         gc_isSetDefault := True;
       //
       Application.CreateForm(TdmMain, dmMain);
-  // определяет главную форму
-      if isMainForm_OLD = TRUE
-      then
-           Application.CreateForm(TMainCashForm, MainCash.MainCashForm) // имя модуля обязательно
-      else
-          // Форма работате в связке с FarmacyCashServise.exe
-          Application.CreateForm(TMainCashForm2, MainCash2.MainCashForm); // имя модуля обязательно
-
+      // определяет главную форму
+      // Форма работате в связке с FarmacyCashServise.exe
+      Application.CreateForm(TMainCashForm2, MainCashForm);
 
       Application.CreateForm(TfrmSplash, frmSplash);
 

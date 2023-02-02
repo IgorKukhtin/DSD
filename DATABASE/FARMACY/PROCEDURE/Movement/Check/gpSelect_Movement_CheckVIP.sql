@@ -58,7 +58,10 @@ RETURNS TABLE (
   isAutoVIPforSales Boolean, 
   isMobileApplication Boolean, isConfirmByPhone Boolean, DateComing TDateTime,
   MobileDiscount TFloat, 
-  isMobileFirstOrder Boolean
+  isMobileFirstOrder Boolean,
+  isShowVIP Boolean,
+  isShowLiki24 Boolean,
+  isShowTabletki Boolean
  )
 AS
 $BODY$
@@ -217,6 +220,12 @@ BEGIN
             , MovementDate_Coming.ValueData                                AS DateComing
             , COALESCE(MovementFloat_MobileDiscount.ValueData, 0)::TFloat  AS MobileDiscount
             , COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False)::Boolean    AS isMobileFirstOrder
+            
+            , COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) 
+              NOT IN (zc_Enum_CheckSourceKind_Liki24(), zc_Enum_CheckSourceKind_Tabletki())                  AS isShowVIP
+            , COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Liki24()   AS isShowLiki24
+            , COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() AS isShowTabletki
+
 
        FROM tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id

@@ -615,6 +615,45 @@ object CashSettingsEditForm: TCashSettingsEditForm
     Hint = #9#1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072
     Caption = #9#1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072
   end
+  object cxLabel37: TcxLabel
+    Left = 540
+    Top = 517
+    Caption = #9#1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1087#1086' '#1089#1086#1079#1076#1072#1085#1080#1102' '#1079#1072#1082#1072#1079#1072' '#1087#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102
+  end
+  object ceMobMessSum: TcxCurrencyEdit
+    Left = 759
+    Top = 536
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.EditFormat = ',0.00'
+    TabOrder = 83
+    Width = 121
+  end
+  object cxLabel38: TcxLabel
+    Left = 540
+    Top = 537
+    Hint = 
+      #1055#1088#1086#1094#1077#1085#1090' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077' '#1087#1086' 1303 '#1076#1083#1103' '#1073#1083#1086 +
+      #1082#1080#1088#1086#1074#1082#1080
+    Caption = #1054#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1086#1074
+  end
+  object ceMobMessCount: TcxCurrencyEdit
+    Left = 759
+    Top = 559
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    Properties.EditFormat = ',0'
+    TabOrder = 85
+    Width = 121
+  end
+  object cxLabel39: TcxLabel
+    Left = 540
+    Top = 560
+    Hint = 
+      #1055#1088#1086#1094#1077#1085#1090' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077' '#1087#1086' 1303 '#1076#1083#1103' '#1073#1083#1086 +
+      #1082#1080#1088#1086#1074#1082#1080
+    Caption = #1044#1083#1103' '#1082#1072#1078#1076#1086#1075#1086' N '#1095#1077#1082#1072
+  end
   object ActionList: TActionList
     Left = 344
     Top = 76
@@ -993,6 +1032,21 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMobMessSum'
+        Value = Null
+        Component = ceMobMessSum
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMobMessCount'
+        Value = Null
+        Component = ceMobMessCount
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -1314,6 +1368,19 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Value = Null
         Component = ceFixedPercent
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MobMessSum'
+        Value = Null
+        Component = ceMobMessSum
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MobMessCount'
+        Value = Null
+        Component = ceMobMessCount
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -33,9 +33,6 @@ type
     CheckGridDBTableView: TcxGridDBTableView;
     CheckGridLevel: TcxGridLevel;
     CheckGrid: TcxGrid;
-    AlternativeGridDBTableView: TcxGridDBTableView;
-    AlternativeGridLevel: TcxGridLevel;
-    AlternativeGrid: TcxGrid;
     cxSplitter1: TcxSplitter;
     SearchPanel: TPanel;
     cxSplitter2: TcxSplitter;
@@ -45,8 +42,6 @@ type
     CheckGridColPrice: TcxGridDBColumn;
     CheckGridColAmount: TcxGridDBColumn;
     CheckGridColSumm: TcxGridDBColumn;
-    AlternativeGridColGoodsCode: TcxGridDBColumn;
-    AlternativeGridColGoodsName: TcxGridDBColumn;
     MainColCode: TcxGridDBColumn;
     MainColName: TcxGridDBColumn;
     MainColRemains: TcxGridDBColumn;
@@ -75,16 +70,8 @@ type
     lblTotalSumm: TcxLabel;
     dsdDBViewAddOnCheck: TdsdDBViewAddOn;
     actPutCheckToCash: TAction;
-    AlternativeGridColLinkType: TcxGridDBColumn;
-    AlternativeCDS: TClientDataSet;
-    AlternativeDS: TDataSource;
-    spSelect_Alternative: TdsdStoredProc;
-    dsdDBViewAddOnAlternative: TdsdDBViewAddOn;
     actSetVIP: TAction;
     VIP1: TMenuItem;
-    AlternativeGridColTypeColor: TcxGridDBColumn;
-    AlternativeGridDColPrice: TcxGridDBColumn;
-    AlternativeGridColRemains: TcxGridDBColumn;
     btnVIP: TcxButton;
     actOpenCheckVIP: TOpenChoiceForm;
     actLoadVIP: TMultiAction;
@@ -1600,20 +1587,6 @@ begin
       ActiveControl := edAmount;
     end
   end
-  else if AlternativeGrid.IsFocused then
-  Begin
-    if AlternativeCDS.isempty then
-      exit;
-    if AlternativeCDS.FieldByName('Remains').asCurrency > 0 then
-    begin
-      SourceClientDataSet := AlternativeCDS;
-      SoldRegim := True;
-      lcName.Text := AlternativeCDS.FieldByName('GoodsName').AsString;
-      edAmount.Enabled := True;
-      edAmount.Text := '1';
-      ActiveControl := edAmount;
-    end
-  End
   else
   Begin
     if CheckCDS.isempty then
@@ -4416,11 +4389,9 @@ begin
     // ShowMessage('Загрузка из Remains');
     MainGridDBTableView.BeginUpdate;
     RemainsCDS.DisableControls;
-    // AlternativeCDS.DisableControls;
     ExpirationDateCDS.DisableControls;
     try
       if not fileExists(Remains_lcl) or
-      // not FileExists(Alternative_lcl) then
         not fileExists(GoodsExpirationDate_lcl) then
       Begin
         ShowMessage('Нет локального хранилища. Дальнейшая работа невозможна!');
@@ -4432,12 +4403,6 @@ begin
       finally
         ReleaseMutex(MutexRemains);
       end;
-      // WaitForSingleObject(MutexAlternative, INFINITE);
-      // try
-      // LoadLocalData(AlternativeCDS, Alternative_lcl);
-      // finally
-      // ReleaseMutex(MutexAlternative);
-      // end;
       WaitForSingleObject(MutexGoodsExpirationDate, INFINITE);
       try
         LoadLocalData(ExpirationDateCDS, GoodsExpirationDate_lcl);
@@ -4450,7 +4415,6 @@ begin
     finally
       RemainsCDS.EnableControls;
       ExpirationDateCDS.EnableControls;
-      // AlternativeCDS.EnableControls;
       MainGridDBTableView.EndUpdate;
     end;
     if not gc_User.Local then
@@ -4700,18 +4664,6 @@ end;
 procedure TMainCashForm2.actSetFilterExecute(Sender: TObject);
 begin
   inherited;
-  // if RemainsCDS.Active and AlternativeCDS.Active then
-
-  // a1  код из события RemainsCDSAfterScroll для ускорения работы приложения
-  // if RemainsCDS.IsEmpty then
-  // AlternativeCDS.Filter := 'Remains > 0 AND MainGoodsId= 0'
-  // else if RemainsCDS.FieldByName('AlternativeGroupId').AsInteger = 0 then
-  // AlternativeCDS.Filter := 'Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString
-  // else
-  // AlternativeCDS.Filter := '(Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString +
-  // ') or (Remains > 0 AND AlternativeGroupId='+RemainsCDS.FieldByName('AlternativeGroupId').AsString+
-  // ' AND Id <> '+RemainsCDS.FieldByName('Id').AsString+')';
-  // a1
 
   if RemainsCDS.isempty then
     ExpirationDateCDS.Filter := 'Amount <> 0 AND ID = 0'
@@ -5875,7 +5827,6 @@ var
 begin
   // ShowMessage('actSetRimainsFromMemdataExecute - begin');
   Add_Log('Начало заполнения с Memdata');
-  // AlternativeCDS.DisableControls;
   RemainsCDS.AfterScroll := Nil;
   GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
   PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
@@ -5887,7 +5838,6 @@ begin
   if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
     nCheckId := CheckCDS.FieldByName('GoodsId').AsInteger;
   RemainsCDS.Filtered := false;
-  // AlternativeCDS.Filtered := False;
   CheckCDS.DisableControls;
   oldFilter := CheckCDS.Filter;
   oldFiltered := CheckCDS.Filtered;
@@ -6077,30 +6027,12 @@ begin
 
       MemData.Next;
     end;
-
-    // AlternativeCDS.First;
-    // while Not AlternativeCDS.eof do
-    // Begin
-    // if MemData.locate('Id',AlternativeCDS.fieldByName('Id').AsInteger,[]) then
-    // Begin
-    // if AlternativeCDS.FieldByName('Remains').asCurrency <> MemData.FieldByName('Remains').asCurrency then
-    // Begin
-    // AlternativeCDS.Edit;
-    // AlternativeCDS.FieldByName('Remains').asCurrency := MemData.FieldByName('Remains').asCurrency;
-    // AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency - Amount_find;
-    // AlternativeCDS.Post;
-    // End;
-    // End;
-    // AlternativeCDS.Next;
-    // End;
     MemData.Close;
   finally
     RemainsCDS.Filtered := True;
     RemainsCDS.Locate('Id;PartionDateKindId;NDSKINDID;DiscountExternalID;DivisionPartiesID',
       VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
     RemainsCDS.EnableControls;
-    // AlternativeCDS.Filtered := true;
-    // AlternativeCDS.EnableControls;
     if nCheckId <> 0 then
       CheckCDS.Locate('GoodsId', nCheckId, []);
     CheckCDS.EnableControls;
@@ -10757,7 +10689,6 @@ begin
   // отключаем реакции
 
   Add_Log('Начало обновления остатков');
-  // AlternativeCDS.DisableControls;
   RemainsCDS.AfterScroll := Nil;
   GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
   PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
@@ -10769,7 +10700,6 @@ begin
   if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
     nCheckId := CheckCDS.FieldByName('GoodsId').AsInteger;
   RemainsCDS.Filtered := false;
-  // AlternativeCDS.Filtered := False;
   ADiffCDS.DisableControls;
   CheckCDS.DisableControls;
   oldFilter := CheckCDS.Filter;
@@ -10854,29 +10784,11 @@ begin
       End;
       ADiffCDS.Next;
     end;
-
-    // AlternativeCDS.First;
-    // while Not AlternativeCDS.eof do
-    // Begin
-    // if ADIffCDS.locate('Id',AlternativeCDS.fieldByName('Id').AsInteger,[]) then
-    // Begin
-    // if AlternativeCDS.FieldByName('Remains').asCurrency <> ADIffCDS.FieldByName('Remains').asCurrency then
-    // Begin
-    // AlternativeCDS.Edit;
-    // AlternativeCDS.FieldByName('Remains').asCurrency := ADIffCDS.FieldByName('Remains').asCurrency;
-    // AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency - Amount_find;
-    // AlternativeCDS.Post;
-    // End;
-    // End;
-    // AlternativeCDS.Next;
-    // End;
   finally
     RemainsCDS.Filtered := True;
     RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
       VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
     RemainsCDS.EnableControls;
-    // AlternativeCDS.Filtered := true;
-    // AlternativeCDS.EnableControls;
     if nCheckId <> 0 then
       CheckCDS.Locate('GoodsId', nCheckId, []);
     CheckCDS.EnableControls;
@@ -11453,12 +11365,6 @@ begin
         finally
           ReleaseMutex(MutexRemains);
         end;
-        // WaitForSingleObject(MutexAlternative, INFINITE);
-        // try
-        // SaveLocalData(AlternativeCDS,Alternative_lcl);
-        // finally
-        // ReleaseMutex(MutexAlternative);
-        // end;
         WaitForSingleObject(MutexGoodsExpirationDate, INFINITE);
         try
           SaveLocalData(ExpirationDateCDS, GoodsExpirationDate_lcl);
@@ -12049,7 +11955,6 @@ begin
     exit;
   End;
   // открючаем реакции
-  // AlternativeCDS.DisableControls;
   ExpirationDateCDS.DisableControls;
   oldFilterExpirationDate := ExpirationDateCDS.Filter;
   RemainsCDS.AfterScroll := Nil;
@@ -12061,7 +11966,6 @@ begin
   RemainsCDS.DisableControls;
   RemainsCDS.Filtered := false;
   CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
-  // AlternativeCDS.Filtered := False;
   try
     CheckCDS.First;
     if not ALoadVipCheck then
@@ -12145,36 +12049,6 @@ begin
       end;
       ExpirationDateCDS.Next;
     End;
-
-
-    // AlternativeCDS.First;
-    // while Not AlternativeCDS.eof do
-    // Begin
-    // if (AGoodsId = 0) or ((AlternativeCDS.FieldByName('Id').AsInteger = AGoodsId) and (AlternativeCDS.FieldByName('Price').AsFloat = APriceSale)) then
-    // Begin
-    // //if (AAmount < 0) and (CheckCDS.FieldByName('PriceSale').asCurrency > 0)
-    // //then lPriceSale:= CheckCDS.FieldByName('PriceSale').asCurrency
-    // //else lPriceSale:= AlternativeCDS.fieldByName('Price').asCurrency;
-    //
-    // if CheckCDS.locate('GoodsId;PriceSale',VarArrayOf([AlternativeCDS.fieldByName('Id').AsInteger,APriceSale]),[]) then
-    // Begin
-    // AlternativeCDS.Edit;
-    // if (AAmount = 0) or
-    // (
-    // (AAmount < 0)
-    // AND
-    // (abs(AAmount) >= CheckCDS.FieldByName('Amount').asCurrency)
-    // ) then
-    // AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
-    // + CheckCDS.FieldByName('Amount').asCurrency
-    // else
-    // AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
-    // - AAmount;
-    // AlternativeCDS.Post;
-    // End;
-    // End;
-    // AlternativeCDS.Next;
-    // End;
 
     CheckCDS.First;
     while not CheckCDS.Eof do
@@ -12532,8 +12406,6 @@ begin
     RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
       VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
     RemainsCDS.EnableControls;
-    // AlternativeCDS.Filtered := true;
-    // AlternativeCDS.EnableControls;
     ExpirationDateCDS.Filter := oldFilterExpirationDate;
     ExpirationDateCDS.EnableControls;
     CheckCDS.Filtered := True;
@@ -14097,26 +13969,22 @@ end;
 
 procedure TMainCashForm2.LoadFromLocalStorage;
 var
-  nRemainsID, nAlternativeID, nCheckId: Integer;
+  nRemainsID, nCheckId: Integer;
 begin
   startSplash('Начало обновления данных с сервера !!');
 
   try
     MainGridDBTableView.BeginUpdate;
     RemainsCDS.DisableControls;
-    // AlternativeCDS.DisableControls;
     ExpirationDateCDS.DisableControls;
     nRemainsID := 0;
     if RemainsCDS.Active and (RemainsCDS.RecordCount > 0) then
       nRemainsID := RemainsCDS.FieldByName('Id').AsInteger;
-    nAlternativeID := 0;
-    // if AlternativeCDS.Active and (AlternativeCDS.RecordCount > 0) then
-    // nAlternativeID := AlternativeCDS.FieldByName('Id').asInteger;
     nCheckId := 0;
     if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
       nCheckId := CheckCDS.FieldByName('GoodsId').AsInteger;
     try
-      if not fileExists(Remains_lcl) { or not FileExists(Alternative_lcl) } then
+      if not fileExists(Remains_lcl) then
         ShowMessage('Нет локального хранилища.');
 
       WaitForSingleObject(MutexRemains, INFINITE);
@@ -14125,12 +13993,6 @@ begin
       finally
         ReleaseMutex(MutexRemains);
       end;
-      // WaitForSingleObject(MutexAlternative, INFINITE);
-      // try
-      // LoadLocalData(AlternativeCDS, Alternative_lcl);
-      // finally
-      // ReleaseMutex(MutexAlternative);
-      // end;
       WaitForSingleObject(MutexGoodsExpirationDate, INFINITE);
       try
         LoadLocalData(ExpirationDateCDS, GoodsExpirationDate_lcl);
@@ -14183,12 +14045,9 @@ begin
     finally
       if nRemainsID <> 0 then
         RemainsCDS.Locate('Id', nRemainsID, []);
-      // if nAlternativeID <> 0 then
-      // AlternativeCDS.Locate('Id', nAlternativeID, []);
       if nCheckId <> 0 then
         CheckCDS.Locate('GoodsId', nCheckId, []);
       RemainsCDS.EnableControls;
-      // AlternativeCDS.EnableControls;
       ExpirationDateCDS.EnableControls;
       MainGridDBTableView.EndUpdate;
     end;

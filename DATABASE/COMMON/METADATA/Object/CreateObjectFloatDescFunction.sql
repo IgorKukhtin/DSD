@@ -2363,10 +2363,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_PartionDateWages_Percent() RETURNS Int
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_PartionDateWages(), 'zc_ObjectFloat_PartionDateWages_Percent', 'Поправочный коэффициент при начислении' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PartionDateWages_Percent');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_MobMessSum() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_MobMessSum'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_MobMessSum', 'Сообщение по созданию заказа по приложению от суммы чека' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_MobMessSum');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_MobMessCount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_MobMessCount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_MobMessCount', 'Сообщение по созданию заказа по приложению после чека' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_MobMessCount');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 02.02.23                                                                                      * zc_ObjectFloat_CashSettings_MobMessSum, zc_ObjectFloat_CashSettings_MobMessCount
  18.01.23                                                                                      * zc_ObjectFloat_PartionDateWages_Percent
  17.01.23                                                                                      * zc_ObjectFloat_CashSettings_FixedPercent
  12.01.23                                                                                      * zc_ObjectFloat_PayrollTypeVIP_Rate

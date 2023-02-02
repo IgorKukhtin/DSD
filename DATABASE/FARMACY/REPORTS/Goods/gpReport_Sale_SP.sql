@@ -862,6 +862,15 @@ BEGIN
                   THEN 'UA083077700000026008711126473'  
                   WHEN tmpMovDetails.JuridicalId = 472115  
                   THEN 'UA443077700000026006711126475' 
+                  WHEN tmpMovDetails.JuridicalId = 1311462 
+                   AND Object_PartnerMedical.Id = 4474556 
+                  THEN 'UA833077700000026002711126394' 
+                  WHEN tmpMovDetails.JuridicalId = 3457711 
+                   AND Object_PartnerMedical.Id = 4474556 
+                  THEN 'UA313077700000026003711126326' 
+                  WHEN tmpMovDetails.JuridicalId = 1311462  
+                   AND Object_PartnerMedical.Id = 4212299 
+                  THEN 'UA833077700000026002711126394' 
                   ELSE tmpMovDetails.BankAccount END ::TVarChar
            , tmpMovDetails.Phone
            , tmpMovDetails.MainName
@@ -873,11 +882,29 @@ BEGIN
                   THEN '¿“ "¿_¡¿Õ "'  
                   WHEN tmpMovDetails.JuridicalId = 472115  
                   THEN '¿“ "¿-¡¿Õ "' 
+                  WHEN tmpMovDetails.JuridicalId = 1311462 
+                   AND Object_PartnerMedical.Id = 4474556 
+                  THEN '¿“ "¿-¡¿Õ "' 
+                  WHEN tmpMovDetails.JuridicalId = 3457711 
+                   AND Object_PartnerMedical.Id = 4474556 
+                  THEN '¿“ "¿-¡¿Õ "' 
+                  WHEN tmpMovDetails.JuridicalId = 1311462  
+                   AND Object_PartnerMedical.Id = 4212299 
+                  THEN '¿“ "¿-¡¿Õ "' 
                   ELSE tmpMovDetails.BankName END ::TVarChar
            , CASE WHEN tmpMovDetails.JuridicalId = 2886776 
                   THEN '370770'  
                   WHEN tmpMovDetails.JuridicalId = 472115  
                   THEN '370770' 
+                  WHEN tmpMovDetails.JuridicalId = 1311462 
+                   AND Object_PartnerMedical.Id = 4474556 
+                  THEN '307770' 
+                  WHEN tmpMovDetails.JuridicalId = 3457711 
+                   AND Object_PartnerMedical.Id = 4474556 
+                  THEN '307770' 
+                  WHEN tmpMovDetails.JuridicalId = 1311462  
+                   AND Object_PartnerMedical.Id = 4212299 
+                  THEN '307770' 
                   ELSE tmpMovDetails.MFO END      ::TVarChar
 
            , Object_PartnerMedicalJuridical.ValueData AS PartnerMedical_JuridicalName
@@ -1073,4 +1100,4 @@ $BODY$
 
 -- SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.05.2022', inEndDate:= '05.05.2022', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inNDSKindId := 0, inSession:= zfCalc_UserAdmin());
 
-select * from gpReport_Sale_SP(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('12.08.2022')::TDateTime , inJuridicalId := 2886776 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 9 ,  inSession := '3');
+-- select * from gpReport_Sale_SP(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('12.08.2022')::TDateTime , inJuridicalId := 2886776 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 9 ,  inSession := '3');

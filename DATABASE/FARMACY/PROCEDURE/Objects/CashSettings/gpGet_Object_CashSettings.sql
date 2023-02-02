@@ -52,6 +52,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , AddMarkupTabletki TFloat
              , isShoresSUN Boolean
              , FixedPercent TFloat
+             , MobMessSum TFloat
+             , MobMessCount Integer
              ) AS
 $BODY$
 BEGIN
@@ -109,6 +111,9 @@ BEGIN
         , ObjectFloat_CashSettings_AddMarkupTabletki.ValueData                     AS AddMarkupTabletki
         , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE)          AS isShoresSUN
         , ObjectFloat_CashSettings_FixedPercent.ValueData                          AS FixedPercent
+        , ObjectFloat_CashSettings_MobMessSum.ValueData                            AS MobMessSum
+        , ObjectFloat_CashSettings_MobMessCount.ValueData::Integer                 AS MobMessCount
+
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -257,6 +262,13 @@ BEGIN
                               ON ObjectFloat_CashSettings_FixedPercent.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_FixedPercent.DescId = zc_ObjectFloat_CashSettings_FixedPercent()
 
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_MobMessSum
+                              ON ObjectFloat_CashSettings_MobMessSum.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_MobMessSum.DescId = zc_ObjectFloat_CashSettings_MobMessSum()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_MobMessCount
+                              ON ObjectFloat_CashSettings_MobMessCount.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_MobMessCount.DescId = zc_ObjectFloat_CashSettings_MobMessCount()
+
         LEFT JOIN ObjectLink AS ObjectLink_CashSettings_UserUpdateMarketing
                ON ObjectLink_CashSettings_UserUpdateMarketing.ObjectId = Object_CashSettings.Id
               AND ObjectLink_CashSettings_UserUpdateMarketing.DescId = zc_ObjectLink_CashSettings_UserUpdateMarketing()
@@ -280,4 +292,5 @@ ALTER FUNCTION gpGet_Object_CashSettings(TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_CashSettings ('3')
+-- 
+SELECT * FROM gpGet_Object_CashSettings ('3')

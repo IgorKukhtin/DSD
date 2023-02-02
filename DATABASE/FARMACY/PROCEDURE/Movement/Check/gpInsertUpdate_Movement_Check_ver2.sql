@@ -25,9 +25,11 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Boolean, Integer, Boolean, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Boolean, Integer, Boolean, Boolean, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TVarChar, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Boolean, Integer, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
+    IN inUID                 TVarChar  , -- UID элемента чека
     IN inDate                TDateTime , -- Дата/время документа
     IN inCashRegister        TVarChar  , -- Серийник кассового аппарата
     IN inPaidType            Integer   , -- тип оплаты
@@ -118,6 +120,21 @@ BEGIN
     THEN
         inDate := CURRENT_TIMESTAMP::TDateTime;
     END IF;
+    
+    -- Ищем ID чека по inUID
+    IF COALESCE (ioId, 0) = 0 AND COALESCE (inUID, '') <> ''
+    THEN
+      ioId := COALESCE ((SELECT Movement.Id
+                         FROM Movement 
+                           
+                              INNER JOIN MovementString ON MovementString.DescId = zc_MIString_UID()
+                                                       AND MovementString.MovementId = Movement.Id
+                                                       AND MovementString.ValueData = inUID
+                               
+                               
+                         WHERE Movement.OperDate >= inDate - INTERVAL '3 DAY'
+                           AND Movement.DescId = zc_Movement_Check()), 0);
+    END IF;
 
     -- определяем признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -148,6 +165,9 @@ BEGIN
 
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Check(), vbInvNumber::TVarChar, inDate, NULL);
+    
+    -- сохранили UID элемента чека
+    PERFORM lpInsertUpdate_MovementString(zc_MIString_UID(),ioId,inUID);
 
     -- сохранили связь с <Подразделением>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, vbUnitId);
@@ -459,7 +479,7 @@ BEGIN
     -- !!!ВРЕМЕННО для ТЕСТА!!!
     IF inSession = zfCalc_UserAdmin()
     THEN
-        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inisDoctors, inUserSession, inSession;
+        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inUID, inUserSession, inSession;
     END IF;
 
 
