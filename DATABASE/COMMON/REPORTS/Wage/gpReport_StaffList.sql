@@ -221,11 +221,12 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay
                               ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id
                              AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
-        --StaffListCost
-        INNER JOIN ObjectLink AS ObjectLink_StaffListCost_StaffList
+        --StaffListCost INNER
+        LEFT JOIN ObjectLink AS ObjectLink_StaffListCost_StaffList
                               ON ObjectLink_StaffListCost_StaffList.ChildObjectId = Object_StaffList.ID
                              AND ObjectLink_StaffListCost_StaffList.DescId = zc_ObjectLink_StaffListCost_StaffList()
-        INNER JOIN Object AS Object_StaffListCost
+        --INNER
+        LEFT JOIN Object AS Object_StaffListCost
                           ON Object_StaffListCost.Id = ObjectLink_StaffListCost_StaffList.ObjectId
                          AND Object_StaffListCost.isErased = FALSE
         --Price расценка
@@ -236,7 +237,8 @@ BEGIN
         LEFT OUTER JOIN ObjectLink AS ObjectLink_StaffListCost_ModelService
                                    ON ObjectLink_StaffListCost_ModelService.ObjectId = Object_StaffListCost.Id
                                   AND ObjectLink_StaffListCost_ModelService.DescId = zc_ObjectLink_StaffListCost_ModelService()
-        INNER JOIN Object AS Object_ModelService
+        --INNER
+        LEFT JOIN Object AS Object_ModelService
                           ON Object_ModelService.Id = ObjectLink_StaffListCost_ModelService.ChildObjectId
                          AND Object_ModelService.isErased = FALSE
         LEFT OUTER JOIN ObjectLink AS ObjectLink_ModelService_ModelServiceKind
@@ -248,7 +250,8 @@ BEGIN
                                   AND ObjectLink_ModelServiceItemMaster_ModelService.DescId = zc_ObjectLink_ModelServiceItemMaster_ModelService()
 
 
-        INNER JOIN Object AS Object_ModelServiceItemMaster
+        --INNER
+        LEFT JOIN Object AS Object_ModelServiceItemMaster
                           ON Object_ModelServiceItemMaster.Id       = ObjectLink_ModelServiceItemMaster_ModelService.ObjectId
                          AND Object_ModelServiceItemMaster.DescId   = zc_Object_ModelServiceItemMaster()
                          AND Object_ModelServiceItemMaster.isErased = FALSE
@@ -367,13 +370,13 @@ BEGIN
         AND (ObjectLink_StaffList_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
         AND (ObjectLink_StaffList_Position.ChildObjectId = inPositionId OR inPositionId = 0)
         AND (ObjectLink_StaffListCost_ModelService.ChildObjectId = inModelServiceId OR inModelServiceId = 0)
-        AND (Object_ModelServiceItemChild.Id > 0
+       /* AND (Object_ModelServiceItemChild.Id > 0
           OR ObjectLink_ModelServiceItemMaster_SelectKind.ChildObjectId IN (zc_Enum_SelectKind_MovementTransportHours()
                                                                           , zc_Enum_SelectKind_MovementReestrWeight()
                                                                           , zc_Enum_SelectKind_MovementReestrDoc()
                                                                           , zc_Enum_SelectKind_MovementReestrPartner()
                                                                            )
-            )
+            )*/
 
     
    ;
