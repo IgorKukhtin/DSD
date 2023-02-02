@@ -106,7 +106,7 @@ type
     bbShowErasedCost: TdxBarButton;
     InsertRecordProduct: TInsertRecord;
     bbInsertRecordGoods: TdxBarButton;
-    bbPrintSticker: TdxBarButton;
+    bbPrintCalc: TdxBarButton;
     bbPrintStickerTermo: TdxBarButton;
     bbMIContainerCost: TdxBarButton;
     actOpenFormInvoice: TdsdOpenForm;
@@ -281,6 +281,7 @@ type
     Summ_ch1: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     Summ: TcxGridDBColumn;
+    actPrintCalc: TdsdPrintAction;
   private
   public
   end;

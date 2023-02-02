@@ -95,9 +95,10 @@ type
     N1: TMenuItem;
     ExecuteDialog: TExecuteDialog;
     actPrintSticker: TdsdPrintAction;
-    bbPrintSticker: TdxBarButton;
+    bbPrintCalc: TdxBarButton;
     actPrintStickerTermo: TdsdPrintAction;
     bbPrintStickerTermo: TdxBarButton;
+    actPrintCalc: TdsdPrintAction;
   private
   public
   end;
