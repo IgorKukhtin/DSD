@@ -415,7 +415,18 @@ begin
                 FileData := copy(FileData, pos('<?xml', FileData), MaxInt);
                 FileData := copy(FileData, 1, pos('</ЕлектроннийДокумент>',
                   FileData) + 21);
+                try
+                MovementId:= 0;
                 ЕлектроннийДокумент := LoadЕлектроннийДокумент(FileData);
+                except ON E: Exception DO
+                      Begin
+                         ShowMessage(E.Message +#10  +#13 + List[i]);
+                         MovementId:= -1;
+                      End;
+                end;
+                if MovementId <> -1
+                then
+
                 if (ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '007')
                  or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '004')
                  or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '012')
