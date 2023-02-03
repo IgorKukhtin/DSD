@@ -50,7 +50,7 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdSetUnErased: TdsdUpdateErased;
-    GridDS: TDataSource;
+    ClientDS: TDataSource;
     ClientDataSet: TClientDataSet;
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
@@ -93,6 +93,7 @@ type
     macUpdate_isIrna: TMultiAction;
     bbUpdate_isIrna: TdxBarButton;
     isCountCount: TcxGridDBColumn;
+    spErasedUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -32,7 +32,7 @@ object UnitForm: TUnitForm
     TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = GridDS
+      DataController.DataSource = ClientDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -117,7 +117,6 @@ object UnitForm: TUnitForm
         Width = 70
       end
       object PersonalServiceDate: TcxGridDBColumn
-        AlternateCaption = '80'
         Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1047#1055
         DataBinding.FieldName = 'PersonalServiceDate'
         PropertiesClassName = 'TcxDateEditProperties'
@@ -590,7 +589,7 @@ object UnitForm: TUnitForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-      DataSource = GridDS
+      DataSource = ClientDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -614,14 +613,18 @@ object UnitForm: TUnitForm
         end>
       isShowModal = True
       ActionType = acUpdate
-      DataSource = GridDS
+      DataSource = ClientDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 46
@@ -657,12 +660,16 @@ object UnitForm: TUnitForm
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
-      DataSource = GridDS
+      DataSource = ClientDS
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 32776
@@ -723,7 +730,7 @@ object UnitForm: TUnitForm
         end>
       Caption = 'actUpdate_HistoryCost'
       ImageIndex = 76
-      DataSource = GridDS
+      DataSource = ClientDS
     end
     object actProtocol: TdsdOpenForm
       Category = 'DSDLib'
@@ -797,7 +804,7 @@ object UnitForm: TUnitForm
       ImageIndex = 66
     end
   end
-  object GridDS: TDataSource
+  object ClientDS: TDataSource
     DataSet = ClientDataSet
     Left = 360
     Top = 104
@@ -908,5 +915,22 @@ object UnitForm: TUnitForm
     PackSize = 1
     Left = 480
     Top = 136
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 352
+    Top = 224
   end
 end
