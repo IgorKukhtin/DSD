@@ -53,6 +53,15 @@ BEGIN
                              );
 
 
+     -- !!!сначала Распровели!!!, только потом остаток
+     IF vbMovementId_Peresort <> 0
+     THEN
+         PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_Peresort
+                                      , inUserId     := inUserId
+                                       );
+     END IF;
+
+
 
      -- таблица остатки для  inUnitId = 8459
      CREATE TEMP TABLE _tmpRemains (GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
@@ -73,8 +82,9 @@ BEGIN
           AND Container.Amount > 0
           --  !!!Розподільчий комплекс!!!
           AND inUnitId = 8459
-          -- !!!
-          AND COALESCE (vbMovementId_Peresort, 0) = 0
+          -- !!!значит только в первый раз
+          -- AND COALESCE (vbMovementId_Peresort, 0) = 0
+
         GROUP BY Container.ObjectId, CLO_GoodsKind.ObjectId
        ;
 
@@ -170,7 +180,7 @@ END IF;
         )
        -- !!!Розподільчий комплекс!!!
        --OR (vbMovementId_Peresort > 0 AND inUnitId = 8459)
-       -- !!!
+       -- !!! только для Ночной пересчет
      --OR inUserId = zc_Enum_Process_Auto_PrimeCost()
      THEN
          -- !!! ВЫХОД !!!
@@ -358,14 +368,6 @@ END IF;
          END IF;
 
 
-         -- Распровели
-         IF vbMovementId_Peresort <> 0
-         THEN
-             PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_Peresort
-                                          , inUserId     := inUserId
-                                           );
-         END IF;
-
 
          -- создается документ - <Производство смешивание> - Пересортица
          vbMovementId_Peresort:= lpInsertUpdate_Movement_ProductionUnion (ioId             := vbMovementId_Peresort
@@ -380,7 +382,7 @@ END IF;
 
 IF inUserId = 5 AND 1=0
 THEN
-    RAISE EXCEPTION 'Ошибка.<%>   <%>   <%>', vbMovementId_Peresort
+    RAISE EXCEPTION 'Ошибка.<%>   <%>   <%> ', vbMovementId_Peresort
     , (select SUM (_tmpItemPeresort_new.Amount_to) from _tmpItemPeresort_new)
     , (select SUM (_tmpItemPeresort_new.Amount_Remains) from _tmpItemPeresort_new)
     ;

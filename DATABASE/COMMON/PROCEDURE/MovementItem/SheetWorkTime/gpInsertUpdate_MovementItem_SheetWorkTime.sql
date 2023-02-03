@@ -342,6 +342,26 @@ BEGIN
 
 
     ---
+    IF 1 < (SELECT COUNT(*)
+                     FROM Movement AS Movement_SheetWorkTime
+                          JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                  ON MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                 AND MovementLinkObject_Unit.MovementId = Movement_SheetWorkTime.Id
+                                                 AND MovementLinkObject_Unit.ObjectId = inUnitId
+                     WHERE Movement_SheetWorkTime.OperDate = inOperDate
+                       AND Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime()
+                       AND Movement_SheetWorkTime.StatusId <> zc_Enum_Status_Erased()
+                    )
+    THEN
+        RAISE EXCEPTION 'Ошибка.Найдено несколько Документов Табель %за <%> %для <%> %<%>'
+                       , CHR (13)
+                       , (zfConvert_DateToString (inOperDate))
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inUnitId)
+                       , CHR (13)
+                       , inUnitId
+                        ;
+    END IF;
 
     -- Для начала определим ID Movement, если таковой имеется. Ключом будет OperDate и UnitId
     vbMovementId := (SELECT Movement_SheetWorkTime.Id
@@ -726,6 +746,30 @@ $BODY$
  17.10.13                         *
  03.10.13         *
 
+*/
+-- select * from Movement WHERE Id = 24343181
+-- update Movement set StatusId = zc_enum_status_erased()  WHERE Id = 24343181
+-- update Movement set StatusId = 7  WHERE Id = 24343196
+/*SELECT *
+-- update Movement set StatusId = zc_enum_status_erased()  
+from
+(
+SELECT Movement_SheetWorkTime.Id, Movement_SheetWorkTime.OperDate, MovementLinkObject_Unit.ObjectId , Movement_SheetWorkTime.StatusId
+ , ROW_NUMBER() OVER (PARTITION BY Movement_SheetWorkTime.OperDate, MovementLinkObject_Unit.ObjectId ) AS Ord
+                     FROM Movement AS Movement_SheetWorkTime
+                          JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                  ON MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                 AND MovementLinkObject_Unit.MovementId = Movement_SheetWorkTime.Id
+                                                 AND MovementLinkObject_Unit.ObjectId = 8395 -- inUnitId 
+                    WHERE Movement_SheetWorkTime.OperDate between '01.01.2023' and '31.01.2023'
+--                     WHERE Movement_SheetWorkTime.OperDate between '01.01.2023' and '01.01.2023'
+                       AND Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime()
+                       AND Movement_SheetWorkTime.StatusId <> zc_Enum_Status_Erased()
+ 
+) as a
+ where ord = 1 
+-- and Movement.Id = a.Id
+-- 
 */
 
 -- тест
