@@ -398,6 +398,8 @@ type
     spSelectPrintStructureHeader: TdsdStoredProc;
     ReceiptGoodsCode_ch3: TcxGridDBColumn;
     ReceiptGoodsName_ch3: TcxGridDBColumn;
+    cxLabel19: TcxLabel;
+    edNPP: TcxCurrencyEdit;
   private
   public
   end;

@@ -26,6 +26,7 @@ object OrderClientForm: TOrderClientForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 1
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -167,15 +168,15 @@ object OrderClientForm: TOrderClientForm
       Width = 157
     end
     object cxLabel16: TcxLabel
-      Left = 651
+      Left = 731
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 651
+      Left = 731
       Top = 63
       TabOrder = 18
-      Width = 290
+      Width = 210
     end
     object cxLabel10: TcxLabel
       Left = 273
@@ -1356,9 +1357,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -2363,9 +2361,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -2423,9 +2418,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -3015,7 +3007,7 @@ object OrderClientForm: TOrderClientForm
     Caption = '% '#1057#1082#1080#1076#1082#1080' '#8470'2'
   end
   object edDiscountNextTax: TcxCurrencyEdit
-    Left = 487
+    Left = 488
     Top = 63
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
@@ -3024,6 +3016,24 @@ object OrderClientForm: TOrderClientForm
     Properties.ReadOnly = True
     TabOrder = 9
     Width = 78
+  end
+  object cxLabel19: TcxLabel
+    Left = 651
+    Top = 45
+    Caption = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100
+  end
+  object edNPP: TcxCurrencyEdit
+    Left = 651
+    Top = 63
+    Hint = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1089#1073#1086#1088#1082#1080
+    ParentShowHint = False
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0.###'
+    ShowHint = True
+    TabOrder = 11
+    Width = 74
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -3663,6 +3673,7 @@ object OrderClientForm: TOrderClientForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -3678,6 +3689,7 @@ object OrderClientForm: TOrderClientForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -4465,6 +4477,14 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNPP'
+        Value = Null
+        Component = edNPP
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inFromId'
         Value = ''
         Component = GuidesFrom
@@ -4565,6 +4585,7 @@ object OrderClientForm: TOrderClientForm
         Control = ceInvoice
       end
       item
+        Control = edNPP
       end
       item
       end
@@ -4791,6 +4812,13 @@ object OrderClientForm: TOrderClientForm
         Value = Null
         Component = edInsertDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NPP'
+        Value = Null
+        Component = edNPP
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

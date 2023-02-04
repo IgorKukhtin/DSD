@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
              , VATPercent TFloat, DiscountTax TFloat, DiscountNextTax TFloat
+             , NPP TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -24,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbNPP TFloat;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -32,6 +34,14 @@ BEGIN
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
+     vbNPP := COALESCE ((SELECT MAX(MovementFloat.ValueData)
+                         FROM MovementFloat
+                             INNER JOIN Movement ON Movement.Id = MovementFloat.MovementId
+                                                AND Movement.DescId = zc_Movement_OrderClient()
+                                                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                         WHERE MovementFloat.DescId = zc_MovementFloat_NPP()
+                           AND COALESCE (MovementFloat.ValueData,0)<>0
+                         ), 0);
      RETURN QUERY
          SELECT
                0                         AS Id
@@ -44,6 +54,7 @@ BEGIN
              , ObjectFloat_TaxKind_Value.ValueData :: TFloat AS VATPercent
              , CAST (0 as TFloat)        AS DiscountTax
              , CAST (0 as TFloat)        AS DiscountNextTax
+             , (vbNPP +1)       ::TFloat AS NPP
              , 0                         AS FromId
              , CAST ('' AS TVarChar)     AS FromName
              , 0                         AS ToId
@@ -87,6 +98,7 @@ BEGIN
           , MovementFloat_VATPercent.ValueData        AS VATPercent
           , MovementFloat_DiscountTax.ValueData       AS DiscountTax
           , MovementFloat_DiscountNextTax.ValueData   AS DiscountNextTax
+          , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP
 
           , Object_From.Id                            AS FromId
           , Object_From.ValueData                     AS FromName
@@ -151,6 +163,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
                                     ON MovementFloat_DiscountNextTax.MovementId = Movement_OrderClient.Id
                                    AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
+
+             LEFT JOIN MovementFloat AS MovementFloat_NPP
+                                     ON MovementFloat_NPP.MovementId = Movement_OrderClient.Id
+                                    AND MovementFloat_NPP.DescId = zc_MovementFloat_NPP()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId = Movement_OrderClient.Id

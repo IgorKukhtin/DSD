@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumbe
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , SummDiscount_total TFloat
+             , NPP TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -116,6 +117,7 @@ BEGIN
 
              , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSumm.ValueData,0)) :: TFloat AS TotalSummVAT
              , (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0) - COALESCE (MovementFloat_TotalSumm.ValueData,0)) :: TFloat AS SummDiscount_total
+             , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP
 
              , Object_From.Id                               AS FromId
              , Object_From.ObjectCode                       AS FromCode
@@ -189,6 +191,10 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                      ON MovementFloat_TotalSummMVAT.MovementId = Movement_OrderClient.Id
                                     AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+
+             LEFT JOIN MovementFloat AS MovementFloat_NPP
+                                     ON MovementFloat_NPP.MovementId = Movement_OrderClient.Id
+                                    AND MovementFloat_NPP.DescId = zc_MovementFloat_NPP()
 
              LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                        ON MovementBoolean_PriceWithVAT.MovementId = Movement_OrderClient.Id
