@@ -558,11 +558,11 @@
           Width = 64
         end
         object DateBegin: TcxGridDBColumn
-          Caption = #1042#1074#1086#1076' '#1074' '#1101#1082#1089#1087#1083'.'
+          Caption = #1044#1072#1090#1072' '#1087#1083#1072#1085
           DataBinding.FieldName = 'DateBegin'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1044#1072#1090#1072' '#1074#1074#1086#1076#1072' '#1074' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1102
+          HeaderHint = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1089#1073#1086#1088#1082#1080
           Options.Editing = False
           Width = 66
         end

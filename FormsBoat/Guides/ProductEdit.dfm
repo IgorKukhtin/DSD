@@ -91,8 +91,8 @@ object ProductEditForm: TProductEditForm
   object cxLabel4: TcxLabel
     Left = 105
     Top = 330
-    Hint = #1042#1074#1086#1076' '#1074' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1102
-    Caption = #1042#1074#1086#1076' '#1074' '#1101#1082#1089#1087#1083'.'
+    Hint = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1089#1073#1086#1088#1082#1080
+    Caption = #1044#1072#1090#1072' '#1087#1083#1072#1085
     ParentShowHint = False
     ShowHint = True
   end
@@ -113,8 +113,8 @@ object ProductEditForm: TProductEditForm
     Caption = 'CIN Nr.'
   end
   object edDateStart: TcxDateEdit
-    Left = 10
-    Top = 350
+    Left = 8
+    Top = 348
     EditValue = 42160d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -123,10 +123,12 @@ object ProductEditForm: TProductEditForm
   end
   object edDateBegin: TcxDateEdit
     Left = 105
-    Top = 350
+    Top = 348
     EditValue = 42160d
+    ParentShowHint = False
     Properties.SaveTime = False
     Properties.ShowTime = False
+    ShowHint = True
     TabOrder = 15
     Width = 82
   end
@@ -594,7 +596,7 @@ object ProductEditForm: TProductEditForm
     Top = 487
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 75
+    TabOrder = 74
     Width = 79
   end
   object edTransportSumm_load: TcxCurrencyEdit
@@ -1233,11 +1235,13 @@ object ProductEditForm: TProductEditForm
       end
       item
         Name = 'inUrl_Doc'
+        Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'inUrl_Photo'
+        Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -2414,6 +2418,7 @@ object ProductEditForm: TProductEditForm
       end
       item
         Name = 'outHttps'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inUrl_Doc'
         DataType = ftBlob
