@@ -531,6 +531,20 @@ END IF;
        AND inGroupId <> 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
        AND inGroupId <> 4
 
+/*
+     SELECT Movement.Id AS MovementId
+          , Movement.OperDate
+          , Movement.InvNumber
+          , MovementDesc.Code
+          , MovementDesc.ItemName AS ItemName
+     FROM Movement
+          JOIN MovementLinkMovement on MovementLinkMovement.MovementChildId = Movement.Id AND MovementLinkMovement.Descid = zc_MovementLinkMovement_Production()
+          JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+       AND Movement.DescId = zc_Movement_Sale()
+       AND Movement.StatusId = zc_Enum_Status_Complete()
+*/
+
     ) AS tmp
     -- INNER JOIN tmpMovContainer ON tmpMovContainer.MovementId = tmp.MovementId
 

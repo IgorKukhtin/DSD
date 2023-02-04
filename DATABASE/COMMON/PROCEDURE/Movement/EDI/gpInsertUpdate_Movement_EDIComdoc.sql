@@ -109,21 +109,22 @@ BEGIN
          -- 1.2.
          ELSEIF inOrderInvNumber <> ''
          THEN
-              IF /*vbUserId = 5 
-                 AND*/ 1 < (SELECT COUNT(*)
-                              FROM Movement
-                                   INNER JOIN MovementString AS MovementString_OKPO
-                                                             ON MovementString_OKPO.MovementId =  Movement.Id
-                                                            AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
-                                                            AND MovementString_OKPO.ValueData = inOKPO
-                                   INNER JOIN MovementString AS MovementString_MovementDesc
-                                                             ON MovementString_MovementDesc.MovementId =  Movement.Id
-                                                            AND MovementString_MovementDesc.DescId = zc_MovementString_Desc()
-                                                            AND MovementString_MovementDesc.ValueData IN (inDesc, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_OrderExternal()))
-                              WHERE Movement.DescId = zc_Movement_EDI()
-                                AND Movement.InvNumber = inOrderInvNumber
-                                AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
-                         )
+              IF -- vbUserId <> 5 AND
+                 1 < (SELECT COUNT(*)
+                      FROM Movement
+                           INNER JOIN MovementString AS MovementString_OKPO
+                                                     ON MovementString_OKPO.MovementId =  Movement.Id
+                                                    AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+                                                    AND MovementString_OKPO.ValueData = inOKPO
+                           INNER JOIN MovementString AS MovementString_MovementDesc
+                                                     ON MovementString_MovementDesc.MovementId =  Movement.Id
+                                                    AND MovementString_MovementDesc.DescId = zc_MovementString_Desc()
+                                                    AND MovementString_MovementDesc.ValueData IN (inDesc, (SELECT MovementDesc.Code FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_OrderExternal()))
+                      WHERE Movement.DescId = zc_Movement_EDI()
+                        AND Movement.InvNumber = inOrderInvNumber
+                        AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
+                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                     )
               THEN
                    RAISE EXCEPTION 'Ошибка.inOKPO = <%>%inOrderInvNumber=<%>%<%>.'
                                   , inOKPO
@@ -145,6 +146,9 @@ BEGIN
                               WHERE Movement.DescId = zc_Movement_EDI()
                                 AND Movement.InvNumber = inOrderInvNumber
                                 AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
+                                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                              ORDER BY Movement.Id ASC
+                              LIMIT CASE WHEN vbUserId = 5 THEN 100 ELSE 100 END
                              );
 
               IF vbMovementId <> 0
@@ -179,6 +183,7 @@ BEGIN
                                                                        AND Movement_Sale.InvNumber = inInvNumberSaleLink
                               WHERE Movement.DescId = zc_Movement_EDI()
                                 AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
+                                AND Movement.StatusId <> zc_Enum_Status_Erased()
                          )
               THEN
                    RAISE EXCEPTION 'Ошибка.inOKPO = <%>%inInvNumberSaleLink = <%>%<%>.'
@@ -209,6 +214,7 @@ BEGIN
                                                                        AND Movement_Sale.InvNumber = inInvNumberSaleLink
                               WHERE Movement.DescId = zc_Movement_EDI()
                                 AND Movement.OperDate BETWEEN (inPartnerOperDate - (INTERVAL '7 DAY')) AND (inPartnerOperDate + (INTERVAL '7 DAY'))
+                                AND Movement.StatusId <> zc_Enum_Status_Erased()
                              );
 
               IF vbMovementId <> 0

@@ -34,6 +34,7 @@ BEGIN
               inOperDate        := Movement.OperDate                   , -- дата установки часов
               ioValue           := SUM (CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat))::TVarChar                    , -- часы
               ioTypeId          := zc_Enum_WorkTimeKind_Work()         , 
+              ioWorkTimeKindId_key:= NULL,
               inisPersonalGroup := FALSE                               , -- используется при сохранении из списка бригад
               inSession         := inSession)    -- сессия пользователя
        FROM Movement
@@ -70,6 +71,7 @@ BEGIN
               inOperDate        := Movement.OperDate                   , -- дата установки часов
               ioValue           := SUM(CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat))::TVarChar                    , -- часы
               ioTypeId          := zc_Enum_WorkTimeKind_Work()         , 
+              ioWorkTimeKindId_key:= NULL,
               inisPersonalGroup := FALSE                               , -- используется при сохранении из списка бригад
               inSession         := inSession)    -- сессия пользователя
        FROM Movement
@@ -107,6 +109,7 @@ BEGIN
               inOperDate        := Movement.OperDate                   , -- дата установки часов
               ioValue           := SUM(CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat))::TVarChar                    , -- часы
               ioTypeId          := zc_Enum_WorkTimeKind_Work()         , 
+              ioWorkTimeKindId_key:= NULL,
               inisPersonalGroup := FALSE                               , -- используется при сохранении из списка бригад
               inSession         := inSession)    -- сессия пользователя
        FROM Movement
