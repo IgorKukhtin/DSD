@@ -278,7 +278,7 @@ object ProductEditForm: TProductEditForm
     ShowHint = True
   end
   object edClient: TcxButtonEdit
-    Left = 331
+    Left = 332
     Top = 121
     Properties.Buttons = <
       item
@@ -287,7 +287,7 @@ object ProductEditForm: TProductEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 34
-    Width = 239
+    Width = 166
   end
   object edDiscountTax: TcxCurrencyEdit
     Left = 331
@@ -611,6 +611,24 @@ object ProductEditForm: TProductEditForm
     Left = 497
     Top = 470
     Caption = 'Transp (Order)'
+  end
+  object cxLabel35: TcxLabel
+    Left = 502
+    Top = 102
+    Caption = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100
+  end
+  object edNPP: TcxCurrencyEdit
+    Left = 504
+    Top = 121
+    Hint = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1089#1073#1086#1088#1082#1080
+    ParentShowHint = False
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0.###'
+    ShowHint = True
+    TabOrder = 82
+    Width = 66
   end
   object ActionList: TActionList
     Left = 232
@@ -1159,6 +1177,14 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNPP_OrderClient'
+        Value = Null
+        Component = edNPP
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMovementId_Invoice'
         Value = Null
         Component = FormParams
@@ -1487,6 +1513,13 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'NPP_OrderClient'
+        Value = Null
+        Component = edNPP
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'TotalSummMVAT'
         Value = Null
         Component = edTotalSummMVAT
@@ -1600,8 +1633,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 200
-    Top = 48
+    Left = 216
+    Top = 64
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1886,8 +1919,8 @@ object ProductEditForm: TProductEditForm
       item
         Component = edDateStart
       end>
-    Left = 248
-    Top = 8
+    Left = 144
+    Top = 64
   end
   object spGetCIN: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Product_CIN'

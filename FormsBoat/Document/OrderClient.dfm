@@ -26,7 +26,6 @@ object OrderClientForm: TOrderClientForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 1
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -3014,7 +3013,7 @@ object OrderClientForm: TOrderClientForm
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
     Properties.ReadOnly = True
-    TabOrder = 9
+    TabOrder = 8
     Width = 78
   end
   object cxLabel19: TcxLabel

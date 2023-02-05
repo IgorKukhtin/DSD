@@ -21,11 +21,11 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumbe
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , SummDiscount_total TFloat
-             , NPP TFloat
+             , NPP TFloat, NPP_2 TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ProductId Integer, ProductName TVarChar, ProductName_Full TVarChar
+             , ProductId Integer, ProductName TVarChar, ProductName_Full TVarChar, DateBegin TDateTime
              , ReceiptProdModelId Integer, ReceiptProdModelCode Integer, ReceiptProdModelName TVarChar
              , BrandId Integer, BrandName TVarChar, CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
              , Comment TVarChar
@@ -118,6 +118,7 @@ BEGIN
              , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSumm.ValueData,0)) :: TFloat AS TotalSummVAT
              , (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0) - COALESCE (MovementFloat_TotalSumm.ValueData,0)) :: TFloat AS SummDiscount_total
              , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP
+             , ROW_NUMBER() OVER (ORDER BY ObjectDate_DateBegin.ValueData, MovementFloat_NPP.ValueData, Movement_OrderClient.OperDate) ::TFloat AS NPP_2
 
              , Object_From.Id                               AS FromId
              , Object_From.ObjectCode                       AS FromCode
@@ -130,7 +131,8 @@ BEGIN
              , Object_Product.Id                            AS ProductId
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
              , (zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) || ' / ' || zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased)) ::TVarChar AS ProductName_Full
-
+             , ObjectDate_DateBegin.ValueData               AS DateBegin
+             
              , Object_ReceiptProdModel.Id                   AS ReceiptProdModelId
              , Object_ReceiptProdModel.ObjectCode           AS ReceiptProdModelCode
              , Object_ReceiptProdModel.ValueData            AS ReceiptProdModelName
@@ -240,6 +242,10 @@ BEGIN
                                   ON ObjectLink_Product_ReceiptProdModel.ObjectId = Object_Product.Id
                                  AND ObjectLink_Product_ReceiptProdModel.DescId   = zc_ObjectLink_Product_ReceiptProdModel()
              LEFT JOIN Object AS Object_ReceiptProdModel ON Object_ReceiptProdModel.Id = ObjectLink_Product_ReceiptProdModel.ChildObjectId
+
+             LEFT JOIN ObjectDate AS ObjectDate_DateBegin
+                                  ON ObjectDate_DateBegin.ObjectId = Object_Product.Id
+                                 AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin()
        ;
 
 END;
