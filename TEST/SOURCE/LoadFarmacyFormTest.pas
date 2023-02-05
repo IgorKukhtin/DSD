@@ -3696,6 +3696,9 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TCashSettingsEditForm');
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsHistoryForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TCashSettingsHistoryForm');
+
 {    TdsdFormStorageFactory.GetStorage.Save(GetForm('TNewUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TNewUserForm');
 

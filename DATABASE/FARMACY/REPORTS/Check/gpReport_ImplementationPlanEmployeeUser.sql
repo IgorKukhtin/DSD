@@ -49,18 +49,11 @@ BEGIN
     vbDateStart := date_trunc('month', inStartDate);
     vbDateEnd := date_trunc('month', vbDateStart + INTERVAL '1 month');
     
-    SELECT COALESCE(ObjectFloat_CashSettings_FixedPercent.ValueData, 1)
-    INTO vbFixedPercent
-    FROM Object AS Object_CashSettings
-
-         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_FixedPercent
-                               ON ObjectFloat_CashSettings_FixedPercent.ObjectId = Object_CashSettings.Id 
-                              AND ObjectFloat_CashSettings_FixedPercent.DescId = zc_ObjectFloat_CashSettings_FixedPercent()
-
-    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
-    LIMIT 1;
+    vbFixedPercent := COALESCE ((SELECT History_CashSettings.FixedPercent 
+                                 FROM gpSelect_ObjectHistory_CashSettings (0, inSession) AS History_CashSettings
+                                 WHERE History_CashSettings.StartDate <= vbDateStart
+                                   AND History_CashSettings.EndDate > vbDateStart), 0);
     
-
       -- Отработано по календарю
     CREATE TEMP TABLE tmpUserUnitDayTable (
             UserID             Integer,
