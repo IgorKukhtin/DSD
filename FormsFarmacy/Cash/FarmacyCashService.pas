@@ -838,12 +838,14 @@ procedure TMainCashForm2.SaveLocalVIP;
 var
   sp : TdsdStoredProc;
   ds : TClientDataSet;
+  dsl : TClientDataSet;
 begin  //+
   // pr вызывается из обновления остатков
   tiServise.Hint := 'Получение информации о VIP чеках';
   sp := TdsdStoredProc.Create(nil);
   try
     ds := TClientDataSet.Create(nil);
+    dsl := TClientDataSet.Create(nil);
     try
       try
         sp.OutputType := otDataSet;
@@ -862,10 +864,14 @@ begin  //+
           ReleaseMutex(MutexVip);
         end;
 
-        sp.StoredProcName := 'gpSelect_Movement_CheckVIP';
+        sp.OutputType := otMultiDataSet;
+        sp.DataSets.Add.DataSet := dsl;
+        sp.StoredProcName := 'gpSelect_Movement_CheckCashDeferred';
         sp.Params.Clear;
-        sp.Params.AddParam('inIsErased',ftBoolean,ptInput,False);
+        sp.Params.AddParam('inType',ftInteger,ptInput,0);
+
         sp.Execute(False,False);
+
         Add_Log('Start MutexVip 617');
         WaitForSingleObject(MutexVip, INFINITE);
         try
@@ -875,13 +881,10 @@ begin  //+
           ReleaseMutex(MutexVip);
         end;
 
-        sp.StoredProcName := 'gpSelect_MovementItem_CheckDeferred';
-        sp.Params.Clear;
-        sp.Execute(False,False);
         Add_Log('Start MutexVip 629');
         WaitForSingleObject(MutexVip, INFINITE);
         try
-          SaveLocalData(ds,VipList_lcl);
+          SaveLocalData(dsl,VipList_lcl);
         finally
           Add_Log('End MutexVip 629');
           ReleaseMutex(MutexVip);
@@ -890,6 +893,7 @@ begin  //+
         Add_Log('Ошибка получения отложенных чеков:' + E.Message);
       end;
     finally
+      dsl.free;
       ds.free;
     end;
   finally
@@ -1106,7 +1110,7 @@ begin
       Add_Log('End CashRemainsDiffExecute');
     end;
 
-    if FSaveLocalVIP > 3 then
+    if FSaveLocalVIP > 2 then
     begin
       Add_Log('Start SaveLocalVIP');
       if not gc_User.Local then SaveLocalVIP;

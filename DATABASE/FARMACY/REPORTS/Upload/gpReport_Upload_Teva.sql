@@ -80,30 +80,55 @@ BEGIN
       ANALYSE tmpGoods;
 
       -- продажи за указанную дату
-      CREATE TEMP TABLE tmpSales ON COMMIT DROP
-      AS (SELECT DATE_TRUNC ('day', Movement_Check.OperDate)::TDateTime AS OperDate
-               , MovementLinkObject_Unit.ObjectId                       AS UnitId
-               , MI_Check.ObjectId                                      AS GoodsId
-               , COALESCE (MIFloat_Price.ValueData, 0.0)::TFloat        AS Price
-               , SUM (MI_Check.Amount)::TFloat                          AS Amount
-               , SUM (COALESCE (MIFloat_Price.ValueData, 0.0) * MI_Check.Amount)::TFloat AS Summ
+      CREATE TEMP TABLE tmpMovement ON COMMIT DROP
+      AS (SELECT Movement_Check.*
+               , MovementLinkObject_Unit.ObjectId                       AS UnitId 
           FROM Movement AS Movement_Check
+               JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                       ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+               JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId 
+          WHERE Movement_Check.DescId IN (zc_Movement_Check(), zc_Movement_Sale())
+            AND Movement_Check.OperDate  >= DATE_TRUNC ('day', inDate)
+            AND Movement_Check.OperDate  < DATE_TRUNC ('day', inDate) + INTERVAL '1 DAY'
+            AND Movement_Check.StatusId = zc_Enum_Status_Complete()
+         );
+         
+      ANALYSE tmpMovement;
+
+      -- продажи за указанную дату
+      CREATE TEMP TABLE tmpMI ON COMMIT DROP
+      AS (SELECT DATE_TRUNC ('day', Movement_Check.OperDate)::TDateTime AS OperDate
+               , Movement_Check.UnitId                                  AS UnitId
+               , MI_Check.Id                                            AS Id
+               , MI_Check.ObjectId                                      AS GoodsId
+               , MI_Check.Amount                                        AS Amount
+          FROM tmpMovement AS Movement_Check
                JOIN MovementItem AS MI_Check
                                  ON MI_Check.MovementId = Movement_Check.Id
                                 AND MI_Check.DescId = zc_MI_Master()
                                 AND MI_Check.isErased = FALSE
-               JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                       ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
-                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+         );
+         
+      ANALYSE tmpMI;
+            
+      -- продажи за указанную дату
+      CREATE TEMP TABLE tmpSales ON COMMIT DROP
+      AS (SELECT Movement_Check.OperDate                                AS OperDate
+               , Movement_Check.UnitId                                  AS UnitId
+               , Movement_Check.GoodsId                                 AS GoodsId
+               , COALESCE (MIFloat_Price.ValueData, 0.0)::TFloat        AS Price
+               , SUM (Movement_Check.Amount)::TFloat                    AS Amount
+               , SUM (COALESCE (MIFloat_Price.ValueData, 0.0) * Movement_Check.Amount)::TFloat AS Summ
+          FROM tmpMI AS Movement_Check
+
                LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                           ON MIFloat_Price.MovementItemId = MI_Check.Id
+                                           ON MIFloat_Price.MovementItemId = Movement_Check.Id
                                           AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-          WHERE Movement_Check.DescId IN (zc_Movement_Check(), zc_Movement_Sale())
-            AND DATE_TRUNC ('day', Movement_Check.OperDate)::TDateTime = inDate 
-            AND Movement_Check.StatusId = zc_Enum_Status_Complete()
-          GROUP BY DATE_TRUNC ('day', Movement_Check.OperDate)
-                 , MovementLinkObject_Unit.ObjectId
-                 , MI_Check.ObjectId
+
+          GROUP BY Movement_Check.OperDate
+                 , Movement_Check.UnitId
+                 , Movement_Check.GoodsId
                  , MIFloat_Price.ValueData
          );
          
@@ -121,7 +146,9 @@ BEGIN
              , tmpSales.Price   
         FROM tmpSales
              JOIN tmpUnit ON tmpUnit.UnitId = tmpSales.UnitId
-             JOIN tmpGoods ON tmpGoods.GoodsId = tmpSales.GoodsId;
+             JOIN tmpGoods ON tmpGoods.GoodsId = tmpSales.GoodsId
+        ORDER BY tmpSales.OperDate, tmpGoods.GoodsName, tmpSales.Price ;
+                          
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -136,4 +163,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Upload_Teva (inDate:= '07.02.2017'::TDateTime, inObjectId:= 59610, inSession:= zfCalc_UserAdmin())
+-- 
+SELECT * FROM gpReport_Upload_Teva (inDate:= '09.01.2023'::TDateTime, inObjectId:= 59610, inSession:= zfCalc_UserAdmin())

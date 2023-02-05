@@ -23,6 +23,7 @@ $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbObjectId Integer;
     DECLARE vbUnitId Integer;
+    DECLARE vbUnitCategoryId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_PromoUnit());
@@ -32,14 +33,15 @@ BEGIN
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
     vbUnitId := (SELECT ML.ObjectId FROM MovementLinkObject AS ML WHERE  ML.MovementId = inMovementId AND ML.DescId = zc_MovementLinkObject_Unit());
-
+    vbUnitCategoryId := (SELECT ML.ObjectId FROM MovementLinkObject AS ML WHERE  ML.MovementId = inMovementId AND ML.DescId = zc_MovementLinkObject_UnitCategory());
+    
     -- Результат
     IF inShowAll THEN
         -- Результат такой
         RETURN QUERY
             WITH 
             tmpPrice AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
-                              , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
+                              , MAX(ROUND(Price_Value.ValueData,2))::TFloat  AS Price 
                          FROM ObjectLink AS ObjectLink_Price_Unit
                               LEFT JOIN ObjectLink AS Price_Goods
                                      ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -48,7 +50,12 @@ BEGIN
                                      ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                                     AND Price_Value.DescId =  zc_ObjectFloat_Price_Value()
                          WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                           AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId     
+                           AND (ObjectLink_Price_Unit.ChildObjectId = vbUnitId     
+                            OR ObjectLink_Price_Unit.ChildObjectId in (SELECT ObjectLink.ObjectId 
+                                                                       FROM ObjectLink 
+                                                                       WHERE ObjectLink.DescId = zc_ObjectLink_Unit_Category() 
+                                                                         AND ObjectLink.ChildObjectId = vbUnitCategoryId))
+                         GROUP BY Price_Goods.ChildObjectId
                          )
 
         , MI_PromoUnit AS (SELECT MI_PromoUnit.Id
@@ -156,5 +163,5 @@ $BODY$
 */
 
 --
-select * from gpSelect_MovementItem_PromoUnit(inMovementId := 0 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
---select * from gpSelect_MovementItem_PromoUnitChild(inMovementId := 0 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+
+select * from gpSelect_MovementItem_PromoUnit(inMovementId := 30890062 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

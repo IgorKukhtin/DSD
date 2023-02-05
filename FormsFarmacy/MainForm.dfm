@@ -5401,6 +5401,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Check_TabletkiRecreate: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1057#1074#1077#1088#1082#1072' '#1076#1091#1073#1083#1077#1081' '#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1093' '#1095#1077#1082#1086#1074' '#1080' '#1091#1076#1072#1083#1077#1085#1085#1099#1093' '#1079#1072#1082#1072#1079#1086#1074' '#1087#1086' '#1058#1072#1073#1083#1077#1090#1082#1072#1084
+      FormName = 'TReport_Check_TabletkiRecreateForm'
+      FormNameParam.Value = 'TReport_Check_TabletkiRecreateForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6894,6 +6905,9 @@
         end
         object N361: TMenuItem
           Action = actReport_RestTermGoods
+        end
+        object N373: TMenuItem
+          Action = actReport_Check_TabletkiRecreate
         end
       end
       object miTaxUnit: TMenuItem [3]

@@ -863,6 +863,7 @@ type
     FHint: THintWindow;
 
     FBuyerForSite : string;
+    FMobMessCount : Integer;
 
     wcActive, wcPrevious : TWinControl;
 
@@ -3551,11 +3552,32 @@ begin
     exit;
   end;
 
+  if (FormParams.ParamByName('CheckId').Value = 0) and
+     (UnitConfigCDS.FindField('MobMessSum').AsCurrency > 0) and
+     (UnitConfigCDS.FindField('MobMessCount').AsCurrency > 0) and
+     (FTotalSumm > UnitConfigCDS.FindField('MobMessSum').AsCurrency) then
+  begin
+    if UnitConfigCDS.FindField('MobMessCount').AsCurrency <= FMobMessCount then
+    begin
+      FMobMessCount := 0;
+      ShowMessage('Чек свыше 200 грн!'#13#10#13#10 +
+                  'Можно сделать заказ через мобильное приложение и получить 20 грн.');
+    end else Inc(FMobMessCount);
+  end;
+
   if fBanCash then
   begin
-    ShowMessage
-      ('Уважаемые коллеги, вы не поставили отметку времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
-    exit;
+    if gc_User.Local then
+    begin
+      if MessageDlg('Вы отметились в табеле?', mtConfirmation, mbYesNo, 0) = mrYes then
+        fBanCash := False
+    end;
+
+    if fBanCash then
+    begin
+      ShowMessage('Уважаемые коллеги, вы не поставили отметку времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
+      exit;
+    end;
   end;
 
   if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode <> 0) and
@@ -3581,8 +3603,9 @@ begin
 
     if (FormParams.ParamByName('HelsiPartialPrescription').Value = True) then
     begin
-      if Round(RoundTo(CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
-        ('Amount').asCurrency, -2) * 100) > Round(FormParams.ParamByName('HelsiQty').Value * 100) then
+      if Round(RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
+         CheckCDS.FieldByName('Amount').asCurrency, -2) * 100) >
+         Round(FormParams.ParamByName('HelsiQty').Value * 100) then
       begin
         ShowMessage('Ошибка.'#13#10'В рецепте выписано: ' + FormatCurr('0.####',
           FormParams.ParamByName('HelsiQty').Value) + ' единиц'#13#10'В чеке: ' +
@@ -3598,8 +3621,9 @@ begin
           CheckCDS.FieldByName('Amount').asCurrency, -2)) +
           ' единиц'#13#10'Производит отпуск ментшего количества чем выписано ?...',
           mtConfirmation, mbYesNo, 0) <> mrYes then Exit;
-    end else if Round(RoundTo(CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
-      ('Amount').asCurrency, -2) * 100) <> Round(FormParams.ParamByName('HelsiQty').Value * 100) then
+    end else if Round(RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
+                CheckCDS.FieldByName('Amount').asCurrency, -2) * 100) <>
+                Round(FormParams.ParamByName('HelsiQty').Value * 100) then
     begin
       ShowMessage('Ошибка.'#13#10'В рецепте выписано: ' + FormatCurr('0.####',
         FormParams.ParamByName('HelsiQty').Value) + ' единиц'#13#10'В чеке: ' +
@@ -4050,8 +4074,9 @@ begin
     begin
       if not CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
         CheckCDS.FieldByName('ProgramIdSP').AsString,
-        RoundTo(CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
-        ('Amount').asCurrency, -2), CheckCDS.FieldByName('PriceSale').asCurrency,
+        RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
+        CheckCDS.FieldByName('Amount').asCurrency, -2),
+        CheckCDS.FieldByName('PriceSale').asCurrency,
         RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
         CheckCDS.FieldByName('PriceSale').asCurrency, -2),
         RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
@@ -4068,8 +4093,9 @@ begin
     begin
       if not CreateLikiDniproeHealthNewDispense(CheckCDS.FieldByName('IdSP').AsString,
         CheckCDS.FieldByName('ProgramIdSP').AsString,
-        RoundTo(CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
-        ('Amount').asCurrency, -2), CheckCDS.FieldByName('PriceSale').asCurrency,
+        RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
+        CheckCDS.FieldByName('Amount').asCurrency, -2),
+        CheckCDS.FieldByName('PriceSale').asCurrency,
         RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
         CheckCDS.FieldByName('PriceSale').asCurrency, -2),
         RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
@@ -8174,6 +8200,7 @@ procedure TMainCashForm2.CheckGridColNameStylesGetContentStyle(
   Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
   AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
+  FStyle.Assign(CheckGridDBTableView.Styles.Content);
   if (ARecord.Values[CheckGridColSummChangePercent.Index] <> Null) and (ARecord.Values[CheckGridColSummChangePercent.Index] <> 0) then
     FStyle.Color := TColor($FFD784);
   AStyle := FStyle;
@@ -8610,6 +8637,7 @@ begin
   //
   edDays.Value := 7;
   PanelMCSAuto.Visible := false;
+  FMobMessCount := 1000;
   MainGridDBTableView.Columns[MainGridDBTableView.GetColumnByFieldName
     ('MCSValue').Index].Options.Editing := false;
   // для
@@ -11000,6 +11028,7 @@ procedure TMainCashForm2.MainFixPercentStylesGetContentStyle(
   Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
   AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
+  FStyle.Assign(MainGridDBTableView.Styles.Content);
   if UnitConfigCDS.Active and
      (FormParams.ParamByName('SPKindId').Value = 4823010) and (ARecord.Values[MainPriceSaleOOC1303.Index] <> Null) and
      (ARecord.Values[MainPriceSaleOOC1303.Index] < MinCurr(ARecord.Values[MainColPrice.Index], ARecord.Values[MainPriceSale1303.Index])) and
@@ -11069,8 +11098,17 @@ begin
   inherited;
 
   if AAllow and fBanCash then
-    ShowMessage
-      ('Уважаемые коллеги, вы не поставили отметку времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
+  begin
+    if gc_User.Local then
+    begin
+      if MessageDlg('Вы отметились в табеле?', mtConfirmation, mbYesNo, 0) = mrYes then
+        fBanCash := False;
+    end;
+
+    if fBanCash then
+      ShowMessage
+        ('Уважаемые коллеги, вы не поставили отметку времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
+  end;
 end;
 
 procedure TMainCashForm2.MainGridDBTableViewFocusedRecordChanged
@@ -13847,7 +13885,6 @@ begin
     EmployeeScheduleCDS.Free;
     ReleaseMutex(MutexEmployeeSchedule);
   end;
-
 end;
 
 procedure TMainCashForm2.pGet_OldSP(var APartnerMedicalId: Integer;

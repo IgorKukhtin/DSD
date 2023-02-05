@@ -195,6 +195,7 @@ begin
       if not gc_User.Local then
       Begin
         InitCashSession(True);
+        if not FileExists(ExtractFilePath(ParamStr(0)) + 'sqlite3.dll') then TUpdater.UpdateDll('sqlite3.dll');
         IniUtils.AutomaticUpdateProgramTest;
         IniUtils.AutomaticUpdateProgram;
         IniUtils.AutomaticUpdateFarmacyCashServise;

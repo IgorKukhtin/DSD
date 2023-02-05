@@ -283,7 +283,7 @@ begin
     '</xml>';
 
 
-  N := LoadXMLData(pStorage.ExecuteProc(pXML, False, 4, False)).DocumentElement;
+  N := LoadXMLData(pStorage.ExecuteProc(pXML, False, 2, False)).DocumentElement;
   //
   if Assigned(N) then
   begin

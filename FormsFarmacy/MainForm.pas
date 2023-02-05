@@ -1007,6 +1007,8 @@ type
     N371: TMenuItem;
     actPartionDateWages: TdsdOpenForm;
     N372: TMenuItem;
+    actReport_Check_TabletkiRecreate: TdsdOpenForm;
+    N373: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
