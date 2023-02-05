@@ -265,6 +265,8 @@ type
     miReport_PriceList: TMenuItem;
     actProductionUnionMaster: TdsdOpenForm;
     miProductionUnionMaster: TMenuItem;
+    actReport_Personal: TdsdOpenForm;
+    miReport_Personal: TMenuItem;
   private
     { Private declarations }
   public
