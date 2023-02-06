@@ -540,8 +540,11 @@ END IF;
      FROM Movement
           JOIN MovementLinkMovement on MovementLinkMovement.MovementChildId = Movement.Id AND MovementLinkMovement.Descid = zc_MovementLinkMovement_Production()
           JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+          JOIN Movement AS Movement2 ON Movement2.Id       = MovementLinkMovement.MovementId 
+                                    AND Movement2.StatusId = zc_Enum_Status_UnComplete() 
+
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId = zc_Movement_Sale()
+       AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_SendOnPrice())
        AND Movement.StatusId = zc_Enum_Status_Complete()
 */
 
