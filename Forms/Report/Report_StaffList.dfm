@@ -23,7 +23,6 @@ inherited Report_StaffListForm: TReport_StaffListForm
       inherited cxGrid: TcxGrid
         Width = 998
         Height = 322
-        ExplicitLeft = 3
         ExplicitWidth = 998
         ExplicitHeight = 322
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -88,7 +87,7 @@ inherited Report_StaffListForm: TReport_StaffListForm
             Width = 98
           end
           object ServiceModelName: TcxGridDBColumn
-            Caption = #1052#1086#1076#1077#1083#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' / '#1058#1080#1087' '#1089#1091#1084#1084#1099
+            Caption = #1052#1086#1076#1077#1083#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'ServiceModelName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

@@ -1409,7 +1409,8 @@ uses
   GoogleOTP in '..\..\SOURCE\GoogleOTP.pas',
   GoogleOTPRegistration in '..\..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
   Report_StaffList in '..\..\Forms\Report\Report_StaffList.pas' {Report_StaffListForm: TParentForm},
-  Report_StaffListDialog in '..\..\Forms\Report\Report_StaffListDialog.pas' {Report_StaffListDialogForm: TParentForm};
+  Report_StaffListDialog in '..\..\Forms\Report\Report_StaffListDialog.pas' {Report_StaffListDialogForm: TParentForm},
+  PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
