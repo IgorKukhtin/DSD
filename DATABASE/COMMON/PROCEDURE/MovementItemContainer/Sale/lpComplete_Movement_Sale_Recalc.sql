@@ -53,23 +53,22 @@ BEGIN
                              );
 
 
-     -- !!!сначала Распровели!!!, только потом остаток
-     IF vbMovementId_Peresort <> 0
-     THEN
-         PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_Peresort
-                                      , inUserId     := inUserId
-                                       );
-     END IF;
-
-
-
      -- таблица остатки для  inUnitId = 8459
      CREATE TEMP TABLE _tmpRemains (GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
      --
      INSERT INTO _tmpRemains (GoodsId, GoodsKindId, Amount)
+        WITH tmpMIContainer AS (SELECT MIContainer.ObjectId_Analyzer    AS GoodsId
+                                     , MIContainer.ObjectIntId_Analyzer AS GoodsKindId
+                                     , SUM (MIContainer.Amount)         AS Amount
+                                FROM MovementItemContainer AS MIContainer
+                                WHERE MIContainer.MovementId = vbMovementId_Peresort
+                                  AND MIContainer.DescId     = zc_MIContainer_Count()
+                                GROUP BY MIContainer.ObjectId_Analyzer
+                                       , MIContainer.ObjectIntId_Analyzer
+                               )
         SELECT Container.ObjectId     AS GoodsId
              , CLO_GoodsKind.ObjectId AS GoodsKindId
-             , SUM (Container.Amount) AS Amount
+             , SUM (Container.Amount) - COALESCE (tmpMIContainer.Amount, 0) AS Amount
         FROM Container
              INNER JOIN ContainerLinkObject AS CLO_Unit
                                             ON CLO_Unit.ContainerId = Container.Id
@@ -78,14 +77,16 @@ BEGIN
              LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                            ON CLO_GoodsKind.ContainerId = Container.Id
                                           AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+             LEFT JOIN tmpMIContainer ON tmpMIContainer.GoodsId     = Container.ObjectId
+                                     AND tmpMIContainer.GoodsKindId = CLO_GoodsKind.ObjectId
         WHERE Container.DescId = zc_Container_Count()
-          AND Container.Amount > 0
+          AND Container.Amount - COALESCE (tmpMIContainer.Amount, 0) > 0
           --  !!!Розподільчий комплекс!!!
           AND inUnitId = 8459
           -- !!!значит только в первый раз
           -- AND COALESCE (vbMovementId_Peresort, 0) = 0
 
-        GROUP BY Container.ObjectId, CLO_GoodsKind.ObjectId
+        GROUP BY Container.ObjectId, CLO_GoodsKind.ObjectId, tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId, tmpMIContainer.Amount
        ;
 
 IF inUserId = 5 AND 1=0
@@ -318,6 +319,8 @@ END IF;
          IF vbMovementId_Peresort <> 0
             -- если дата Документа раньше чем "незакрытый" период
             AND DATE_TRUNC ('MONTH', vbOperDate) < DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '5 DAY')
+            --
+            AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_Peresort AND Movement.StatusId = zc_Enum_Status_Complete())
          THEN
             IF -- если НЕТ элементов которые надо добавить
                NOT EXISTS (SELECT 1 FROM _tmpItemPeresort_new WHERE MovementItemId_to = 0 OR MovementItemId_from = 0)
@@ -363,11 +366,18 @@ END IF;
 
             -- Админу только отладка
             -- if inUserId = 5 then RAISE EXCEPTION 'Ошибка - НЕТ Проверки - что б ничего не делать  <%>', (SELECT COUNT(*) FROM _tmpItemPeresort_new WHERE MovementItemId_to = 0 OR MovementItemId_from = 0); end if;
-            if inUserId = 5 then RAISE EXCEPTION 'Ошибка - НЕТ Проверки - что б ничего не делать  <%>', (SELECT COUNT(*) FROM _tmpItemPeresort_new WHERE GoodsKindId_to is null OR GoodsKindId_from is null); end if;
+            if inUserId = 5 AND 1=0 then RAISE EXCEPTION 'Ошибка - НЕТ Проверки - что б ничего не делать  <%>', (SELECT COUNT(*) FROM _tmpItemPeresort_new WHERE GoodsKindId_to is null OR GoodsKindId_from is null); end if;
 
          END IF;
 
 
+         -- !!!сначала Распровели!!!
+         IF vbMovementId_Peresort <> 0
+         THEN
+             PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_Peresort
+                                          , inUserId     := inUserId
+                                           );
+         END IF;
 
          -- создается документ - <Производство смешивание> - Пересортица
          vbMovementId_Peresort:= lpInsertUpdate_Movement_ProductionUnion (ioId             := vbMovementId_Peresort
@@ -511,6 +521,9 @@ END IF;
 
 
      ELSE
+         -- Админу только отладка
+         if inUserId = 5 AND 1=1 then RAISE EXCEPTION 'Нет элементов для пересортицы.'; end if;
+
          IF vbMovementId_Peresort <> 0 AND zc_Enum_Status_Erased() <> (SELECT StatusId FROM Movement WHERE Id = vbMovementId_Peresort)
          THEN
              PERFORM lpSetErased_Movement (inMovementId := vbMovementId_Peresort

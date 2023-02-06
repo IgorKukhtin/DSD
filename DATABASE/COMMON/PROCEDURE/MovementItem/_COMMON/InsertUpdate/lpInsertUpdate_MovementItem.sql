@@ -45,7 +45,7 @@ BEGIN
      IF vbStatusId <> zc_Enum_Status_UnComplete() AND COALESCE (inUserId, 0) NOT IN (-12345, zc_Enum_Process_Auto_PartionClose()) -- , 5 
         AND inDescId <> zc_MI_Sign() AND inDescId <> zc_MI_Message() -- AND inDescId <> zc_MI_Detail()
         AND (COALESCE (vbMovementDescId, 0) <> zc_Movement_OrderExternal() OR inDescId <> zc_MI_Child())
-        AND inUserId <> 5
+        --AND inUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.(%)', vbInvNumber, lfGet_Object_ValueData (vbStatusId), inMovementId;
      END IF;
