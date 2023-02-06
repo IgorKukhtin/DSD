@@ -2165,10 +2165,10 @@ inherited Report_PersonalForm: TReport_PersonalForm
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
-    FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TInfoMoney_ObjectDescForm'
+    FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -2269,10 +2269,10 @@ inherited Report_PersonalForm: TReport_PersonalForm
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonal
-    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.Value = 'TPersonalForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonal_ObjectForm'
+    FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
