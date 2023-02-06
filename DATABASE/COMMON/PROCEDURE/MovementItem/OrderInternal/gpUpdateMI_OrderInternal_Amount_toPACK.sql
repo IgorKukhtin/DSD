@@ -1180,11 +1180,12 @@ else*/
 
 IF vbUserId = 5 --AND inIsByDay = TRUE
 THEN
-    RAISE EXCEPTION 'Ошибка.test ok <%>  <%>  <%> <%>    <%>   <%>', (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 225490279  AND MIB.DescId = zc_MIBoolean_Calculated())
-             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 225490279  AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
+    RAISE EXCEPTION 'Ошибка.test ok <%>  <%>  <%> <%>    <%>   <%>'
+             , (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 250377451  AND MIB.DescId = zc_MIBoolean_Calculated())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 250377451  AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
              , (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 225490363 AND MIB.DescId = zc_MIBoolean_Calculated())
              , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 225490363 AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
-             , (SELECT _tmpMI_Child.AmountNextSecondResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 225490279)
+             , (SELECT _tmpMI_Child.AmountNextSecondResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 250377451)
              , (SELECT _tmpMI_Child.AmountNextSecondResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 225490363)
               ;
 END IF;

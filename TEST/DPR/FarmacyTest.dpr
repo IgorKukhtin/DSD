@@ -1272,7 +1272,10 @@ uses
   DialogPswSms in '..\..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
   dsdPlaySound in '..\..\SOURCE\dsdPlaySound.pas',
   CheckErrorInsertDate in '..\..\FormsFarmacy\Document\CheckErrorInsertDate.pas' {CheckErrorInsertDateForm: TParentForm},
-  PartionDateWages in '..\..\FormsFarmacy\Guides\PartionDateWages.pas' {PartionDateWagesForm: TParentForm};
+  PartionDateWages in '..\..\FormsFarmacy\Guides\PartionDateWages.pas' {PartionDateWagesForm: TParentForm},
+  Report_Check_TabletkiRecreateDialog in '..\..\FormsFarmacy\Report\Report_Check_TabletkiRecreateDialog.pas' {Report_Check_TabletkiRecreateDialogForm: TParentForm},
+  Report_Check_TabletkiRecreate in '..\..\FormsFarmacy\Report\Report_Check_TabletkiRecreate.pas' {Report_Check_TabletkiRecreateForm: TParentForm},
+  CashSettingsHistory in '..\..\FormsFarmacy\Guides\CashSettingsHistory.pas' {CashSettingsHistoryForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

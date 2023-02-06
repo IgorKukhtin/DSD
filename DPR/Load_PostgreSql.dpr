@@ -73,7 +73,10 @@ uses
   Medoc_J1201212 in '..\SOURCE\MeDOC\Medoc_J1201212.pas',
   DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
   DOCUMENTINVOICE_PRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
-  DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas';
+  DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
+  GoogleOTP in '..\SOURCE\GoogleOTP.pas',
+  GoogleOTPDialogPsw in '..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
+  GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm};
 
 {$R *.res}
 

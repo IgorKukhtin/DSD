@@ -7,7 +7,17 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus, cxLabel, Vcl.StdCtrls,
   cxButtons, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxPropertiesStore,
-  dxSkinsCore, dxSkinsDefaultPainters, cxClasses, UtilConst;
+  dxSkinsCore, dxSkinsDefaultPainters, cxClasses, UtilConst, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TcxComboBoxUser = Class(TcxComboBox)
@@ -96,6 +106,8 @@ begin
 //        if FAllowLocalConnect then
 //          SaveLocalConnect(edUserName.Text, edPassword.Text, gc_User.Session);
         TStorageFactory.GetStorage.LoadReportList(gc_User.Session);
+        if dsdProject = prProject then
+          TStorageFactory.GetStorage.LoadReportPriorityList(gc_User.Session);
         ModalResult := mrOk;
       End
       else

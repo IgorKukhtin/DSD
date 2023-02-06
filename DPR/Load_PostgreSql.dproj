@@ -75,7 +75,7 @@
 			<DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-			<Debugger_RunParams>alan_dp_ua </Debugger_RunParams>
+			<Debugger_RunParams>alan_dp_ua_2</Debugger_RunParams>
 			<DCC_ExeOutput>..\Bin</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -170,6 +170,13 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas"/>
+			<DCCReference Include="..\SOURCE\GoogleOTP.pas"/>
+			<DCCReference Include="..\SOURCE\GoogleOTPDialogPsw.pas">
+				<Form>GoogleOTPDialogPswForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\GoogleOTPRegistration.pas">
+				<Form>GoogleOTPRegistrationForm</Form>
+			</DCCReference>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>
