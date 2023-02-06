@@ -4604,6 +4604,18 @@
 				<Form>PartionDateWagesForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_TabletkiRecreateDialog.pas">
+				<Form>Report_Check_TabletkiRecreateDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Check_TabletkiRecreate.pas">
+				<Form>Report_Check_TabletkiRecreateForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\CashSettingsHistory.pas">
+				<Form>CashSettingsHistoryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

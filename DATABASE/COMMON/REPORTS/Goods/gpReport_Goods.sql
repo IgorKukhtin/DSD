@@ -48,7 +48,10 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , OperDate_Protocol TDateTime
               , UserName_Protocol TVarChar
               , OperDate_Protocol_auto TDateTime
-              , UserName_Protocol_auto TVarChar
+              , UserName_Protocol_auto TVarChar   
+              , OperDate_Insert TDateTime
+              , UserName_Insert TVarChar
+              
                )
 AS
 $BODY$
@@ -156,15 +159,36 @@ BEGIN
                                                       AND MovementProtocol_auto.Id         = tmpProtocol1.MaxId_Auto_Auto
                             LEFT JOIN Object AS Object_User      ON Object_User.Id      = MovementProtocol.UserId
                             LEFT JOIN Object AS Object_User_auto ON Object_User_auto.Id = MovementProtocol_auto.UserId
-                      )
+                      )  
+
+     --
+   , tmpProtocolInsert AS (SELECT tmp.MovementId
+                                , tmp.OperDate
+                                , tmp.UserId
+                                , Object_User.ValueData AS UserName
+                           FROM (SELECT *
+                                        -- π Ô/Ô
+                                      , ROW_NUMBER() OVER (PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.OperDate ASC) AS Ord
+                                 FROM MovementProtocol
+                                 WHERE MovementProtocol.MovementId IN (SELECT DISTINCT gpReport.MovementId FROM gpReport)
+                                 ) AS tmp
+                                 LEFT JOIN Object AS Object_User ON Object_User.Id = tmp.UserId
+                           WHERE tmp.Ord = 1
+                          )
+ 
      -- –≈«”À‹“¿“
      SELECT gpReport.*
           , tmpProtocol.OperDate      ::TDateTime AS OperDate_Protocol
           , tmpProtocol.UserName      ::TVarChar  AS UserName_Protocol
           , tmpProtocol.OperDate_auto ::TDateTime AS OperDate_Protocol_auto
           , tmpProtocol.UserName_auto ::TVarChar  AS UserName_Protocol_auto
+          
+          , tmpProtocolInsert.OperDate ::TDateTime AS OperDate_Insert
+          , tmpProtocolInsert.UserName ::TVarChar  AS UserName_Insert
      FROM gpReport
-          LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = gpReport.MovementId
+          LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = gpReport.MovementId 
+          
+          LEFT JOIN tmpProtocolInsert ON tmpProtocolInsert.MovementId = gpReport.MovementId
          
          ;
  
@@ -734,6 +758,22 @@ BEGIN
                             LEFT JOIN Object AS Object_User      ON Object_User.Id      = MovementProtocol.UserId
                             LEFT JOIN Object AS Object_User_auto ON Object_User_auto.Id = MovementProtocol_auto.UserId
                       )
+
+
+    , tmpProtocolInsert AS (SELECT tmp.MovementId
+                                , tmp.OperDate
+                                , tmp.UserId
+                                , Object_User.ValueData AS UserName
+                           FROM (SELECT *
+                                        -- π Ô/Ô
+                                      , ROW_NUMBER() OVER (PARTITION BY MovementProtocol.MovementId ORDER BY MovementProtocol.OperDate ASC) AS Ord
+                                 FROM MovementProtocol
+                                 WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMIContainer_group.MovementId FROM tmpMIContainer_group)
+                                 ) AS tmp
+                                 LEFT JOIN Object AS Object_User ON Object_User.Id = tmp.UserId
+                           WHERE tmp.Ord = 1
+                          )
+
     -- –≈«”À‹“¿“
   , tmpDataAll AS (SELECT Movement.Id AS MovementId
                         , Movement.InvNumber
@@ -913,6 +953,8 @@ BEGIN
                         , tmpProtocol.OperDate_auto ::TDateTime AS OperDate_Protocol_auto
                         , tmpProtocol.UserName_auto ::TVarChar  AS UserName_Protocol_auto
 
+                        , tmpProtocolInsert.OperDate ::TDateTime AS OperDate_Insert
+                        , tmpProtocolInsert.UserName ::TVarChar  AS UserName_Insert
                    FROM tmpMIContainer_group
                         LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
                         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -992,11 +1034,9 @@ BEGIN
                         LEFT JOIN zfCalc_DayOfWeekName (MovementDate_OperDatePartner.ValueData) AS tmpWeekDay_partner ON 1=1
 
                         LEFT JOIN tmpProtocol ON tmpProtocol.MovementId =  tmpMIContainer_group.MovementId
+                        LEFT JOIN tmpProtocolInsert ON tmpProtocolInsert.MovementId =  tmpMIContainer_group.MovementId
+                        
                    )
-
-
-
-
 
    -- –≈«”À‹“¿“
    SELECT tmpDataAll.MovementId AS MovementId
@@ -1088,6 +1128,9 @@ BEGIN
         , tmpDataAll.OperDate_Protocol_auto ::TDateTime AS OperDate_Protocol_auto
         , tmpDataAll.UserName_Protocol_auto ::TVarChar  AS UserName_Protocol_auto
 
+        , tmpDataAll.OperDate_Insert ::TDateTime AS OperDate_Insert
+        , tmpDataAll.UserName_Insert ::TVarChar  AS UserName_Insert
+
    FROM tmpDataAll
    GROUP BY tmpDataAll.MovementId
         , tmpDataAll.InvNumber
@@ -1141,6 +1184,8 @@ BEGIN
         , tmpDataAll.UserName_Protocol
         , tmpDataAll.OperDate_Protocol_auto
         , tmpDataAll.UserName_Protocol_auto
+        , tmpDataAll.OperDate_Insert
+        , tmpDataAll.UserName_Insert
    ;
 
    END IF;

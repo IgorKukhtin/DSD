@@ -119,6 +119,7 @@ type
     bbPrintStructureGoods: TdxBarButton;
     spSelectPrintStructureGoods: TdsdStoredProc;
     spSelectPrintStructureHeader: TdsdStoredProc;
+    NPP: TcxGridDBColumn;
   private
   public
   end;

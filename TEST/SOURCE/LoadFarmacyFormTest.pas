@@ -1164,6 +1164,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_TabletkiRecreateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_TabletkiRecreateForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_TabletkiRecreateDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_TabletkiRecreateDialogForm');
+
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUsersSiteProfileForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUsersSiteProfileForm');
@@ -3688,10 +3693,16 @@ end;
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
 
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TNewUserForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsEditForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TCashSettingsEditForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsHistoryForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TCashSettingsHistoryForm');
+
+{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TNewUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TNewUserForm');
 
-{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TPickUpLogsAndDBFForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TPickUpLogsAndDBFForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPickUpLogsAndDBFForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGUIDUnitForm'));
@@ -3705,10 +3716,6 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalPrioritiesForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridicalPrioritiesForm');
-}
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsEditForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TCashSettingsEditForm');
- {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMethodsAssortmentForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMethodsAssortmentForm');
 

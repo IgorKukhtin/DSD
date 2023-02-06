@@ -314,7 +314,8 @@ BEGIN
                                , COALESCE (MIString_ProgramIdSP.ValueData, '')::TVarChar AS ProgramIdSP
                                , MIString_DosageIdSP.ValueData AS DosageIdSP
                                                                 -- № п/п - на всякий случай
-                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
+                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId 
+                                                    ORDER BY Movement.OperDate DESC, MIFloat_CountSPMin.ValueData DESC) AS Ord
                           FROM Movement
                                INNER JOIN MovementDate AS MovementDate_OperDateStart
                                                        ON MovementDate_OperDateStart.MovementId = Movement.Id

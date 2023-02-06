@@ -115,13 +115,20 @@ BEGIN
                                                 ON MovementLinkObject_CashRegister.MovementId = Movement.Id
                                                AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
                    LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
+
+                   LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                           ON MovementFloat_TotalCount.MovementId = Movement.Id
+                                          AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
                    
               WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate) 
                 AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                 AND Movement.DescId = zc_Movement_Check()
                 AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
-                AND COALESCE (Object_CashRegister.ValueData, '') <> ''
-                AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                AND (COALESCE (Object_CashRegister.ValueData, '') <> ''
+                     AND Movement.StatusId = zc_Enum_Status_UnComplete() OR
+                     COALESCE (MovementFloat_TotalCount.ValueData, 0) = 0
+                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                    )
            ) AS Movement_Check 
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Check.StatusId
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Movement_Check.UnitId
@@ -273,5 +280,7 @@ $BODY$
 -- тест
 -- 
 
-select * from gpSelect_Movement_Check_Red(inStartDate := ('01.03.2022')::TDateTime , inEndDate := ('26.03.2022')::TDateTime , inUnitId := 0 ,  inSession := '3');
+
+select * from gpSelect_Movement_Check_Red(inStartDate := ('01.01.2023')::TDateTime , inEndDate := ('02.02.2023')::TDateTime , inUnitId := 0 ,  inSession := '3');
+
 

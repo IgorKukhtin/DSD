@@ -143,6 +143,7 @@ BEGIN
     OPEN Cursor1 FOR (
         WITH
             tmpMovement AS (SELECT Movement.Id
+                                 , Movement.isShowVIP 
                                  , Movement.isShowTabletki 
                                  , Movement.isShowLiki24
                             FROM tmpMov as Movement
@@ -182,13 +183,14 @@ BEGIN
                     AND COALESCE(MovementFloat_MobileDiscount.ValueData, 0) > 0
                    THEN COALESCE(MovementFloat_MobileDiscount.ValueData, 0)
                    ELSE 0 END)::TFloat                   AS TotalSumm
+            , Object_Unit.Id                             AS UnitId
             , Object_Unit.ValueData                      AS UnitName
             , Object_CashRegister.ValueData              AS CashRegisterName
             , MovementLinkObject_CheckMember.ObjectId    AS CashMemberId
-            , CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
+            , CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = '' 
+                   THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
 	        , COALESCE(Object_BuyerForSite.ValueData,
                       MovementString_Bayer.ValueData)             AS Bayer
-
             , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
                        MovementString_BayerPhone.ValueData)       AS BayerPhone
             , COALESCE(MovementString_InvNumberOrder.ValueData,
@@ -240,10 +242,10 @@ BEGIN
             , CASE WHEN tmpMov.isShowTabletki = TRUE THEN 'Таблетки' 
                    WHEN tmpMov.isShowLiki24 = TRUE THEN 'Liki24' 
                    ELSE 'VIP' END::TVarChar  AS TypeChech
-            , CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) in (zc_Enum_CheckSourceKind_Tabletki(), zc_Enum_CheckSourceKind_Liki24()) THEN TRUE ELSE FALSE END AS isBanAdd
+            , CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) in (zc_Enum_CheckSourceKind_Tabletki(), zc_Enum_CheckSourceKind_Liki24()) 
+                   THEN TRUE ELSE FALSE END AS isBanAdd
             , COALESCE(MovementBoolean_NotMCS.ValueData,FALSE)   AS isNotMCS
             , COALESCE(MovementBoolean_DiscountCommit.ValueData, False)    AS isDiscountCommit
-
             , MovementString_CommentCustomer.ValueData                     AS CommentCustomer
             , COALESCE(MovementBoolean_ErrorRRO.ValueData, False)          AS isErrorRRO
             , COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False)   AS isAutoVIPforSales
@@ -252,6 +254,10 @@ BEGIN
             , MovementDate_Coming.ValueData                                AS DateComing
             , COALESCE(MovementFloat_MobileDiscount.ValueData, 0)::TFloat  AS MobileDiscount
             , COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False)::Boolean    AS isMobileFirstOrder
+            
+            , CASE WHEN tmpMov.isShowVIP = TRUE THEN 1
+                   WHEN tmpMov.isShowTabletki = TRUE THEN 2 
+                   WHEN tmpMov.isShowLiki24 = TRUE THEN 3 END :: Integer               AS TypeShow 
 
        FROM tmpMovement as tmpMov
             LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id
@@ -496,7 +502,11 @@ BEGIN
                                 FROM Object_Goods_Retail
                                 WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
                                   AND Object_Goods_Retail.RetailId = 4)
-           , tmpMI_all AS (SELECT MovementItem.Id, MovementItem.Amount, MovementItem.ObjectId, MovementItem.MovementId
+           , tmpMI_all AS (SELECT MovementItem.Id
+                               , MovementItem.Amount
+                               , MovementItem.ObjectId
+                               , MovementItem.MovementId
+                               , MovementItem.ParentId
                                , Object_Goods_PairSun_Main.MainID                       AS GoodsPairSunId
                                , COALESCE(Object_Goods_PairSun_Main.MainID, 0) <> 0     AS isGoodsPairSun
                                , Object_Goods_PairSun.GoodsPairSunID                    AS GoodsPairSunMainId
@@ -688,14 +698,14 @@ BEGIN
 
        -- Результат
        SELECT
-             MovementItem.Id          AS Id,
-             MovementItem.MovementId  AS MovementId
+             MovementItem.Id          AS Id
+           , MovementItem.ParentId  
+           , MovementItem.MovementId  AS MovementId
            , MovementItem.ObjectId    AS GoodsId
            , Object_Goods_Main.ObjectCode  AS GoodsCode
            , CASE WHEN vbLanguage = 'UA' AND COALESCE(Object_Goods_Main.NameUkr, '') <> ''
                   THEN Object_Goods_Main.NameUkr
                   ELSE Object_Goods_Main.Name END   AS GoodsName
-           , tmpRemains.Amount_remains :: TFloat AS Amount_remains
            , MovementItem.Amount      AS Amount
            , MovementItem.Price       AS Price
            , MovementItem.AmountSumm  AS Summ
@@ -704,24 +714,29 @@ BEGIN
            , MovementItem.ChangePercent          AS ChangePercent
            , MovementItem.SummChangePercent      AS SummChangePercent
            , MovementItem.AmountOrder            AS AmountOrder
-           , MovementItem.List_UID               AS List_UID
            , False                               AS isErased
-
+           , MovementItem.List_UID               AS List_UID
+           , tmpRemains.Amount_remains :: TFloat AS Remains
            , CASE WHEN Movement.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND tmpRemains.GoodsId > 0 AND MovementItem.Amount > 0 THEN 16440317 -- бледно крассный / розовый
                   -- WHEN tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND tmpRemains.GoodsId IS NULL THEN zc_Color_Yelow() -- желтый
                   ELSE zc_Color_White()
              END  AS Color_Calc
-
+           , zc_Color_Black()                                                    AS Color_ExpirationDate
            , CASE WHEN tmpRemains.GoodsId > 0 THEN zc_Color_Red()
                   ELSE zc_Color_Black()
              END  AS Color_CalcError
-
+           , Object_Accommodation.ValueData                                      AS AccommodationName
+           , Null::TFloat                                                        AS Multiplicity
+           , COALESCE (Object_Goods_Main.isDoesNotShare, FALSE)                  AS DoesNotShare
+           , Null::TVArChar                                                      AS IdSP
+           , Null::TVArChar                                                      AS ProgramIdSP
+           , Null::TFloat                                                        AS CountSP
+           , Null::TFloat                                                        AS PriceRetSP
+           , Null::TFloat                                                        AS PaymentSP
            , Object_PartionDateKind.Id                                           AS PartionDateKindId
            , Object_PartionDateKind.ValueData                                    AS PartionDateKindName
            , MovementItem.PricePartionDate                                       AS PricePartionDate
            , COALESCE (ObjectFloat_Month.ValueData, 0) :: TFLoat                 AS AmountMonth
-           , Object_Accommodation.ValueData                                      AS AccommodationName
-           
            , 0::Integer                                                          AS TypeDiscount
            , COALESCE(MovementItem.PricePartionDate, MovementItem.PriceSale)     AS PriceDiscount
            , COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId) AS  NDSKindId
@@ -737,6 +752,7 @@ BEGIN
            , MovementItem.isPresent                                              AS isPresent
            , Object_Goods_Main.Multiplicity                                      AS MultiplicitySale
            , Object_Goods_Main.isMultiplicityError                               AS isMultiplicityError
+           , Null::TDateTime                                                     AS FixEndDate 
            , MILinkObject_Juridical.ObjectId                                     AS JuridicalId 
            , Object_Juridical.ValueData                                          AS JuridicalName
            , tmpGoodsDiscountPrice.DiscountProcent                               AS GoodsDiscountProcent

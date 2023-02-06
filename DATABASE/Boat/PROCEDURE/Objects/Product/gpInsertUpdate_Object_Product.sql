@@ -10,7 +10,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar
                                                     , TFloat, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
                                                     , Integer, TVarChar, TDateTime, Integer, TVarChar, TDateTime, TFloat, TFloat
                                                     , TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean
+                                                    , TFloat, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
+                                                    , Integer, TVarChar, TDateTime, Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat
+                                                    , TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
  INOUT ioId                    Integer   ,    -- ключ объекта <Лодки>
@@ -36,6 +39,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
     IN inMovementId_OrderClient  Integer,
     IN inInvNumber_OrderClient   TVarChar ,  -- Номер документа
     IN inOperDate_OrderClient    TDateTime,
+    IN inNPP_OrderClient         TFloat,
 
     IN inMovementId_Invoice      Integer,
     IN inInvNumber_Invoice       TVarChar ,  -- Номер документа
@@ -204,6 +208,7 @@ BEGIN
                                                                                               )
                                                                     , inDiscountTax        := inDiscountTax
                                                                     , inDiscountNextTax    := inDiscountNextTax
+                                                                    , inNPP                := inNPP_OrderClient
                                                                     , inFromId             := inClientId
                                                                     , inToId               := zc_Unit_Production()
                                                                     , inPaidKindId         := zc_Enum_PaidKind_FirstForm()
@@ -223,6 +228,7 @@ BEGIN
                                                  , inVATPercent       := tmp.VATPercent            ::TFloat
                                                  , inDiscountTax      := inDiscountTax             ::TFloat              --пересохраняем
                                                  , inDiscountNextTax  := inDiscountNextTax         ::TFloat              --пересохраняем
+                                                 , inNPP              := inNPP_OrderClient
                                                  , inFromId           := inClientId                ::Integer             --пересохраняем
                                                  , inToId             := tmp.ToId                  ::Integer
                                                  , inPaidKindId       := tmp.PaidKindId            ::Integer

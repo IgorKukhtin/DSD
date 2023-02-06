@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_GoodsSP()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsSP (Integer, Integer, Integer, Integer, Integer, Integer
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsSP (Integer, Integer, Integer, Integer, Integer, Integer
                                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsSP (Integer, Integer, Integer, Integer, Integer, Integer
@@ -15,12 +15,12 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsSP (Integer, Integer, I
                                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                            , TVarChar, TVarChar, TVarChar, TVarChar
-                                                           , Integer);
+                                                           , Integer);*/
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsSP (Integer, Integer, Integer, Integer, Integer, Integer
                                                            , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                            , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
-                                                           , TVarChar, TVarChar, TVarChar, TVarChar
+                                                           , TVarChar, TVarChar, TVarChar
                                                            , Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_GoodsSP(
@@ -63,7 +63,7 @@ BEGIN
     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
     -- сохранили <Элемент документа>
-    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, 0, NULL);
+    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, 0, NULL, zc_Enum_Process_Auto_PartionClose());
     
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ColSP(), ioId, inColSP);

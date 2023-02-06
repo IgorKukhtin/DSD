@@ -12,7 +12,6 @@ type
      class procedure UpdateProgram;
      class function UpdateProgramTest : boolean;
      class function ProgramLoadSuffics(aFileName: string) : String;
-     class function UpdateDll(aFileName: string) : Boolean;
   public
      class procedure AutomaticCheckConnect;
      class procedure AutomaticUpdateProgram;
@@ -22,6 +21,7 @@ type
      class procedure AutomaticDownloadFarmacyCash(APath : string);
      class procedure AutomaticDownloadFarmacyCashServise(APath : string);
      class function AutomaticUpdateProgramTestStart : boolean;
+     class function UpdateDll(aFileName: string) : Boolean;
   end;
 
   const fAlan_colocall : Boolean = FALSE;
@@ -682,6 +682,9 @@ begin
   //4.2. ssleay32.dll грузим - дл€ SMS
   if (gc_ProgramName = 'FarmacyCash.exe') then UpdateDll('ssleay32.dll');
 
+  //4.3. sqlite3.dll грузим - дл€ SQLite
+  if (gc_ProgramName = 'FarmacyCash.exe') then UpdateDll('sqlite3.dll');
+
   //5. «апускаем Upgrader дл€ замени EXE
   Execute(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe ' + ParamStr(0), ExtractFileDir(ParamStr(0)));
 
@@ -722,6 +725,9 @@ begin
 
   //4.2. ssleay32.dll грузим - дл€ SMS
   if (gc_ProgramName = 'FarmacyCash.exe') then UpdateDll('ssleay32.dll');
+
+  //4.3. sqlite3.dll грузим - дл€ SQLite
+  if (gc_ProgramName = 'FarmacyCash.exe') then UpdateDll('sqlite3.dll');
 
   //5. «апускаем Upgrader дл€ замени EXE
   Execute(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe ' + ParamStr(0), ExtractFileDir(ParamStr(0)));

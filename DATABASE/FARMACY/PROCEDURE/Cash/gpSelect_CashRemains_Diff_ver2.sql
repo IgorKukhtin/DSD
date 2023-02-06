@@ -438,11 +438,13 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                , MIFloat_PriceSP.ValueData     AS PriceSP
                                , MIFloat_PaymentSP.ValueData   AS PaymentSP
                                , MIFloat_CountSP.ValueData     AS CountSP
+                               , MIFloat_CountSPMin.ValueData  AS CountSPMin
                                , MIString_IdSP.ValueData       AS IdSP
                                , COALESCE (MIString_ProgramIdSP.ValueData, '')::TVarChar AS ProgramIdSP
                                , MIString_DosageIdSP.ValueData AS DosageIdSP
                                                                 -- № п/п - на всякий случай
-                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
+                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId 
+                                                    ORDER BY Movement.OperDate DESC, MIFloat_CountSPMin.ValueData DESC) AS Ord
                           FROM Movement
                                INNER JOIN MovementDate AS MovementDate_OperDateStart
                                                        ON MovementDate_OperDateStart.MovementId = Movement.Id
@@ -482,6 +484,10 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                LEFT JOIN MovementItemFloat AS MIFloat_CountSP
                                                            ON MIFloat_CountSP.MovementItemId = MovementItem.Id
                                                           AND MIFloat_CountSP.DescId = zc_MIFloat_CountSP()
+                               -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект)(6)
+                               LEFT JOIN MovementItemFloat AS MIFloat_CountSPMin
+                                                           ON MIFloat_CountSPMin.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_CountSPMin.DescId = zc_MIFloat_CountSPMin()
                                -- ID лікарського засобу
                                LEFT JOIN MovementItemString AS MIString_IdSP
                                                             ON MIString_IdSP.MovementItemId = MovementItem.Id

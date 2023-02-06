@@ -157,6 +157,8 @@ type
     spGet_ProductPhoto: TdsdStoredProc;
     actGet_ProductPhoto: TdsdExecStoredProc;
     actGet_ProductDocument: TdsdExecStoredProc;
+    cxLabel35: TcxLabel;
+    edNPP: TcxCurrencyEdit;
   private
     { Private declarations }
   public

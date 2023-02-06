@@ -64,6 +64,8 @@ type
     spErasedMIMaster: TdsdStoredProc;
     actMISetErased: TdsdUpdateErased;
     actMISetUnErased: TdsdUpdateErased;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    bbMovementProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

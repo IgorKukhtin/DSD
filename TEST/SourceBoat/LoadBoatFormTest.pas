@@ -76,6 +76,7 @@ type
     procedure LoadReceiptServiceFormTest;
     procedure LoadReportFormTest;
     procedure LoadReportProfitLossFormTest;
+    procedure LoadReportPersonalFormTest;
     procedure LoadSaleFormTest;
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
@@ -495,6 +496,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
 end;
+
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_limitForm'));
@@ -941,6 +943,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossDialogForm');
+end;
+
+procedure TLoadFormTest.LoadReportPersonalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalDialogForm');
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;

@@ -162,7 +162,7 @@ BEGIN
                               , Movement.InsertDate 
                          FROM tmpMovement_Check AS Movement 
                          GROUP BY Movement.InsertId, Movement.InsertDate 
-                         HAVING COUNT(*) > 5) AS MovementSelect 
+                         HAVING COUNT(*) >= 5) AS MovementSelect 
                                               ON MovementSelect.InsertId = Movement_Check.InsertId
                                              AND MovementSelect.InsertDate = date_trunc('day', Movement_Check.InsertDate)
         

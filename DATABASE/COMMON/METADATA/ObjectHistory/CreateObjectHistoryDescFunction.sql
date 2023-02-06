@@ -26,10 +26,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectHistory_PriceSite() RETURNS Integer AS $BODY
 INSERT INTO ObjectHistoryDesc(Code, ItemName)
 SELECT 'zc_ObjectHistory_PriceSite', 'Цены для сайта (цена для заказа на сайте)' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryDesc WHERE Id = zc_ObjectHistory_PriceSite());
 
+CREATE OR REPLACE FUNCTION zc_ObjectHistory_CashSettings() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryDesc WHERE Code = 'zc_ObjectHistory_CashSettings'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectHistoryDesc(Code, ItemName)
+SELECT 'zc_ObjectHistory_CashSettings', 'Общие настройки касс' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryDesc WHERE Id = zc_ObjectHistory_CashSettings());
+
  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Шаблий О.В.
+ 05.02.23                                                                        *zc_ObjectHistory_CashSettings
  09.06.21                                                                        *zc_ObjectHistory_PriceSite
  16.04.20         * zc_ObjectHistory_PersentSalary
  16.08.18         * zc_ObjectHistory_PriceChange

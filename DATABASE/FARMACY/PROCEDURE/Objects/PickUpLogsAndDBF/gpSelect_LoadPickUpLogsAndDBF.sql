@@ -54,7 +54,8 @@ BEGIN
       outPassword := '63CxUbbUGfYh';
       outFileList := 'FarmacyCash.log;FarmacyCash_RRO.log;FarmacyCashServise.log;default.log;'||
                      'FarmacyCash_DiscontLog.xml;FarmacyCash_log.xml;'||
-                     'FarmacyCashBody.dbf;FarmacyCashDiff.dbf;FarmacyCashHead.dbf';
+                     'FarmacyCashBody.dbf;FarmacyCashDiff.dbf;FarmacyCashHead.dbf;'||
+                     'FarmacyCashServise_SQLite.log;FarmacyCashSQLite.db';
                      
       SELECT COALESCE(ObjectBoolean_GetArchive.ValueData, False)
       INTO vbisGetArchive

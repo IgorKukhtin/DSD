@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , StatusCode_OrderClient Integer
              , StatusName_OrderClient TVarChar
              , VATPercent_OrderClient TFloat
+             , NPP_OrderClient TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSummVAT TFloat
              , OperPrice_load       TFloat
              , TransportSumm_load   TFloat
@@ -43,6 +44,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , AmountIn_remAll  TFloat
               ) AS
 $BODY$
+    DECLARE vbNPP TFloat;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -50,7 +52,17 @@ BEGIN
 
 
    IF COALESCE (inId, 0) = 0
-   THEN
+   THEN 
+   --находим последний номер по Очередности сборки
+   vbNPP := COALESCE ((SELECT MAX(MovementFloat.ValueData)
+                       FROM MovementFloat
+                           INNER JOIN Movement ON Movement.Id = MovementFloat.MovementId
+                                              AND Movement.DescId = zc_Movement_OrderClient()
+                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
+                       WHERE MovementFloat.DescId = zc_MovementFloat_NPP()
+                         AND COALESCE (MovementFloat.ValueData,0)<>0
+                       ), 0);
+
        RETURN QUERY
        SELECT
              CAST (0 as Integer)       AS Id
@@ -88,6 +100,7 @@ BEGIN
            , Object_Status.Code        AS StatusCode_OrderClient
            , Object_Status.Name        AS StatusName_OrderClient
            , CAST (0 AS TFloat)        AS VATPercent_OrderClient
+           , (vbNPP +1)       ::TFloat AS NPP_OrderClient
 
            , CAST (0 AS TFloat)        AS TotalSummMVAT
            , CAST (0 AS TFloat)        AS TotalSummPVAT
@@ -130,6 +143,7 @@ BEGIN
                              , MovementFloat_VATPercent.ValueData         AS VATPercent
                              , MovementFloat_OperPrice_load.ValueData     AS OperPrice_load
                              , MovementFloat_TransportSumm_load.ValueData AS TransportSumm_load
+                             , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP
                         FROM Movement
                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -156,6 +170,10 @@ BEGIN
                              LEFT JOIN MovementFloat AS MovementFloat_TransportSumm_load
                                                      ON MovementFloat_TransportSumm_load.MovementId = Movement.Id
                                                     AND MovementFloat_TransportSumm_load.DescId     = zc_MovementFloat_TransportSumm_load()
+
+                              LEFT JOIN MovementFloat AS MovementFloat_NPP
+                                                      ON MovementFloat_NPP.MovementId = Movement.Id
+                                                     AND MovementFloat_NPP.DescId = zc_MovementFloat_NPP()
 
                         WHERE Movement.Id = inMovementId_OrderClient
                           AND Movement.DescId = zc_Movement_OrderClient()
@@ -265,6 +283,7 @@ BEGIN
          , tmpOrderClient.StatusCode  :: Integer   AS StatusCode_OrderClient
          , tmpOrderClient.StatusName  :: TVarChar  AS StatusName_OrderClient
          , tmpOrderClient.VATPercent  :: TFloat    AS VATPercent_OrderClient
+         , tmpOrderClient.NPP         :: TFloat    AS NPP_OrderClient
 
          , zfCalc_Summ_NoVAT (MovementFloat_TotalSumm.ValueData, tmpOrderClient.VATPercent):: TFloat AS TotalSummMVAT
          , MovementFloat_TotalSumm.ValueData                                               :: TFloat AS TotalSummPVAT
@@ -390,6 +409,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.02.23         *
  04.01.21         *
  08.10.20         *
 */

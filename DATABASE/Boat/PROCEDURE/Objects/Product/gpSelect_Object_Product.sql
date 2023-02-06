@@ -27,6 +27,8 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , InfoMoneyId_Client   Integer
              , InfoMoneyName_Client TVarChar
              , TaxKind_Value_Client TFloat
+             , NPP_OrderClient TFloat
+             , NPP_2 TFloat
 
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -132,7 +134,7 @@ BEGIN
                               , Object_InfoMoney_View.InfoMoneyName_all
                                 -- % Õƒ— «‡Í‡Á ÍÎËÂÌÚ‡
                               , MovementFloat_VATPercent.ValueData       AS VATPercent
-
+                              , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP
                          FROM MovementLinkObject AS MovementLinkObject_Product
                               INNER JOIN Movement ON Movement.Id = MovementLinkObject_Product.MovementId
                                                  AND Movement.DescId = zc_Movement_OrderClient()
@@ -160,6 +162,10 @@ BEGIN
                               LEFT JOIN MovementFloat AS MovementFloat_TransportSumm_load
                                                       ON MovementFloat_TransportSumm_load.MovementId = Movement.Id
                                                      AND MovementFloat_TransportSumm_load.DescId     = zc_MovementFloat_TransportSumm_load()
+
+                              LEFT JOIN MovementFloat AS MovementFloat_NPP
+                                                      ON MovementFloat_NPP.MovementId = Movement.Id
+                                                     AND MovementFloat_NPP.DescId = zc_MovementFloat_NPP()
 
                               LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
                                                    ON ObjectLink_InfoMoney.ObjectId = Object_From.Id
@@ -661,6 +667,8 @@ BEGIN
          , tmpOrderClient.InfoMoneyId       AS InfoMoneyId_Client
          , tmpOrderClient.InfoMoneyName_all AS InfoMoneyName_Client
          , tmpOrderClient.VATPercent        AS TaxKind_Value_Client
+         , tmpOrderClient.NPP      ::TFloat AS NPP_OrderClient
+         , ROW_NUMBER() OVER (ORDER BY tmpResAll.DateBegin, tmpOrderClient.NPP, tmpOrderClient.OperDate) ::TFloat AS NPP_2
 
          , tmpResAll.InsertName
          , tmpResAll.InsertDate
@@ -735,7 +743,8 @@ BEGIN
           LEFT JOIN tmpCalc AS tmpCalc_1 ON tmpCalc_1.MovementId_OrderClient = tmpResAll.MovementId_OrderClient AND tmpCalc_1.ProductId = tmpResAll.Id AND tmpCalc_1.isBasis = TRUE
           LEFT JOIN tmpCalc AS tmpCalc_2 ON tmpCalc_2.MovementId_OrderClient = tmpResAll.MovementId_OrderClient AND tmpCalc_2.ProductId = tmpResAll.Id AND tmpCalc_2.isBasis = FALSE
 
-          LEFT JOIN tmpOrderClient ON  tmpOrderClient.MovementId = tmpResAll.MovementId_OrderClient AND tmpOrderClient.ProductId = tmpResAll.Id
+          LEFT JOIN tmpOrderClient ON  tmpOrderClient.MovementId = tmpResAll.MovementId_OrderClient AND tmpOrderClient.ProductId = tmpResAll.Id 
+
      ;
 
 END;
@@ -745,6 +754,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.02.23         *
  04.01.21         *
  08.10.20         *
 */
