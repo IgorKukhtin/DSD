@@ -33,6 +33,10 @@ type
 
     procedure LoadReportList(ASession: string);
     procedure LoadReportLocalList(ASession: string);
+    procedure LoadReportPriorityList(ASession: string);
+    procedure LoadReportPriorityState(AProcName: string; var ASecond_pause :Integer;
+                                      var AMessage_pause: String; ASession: string);
+    function ReportPriorityPause(AProcName, ASession: string) : Boolean;
     property Connection: String read GetConnection;
   end;
 
@@ -57,7 +61,7 @@ implementation
 uses IdHTTP, Xml.XMLDoc, XMLIntf, ZLibEx, idGlobal, UtilConst, System.Variants,
      UtilConvert, MessagesUnit, Dialogs, StrUtils, IDComponent, SimpleGauge,
      Forms, Log, IdStack, IdExceptionCore, SyncObjS, CommonData, System.AnsiStrings,
-     Datasnap.DBClient, System.Contnrs;
+     Datasnap.DBClient, System.Contnrs, Vcl.Controls, PriorityPause;
 
 const
 
@@ -110,6 +114,7 @@ type
     FCriticalSection: TCriticalSection;
     FReportList: TStringList;
     FReportLocalList: TStringList;
+    FReportPriorityList: TStringList;
     FConnectionList: TConnectionList;
     function PrepareStr: String;
     procedure PrepareStream(AStream: TBytesStream);
@@ -120,6 +125,10 @@ type
     function GetConnection: string;
     procedure LoadReportList(ASession: string);
     procedure LoadReportLocalList(ASession: string);
+    procedure LoadReportPriorityList(ASession: string);
+    procedure LoadReportPriorityState(AProcName: string; var ASecond_pause :Integer;
+                                      var AMessage_pause: String; ASession: string);
+    function ReportPriorityPause(AProcName, ASession: string) : Boolean;
     function CheckConnectionType(pData: string): TConnectionType;
     procedure InsertReportProtocol(pData: string);
   public
@@ -270,6 +279,95 @@ begin
   end;
 end;
 
+procedure TStorage.LoadReportPriorityList(ASession: string);
+const
+  {создаем XML вызова процедуры на сервере}
+  pXML =
+    '<xml Session = "%s" AutoWidth = "0">' +
+      '<gpSelect_Object_ReportPriority OutputType = "otDataSet" DataSetType = "TClientDataSet">' +
+      '</gpSelect_Object_ReportPriority>' +
+    '</xml>';
+var
+  DataSet: TClientDataSet;
+  Stream: TStringStream;
+begin
+  FReportPriorityList.Clear;
+  try
+    DataSet := TClientDataSet.Create(nil);
+    Stream := nil;
+    try
+      Stream := GetStringStream(String(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession]))));
+      DataSet.LoadFromStream(Stream);
+      if not DataSet.IsEmpty then
+        while not DataSet.Eof do
+        begin
+          if not DataSet.FieldByName('isErased').AsBoolean then
+            FReportPriorityList.Add(DataSet.FieldByName('Name').AsString);
+          DataSet.Next;
+        end;
+    finally
+      if Assigned(Stream) then
+        Stream.Free;
+      DataSet.Free;
+    end;
+  except
+  end;
+end;
+
+procedure TStorage.LoadReportPriorityState(AProcName: string; var ASecond_pause :Integer;
+                                           var AMessage_pause: String; ASession: string);
+const
+  {создаем XML вызова процедуры на сервере}
+  pXML =
+    '<xml Session = "%s" AutoWidth = "0">' +
+      '<gpCheck_Object_ReportPriority OutputType = "otDataSet" DataSetType = "TClientDataSet">' +
+      '<inProcName DataType="ftString" Value="%s" />' +
+      '</gpCheck_Object_ReportPriority>' +
+    '</xml>';
+var
+  DataSet: TClientDataSet;
+  Stream: TStringStream;
+begin
+  try
+    DataSet := TClientDataSet.Create(nil);
+    Stream := nil;
+    try
+      Stream := GetStringStream(String(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [ASession, AProcName]))));
+      DataSet.LoadFromStream(Stream);
+      if not DataSet.IsEmpty then
+      begin
+        ASecond_pause := DataSet.FieldByName('Second_pause').AsInteger;
+        AMessage_pause := DataSet.FieldByName('Message_pause').AsString;
+      end;
+    finally
+      if Assigned(Stream) then
+        Stream.Free;
+      DataSet.Free;
+    end;
+  except
+  end;
+end;
+
+
+function TStorage.ReportPriorityPause(AProcName, ASession: string) : Boolean;
+  var nSecond_pause :Integer; cMessage_pause: String;
+begin
+  Result := True;
+  LoadReportPriorityState(AProcName, nSecond_pause, cMessage_pause, gc_User.Session);
+
+  if nSecond_pause <= 0 then Exit;
+
+  with TPriorityPauseForm.Create(Screen.ActiveForm) do
+  try
+    cxMemo.Text := cMessage_pause;
+    ProcName := AProcName;
+    Second_pause := nSecond_pause;
+    Result := ShowModal = mrOk;
+  finally
+    Free;
+  end;
+end;
+
 class function TStorage.NewInstance: TObject;
 var
   lConnectionPathRep, lConnectionPathRepLocal : String;
@@ -278,6 +376,7 @@ begin
     Instance := TStorage(inherited NewInstance);
     Instance.FReportList := TStringList.Create;
     Instance.FReportLocalList := TStringList.Create;
+    Instance.FReportPriorityList := TStringList.Create;
     Instance.FConnectionList := TConnectionList.Create;
 
     if gc_ProgramName = 'FDemo.exe' then
@@ -501,6 +600,15 @@ begin
       if Pos(S + ' ', pData) > 0 then
       begin
         Result := ctReportLocal;
+        Break;
+      end;
+  if FReportPriorityList.Count > 0 then
+    for S in FReportPriorityList do
+      if Pos(S + ' ', pData) > 0 then
+      begin
+        Result := ctMain;
+        if not ReportPriorityPause (S, gc_User.Session) then
+          raise EStorageException.Create('Выполнение прервано.');
         Break;
       end;
   if FReportList.Count > 0 then
@@ -746,6 +854,7 @@ begin
                         else
                           raise EStorageException.Create(E.Message);
                         end;
+                     else raise EStorageException.Create(E.Message);
                   end;
                 End;
               End
