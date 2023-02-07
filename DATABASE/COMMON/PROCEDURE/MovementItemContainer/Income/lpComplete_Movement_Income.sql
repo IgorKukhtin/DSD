@@ -2939,7 +2939,7 @@ END IF;
                                                                                 ELSE zc_Enum_AccountGroup_20000() -- Запасы
                                                                            END
                                              , inAccountDirectionId     := CASE WHEN _tmpItem_group.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
-                                                                                     THEN (lfGet_Object_Unit_byAccountDirection_Asset (_tmpItem_group.UnitId_Asset)).AccountDirectionId
+                                                                                     THEN (SELECT lfGet.AccountDirectionId FROM lfGet_Object_Unit_byAccountDirection_Asset (_tmpItem_group.UnitId_Asset) AS lfGet)
 
                                                                                 WHEN _tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                                      THEN zc_Enum_AccountDirection_20900() -- Оборотная тара
