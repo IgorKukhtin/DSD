@@ -109,7 +109,8 @@ uses
   IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
   GoogleOTP in '..\SOURCE\GoogleOTP.pas',
   GoogleOTPDialogPsw in '..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
-  GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm};
+  GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
+  PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -136,7 +137,7 @@ begin
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
-     Application.CreateForm(TMainForm, MainFormInstance);
+  Application.CreateForm(TMainFormInstance, MainFormInstance);
   end
   else
     with TLoginForm.Create(Application) do
