@@ -16,7 +16,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, Vcl.Imaging.GIFImg, cxImage, Vcl.ExtCtrls, Vcl.Menus,
+  dxSkinXmas2008Blue, Vcl.ExtCtrls, Vcl.Menus,
   Vcl.StdCtrls, cxButtons, cxTextEdit, cxMemo, Vcl.ActnList, cxCurrencyEdit,
   cxProgressBar;
 
@@ -29,13 +29,16 @@ type
     Timer: TTimer;
     cxCurrencyEdit: TcxCurrencyEdit;
     cxProgressBar: TcxProgressBar;
+    TimerProgressBar: TTimer;
     procedure FormShow(Sender: TObject);
     procedure actCloseExecute(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
+    procedure TimerProgressBarTimer(Sender: TObject);
   private
     { Private declarations }
     FProcName : String;
     FSecond_pause : Integer;
+    FDateTimeEnd : TDateTime;
   public
     { Public declarations }
     property Second_pause : Integer read FSecond_pause write FSecond_pause;
@@ -44,7 +47,7 @@ type
 
 implementation
 
-uses Storage, CommonData;
+uses Storage, CommonData, DateUtils;
 
 {$R *.dfm}
 
@@ -55,33 +58,37 @@ end;
 
 procedure TPriorityPauseForm.FormShow(Sender: TObject);
 begin
-//  GIFImageDefaultAnimate := True;
-//  Image.Picture.LoadFromFile('c:\Users\Oleg\Downloads\ZZ5H.gif');
-  cxProgressBar.Properties.Max := FSecond_pause;
-  cxProgressBar.Position := FSecond_pause;
+  cxProgressBar.Position := cxProgressBar.Properties.Max;
   cxCurrencyEdit.Value := FSecond_pause;
+  FDateTimeEnd := IncMilliSecond(Now, FSecond_pause * 1000);
   Timer.Enabled := True;
+end;
+
+procedure TPriorityPauseForm.TimerProgressBarTimer(Sender: TObject);
+begin
+  if FSecond_pause > 0 then
+    cxProgressBar.Position := MilliSecondsBetween(FDateTimeEnd, Now) / FSecond_pause / 1000 * cxProgressBar.Properties.Max
+  else cxProgressBar.Position := 0;
 end;
 
 procedure TPriorityPauseForm.TimerTimer(Sender: TObject);
   var cMessage_pause : string;
 begin
   Timer.Enabled := False;
+  TimerProgressBar.Enabled := False;
   try
-    Dec(FSecond_pause);
-    cxProgressBar.Position := FSecond_pause;
-    cxCurrencyEdit.Value := FSecond_pause;
-    if FSecond_pause <= 0 then
+    if FDateTimeEnd <= Now then
     begin
       TStorageFactory.GetStorage.LoadReportPriorityState(FProcName, FSecond_pause, cMessage_pause, gc_User.Session);
       cxMemo.Text := cMessage_pause;
-      cxProgressBar.Properties.Max := FSecond_pause;
-      cxProgressBar.Position := FSecond_pause;
+      cxProgressBar.Position := cxProgressBar.Properties.Max;
       cxCurrencyEdit.Value := FSecond_pause;
+      FDateTimeEnd := IncMilliSecond(Now, FSecond_pause * 1000);
       if FSecond_pause <= 0 then ModalResult := mrOk;
-    end;
+    end else cxCurrencyEdit.Value := SecondsBetween(FDateTimeEnd, Now);
   finally
     Timer.Enabled := ModalResult = mrNone;
+    TimerProgressBar.Enabled := Timer.Enabled;
   end;
 end;
 

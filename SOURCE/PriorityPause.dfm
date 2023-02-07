@@ -86,4 +86,11 @@ object PriorityPauseForm: TPriorityPauseForm
     Left = 32
     Top = 80
   end
+  object TimerProgressBar: TTimer
+    Enabled = False
+    Interval = 50
+    OnTimer = TimerProgressBarTimer
+    Left = 32
+    Top = 136
+  end
 end
