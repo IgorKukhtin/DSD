@@ -402,3 +402,4 @@ $BODY$
 
 -- тест-
 -- select * from gpReport_RemainsOLAPTable(inStartDate := ('01.01.2019')::TDateTime , inEndDate := ('02.01.2019')::TDateTime , inUnitId:= 0, inGoodsGroupId := 0 , inGoodsId := 0 , inIsDay := FALSE , inIsMonth:=FALSE , inSession := '5');
+     select * from gpReport_RemainsOLAPTable(inStartDate := ('01.01.2023')::TDateTime , inEndDate := ('01.01.2023')::TDateTime , inUnitId := 8459 , inGoodsGroupId := 1832 , inGoodsId := 2383 , inIsDay := 'False' , inisMonth := 'False' ,  inSession := '9457');
