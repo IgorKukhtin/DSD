@@ -248,10 +248,10 @@ BEGIN
 
          , tmpOperationGroup.Amount_mi       :: TFloat AS Amount_mi
          , tmpOperationGroup.AmountWeight_mi :: TFloat AS AmountWeight_mi
-         , tmpOperationGroup.AmountSh_mi     :: TFloat AS 
-         , (tmpOperationGroup.Amount_mi + (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut))                     :: TFloat AS Amount_diff
-         , (tmpOperationGroup.AmountWeight_mi + (tmpOperationGroup.AmountIn_Weight - tmpOperationGroup.AmountOut_Weight)) :: TFloat AS AmountWeight_diff
-         , (tmpOperationGroup.AmountSh_mi + (tmpOperationGroup.AmountIn_Sh - tmpOperationGroup.AmountOut_Sh))             :: TFloat AS AmountSh_diff
+         , tmpOperationGroup.AmountSh_mi     :: TFloat AS AmountSh_mi
+         , (tmpOperationGroup.Amount_mi       - (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut))               :: TFloat AS Amount_diff
+         , (tmpOperationGroup.AmountWeight_mi - (tmpOperationGroup.AmountIn_Weight - tmpOperationGroup.AmountOut_Weight)) :: TFloat AS AmountWeight_diff
+         , (tmpOperationGroup.AmountSh_mi     - (tmpOperationGroup.AmountIn_Sh - tmpOperationGroup.AmountOut_Sh))         :: TFloat AS AmountSh_diff
      FROM (SELECT tmpContainer.UnitId
                 , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE tmpContainer.GoodsId END AS GoodsId
                 , tmpContainer.GoodsKindId
@@ -259,7 +259,7 @@ BEGIN
                 , tmpContainer.MovementId
 
                 , SUM (tmpContainer.Amount)     AS Amount
-                , SUM (tmpContainer.AmountIn)   AS AmountIn                                                       AmountSh_mi
+                , SUM (tmpContainer.AmountIn)   AS AmountIn
                 , SUM (tmpContainer.AmountIn * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS AmountIn_Weight
                 , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.AmountIn ELSE 0 END) AS AmountIn_sh
 
