@@ -248,10 +248,10 @@ BEGIN
 
          , tmpOperationGroup.Amount_mi       :: TFloat AS Amount_mi
          , tmpOperationGroup.AmountWeight_mi :: TFloat AS AmountWeight_mi
-         , tmpOperationGroup.AmountSh_mi     :: TFloat AS 
-         , (tmpOperationGroup.Amount_mi + (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut))                     :: TFloat AS Amount_diff
-         , (tmpOperationGroup.AmountWeight_mi + (tmpOperationGroup.AmountIn_Weight - tmpOperationGroup.AmountOut_Weight)) :: TFloat AS AmountWeight_diff
-         , (tmpOperationGroup.AmountSh_mi + (tmpOperationGroup.AmountIn_Sh - tmpOperationGroup.AmountOut_Sh))             :: TFloat AS AmountSh_diff
+         , tmpOperationGroup.AmountSh_mi     :: TFloat AS AmountSh_mi
+         , (tmpOperationGroup.Amount_mi       - (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut))               :: TFloat AS Amount_diff
+         , (tmpOperationGroup.AmountWeight_mi - (tmpOperationGroup.AmountIn_Weight - tmpOperationGroup.AmountOut_Weight)) :: TFloat AS AmountWeight_diff
+         , (tmpOperationGroup.AmountSh_mi     - (tmpOperationGroup.AmountIn_Sh - tmpOperationGroup.AmountOut_Sh))         :: TFloat AS AmountSh_diff
      FROM (SELECT tmpContainer.UnitId
                 , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE tmpContainer.GoodsId END AS GoodsId
                 , tmpContainer.GoodsKindId
