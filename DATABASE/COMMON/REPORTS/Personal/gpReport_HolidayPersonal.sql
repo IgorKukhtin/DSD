@@ -32,6 +32,8 @@ RETURNS TABLE(MemberId Integer, PersonalId Integer
             , Day_real_year      TFloat    -- Календ. дней - ЗА ГОД
             , Day_Hol            TFloat    -- Отпуск. дней по табелю - ЗА ПЕРИОД
             , Day_Hol_year       TFloat    -- Отпуск. дней по табелю - ЗА ГОД
+            , Day_hol_NoZp       TFloat    -- отпуск без сохр. по табелю
+            , Day_holiday_NoZp   TFloat    -- отпуск без сохр. по док. отпуск
             , Day_vacation       TFloat
             , Day_holiday        TFloat
             , Day_diff           TFloat
@@ -320,6 +322,8 @@ BEGIN
   , MI_SheetWorkTime AS (SELECT DISTINCT
                                 Movement.OperDate
                               , MI_SheetWorkTime.ObjectId AS MemberId
+                              --отделяем отпуск без сохранения ЗП
+                              , CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_HolidayNoZp() THEN True ELSE False END AS isHolidayNoZp
                          FROM Movement
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -394,6 +398,8 @@ BEGIN
                             , MovementDate_OperDateEnd.ValueData    :: TIMESTAMP AS OperDateEnd
                             , MovementDate_BeginDateStart.ValueData :: TIMESTAMP AS BeginDateStart
                             , MovementDate_BeginDateEnd.ValueData   :: TIMESTAMP AS BeginDateEnd
+                            --отделяем отпуск без сохранения ЗП
+                            , CASE WHEN MovementLinkObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_HolidayNoZp() THEN True ELSE False END AS isHolidayNoZp
                        FROM Movement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
                                                          ON MovementLinkObject_Member.MovementId = Movement.Id
@@ -416,6 +422,10 @@ BEGIN
                                                    ON MovementDate_BeginDateEnd.MovementId = Movement.Id
                                                   AND MovementDate_BeginDateEnd.DescId = zc_MovementDate_BeginDateEnd()
 
+                            LEFT JOIN MovementLinkObject AS MovementLinkObject_WorkTimeKind
+                                                         ON MovementLinkObject_WorkTimeKind.MovementId = Movement.Id
+                                                        AND MovementLinkObject_WorkTimeKind.DescId = zc_MovementLinkObject_WorkTimeKind()
+
                        WHERE Movement.DescId = zc_Movement_MemberHoliday()
                          AND Movement.StatusId = zc_Enum_Status_Complete()
                          AND Movement.OperDate BETWEEN vbStartDate AND vbEndDate
@@ -429,6 +439,7 @@ BEGIN
                         , CASE WHEN inIsDetail = TRUE THEN tmpData.BeginDateStart ELSE NULL END :: TDateTime AS BeginDateStart
                         , CASE WHEN inIsDetail = TRUE THEN tmpData.BeginDateEnd   ELSE NULL END :: TDateTime AS BeginDateEnd
                         , tmpData.MemberId
+                        , tmpData.isHolidayNoZp  --отдельно отпуск без оплаты
                         , SUM (DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart) +1)  :: TFloat AS Day_holiday
                         , ROW_NUMBER(*) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MemberId) AS Ord
                         , SUM ( SUM(DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart) +1 ) )  OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MemberId) AS Day_holiday_All
@@ -440,6 +451,7 @@ BEGIN
                           , CASE WHEN inIsDetail = TRUE THEN tmpData.BeginDateStart ELSE NULL END
                           , CASE WHEN inIsDetail = TRUE THEN tmpData.BeginDateEnd   ELSE NULL END
                           , tmpData.MemberId
+                          , tmpData.isHolidayNoZp
                    HAVING SUM (DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart) +1 ) <> 0
                    )
 
@@ -478,7 +490,10 @@ BEGIN
            -- Дней отпуска
          , COALESCE (MI_SheetWorkTime.Day_Hol, 0)                          :: TFloat AS Day_Hol      -- ЗА ПЕРИОД
          , COALESCE (MI_SheetWorkTime_year.Day_Hol, 0)                     :: TFloat AS Day_Hol_year -- ЗА ГОД
-           --
+         -- Дней отпуска без оплаты за период
+         , COALESCE (MI_SheetWorkTime_NoZp.Day_Hol, 0)                     :: TFloat AS Day_Hol_NoZp     -- SheetWorkTime
+         , COALESCE (tmpHoliday_NoZp.Day_holiday,0)                        :: TFloat AS Day_holiday_NoZp -- Holiday
+         
          , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN tmpVacation.Day_vacation ELSE 0 END :: TFloat AS Day_vacation
            -- использовано дней отпуска
          , tmpHoliday.Day_holiday        :: TFloat
@@ -493,15 +508,31 @@ BEGIN
          , tmpHoliday.BeginDateEnd       :: TDateTime
          , tmpPersonal.InfoAll_old       :: TVarChar AS PositionName_old
     FROM tmpVacation
-         LEFT JOIN tmpHoliday ON tmpHoliday.MemberId = tmpVacation.MemberId
+         LEFT JOIN tmpHoliday ON tmpHoliday.MemberId = tmpVacation.MemberId AND tmpHoliday.isHolidayNoZp = False
+         
+         -- отпуск без сохр.ЗП
+         LEFT JOIN tmpHoliday AS tmpHoliday_NoZp ON tmpHoliday_NoZp.MemberId = tmpVacation.MemberId AND tmpHoliday_NoZp.isHolidayNoZp = True
+
          LEFT JOIN tmpList AS tmpPersonal ON tmpPersonal.MemberId   = tmpVacation.MemberId
          -- Дни отпуска - ЗА ПЕРИОД
-         LEFT JOIN (SELECT COUNT(*) AS Day_Hol, MI_SheetWorkTime.MemberId FROM MI_SheetWorkTime WHERE MI_SheetWorkTime.OperDate BETWEEN vbStartDate AND vbEndDate GROUP BY MI_SheetWorkTime.MemberId
+         LEFT JOIN (SELECT COUNT(*) AS Day_Hol, MI_SheetWorkTime.MemberId 
+                    FROM MI_SheetWorkTime 
+                    WHERE MI_SheetWorkTime.OperDate BETWEEN vbStartDate AND vbEndDate
+                      AND MI_SheetWorkTime.isHolidayNoZp = False
+                    GROUP BY MI_SheetWorkTime.MemberId
                    ) AS MI_SheetWorkTime ON MI_SheetWorkTime.MemberId = tmpVacation.MemberId
          -- Дни отпуска - ЗА ГОД
-         LEFT JOIN (SELECT COUNT(*) AS Day_Hol, MI_SheetWorkTime.MemberId FROM MI_SheetWorkTime GROUP BY MI_SheetWorkTime.MemberId
+         LEFT JOIN (SELECT COUNT(*) AS Day_Hol, MI_SheetWorkTime.MemberId FROM MI_SheetWorkTime WHERE MI_SheetWorkTime.isHolidayNoZp = False GROUP BY MI_SheetWorkTime.MemberId
                    ) AS MI_SheetWorkTime_year ON MI_SheetWorkTime_year.MemberId = tmpVacation.MemberId
 
+         -- Дни отпуска без сохр.ЗП- ЗА ПЕРИОД
+         LEFT JOIN (SELECT COUNT(*) AS Day_Hol, MI_SheetWorkTime.MemberId 
+                    FROM MI_SheetWorkTime 
+                    WHERE MI_SheetWorkTime.OperDate BETWEEN vbStartDate AND vbEndDate
+                      AND MI_SheetWorkTime.isHolidayNoZp = True
+                    GROUP BY MI_SheetWorkTime.MemberId
+                   ) AS MI_SheetWorkTime_NoZp ON MI_SheetWorkTime_NoZp.MemberId = tmpVacation.MemberId
+ 
     ORDER BY tmpPersonal.UnitName
            , tmpPersonal.PersonalName
            , tmpPersonal.PositionName
@@ -514,6 +545,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.02.23         *
  21.01.20                                        *
  23.12.19         *
  24.12.18         *

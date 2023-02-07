@@ -259,7 +259,7 @@ BEGIN
                 , tmpContainer.MovementId
 
                 , SUM (tmpContainer.Amount)     AS Amount
-                , SUM (tmpContainer.AmountIn)   AS AmountIn                                                       AmountSh_mi
+                , SUM (tmpContainer.AmountIn)   AS AmountIn
                 , SUM (tmpContainer.AmountIn * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS AmountIn_Weight
                 , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.AmountIn ELSE 0 END) AS AmountIn_sh
 

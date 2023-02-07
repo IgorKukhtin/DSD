@@ -24,6 +24,10 @@ RETURNS TABLE(MemberId Integer
             , Day_vacation           TFloat
             , Day_holiday            TFloat -- Дней отпуска ЗА ПЕРИОД
             , Day_diff               TFloat
+            
+            , Day_hol_NoZp           TFloat    -- отпуск без сохр. по табелю
+            , Day_holiday_NoZp       TFloat    -- отпуск без сохр. по док. отпуск
+
             , AmountCompensation     TFloat
             , SummaCompensation      TFloat
             , SummaCompensation_fact TFloat -- компенсация из док. ведомости начисления
@@ -133,7 +137,9 @@ BEGIN
                        , tmp.isNotCompensation
                        , tmp.Day_vacation
                        , tmp.Day_holiday       -- использовано дней отпуска
-                       , tmp.Day_diff          -- не использовано дней отпуска
+                       , tmp.Day_diff          -- не использовано дней отпуска 
+                       , tmp.Day_hol_NoZp
+                       , tmp.Day_holiday_NoZp
                        , tmp.Day_calendar      -- Рабоч. дней
                        , tmp.Day_calendar_year -- Рабоч. дней
                     FROM gpReport_HolidayPersonal (inStartDate:= inStartDate, inUnitId:= inUnitId, inMemberId:= inMemberId, inPersonalServiceListId := inPersonalServiceListId, inisDetail:= FALSE, inSession:= inSession) AS tmp
@@ -230,12 +236,16 @@ BEGIN
          , tmpReport.isOfficial
          , tmpReport.isNotCompensation
            -- Положен отпуск, дней
-         , tmpReport.Day_vacation   :: TFloat
+         , tmpReport.Day_vacation     :: TFloat
            -- использовано дней отпуска
          , tmpReport.Day_holiday      :: TFloat
            -- не использовано дней отпуска
          , CASE WHEN tmpReport.isNotCompensation = FALSE THEN tmpReport.Day_diff ELSE 0 END :: TFloat AS Day_diff
 
+           --отпуск без оплаты
+         , tmpReport.Day_hol_NoZp     :: TFloat
+         , tmpReport.Day_holiday_NoZp :: TFloat
+         
            -- Ср. ЗП за день
          , CASE WHEN tmpReport.Day_calendar_year <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar_year ELSE 0 END :: TFloat AS AmountCompensation
            -- Сумма компенс. за неисп. отпуск
@@ -274,6 +284,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.02.23         *
  05.02.20         *
  30.01.19         *
  25.12.18         *
