@@ -76,7 +76,8 @@ uses
   DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
   GoogleOTP in '..\SOURCE\GoogleOTP.pas',
   GoogleOTPDialogPsw in '..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
-  GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm};
+  GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
+  PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm};
 
 {$R *.res}
 
