@@ -351,7 +351,8 @@ uses
   ProductionUnionMasterChoice in '..\..\FormsBoat\Document\ProductionUnionMasterChoice.pas' {ProductionUnionMasterChoiceForm: TParentForm},
   ProductionUnionMasterJournal in '..\..\FormsBoat\Document\ProductionUnionMasterJournal.pas' {ProductionUnionMasterJournalForm: TParentForm},
   Report_Personal in '..\..\FormsBoat\Report\Report_Personal.pas' {Report_PersonalForm: TParentForm},
-  Report_PersonalDialog in '..\..\FormsBoat\Report\Report_PersonalDialog.pas' {Report_PersonalDialogForm: TParentForm};
+  Report_PersonalDialog in '..\..\FormsBoat\Report\Report_PersonalDialog.pas' {Report_PersonalDialogForm: TParentForm},
+  PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
