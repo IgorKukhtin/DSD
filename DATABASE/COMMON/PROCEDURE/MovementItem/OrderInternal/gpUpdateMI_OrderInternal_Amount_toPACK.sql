@@ -640,7 +640,9 @@ else*/
 
                                             -- !!!отбросили НАРЕЗКУ!!!
                                             AND (vbNumber <= vbdaycount_GoodsKind_8333
-                                              OR COALESCE (_tmpMI_Child.GoodsKindId, 0) <> 8333 -- НАР
+                                              OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333    -- НАР
+                                                                                              , 6899005 -- нар. 200 
+                                                                                               )
                                                 )
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ
@@ -782,7 +784,9 @@ else*/
 
                                             -- !!!отбросили НАРЕЗКУ!!!
                                             AND (vbNumber <= vbdaycount_GoodsKind_8333
-                                              OR COALESCE (_tmpMI_Child.GoodsKindId, 0) <> 8333 -- НАР
+                                              OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333    -- НАР
+                                                                                              , 6899005 -- нар. 200 
+                                                                                               )
                                                 )
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ
@@ -923,7 +927,9 @@ else*/
 
                                             -- !!!отбросили НАРЕЗКУ!!!
                                             AND (vbNumber <= vbdaycount_GoodsKind_8333
-                                              OR COALESCE (_tmpMI_Child.GoodsKindId, 0) <> 8333 -- НАР
+                                              OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333    -- НАР
+                                                                                              , 6899005 -- нар. 200 
+                                                                                               )
                                                 )
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ
@@ -1087,7 +1093,9 @@ else*/
 
                                             -- !!!отбросили НАРЕЗКУ!!!
                                             AND (vbNumber <= vbdaycount_GoodsKind_8333
-                                              OR COALESCE (_tmpMI_Child.GoodsKindId, 0) <> 8333 -- НАР
+                                              OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333    -- НАР
+                                                                                              , 6899005 -- нар. 200 
+                                                                                               )
                                                 )
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ

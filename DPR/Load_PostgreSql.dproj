@@ -177,6 +177,9 @@
 			<DCCReference Include="..\SOURCE\GoogleOTPRegistration.pas">
 				<Form>GoogleOTPRegistrationForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\PriorityPause.pas">
+				<Form>PriorityPauseForm</Form>
+			</DCCReference>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

@@ -80,7 +80,7 @@ BEGIN
                        THEN '*'
                    ELSE ''
               END
-           || zfCalc_PartionMovementName (Movement_Sale.DescId, MovementDesc_Sale.ItemName, Movement_Sale.InvNumber, Movement_Sale.OperDate)
+           || zfCalc_PartionMovementName (Movement_Sale.DescId, MovementDesc_Sale.ItemName, Movement_Sale.InvNumber, Movement_Sale.OperDate) || COALESCE (' - ' || Object_From_Sale.ValueData, '')
              ) :: TVarChar AS InvNumber_ProductionFull
 
            , Movement_Order.Id                      AS MovementId_Order
@@ -168,6 +168,10 @@ BEGIN
                                         AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Production()
           LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_Sale.MovementChildId
           LEFT JOIN MovementDesc AS MovementDesc_Sale ON MovementDesc_Sale.Id = Movement_Sale.DescId
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From_Sale
+                                       ON MovementLinkObject_From_Sale.MovementId = Movement_Sale.Id
+                                      AND MovementLinkObject_From_Sale.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN Object AS Object_From_Sale ON Object_From_Sale.Id = MovementLinkObject_From_Sale.ObjectId
            
           LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                          ON MovementLinkMovement_Order.MovementId = Movement.Id

@@ -63,30 +63,83 @@ BEGIN
                                 FROM MovementItemContainer AS MIContainer
                                 WHERE MIContainer.MovementId = vbMovementId_Peresort
                                   AND MIContainer.DescId     = zc_MIContainer_Count()
+                                  --  !!!Розподільчий комплекс!!!
+                                  AND  inUnitId = 8459
                                 GROUP BY MIContainer.ObjectId_Analyzer
                                        , MIContainer.ObjectIntId_Analyzer
                                )
-        SELECT Container.ObjectId     AS GoodsId
-             , CLO_GoodsKind.ObjectId AS GoodsKindId
-             , SUM (Container.Amount) - COALESCE (tmpMIContainer.Amount, 0) AS Amount
-        FROM Container
-             INNER JOIN ContainerLinkObject AS CLO_Unit
-                                            ON CLO_Unit.ContainerId = Container.Id
-                                           AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
-                                           AND CLO_Unit.ObjectId    = inUnitId
-             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
-                                           ON CLO_GoodsKind.ContainerId = Container.Id
-                                          AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
-             LEFT JOIN tmpMIContainer ON tmpMIContainer.GoodsId     = Container.ObjectId
-                                     AND tmpMIContainer.GoodsKindId = CLO_GoodsKind.ObjectId
-        WHERE Container.DescId = zc_Container_Count()
-          AND Container.Amount - COALESCE (tmpMIContainer.Amount, 0) > 0
-          --  !!!Розподільчий комплекс!!!
-          AND inUnitId = 8459
-          -- !!!значит только в первый раз
-          -- AND COALESCE (vbMovementId_Peresort, 0) = 0
+             , tmpRemains AS (SELECT _tmpItem.GoodsId
+                                   , _tmpItem.GoodsKindId
+                                   , RemainsOLAPTable.AmountStart AS Amount
+                              FROM _tmpItem
+                                   INNER JOIN RemainsOLAPTable ON RemainsOLAPTable.GoodsId     = _tmpItem.GoodsId
+                                                              AND RemainsOLAPTable.GoodsKindId = _tmpItem.GoodsKindId
+                                                              AND RemainsOLAPTable.UnitId      = inUnitId
+                                                              AND RemainsOLAPTable.OperDate    = DATE_TRUNC ('MONTH', vbOperDate)
 
-        GROUP BY Container.ObjectId, CLO_GoodsKind.ObjectId, tmpMIContainer.GoodsId, tmpMIContainer.GoodsKindId, tmpMIContainer.Amount
+                              --  !!!Розподільчий комплекс!!!
+                              WHERE inUnitId = 8459
+                             )
+       , tmpContainer_all AS (SELECT _tmpItem.GoodsId
+                                   , _tmpItem.GoodsKindId
+                                   , Container.Id AS ContainerId
+                              FROM _tmpItem
+                                   INNER JOIN Container ON Container.ObjectId = _tmpItem.GoodsId
+                                                       AND Container.DescId   = zc_Container_Count()
+                                   INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                  ON CLO_Unit.ContainerId = Container.Id
+                                                                 AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                                                 AND CLO_Unit.ObjectId    = inUnitId
+                                   INNER JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                                  ON CLO_GoodsKind.ContainerId = Container.Id
+                                                                 AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                                                 AND CLO_GoodsKind.ObjectId    = _tmpItem.GoodsKindId
+                                   LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                                 ON CLO_Account.ContainerId = Container.Id
+                                                                AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
+                              --  !!!Розподільчий комплекс!!!
+                              WHERE inUnitId = 8459
+                                -- без Товар в пути
+                                AND CLO_Account.ObjectId IS NULL
+                             )
+       , tmpMIContainer_all AS (SELECT tmpContainer_all.ContainerId
+                                     , tmpContainer_all.GoodsId
+                                     , tmpContainer_all.GoodsKindId
+                                     , COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount
+                                FROM tmpContainer_all
+                                     LEFT JOIN MovementItemContainer AS MIContainer
+                                                                     ON MIContainer.ContainerId = tmpContainer_all.ContainerId
+                                                                    AND MIContainer.DescId      = zc_MIContainer_Count()
+                                                                    AND MIContainer.OperDate    BETWEEN DATE_TRUNC ('MONTH', vbOperDate) AND vbOperDate
+                                                                    AND (MIContainer.MovementDescId <> zc_Movement_Inventory()
+                                                                      OR MIContainer.OperDate <> vbOperDate
+                                                                        )
+                                GROUP BY tmpContainer_all.ContainerId
+                                       , tmpContainer_all.GoodsId
+                                       , tmpContainer_all.GoodsKindId
+                               )
+           , tmpContainer AS (SELECT tmpContainer.GoodsId
+                                   , tmpContainer.GoodsKindId
+                                   , COALESCE (tmpRemains.Amount, 0) + COALESCE (tmpContainer.Amount, 0) AS Amount
+                              FROM (SELECT tmpContainer_all.GoodsId
+                                         , tmpContainer_all.GoodsKindId
+                                         , COALESCE (SUM (COALESCE (tmpMIContainer_all.Amount, 0)), 0) AS Amount
+                                    FROM  tmpContainer_all
+                                          LEFT JOIN tmpMIContainer_all ON tmpMIContainer_all.ContainerId = tmpContainer_all.ContainerId
+                                    GROUP BY tmpContainer_all.GoodsId
+                                           , tmpContainer_all.GoodsKindId
+                                   ) AS tmpContainer
+                                   LEFT JOIN tmpRemains ON tmpRemains.GoodsId     = tmpContainer.GoodsId
+                                                       AND tmpRemains.GoodsKindId = tmpContainer.GoodsKindId
+                             )
+        -- 
+        SELECT tmpContainer.GoodsId
+             , tmpContainer.GoodsKindId
+             , tmpContainer.Amount - COALESCE (tmpMIContainer.Amount, 0) AS Amount
+        FROM tmpContainer
+             LEFT JOIN tmpMIContainer ON tmpMIContainer.GoodsId     = tmpContainer.GoodsId
+                                     AND tmpMIContainer.GoodsKindId = tmpContainer.GoodsKindId
+        WHERE tmpContainer.Amount - COALESCE (tmpMIContainer.Amount, 0) > 0
        ;
 
 IF inUserId = 5 AND 1=0
@@ -319,6 +372,7 @@ END IF;
          IF vbMovementId_Peresort <> 0
             -- если дата Документа раньше чем "незакрытый" период
             AND DATE_TRUNC ('MONTH', vbOperDate) < DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '5 DAY')
+            AND 1=0
             --
             AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_Peresort AND Movement.StatusId = zc_Enum_Status_Complete())
          THEN
@@ -535,7 +589,8 @@ END IF;
      END IF; -- if ... Временно захардкодил - !!!только для этого склада!!!
 
      -- Админу только отладка
-     if inUserId = 5 AND 1=0 then RAISE EXCEPTION 'Нет Прав и нет Проверки - что б ничего не делать'; end if;
+     -- if inUserId = 5 AND 1=0 then RAISE EXCEPTION 'Нет Прав и нет Проверки - что б ничего не делать'; end if;
+     -- if inMovementId = 24429155 then RAISE EXCEPTION 'Нет Прав и нет Проверки - что б ничего не делать'; end if;
 
 
 END;$BODY$
@@ -551,3 +606,4 @@ END;$BODY$
 -- SELECT * FROM lpComplete_Movement_Sale_Recalc (inMovementId:= 4691383, inUnitId:= 8459, inUserId:= zfCalc_UserAdmin() :: Integer)
 -- SELECT * FROM gpReComplete_Movement_SendOnPrice (inMovementId:= 4691383, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpReComplete_Movement_Sale (inMovementId:= 4691383, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
+-- select * from gpComplete_All_Sybase(24429155, false, '5')

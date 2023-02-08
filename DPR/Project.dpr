@@ -109,7 +109,8 @@ uses
   IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
   GoogleOTP in '..\SOURCE\GoogleOTP.pas',
   GoogleOTPDialogPsw in '..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
-  GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm};
+  GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
+  PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

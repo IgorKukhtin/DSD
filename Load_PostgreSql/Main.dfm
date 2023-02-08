@@ -2599,7 +2599,7 @@ object MainForm: TMainForm
     HostName = '192.168.0.194'
     Port = 0
     Password = 'vas6ok'
-    Protocol = 'postgresql-9'
+    Protocol = 'postgresql'
     Left = 40
     Top = 328
   end

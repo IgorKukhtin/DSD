@@ -1445,11 +1445,29 @@ begin
      zc_rvNo:=1;
      //
      try
+         if ParamStr(1)='alan_dp_ua_2' then
+         with toZConnection do begin
+            Connected:=false;
+            //HostName:='192.168.0.194';
+            HostName:='localhost';
+            User:='admin';
+            Password:='vas6ok';
+            Database:='project_24012023';
+            Port:=5432;
+            Connected:=true;
+            //
+            isGlobalLoad:=zc_rvYes;
+            if Connected
+            then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
+            else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
+            Connected:=false;
+         end
+         else
          if ParamStr(1)='alan_dp_ua' then
          with toZConnection do begin
             Connected:=false;
-            //HostName:='integer-srv.alan.dp.ua';
-            HostName:='192.168.0.219';
+            HostName:='integer-srv.alan.dp.ua';
+            //HostName:='192.168.0.219';
             User:='admin';
             Password:='vas6ok';
             Database:='project';
@@ -1504,7 +1522,11 @@ begin
          fromZConnection.Connected:=true;
          fromZConnection.Connected:=false;
      except
-          ShowMessage ('not Connected : ' + toZConnection.HostName);
+          on E:Exception do
+          begin
+             ShowMessage ('not Connected : ' + toZConnection.HostName);
+             ShowMessage (E.Message);
+          end;
      end;
      //
      //cbAllGuide.Checked:=true;
