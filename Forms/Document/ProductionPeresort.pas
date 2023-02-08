@@ -74,6 +74,7 @@ type
     actGet_checkopen: TdsdExecStoredProc;
     macOpenDocument: TMultiAction;
     bbOpenDocument: TdxBarButton;
+    isPeresort: TcxGridDBColumn;
   private
     { Private declarations }
   public

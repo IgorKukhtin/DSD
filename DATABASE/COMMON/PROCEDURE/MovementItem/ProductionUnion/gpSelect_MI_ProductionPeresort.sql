@@ -20,16 +20,35 @@ RETURNS TABLE (Id Integer, LineNum Integer
              , GoodsKindId_Complete Integer, GoodsKindCode_Complete Integer, GoodsKindName_Complete TVarChar
              , GoodsKindChildId Integer, GoodsKindChildCode Integer, GoodsKindChildName TVarChar
              , GoodsKindId_Complete_child Integer, GoodsKindCode_Complete_child Integer, GoodsKindName_Complete_child TVarChar
+             , isPeresort Boolean
              , isErased Boolean
              )
 AS
 $BODY$
   
 BEGIN
-
    --PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_MovementItem_ProductionUnion());
-   IF inShowAll THEN
+
+   IF inShowAll = TRUE THEN
+
    RETURN QUERY  
+         WITH tmpGoodsByGoodsKindSub AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                                              , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
+                                              , CASE WHEN COALESCE(ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId ,0)    <> 0
+                                                       OR COALESCE(ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId,0) <> 0
+                                                     THEN TRUE
+                                                     ELSE FALSE
+                                                END AS isPeresort
+                                         FROM Object_GoodsByGoodsKind_View
+                                              LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub
+                                                                   ON ObjectLink_GoodsByGoodsKind_GoodsSub.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                                  AND ObjectLink_GoodsByGoodsKind_GoodsSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
+                                              LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub
+                                                                   ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                                  AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
+                                         WHERE ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId     <> 0
+                                            OR ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId <> 0
+                                        )
        SELECT
               0                                     AS Id
             , 0                                     AS LineNum
@@ -71,7 +90,9 @@ BEGIN
             , CAST (NULL AS Integer)                AS GoodsKindCode_Complete_child
             , CAST (NULL AS TVarchar)               AS GoodsKindName_Complete_child
 
-            , FALSE                                  AS isErased
+            , FALSE :: Boolean AS isPeresort
+
+            , FALSE :: Boolean AS isErased
 
        FROM (SELECT Object_Goods.Id           AS GoodsId
                   , Object_Goods.ObjectCode   AS GoodsCode
@@ -97,6 +118,7 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
        WHERE tmpMI.GoodsId IS NULL
+
       UNION ALL
        SELECT
              MovementItem.Id                    AS Id
@@ -140,6 +162,8 @@ BEGIN
             , Object_GoodsKind_Complete_child.Id               AS GoodsKindId_Complete_child
             , Object_GoodsKind_Complete_child.ObjectCode       AS GoodsKindCode_Complete_child
             , Object_GoodsKind_Complete_child.ValueData        AS GoodsKindName_Complete_child
+
+            , CASE WHEN tmpGoodsByGoodsKindSub.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPeresort
 
             , MovementItem.isErased             AS isErased
 
@@ -220,10 +244,32 @@ BEGIN
                                  AND ObjectLink_GoodsChild_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_MeasureChild ON Object_MeasureChild.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-        --ORDER BY 2   --MovementItem.Id 
+             LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId     = Object_Goods.Id
+                                             AND tmpGoodsByGoodsKindSub.GoodsKindId = Object_GoodsKind.Id
             ;
+
+
    ELSE
- RETURN QUERY  
+
+      RETURN QUERY  
+         -- товары пересорт да/нет
+         WITH tmpGoodsByGoodsKindSub AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                                              , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
+                                              , CASE WHEN COALESCE(ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId ,0)    <> 0
+                                                       OR COALESCE(ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId,0) <> 0
+                                                     THEN TRUE
+                                                     ELSE FALSE
+                                                END AS isPeresort
+                                         FROM Object_GoodsByGoodsKind_View
+                                              LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub
+                                                                   ON ObjectLink_GoodsByGoodsKind_GoodsSub.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                                  AND ObjectLink_GoodsByGoodsKind_GoodsSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
+                                              LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub
+                                                                   ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                                  AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
+                                         WHERE ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId     <> 0
+                                            OR ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId <> 0
+                                        )
       SELECT
              MovementItem.Id					AS Id
            , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum
@@ -264,6 +310,8 @@ BEGIN
             , Object_GoodsKind_Complete_child.Id               AS GoodsKindId_Complete_child
             , Object_GoodsKind_Complete_child.ObjectCode       AS GoodsKindCode_Complete_child
             , Object_GoodsKind_Complete_child.ValueData        AS GoodsKindName_Complete_child
+            
+            , CASE WHEN tmpGoodsByGoodsKindSub.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPeresort
 
             , MovementItem.isErased             AS isErased
 
@@ -342,7 +390,9 @@ BEGIN
                                   ON ObjectLink_GoodsChild_Measure.ObjectId = Object_GoodsChild.Id
                                  AND ObjectLink_GoodsChild_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_MeasureChild ON Object_MeasureChild.Id = ObjectLink_GoodsChild_Measure.ChildObjectId
-
+             
+             LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId     = Object_Goods.Id
+                                             AND tmpGoodsByGoodsKindSub.GoodsKindId = Object_GoodsKind.Id
             ;
 
    END IF;
@@ -361,5 +411,5 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_MI_ProductionPeresort (inMovementId:= 597574, inShowAll:= TRUE,  inisErased:= TRUE ,inSession:= '2')
---SELECT * FROM gpSelect_MI_ProductionPeresort (inMovementId:= 597574, inShowAll:= FALSE,  inisErased:= TRUE ,inSession:= '2')
+-- SELECT * FROM gpSelect_MI_ProductionPeresort (inMovementId:= 597574, inShowAll:= TRUE,  inisErased:= TRUE ,inSession:= '2')
+-- SELECT * FROM gpSelect_MI_ProductionPeresort (inMovementId:= 597574, inShowAll:= FALSE,  inisErased:= TRUE ,inSession:= '2')
