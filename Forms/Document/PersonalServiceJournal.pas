@@ -74,7 +74,7 @@ type
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
-    actExportZP: TMultiAction;
+    macExportZP: TMultiAction;
     actGet_Export_FileNameZp: TdsdExecStoredProc;
     spGet_Export_FileNameZP: TdsdStoredProc;
     TotalSummNalog: TcxGridDBColumn;
@@ -126,6 +126,13 @@ type
     bbExportCSV: TdxBarButton;
     actOpenFormPersonalServiceDetail: TdsdOpenForm;
     bbOpenFormPersonalServiceDetail: TdxBarButton;
+    macExport_dbf: TMultiAction;
+    actExport_dbf: TdsdStoredProcExportToFile;
+    bbExport_dbf: TdxBarButton;
+    actGet_Export_FileNameZp_dbf: TdsdExecStoredProc;
+    spSelectExport_test: TdsdStoredProc;
+    actSelect_Export_dbf: TdsdExecStoredProc;
+    actExport_Grid_DBF: TExportGrid;
   private
     { Private declarations }
   public
