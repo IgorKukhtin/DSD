@@ -65,6 +65,8 @@ BEGIN
                                   AND MIContainer.DescId     = zc_MIContainer_Count()
                                   --  !!!Розподільчий комплекс!!!
                                   AND  inUnitId = 8459
+                                  AND vbOperDate < '01.02.2023'
+                                  
                                 GROUP BY MIContainer.ObjectId_Analyzer
                                        , MIContainer.ObjectIntId_Analyzer
                                )
@@ -79,6 +81,7 @@ BEGIN
 
                               --  !!!Розподільчий комплекс!!!
                               WHERE inUnitId = 8459
+                                  AND vbOperDate < '01.02.2023'
                              )
        , tmpContainer_all AS (SELECT _tmpItem.GoodsId
                                    , _tmpItem.GoodsKindId
@@ -101,6 +104,7 @@ BEGIN
                               WHERE inUnitId = 8459
                                 -- без Товар в пути
                                 AND CLO_Account.ObjectId IS NULL
+                                  AND vbOperDate < '01.02.2023'
                              )
        , tmpMIContainer_all AS (SELECT tmpContainer_all.ContainerId
                                      , tmpContainer_all.GoodsId
