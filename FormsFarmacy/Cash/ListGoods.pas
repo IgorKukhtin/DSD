@@ -14,7 +14,7 @@ uses
   Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGrid, cxCurrencyEdit,
   Vcl.ComCtrls, cxCheckBox, cxBlobEdit, dxSkinsdxBarPainter, dxBarExtItems,
   dxBar, cxNavigator, cxDataControllerConditionalFormattingRulesManagerDialog,
-  DataModul, System.Actions, dxDateRanges;
+  DataModul, System.Actions, dxDateRanges, IniUtils;
 
 type
   TListGoodsForm = class(TAncestorBaseForm)
@@ -312,13 +312,11 @@ procedure TListGoodsForm.ParentFormCreate(Sender: TObject);
   var
     sp : TdsdStoredProc;
     ds : TClientDataSet;
-    DateTime: TDateTimeInfoRec;
   begin  //+
     // pr вызывается из обновления остатков
     // Проверяем обновляли ли сегодня
 
-    if FileExists(Goods_lcl) and FileGetDateTimeInfo(Goods_lcl, DateTime) and
-      (MinutesBetween(DateTime.TimeStamp, Now) < 15) then Exit;
+    if (MinutesBetween(iniLocalListGoodsDateGet, Now) < 15) then Exit;
 
     sp := TdsdStoredProc.Create(nil);
     try
@@ -334,6 +332,7 @@ procedure TListGoodsForm.ParentFormCreate(Sender: TObject);
         WaitForSingleObject(MutexGoods, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
         try
           SaveLocalData(ds,Goods_lcl);
+          iniLocalListGoodsDateSave;
         finally
           Add_Log('End MutexGoods');
           ReleaseMutex(MutexGoods);
@@ -368,7 +367,7 @@ begin
   while ListlDiffNoSendCDS.RecordCount > 0 do ListlDiffNoSendCDS.Delete;
   WaitForSingleObject(MutexGoods, INFINITE);
   try
-    if FileExists(Goods_lcl) then LoadLocalData(ListGoodsCDS, Goods_lcl);
+    LoadLocalData(ListGoodsCDS, Goods_lcl);
     if not ListGoodsCDS.Active then ListGoodsCDS.Open;
   finally
     ReleaseMutex(MutexGoods);
@@ -381,29 +380,21 @@ begin
     ListGoodsCDS.EnableControls;
   end;
 
-  if FileExists(DiffKind_lcl) then
-  begin
-    WaitForSingleObject(MutexDiffKind, INFINITE);
-    try
-      LoadLocalData(DiffKindCDS,DiffKind_lcl);
-      if not DiffKindCDS.Active then DiffKindCDS.Open;
-    finally
-      ReleaseMutex(MutexDiffKind);
-    end;
+  WaitForSingleObject(MutexDiffKind, INFINITE);
+  try
+    LoadLocalData(DiffKindCDS,DiffKind_lcl);
+  finally
+    ReleaseMutex(MutexDiffKind);
   end;
 
   WaitForSingleObject(MutexDiffCDS, INFINITE);
   try
     CheckListDiffCDS;
     ListDiffCDS.Filtered := False;
-    if FileExists(ListDiff_lcl) then
+    if not ListDiffCDS.Active then
     begin
-      if not ListDiffCDS.Active then
-      begin
-        DeleteLocalData(ListDiff_lcl);
-        CheckListDiffCDS;
-        LoadLocalData(ListDiffCDS, ListDiff_lcl);
-      end;
+      CheckListDiffCDS;
+      LoadLocalData(ListDiffCDS, ListDiff_lcl);
     end;
     FillingListlDiffNoSendCDS;
   finally
@@ -461,15 +452,11 @@ begin
 
   WaitForSingleObject(MutexDiffCDS, INFINITE);
   try
-    if FileExists(ListDiff_lcl) then
+    LoadLocalData(ListDiffCDS, ListDiff_lcl);
+    if not ListDiffCDS.Active then
     begin
+      CheckListDiffCDS;
       LoadLocalData(ListDiffCDS, ListDiff_lcl);
-      if not ListDiffCDS.Active then
-      begin
-        DeleteLocalData(ListDiff_lcl);
-        CheckListDiffCDS;
-        LoadLocalData(ListDiffCDS, ListDiff_lcl);
-      end;
     end;
   finally
     ReleaseMutex(MutexDiffCDS);

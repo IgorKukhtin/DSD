@@ -71,6 +71,10 @@ function iniLog_RRO : Boolean;
 function iniLocalCashRegisterGet: string;
 function iniLocalCashRegisterSave(ACashRegister: string): string;
 
+//Регистрационный номер текущего кассового аппарата
+function iniLocalListGoodsDateGet: TDateTime;
+function iniLocalListGoodsDateSave: TDateTime;
+
 //Запись информации о старте программы
 procedure InitCashSession(ACheckCashSession : Boolean);
 function UpdateOption : Boolean;
@@ -94,7 +98,7 @@ implementation
 
 uses
   iniFiles, Controls, Classes, SysUtils, Forms, vcl.Dialogs, dsdDB, Data.DB,
-  UnilWin, FormStorage, Updater;
+  UnilWin, FormStorage, Updater, DateUtils;
 
 const
   FileName: String = '\DEFAULTS.INI';
@@ -188,6 +192,21 @@ Begin
   End;
   ini := TiniFile.Create(IniFileName);
   Result := ini.ReadBool(ASection,AParamName,ADefault);
+  ini.Free;
+End;
+
+function GetValueDateTime(const ASection, AParamName: String; ADefault : TDateTime): TDateTime;
+var
+  ini: TiniFile;
+  IniFileName : String;
+Begin
+  if not GetIniFile(IniFileName) then
+  Begin
+    Result := Now();
+    exit;
+  End;
+  ini := TiniFile.Create(IniFileName);
+  Result := ini.ReadDateTime(ASection, AParamName, ADefault);
   ini.Free;
 End;
 
@@ -503,6 +522,25 @@ begin
     end;
   finally
     freeAndNil(sp);
+  end;
+end;
+
+//Регистрационный номер текущего кассового аппарата
+function iniLocalListGoodsDateGet: TDateTime;
+begin
+  Result := GetValueDateTime('Common','ListGoodsDate',IncDay(Now(), - 1));
+end;
+
+function iniLocalListGoodsDateSave: TDateTime;
+var
+  f: TIniFile;
+begin
+  Result := Now();
+  f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
+  try
+    f.WriteDateTime('Common','ListGoodsDate',Result);
+  finally
+    f.Free;
   end;
 end;
 

@@ -11,7 +11,8 @@ uses
   cxMaskEdit, cxButtonEdit, AncestorBase, dxSkinsCore, dxSkinsDefaultPainters,
   cxStyles, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData, cxDataStorage,
   Data.DB, cxDBData, Datasnap.DBClient, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridLevel, cxGridCustomView, cxGrid, CommonData;
+  cxGridDBTableView, cxGridLevel, cxGridCustomView, cxGrid, CommonData,
+  cxNavigator, dxDateRanges, System.Actions;
 
 type
   TVIPDialogForm = class(TAncestorDialogForm)
@@ -53,11 +54,7 @@ Begin
         label1.Visible := False;
         ceMember.Visible := False;
         grMember.Visible := true;
-        if not cdsMember.Active then
-        Begin
-          cdsMember.LoadFromFile(Member_lcl);
-          cdsMember.Open;
-        End;
+        if not cdsMember.Active then LoadLocalData(cdsMember, Member_lcl);
         ActiveControl := grMember;
       End
       else

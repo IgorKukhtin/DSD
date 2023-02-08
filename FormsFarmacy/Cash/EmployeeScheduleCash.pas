@@ -97,11 +97,11 @@ uses LocalWorkUnit, CommonData, MainCash2;
 function CheckEmployeeScheduleCDS : boolean;
   var EmployeeScheduleCDS : TClientDataSet;
 begin
-  Result := FileExists(EmployeeSchedule_lcl);
-  if Result then Exit;
-
   EmployeeScheduleCDS :=  TClientDataSet.Create(Nil);
   try
+    LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl);
+    if EmployeeScheduleCDS.Active then Exit;
+
     try
       EmployeeScheduleCDS.FieldDefs.Add('UserID', ftInteger);
       EmployeeScheduleCDS.FieldDefs.Add('Date', ftDateTime);
@@ -135,7 +135,6 @@ begin
       LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl, False);
       if not EmployeeScheduleCDS.Active then
       begin
-        DeleteLocalData(EmployeeSchedule_lcl);
         CheckEmployeeScheduleCDS;
         LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl);
       end;
@@ -319,7 +318,6 @@ begin
       LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl, False);
       if not EmployeeScheduleCDS.Active then
       begin
-        DeleteLocalData(EmployeeSchedule_lcl);
         CheckEmployeeScheduleCDS;
         LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl);
       end;

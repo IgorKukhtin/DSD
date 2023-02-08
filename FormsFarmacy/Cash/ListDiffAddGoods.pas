@@ -184,21 +184,20 @@ begin
     Except
     end;
 
-    if FileExists(ListDiff_lcl) then
-    begin
-      WaitForSingleObject(MutexDiffCDS, INFINITE);
-      try
+    WaitForSingleObject(MutexDiffCDS, INFINITE);
+    try
+      LoadLocalData(ListDiffCDS, ListDiff_lcl);
+      if not ListDiffCDS.Active then
+      begin
+        CheckListDiffCDS;
         LoadLocalData(ListDiffCDS, ListDiff_lcl);
-        if not ListDiffCDS.Active then
-        begin
-          DeleteLocalData(ListDiff_lcl);
-          CheckListDiffCDS;
-          LoadLocalData(ListDiffCDS, ListDiff_lcl);
-        end;
-      finally
-        ReleaseMutex(MutexDiffCDS);
       end;
+    finally
+      ReleaseMutex(MutexDiffCDS);
+    end;
 
+    if ListDiffCDS.Active then
+    begin
       ListDiffCDS.First;
       while not ListDiffCDS.Eof do
       begin
@@ -245,21 +244,20 @@ begin
     Except
     end;
 
-    if FileExists(ListDiff_lcl) then
-    begin
-      WaitForSingleObject(MutexDiffCDS, INFINITE);
-      try
+    WaitForSingleObject(MutexDiffCDS, INFINITE);
+    try
+      LoadLocalData(ListDiffCDS, ListDiff_lcl);
+      if not ListDiffCDS.Active then
+      begin
+        CheckListDiffCDS;
         LoadLocalData(ListDiffCDS, ListDiff_lcl);
-        if not ListDiffCDS.Active then
-        begin
-          DeleteLocalData(ListDiff_lcl);
-          CheckListDiffCDS;
-          LoadLocalData(ListDiffCDS, ListDiff_lcl);
-        end;
-      finally
-        ReleaseMutex(MutexDiffCDS);
       end;
+    finally
+      ReleaseMutex(MutexDiffCDS);
+    end;
 
+    if ListDiffCDS.Active then
+    begin
       ListDiffCDS.First;
       while not ListDiffCDS.Eof do
       begin
@@ -415,7 +413,6 @@ begin
       LoadLocalData(ListDiffCDS, ListDiff_lcl);
       if not ListDiffCDS.Active then
       begin
-        DeleteLocalData(ListDiff_lcl);
         CheckListDiffCDS;
         LoadLocalData(ListDiffCDS, ListDiff_lcl);
       end;
@@ -491,28 +488,20 @@ begin
       Except
       end;
 
-      if FileExists(DiffKind_lcl) then
-      begin
-        WaitForSingleObject(MutexDiffKind, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
-        try
-          LoadLocalData(DiffKindCDS,DiffKind_lcl);
-          if not DiffKindCDS.Active then DiffKindCDS.Open;
-          if Assigned(DiffKindCDS.FindField('Name')) then
-            DiffKindCDS.FindField('Name').DisplayLabel := 'Вид отказа';
-        finally
-          ReleaseMutex(MutexDiffKind);
-        end;
+      WaitForSingleObject(MutexDiffKind, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+      try
+        LoadLocalData(DiffKindCDS,DiffKind_lcl);
+        if DiffKindCDS.Active then
+          DiffKindCDS.FindField('Name').DisplayLabel := 'Вид отказа';
+      finally
+        ReleaseMutex(MutexDiffKind);
       end;
 
-      if FileExists(DiffKindPrice_lcl) then
-      begin
-        WaitForSingleObject(MutexDiffKind, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
-        try
-          LoadLocalData(DiffKindPriceCDS,DiffKindPrice_lcl);
-          if not DiffKindPriceCDS.Active then DiffKindPriceCDS.Open;
-        finally
-          ReleaseMutex(MutexDiffKind);
-        end;
+      WaitForSingleObject(MutexDiffKind, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+      try
+        LoadLocalData(DiffKindPriceCDS,DiffKindPrice_lcl);
+      finally
+        ReleaseMutex(MutexDiffKind);
       end;
 
       Remains := 0;
@@ -537,16 +526,15 @@ begin
         MainCashForm.RemainsCDS.EnableControls;
       end;
 
-      if FileExists(ListDiff_lcl) then
+      LoadLocalData(ListDiffCDS, ListDiff_lcl);
+      if not ListDiffCDS.Active then
       begin
+        CheckListDiffCDS;
         LoadLocalData(ListDiffCDS, ListDiff_lcl);
-        if not ListDiffCDS.Active then
-        begin
-          DeleteLocalData(ListDiff_lcl);
-          CheckListDiffCDS;
-          LoadLocalData(ListDiffCDS, ListDiff_lcl);
-        end;
+      end;
 
+      if ListDiffCDS.Active then
+      begin
         ListDiffCDS.First;
         while not ListDiffCDS.Eof do
         begin
@@ -570,8 +558,7 @@ begin
 
       WaitForSingleObject(MutexGoods, INFINITE);
       try
-        if FileExists(Goods_lcl) then LoadLocalData(ListGoodsCDS, Goods_lcl);
-        if not ListGoodsCDS.Active then ListGoodsCDS.Open;
+        LoadLocalData(ListGoodsCDS, Goods_lcl);
       finally
         ReleaseMutex(MutexGoods);
       end;
@@ -685,21 +672,20 @@ begin
   Except
   end;
 
-  if FileExists(ListDiff_lcl) then
-  begin
-    WaitForSingleObject(MutexDiffCDS, INFINITE);
-    try
+  WaitForSingleObject(MutexDiffCDS, INFINITE);
+  try
+    LoadLocalData(ListDiffCDS, ListDiff_lcl);
+    if not ListDiffCDS.Active then
+    begin
+      CheckListDiffCDS;
       LoadLocalData(ListDiffCDS, ListDiff_lcl);
-      if not ListDiffCDS.Active then
-      begin
-        DeleteLocalData(ListDiff_lcl);
-        CheckListDiffCDS;
-        LoadLocalData(ListDiffCDS, ListDiff_lcl);
-      end;
-    finally
-      ReleaseMutex(MutexDiffCDS);
     end;
+  finally
+    ReleaseMutex(MutexDiffCDS);
+  end;
 
+  if ListDiffCDS.Active then
+  begin
     ListDiffCDS.First;
     while not ListDiffCDS.Eof do
     begin

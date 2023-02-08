@@ -123,7 +123,7 @@ type
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
-    function Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string; //***12.07.2016 add AnyExecPack
+    function Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string; virtual;
     function ParamByName(const Value: string): TdsdParam;
     // XML для вызова на сервере
     function GetXML: String;
@@ -153,6 +153,58 @@ type
     property AfterExecute: TNotifyEvent read FAfterExecute write FAfterExecute;
   end;
 
+
+  TSQLStrings = class(TCollectionItem)
+  private
+    FStrings: TStrings;
+    procedure SetStrings(const Value: TStrings);
+  public
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
+    procedure Assign(ASource: TPersistent); override;
+  published
+    property SQL: TStrings read FStrings write SetStrings;
+  end;
+
+  TSQLList = class(TOwnedCollection);
+
+  TdsdStoredProcSQLite = class (TdsdStoredProc)
+  private
+    FSQLList: TSQLList;
+    procedure DataSetSQLiteRefresh;
+    procedure MultiDataSetSQLiteRefresh;
+    procedure FillOutputParamsSQLite;
+    function GetFieldSQLite : String;
+  protected
+  public
+    function Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string; override;
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    // Название процедуры на сервере
+    property StoredProcName;
+    // ДатаСет с данными. Введен для удобства, так как зачастую DataSet = DataSets[0]
+    property DataSet;
+    // Обновляемые ДатаСеты
+    property DataSets;
+    // тип возврата значений
+    property OutputType;
+    // Параметры процедуры
+    property Params;
+    // Количество записей в пакете для вызова
+    property PackSize;
+    // автоматический расчет ширины колонок
+    property AutoWidth;
+    // посылать команду перечитывания формам после экзекюта
+    property NeedResetData;
+    //Имя параметра, в котором ИД записи (нужно для перечитывания форм)
+    property ParamKeyField;
+    //процедура, которая вызовется после экзекюта
+    property AfterExecute;
+    //SQL при получении данных из SQLite
+    property SQLList: TSQLList read FSQLList write FSQLList;
+  end;
+
   procedure Register;
 
 
@@ -164,13 +216,13 @@ uses Storage, CommonData, TypInfo, UtilConvert, System.SysUtils, cxTextEdit, VCL
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
      cxButtonEdit, EDI, ExternalSave, Medoc, UnilWin, FormStorage, cxDateNavigator,
      cxMemo, cxImage, cxDropDownEdit, cxMaskEdit, dsdInternetAction, ParentForm,
-     Vcl.ActnList, System.Rtti
-     ,Log;
+     Vcl.ActnList, System.Rtti, Log, StorageSQLite;
 
 procedure Register;
 begin
    RegisterComponents('DSDComponent', [TdsdFormParams]);
    RegisterComponents('DSDComponent', [TdsdStoredProc]);
+   RegisterComponents('DSDComponent', [TdsdStoredProcSQLite]);
 end;
 
 
@@ -469,33 +521,31 @@ begin
        if DataSets[i].DataSet.State in [dsEdit, dsInsert] then
           DataSets[i].DataSet.Post;
   XMLResult := TStorageFactory.GetStorage.ExecuteProc(GetXML);
-  try
-    for I := 0 to DataSets.Count - 1 do begin
-       if DataSets[i].DataSet.Active then
-          B := DataSets[i].DataSet.GetBookmark;
-        if DataSets[i].DataSet is TClientDataSet then begin
+  for I := 0 to DataSets.Count - 1 do begin
+     if DataSets[i].DataSet.Active then
+        B := DataSets[i].DataSet.GetBookmark;
+      if DataSets[i].DataSet is TClientDataSet then begin
 //          TClientDataSet(DataSets[i].DataSet).XMLData := XMLResult[i];
 //           if (dsdProject = prBoat) and SameText(Copy(XMLResult[i], 1, 19), '<?xml version="1.0"') then
 //             FStringStream := TStringStream.Create(String(XMLResult[i]), TEncoding.UTF8)
 //           else
-             FStringStream := TStringStream.Create(String(XMLResult[i]));
-           XMLResult[i] := '';
-           try
-              TClientDataSet(DataSets[i].DataSet).LoadFromStream(FStringStream);
-           finally
-             FreeAndNil(FStringStream);
-           end;
+           FStringStream := TStringStream.Create(String(XMLResult[i]));
+         XMLResult[i] := '';
+         try
+            TClientDataSet(DataSets[i].DataSet).LoadFromStream(FStringStream);
+         finally
+           FreeAndNil(FStringStream);
+         end;
+      end;
+     if Assigned(B) then
+     begin
+        try
+         if DataSets[i].DataSet.BookmarkValid(B) then
+          DataSets[i].DataSet.GotoBookmark(B);
+        except
         end;
-       if Assigned(B) then
-          try
-           if DataSets[i].DataSet.BookmarkValid(B) then
-            DataSets[i].DataSet.GotoBookmark(B);
-          except
-          end;
-    end;
-  finally
-    if Assigned(B) then
-       DataSets[0].DataSet.FreeBookmark(B);
+        DataSets[0].DataSet.FreeBookmark(B);
+     end;
   end;
 end;
 
@@ -1275,6 +1325,179 @@ begin
         Value.FreeNotification(TComponent(Collection.Owner));
      FDataSet := Value;
   end;
+end;
+
+{ TSQLStrings }
+
+constructor TSQLStrings.Create(Collection: TCollection);
+begin
+  inherited Create(Collection);
+  FStrings := TStringList.Create;
+end;
+
+destructor TSQLStrings.Destroy;
+begin
+  FStrings.Free;
+  inherited;
+end;
+
+procedure TSQLStrings.Assign(ASource: TPersistent);
+begin
+  if ASource is TSQLStrings then
+    FStrings.Assign(TSQLStrings(ASource).SQL)
+  else
+    inherited;
+end;
+
+procedure TSQLStrings.SetStrings(const Value: TStrings);
+begin
+  FStrings.Assign(Value);
+end;
+
+
+{ TdsdStoredProcSQLite }
+
+constructor TdsdStoredProcSQLite.Create(AOwner: TComponent);
+begin
+  inherited;
+  FSQLList := TSQLList.Create(Self, TSQLStrings);
+end;
+
+destructor TdsdStoredProcSQLite.Destroy;
+begin
+  FSQLList.Free;
+  inherited;
+end;
+
+procedure TdsdStoredProcSQLite.DataSetSQLiteRefresh;
+var B: TBookMark;
+begin
+  if (DataSets.Count > 0) and
+      Assigned(DataSets[0]) and
+      Assigned(DataSets[0].DataSet) then
+   begin
+     if DataSets[0].DataSet.State in dsEditModes then begin
+        DataSets[0].DataSet.Post;
+     end;
+     if DataSets[0].DataSet.Active and (DataSets[0].DataSet.RecordCount > 0) then
+        B := DataSets[0].DataSet.GetBookmark;
+     if DataSets[0].DataSet is TClientDataSet then
+     begin
+       if (SQLList.Count > 0) and Assigned(SQLList.Items[0]) and (TSQLStrings(SQLList.Items[0]).SQL.Text <> '') then
+         LoadSQLiteSQL(TClientDataSet(DataSets[0].DataSet), TSQLStrings(SQLList.Items[0]).SQL.Text)
+       else ShowMessage('Не определен SQL для выполнения запроса.');
+     end;
+     if Assigned(B) then
+     begin
+        try
+          if DataSets[0].DataSet.BookmarkValid(B) then
+            DataSets[0].DataSet.GotoBookmark(B);
+        except
+        end;
+        DataSets[0].DataSet.FreeBookmark(B);
+     end;
+   end;
+end;
+
+procedure TdsdStoredProcSQLite.MultiDataSetSQLiteRefresh;
+var B: TBookMark;
+    i: integer;
+begin
+  for I := 0 to DataSets.Count - 1 do
+      if DataSets[i].DataSet.State in [dsEdit, dsInsert] then
+         DataSets[i].DataSet.Post;
+
+  for I := 0 to DataSets.Count - 1 do
+  begin
+      if DataSets[i].DataSet.Active then
+        B := DataSets[i].DataSet.GetBookmark;
+      if DataSets[i].DataSet is TClientDataSet then
+      begin
+        if (SQLList.Count > I) and Assigned(SQLList.Items[I]) and (TSQLStrings(SQLList.Items[I]).SQL.Text <> '') then
+          LoadSQLiteSQL(TClientDataSet(DataSets[I].DataSet), TSQLStrings(SQLList.Items[I]).SQL.Text)
+        else ShowMessage('Не определен SQL для выполнения запроса.');
+      end;
+      if Assigned(B) then
+      begin
+        try
+          if DataSets[i].DataSet.BookmarkValid(B) then
+            DataSets[i].DataSet.GotoBookmark(B);
+        except
+        end;
+        DataSets[0].DataSet.FreeBookmark(B);
+      end;
+  end;
+end;
+
+procedure TdsdStoredProcSQLite.FillOutputParamsSQLite;
+  var ClientDataSet: TClientDataSet;
+      i: integer;
+begin
+
+  if (SQLList.Count = 0) or not Assigned(SQLList.Items[0]) or (TSQLStrings(SQLList.Items[0]).SQL.Text = '') then
+  begin
+    ShowMessage('Не определен SQL для выполнения запроса.');
+    Exit;
+  end;
+
+  ClientDataSet := TClientDataSet.Create(Nil);
+  try
+
+    LoadSQLiteSQL(ClientDataSet, TSQLStrings(SQLList.Items[0]).SQL.Text);
+
+    for I := 0 to Params.Count - 1 do
+      if (Params[i].ParamType in [ptOutput, ptInputOutput])
+      then
+         if Assigned(ClientDataSet.FindField(Params[i].Name)) then
+            Params[i].Value := ClientDataSet.FieldByName(Params[i].Name).AsVariant;
+  finally
+    ClientDataSet.Free;
+  end;
+end;
+
+function TdsdStoredProcSQLite.GetFieldSQLite : String;
+  var ClientDataSet: TClientDataSet;
+      i: integer;
+begin
+
+  if (SQLList.Count = 0) or not Assigned(SQLList.Items[0]) or (TSQLStrings(SQLList.Items[0]).SQL.Text = '') then
+  begin
+    ShowMessage('Не определен SQL для выполнения запроса.');
+    Exit;
+  end;
+
+  ClientDataSet := TClientDataSet.Create(Nil);
+  try
+
+    LoadSQLiteSQL(ClientDataSet, TSQLStrings(SQLList.Items[0]).SQL.Text);
+
+    Result := ClientDataSet.Fields.Fields[0].AsString;
+
+  finally
+    ClientDataSet.Free;
+  end;
+end;
+
+function TdsdStoredProcSQLite.Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string;
+begin
+  result := '';
+
+  if gc_User.Local = true then
+  begin
+
+    if ACursorHourGlass then
+      Screen.Cursor := crHourGlass;
+    try
+      if (OutputType = otDataSet) then DataSetSQLiteRefresh;
+      if (OutputType = otMultiDataSet) then MultiDataSetSQLiteRefresh;
+      if (OutputType = otResult) then FillOutputParamsSQLite;
+      if (OutputType = otBlob) then result := GetFieldSQLite;
+    finally
+      if ACursorHourGlass then
+        Screen.Cursor := crDefault;
+    end;
+  end else result := inherited;
+
 end;
 
 initialization
