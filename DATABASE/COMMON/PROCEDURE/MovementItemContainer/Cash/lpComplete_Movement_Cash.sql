@@ -380,16 +380,21 @@ BEGIN
                     ELSE 0
                END AS PartionMovementId
 
-             , CASE WHEN inUserId = 5
+             , CASE WHEN inUserId = 5 AND 1=0
                          THEN zc_Enum_AnalyzerId_Cash_PersonalAvance() -- Выплата сотруднику - аванс
+
                     WHEN MI_Child.Id > 0 AND MI_Child.isCalculated = TRUE
                          THEN zc_Enum_AnalyzerId_Cash_PersonalCardSecond() -- Выплата сотруднику - по ведомости Карта БН 2ф.
+
                     WHEN MI_Child.Id > 0
                          THEN zc_Enum_AnalyzerId_Cash_PersonalService() -- Выплата сотруднику - по ведомости
+
                     WHEN Object.DescId = zc_Object_Personal()
                          THEN zc_Enum_AnalyzerId_Cash_PersonalAvance() -- Выплата сотруднику - аванс
+
                     WHEN ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm() -- !!!вот он БН!!!
                          THEN zc_Enum_AnalyzerId_Cash_PersonalAvance() -- Выплата сотруднику - аванс
+
                     ELSE 0
                END AS AnalyzerId
 

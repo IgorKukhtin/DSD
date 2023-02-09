@@ -349,7 +349,7 @@ BEGIN
                       UNION ALL
                        SELECT tmpPersonal.MovementItemId, tmpPersonal.Amount, tmpPersonal.PersonalId, tmpPersonal.UnitId, tmpPersonal.PositionId, tmpPersonal.InfoMoneyId, tmpPersonal.Memberid_Personal, tmpPersonal.MemberId, tmpPersonal.PersonalServiceListId, tmpPersonal.isErased FROM tmpPersonal
                       )
-          --выплата аванса
+            -- выплата аванса
           , tmpContainer_pay AS (SELECT DISTINCT
                                         CLO_ServiceDate.ContainerId
                                       , ObjectLink_Personal_Member.ChildObjectId AS MemberId
@@ -386,6 +386,8 @@ BEGIN
                                         -- аванс по ведомости
                                       , SUM (CASE WHEN ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
                                                    AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                                   AND Object.ValueData ILIKE '%АВАНС%'
+
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_avance_ps
@@ -399,9 +401,13 @@ BEGIN
                                                                        ON MIContainer.ContainerId    = tmpContainer_pay.ContainerId
                                                                       AND MIContainer.DescId         = zc_MIContainer_Summ()
                                                                       AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                      LEFT JOIN MovementItem ON MovementItem.MovementId = MIContainer.MovementId
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                                                       ON MILinkObject_MoneyPlace.MovementItemId = MIContainer.MovementItemId
+                                                                       ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
+                                      LEFT JOIN Object ON Object.Id = MILinkObject_MoneyPlace.ObjectId
                                       LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
                                                            ON ObjectLink_PersonalServiceList_PaidKind.ObjectId = MILinkObject_MoneyPlace.ObjectId
                                                           AND ObjectLink_PersonalServiceList_PaidKind.DescId   = zc_ObjectLink_PersonalServiceList_PaidKind()
