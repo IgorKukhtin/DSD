@@ -131,6 +131,8 @@ type
     actUpdate_NPP_Minus: TdsdExecStoredProc;
     bbUpdate_NPP_Plus: TdxBarButton;
     bbUpdate_NPP_Minus: TdxBarButton;
+    StateText: TcxGridDBColumn;
+    StateColor: TcxGridDBColumn;
   private
   public
   end;

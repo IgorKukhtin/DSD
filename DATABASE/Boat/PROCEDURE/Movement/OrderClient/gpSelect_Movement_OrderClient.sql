@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumbe
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
+             , StateText TVarChar, StateColor Integer
              )
 
 AS
@@ -95,6 +96,43 @@ BEGIN
                                    WHERE MovementLinkObject_From.ObjectId = inClientId
                                      OR inClientId = 0
                                   )
+          --проведенные док. заказ производство и сборка
+          , tmpMIFloat_MovementId AS (SELECT DISTINCT MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
+                                             , Movement.DescId
+                                      FROM MovementItemFloat AS MIFloat_MovementId
+                                           JOIN MovementItem ON MovementItem.Id = MIFloat_MovementId.MovementItemId
+                                                            AND MovementItem.isErased = FALSE
+                                                            AND MovementItem.DescId = zc_MI_Master()
+                                           
+                                           JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                        AND Movement.DescId IN (zc_Movement_ProductionUnion(), zc_Movement_OrderInternal())
+                                      WHERE MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                        AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                        AND MIFloat_MovementId.ValueData :: Integer IN (SELECT DISTINCT Movement_OrderClient.Id FROM Movement_OrderClient)
+                                      )
+       /* --проведенные док. заказ производство
+        , tmpOrderInternal AS (SELECT DISTINCT MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
+                               FROM MovementItemFloat AS MIFloat_MovementId
+                                    JOIN MovementItem ON MovementItem.Id = MIFloat_MovementId.MovementItemId
+                                                     AND MovementItem.isErased = FALSE
+                                                     AND MovementItem.DescId = zc_MI_Master()
+                                    
+                                    JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                               WHERE MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                 AND MIFloat_MovementId.ValueData :: Integer IN (SELECT DISTINCT Movement_OrderClient.Id FROM Movement_OrderClient)
+                               )
+          --проведенные zc_Movement_ProductionUnion
+        , tmpProductionUnion AS (SELECT DISTINCT Movement.ParentId AS MovementId_OrderClient
+                                 FROM Movement
+                                 WHERE Movement.DescId = zc_Movement_ProductionUnion()
+                                   AND Movement.StatusId = zc_Enum_Status_Complete()
+                                   AND Movement.ParentId IN (SELECT DISTINCT Movement_OrderClient.Id FROM Movement_OrderClient)
+                                )
+         */
+
         -- Результат
         SELECT Movement_OrderClient.Id
              , zfConvert_StringToNumber (Movement_OrderClient.InvNumber) AS InvNumber
@@ -153,6 +191,17 @@ BEGIN
              , Object_Update.ValueData                      AS UpdateName
              , MovementDate_Update.ValueData                AS UpdateDate
 
+             -- колонка "Состояние" - если есть NPP>0 тогда "Планируется" если есть проведенный zc_Movement_OrderInternal тогда "В работе"  если есть проведенный zc_Movement_ProductionUnion тогда "Готова" 
+             , CASE WHEN COALESCE (MovementFloat_NPP.ValueData,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion.MovementId_OrderClient IS NOT NULL THEN 'Готова'
+                    WHEN COALESCE (MovementFloat_NPP.ValueData,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion.MovementId_OrderClient IS NULL     THEN 'В работе'
+                    WHEN COALESCE (MovementFloat_NPP.ValueData,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NULL     AND tmpProductionUnion.MovementId_OrderClient IS NULL     THEN 'Планируется'                  
+                     ELSE NULL
+                END ::TVarChar AS StateText
+              -- - все три состояния подсветить всю строчку фоном
+             , CASE WHEN COALESCE (MovementFloat_NPP.ValueData,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion.MovementId_OrderClient IS NOT NULL THEN zc_Color_GreenL()
+                    ELSE zc_Color_White()
+               END ::Integer AS StateColor
+               
         FROM Movement_OrderClient
 
              LEFT JOIN Object AS Object_Status   ON Object_Status.Id   = Movement_OrderClient.StatusId
@@ -246,6 +295,9 @@ BEGIN
              LEFT JOIN ObjectDate AS ObjectDate_DateBegin
                                   ON ObjectDate_DateBegin.ObjectId = Object_Product.Id
                                  AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin()
+             
+             LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal ON tmpOrderInternal.MovementId_OrderClient = Movement_OrderClient.Id AND tmpOrderInternal.DescId = zc_Movement_OrderInternal()
+             LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion ON tmpProductionUnion.MovementId_OrderClient = Movement_OrderClient.Id AND tmpProductionUnion.DescId = zc_Movement_ProductionUnion()
        ;
 
 END;
@@ -255,6 +307,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.02.23         *
  25.12.22         *
  23.02.21         *
  15.02.21         *
@@ -268,4 +321,4 @@ $BODY$
 4) итого сумма скидки
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderClient (inStartDate:= '01.01.2021', inEndDate:= '31.12.2021', inClientId:=0 , inIsErased := true, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_OrderClient (inStartDate:= '01.10.2022', inEndDate:= '31.12.2023', inClientId:=0 , inIsErased := true, inSession:= zfCalc_UserAdmin())

@@ -64,8 +64,6 @@ object OrderClientJournalForm: TOrderClientJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 656
-    ExplicitTop = 225
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -193,6 +191,13 @@ object OrderClientJournalForm: TOrderClientJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object StateText: TcxGridDBColumn
+        Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
+        DataBinding.FieldName = 'StateText'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object NPP: TcxGridDBColumn
         Caption = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1089#1073#1086#1088#1082#1080
         DataBinding.FieldName = 'NPP'
@@ -510,6 +515,12 @@ object OrderClientJournalForm: TOrderClientJournalForm
         HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
         Options.Editing = False
         Width = 78
+      end
+      object StateColor: TcxGridDBColumn
+        DataBinding.FieldName = 'StateColor'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -1803,7 +1814,11 @@ object OrderClientJournalForm: TOrderClientJournalForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = StateColor
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
