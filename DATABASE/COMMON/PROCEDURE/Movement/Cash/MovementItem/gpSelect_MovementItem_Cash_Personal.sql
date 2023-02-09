@@ -125,7 +125,7 @@ BEGIN
                                              - COALESCE (MIFloat_SummCard.ValueData, 0)
                                              - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
                                              - COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
-                                             - COALESCE (MIFloat_SummAvance.ValueData, 0)
+                                           --- COALESCE (MIFloat_SummAvance.ValueData, 0)
                                              + COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0)
                                           END
                                          ) AS SummToPay_cash
@@ -155,6 +155,7 @@ BEGIN
                                    , SUM (COALESCE (MIFloat_SummPhone.ValueData, 0))            AS SummPhone
                                    , SUM (COALESCE (MIFloat_SummCompensation.ValueData, 0))     AS SummCompensation
                                    , SUM (COALESCE (MIFloat_SummAvance.ValueData, 0) + COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0)) AS SummAvance
+                                   , SUM (COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0)) AS SummAvanceRecalc
                                    , MovementItem.ObjectId                                  AS PersonalId
                                    , MILinkObject_Unit.ObjectId                             AS UnitId
                                    , MILinkObject_Position.ObjectId                         AS PositionId
@@ -318,6 +319,7 @@ BEGIN
                                    , tmpParent_all.SummPhone
                                    , tmpParent_all.SummCompensation
                                    , tmpParent_all.SummAvance
+                                   , tmpParent_all.SummAvanceRecalc
 
                                    , tmpParent_all.PersonalId
                                    , tmpParent_all.UnitId
@@ -356,6 +358,7 @@ BEGIN
                                    , 0 AS SummPhone
                                    , 0 AS SummCompensation
                                    , 0 AS SummAvance
+                                   , 0 AS SummAvanceRecalc
 
                                    , CLO_Personal.ObjectId  AS PersonalId
                                    , CLO_Unit.ObjectId      AS UnitId
@@ -489,6 +492,7 @@ BEGIN
                                    , SUM (tmpParent.SummPhone)                    AS SummPhone
                                    , SUM (tmpParent.SummCompensation)             AS SummCompensation
                                    , SUM (tmpParent.SummAvance)                   AS SummAvance
+                                   , SUM (tmpParent.SummAvanceRecalc)             AS SummAvanceRecalc
                                    , SUM (tmpMIContainer.Amount_current)          AS Amount_current
                                    , SUM (tmpMIContainer.Amount_avance)           AS Amount_avance
                                    , SUM (tmpMIContainer.Amount_avance_ret)       AS Amount_avance_ret
@@ -536,6 +540,7 @@ BEGIN
                                    , tmpService.SummPhone
                                    , tmpService.SummCompensation
                                    , tmpService.SummAvance
+                                   , tmpService.SummAvanceRecalc
                                    , tmpService.Amount_current
                                    , tmpService.Amount_avance
                                    , tmpService.Amount_avance_ret
@@ -604,11 +609,22 @@ BEGIN
             , tmpData.SummAvance           :: TFloat AS SummAvance
 
             , tmpData.Amount_current     :: TFloat AS Amount_current
-            , tmpData.Amount_avance      :: TFloat AS Amount_avance
+            , CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0 ELSE tmpData.Amount_avance END :: TFloat AS Amount_avance
             , tmpData.Amount_avance_ret  :: TFloat AS Amount_avance_ret
             , tmpData.Amount_service     :: TFloat AS Amount_service
-            , (COALESCE (tmpData.SummToPay_cash, 0)       - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN 0 ELSE COALESCE (tmpData.Amount, 0) END - COALESCE (tmpData.Amount_avance_ret, 0) - COALESCE (tmpData.Amount_avance, 0) - COALESCE (tmpData.Amount_service, 0)) :: TFloat AS SummRemains
-            , (COALESCE (tmpData.SummCardSecond, 0) + COALESCE (tmpData.SummCardSecondCash, 0) - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN COALESCE (tmpData.Amount, 0) ELSE 0 END - COALESCE (tmpData.AmountCardSecond_avance, 0)) :: TFloat AS SummCardSecondRemains
+            , (COALESCE (tmpData.SummToPay_cash, 0)
+               - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN 0 ELSE COALESCE (tmpData.Amount, 0) END
+               - COALESCE (tmpData.Amount_avance_ret, 0)
+               - CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0 ELSE COALESCE (tmpData.Amount_avance, 0) END
+               - COALESCE (tmpData.Amount_service, 0)
+              ) :: TFloat AS SummRemains
+
+            , (CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0
+                    ELSE COALESCE (tmpData.SummCardSecond, 0)
+                       + COALESCE (tmpData.SummCardSecondCash, 0)
+                       - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN COALESCE (tmpData.Amount, 0) ELSE 0 END
+                       - COALESCE (tmpData.AmountCardSecond_avance, 0)
+               END) :: TFloat AS SummCardSecondRemains
 
             , COALESCE (MIBoolean_Calculated.ValueData, FALSE) AS isCalculated
             , MIString_Comment.ValueData       AS Comment

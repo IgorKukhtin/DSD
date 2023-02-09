@@ -48,6 +48,32 @@ BEGIN
                        AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
                     ))
         AND NOT EXISTS (SELECT 1 FROM Constant_User_LevelMax01_View WHERE Constant_User_LevelMax01_View.UserId = vbUserId) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
+
+         AND NOT EXISTS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                         FROM ObjectLink AS ObjectLink_User_Member
+                              INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
+                                                    ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                   AND ObjectLink_MemberPersonalServiceList.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
+                              INNER JOIN Object AS Object_MemberPersonalServiceList
+                                                ON Object_MemberPersonalServiceList.Id       = ObjectLink_MemberPersonalServiceList.ObjectId
+                                               AND Object_MemberPersonalServiceList.isErased = FALSE
+                              LEFT JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                     AND ObjectBoolean.DescId   = zc_ObjectBoolean_MemberPersonalServiceList_All()
+                              LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
+                                                   ON ObjectLink_PersonalServiceList.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                  AND ObjectLink_PersonalServiceList.DescId   = zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList()
+                              LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                                            AND (Object_PersonalServiceList.Id    = ObjectLink_PersonalServiceList.ChildObjectId
+                                                                              OR ObjectBoolean.ValueData          = TRUE)
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                            ON MovementLinkObject_PersonalServiceList.MovementId = inMovementId
+                                                           AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                                           AND MovementLinkObject_PersonalServiceList.ObjectId   = Object_PersonalServiceList.Id
+
+                         WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                           AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                        )
+
      THEN
          RAISE EXCEPTION 'Ошибка. Нет прав для загрузки данных.';
      END IF;
