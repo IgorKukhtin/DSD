@@ -160,6 +160,7 @@ begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
   ConnectionPath := '..\INIT\farmacy_init.php';
+  SQLiteFile := iniLocalDataBaseSQLite;
   gc_ProgramName := 'FarmacyCash.exe';
   dsdProject := prFarmacy;
   StartSplash('Старт');
@@ -200,9 +201,8 @@ begin
         IniUtils.AutomaticUpdateProgram;
         IniUtils.AutomaticUpdateFarmacyCashServise;
         if not FindCmdLineSwitch('skipcheckconnect') then TUpdater.AutomaticCheckConnect;
-      End
-      else
-        gc_isSetDefault := True;
+      End;
+
       //
       Application.CreateForm(TdmMain, dmMain);
       // определяет главную форму

@@ -25,6 +25,8 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
     Height = 405
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = 80
+    ExplicitTop = 83
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -64,12 +66,22 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
         item
           Format = ',0.##'
           Kind = skSum
-          Column = Day_Hol_NoZp
+          Column = Day_hol_NoZp
         end
         item
           Format = ',0.##'
           Kind = skSum
           Column = Day_holiday_NoZp
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_vacation_NoZp
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_diff_NoZp
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -110,12 +122,22 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
         item
           Format = ',0.##'
           Kind = skSum
-          Column = Day_Hol_NoZp
+          Column = Day_hol_NoZp
         end
         item
           Format = ',0.##'
           Kind = skSum
           Column = Day_holiday_NoZp
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_vacation_NoZp
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = Day_diff_NoZp
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -360,6 +382,30 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1054#1090#1087#1091#1089#1082#1085#1099#1093' '#1076#1085#1077#1081' '#1073#1077#1079' '#1089#1086#1093#1088'. '#1079#1087' '#1087#1086' '#1090#1072#1073#1077#1083#1102'- '#1079#1072' '#1087#1077#1088#1080#1086#1076
+        Width = 80
+      end
+      object Day_vacation_NoZp: TcxGridDBColumn
+        Caption = #1055#1086#1083#1086#1078#1077#1085' '#1086#1090#1087#1091#1089#1082' '#1073#1077#1079' '#1089#1086#1093#1088'. , '#1076#1085#1077#1081
+        DataBinding.FieldName = 'Day_vacation_NoZp'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1083#1086#1078#1077#1085#1085#1086' '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072' '#1073#1077#1079' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103' '#1079#1087' - '#1079#1072' '#1087#1077#1088#1080#1086#1076
+        Options.Editing = False
+        Width = 80
+      end
+      object Day_diff_NoZp: TcxGridDBColumn
+        Caption = #1053#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086' '#1073#1077#1079' '#1089#1086#1093#1088'., '#1076#1085#1077#1081
+        DataBinding.FieldName = 'Day_diff_NoZp'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086' '#1086#1090#1087#1091#1089#1082' '#1073#1077#1079' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103', '#1076#1085#1077#1081' - '#1079#1072' '#1087#1077#1088#1080#1086#1076
+        Options.Editing = False
         Width = 80
       end
       object Day_Hol_year: TcxGridDBColumn

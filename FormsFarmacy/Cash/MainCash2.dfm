@@ -1171,8 +1171,8 @@ inherited MainCashForm2: TMainCashForm2
         Style.IsFontAssigned = True
       end
       object btnVIP: TcxButton
-        Left = 496
-        Top = 21
+        Left = 495
+        Top = 20
         Width = 91
         Height = 22
         Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1086#1090#1083#1086#1078#1077#1085'. '#1095#1077#1082#1086#1074
@@ -9011,16 +9011,8 @@ inherited MainCashForm2: TMainCashForm2
     end
     object N55: TMenuItem
       Tag = 31
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1095#1077#1082#1086#1074' '#1089' '#1089#1072#1081#1090#1072' "Liki24"'
+      Caption = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1077' '#1095#1077#1082#1080' '#1085#1072' '#1084#1086#1084#1077#1085#1090' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1086#1085#1083#1072#1081#1085
       OnClick = pm_VIP1Click
-    end
-    object N56: TMenuItem
-      Tag = 32
-      Caption = #1055#1086#1080#1089#1082' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074' '#1074' '#1095#1077#1082#1072#1093' '#1089' '#1089#1072#1081#1090#1072' "Liki24"'
-      OnClick = pm_VIP1Click
-    end
-    object Liki241: TMenuItem
-      Action = actOpenDelayLiki24
     end
   end
   object CashListDiffCDS: TClientDataSet

@@ -26,10 +26,10 @@ BEGIN
   -- определяем <Статус>
   vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
   -- проверка - проведенные/удаленные документы Изменять нельзя
-  IF vbStatusId <> zc_Enum_Status_UnComplete()
+ /* IF vbStatusId <> zc_Enum_Status_UnComplete()
   THEN
       RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
-  END IF;
+  END IF;*/
 
   -- пересчитали Итоговые суммы по накладной
   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);

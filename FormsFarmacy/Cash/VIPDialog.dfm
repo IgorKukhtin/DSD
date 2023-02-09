@@ -7,7 +7,7 @@ inherited VIPDialogForm: TVIPDialogForm
   ClientWidth = 554
   Position = poDesktopCenter
   ExplicitWidth = 560
-  ExplicitHeight = 193
+  ExplicitHeight = 192
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel [0]
@@ -108,6 +108,7 @@ inherited VIPDialogForm: TVIPDialogForm
         Value = Null
         Component = MemberGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberName'
@@ -115,6 +116,7 @@ inherited VIPDialogForm: TVIPDialogForm
         Component = MemberGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 48
@@ -124,6 +126,7 @@ inherited VIPDialogForm: TVIPDialogForm
     LookupControl = ceMember
     FormNameParam.Value = 'TMemberForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMemberForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -132,6 +135,7 @@ inherited VIPDialogForm: TVIPDialogForm
         Value = ''
         Component = MemberGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -139,6 +143,7 @@ inherited VIPDialogForm: TVIPDialogForm
         Component = MemberGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 200
     Top = 48

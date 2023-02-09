@@ -384,7 +384,7 @@ type
     cbChild_Recalc: TcxCheckBox;
     spSelectPrintStructureGoods: TdsdStoredProc;
     actPrintStructureGoods: TdsdPrintAction;
-    bb: TdxBarButton;
+    bbPrintStructureGoods: TdxBarButton;
     MaterialOptionsName_ch2: TcxGridDBColumn;
     Comment_goods_ch3: TcxGridDBColumn;
     GoodsCode_basis_ch3: TcxGridDBColumn;
@@ -398,8 +398,11 @@ type
     spSelectPrintStructureHeader: TdsdStoredProc;
     ReceiptGoodsCode_ch3: TcxGridDBColumn;
     ReceiptGoodsName_ch3: TcxGridDBColumn;
-    cxLabel19: TcxLabel;
-    edNPP: TcxCurrencyEdit;
+    actChangePercentDialog: TExecuteDialog;
+    macChangeNPP: TMultiAction;
+    actUpdateMovement_NPP: TdsdExecStoredProc;
+    spUpdateMovement_NPP: TdsdStoredProc;
+    bbChangeNPP: TdxBarButton;
   private
   public
   end;

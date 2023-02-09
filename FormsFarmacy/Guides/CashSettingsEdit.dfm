@@ -707,6 +707,34 @@ object CashSettingsEditForm: TCashSettingsEditForm
         end>
       isShowModal = False
     end
+    object actProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1082#1072#1089#1089
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_CashSettings'
@@ -1564,6 +1592,10 @@ object CashSettingsEditForm: TCashSettingsEditForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1596,6 +1628,10 @@ object CashSettingsEditForm: TCashSettingsEditForm
     end
     object dxBarButton1: TdxBarButton
       Action = actCashSettingsHistory
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actProtocolOpenForm
       Category = 0
     end
   end

@@ -17,9 +17,9 @@ object CheckoutTestingForm: TCheckoutTestingForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 27
     Width = 759
-    Height = 408
+    Height = 407
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
@@ -151,7 +151,7 @@ object CheckoutTestingForm: TCheckoutTestingForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -15
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -170,7 +170,7 @@ object CheckoutTestingForm: TCheckoutTestingForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -383,6 +383,7 @@ object CheckoutTestingForm: TCheckoutTestingForm
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
+      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -479,6 +480,7 @@ object CheckoutTestingForm: TCheckoutTestingForm
         end
         item
           FromParam.Name = 'GUID'
+          FromParam.Value = Null
           FromParam.DataType = ftString
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'GUID'

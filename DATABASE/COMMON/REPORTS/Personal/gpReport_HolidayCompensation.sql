@@ -27,6 +27,8 @@ RETURNS TABLE(MemberId Integer
             
             , Day_hol_NoZp           TFloat    -- отпуск без сохр. по табелю
             , Day_holiday_NoZp       TFloat    -- отпуск без сохр. по док. отпуск
+            , Day_vacation_NoZp      TFloat 
+            , Day_diff_NoZp          TFloat    --
 
             , AmountCompensation     TFloat
             , SummaCompensation      TFloat
@@ -140,6 +142,8 @@ BEGIN
                        , tmp.Day_diff          -- не использовано дней отпуска 
                        , tmp.Day_hol_NoZp
                        , tmp.Day_holiday_NoZp
+                       , tmp.Day_vacation_NoZp
+                       , tmp.Day_diff_NoZp
                        , tmp.Day_calendar      -- Рабоч. дней
                        , tmp.Day_calendar_year -- Рабоч. дней
                     FROM gpReport_HolidayPersonal (inStartDate:= inStartDate, inUnitId:= inUnitId, inMemberId:= inMemberId, inPersonalServiceListId := inPersonalServiceListId, inisDetail:= FALSE, inSession:= inSession) AS tmp
@@ -245,6 +249,8 @@ BEGIN
            --отпуск без оплаты
          , tmpReport.Day_hol_NoZp     :: TFloat
          , tmpReport.Day_holiday_NoZp :: TFloat
+         , tmpReport.Day_vacation_NoZp:: TFloat     -- положено дней без сохр =  Положен отпуск, дней 
+         , tmpReport.Day_diff_NoZp    :: TFloat     -- не использовано дней отпуска  без сохр
          
            -- Ср. ЗП за день
          , CASE WHEN tmpReport.Day_calendar_year <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar_year ELSE 0 END :: TFloat AS AmountCompensation

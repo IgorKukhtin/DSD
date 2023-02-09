@@ -1,15 +1,11 @@
 unit LocalWorkUnit;
 
-{$I dsdVer.inc}
-
 interface
 
 uses
   System.SysUtils, System.Classes, System.IOUtils, Vcl.Forms, Vcl.Dialogs,
   Authentication, VKDBFDataSet, DB, DataSnap.DBClient, Soap.EncdDecd, Windows,
-  IniUtils, ZAbstractRODataset, ZAbstractDataset, ZDataset, ZAbstractConnection,
-  ZConnection, ZEncoding, Datasnap.Provider,
-  {$IFDEF DELPHI103RIO} System.JSON {$ELSE} Data.DBXJSON {$ENDIF};
+  IniUtils, StorageSQLite;
 
 type
   TSaveLocalMode = (slmRewrite, slmUpdate, slmAppend);
@@ -48,6 +44,7 @@ function CashAttachment_lcl: String;
 function UserHelsi_lcl: String;
 function UserLikiDnipro_lcl: String;
 function UserSettings_lcl: String;
+function FormData_lcl: String;
 function EmployeeSchedule_lcl: String;
 function Buyer_lcl: String;
 function DistributionPromo_lcl: String;
@@ -56,13 +53,8 @@ function ZReportLog_lcl: String;
 function ImplementationPlanEmployeeUser_lcl: String;
 function SalePromoGoods_lcl: String;
 
-procedure SaveSQLiteData(ASrc: TClientDataSet; AFileName: String);
-procedure LoadSQLiteData(ADst: TClientDataSet; AFileName: String; AShowError : Boolean = True);
-procedure DeleteSQLiteData(AFileName: String);
-
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String; AShowError : Boolean = True);
-procedure DeleteLocalData(AFileName: String);
 
 function GetFileSizeByName(AFileName: String): DWord;
 function GetBackupFileName(AFileName: String): string;
@@ -73,7 +65,7 @@ procedure CloseMutex;
 
 
 var
-  MutexUserSettings, MutexDBF, MutexDBFDiff, MutexSQLite,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
+  MutexUserSettings, MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative, MutexRefresh,
   MutexAllowedConduct, MutexGoods, MutexDiffCDS, MutexDiffKind, MutexEmployeeWorkLog,
   MutexBankPOSTerminal, MutexUnitConfig, MutexTaxUnitNight, MutexGoodsExpirationDate,
   MutexGoodsAnalog, MutexUserHelsi, MutexUserLikiDnipro, MutexEmployeeSchedule, MutexBuyer, MutexDistributionPromo,
@@ -81,28 +73,6 @@ var
   MutexSalePromoGoods : THandle;
 
 implementation
-
-var ZSQLiteConnection: TZConnection;
-
-procedure Add_SQLiteLog(AMessage: String);
-  var F: TextFile;
-begin
-  try
-    AssignFile(F,ChangeFileExt(Application.ExeName,'_SQLite.log'));
-    if not fileExists(ChangeFileExt(Application.ExeName,'_SQLite.log')) then
-    begin
-      Rewrite(F);
-    end
-    else
-      Append(F);
-    //
-    try  Writeln(F, DateTimeToStr(Now) + ': ' + AMessage);
-    finally CloseFile(F);
-    end;
-  except
-  end;
-end;
-
 
 function GetBackupFileName(AFileName: String): string;
 begin
@@ -220,6 +190,11 @@ End;
 function UserSettings_lcl: String;
 Begin
   Result := ExtractFilePath(Application.ExeName) + 'UserSettings.local';
+End;
+
+function FormData_lcl: String;
+Begin
+  Result := ExtractFilePath(Application.ExeName) + 'FormData.local';
 End;
 
 function EmployeeSchedule_lcl: String;
@@ -348,14 +323,12 @@ var
   User: TClientDataSet;
 Begin
   result := False;
-  if not FileExists(UserSettings_lcl) then
-    exit;
   User := TClientDataSet.Create(nil);
   try
 
     WaitForSingleObject(MutexUserSettings, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
     try
-      User.LoadFromFile(UserSettings_lcl);
+      LoadLocalData(User, UserSettings_lcl);
       User.Open;
     finally
       ReleaseMutex(MutexUserSettings);
@@ -391,14 +364,12 @@ var
   User: TClientDataSet;
 begin
   result := '';
-  if not FileExists(UserSettings_lcl) then
-    exit;
   User := TClientDataSet.Create(nil);
   try
 
     WaitForSingleObject(MutexUserSettings, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
     try
-      User.LoadFromFile(UserSettings_lcl);
+      LoadLocalData(User, UserSettings_lcl);
       User.Open;
     finally
       ReleaseMutex(MutexUserSettings);
@@ -423,7 +394,7 @@ procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
 Begin
   if not ASrc.Active then Exit;
 
-  // SaveSQLiteData(ASrc, AFileName);
+  SaveSQLiteData(ASrc, TPath.GetFileNameWithoutExtension(AFileName));
 
   if FileExists(AFileName) and (GetFileSizeByName(AFileName) > 0) then
     CopyFile(PChar(AFileName), PChar(GetBackupFileName(AFileName)), false);
@@ -450,9 +421,9 @@ End;
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String; AShowError : Boolean = True);
   var I : integer;
 Begin
-//  LoadSQLiteData(ADst, AFileName, AShowError);
-//
-//  if ADst.Active then Exit;
+  LoadSQLiteData(ADst, TPath.GetFileNameWithoutExtension(AFileName), AShowError);
+
+  if ADst.Active then Exit;
 
   if not FileExists(AFileName) then
   begin
@@ -489,256 +460,6 @@ Begin
 
 End;
 
-procedure DeleteLocalData(AFileName: String);
-Begin
-//  DeleteSQLiteData(AFileName);
-  if FileExists(PChar(GetBackupFileName(AFileName))) then DeleteFile(PChar(PChar(GetBackupFileName(AFileName))));
-  if FileExists(AFileName) then DeleteFile(PChar(AFileName));
-End;
-
-procedure SaveSQLiteData(ASrc: TClientDataSet; AFileName: String);
-  var ZQuery: TZQuery; I, J : Integer; S, SD : string;
-      jsonItem : TJSONObject; JSONA: TJSONArray;
-
-begin
-  if not ASrc.Active then Exit;
-
-  AFileName := TPath.GetFileNameWithoutExtension(AFileName);
-
-  if AFileName = 'ListDiff' then
-  begin
-    AFileName := TPath.GetFileNameWithoutExtension(AFileName);
-  end;
-
-  try
-    WaitForSingleObject(MutexSQLite, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
-    ZSQLiteConnection.Connect;
-    ZQuery := TZQuery.Create(Nil);
-    ZQuery.Connection := ZSQLiteConnection;
-    try
-
-        // Удаляем новую если вдркг остался мусор
-      ZQuery.SQL.Text := 'drop table if exists ' + AFileName+ 'New';
-      ZQuery.ExecSQL;
-
-        // Создаем новую таблицу
-      S :=  'CREATE TABLE ' + AFileName + 'New (';
-      for I := 0 to ASrc.FieldCount - 1 do
-      begin
-        if I > 0 then S := S + ', ';
-        S := S + ASrc.Fields.Fields[I].FieldName + ' ';
-        case ASrc.Fields.Fields[I].DataType of
-          ftInteger, ftLargeint : S := S + 'Integer';
-          ftDateTime : S := S + 'DateTime';
-          ftString, ftWideString :
-            if (ASrc.Fields.Fields[I].Size > 0) and (ASrc.Fields.Fields[I].Size <= 255) then
-              S := S + 'VarChar(255)'
-            else S := S + 'TEXT';
-          ftMemo, ftWideMemo : S := S + 'TEXT';
-          ftFloat, ftCurrency : S := S + 'Float';
-          ftBoolean : S := S + 'Boolean';
-        else
-          Add_SQLiteLog('Ошибка сохранения таблицы: ' + AFileName + ' - Неописанный тип дпнных: ' + ASrc.Fields.Fields[I].FieldName);
-        end;
-      end;
-      S := S + ')';
-
-      ZQuery.SQL.Text := S;
-      ZQuery.ExecSQL;
-
-        // Готовим SQL для заливки
-//      S :=  'INSERT INTO ' + AFileName + 'New (';
-//      for I := 0 to ASrc.FieldCount - 1 do
-//      begin
-//        if I > 0 then S := S + ', ';
-//        S := S + ASrc.Fields.Fields[I].FieldName
-//      end;
-//      S := S + ') VALUES ';
-
-        // Заливаем данные пока медленно но потом может решу чтоб быстрее
-//      ZQuery.Active := False;
-//      ZQuery.SQL.Text := 'select * from ' + AFileName + 'New limit 0';
-//      ZQuery.Active := True;
-//
-//      ASrc.First;
-//      while not ASrc.Eof do
-//      begin
-//        ZQuery.Append;
-//
-//        for I := 0 to ASrc.FieldCount - 1 do
-//        begin
-//          ZQuery.Fields.Fields[I].Value := ASrc.Fields.Fields[I].Value;
-//        end;
-//        ZQuery.Post;
-//
-//        ASrc.Next;
-//      end;
-
-        // Заливаем данные через JSON
-      S :=  '';
-      for I := 0 to ASrc.Fields.Count - 1 do
-      begin
-        if I > 0 then S := S + ', ';
-        S := S + 'json_extract(json_each.VALUE, ''$.' + ASrc.Fields.Fields[I].FieldName + ''')';
-      end;
-
-      JSONA := TJSONArray.Create;
-      try
-        ASrc.First;
-        while not ASrc.Eof do
-        begin
-          jsonItem := TJSONObject.Create;
-
-          for I := 0 to ASrc.Fields.Count - 1 do
-          begin
-            if ASrc.Fields.Fields[I].IsNull then
-              jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONNull.Create)
-            else
-              case ASrc.Fields.Fields[I].DataType of
-                ftInteger, ftLargeint : jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONNumber.Create(ASrc.Fields.Fields[I].AsInteger));
-                ftDateTime : jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONString.Create(FormatDateTime('YYYY-MM-DD HH:NN:SS.ZZZ', ASrc.Fields.Fields[I].AsDateTime)));
-                ftFloat : jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONNumber.Create(ASrc.Fields.Fields[I].AsCurrency));
-                ftBoolean : if ASrc.Fields.Fields[I].AsBoolean then
-                              jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONTrue.Create)
-                            else jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONFalse.Create);
-              else
-                jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONString.Create(ASrc.Fields.Fields[I].AsString));
-              end;
-          end;
-          JSONA.AddElement(jsonItem);
-
-          ASrc.Next;
-        end;
-
-        if ASrc.RecordCount > 0 then
-        begin
-          ZQuery.SQL.Text := 'INSERT INTO ' + AFileName + 'New SELECT ' + S + ' FROM json_each(:Json) AS json_each';
-          ZQuery.ParamByName('Json').Value := JSONA.ToString;
-          ZQuery.ExecSQL;
-        end;
-      finally
-        JSONA.Free;
-      end;
-
-
-        // Удаляем предыдущий вариант
-      ZQuery.SQL.Text := 'drop table if exists ' + AFileName;
-      ZQuery.ExecSQL;
-
-        // Переименовываем
-      ZQuery.SQL.Text := 'ALTER TABLE ' + AFileName + 'New RENAME TO ' + AFileName;
-      ZQuery.ExecSQL;
-
-    finally
-      ZQuery.Free;
-      ZSQLiteConnection.Disconnect;
-      ReleaseMutex(MutexSQLite);
-    end;
-  Except on E: Exception do
-    Add_SQLiteLog('Ошибка сохранения таблицы: ' + AFileName + ' - ' + E.Message);
-  end;
-end;
-
-procedure LoadSQLiteData(ADst: TClientDataSet; AFileName: String; AShowError : Boolean = True);
-  var  ZQuery: TZQuery; I : Integer;
-       DataSetProvider: TDataSetProvider;
-       ClientDataSet: TClientDataSet;
-begin
-  AFileName := TPath.GetFileNameWithoutExtension(AFileName);
-
-  if AFileName = 'ListDiff' then
-  begin
-    AFileName := TPath.GetFileNameWithoutExtension(AFileName);
-  end;
-
-  try
-    WaitForSingleObject(MutexSQLite, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
-    ZSQLiteConnection.Connect;
-    ZQuery := TZQuery.Create(Nil);
-    ZQuery.Connection := ZSQLiteConnection;
-    try
-
-        // Проверяем наличие таблицы
-      ZQuery.SQL.Text := 'SELECT name FROM sqlite_master WHERE type = ''table'' AND name= ''' + AFileName + '''';
-      ZQuery.Open;
-
-      if ZQuery.RecordCount < 1 then Exit;
-
-      ZQuery.Close;
-
-      DataSetProvider := TDataSetProvider.Create(Application);
-      DataSetProvider.Name := 'DataSetProvider';
-      DataSetProvider.DataSet := ZQuery;
-      ClientDataSet := TClientDataSet.Create(Application);
-      ClientDataSet.ProviderName := DataSetProvider.Name;
-      try
-
-          // Получаем данные
-        ZQuery.SQL.Text := 'select * FROM ' + AFileName;
-        ZQuery.Active := True;
-
-        ClientDataSet.Active := True;
-
-        if ADst.Active then ADst.Close;
-
-//        for I := 0 to ZQuery.FieldCount - 1 do
-//        begin
-//          case ZQuery.Fields.Fields[I].DataType of
-//            ftInteger, ftLargeint : ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftInteger);
-//            ftDateTime : ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftDateTime);
-//            ftString, ftMemo, ftWideMemo, ftWideString :
-//              if (ZQuery.Fields.Fields[I].Size <= 255) and (ZQuery.Fields.Fields[I].Size > 0) then
-//                ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftString, 255)
-//              else ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftWideString);
-//            ftFloat : ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftFloat);
-//            ftBoolean : ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftBoolean);
-//          else
-//            Add_SQLiteLog('Ошибка сщоздания таблицы: ' + AFileName + ' - Неописанный тип дпнных: ' + ZQuery.Fields.Fields[I].FieldName);
-//          end;
-//        end;
-//        ADst.CreateDataSet;
-
-        ADst.AppendData(ClientDataSet.Data, False);
-
-      finally
-        ClientDataSet.Free;
-        DataSetProvider.Free;
-      end;
-    finally
-      ZQuery.Free;
-      ZSQLiteConnection.Disconnect;
-      ReleaseMutex(MutexSQLite);
-    end;
-  Except on E: Exception do
-    Add_SQLiteLog('Ошибка загрузки таблицы '+ AFileName + ' - ' + E.Message);
-  end;
-end;
-
-procedure DeleteSQLiteData(AFileName: String);
-  var  ZQuery: TZQuery;
-begin
-  AFileName := TPath.GetFileNameWithoutExtension(AFileName);
-  try
-    WaitForSingleObject(MutexSQLite, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
-    ZSQLiteConnection.Connect;
-    ZQuery := TZQuery.Create(Nil);
-    ZQuery.Connection := ZSQLiteConnection;
-    try
-
-        // Удаляем если есть
-      ZQuery.SQL.Text := 'drop table if exists ' + AFileName;
-      ZQuery.ExecSQL;
-
-    finally
-      ZQuery.Free;
-      ZSQLiteConnection.Disconnect;
-      ReleaseMutex(MutexSQLite);
-    end;
-  Except on E: Exception do
-     Add_SQLiteLog('Ошибка удаления таблицы '+ AFileName + ' - ' + E.Message);
-  end;
-end;
-
 function CreateCashAttachment(ATable : TClientDataSet): Boolean;
 var
   User: TClientDataSet;
@@ -766,8 +487,6 @@ begin
   MutexDBF := CreateMutex(nil, false, 'farmacycashMutexDBF');
   LastErr := GetLastError;
   MutexDBFDiff := CreateMutex(nil, false, 'farmacycashMutexDBFDiff');
-  LastErr := GetLastError;
-  MutexSQLite := CreateMutex(nil, false, 'farmacycashMutexSQLite');
   LastErr := GetLastError;
   MutexVip := CreateMutex(nil, false, 'farmacycashMutexVip');
   LastErr := GetLastError;
@@ -820,7 +539,6 @@ begin
  CloseHandle(MutexUserSettings);
  CloseHandle(MutexDBF);
  CloseHandle(MutexDBFDiff);
- CloseHandle(MutexSQLite);
  CloseHandle(MutexVip);
  CloseHandle(MutexRemains);
  CloseHandle(MutexAlternative);
@@ -844,16 +562,5 @@ begin
  CloseHandle(MutexImplementationPlanEmployeeUser);
  CloseHandle(MutexSalePromoGoods);
 end;
-
-initialization
-
-  ZSQLiteConnection := TZConnection.Create(Nil);
-  ZSQLiteConnection.Protocol := 'sqlite-3';
-  ZSQLiteConnection.Database := iniLocalDataBaseSQLite;
-  ZSQLiteConnection.LibraryLocation := ExtractFilePath(Application.ExeName) + 'sqlite3.dll';
-
-finalization
-
-  ZSQLiteConnection.Free;
 
 end.

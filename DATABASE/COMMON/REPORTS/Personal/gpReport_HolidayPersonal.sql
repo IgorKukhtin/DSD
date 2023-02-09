@@ -32,11 +32,13 @@ RETURNS TABLE(MemberId Integer, PersonalId Integer
             , Day_real_year      TFloat    -- Календ. дней - ЗА ГОД
             , Day_Hol            TFloat    -- Отпуск. дней по табелю - ЗА ПЕРИОД
             , Day_Hol_year       TFloat    -- Отпуск. дней по табелю - ЗА ГОД
-            , Day_hol_NoZp       TFloat    -- отпуск без сохр. по табелю
-            , Day_holiday_NoZp   TFloat    -- отпуск без сохр. по док. отпуск
             , Day_vacation       TFloat
             , Day_holiday        TFloat
             , Day_diff           TFloat
+            , Day_hol_NoZp       TFloat    -- отпуск без сохр. по табелю
+            , Day_holiday_NoZp   TFloat    -- отпуск без сохр. по док. отпуск
+            , Day_vacation_NoZp  TFloat 
+            , Day_diff_NoZp      TFloat    --
 
             , InvNumber          TVarChar
             , OperDate           TDateTime
@@ -490,15 +492,19 @@ BEGIN
            -- Дней отпуска
          , COALESCE (MI_SheetWorkTime.Day_Hol, 0)                          :: TFloat AS Day_Hol      -- ЗА ПЕРИОД
          , COALESCE (MI_SheetWorkTime_year.Day_Hol, 0)                     :: TFloat AS Day_Hol_year -- ЗА ГОД
-         -- Дней отпуска без оплаты за период
-         , COALESCE (MI_SheetWorkTime_NoZp.Day_Hol, 0)                     :: TFloat AS Day_Hol_NoZp     -- SheetWorkTime
-         , COALESCE (tmpHoliday_NoZp.Day_holiday,0)                        :: TFloat AS Day_holiday_NoZp -- Holiday
-         
+         --положено дней отпуска         
          , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN tmpVacation.Day_vacation ELSE 0 END :: TFloat AS Day_vacation
            -- использовано дней отпуска
          , tmpHoliday.Day_holiday        :: TFloat
            -- не использовано дней отпуска
          , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN (COALESCE (tmpVacation.Day_vacation, 0) - COALESCE (tmpHoliday.Day_holiday_All, 0)) ELSE 0 END  :: TFloat AS Day_diff
+
+         -- Дней отпуска без оплаты за период
+         , COALESCE (MI_SheetWorkTime_NoZp.Day_Hol, 0)                     :: TFloat AS Day_Hol_NoZp     -- SheetWorkTime
+         , COALESCE (tmpHoliday_NoZp.Day_holiday,0)                        :: TFloat AS Day_holiday_NoZp -- Holiday
+         , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN tmpVacation.Day_vacation ELSE 0 END :: TFloat AS Day_vacation_NoZp     --положено дней без сохр =  Положен отпуск, дней 
+         , CASE WHEN tmpHoliday.Ord = 1 OR tmpHoliday.Ord IS NULL THEN (COALESCE (tmpVacation.Day_vacation, 0) - COALESCE (tmpHoliday_NoZp.Day_holiday,0)) ELSE 0 END  :: TFloat AS Day_diff_NoZp
+
            --
          , tmpHoliday.InvNumber          :: TVarChar
          , tmpHoliday.OperDate           :: TDateTime

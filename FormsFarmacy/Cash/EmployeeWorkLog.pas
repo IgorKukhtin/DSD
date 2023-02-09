@@ -18,10 +18,11 @@ uses LocalWorkUnit, CommonData, MainCash2;
 function CheckEmployeeWorkLogCDS : boolean;
   var EmployeeWorkLogCDS : TClientDataSet;
 begin
-  Result := FileExists(EmployeeWorkLog_lcl);
-  if Result then Exit;
   EmployeeWorkLogCDS :=  TClientDataSet.Create(Nil);
   try
+    LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl);
+    if EmployeeWorkLogCDS.Active then Exit;
+
     try
       EmployeeWorkLogCDS.FieldDefs.Add('UserID', ftInteger);
       EmployeeWorkLogCDS.FieldDefs.Add('DateLogIn', ftDateTime);
@@ -51,7 +52,6 @@ begin
       LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl, False);
       if not EmployeeWorkLogCDS.Active then
       begin
-        DeleteLocalData(EmployeeWorkLog_lcl);
         CheckEmployeeWorkLogCDS;
         LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl);
       end;
@@ -82,7 +82,6 @@ begin
       LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl, False);
       if not EmployeeWorkLogCDS.Active then
       begin
-        DeleteLocalData(EmployeeWorkLog_lcl);
         CheckEmployeeWorkLogCDS;
         LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl);
       end;

@@ -14,6 +14,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar
                                                     , TFloat, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
                                                     , Integer, TVarChar, TDateTime, Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat
                                                     , TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean
+                                                    , TFloat, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
+                                                    , Integer, TVarChar, TDateTime, Integer, TVarChar, TDateTime, TFloat, TFloat
+                                                    , TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
  INOUT ioId                    Integer   ,    -- ключ объекта <Лодки>

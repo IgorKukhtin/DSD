@@ -235,6 +235,23 @@
           Options.Editing = False
           Width = 80
         end
+        object NPP_OrderClient: TcxGridDBColumn
+          Caption = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1089#1073#1086#1088#1082#1080
+          DataBinding.FieldName = 'NPP_OrderClient'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 85
+        end
+        object NPP_2: TcxGridDBColumn
+          Caption = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1087#1083#1072#1085
+          DataBinding.FieldName = 'NPP_2'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100'  '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1089#1073#1086#1088#1082#1080
+          Options.Editing = False
+          Width = 85
+        end
         object Code: TcxGridDBColumn
           Caption = 'Interne Nr'
           DataBinding.FieldName = 'Code'
@@ -616,23 +633,6 @@
           DataBinding.FieldName = 'Color_fon'
           Visible = False
           VisibleForCustomization = False
-        end
-        object NPP_OrderClient: TcxGridDBColumn
-          Caption = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1089#1073#1086#1088#1082#1080
-          DataBinding.FieldName = 'NPP_OrderClient'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 85
-        end
-        object NPP_2: TcxGridDBColumn
-          Caption = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1087#1083#1072#1085
-          DataBinding.FieldName = 'NPP_2'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100'  '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1089#1073#1086#1088#1082#1080
-          Options.Editing = False
-          Width = 85
         end
         object StatusCode_OrderClient: TcxGridDBColumn
           Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
@@ -1624,6 +1624,22 @@
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_NPP_Plus'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_NPP_Minus'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChangeNPP'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1841,11 +1857,36 @@
       Action = actUpdate2
       Category = 0
     end
+    object bbChangeNPP: TdxBarButton
+      Action = macChangeNPP
+      Category = 0
+    end
+    object bbUpdate_NPP_Plus: TdxBarButton
+      Action = actUpdate_NPP_Plus
+      Category = 0
+    end
+    object bbUpdate_NPP_Minus: TdxBarButton
+      Action = actUpdate_NPP_Minus
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 8
     Top = 96
+    object actRefreshMaster: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -3189,6 +3230,96 @@
         end>
       isShowModal = False
     end
+    object actUpdateMovement_NPP: TdsdExecStoredProc
+      Category = 'NPP'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovement_NPP
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovement_NPP
+        end>
+      Caption = 'actUpdateMovement_NPP'
+    end
+    object actChangePercentDialog: TExecuteDialog
+      Category = 'NPP'
+      MoveParams = <>
+      Caption = 'actOrderClientDialog'
+      FormName = 'TOrderClientDialogForm'
+      FormNameParam.Value = 'TOrderClientDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'NPP'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NPP_OrderClient'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DateBegin'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'DateBegin'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macChangeNPP: TMultiAction
+      Category = 'NPP'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChangePercentDialog
+        end
+        item
+          Action = actUpdateMovement_NPP
+        end
+        item
+          Action = actRefreshMaster
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100
+      ImageIndex = 43
+    end
+    object actUpdate_NPP_Plus: TdsdExecStoredProc
+      Category = 'NPP'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_NPP_Plus
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_NPP_Plus
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' +1'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' +1'
+      ImageIndex = 81
+    end
+    object actUpdate_NPP_Minus: TdsdExecStoredProc
+      Category = 'NPP'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_NPP_Minus
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_NPP_Minus
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' -1'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' -1'
+      ImageIndex = 82
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Product'
@@ -4007,5 +4138,114 @@
     PackSize = 1
     Left = 1000
     Top = 208
+  end
+  object spUpdateMovement_NPP: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderClient_NPP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProductId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateBegin'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DateBegin'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNPP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NPP_OrderClient'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 154
+    Top = 128
+  end
+  object spUpdate_NPP_Minus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderClient_NPP_Plus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioNPP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NPP_OrderClient'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlus'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 226
+    Top = 120
+  end
+  object spUpdate_NPP_Plus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderClient_NPP_Plus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioNPP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NPP_OrderClient'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlus'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 250
+    Top = 152
   end
 end

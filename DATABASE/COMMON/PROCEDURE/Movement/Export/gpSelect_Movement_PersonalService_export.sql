@@ -43,7 +43,7 @@ BEGIN
 
      -- *** Временная таблица для сбора результата
      CREATE TEMP TABLE _tmpResult (NPP Integer, RowData Text, errStr TVarChar) ON COMMIT DROP;
-
+     /*
      -- Проверка
      IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Export() AND MB.ValueData = TRUE) AND vbUserId <> 5
      THEN
@@ -55,7 +55,7 @@ BEGIN
                         ;
                          
      END IF;
-
+    */
 
      -- определили данные из ведомости начисления
      SELECT Object_Bank.Id                 AS BankId             -- БАНК

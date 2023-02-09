@@ -18,8 +18,6 @@ inherited ListGoodsForm: TListGoodsForm
     BiDiMode = bdLeftToRight
     ParentBiDiMode = False
     TabOrder = 1
-    ExplicitLeft = -1
-    ExplicitTop = 82
     object ListGoodsGridDBTableView: TcxGridDBTableView
       OnDblClick = ListGoodsGridDBTableViewDblClick
       Navigator.Buttons.CustomButtons = <>

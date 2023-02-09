@@ -132,6 +132,8 @@ type
     bbGridToExcel: TdxBarButton;
     bbChoice: TdxBarButton;
     dxBarButton1: TdxBarButton;
+    actProtocolOpenForm: TdsdOpenForm;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

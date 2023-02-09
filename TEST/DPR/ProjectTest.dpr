@@ -1410,7 +1410,8 @@ uses
   GoogleOTPRegistration in '..\..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
   Report_StaffList in '..\..\Forms\Report\Report_StaffList.pas' {Report_StaffListForm: TParentForm},
   Report_StaffListDialog in '..\..\Forms\Report\Report_StaffListDialog.pas' {Report_StaffListDialogForm: TParentForm},
-  PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm};
+  PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
+  StorageSQLite in '..\..\SOURCE\StorageSQLite.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

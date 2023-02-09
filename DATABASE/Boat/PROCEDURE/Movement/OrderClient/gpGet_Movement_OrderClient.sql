@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar
+             , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar, DateBegin TDateTime
              , Comment TVarChar
              , isChild_Recalc Boolean
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
@@ -66,6 +66,7 @@ BEGIN
              , 0                         AS BrandId
              , CAST ('' AS TVarChar)     AS BrandName
              , CAST ('' AS TVarChar)     AS CIN
+             , NULL AS TDateTime         AS DateBegin
              , CAST ('' AS TVarChar)     AS Comment
              , FALSE :: Boolean          AS isChild_Recalc
              , 0                         AS MovementId_Invoice
@@ -112,6 +113,7 @@ BEGIN
           , Object_Brand.Id                            AS BrandId
           , Object_Brand.ValueData                     AS BrandName
           , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS CIN
+          , ObjectDate_DateBegin.ValueData             AS DateBegin
 
           , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
         --, EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE) :: Boolean AS isChild_Recalc
@@ -202,6 +204,9 @@ BEGIN
                                 AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
             LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
 
+            LEFT JOIN ObjectDate AS ObjectDate_DateBegin
+                                 ON ObjectDate_DateBegin.ObjectId = Object_Product.Id
+                                AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin()
         WHERE Movement_OrderClient.Id = inMovementId
           AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
           ;

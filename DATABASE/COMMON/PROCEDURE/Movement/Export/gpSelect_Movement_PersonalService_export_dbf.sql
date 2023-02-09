@@ -1,9 +1,9 @@
 -- Function: gpSelect_Movement_PersonalService_export
 
 -- DROP FUNCTION IF EXISTS gpexport_txtbankvostokpayroll (Integer, TVarChar, TFloat, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_export_test (Integer, TVarChar, TFloat, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_export_dbf (Integer, TVarChar, TFloat, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_export_test(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_export_dbf(
     IN inMovementId           Integer,
     IN inInvNumber            TVarChar,
     IN inAmount               TFloat,
@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_export_test(
 RETURNS TABLE (CARDIBAN TVarChar
              , FIO TVarChar
              , ID_CODE TVarChar
-             , SUMA TFloat
+             , SUMA TVarChar
              )
 AS
 $BODY$
@@ -49,7 +49,7 @@ BEGIN
      CREATE TEMP TABLE _tmpResult (NPP Integer, RowData Text, errStr TVarChar) ON COMMIT DROP;
 
      -- Проверка
-   /*  IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Export() AND MB.ValueData = TRUE) AND vbUserId <> 5
+     IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Export() AND MB.ValueData = TRUE) AND vbUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.<%> № <%> от <%> уже была выгружена.%Для повторной выгрузки необходимо перепровести документ.'
                        , lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList()))
@@ -59,7 +59,7 @@ BEGIN
                         ;
                          
      END IF;
-    */ 
+     
 
      -- определили данные из ведомости начисления
      SELECT Object_Bank.Id                 AS BankId             -- БАНК
@@ -108,11 +108,6 @@ BEGIN
      WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
        AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList();
 
-     --если не внесен коєф. берем по умолчанию = 1.00807
-     IF COALESCE (vbKoeffSummCardSecond,0) = 0
-     THEN
-         vbKoeffSummCardSecond := 1.00807;
-     END IF;
 
        /*
      --Райфайзен
@@ -137,12 +132,10 @@ BEGIN
 
      END IF;
       */
-     -- проверка ошибки
-     IF er <> ''
-     THEN
-         RAISE EXCEPTION '%', er;
-     END IF;
 
+     IF vbBankId = 81283
+     THEN
+     
      -- сохранили свойство <Сформирована Выгрузка (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Export(), inMovementId, TRUE);
 
@@ -152,13 +145,14 @@ BEGIN
         SELECT gpSelect.card         ::TVarChar AS CARDIBAN   -- Номер карточного (или другого) счёта
              , gpSelect.PersonalName ::TVarChar AS FIO        -- Фамилия сотрудника - Прізвище співробітника
              , gpSelect.INN          ::TVarChar AS ID_CODE    -- Табельный номер сотрудника
-             , REPLACE (CAST (COALESCE (gpSelect.SummCardRecalc, 0) AS NUMERIC (16, 2)) :: TVarChar, '.', ',') :: TFloat AS SUMA        -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
+             , REPLACE (CAST (COALESCE (gpSelect.SummCardRecalc, 0) AS NUMERIC (16, 2)) :: TVarChar, '.', ',') :: TVarChar AS SUMA        -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
         FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId 
                                                   , inShowAll    := FALSE
                                                   , inIsErased   := FALSE
                                                   , inSession    := inSession
                                                    ) AS gpSelect
-        WHERE COALESCE (gpSelect.SummCardRecalc, 0) <> 0;
+        WHERE COALESCE (gpSelect.SummCardRecalc, 0) <> 0;  
+     END IF;
 
 END;
 $BODY$
@@ -167,12 +161,9 @@ $BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 20.07.17         *
- 20.12.16                                        *
- 01.07.16
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.02.23         *
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_Movement_PersonalService_export_test (24465293 , '1959', 50000.01, '15.06.2016', zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_PersonalService_export_dbf (24465293 , '1959', 50000.01, '15.06.2016', zfCalc_UserAdmin());

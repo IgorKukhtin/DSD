@@ -205,6 +205,18 @@ type
     AmountBasis_ch2: TcxGridDBColumn;
     Color_ProdColor_ch2: TcxGridDBColumn;
     Color_ProdColorValue_Ch2: TcxGridDBColumn;
+    spUpdateMovement_NPP: TdsdStoredProc;
+    spUpdate_NPP_Minus: TdsdStoredProc;
+    spUpdate_NPP_Plus: TdsdStoredProc;
+    actUpdateMovement_NPP: TdsdExecStoredProc;
+    actChangePercentDialog: TExecuteDialog;
+    macChangeNPP: TMultiAction;
+    actUpdate_NPP_Plus: TdsdExecStoredProc;
+    actUpdate_NPP_Minus: TdsdExecStoredProc;
+    bbChangeNPP: TdxBarButton;
+    bbUpdate_NPP_Plus: TdxBarButton;
+    bbUpdate_NPP_Minus: TdxBarButton;
+    actRefreshMaster: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

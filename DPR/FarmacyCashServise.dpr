@@ -78,7 +78,8 @@ uses
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
   dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
-  UnitMyIP in '..\SOURCE\UnitMyIP.pas';
+  UnitMyIP in '..\SOURCE\UnitMyIP.pas',
+  StorageSQLite in '..\SOURCE\StorageSQLite.pas';
 
 {$R *.res}
 
@@ -88,6 +89,7 @@ begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
   ConnectionPath := '..\INIT\farmacy_init.php';
+  SQLiteFile := iniLocalDataBaseSQLite;
   dsdProject := prFarmacy;
   gc_ProgramName := 'FarmacyCashServise.exe';
 

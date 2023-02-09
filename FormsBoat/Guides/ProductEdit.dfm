@@ -122,8 +122,8 @@ object ProductEditForm: TProductEditForm
     Width = 82
   end
   object edDateBegin: TcxDateEdit
-    Left = 105
-    Top = 348
+    Left = 113
+    Top = 353
     EditValue = 42160d
     ParentShowHint = False
     Properties.SaveTime = False
@@ -604,7 +604,7 @@ object ProductEditForm: TProductEditForm
     Top = 487
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 79
+    TabOrder = 78
     Width = 73
   end
   object cxLabel34: TcxLabel
