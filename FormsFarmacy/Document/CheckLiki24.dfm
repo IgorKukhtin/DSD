@@ -1,5 +1,5 @@
 inherited CheckLiki24Form: TCheckLiki24Form
-  Caption = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1077' '#1095#1077#1082#1080'  '#1089' '#1089#1072#1081#1090#1072' Liki24'
+  Caption = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1077' '#1095#1077#1082#1080' '#1085#1072' '#1084#1086#1084#1077#1085#1090' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1086#1085#1083#1072#1081#1085
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -29,362 +29,7 @@ inherited CheckLiki24Form: TCheckLiki24Form
       end
     end
   end
-  inherited ActionList: TActionList [1]
-    inherited dsdChoiceGuides: TdsdChoiceGuides
-      Params = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Bayer'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CashMemberId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'CashMemberId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CashMember'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'CashMember'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DiscountExternalId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'DiscountExternalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DiscountExternalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'DiscountExternalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DiscountCardNumber'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'DiscountCardNumber'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ConfirmedKindName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ConfirmedKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BayerPhone'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'BayerPhone'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumberOrder'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InvNumberOrder'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ConfirmedKindClientName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ConfirmedKindClientName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartnerMedicalId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartnerMedicalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartnerMedicalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartnerMedicalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Ambulance'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Ambulance'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MedicSP'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MedicSP'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumberSP'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InvNumberSP'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDateSP'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperDateSP'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'SPKindId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'SPKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'SPKindName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'SPKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'SPTax'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'SPTax'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ManualDiscount'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ManualDiscount'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PromoCodeID'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PromoCodeID'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PromoName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PromoName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PromoCodeGUID'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PromoCodeGUID'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PromoCodeChangePercent'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PromoCodeChangePercent'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MemberSPId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MemberSPId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'SiteDiscount'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'SiteDiscount'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartionDateKindId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartionDateKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PartionDateKindName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PartionDateKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'AmountMonth'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'AmountMonth'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'LoyaltyChangeSumma'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'LoyaltyChangeSumma'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'SummCard'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'SummCard'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isBanAdd'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'isBanAdd'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isDiscountCommit'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'isDiscountCommit'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isAutoVIPforSales'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'isAutoVIPforSales'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MobileDiscount'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MobileDiscount'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isMobileFirstOrder'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'isMobileFirstOrder'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-    end
-    inherited actCheckCash: TdsdOpenForm
-      GuiParams = <
-        item
-          Name = 'Id'
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'OperDate'
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-    end
-    object Action1: TAction
-      Category = 'DSDLib'
-      Caption = 'Action1'
-    end
-  end
-  inherited DBViewAddOn: TdsdDBViewAddOn [2]
-  end
-  inherited PopupMenu: TPopupMenu [3]
-  end
-  inherited ClientDataSet1: TClientDataSet [4]
-  end
-  inherited DataSource1: TDataSource [5]
-  end
-  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [6]
-  end
-  inherited spMovementSetErased: TdsdStoredProc [7]
-  end
-  inherited spConfirmedKind_Complete: TdsdStoredProc [8]
-  end
-  inherited spConfirmedKind_UnComplete: TdsdStoredProc [9]
-  end
-  inherited spUpdateMovementItemAmount: TdsdStoredProc [10]
-  end
-  inherited spSmashCheck: TdsdStoredProc [11]
-  end
-  inherited spUpdateOperDate: TdsdStoredProc [12]
-  end
-  inherited spMovementSetErasedSite: TdsdStoredProc [13]
-  end
-  inherited FormParams: TdsdFormParams [14]
-  end
-  inherited MasterDS: TDataSource [15]
-  end
-  inherited MasterCDS: TClientDataSet [16]
-  end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [17]
-  end
-  inherited cxPropertiesStore: TcxPropertiesStore [18]
-  end
-  inherited spSelect: TdsdStoredProc [19]
+  inherited spSelect: TdsdStoredProc [3]
     Params = <
       item
         Name = 'inType'
@@ -393,7 +38,7 @@ inherited CheckLiki24Form: TCheckLiki24Form
         MultiSelectSeparator = ','
       end>
   end
-  inherited BarManager: TdxBarManager [20]
+  inherited BarManager: TdxBarManager [4]
     DockControlHeights = (
       0
       0
@@ -482,5 +127,472 @@ inherited CheckLiki24Form: TCheckLiki24Form
           ItemName = 'bbGridToExcel'
         end>
     end
+  end
+  inherited ActionList: TActionList [5]
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProc = spSelectLocal
+      StoredProcList = <
+        item
+          StoredProc = spSelectLocal
+        end>
+    end
+    inherited actShowErased: TBooleanStoredProcAction
+      StoredProc = spSelectLocal
+      StoredProcList = <
+        item
+          StoredProc = spSelectLocal
+        end>
+    end
+    inherited dsdChoiceGuides: TdsdChoiceGuides
+      Params = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'Bayer'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CashMemberId'
+          Component = MasterCDS
+          ComponentItem = 'CashMemberId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CashMember'
+          Component = MasterCDS
+          ComponentItem = 'CashMember'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalId'
+          Component = MasterCDS
+          ComponentItem = 'DiscountExternalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalName'
+          Component = MasterCDS
+          ComponentItem = 'DiscountExternalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountCardNumber'
+          Component = MasterCDS
+          ComponentItem = 'DiscountCardNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ConfirmedKindName'
+          Component = MasterCDS
+          ComponentItem = 'ConfirmedKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BayerPhone'
+          Component = MasterCDS
+          ComponentItem = 'BayerPhone'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberOrder'
+          Component = MasterCDS
+          ComponentItem = 'InvNumberOrder'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ConfirmedKindClientName'
+          Component = MasterCDS
+          ComponentItem = 'ConfirmedKindClientName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerMedicalId'
+          Component = MasterCDS
+          ComponentItem = 'PartnerMedicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerMedicalName'
+          Component = MasterCDS
+          ComponentItem = 'PartnerMedicalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Ambulance'
+          Component = MasterCDS
+          ComponentItem = 'Ambulance'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MedicSP'
+          Component = MasterCDS
+          ComponentItem = 'MedicSP'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberSP'
+          Component = MasterCDS
+          ComponentItem = 'InvNumberSP'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDateSP'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDateSP'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPKindId'
+          Component = MasterCDS
+          ComponentItem = 'SPKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPKindName'
+          Component = MasterCDS
+          ComponentItem = 'SPKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SPTax'
+          Component = MasterCDS
+          ComponentItem = 'SPTax'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ManualDiscount'
+          Component = MasterCDS
+          ComponentItem = 'ManualDiscount'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeID'
+          Component = MasterCDS
+          ComponentItem = 'PromoCodeID'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoName'
+          Component = MasterCDS
+          ComponentItem = 'PromoName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeGUID'
+          Component = MasterCDS
+          ComponentItem = 'PromoCodeGUID'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PromoCodeChangePercent'
+          Component = MasterCDS
+          ComponentItem = 'PromoCodeChangePercent'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberSPId'
+          Component = MasterCDS
+          ComponentItem = 'MemberSPId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SiteDiscount'
+          Component = MasterCDS
+          ComponentItem = 'SiteDiscount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionDateKindId'
+          Component = MasterCDS
+          ComponentItem = 'PartionDateKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionDateKindName'
+          Component = MasterCDS
+          ComponentItem = 'PartionDateKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountMonth'
+          Component = MasterCDS
+          ComponentItem = 'AmountMonth'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LoyaltyChangeSumma'
+          Component = MasterCDS
+          ComponentItem = 'LoyaltyChangeSumma'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SummCard'
+          Component = MasterCDS
+          ComponentItem = 'SummCard'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isBanAdd'
+          Component = MasterCDS
+          ComponentItem = 'isBanAdd'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDiscountCommit'
+          Component = MasterCDS
+          ComponentItem = 'isDiscountCommit'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAutoVIPforSales'
+          Component = MasterCDS
+          ComponentItem = 'isAutoVIPforSales'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MobileDiscount'
+          Component = MasterCDS
+          ComponentItem = 'MobileDiscount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobileFirstOrder'
+          Component = MasterCDS
+          ComponentItem = 'isMobileFirstOrder'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+    end
+    inherited actCheckCash: TdsdOpenForm
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    inherited acteSputnikSendSMS: TdsdeSputnikSendSMS
+      UserNameParam.Value = ''
+      PasswordParam.Value = ''
+      FromParam.Value = ''
+      TextParam.Value = ''
+      PhoneParam.Value = ''
+      SendParam.Value = True
+    end
+    object Action1: TAction
+      Category = 'DSDLib'
+      Caption = 'Action1'
+    end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn [6]
+  end
+  inherited PopupMenu: TPopupMenu [7]
+  end
+  inherited ClientDataSet1: TClientDataSet [8]
+  end
+  inherited DataSource1: TDataSource [9]
+  end
+  inherited dsdDBViewAddOn1: TdsdDBViewAddOn [10]
+  end
+  inherited spMovementSetErased: TdsdStoredProc [11]
+  end
+  inherited spConfirmedKind_Complete: TdsdStoredProc [12]
+  end
+  inherited spConfirmedKind_UnComplete: TdsdStoredProc [13]
+  end
+  inherited spUpdateMovementItemAmount: TdsdStoredProc [14]
+  end
+  inherited spSmashCheck: TdsdStoredProc [15]
+  end
+  inherited spUpdateOperDate: TdsdStoredProc [16]
+  end
+  inherited MasterDS: TDataSource [17]
+  end
+  inherited MasterCDS: TClientDataSet [18]
+  end
+  inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'CancelReasonId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSend'
+        Value = True
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromName'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BayerPhone'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SMSText'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+  end
+  inherited speSputnikSMSParams: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = 0
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSend'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isSend'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Password'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FromName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FromName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BayerPhone'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BayerPhone'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SMSText'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SMSText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+  end
+  object spSelectLocal: TdsdStoredProcSQLite
+    StoredProcName = 'gpSelect_Movement_CheckCashDeferred'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end
+      item
+        DataSet = ClientDataSet1
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inType'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    SQLList = <
+      item
+        SQL.Strings = (
+          'select * from VIP')
+      end
+      item
+        SQL.Strings = (
+          'select * from VIPList')
+      end>
+    Left = 72
+    Top = 200
   end
 end

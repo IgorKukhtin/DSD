@@ -217,6 +217,7 @@ type
     bbUpdate_NPP_Plus: TdxBarButton;
     bbUpdate_NPP_Minus: TdxBarButton;
     actRefreshMaster: TdsdDataSetRefresh;
+    StateColor: TcxGridDBColumn;
   private
     { Private declarations }
   public

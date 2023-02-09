@@ -235,6 +235,13 @@
           Options.Editing = False
           Width = 80
         end
+        object StateText: TcxGridDBColumn
+          Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
+          DataBinding.FieldName = 'StateText'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
         object NPP_OrderClient: TcxGridDBColumn
           Caption = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1089#1073#1086#1088#1082#1080
           DataBinding.FieldName = 'NPP_OrderClient'
@@ -700,6 +707,12 @@
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 55
+        end
+        object StateColor: TcxGridDBColumn
+          DataBinding.FieldName = 'StateColor'
+          Visible = False
+          VisibleForCustomization = False
+          Width = 70
         end
       end
       object cxGridLevel: TcxGridLevel
@@ -1885,6 +1898,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh

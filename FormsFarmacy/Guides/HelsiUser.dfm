@@ -3,7 +3,7 @@ object HelsiUserForm: THelsiUserForm
   Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1087#1072#1088#1086#1083#1080' '#1045#1093#1077#1083#1089' ('#1057#1055')'
   ClientHeight = 471
-  ClientWidth = 1206
+  ClientWidth = 1298
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,14 +19,15 @@ object HelsiUserForm: THelsiUserForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 1206
-    Height = 445
+    Top = 27
+    Width = 1298
+    Height = 444
     Align = alClient
     PopupMenu = pmGrid
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 1206
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -117,6 +118,14 @@ object HelsiUserForm: THelsiUserForm
         Options.Editing = False
         Width = 82
       end
+      object CheckOperDate: TcxGridDBColumn
+        Caption = #1055#1086#1089#1083'. '#1080#1089#1087#1086#1083#1100#1079'. '#1079#1072' 2 '#1084#1077#1089#1103#1094#1072
+        DataBinding.FieldName = 'CheckOperDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 85
+      end
       object isUserKeyDate: TcxGridDBColumn
         Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1099' '#1074#1089#1077' '#1092#1072#1081#1083#1086#1074#1099#1077' '#1082#1083#1102#1095#1080
         DataBinding.FieldName = 'isUserKeyDate'
@@ -181,7 +190,7 @@ object HelsiUserForm: THelsiUserForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -15
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -200,7 +209,7 @@ object HelsiUserForm: THelsiUserForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'

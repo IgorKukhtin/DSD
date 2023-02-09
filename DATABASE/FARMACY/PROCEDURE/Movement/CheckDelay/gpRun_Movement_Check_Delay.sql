@@ -75,10 +75,17 @@ BEGIN
                                    ON MovementBoolean_AutoVIPforSales.MovementId = Movement.Id
                                   AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
 
-    WHERE CASE WHEN MovementDate_Delay.ValueData is not Null THEN MovementDate_Delay.ValueData
-               WHEN MovementDate_UserConfirmedKind.ValueData is not Null THEN MovementDate_UserConfirmedKind.ValueData
-               WHEN MovementLinkObject_CheckSourceKind.ObjectId = zc_Enum_CheckSourceKind_Tabletki() THEN Movement.OperDate
-               ELSE Movement.OperDate + INTERVAL '5 DAY' END <= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '2 DAY'
+    WHERE CASE WHEN MovementDate_Delay.ValueData is not Null 
+                    THEN MovementDate_Delay.ValueData + INTERVAL '2 DAY'
+               WHEN MovementDate_UserConfirmedKind.ValueData is not Null AND COALESCE (MovementString_InvNumberOrder.ValueData, '') = '' AND
+                    COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> zc_Enum_CheckSourceKind_Tabletki() 
+                    THEN MovementDate_UserConfirmedKind.ValueData + INTERVAL '2 DAY'
+               WHEN MovementDate_UserConfirmedKind.ValueData is not Null AND (COALESCE (MovementString_InvNumberOrder.ValueData, '') <> '' OR
+                    COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki()) 
+                    THEN MovementDate_UserConfirmedKind.ValueData + INTERVAL '1 DAY'
+               WHEN MovementLinkObject_CheckSourceKind.ObjectId = zc_Enum_CheckSourceKind_Tabletki() 
+                    THEN Movement.OperDate
+               ELSE Movement.OperDate + INTERVAL '7 DAY' END < DATE_TRUNC ('DAY', CURRENT_DATE)
       AND COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False) = False) AS Movement;
                
 END;

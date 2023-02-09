@@ -83,6 +83,7 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , isBasicConf Boolean
              , Color_fon Integer
              , isErased Boolean
+             , StateText TVarChar--, StateColor Integer
               )
 AS
 $BODY$
@@ -620,6 +621,23 @@ BEGIN
                                              ON ObjectDate_Insert.ObjectId = Object_Product.Id
                                             AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
                   )
+
+          --проведенные док. заказ производство и сборка
+   , tmpMIFloat_MovementId AS (SELECT DISTINCT MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
+                                      , Movement.DescId
+                               FROM MovementItemFloat AS MIFloat_MovementId
+                                    JOIN MovementItem ON MovementItem.Id = MIFloat_MovementId.MovementItemId
+                                                     AND MovementItem.isErased = FALSE
+                                                     AND MovementItem.DescId = zc_MI_Master()
+                                    
+                                    JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                 AND Movement.DescId IN (zc_Movement_ProductionUnion(), zc_Movement_OrderInternal())
+                               WHERE MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                 AND MIFloat_MovementId.ValueData :: Integer IN (SELECT DISTINCT tmpResAll.MovementId_OrderClient FROM tmpResAll)
+                               )
+
      -- Результат
     SELECT
            (tmpResAll.Id :: TVarChar || '_' || tmpResAll.MovementId_OrderClient :: TVarChar) :: TVarChar KeyId
@@ -730,8 +748,9 @@ BEGIN
 
          , tmpResAll.isBasicConf
 
-         , CASE WHEN tmpResAll.isSale
-                     THEN zc_Color_Lime()
+         , CASE WHEN tmpResAll.isSale THEN zc_Color_Lime()
+                --если состояние готова то выделяем фоном
+                WHEN COALESCE (tmpOrderClient.NPP,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion.MovementId_OrderClient IS NOT NULL THEN zc_Color_GreenL()
                 ELSE
                     -- нет цвета
                     zc_Color_White()
@@ -739,11 +758,24 @@ BEGIN
 
          , tmpResAll.isErased
 
+         -- колонка "Состояние" - если есть NPP>0 тогда "Планируется" если есть проведенный zc_Movement_OrderInternal тогда "В работе"  если есть проведенный zc_Movement_ProductionUnion тогда "Готова" 
+         , CASE WHEN COALESCE (tmpOrderClient.NPP,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion.MovementId_OrderClient IS NOT NULL THEN 'Готова'
+                WHEN COALESCE (tmpOrderClient.NPP,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion.MovementId_OrderClient IS NULL     THEN 'В работе'
+                WHEN COALESCE (tmpOrderClient.NPP,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NULL     AND tmpProductionUnion.MovementId_OrderClient IS NULL     THEN 'Планируется'                  
+                 ELSE NULL
+            END ::TVarChar AS StateText
+          -- - все три состояния подсветить всю строчку фоном
+         /*, CASE WHEN COALESCE (tmpOrderClient.NPP,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion.MovementId_OrderClient IS NOT NULL THEN zc_Color_GreenL()
+                ELSE zc_Color_White()
+           END ::Integer AS StateColor*/
      FROM tmpResAll
           LEFT JOIN tmpCalc AS tmpCalc_1 ON tmpCalc_1.MovementId_OrderClient = tmpResAll.MovementId_OrderClient AND tmpCalc_1.ProductId = tmpResAll.Id AND tmpCalc_1.isBasis = TRUE
           LEFT JOIN tmpCalc AS tmpCalc_2 ON tmpCalc_2.MovementId_OrderClient = tmpResAll.MovementId_OrderClient AND tmpCalc_2.ProductId = tmpResAll.Id AND tmpCalc_2.isBasis = FALSE
 
           LEFT JOIN tmpOrderClient ON  tmpOrderClient.MovementId = tmpResAll.MovementId_OrderClient AND tmpOrderClient.ProductId = tmpResAll.Id 
+
+          LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal ON tmpOrderInternal.MovementId_OrderClient = tmpResAll.MovementId_OrderClient AND tmpOrderInternal.DescId = zc_Movement_OrderInternal()
+          LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion ON tmpProductionUnion.MovementId_OrderClient = tmpResAll.MovementId_OrderClient AND tmpProductionUnion.DescId = zc_Movement_ProductionUnion()
 
      ;
 
