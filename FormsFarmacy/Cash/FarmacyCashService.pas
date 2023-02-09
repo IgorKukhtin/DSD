@@ -14,7 +14,8 @@ uses
   cxGrid,  cxSplitter, cxContainer,  cxTextEdit, cxCurrencyEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox,  cxCheckBox, cxNavigator, CashInterface,  cxImageComboBox , dsdAddOn,
   Vcl.ImgList, LocalStorage, IdFTPCommon, IdGlobal, IdFTP, IdSSLOpenSSL, IdExplicitTLSClientServerBase,
-  UnilWin, System.ImageList, System.Actions, System.Zip, System.RegularExpressions, UnitMyIP;
+  UnilWin, System.ImageList, System.Actions, System.Zip, System.RegularExpressions, UnitMyIP,
+  StorageSQLite;
 
 type
  THeadRecord = record
@@ -199,7 +200,6 @@ type
     procedure N5Click(Sender: TObject);
     procedure N7Click(Sender: TObject);
     procedure actCashRemainsExecute(Sender: TObject);
-    procedure spUpdate_Log_CashRemainsAfterExecute(Sender: TObject);
     procedure TimerNeedRemainsDiffTimer(Sender: TObject);
     procedure CashRemainsDiffExecute;
 
@@ -235,6 +235,7 @@ type
     procedure SaveUserHelsi;
     procedure SaveUserLikiDnipro;
     procedure SaveUserSettings;
+    procedure SaveFormData;
     procedure SaveTaxUnitNight;
     procedure SaveGoodsExpirationDate;
     procedure SaveBuyer;
@@ -458,10 +459,11 @@ begin
 
   try
     TimerNeedRemainsDiff.Enabled := False;
-    MainCashForm2.tiServise.IconIndex:=1;
-    Application.ProcessMessages;
     if SetFarmacyNameByUser then
     begin
+      MainCashForm2.tiServise.IconIndex:=1;
+      Application.ProcessMessages;
+
       //Получение конфигурации аптеки
       SaveUnitConfig;
       //Получение Сотрудников и настроек
@@ -491,7 +493,8 @@ begin
       tiServise.Hint := 'Ожидание задания.';
       end else
     begin
-      tiServise.BalloonHint:='Ошибка сохранения аптеки содруднику.';
+      tiServise.BalloonHint:='Ошибка связи с сервером.';
+      TimerNeedRemainsDiff.Interval := 10000;
     end;
   finally
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
@@ -518,77 +521,80 @@ begin   //yes
   Add_Log('Refresh all start');
   bError := false;
   try
-    MainCashForm2.tiServise.IconIndex:=1;
-    // посылаем сообщение о начале получения полных остатков
-    PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 4);
-    Application.ProcessMessages;
 
-    if not gc_User.Local  then
-    Begin
-      if SetFarmacyNameByUser then
+    // Проверяем и архивируем
+    SQLiteChechAndArc;
+
+    if SetFarmacyNameByUser then
+    begin
+
+      MainCashForm2.tiServise.IconIndex:=1;
+      // посылаем сообщение о начале получения полных остатков
+      PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 4);
+      Application.ProcessMessages;
+
+      //Получение конфигурации аптеки
+      SaveUnitConfig;
+      //Получение Сотрудников и настроек
+      SaveUserSettings;
+      //Получение данных для открытия форм
+      SaveFormData;
+      //Получение Сотрудников для сайта Хелси
+      SaveUserHelsi;
+      //Получение Сотрудников для сайта Каштан
+      SaveUserLikiDnipro;
+      //Получение остатков
+      bError := SaveCashRemains;
+      if bError then
       begin
-
-        //Получение конфигурации аптеки
-        SaveUnitConfig;
-        //Получение Сотрудников и настроек
-        SaveUserSettings;
-        //Получение Сотрудников для сайта Хелси
-        SaveUserHelsi;
-        //Получение Сотрудников для сайта Каштан
-        SaveUserLikiDnipro;
-        //Получение остатков
-        bError := SaveCashRemains;
-        if bError then
-        begin
-         // посылаем сообщение о ошибке получения полных остатков
-         PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 5);
-        end;
-        //Проверка обновления программ
-        if not gc_User.Local then SecureUpdateVersion;
-        //Получение ВИП чеков и сохранение в локальной базе
-        if not gc_User.Local then SaveLocalVIP;
-        //Получение товаров
-        if not gc_User.Local then SaveLocalGoods;
-        //Получение причин отказов
-        if not gc_User.Local then SaveLocalDiffKind;
-        //Получение POS терминалов
-        if not gc_User.Local then SaveBankPOSTerminal;
-        //Получение ночных скидок
-        if not gc_User.Local then SaveTaxUnitNight;
-        //Получение остатков по партиям
-        if not gc_User.Local then SaveGoodsExpirationDate;
-        //Получение покупателей
-        if not gc_User.Local then SaveBuyer;
-        //Получение Раздача акционных материалов
-        if not gc_User.Local then SaveDistributionPromo;
-        //Получение выполнения плана продаж по сотруднику
-        if not gc_User.Local then SaveImplementationPlanEmployee;
-        //Получение выполнения плана продаж по сотруднику итоги
-        if not gc_User.Local then SaveImplementationPlanEmployeeUser;
-        //Получение акционных товаров
-        if not gc_User.Local then SaveSalePromoGoods;
-        //Получение справочника аналогов
+       // посылаем сообщение о ошибке получения полных остатков
+       PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 5);
+      end;
+      //Проверка обновления программ
+      if not gc_User.Local then SecureUpdateVersion;
+      //Получение ВИП чеков и сохранение в локальной базе
+      if not gc_User.Local then SaveLocalVIP;
+      //Получение товаров
+      if not gc_User.Local then SaveLocalGoods;
+      //Получение причин отказов
+      if not gc_User.Local then SaveLocalDiffKind;
+      //Получение POS терминалов
+      if not gc_User.Local then SaveBankPOSTerminal;
+      //Получение ночных скидок
+      if not gc_User.Local then SaveTaxUnitNight;
+      //Получение остатков по партиям
+      if not gc_User.Local then SaveGoodsExpirationDate;
+      //Получение покупателей
+      if not gc_User.Local then SaveBuyer;
+      //Получение Раздача акционных материалов
+      if not gc_User.Local then SaveDistributionPromo;
+      //Получение выполнения плана продаж по сотруднику
+      if not gc_User.Local then SaveImplementationPlanEmployee;
+      //Получение выполнения плана продаж по сотруднику итоги
+      if not gc_User.Local then SaveImplementationPlanEmployeeUser;
+      //Получение акционных товаров
+      if not gc_User.Local then SaveSalePromoGoods;
+      //Получение справочника аналогов
 //        if not gc_User.Local then SaveGoodsAnalog;
 
-        PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
-        // Вывод уведомления сервиса
-        if gc_User.Local then
-        begin
-          tiServise.BalloonHint:='Обрыв соединения';
-          tiServise.ShowBalloonHint;
-        end else
-        begin
-          tiServise.BalloonHint:='Остатки обновлены.';
-          tiServise.ShowBalloonHint;
-          FirstRemainsReceived := true;
-        end;
-        tiServise.Hint := 'Ожидание задания.';
+      PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
+      // Вывод уведомления сервиса
+      if gc_User.Local then
+      begin
+        tiServise.BalloonHint:='Обрыв соединения';
+        tiServise.ShowBalloonHint;
       end else
       begin
-        tiServise.BalloonHint:='Ошибка сохранения аптеки содруднику.';
+        tiServise.BalloonHint:='Остатки обновлены.';
         tiServise.ShowBalloonHint;
+        FirstRemainsReceived := true;
       end;
-    End;
+      tiServise.Hint := 'Ожидание задания.';
+    end else
+    begin
+      tiServise.BalloonHint:='Ошибка связи с сервером.';
+      TimerGetRemains.Interval := 10000;
+    end;
   finally
     if not bError then ChangeStatus('Сохранили');
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
@@ -830,7 +836,7 @@ begin
   finally
     Add_Log('End MutexRemains 335');
     ReleaseMutex(MutexRemains);
-//    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
   end;
 end;
 
@@ -930,6 +936,7 @@ begin  //+
         WaitForSingleObject(MutexGoods, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
         try
           SaveLocalData(ds,Goods_lcl);
+          iniLocalListGoodsDateSave;
         finally
           Add_Log('End MutexGoods');
           ReleaseMutex(MutexGoods);
@@ -946,38 +953,35 @@ begin  //+
   end;
 
   // Очистка лисиа заказов
-  if FileExists(ListDiff_lcl) then
-  begin
-    Add_Log('Start MutexDiffCDS');
-    WaitForSingleObject(MutexDiffCDS, INFINITE);
+  Add_Log('Start MutexDiffCDS');
+  WaitForSingleObject(MutexDiffCDS, INFINITE);
+  try
     try
-      try
 
-        LoadLocalData(ListDiffCDS, ListDiff_lcl);
-        if ListDiffCDS.Active then
+      LoadLocalData(ListDiffCDS, ListDiff_lcl);
+      if ListDiffCDS.Active then
+      begin
+
+        ListDiffCDS.First;
+        while not ListDiffCDS.Eof do
         begin
-
-          ListDiffCDS.First;
-          while not ListDiffCDS.Eof do
+          if ListDiffCDS.FieldByName('IsSend').AsBoolean and
+            (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) < IncDay(Date, - 1)) then
           begin
-            if ListDiffCDS.FieldByName('IsSend').AsBoolean and
-              (StartOfTheDay(ListDiffCDS.FieldByName('DateInput').AsDateTime) < IncDay(Date, - 1)) then
-            begin
-              ListDiffCDS.Delete;
-              Continue;
-            end;
-            ListDiffCDS.Next;
+            ListDiffCDS.Delete;
+            Continue;
           end;
-          SaveLocalData(ListDiffCDS, ListDiff_lcl);
+          ListDiffCDS.Next;
         end;
-
-      Except ON E:Exception do
-        Add_Log('Ошибка отправки листа отказов:' + E.Message);
+        SaveLocalData(ListDiffCDS, ListDiff_lcl);
       end;
-    finally
-      Add_Log('End MutexDiffCDS');
-      ReleaseMutex(MutexDiffCDS);
+
+    Except ON E:Exception do
+      Add_Log('Ошибка отправки листа отказов:' + E.Message);
     end;
+  finally
+    Add_Log('End MutexDiffCDS');
+    ReleaseMutex(MutexDiffCDS);
   end;
   tiServise.Hint := 'Ожидание задания.';
 end;
@@ -1080,44 +1084,51 @@ begin
   Inc(FSaveLocalVIP);
 
   try
+    if SetFarmacyNameByUser then
+    begin
 
-    bRun := False;
-    dsdSave := TdsdStoredProc.Create(nil);
-    try
-      dsdSave.StoredProcName := 'gpSelect_Cash_NeedRemainsDiff';
-      dsdSave.OutputType := otResult;
-      dsdSave.Params.Clear;
-      dsdSave.Params.AddParam('inCashSessionId', ftString, ptInput, FormParams.ParamByName('CashSessionId').Value);
-      dsdSave.Params.AddParam('outIsRemainsDiff', ftBoolean, ptOutput, False);
+      bRun := False;
+      dsdSave := TdsdStoredProc.Create(nil);
       try
-        Add_Log('Start Execute gpSelect_Cash_NeedRemainsDiff');
-        dsdSave.Execute(False, False);
-        bRun := dsdSave.ParamByName('outIsRemainsDiff').Value;
-      except
-        on E: Exception do
-        Begin
-          Add_Log('Error gpSelect_Cash_NeedRemainsDiff: ' + E.Message);
-        End;
+        dsdSave.StoredProcName := 'gpSelect_Cash_NeedRemainsDiff';
+        dsdSave.OutputType := otResult;
+        dsdSave.Params.Clear;
+        dsdSave.Params.AddParam('inCashSessionId', ftString, ptInput, FormParams.ParamByName('CashSessionId').Value);
+        dsdSave.Params.AddParam('outIsRemainsDiff', ftBoolean, ptOutput, False);
+        try
+          Add_Log('Start Execute gpSelect_Cash_NeedRemainsDiff');
+          dsdSave.Execute(False, False);
+          bRun := dsdSave.ParamByName('outIsRemainsDiff').Value;
+        except
+          on E: Exception do
+          Begin
+            Add_Log('Error gpSelect_Cash_NeedRemainsDiff: ' + E.Message);
+          End;
+        end;
+      finally
+        freeAndNil(dsdSave);
       end;
-    finally
-      freeAndNil(dsdSave);
-    end;
 
-    if bRun then
+      if bRun then
+      begin
+        Add_Log('Start CashRemainsDiffExecute');
+        CashRemainsDiffExecute;
+        Add_Log('End CashRemainsDiffExecute');
+      end;
+
+      if FSaveLocalVIP > 2 then
+      begin
+        Add_Log('Start SaveLocalVIP');
+        if not gc_User.Local then SaveLocalVIP;
+        Add_Log('End SaveLocalVIP');
+        FSaveLocalVIP := 0;
+      end;
+
+    end else
     begin
-      Add_Log('Start CashRemainsDiffExecute');
-      CashRemainsDiffExecute;
-      Add_Log('End CashRemainsDiffExecute');
+      tiServise.BalloonHint:='Ошибка связи с сервером.';
+      TimerNeedRemainsDiff.Interval := 10000;
     end;
-
-    if FSaveLocalVIP > 2 then
-    begin
-      Add_Log('Start SaveLocalVIP');
-      if not gc_User.Local then SaveLocalVIP;
-      Add_Log('End SaveLocalVIP');
-      FSaveLocalVIP := 0;
-    end;
-
   finally
     TimerNeedRemainsDiff.Enabled := not TimerGetRemains.Enabled;
   end;
@@ -1953,38 +1964,35 @@ end;
 procedure TMainCashForm2.SaveListDiff;
 begin
   // Отправка листа отказов
-  if FileExists(ListDiff_lcl) then
-  begin
-    Add_Log('Start MutexDiffCDS');
-    WaitForSingleObject(MutexDiffCDS, INFINITE);
+  Add_Log('Start MutexDiffCDS');
+  WaitForSingleObject(MutexDiffCDS, INFINITE);
+  try
     try
-      try
 
-        LoadLocalData(ListDiffCDS, ListDiff_lcl, False);
-        if not ListDiffCDS.Active then Exit;
+      LoadLocalData(ListDiffCDS, ListDiff_lcl, False);
+      if not ListDiffCDS.Active then Exit;
 
-        ListDiffCDS.First;
-        while not ListDiffCDS.Eof do
+      ListDiffCDS.First;
+      while not ListDiffCDS.Eof do
+      begin
+        if not ListDiffCDS.FieldByName('IsSend').AsBoolean then
         begin
-          if not ListDiffCDS.FieldByName('IsSend').AsBoolean then
-          begin
-            spSendListDiff.Execute;
-            ListDiffCDS.Edit;
-            ListDiffCDS.FieldByName('IsSend').AsBoolean := True;
-            ListDiffCDS.Post;
-          end;
-          ListDiffCDS.Next;
+          spSendListDiff.Execute;
+          ListDiffCDS.Edit;
+          ListDiffCDS.FieldByName('IsSend').AsBoolean := True;
+          ListDiffCDS.Post;
         end;
-        SaveLocalData(ListDiffCDS, ListDiff_lcl);
-
-      Except ON E:Exception do
-        Add_Log('Ошибка отправки листа отказов:' + E.Message);
+        ListDiffCDS.Next;
       end;
-    finally
-      Add_Log('End MutexDiffCDS');
-      ReleaseMutex(MutexDiffCDS);
-      ListDiffCDS.Close;
+      SaveLocalData(ListDiffCDS, ListDiff_lcl);
+
+    Except ON E:Exception do
+      Add_Log('Ошибка отправки листа отказов:' + E.Message);
     end;
+  finally
+    Add_Log('End MutexDiffCDS');
+    ReleaseMutex(MutexDiffCDS);
+    ListDiffCDS.Close;
   end;
 end;
 
@@ -2203,50 +2211,47 @@ end;
 procedure TMainCashForm2.SaveZReportLog;
 begin
   // Отправка данных по Z отчетам
-  if FileExists(ZReportLog_lcl) then
-  begin
-    Add_Log('Start MutexZReportLog');
-    WaitForSingleObject(MutexZReportLog, INFINITE);
+  Add_Log('Start MutexZReportLog');
+  WaitForSingleObject(MutexZReportLog, INFINITE);
+  try
     try
-      try
 
-        LoadLocalData(ZReportLogCDS, ZReportLog_lcl, False);
-        if not ZReportLogCDS.Active then Exit;
+      LoadLocalData(ZReportLogCDS, ZReportLog_lcl, False);
+      if not ZReportLogCDS.Active then Exit;
 
-        ZReportLogCDS.First;
-        while not ZReportLogCDS.Eof do
+      ZReportLogCDS.First;
+      while not ZReportLogCDS.Eof do
+      begin
+        if not ZReportLogCDS.FieldByName('IsSend').AsBoolean then
         begin
-          if not ZReportLogCDS.FieldByName('IsSend').AsBoolean then
-          begin
-            spSendZReportLog.Execute;
-            ZReportLogCDS.Edit;
-            ZReportLogCDS.FieldByName('IsSend').AsBoolean := True;
-            ZReportLogCDS.Post;
-          end;
-          ZReportLogCDS.Next;
+          spSendZReportLog.Execute;
+          ZReportLogCDS.Edit;
+          ZReportLogCDS.FieldByName('IsSend').AsBoolean := True;
+          ZReportLogCDS.Post;
         end;
-        SaveLocalData(ZReportLogCDS, ZReportLog_lcl);
-
-        ZReportLogCDS.First;
-        while not ZReportLogCDS.Eof do
-        begin
-          if ZReportLogCDS.FieldByName('IsSend').AsBoolean then
-          begin
-            ZReportLogCDS.Delete;
-            Continue;
-          end;
-          ZReportLogCDS.Next;
-        end;
-        SaveLocalData(ZReportLogCDS, ZReportLog_lcl);
-
-      Except ON E:Exception do
-        Add_Log('Ошибка отправки данных по Z отчетам:' + E.Message);
+        ZReportLogCDS.Next;
       end;
-    finally
-      Add_Log('End ZReportLogCDS');
-      ReleaseMutex(MutexZReportLog);
-      ZReportLogCDS.Close;
+      SaveLocalData(ZReportLogCDS, ZReportLog_lcl);
+
+      ZReportLogCDS.First;
+      while not ZReportLogCDS.Eof do
+      begin
+        if ZReportLogCDS.FieldByName('IsSend').AsBoolean then
+        begin
+          ZReportLogCDS.Delete;
+          Continue;
+        end;
+        ZReportLogCDS.Next;
+      end;
+      SaveLocalData(ZReportLogCDS, ZReportLog_lcl);
+
+    Except ON E:Exception do
+      Add_Log('Ошибка отправки данных по Z отчетам:' + E.Message);
     end;
+  finally
+    Add_Log('End ZReportLogCDS');
+    ReleaseMutex(MutexZReportLog);
+    ZReportLogCDS.Close;
   end;
 end;
 
@@ -2317,11 +2322,6 @@ begin
           Add_Log('End MutexUserHelsi');
           ReleaseMutex(MutexUserHelsi);
         end;
-
-        if FileExists(ExtractFilePath(Application.ExeName) + 'users.local') then
-          DeleteFile(ExtractFilePath(Application.ExeName) + 'users.local');
-        if FileExists(ExtractFilePath(Application.ExeName) + 'users.backup') then
-          DeleteFile(ExtractFilePath(Application.ExeName) + 'users.backup');
       finally
         ds.free;
       end;
@@ -2337,6 +2337,7 @@ begin
     tiServise.Hint := 'Ожидание задания.';
   end;
 end;
+
 procedure TMainCashForm2.SaveUserSettings;
 var
   sp : TdsdStoredProc;
@@ -2370,6 +2371,48 @@ begin
       on E: Exception do
       begin
         Add_Log('SaveUserSettings Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
+  end;
+end;
+
+procedure TMainCashForm2.SaveFormData;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  tiServise.Hint := 'Получение данных для открытия форм';
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_Cash_Object_Form';
+        sp.Params.Clear;
+        sp.Execute;
+        Add_Log('Start MutexUserSettings');
+        WaitForSingleObject(MutexUserSettings, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        try
+          SaveLocalData(ds,FormData_lcl);
+        finally
+          Add_Log('End MutexUserSettings');
+          ReleaseMutex(MutexUserSettings);
+        end;
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveFormData Exception: ' + E.Message);
         Exit;
       end;
     end;
@@ -2638,7 +2681,6 @@ procedure TMainCashForm2.SendZReport;
   begin
     Result := '';
 
-    if FileExists(UnitConfig_lcl) then
     try
       ds := TClientDataSet.Create(nil);
       try
@@ -2760,133 +2802,126 @@ procedure TMainCashForm2.SendEmployeeWorkLog;
       OldProgram, OldServise : Boolean;
 begin
   // Отправка лога работы сотрудников
-  if FileExists(EmployeeWorkLog_lcl) then
-  begin
+  tiServise.Hint := 'Отправка лога работы сотрудников';
 
-    tiServise.Hint := 'Отправка лога работы сотрудников';
+  OldProgram := False;
+  OldServise := False;
 
-    OldProgram := False;
-    OldServise := False;
-
-    Add_Log('Start MutexEmployeeWorkLog');
-    WaitForSingleObject(MutexEmployeeWorkLog, INFINITE);
+  Add_Log('Start MutexEmployeeWorkLog');
+  WaitForSingleObject(MutexEmployeeWorkLog, INFINITE);
+  try
     try
-      try
 
-        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('FarmacyCash.exe', GetBinaryPlatfotmSuffics(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe', ''));
-        LocalVersionInfo := UnilWin.GetFileVersion(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe');
-        if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
-           ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldProgram := True;
+      BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion('FarmacyCash.exe', GetBinaryPlatfotmSuffics(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe', ''));
+      LocalVersionInfo := UnilWin.GetFileVersion(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe');
+      if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
+         ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldProgram := True;
 
-        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)), GetBinaryPlatfotmSuffics(ParamStr(0), ''));
-        LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
-        if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
-           ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldServise := True;
+      BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)), GetBinaryPlatfotmSuffics(ParamStr(0), ''));
+      LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
+      if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
+         ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then OldServise := True;
 
-        LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl, False);
-        if not EmployeeWorkLogCDS.Active then Exit;
+      LoadLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl, False);
+      if not EmployeeWorkLogCDS.Active then Exit;
 
-        EmployeeWorkLogCDS.First;
-        while not EmployeeWorkLogCDS.Eof do
+      EmployeeWorkLogCDS.First;
+      while not EmployeeWorkLogCDS.Eof do
+      begin
+        if not EmployeeWorkLogCDS.FieldByName('IsSend').AsBoolean then
         begin
-          if not EmployeeWorkLogCDS.FieldByName('IsSend').AsBoolean then
+          spEmployeeWorkLog.ParamByName('inIP').Value := GetMyIP_Day;
+          if EmployeeWorkLogCDS.RecNo = EmployeeWorkLogCDS.RecordCount then
           begin
-            spEmployeeWorkLog.ParamByName('inIP').Value := GetMyIP_Day;
-            if EmployeeWorkLogCDS.RecNo = EmployeeWorkLogCDS.RecordCount then
-            begin
-              spEmployeeWorkLog.ParamByName('inOldProgram').Value := OldProgram;
-              spEmployeeWorkLog.ParamByName('inOldServise').Value := OldServise;
-            end else
-            begin
-              spEmployeeWorkLog.ParamByName('inOldProgram').Value := False;
-              spEmployeeWorkLog.ParamByName('inOldServise').Value := False;
-            end;
-            spEmployeeWorkLog.Execute;
-            EmployeeWorkLogCDS.Edit;
-            EmployeeWorkLogCDS.FieldByName('IsSend').AsBoolean := True;
-            EmployeeWorkLogCDS.Post;
-          end;
-          EmployeeWorkLogCDS.Next;
-        end;
-
-        EmployeeWorkLogCDS.First;
-        while not EmployeeWorkLogCDS.Eof do
-        begin
-          if EmployeeWorkLogCDS.FieldByName('IsSend').AsBoolean and
-            (StartOfTheDay(EmployeeWorkLogCDS.FieldByName('DateLogIn').AsDateTime) < IncDay(Date, - 7)) then
+            spEmployeeWorkLog.ParamByName('inOldProgram').Value := OldProgram;
+            spEmployeeWorkLog.ParamByName('inOldServise').Value := OldServise;
+          end else
           begin
-            EmployeeWorkLogCDS.Delete;
-            Continue;
+            spEmployeeWorkLog.ParamByName('inOldProgram').Value := False;
+            spEmployeeWorkLog.ParamByName('inOldServise').Value := False;
           end;
-          EmployeeWorkLogCDS.Next;
+          spEmployeeWorkLog.Execute;
+          EmployeeWorkLogCDS.Edit;
+          EmployeeWorkLogCDS.FieldByName('IsSend').AsBoolean := True;
+          EmployeeWorkLogCDS.Post;
         end;
-
-        SaveLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl);
-
-      Except ON E:Exception do
-        Add_Log('Ошибка отправки лога работы сотрудников:' + E.Message);
+        EmployeeWorkLogCDS.Next;
       end;
-    finally
-      Add_Log('End MutexEmployeeWorkLog');
-      ReleaseMutex(MutexEmployeeWorkLog);
-      EmployeeWorkLogCDS.Close;
-      tiServise.Hint := 'Ожидание задания.';
+
+      EmployeeWorkLogCDS.First;
+      while not EmployeeWorkLogCDS.Eof do
+      begin
+        if EmployeeWorkLogCDS.FieldByName('IsSend').AsBoolean and
+          (StartOfTheDay(EmployeeWorkLogCDS.FieldByName('DateLogIn').AsDateTime) < IncDay(Date, - 7)) then
+        begin
+          EmployeeWorkLogCDS.Delete;
+          Continue;
+        end;
+        EmployeeWorkLogCDS.Next;
+      end;
+
+      SaveLocalData(EmployeeWorkLogCDS, EmployeeWorkLog_lcl);
+
+    Except ON E:Exception do
+      Add_Log('Ошибка отправки лога работы сотрудников:' + E.Message);
     end;
+  finally
+    Add_Log('End MutexEmployeeWorkLog');
+    ReleaseMutex(MutexEmployeeWorkLog);
+    EmployeeWorkLogCDS.Close;
+    tiServise.Hint := 'Ожидание задания.';
   end;
 end;
 
 procedure TMainCashForm2.SendEmployeeSchedule;
 begin
   // Отправка времени работы сотрудников
-  if FileExists(EmployeeSchedule_lcl) then
-  begin
 
-    tiServise.Hint := 'Отправка времени работы сотрудников';
+  tiServise.Hint := 'Отправка времени работы сотрудников';
 
-    Add_Log('Start MutexEmployeeSchedule');
-    WaitForSingleObject(MutexEmployeeSchedule, INFINITE);
+  Add_Log('Start MutexEmployeeSchedule');
+  WaitForSingleObject(MutexEmployeeSchedule, INFINITE);
+  try
     try
-      try
 
-        LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl, False);
-        if not EmployeeScheduleCDS.Active then Exit;
+      LoadLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl, False);
+      if not EmployeeScheduleCDS.Active then Exit;
 
-        EmployeeScheduleCDS.First;
-        while not EmployeeScheduleCDS.Eof do
+      EmployeeScheduleCDS.First;
+      while not EmployeeScheduleCDS.Eof do
+      begin
+        if not EmployeeScheduleCDS.FieldByName('IsSend').AsBoolean then
         begin
-          if not EmployeeScheduleCDS.FieldByName('IsSend').AsBoolean then
-          begin
-            spEmployeeSchedule.Execute;
-            EmployeeScheduleCDS.Edit;
-            EmployeeScheduleCDS.FieldByName('IsSend').AsBoolean := True;
-            EmployeeScheduleCDS.Post;
-          end;
-          EmployeeScheduleCDS.Next;
+          spEmployeeSchedule.Execute;
+          EmployeeScheduleCDS.Edit;
+          EmployeeScheduleCDS.FieldByName('IsSend').AsBoolean := True;
+          EmployeeScheduleCDS.Post;
         end;
-
-        EmployeeScheduleCDS.First;
-        while not EmployeeScheduleCDS.Eof do
-        begin
-          if EmployeeScheduleCDS.FieldByName('IsSend').AsBoolean and
-            (StartOfTheDay(EmployeeScheduleCDS.FieldByName('Date').AsDateTime) < IncDay(Date, - 7)) then
-          begin
-            EmployeeScheduleCDS.Delete;
-            Continue;
-          end;
-          EmployeeScheduleCDS.Next;
-        end;
-
-        SaveLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl);
-
-      Except ON E:Exception do
-        Add_Log('Ошибка отправки времени работы сотрудников:' + E.Message);
+        EmployeeScheduleCDS.Next;
       end;
-    finally
-      Add_Log('End MutexEmployeeSchedule');
-      ReleaseMutex(MutexEmployeeSchedule);
-      EmployeeScheduleCDS.Close;
-      tiServise.Hint := 'Ожидание задания.';
+
+      EmployeeScheduleCDS.First;
+      while not EmployeeScheduleCDS.Eof do
+      begin
+        if EmployeeScheduleCDS.FieldByName('IsSend').AsBoolean and
+          (StartOfTheDay(EmployeeScheduleCDS.FieldByName('Date').AsDateTime) < IncDay(Date, - 7)) then
+        begin
+          EmployeeScheduleCDS.Delete;
+          Continue;
+        end;
+        EmployeeScheduleCDS.Next;
+      end;
+
+      SaveLocalData(EmployeeScheduleCDS, EmployeeSchedule_lcl);
+
+    Except ON E:Exception do
+      Add_Log('Ошибка отправки времени работы сотрудников:' + E.Message);
     end;
+  finally
+    Add_Log('End MutexEmployeeSchedule');
+    ReleaseMutex(MutexEmployeeSchedule);
+    EmployeeScheduleCDS.Close;
+    tiServise.Hint := 'Ожидание задания.';
   end;
 end;
 
@@ -2927,11 +2962,6 @@ begin
     Result := 5
   else
     Result := 0;
-end;
-
-procedure TMainCashForm2.spUpdate_Log_CashRemainsAfterExecute(Sender: TObject);
-begin
-
 end;
 
 // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА

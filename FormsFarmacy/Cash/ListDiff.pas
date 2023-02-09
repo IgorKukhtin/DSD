@@ -123,15 +123,15 @@ end;
 function CheckListDiffCDS : boolean;
   var ListDiffCDS : TClientDataSet;
 begin
-  Result := FileExists(ListDiff_lcl);
-  if Result then
-  begin
-    Result := CheckListDiffStrucnureCDS;
-    Exit;
-  end;
-
   ListDiffCDS :=  TClientDataSet.Create(Nil);
   try
+    LoadLocalData(ListDiffCDS, ListDiff_lcl);
+    if ListDiffCDS.Active then
+    begin
+      Result := CheckListDiffStrucnureCDS;
+      Exit;
+    end;
+
     try
       ListDiffCDS.FieldDefs.Add('ID', ftInteger);
       ListDiffCDS.FieldDefs.Add('Code', ftInteger);
@@ -222,7 +222,6 @@ begin
     if FileExists(ListDiff_lcl) then LoadLocalData(ListDiffCDS, ListDiff_lcl);
     if not ListDiffCDS.Active then
     begin
-      DeleteLocalData(ListDiff_lcl);
       CheckListDiffCDS;
       LoadLocalData(ListDiffCDS, ListDiff_lcl);
     end;

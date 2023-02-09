@@ -786,6 +786,7 @@ initialization
   RegisterClass (TdsdOpenForm);
   RegisterClass (TdsdPrintAction);
   RegisterClass (TdsdStoredProc);
+  RegisterClass (TdsdStoredProcSQLite);
   RegisterClass (TdsdUpdateDataSet);
   RegisterClass (TdsdUpdateErased);
   RegisterClass (TdsdUserSettingsStorageAddOn);

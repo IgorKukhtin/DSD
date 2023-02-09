@@ -521,8 +521,6 @@ type
     actOpenDelayLiki24: TdsdOpenForm;
     N54: TMenuItem;
     N55: TMenuItem;
-    N56: TMenuItem;
-    Liki241: TMenuItem;
     actLoadLiki24: TMultiAction;
     actLoadLiki24_Search: TMultiAction;
     Color_IPE: TcxGridDBColumn;
@@ -3025,7 +3023,7 @@ begin
           ShowPUSHMessageCash('Коллеги, обновите FCash, для вас доступна тестовая версия (Ctrl+U)!', cResult);
         end;
 
-        if UnitConfigCDS.FindField('isGetHardwareData').AsBoolean and (HourOf(Now) < 15) then
+        if UnitConfigCDS.FieldByName('isGetHardwareData').AsBoolean and (HourOf(Now) < 15) then
           SaveHardwareData;
       end;
       Inc(FUpdatePUSH);
@@ -3034,7 +3032,7 @@ begin
     Load_PUSH(false);
 
     // Удалим Скайп
-    if UnitConfigCDS.FindField('isRemovingPrograms').AsBoolean and (gc_User.Session <> '3') then
+    if UnitConfigCDS.FieldByName('isRemovingPrograms').AsBoolean and (gc_User.Session <> '3') then
     begin
       UnitConfigCDS.Edit;
       UnitConfigCDS.FindField('isRemovingPrograms').AsBoolean := False;
@@ -3150,13 +3148,6 @@ var
   S: string;
 begin
   try
-    if not fileExists(Goods_lcl) then
-    begin
-      ShowMessage
-        ('Справочник медикаментов не найден обратитесь к администратору...');
-      exit;
-    end;
-
     if Self.ActiveControl is TcxGridSite then
       S := MainGridDBTableView.DataController.Search.SearchText
     else if ActiveControl is TcxCustomComboBoxInnerEdit then
@@ -4417,12 +4408,6 @@ begin
     RemainsCDS.DisableControls;
     ExpirationDateCDS.DisableControls;
     try
-      if not fileExists(Remains_lcl) or
-        not fileExists(GoodsExpirationDate_lcl) then
-      Begin
-        ShowMessage('Нет локального хранилища. Дальнейшая работа невозможна!');
-        Close;
-      End;
       WaitForSingleObject(MutexRemains, INFINITE);
       try
         LoadLocalData(RemainsCDS, Remains_lcl);
@@ -4932,11 +4917,11 @@ begin
     exit;
   End;
 
-  if gc_User.Local and not fileExists(Buyer_lcl) then
-  Begin
-    ShowMessage('В отложенном режиме справочник покупатедлей не найден...');
-    exit;
-  End;
+//  if gc_User.Local and not fileExists(Buyer_lcl) then
+//  Begin
+//    ShowMessage('В отложенном режиме справочник покупатедлей не найден...');
+//    exit;
+//  End;
 
   if (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
   begin
@@ -7573,11 +7558,6 @@ end;
 procedure TMainCashForm2.actShowListDiffExecute(Sender: TObject);
 begin
   inherited;
-  if not fileExists(ListDiff_lcl) then
-  begin
-    ShowMessage('Данных для просмотра нет...');
-    exit;
-  end;
 
   with TListDiffForm.Create(nil) do
     try
@@ -8662,11 +8642,7 @@ begin
   End;
   ChangeStatus('Загрузка профиля пользователя');
 
-  if gc_User.Local then
-    UserSettingsStorageAddOn.LoadUserSettingsData
-      (GetLocalMainFormData(gc_User.Session))
-  else
-    UserSettingsStorageAddOn.LoadUserSettings;
+  UserSettingsStorageAddOn.LoadUserSettings;
 
   // Временно переместим план в начало грида
   Color_IPE.Index := 0;
@@ -11488,8 +11464,8 @@ begin
     VIPForm.AddOnFormData.isSingle := True;
     VIPForm.isAlreadyOpen := True;
     SetVIPCDS;
-    VipCDS.LoadFromFile(vip_lcl);
-    VIPListCDS.LoadFromFile(vipList_lcl);
+    LoadLocalData(VipCDS, vip_lcl);
+    LoadLocalData(VIPListCDS, vipList_lcl);
   End;
   FPUSHEnd := Now;
   if FPUSHStart then
@@ -12629,8 +12605,6 @@ var
   ListGoodsCDS: TClientDataSet;
   nAmount: Currency;
 begin
-  if not fileExists(GoodsExpirationDate_lcl) then
-    exit;
 
   CheckCDS.DisableControls;
   try
@@ -12640,8 +12614,7 @@ begin
 
     WaitForSingleObject(MutexGoodsExpirationDate, INFINITE);
     try
-      if fileExists(GoodsExpirationDate_lcl) then
-        LoadLocalData(ListGoodsCDS, GoodsExpirationDate_lcl);
+      LoadLocalData(ListGoodsCDS, GoodsExpirationDate_lcl);
       if not ListGoodsCDS.Active then
         ListGoodsCDS.Open;
 
@@ -12950,7 +12923,6 @@ begin
     myVIPCDS.FieldByName('SPTax').AsFloat := ASPTax;
     myVIPCDS.FieldByName('SPKindId').AsInteger := ASPKindId;
     myVIPCDS.FieldByName('SPKindName').AsString := ASPKindName;
-    myVIPCDS.FieldByName('MedicalProgramSPId').AsInteger := AMedicalProgramSPId;
     // ***02.02.18
     myVIPCDS.FieldByName('PromoCodeID').Value := APromoCodeID; // Id промокода
     // ***27.06.18
@@ -13865,13 +13837,6 @@ begin
     Exit;
   end;
 
-      // Получили статус не отметился
-  if not FileExists(EmployeeSchedule_lcl) then
-  begin
-    fBanCash := True;
-    Exit;
-  end;
-
   EmployeeScheduleCDS :=  TClientDataSet.Create(Nil);
   WaitForSingleObject(MutexEmployeeSchedule, INFINITE);
   try
@@ -14021,8 +13986,6 @@ begin
     if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
       nCheckId := CheckCDS.FieldByName('GoodsId').AsInteger;
     try
-      if not fileExists(Remains_lcl) then
-        ShowMessage('Нет локального хранилища.');
 
       WaitForSingleObject(MutexRemains, INFINITE);
       try
@@ -14097,8 +14060,6 @@ procedure TMainCashForm2.LoadBankPOSTerminal;
 var
   nPos: Integer;
 begin
-  if not fileExists(BankPOSTerminal_lcl) then
-    exit;
 
   BankPOSTerminalCDS.DisableControls;
   try
@@ -14122,8 +14083,6 @@ end;
 
 procedure TMainCashForm2.LoadGoodsExpirationDate;
 begin
-  if not fileExists(GoodsExpirationDate_lcl) then
-    exit;
 
   ExpirationDateCDS.DisableControls;
   try
@@ -14140,8 +14099,6 @@ end;
 
 procedure TMainCashForm2.LoadSalePromoGoods;
 begin
-  if not fileExists(SalePromoGoods_lcl) then
-    exit;
 
   WaitForSingleObject(MutexSalePromoGoods, INFINITE);
   try
@@ -14155,9 +14112,37 @@ procedure TMainCashForm2.LoadUnitConfig;
 var
   nPos: Integer;
   bOverload, bGetHardwareData, bRemovingPrograms : Boolean;
+
+  procedure SaveUnitConfig;
+  var
+    sp : TdsdStoredProc;
+    ds : TClientDataSet;
+  begin
+    sp := TdsdStoredProc.Create(nil);
+    try
+      try
+        ds := TClientDataSet.Create(nil);
+        try
+          sp.OutputType := otDataSet;
+          sp.DataSet := ds;
+
+          sp.StoredProcName := 'gpSelect_Cash_UnitConfig';
+          sp.Params.Clear;
+          sp.Params.AddParam('inCashRegister', ftString, ptInput, iniLocalCashRegisterGet);
+          sp.Execute;
+          SaveLocalData(ds,UnitConfig_lcl);
+
+        finally
+          ds.free;
+        end;
+      except
+      end;
+    finally
+      freeAndNil(sp);
+    end;
+  end;
+
 begin
-  if not fileExists(UnitConfig_lcl) then
-    exit;
 
   WaitForSingleObject(MutexUnitConfig, INFINITE);
   try
@@ -14169,8 +14154,18 @@ begin
       bRemovingPrograms := UnitConfigCDS.FindField('isRemovingPrograms').AsBoolean;
     end else bOverload := False;
 
-    UnitConfigCDS.Close;
-    LoadLocalData(UnitConfigCDS, UnitConfig_lcl);
+    WaitForSingleObject(MutexUnitConfig, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+    try
+      UnitConfigCDS.Close;
+      LoadLocalData(UnitConfigCDS, UnitConfig_lcl);
+      if not UnitConfigCDS.Active then
+      begin
+        SaveUnitConfig;
+        LoadLocalData(UnitConfigCDS, UnitConfig_lcl);
+      end;
+    finally
+      ReleaseMutex(MutexUnitConfig);
+    end;
 
     if bOverload then
     begin
@@ -14238,8 +14233,6 @@ procedure TMainCashForm2.LoadTaxUnitNight;
 var
   nPos: Integer;
 begin
-  if not fileExists(TaxUnitNight_lcl) then
-    exit;
 
   WaitForSingleObject(MutexTaxUnitNight, INFINITE);
   try
@@ -15433,9 +15426,6 @@ begin
 
   if Length(aDistributionPromoId) = 0 then Exit;
 
-  if not fileExists(DistributionPromo_lcl) then
-    exit;
-
   try
 
     DistributionPromoCDS := TClientDataSet.Create(Nil);
@@ -15443,10 +15433,8 @@ begin
 
     WaitForSingleObject(MutexDistributionPromo, INFINITE);
     try
-      if fileExists(GoodsExpirationDate_lcl) then
-        LoadLocalData(DistributionPromoCDS, DistributionPromo_lcl);
-      if not DistributionPromoCDS.Active then
-        DistributionPromoCDS.Open;
+      LoadLocalData(DistributionPromoCDS, DistributionPromo_lcl);
+      if not DistributionPromoCDS.Active then Exit;
 
       for I := Low(aDistributionPromoId) to High(aDistributionPromoId) do
         if DistributionPromoCDS.Locate('Id', aDistributionPromoId[I], []) then
@@ -15501,57 +15489,54 @@ begin
   end;
 
   // Загрузка ImplementationPlanEmployee_lcl по выполнению плана сотрудника
-  if FileExists(ImplementationPlanEmployee_lcl) then
-  begin
-    WaitForSingleObject(MutexImplementationPlanEmployee, INFINITE);
+  WaitForSingleObject(MutexImplementationPlanEmployee, INFINITE);
+  try
     try
-      try
 
+      PlanEmployeeCDS.Close;
+      LoadLocalData(PlanEmployeeCDS, ImplementationPlanEmployee_lcl);
+      if not PlanEmployeeCDS.Active then Exit;
+
+      PlanEmployeeCDS.First;
+      if PlanEmployeeCDS.IsEmpty then Exit
+      else if PlanEmployeeCDS.FieldByName('UserId').AsString <> gc_User.Session then
+      begin
         PlanEmployeeCDS.Close;
-        LoadLocalData(PlanEmployeeCDS, ImplementationPlanEmployee_lcl);
-        if not PlanEmployeeCDS.Active then PlanEmployeeCDS.Open;
-
-        PlanEmployeeCDS.First;
-        if PlanEmployeeCDS.IsEmpty then Exit
-        else if PlanEmployeeCDS.FieldByName('UserId').AsString <> gc_User.Session then
-        begin
-          PlanEmployeeCDS.Close;
-          Exit;
-        end;
-
-        S := RemainsCDS.Filter;
-        F := RemainsCDS.Filtered;
-        try
-          while not PlanEmployeeCDS.Eof do
-          begin
-
-            RemainsCDS.Filtered := False;
-            RemainsCDS.Filter := 'GoodsCode = ' + PlanEmployeeCDS.FieldByName('GoodsCode').AsString;
-            RemainsCDS.Filtered := True;
-            RemainsCDS.First;
-            while not RemainsCDS.Eof do
-            begin
-              if RemainsCDS.FieldByName('Color_IPE').AsInteger <> PlanEmployeeCDS.FieldByName('Color').AsInteger then
-              begin
-                RemainsCDS.Edit;
-                RemainsCDS.FieldByName('Color_IPE').AsInteger := PlanEmployeeCDS.FieldByName('Color').AsInteger;
-                RemainsCDS.Post;
-              end;
-              RemainsCDS.Next;
-            end;
-            PlanEmployeeCDS.Next;
-          end;
-        finally
-          RemainsCDS.Filter := S;
-          RemainsCDS.Filtered := F;
-        end;
-
-      Except ON E:Exception do
-        Add_Log('Ошибка загрузки выполнения плана сотрудника:' + E.Message);
+        Exit;
       end;
-    finally
-      ReleaseMutex(MutexImplementationPlanEmployee);
+
+      S := RemainsCDS.Filter;
+      F := RemainsCDS.Filtered;
+      try
+        while not PlanEmployeeCDS.Eof do
+        begin
+
+          RemainsCDS.Filtered := False;
+          RemainsCDS.Filter := 'GoodsCode = ' + PlanEmployeeCDS.FieldByName('GoodsCode').AsString;
+          RemainsCDS.Filtered := True;
+          RemainsCDS.First;
+          while not RemainsCDS.Eof do
+          begin
+            if RemainsCDS.FieldByName('Color_IPE').AsInteger <> PlanEmployeeCDS.FieldByName('Color').AsInteger then
+            begin
+              RemainsCDS.Edit;
+              RemainsCDS.FieldByName('Color_IPE').AsInteger := PlanEmployeeCDS.FieldByName('Color').AsInteger;
+              RemainsCDS.Post;
+            end;
+            RemainsCDS.Next;
+          end;
+          PlanEmployeeCDS.Next;
+        end;
+      finally
+        RemainsCDS.Filter := S;
+        RemainsCDS.Filtered := F;
+      end;
+
+    Except ON E:Exception do
+      Add_Log('Ошибка загрузки выполнения плана сотрудника:' + E.Message);
     end;
+  finally
+    ReleaseMutex(MutexImplementationPlanEmployee);
   end;
 
 end;
@@ -15565,7 +15550,7 @@ begin
           ' <' + IniUtils.gUnitName + '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>'  + ' - <' + IniUtils.gUserName + '>';
 
   // Пропись итогов выполнения плана по сотруднику
-  if UnitConfigCDS.Active and UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean and FileExists(ImplementationPlanEmployeeUser_lcl) then
+  if UnitConfigCDS.Active and UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean then
   begin
     ds := TClientDataSet.Create(nil);
     try
@@ -15574,7 +15559,7 @@ begin
         try
 
           LoadLocalData(ds, ImplementationPlanEmployeeUser_lcl);
-          if not ds.Active then ds.Open;
+          if not ds.Active then Exit;
 
           if ds.IsEmpty then Exit;
           if (ds.FieldByName('UserID').AsString = gc_User.Session) or (gc_User.Session = '3') then

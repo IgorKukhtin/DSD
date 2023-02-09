@@ -87,7 +87,6 @@ object MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    AfterExecute = spUpdate_Log_CashRemainsAfterExecute
     Left = 168
     Top = 80
   end

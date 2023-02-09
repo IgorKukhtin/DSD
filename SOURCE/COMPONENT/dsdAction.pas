@@ -769,6 +769,9 @@ type
     property InsertProcedureName: String read FInsertProcedureName write FInsertProcedureName;
   end;
 
+type
+  TspExportToFile = (spefExportToText, spefExportToDbf);
+
   // Выгрузка результата в файл
   TdsdStoredProcExportToFile = class(TdsdCustomAction)
   private
@@ -783,6 +786,7 @@ type
     FFileNamePrefixParam: TdsdParam;
     FShowSaveDialog : Boolean;
     sdSaveFile: TSaveDialog;
+    FExportType: TspExportToFile;
     //FIncludeFieldNames: Boolean;
 
     procedure SetdsdStoredProcName(Value: TdsdStoredProc);
@@ -817,6 +821,8 @@ type
     property FileNamePrefixParam: TdsdParam read FFileNamePrefixParam write FFileNamePrefixParam;
     // Показывать диалог сохранения
     property ShowSaveDialog : Boolean read FShowSaveDialog write FShowSaveDialog default True;
+    // Формат файла
+    property ExportType: TspExportToFile read FExportType write FExportType default spefExportToText;
   end;
 
   TdsdPartnerMapAction = class(TdsdOpenForm, IFormAction)
@@ -4534,6 +4540,7 @@ begin
   FFileNamePrefixParam.Value := '';
 
   FShowSaveDialog := True;
+  FExportType := spefExportToText;
 end;
 
 destructor TdsdStoredProcExportToFile.Destroy;
@@ -4575,9 +4582,17 @@ begin
   if (ShowSaveDialog = True) or (FilePaths = '') or (FileName = '') then
   begin
     //теперь будем всегда очищать
-    if FileExt <> '' then
-      sdSaveFile.Filter := 'Текстовый файл|*' + FileExt + '|Все файлы|*.*'
-    else sdSaveFile.Filter := 'Текстовый файл|*.txt|Все файлы|*.*';
+    if FExportType = spefExportToDbf then
+    begin
+      if FileExt <> '' then
+        sdSaveFile.Filter := 'Файл DBF|*' + FileExt + '|Все файлы|*.*'
+      else sdSaveFile.Filter := 'Файл DBF|*.dbf|Все файлы|*.*';
+    end else
+    begin
+      if FileExt <> '' then
+        sdSaveFile.Filter := 'Текстовый файл|*' + FileExt + '|Все файлы|*.*'
+      else sdSaveFile.Filter := 'Текстовый файл|*.txt|Все файлы|*.*';
+    end;
     sdSaveFile.Title := 'Укажите файл для сохранения';
     if FilePaths <> '' then sdSaveFile.InitialDir  := FilePaths;
     sdSaveFile.FileName := FileName;
@@ -4600,23 +4615,38 @@ begin
   end;
 
   FdsdStoredProcName.Execute();
-  TdsdStoredProc(FdsdStoredProcName).DataSet.First;
+  if FExportType = spefExportToDbf then
+  begin
 
-  //
-  try
-    AssignFile(F, FilePaths + '\' + FilenamePrefix + FileNames);
-    Rewrite(F); // переписываем файл
+     with TFileExternalSave.Create(TdsdStoredProc(FdsdStoredProcName).DataSet.FieldDefs,
+                                   TdsdStoredProc(FdsdStoredProcName).DataSet,
+                                   FilePaths + '\' + FilenamePrefix + FileNames, true) do
+     try
+       Execute(FileNames);
+     finally
+       Free
+     end;
+  end else
+  begin
+
+      TdsdStoredProc(FdsdStoredProcName).DataSet.First;
+
+      //
+      try
+        AssignFile(F, FilePaths + '\' + FilenamePrefix + FileNames);
+        Rewrite(F); // переписываем файл
 
 
-    while not TdsdStoredProc(FdsdStoredProcName).DataSet.Eof do
-    begin
-      FieldNames := FieldNames + TdsdStoredProc(FdsdStoredProcName).DataSet.Fields[0].AsString +#13+#10;
-      TdsdStoredProc(FdsdStoredProcName).DataSet.Next;
-    end;
-    Writeln(F, FieldNames);
+        while not TdsdStoredProc(FdsdStoredProcName).DataSet.Eof do
+        begin
+          FieldNames := FieldNames + TdsdStoredProc(FdsdStoredProcName).DataSet.Fields[0].AsString +#13+#10;
+          TdsdStoredProc(FdsdStoredProcName).DataSet.Next;
+        end;
+        Writeln(F, FieldNames);
 
-  finally
-    CloseFile(F);
+      finally
+        CloseFile(F);
+      end;
   end;
 end;
 

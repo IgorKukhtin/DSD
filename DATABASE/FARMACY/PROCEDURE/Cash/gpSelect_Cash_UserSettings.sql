@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer
              , Name TVarChar
              , Pass TVarChar
              , MainForm TBlob
+             , DataModulForm TBlob
               )
 
 AS
@@ -45,6 +46,18 @@ BEGIN
                                     AND ObjectLink_UserFormSettings_User.ObjectId = Object_UserFormSettings.Id
                       WHERE Object_UserFormSettings.ValueData = 'TMainCashForm2' AND Object_UserFormSettings.DescId = zc_Object_UserFormSettings()),
 
+         FD AS (SELECT
+                        ObjectLink_UserFormSettings_User.ChildObjectId      AS UserID
+                      , ObjectBLOB_UserFormSettings_Data.ValueData          AS MainForm
+                FROM Object AS Object_UserFormSettings
+                     JOIN ObjectBLOB AS ObjectBLOB_UserFormSettings_Data
+                                     ON ObjectBLOB_UserFormSettings_Data.DescId = zc_ObjectBlob_UserFormSettings_Data()
+                                    AND ObjectBLOB_UserFormSettings_Data.ObjectId = Object_UserFormSettings.Id
+                     JOIN ObjectLink AS ObjectLink_UserFormSettings_User
+                                     ON ObjectLink_UserFormSettings_User.DescId = zc_ObjectLink_UserFormSettings_User()
+                                    AND ObjectLink_UserFormSettings_User.ObjectId = Object_UserFormSettings.Id
+                      WHERE Object_UserFormSettings.ValueData = 'TdmMain' AND Object_UserFormSettings.DescId = zc_Object_UserFormSettings()),
+
          RR AS (SELECT Object_User.ID  AS RoleID
                 FROM DefaultValue
                      INNER JOIN DefaultKeys ON DefaultKeys.Id = DefaultValue.DefaultKeyId
@@ -73,6 +86,7 @@ BEGIN
          , encode(ObjectString_User_Password.ValueData::bytea, 'base64')::TVarChar
 
          , UserFormSettings.MainForm
+         , UserDMSettings.MainForm
 
     FROM UR
 
@@ -92,6 +106,9 @@ BEGIN
                                
 
          LEFT JOIN FS AS UserFormSettings ON UserFormSettings.UserID = Object_User.Id
+
+         LEFT JOIN FD AS UserDMSettings ON UserDMSettings.UserID = Object_User.Id
+
     WHERE Object_User.isErased = FALSE
       AND COALESCE(Object_Member.isErased, FALSE) = FALSE;
 
@@ -106,8 +123,6 @@ $BODY$
 */
 
 -- тест
---
---
--- SELECT * FROM gpSelect_Cash_UserSettings (inSession:= '3')
--- select * from gpSelect_Cash_UserSettings( inSession := '5323107');
--- select * from gpSelect_Cash_UserSettings( inSession := '7670317');
+
+-- 
+SELECT * FROM gpSelect_Cash_UserSettings (inSession:= '3')

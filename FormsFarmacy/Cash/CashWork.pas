@@ -64,10 +64,10 @@ implementation
 function CheckZReportLogCDS : boolean;
   var ZReportLogCDS : TClientDataSet;
 begin
-  Result := FileExists(ZReportLog_lcl);
-  if Result then Exit;
   ZReportLogCDS :=  TClientDataSet.Create(Nil);
   try
+    LoadLocalData(ZReportLogCDS, ZReportLog_lcl);
+    if ZReportLogCDS.Active then Exit;
     try
       ZReportLogCDS.FieldDefs.Add('ZReport', ftInteger);
       ZReportLogCDS.FieldDefs.Add('FiscalNumber', ftString, 20);
@@ -309,42 +309,38 @@ begin
     ShowMessage('Ошибка сохранения Электронной формы z отчёта. Покажите это окно системному администратору: ' + #13#10 + E.Message);
   end;
 
-  if CheckZReportLogCDS then
-  begin
-    if not TryStrToInt(gc_User.Session, nUserId) then nUserId := 0;
+  if not TryStrToInt(gc_User.Session, nUserId) then nUserId := 0;
 
-    ZReportLogCDS :=  TClientDataSet.Create(Nil);
-    WaitForSingleObject(MutexZReportLog, INFINITE);
+  ZReportLogCDS :=  TClientDataSet.Create(Nil);
+  WaitForSingleObject(MutexZReportLog, INFINITE);
+  try
     try
-      try
-        LoadLocalData(ZReportLogCDS, ZReportLog_lcl, False);
-        if not ZReportLogCDS.Active then
-        begin
-          DeleteLocalData(ZReportLog_lcl);
-          CheckZReportLogCDS;
-          LoadLocalData(ZReportLogCDS, ZReportLog_lcl);
-        end;
-
-        ZReportLogCDS.Append;
-        ZReportLogCDS.FieldByName('ZReport').AsInteger := AZReport;
-        ZReportLogCDS.FieldByName('FiscalNumber').AsString := AFiscalNumber;
-        ZReportLogCDS.FieldByName('Date').AsDateTime := Now;
-        ZReportLogCDS.FieldByName('SummaCash').AsCurrency := ASummaCash;
-        ZReportLogCDS.FieldByName('SummaCard').AsCurrency := ASummaCard;
-        ZReportLogCDS.FieldByName('UserId').AsInteger := nUserId;
-        ZReportLogCDS.FieldByName('isSend').AsBoolean := False;
-        ZReportLogCDS.Post;
-
-        SaveLocalData(ZReportLogCDS, ZReportLog_lcl);
-      Except ON E:Exception do
-        ShowMessage('Ошибка сохранения данных по Z отчетам:'#13#10 + E.Message);
+      LoadLocalData(ZReportLogCDS, ZReportLog_lcl, False);
+      if not ZReportLogCDS.Active then
+      begin
+        CheckZReportLogCDS;
+        LoadLocalData(ZReportLogCDS, ZReportLog_lcl);
       end;
-    finally
-      ReleaseMutex(MutexZReportLog);
-      ZReportLogCDS.Free;
-        // отправка сообщения о необходимости отправки
-      PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 6);
+
+      ZReportLogCDS.Append;
+      ZReportLogCDS.FieldByName('ZReport').AsInteger := AZReport;
+      ZReportLogCDS.FieldByName('FiscalNumber').AsString := AFiscalNumber;
+      ZReportLogCDS.FieldByName('Date').AsDateTime := Now;
+      ZReportLogCDS.FieldByName('SummaCash').AsCurrency := ASummaCash;
+      ZReportLogCDS.FieldByName('SummaCard').AsCurrency := ASummaCard;
+      ZReportLogCDS.FieldByName('UserId').AsInteger := nUserId;
+      ZReportLogCDS.FieldByName('isSend').AsBoolean := False;
+      ZReportLogCDS.Post;
+
+      SaveLocalData(ZReportLogCDS, ZReportLog_lcl);
+    Except ON E:Exception do
+      ShowMessage('Ошибка сохранения данных по Z отчетам:'#13#10 + E.Message);
     end;
+  finally
+    ReleaseMutex(MutexZReportLog);
+    ZReportLogCDS.Free;
+      // отправка сообщения о необходимости отправки
+    PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 6);
   end;
 end;
 
