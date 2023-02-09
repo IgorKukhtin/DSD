@@ -32,14 +32,14 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummSocialIn TFloat, SummSocialAdd TFloat
              , SummChild TFloat, SummChildRecalc TFloat, SummMinusExt TFloat, SummMinusExtRecalc TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
-             , Amount_avance TFloat 
+             , Amount_avance TFloat, Amount_avance_ps TFloat
              , SummAvance TFloat, SummAvanceRecalc TFloat
              , TotalSummChild TFloat, SummDiff TFloat
-             
+
              , DayCount_child TFloat
              , WorkTimeHoursOne_child TFloat
              , Price_child TFloat
-            
+
              , SummAddOth TFloat, SummAddOthRecalc TFloat
              , SummHouseAdd TFloat
              , SummCompensation TFloat, SummCompensationRecalc TFloat
@@ -101,7 +101,7 @@ BEGIN
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('tmpPersonalServiceList_check'))
      THEN
           -- Оптимизация
-          CREATE TEMP TABLE tmpPersonalServiceList_check ON COMMIT DROP AS 
+          CREATE TEMP TABLE tmpPersonalServiceList_check ON COMMIT DROP AS
             WITH tmpUserAll_check AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId /*AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
             SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
             FROM ObjectLink AS ObjectLink_User_Member
@@ -205,7 +205,7 @@ BEGIN
                                                             ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList()
                      )
-      , tmpMIChild_all AS (SELECT 
+      , tmpMIChild_all AS (SELECT
                                   MovementItem.ParentId                    AS ParentId
                                 , MovementItem.Id                          AS MovementItemId
                                 , MovementItem.Amount                      AS Amount
@@ -220,7 +220,7 @@ BEGIN
                                 , COALESCE (MIFloat_GrossOne.ValueData, 0)           AS GrossOne
                                 , COALESCE (MIFloat_HoursPlan.ValueData, 0)          AS HoursPlan
                                 , COALESCE (MIFloat_HoursDay.ValueData, 0)           AS HoursDay*/
-                                
+
                            FROM MovementItem
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_StaffListSummKind
                                                                ON MILinkObject_StaffListSummKind.MovementItemId = MovementItem.Id
@@ -239,7 +239,7 @@ BEGIN
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_PositionLevel
                                                                ON MILinkObject_PositionLevel.MovementItemId = MovementItem.Id
                                                               AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
-                                                              
+
                               --
                               LEFT JOIN MovementItemFloat AS MIFloat_DayCount
                                                           ON MIFloat_DayCount.MovementItemId = MovementItem.Id
@@ -259,9 +259,9 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_HoursDay
                                                           ON MIFloat_HoursDay.MovementItemId = MovementItem.Id
                                                          AND MIFloat_HoursDay.DescId = zc_MIFloat_HoursDay()
-                                                         
-                                                         
-                                                         
+
+
+
                            WHERE MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId = zc_MI_Child()
                               AND MovementItem.isErased = FALSE
@@ -304,7 +304,7 @@ BEGIN
                            -- Любарский Г.О. видит ВСЕХ
                            SELECT vbUserId WHERE vbUserId = 2573318
                           )
-          
+
             , tmpPersonal_all AS (SELECT View_Personal.*
                                   FROM (SELECT UnitId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId AND inShowAll = TRUE
                                         UNION
@@ -313,7 +313,7 @@ BEGIN
                                                                                                   AND EXISTS (SELECT 1 FROM tmpUserAll)
                                         ) AS View_RoleAccessKeyGuide
                                         INNER JOIN Object_Personal_View AS View_Personal ON View_Personal.UnitId = View_RoleAccessKeyGuide.UnitId_PersonalService
-       
+
                                  UNION
                                   SELECT View_Personal.*
                                   FROM tmpPersonalServiceList_check
@@ -361,7 +361,7 @@ BEGIN
                                                                      ON CLO_ServiceDate.ObjectId    = vbServiceDateId
                                                                     AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
                                                                     AND CLO_ServiceDate.ContainerId = CLO_PersonalServiceList.ContainerId
-   
+
                                       INNER JOIN ContainerLinkObject AS CLO_Personal
                                                                      ON CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
                                                                     AND CLO_Personal.ContainerId = CLO_ServiceDate.ContainerId
@@ -383,6 +383,13 @@ BEGIN
         , tmpMIContainer_pay AS (SELECT SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
                                     --, SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND MIContainer.Amount < 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_ret
                                     --, SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS Amount_service
+                                        -- аванс по ведомости
+                                      , SUM (CASE WHEN ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+                                                   AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                                       THEN MIContainer.Amount
+                                                  ELSE 0
+                                             END) AS Amount_avance_ps
+
                                       , tmpContainer_pay.MemberId
                                       , tmpContainer_pay.PositionId
                                       , tmpContainer_pay.PositionLevelId
@@ -392,6 +399,12 @@ BEGIN
                                                                        ON MIContainer.ContainerId    = tmpContainer_pay.ContainerId
                                                                       AND MIContainer.DescId         = zc_MIContainer_Summ()
                                                                       AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                                                       ON MILinkObject_MoneyPlace.MovementItemId = MIContainer.MovementItemId
+                                                                      AND MILinkObject_MoneyPlace.DescId         = zc_MILinkObject_MoneyPlace()
+                                      LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                                           ON ObjectLink_PersonalServiceList_PaidKind.ObjectId = MILinkObject_MoneyPlace.ObjectId
+                                                          AND ObjectLink_PersonalServiceList_PaidKind.DescId   = zc_ObjectLink_PersonalServiceList_PaidKind()
                                  GROUP BY tmpContainer_pay.MemberId
                                         , tmpContainer_pay.PositionId
                                         , tmpContainer_pay.PositionLevelId
@@ -415,8 +428,8 @@ BEGIN
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
               -- дата увольнения
             , CASE WHEN COALESCE (ObjectDate_Personal_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_Personal_DateOut.ValueData END     :: TDateTime AS DateOut
-             -- дата приема на работу - только если мес начислений соотв месяцу приема 
-            , CASE WHEN DATE_TRUNC ('Month', ObjectDate_DateIn.ValueData) = DATE_TRUNC ('Month', vbServiceDate) THEN ObjectDate_DateIn.ValueData ELSE NULL END ::TDateTime AS DateIn 
+             -- дата приема на работу - только если мес начислений соотв месяцу приема
+            , CASE WHEN DATE_TRUNC ('Month', ObjectDate_DateIn.ValueData) = DATE_TRUNC ('Month', vbServiceDate) THEN ObjectDate_DateIn.ValueData ELSE NULL END ::TDateTime AS DateIn
             , Object_PersonalTo.ObjectCode            AS PersonalCode_to
             , Object_PersonalTo.ValueData             AS PersonalName_to
 
@@ -441,7 +454,7 @@ BEGIN
 
             , COALESCE (Object_UnitFineSubject.Id, 0)         :: Integer  AS UnitFineSubjectId
             , COALESCE (Object_UnitFineSubject.ValueData, '') :: TVarChar AS UnitFineSubjectName
-            
+
             , COALESCE (tmpMIChild.StaffListSummKindName,'') ::TVarChar AS StaffListSummKindName
 
             , tmpAll.Amount :: TFloat           AS Amount
@@ -452,7 +465,7 @@ BEGIN
                           ELSE COALESCE (MIFloat_SummCard.ValueData, 0)
                              + COALESCE (MIFloat_SummCardSecond.ValueData, 0)
                              + COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
-                      END 
+                      END
               ) :: TFloat AS AmountCash
             , MIFloat_SummService.ValueData           AS SummService
             , MIFloat_SummCard.ValueData              AS SummCard
@@ -487,7 +500,9 @@ BEGIN
             , MIFloat_SummTransportAddLong.ValueData  AS SummTransportAddLong
             , MIFloat_SummTransportTaxi.ValueData     AS SummTransportTaxi
             , MIFloat_SummPhone.ValueData             AS SummPhone
-            , ( 1 * tmpMIContainer_pay.Amount_avance) :: TFloat AS Amount_avance 
+            , ( 1 * tmpMIContainer_pay.Amount_avance)    :: TFloat AS Amount_avance
+            , ( 1 * tmpMIContainer_pay.Amount_avance_ps) :: TFloat AS Amount_avance_ps
+
 
             , MIFloat_SummAvance.ValueData        ::TFloat AS SummAvance
             , MIFloat_SummAvanceRecalc.ValueData  ::TFloat AS SummAvanceRecalc
@@ -505,10 +520,10 @@ BEGIN
 
             , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensation.ValueData        ELSE 0 END ::TFloat AS SummCompensation
             , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_SummCompensationRecalc.ValueData  ELSE 0 END ::TFloat AS SummCompensationRecalc
-            
+
             , MIFloat_DayCompensation.ValueData AS DayCompensation
             , CASE WHEN tmpPersonalServiceList_check.PersonalServiceListId > 0 OR tmpAll.PersonalServiceListId IS NULL THEN MIFloat_PriceCompensation.ValueData       ELSE 0 END ::TFloat AS PriceCompensation
-            
+
             , MIFloat_DayVacation.ValueData             ::TFloat AS DayVacation
             , MIFloat_DayHoliday.ValueData              ::TFloat AS DayHoliday
             , MIFloat_DayWork.ValueData                 ::TFloat AS DayWork
@@ -529,7 +544,7 @@ BEGIN
                                   AND ObjectString_Code1C.DescId    = zc_ObjectString_Personal_Code1C()
 
             LEFT JOIN tmpPersonalServiceList_check ON tmpPersonalServiceList_check.PersonalServiceListId = tmpAll.PersonalServiceListId
-       
+
             LEFT JOIN tmpMIContainer_all ON tmpMIContainer_all.MovementItemId = tmpAll.MovementItemId
                                         AND tmpMIContainer_all.Ord            = 1 -- !!!только 1-ый!!!
 
@@ -583,7 +598,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRetRecalc
                                         ON MIFloat_SummNalogRetRecalc.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummNalogRetRecalc.DescId = zc_MIFloat_SummNalogRetRecalc()
-                                       
+
             LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
                                         ON MIFloat_SummMinus.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
@@ -753,7 +768,7 @@ BEGIN
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_BankOut
-                                    ON ObjectBoolean_BankOut.ObjectId = Object_PersonalServiceList.Id 
+                                    ON ObjectBoolean_BankOut.ObjectId = Object_PersonalServiceList.Id
                                    AND ObjectBoolean_BankOut.DescId = zc_ObjectBoolean_PersonalServiceList_BankOut()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_FineSubject

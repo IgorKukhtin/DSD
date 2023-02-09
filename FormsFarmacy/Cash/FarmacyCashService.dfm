@@ -265,6 +265,7 @@ object MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
+    AfterExecute = spCheck_RemainsErrorAfterExecute
     Left = 176
     Top = 200
   end

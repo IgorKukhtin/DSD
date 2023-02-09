@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , PasswordEHels TVarChar
              , KeyExpireDate TDateTime
              , isUserKeyDate boolean
+             , CheckOperDate TDateTime
              , Color_calc Integer
               )
 AS
@@ -31,6 +32,25 @@ BEGIN
    THEN
      RAISE EXCEPTION 'Доступно только системному администратору';
    END IF;
+
+   CREATE TEMP TABLE tmpMov ON COMMIT DROP AS 
+     SELECT MLO_Insert.ObjectId               AS UserId
+          , max(Movement.OperDate)::TDateTime AS OperDate       
+     FROM Movement
+          INNER JOIN MovementLinkObject AS MLO_Insert
+                                        ON MLO_Insert.MovementId = Movement.Id
+                                       AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+          INNER JOIN MovementLinkObject AS MovementLinkObject_SPKind
+                                       ON MovementLinkObject_SPKind.MovementId = Movement.Id
+                                      AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
+                                      AND COALESCE(MovementLinkObject_SPKind.ObjectId, 0) = zc_Enum_SPKind_SP()
+                                   
+     WHERE Movement.DescId = zc_Movement_Check()
+       AND Movement.StatusId = zc_Enum_Status_Complete()
+       AND Movement.OperDate >= CURRENT_DATE - INTERVAL '2 MONTH'
+     GROUP BY MLO_Insert.ObjectId;
+        
+   ANALYSE tmpMov;
 
    -- Результат
    RETURN QUERY 
@@ -92,10 +112,12 @@ BEGIN
        , ObjectString_PasswordEHels.ValueData
        
        , ObjectDate_User_KeyExpireDate.ValueData
-       
+              
        , CASE WHEN COALESCE(tmpMedicalProgramSPUnit.UnitId, 0) <> 0 AND 
                    COALESCE(tmpUserKeyUnit.UnitId, 0) = 0
               THEN True ELSE False END                                                    AS isUserKeyDate     
+
+       , date_trunc('DAY', tmpMov.OperDate)::TDateTime 
 
        , CASE WHEN Object_Unit.ValueData ILIKE '%Зачинена%' OR Object_Unit.ValueData ILIKE '%ЗАКРЫТА%' 
               THEN zfCalc_Color (255, 165, 0)
@@ -153,6 +175,8 @@ BEGIN
          LEFT JOIN tmpMedicalProgramSPUnit ON tmpMedicalProgramSPUnit.UnitId = ObjectLink_User_Unit.ChildObjectId
          
          LEFT JOIN tmpUserKeyUnit ON tmpUserKeyUnit.UnitId = ObjectLink_User_Unit.ChildObjectId
+         
+         LEFT JOIN tmpMov ON tmpMov.UserId = Object_User.Id
 
    WHERE Object_User.DescId = zc_Object_User()
      AND COALESCE(ObjectString_UserName.ValueData, '') <> ''
@@ -179,6 +203,4 @@ ALTER FUNCTION gpSelect_Object_HelsiUser (Boolean, TVarChar) OWNER TO postgres;
 -- тест
 -- SELECT * FROM gpSelect_Object_HelsiUser (False, '3')
 
-select * from gpSelect_Object_HelsiUser(inIsShowAll := 'True' ,  inSession := '3');
-
-
+select * from gpSelect_Object_HelsiUser(inIsShowAll := 'False' ,  inSession := '3');
