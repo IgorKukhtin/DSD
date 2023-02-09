@@ -1874,6 +1874,19 @@
     Images = dmMain.ImageList
     Left = 8
     Top = 96
+    object actRefreshMaster: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -3240,8 +3253,8 @@
         item
           Name = 'NPP'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'NPP'
+          Component = MasterCDS
+          ComponentItem = 'NPP_OrderClient'
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3249,7 +3262,7 @@
         item
           Name = 'DateBegin'
           Value = Null
-          Component = FormParams
+          Component = MasterCDS
           ComponentItem = 'DateBegin'
           DataType = ftDateTime
           ParamType = ptInput
@@ -3267,6 +3280,9 @@
         end
         item
           Action = actUpdateMovement_NPP
+        end
+        item
+          Action = actRefreshMaster
         end>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100

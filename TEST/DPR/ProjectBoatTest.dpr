@@ -353,7 +353,8 @@ uses
   Report_Personal in '..\..\FormsBoat\Report\Report_Personal.pas' {Report_PersonalForm: TParentForm},
   Report_PersonalDialog in '..\..\FormsBoat\Report\Report_PersonalDialog.pas' {Report_PersonalDialogForm: TParentForm},
   PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
-  OrderClientDialog in '..\..\FormsBoat\Document\OrderClientDialog.pas' {OrderClientDialogForm: TParentForm};
+  OrderClientDialog in '..\..\FormsBoat\Document\OrderClientDialog.pas' {OrderClientDialogForm: TParentForm},
+  StorageSQLite in '..\..\SOURCE\StorageSQLite.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

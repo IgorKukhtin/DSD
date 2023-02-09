@@ -216,6 +216,7 @@ type
     bbChangeNPP: TdxBarButton;
     bbUpdate_NPP_Plus: TdxBarButton;
     bbUpdate_NPP_Minus: TdxBarButton;
+    actRefreshMaster: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
