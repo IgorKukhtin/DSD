@@ -120,6 +120,17 @@ type
     spSelectPrintStructureGoods: TdsdStoredProc;
     spSelectPrintStructureHeader: TdsdStoredProc;
     NPP: TcxGridDBColumn;
+    spUpdateMovement_NPP: TdsdStoredProc;
+    actUpdateMovement_NPP: TdsdExecStoredProc;
+    actChangePercentDialog: TExecuteDialog;
+    macChangeNPP: TMultiAction;
+    bbChangeNPP: TdxBarButton;
+    spUpdate_NPP_Plus: TdsdStoredProc;
+    spUpdate_NPP_Minus: TdsdStoredProc;
+    actUpdate_NPP_Plus: TdsdExecStoredProc;
+    actUpdate_NPP_Minus: TdsdExecStoredProc;
+    bbUpdate_NPP_Plus: TdxBarButton;
+    bbUpdate_NPP_Minus: TdxBarButton;
   private
   public
   end;

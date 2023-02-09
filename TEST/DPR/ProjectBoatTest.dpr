@@ -352,7 +352,8 @@ uses
   ProductionUnionMasterJournal in '..\..\FormsBoat\Document\ProductionUnionMasterJournal.pas' {ProductionUnionMasterJournalForm: TParentForm},
   Report_Personal in '..\..\FormsBoat\Report\Report_Personal.pas' {Report_PersonalForm: TParentForm},
   Report_PersonalDialog in '..\..\FormsBoat\Report\Report_PersonalDialog.pas' {Report_PersonalDialogForm: TParentForm},
-  PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm};
+  PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
+  OrderClientDialog in '..\..\FormsBoat\Document\OrderClientDialog.pas' {OrderClientDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

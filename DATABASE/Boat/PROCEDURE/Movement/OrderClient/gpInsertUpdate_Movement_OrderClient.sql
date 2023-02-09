@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderClient(Integer, TVarChar, T
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderClient(Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderClient(Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderClient(Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderClient(Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderClient(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -14,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderClient(
     IN inVATPercent          TFloat    , --
     IN inDiscountTax         TFloat    , --
     IN inDiscountNextTax     TFloat    , -- 
-    IN inNPP                 TFloat    , -- Очередность сборки
+    --IN inNPP                 TFloat    , -- Очередность сборки
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
     IN inPaidKindId          Integer   , -- ФО
@@ -36,7 +37,7 @@ BEGIN
                                          , inOperDate
                                          , inPriceWithVAT
                                          , inVATPercent, inDiscountTax, inDiscountNextTax
-                                         , inNPP
+                                         --, inNPP
                                          , inFromId, inToId
                                          , inPaidKindId
                                          , inProductId

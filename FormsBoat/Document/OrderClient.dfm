@@ -167,15 +167,15 @@ object OrderClientForm: TOrderClientForm
       Width = 157
     end
     object cxLabel16: TcxLabel
-      Left = 731
+      Left = 651
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 731
+      Left = 651
       Top = 63
       TabOrder = 18
-      Width = 210
+      Width = 291
     end
     object cxLabel10: TcxLabel
       Left = 273
@@ -3013,26 +3013,8 @@ object OrderClientForm: TOrderClientForm
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 6
     Width = 78
-  end
-  object cxLabel19: TcxLabel
-    Left = 651
-    Top = 45
-    Caption = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100
-  end
-  object edNPP: TcxCurrencyEdit
-    Left = 651
-    Top = 63
-    Hint = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1089#1073#1086#1088#1082#1080
-    ParentShowHint = False
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0.###'
-    ShowHint = True
-    TabOrder = 11
-    Width = 74
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -3087,8 +3069,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 192
-    Top = 215
+    Left = 152
+    Top = 175
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -3175,6 +3157,14 @@ object OrderClientForm: TOrderClientForm
         end
         item
           Visible = True
+          ItemName = 'bbChangeNPP'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -3215,7 +3205,7 @@ object OrderClientForm: TOrderClientForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbPrintStructureGoods'
         end
         item
           Visible = True
@@ -3421,8 +3411,12 @@ object OrderClientForm: TOrderClientForm
       Action = actOpenBankAccountJournalByInvoice
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbPrintStructureGoods: TdxBarButton
       Action = actPrintStructureGoods
+      Category = 0
+    end
+    object bbChangeNPP: TdxBarButton
+      Action = macChangeNPP
       Category = 0
     end
   end
@@ -3443,8 +3437,8 @@ object OrderClientForm: TOrderClientForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 59
-    Top = 215
+    Left = 43
+    Top = 191
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -3461,6 +3455,17 @@ object OrderClientForm: TOrderClientForm
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 14
       ShortCut = 113
+    end
+    object actUpdateMovement_NPP: TdsdExecStoredProc
+      Category = 'NPP'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovement_NPP
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovement_NPP
+        end>
+      Caption = 'actUpdateMovement_NPP'
     end
     object actShowErasedCost: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -4265,6 +4270,50 @@ object OrderClientForm: TOrderClientForm
         end>
       isShowModal = False
     end
+    object actChangePercentDialog: TExecuteDialog
+      Category = 'NPP'
+      MoveParams = <>
+      Caption = 'actOrderClientDialog'
+      FormName = 'TOrderClientDialogForm'
+      FormNameParam.Value = 'TOrderClientDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'NPP'
+          Value = 0.000000000000000000
+          Component = FormParams
+          ComponentItem = 'NPP'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DateBegin'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DateBegin'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macChangeNPP: TMultiAction
+      Category = 'NPP'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChangePercentDialog
+        end
+        item
+          Action = actUpdateMovement_NPP
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100
+      ImageIndex = 43
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -4478,9 +4527,8 @@ object OrderClientForm: TOrderClientForm
       item
         Name = 'inNPP'
         Value = Null
-        Component = edNPP
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -4533,7 +4581,7 @@ object OrderClientForm: TOrderClientForm
       end>
     PackSize = 1
     Left = 154
-    Top = 272
+    Top = 248
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -4584,7 +4632,6 @@ object OrderClientForm: TOrderClientForm
         Control = ceInvoice
       end
       item
-        Control = edNPP
       end
       item
       end
@@ -4816,8 +4863,17 @@ object OrderClientForm: TOrderClientForm
       item
         Name = 'NPP'
         Value = Null
-        Component = edNPP
+        Component = FormParams
+        ComponentItem = 'NPP'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateBegin'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DateBegin'
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -5249,7 +5305,7 @@ object OrderClientForm: TOrderClientForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 808
+    Left = 840
     Top = 16
   end
   object GuidesBrand: TdsdGuides
@@ -5866,8 +5922,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 272
-    Top = 239
+    Left = 336
+    Top = 287
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
@@ -6189,5 +6245,48 @@ object OrderClientForm: TOrderClientForm
     PackSize = 1
     Left = 1144
     Top = 128
+  end
+  object spUpdateMovement_NPP: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderClient_NPP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProductId'
+        Value = ''
+        Component = GuidesProduct
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateBegin'
+        Value = 42160d
+        Component = FormParams
+        ComponentItem = 'DateBegin'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNPP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'NPP'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 226
+    Top = 232
   end
 end

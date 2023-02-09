@@ -1206,6 +1206,10 @@
 			<DCCReference Include="..\..\SOURCE\PriorityPause.pas">
 				<Form>PriorityPauseForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Document\OrderClientDialog.pas">
+				<Form>OrderClientDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

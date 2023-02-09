@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderClient(
     IN inVATPercent          TFloat    , --
     IN inDiscountTax         TFloat    , --
     IN inDiscountNextTax     TFloat    , --
-    IN inNPP                 TFloat    , -- Очередность сборки
+    --IN inNPP                 TFloat    , -- Очередность сборки
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
     IN inPaidKindId          Integer   , -- ФО
@@ -63,9 +63,6 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountTax(), ioId, inDiscountTax);
      -- сохранили значение <% скидки доп>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountNextTax(), ioId, inDiscountNextTax);
-
-     -- сохранили значение <NPP>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NPP(), ioId, inNPP);
 
      -- сохранили <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
@@ -166,24 +163,8 @@ BEGIN
          END IF;
      END IF;
 
-    --проверка / замена
-    /*если при вводе такой номер встречается тогда в остальных документах он сдвигается на +1, т.е. были документы 1,2,3;4,5 .... добавили новый док и поставили там №-3, тогда 3,4,5 превращаются в 4,5,6*/
-     IF EXISTS (SELECT 1
-                FROM MovementFloat
-                WHERE MovementFloat.DescId = zc_MovementFloat_NPP()
-                  AND COALESCE (MovementFloat.ValueData,0) = inNPP
-                  AND MovementFloat.MovementId <> ioId)
-     THEN
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NPP(), MovementFloat.MovementId, COALESCE (MovementFloat.ValueData,0) + 1 )
-         FROM MovementFloat
-             INNER JOIN Movement ON Movement.Id = MovementFloat.MovementId
-                                AND Movement.DescId = zc_Movement_OrderClient()
-                                AND Movement.StatusId <> zc_Enum_Status_Erased()
-         WHERE MovementFloat.DescId = zc_MovementFloat_NPP()
-           AND COALESCE (MovementFloat.ValueData,0) >= inNPP
-           AND MovementFloat.MovementId <> ioId;
-     END IF; 
 
+       
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 

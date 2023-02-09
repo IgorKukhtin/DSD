@@ -64,6 +64,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 656
+    ExplicitTop = 225
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -567,8 +569,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 64
-    Top = 32
+    Left = 80
+    Top = 64
     DockControlHeights = (
       0
       0
@@ -628,6 +630,26 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_NPP_Plus'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_NPP_Minus'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChangeNPP'
         end
         item
           Visible = True
@@ -766,11 +788,23 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Action = actPrintStructureGoods
       Category = 0
     end
+    object bbChangeNPP: TdxBarButton
+      Action = macChangeNPP
+      Category = 0
+    end
+    object bbUpdate_NPP_Plus: TdxBarButton
+      Action = actUpdate_NPP_Plus
+      Category = 0
+    end
+    object bbUpdate_NPP_Minus: TdxBarButton
+      Action = actUpdate_NPP_Minus
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 80
-    Top = 48
+    Left = 120
+    Top = 64
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -789,6 +823,22 @@ object OrderClientJournalForm: TOrderClientJournalForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object actUpdate_NPP_Plus: TdsdExecStoredProc
+      Category = 'NPP'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_NPP_Plus
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_NPP_Plus
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' +1'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' +1'
+      ImageIndex = 81
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -834,6 +884,22 @@ object OrderClientJournalForm: TOrderClientJournalForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actUpdate_NPP_Minus: TdsdExecStoredProc
+      Category = 'NPP'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_NPP_Minus
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_NPP_Minus
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' -1'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' -1'
+      ImageIndex = 82
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1002,6 +1068,17 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 12
+    end
+    object actUpdateMovement_NPP: TdsdExecStoredProc
+      Category = 'NPP'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovement_NPP
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovement_NPP
+        end>
+      Caption = 'actUpdateMovement_NPP'
     end
     object mactCompleteList: TMultiAction
       Category = 'DSDLib'
@@ -1520,6 +1597,50 @@ object OrderClientJournalForm: TOrderClientJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actChangePercentDialog: TExecuteDialog
+      Category = 'NPP'
+      MoveParams = <>
+      Caption = 'actOrderClientDialog'
+      FormName = 'TOrderClientDialogForm'
+      FormNameParam.Value = 'TOrderClientDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'NPP'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'NPP'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DateBegin'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DateBegin'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macChangeNPP: TMultiAction
+      Category = 'NPP'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChangePercentDialog
+        end
+        item
+          Action = actUpdateMovement_NPP
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100
+      ImageIndex = 43
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderClient'
@@ -1919,5 +2040,114 @@ object OrderClientJournalForm: TOrderClientJournalForm
     PackSize = 1
     Left = 830
     Top = 208
+  end
+  object spUpdateMovement_NPP: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderClient_NPP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProductId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'ProductId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateBegin'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DateBegin'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNPP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'NPP'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 394
+    Top = 344
+  end
+  object spUpdate_NPP_Plus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderClient_NPP_Plus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioNPP'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'NPP'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlus'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 386
+    Top = 392
+  end
+  object spUpdate_NPP_Minus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderClient_NPP_Plus'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioNPP'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'NPP'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPlus'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 474
+    Top = 384
   end
 end
