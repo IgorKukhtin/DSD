@@ -130,7 +130,7 @@ type
     actExport_dbf: TdsdStoredProcExportToFile;
     bbExport_dbf: TdxBarButton;
     actGet_Export_FileNameZp_dbf: TdsdExecStoredProc;
-    spSelectExport_test: TdsdStoredProc;
+    spSelectExport_dbf: TdsdStoredProc;
     actSelect_Export_dbf: TdsdExecStoredProc;
     actExport_Grid_DBF: TExportGrid;
   private

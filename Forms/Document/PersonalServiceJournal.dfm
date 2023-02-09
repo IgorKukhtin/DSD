@@ -22,8 +22,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       inherited cxGrid: TcxGrid
         Width = 1221
         Height = 563
-        ExplicitLeft = 328
-        ExplicitTop = 3
         ExplicitWidth = 1221
         ExplicitHeight = 563
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1116,7 +1114,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     object actExport_dbf: TdsdStoredProcExportToFile [5]
       Category = 'Export_dbf'
       MoveParams = <>
-      dsdStoredProcName = spSelectExport_test
+      dsdStoredProcName = spSelectExport_dbf
       FilePathParam.Value = ''
       FilePathParam.DataType = ftString
       FilePathParam.MultiSelectSeparator = ','
@@ -1131,6 +1129,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       FileNamePrefixParam.Value = 'Raiffeisen_'
       FileNamePrefixParam.DataType = ftString
       FileNamePrefixParam.MultiSelectSeparator = ','
+      ExportType = spefExportToDbf
       Left = 1192
       Top = 216
     end
@@ -1138,10 +1137,10 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Category = 'Export_dbf'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spSelectExport_test
+      StoredProc = spSelectExport_dbf
       StoredProcList = <
         item
-          StoredProc = spSelectExport_test
+          StoredProc = spSelectExport_dbf
         end>
       Caption = 'actSelect_Export_dbf'
     end
@@ -1153,10 +1152,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           Action = actGet_Export_FileNameZp_dbf
         end
         item
-          Action = actSelect_Export_dbf
-        end
-        item
-          Action = actExport_Grid_DBF
+          Action = actExport_dbf
         end>
       QuestionBeforeExecute = 
         #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1069#1082#1089#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1074#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1076#1083#1103' "'#1056#1072#1081#1092#1092#1072 +
@@ -2668,8 +2664,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Left = 600
     Top = 512
   end
-  object spSelectExport_test: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PersonalService_export_test'
+  object spSelectExport_dbf: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PersonalService_export_dbf'
     DataSet = ExportCDS
     DataSets = <
       item

@@ -265,6 +265,30 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object Day_vacation_NoZp: TcxGridDBColumn
+        Caption = #1055#1086#1083#1086#1078#1077#1085' '#1086#1090#1087#1091#1089#1082' '#1073#1077#1079' '#1089#1086#1093#1088'. , '#1076#1085#1077#1081
+        DataBinding.FieldName = 'Day_vacation_NoZp'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1083#1086#1078#1077#1085#1085#1086' '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072' '#1073#1077#1079' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103' '#1079#1087' - '#1079#1072' '#1087#1077#1088#1080#1086#1076
+        Options.Editing = False
+        Width = 80
+      end
+      object Day_diff_NoZp: TcxGridDBColumn
+        Caption = #1053#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086' '#1073#1077#1079' '#1089#1086#1093#1088'., '#1076#1085#1077#1081
+        DataBinding.FieldName = 'Day_diff_NoZp'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086' '#1086#1090#1087#1091#1089#1082' '#1073#1077#1079' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103', '#1076#1085#1077#1081' - '#1079#1072' '#1087#1077#1088#1080#1086#1076
+        Options.Editing = False
+        Width = 80
+      end
       object AmountCompensation: TcxGridDBColumn
         Caption = #1057#1088'. '#1047#1055' '#1079#1072' '#1076#1077#1085#1100
         DataBinding.FieldName = 'AmountCompensation'
