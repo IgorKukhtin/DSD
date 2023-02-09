@@ -12,6 +12,7 @@ var
   MovementStatus: Array[TdsdMovementStatus] of string = ('Не проведен', 'Проведен', 'Удален');
 
   ConnectionPath: string = '..\INIT\Boat_init.php';
+  SQLiteFile: string = '';
 
 //  EnumPath: string = '..\DATABASE\COMMON\METADATA\Enum\';
 //  ProcedurePath: string = '..\DATABASE\COMMON\PROCEDURE\';
