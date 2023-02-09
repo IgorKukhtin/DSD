@@ -76,6 +76,7 @@ type
     actPUSHInfo: TdsdShowPUSHMessage;
     actShowAll: TBooleanStoredProcAction;
     dxBarButton1: TdxBarButton;
+    CheckOperDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

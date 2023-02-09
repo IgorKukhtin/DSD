@@ -15,7 +15,7 @@ uses
   cxDBLookupEdit, cxDBLookupComboBox,  cxCheckBox, cxNavigator, CashInterface,  cxImageComboBox , dsdAddOn,
   Vcl.ImgList, LocalStorage, IdFTPCommon, IdGlobal, IdFTP, IdSSLOpenSSL, IdExplicitTLSClientServerBase,
   UnilWin, System.ImageList, System.Actions, System.Zip, System.RegularExpressions, UnitMyIP,
-  StorageSQLite;
+  Storage, StorageSQLite;
 
 type
  THeadRecord = record
@@ -141,6 +141,12 @@ type
   end;
   TBodyArr = Array of TBodyRecord;
 
+  TCheckConnectThread = class(TThread)
+  private
+  { Private declarations }
+  protected
+    procedure Execute; override;
+  end;
 
   TMainCashForm2 = class(TForm)
     FormParams: TdsdFormParams;
@@ -202,6 +208,7 @@ type
     procedure actCashRemainsExecute(Sender: TObject);
     procedure TimerNeedRemainsDiffTimer(Sender: TObject);
     procedure CashRemainsDiffExecute;
+    procedure spCheck_RemainsErrorAfterExecute(Sender: TObject);
 
   private
     { Private declarations }
@@ -220,6 +227,7 @@ type
     FisShowPlanEmployeeUser: boolean;
 
     FSaveLocalVIP: Integer;
+    FCheckConnectThread : TCheckConnectThread;
 
     function SetFarmacyNameByUser : boolean;
 
@@ -286,6 +294,20 @@ var
 implementation
 
 {$R *.dfm}
+
+{ TPUSHThread }
+
+procedure TCheckConnectThread.Execute;
+begin
+  while True do
+  begin
+    if TStorageFactory.GetStorage.IdHTTP.Connected then
+    begin
+      TStorageFactory.GetStorage.IdHTTP.Disconnect;
+    end;
+
+  end;
+end;
 
 function TMainCashForm2.GetInterval_CashRemains_Diff: integer;
 var dsdProc: TdsdStoredProc;
@@ -465,11 +487,11 @@ begin
       Application.ProcessMessages;
 
       //Получение конфигурации аптеки
-      SaveUnitConfig;
+      if not gc_User.Local then SaveUnitConfig;
       //Получение Сотрудников и настроек
-      SaveUserSettings;
+      if not gc_User.Local then SaveUserSettings;
       //Получение разницы остатков
-      SaveCashRemainsDif;
+      if not gc_User.Local then SaveCashRemainsDif;
       //Получение остатков по партиям
       if not gc_User.Local then SaveGoodsExpirationDate;
       //Получение выполнения плана продаж по сотруднику
@@ -534,21 +556,24 @@ begin   //yes
       Application.ProcessMessages;
 
       //Получение конфигурации аптеки
-      SaveUnitConfig;
+      if not gc_User.Local then SaveUnitConfig;
       //Получение Сотрудников и настроек
-      SaveUserSettings;
+      if not gc_User.Local then SaveUserSettings;
       //Получение данных для открытия форм
-      SaveFormData;
+      if not gc_User.Local then SaveFormData;
       //Получение Сотрудников для сайта Хелси
-      SaveUserHelsi;
+      if not gc_User.Local then SaveUserHelsi;
       //Получение Сотрудников для сайта Каштан
-      SaveUserLikiDnipro;
+      if not gc_User.Local then SaveUserLikiDnipro;
       //Получение остатков
-      bError := SaveCashRemains;
-      if bError then
+      if not gc_User.Local then
       begin
-       // посылаем сообщение о ошибке получения полных остатков
-       PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 5);
+        bError := SaveCashRemains;
+        if bError then
+        begin
+         // посылаем сообщение о ошибке получения полных остатков
+         PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 5);
+        end;
       end;
       //Проверка обновления программ
       if not gc_User.Local then SecureUpdateVersion;
@@ -644,6 +669,11 @@ begin
     Application.Terminate;
     exit;
   End;
+
+  FCheckConnectThread := TCheckConnectThread.Create(true);
+  FCheckConnectThread.FreeOnTerminate:=true;
+  FCheckConnectThread.Resume;
+
   ChangeStatus('Инициализация локального хранилища - да');
   FSaveRealAllRunning := false;
   TimerSaveReal.Enabled := false;
@@ -1057,6 +1087,8 @@ begin
   finally
     tiServise.Hint := 'Ожидание задания.';
     TimerSaveReal.Enabled := True;
+    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+    Application.ProcessMessages;
   end;
 end;
 
@@ -1073,6 +1105,8 @@ begin
     ReleaseMutex(MutexRefresh);
     TimerGetRemains.Enabled := not FirstRemainsReceived;
     TimerNeedRemainsDiff.Enabled := not TimerGetRemains.Enabled;
+    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+    Application.ProcessMessages;
   end;
 end;
 
@@ -1131,6 +1165,8 @@ begin
     end;
   finally
     TimerNeedRemainsDiff.Enabled := not TimerGetRemains.Enabled;
+    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+    Application.ProcessMessages;
   end;
 end;
 
@@ -1194,6 +1230,11 @@ begin
   finally
     freeAndNil(sp);
   end;
+end;
+
+procedure TMainCashForm2.spCheck_RemainsErrorAfterExecute(Sender: TObject);
+begin
+
 end;
 
 { TSaveRealThread }
@@ -2995,6 +3036,7 @@ end;
 procedure TMainCashForm2.FormDestroy(Sender: TObject);
 begin
  Add_Log('== Close');
+ FCheckConnectThread.Terminate;
  CloseMutex;
 end;
 
