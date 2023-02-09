@@ -282,6 +282,7 @@ type
     actDoLoad_Avance: TExecuteImportSettingsAction;
     macLoad_Avance: TMultiAction;
     bbLoad_Avance: TdxBarButton;
+    Amount_avance_ps: TcxGridDBColumn;
   private
     { Private declarations }
   public
