@@ -283,6 +283,15 @@ type
     macLoad_Avance: TMultiAction;
     bbLoad_Avance: TdxBarButton;
     Amount_avance_ps: TcxGridDBColumn;
+    spSelectExport_dbf: TdsdStoredProc;
+    actGet_Export_FileNameZp_dbf: TdsdExecStoredProc;
+    actExport_dbf: TdsdStoredProcExportToFile;
+    macExport_dbf: TMultiAction;
+    spGet_Export_FileNameZP_dbf: TdsdStoredProc;
+    bbExport_dbf: TdxBarButton;
+    bbSubPrint: TdxBarSubItem;
+    bbInsertData: TdxBarSubItem;
+    bbExportSub: TdxBarSubItem;
   private
     { Private declarations }
   public

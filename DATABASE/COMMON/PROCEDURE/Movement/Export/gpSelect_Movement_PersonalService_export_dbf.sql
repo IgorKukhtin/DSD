@@ -1,19 +1,20 @@
 -- Function: gpSelect_Movement_PersonalService_export
 
 -- DROP FUNCTION IF EXISTS gpexport_txtbankvostokpayroll (Integer, TVarChar, TFloat, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_export_dbf (Integer, TVarChar, TFloat, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_export_dbf (Integer, TVarChar, TFloat, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_export_dbf (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_export_dbf(
     IN inMovementId           Integer,
-    IN inInvNumber            TVarChar,
-    IN inAmount               TFloat,
-    IN inOperDate             TDateTime,
+    --IN inInvNumber            TVarChar,
+    --IN inAmount               TFloat,
+    --IN inOperDate             TDateTime,
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (CARDIBAN TVarChar
              , FIO TVarChar
              , ID_CODE TVarChar
-             , SUMA TVarChar
+             , SUMA TFloat
              )
 AS
 $BODY$
@@ -41,12 +42,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-
      -- определяется
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
      -- *** Временная таблица для сбора результата
-     CREATE TEMP TABLE _tmpResult (NPP Integer, RowData Text, errStr TVarChar) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpResult (NPP Integer, CARDIBAN TVarChar, FIO TVarChar, ID_CODE TVarChar, SUMA TFloat) ON COMMIT DROP;
 
      -- Проверка
      IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Export() AND MB.ValueData = TRUE) AND vbUserId <> 5
@@ -60,7 +60,7 @@ BEGIN
                          
      END IF;
      
-
+ 
      -- определили данные из ведомости начисления
      SELECT Object_Bank.Id                 AS BankId             -- БАНК
           , Object_Bank.ValueData          AS BankName           -- БАНК
@@ -109,50 +109,39 @@ BEGIN
        AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList();
 
 
-       /*
      --Райфайзен
      IF vbBankId = 81283
      THEN
-     INSERT INTO _tmpResult (NPP,RowData)
-        SELECT ROW_NUMBER() OVER (ORDER BY gpSelect.card) AS NPP  
-               
-             , 'CARDIBAN = "' || gpSelect.card || '";'
-               -- Фамилия сотрудника - Прізвище співробітника
-             ||'FIO = "' ||gpSelect.PersonalName || '";'
-            -- Табельный номер сотрудника
-             ||'ID_CODE = "' ||gpSelect.INN || '";'
-            -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
-             ||'SUMA = "' ||REPLACE (CAST (COALESCE (gpSelect.SummCardRecalc, 0) AS NUMERIC (16, 2)) :: TVarChar, '.', ',') || '"' 
-        FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId 
-                                                  , inShowAll    := FALSE
-                                                  , inIsErased   := FALSE
-                                                  , inSession    := inSession
-                                                   ) AS gpSelect
-        WHERE COALESCE (gpSelect.SummCardRecalc, 0) <> 0;
 
-     END IF;
-      */
+     INSERT INTO _tmpResult (NPP, CARDIBAN, FIO, ID_CODE, SUMA)
 
-     IF vbBankId = 81283
-     THEN
-     
-     -- сохранили свойство <Сформирована Выгрузка (да/нет)>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Export(), inMovementId, TRUE);
-
-     -- Результат
-     RETURN QUERY
-        --SELECT _tmpResult.* FROM _tmpResult ORDER BY NPP; 
-        SELECT gpSelect.card         ::TVarChar AS CARDIBAN   -- Номер карточного (или другого) счёта
+        SELECT ROW_NUMBER() OVER (ORDER BY gpSelect.card) AS NPP 
+             , gpSelect.card         ::TVarChar AS CARDIBAN   -- Номер карточного (или другого) счёта
              , gpSelect.PersonalName ::TVarChar AS FIO        -- Фамилия сотрудника - Прізвище співробітника
              , gpSelect.INN          ::TVarChar AS ID_CODE    -- Табельный номер сотрудника
-             , REPLACE (CAST (COALESCE (gpSelect.SummCardRecalc, 0) AS NUMERIC (16, 2)) :: TVarChar, '.', ',') :: TVarChar AS SUMA        -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
+             , CAST (COALESCE (gpSelect.SummCardRecalc, 0) AS NUMERIC (16, 2))  :: TFloat AS SUMA        -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
         FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId 
                                                   , inShowAll    := FALSE
                                                   , inIsErased   := FALSE
                                                   , inSession    := inSession
                                                    ) AS gpSelect
         WHERE COALESCE (gpSelect.SummCardRecalc, 0) <> 0;  
+
      END IF;
+
+
+     -- сохранили свойство <Сформирована Выгрузка (да/нет)>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Export(), inMovementId, TRUE);
+
+     -- Результат
+     RETURN QUERY   
+     
+     SELECT _tmpResult.CARDIBAN
+          , _tmpResult.FIO
+          , _tmpResult.ID_CODE
+          , _tmpResult.SUMA::TFloat
+     FROM _tmpResult
+     ORDER BY NPP; 
 
 END;
 $BODY$

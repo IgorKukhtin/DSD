@@ -2,6 +2,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 749
   ClientWidth = 1034
+  ExplicitTop = -116
   ExplicitWidth = 1050
   ExplicitHeight = 788
   PixelsPerInch = 96
@@ -4011,6 +4012,57 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = False
     end
+    object actGet_Export_FileNameZp_dbf: TdsdExecStoredProc
+      Category = 'Export_dbf'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileNameZP_dbf
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileNameZP_dbf
+        end>
+      Caption = 'actGet_Export_Email'
+    end
+    object actExport_dbf: TdsdStoredProcExportToFile
+      Category = 'Export_dbf'
+      MoveParams = <>
+      dsdStoredProcName = spSelectExport_dbf
+      FilePathParam.Value = ''
+      FilePathParam.DataType = ftString
+      FilePathParam.MultiSelectSeparator = ','
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      FileExt = '.dbf'
+      FileExtParam.Value = '.dbf'
+      FileExtParam.DataType = ftString
+      FileExtParam.MultiSelectSeparator = ','
+      FileNamePrefix = 'Raiffeisen_'
+      FileNamePrefixParam.Value = 'Raiffeisen_'
+      FileNamePrefixParam.DataType = ftString
+      FileNamePrefixParam.MultiSelectSeparator = ','
+      ExportType = spefExportToDbf
+      Left = 1192
+      Top = 216
+    end
+    object macExport_dbf: TMultiAction
+      Category = 'Export_dbf'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_FileNameZp_dbf
+        end
+        item
+          Action = actExport_dbf
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1069#1082#1089#1087#1086#1088#1090#1080#1088#1086#1074#1072#1090#1100' '#1074#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1076#1083#1103' "'#1056#1072#1081#1092#1092#1072 +
+        #1081#1079#1077#1085'"?'
+      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
+      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1085#1072' '#1082#1072#1088#1090#1086#1095#1082#1091' '#1076#1083#1103' "'#1056#1072#1081#1092#1092#1072#1081#1079#1077#1085'"'
+      Hint = #1069#1082#1089#1087#1086#1088#1090' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1085#1072' '#1082#1072#1088#1090#1086#1095#1082#1091' '#1076#1083#1103' "'#1056#1072#1081#1092#1092#1072#1081#1079#1077#1085'"'
+      ImageIndex = 61
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -4120,59 +4172,19 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbSubPrint'
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbPrint_All'
+          ItemName = 'bbInsertData'
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Child'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateCardSecondCash'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateCardSecond'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateSummNalogRet'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Compensation'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -4180,11 +4192,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbInsertUpdate_MemberMinus'
+          ItemName = 'bbExportSub'
         end
         item
           Visible = True
@@ -4197,38 +4209,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           Visible = True
           ItemName = 'bbInsertUpdateMISignNo'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExportZP'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExportZPDate'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExport'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExportCSV'
         end
         item
           Visible = True
@@ -4410,6 +4390,80 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Action = macLoad_Avance
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1040#1074#1072#1085#1089#1072' '#1080#1079' '#1092#1072#1081#1083#1072
       Category = 0
+    end
+    object bbExport_dbf: TdxBarButton
+      Action = macExport_dbf
+      Category = 0
+    end
+    object bbSubPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_All'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Child'
+        end>
+    end
+    object bbInsertData: TdxBarSubItem
+      Caption = #1060#1086#1088#1084'.'#1076#1072#1085#1085#1099#1093
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdateCardSecondCash'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateCardSecond'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateSummNalogRet'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Compensation'
+        end>
+    end
+    object bbExportSub: TdxBarSubItem
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdate_MemberMinus'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportZP'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExport_dbf'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportZPDate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportCSV'
+        end>
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -6783,5 +6837,82 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 904
     Top = 248
+  end
+  object spSelectExport_dbf: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PersonalService_export_dbf'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = Null
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummCardRecalc'
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 229
+    Top = 653
+  end
+  object spGet_Export_FileNameZP_dbf: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Export_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileNamePrefix'
+        Value = Null
+        Component = actExport_dbf
+        ComponentItem = 'FileNamePrefix'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileExt'
+        Value = '.dbf'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 402
+    Top = 666
   end
 end
