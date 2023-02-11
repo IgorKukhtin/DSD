@@ -90,7 +90,9 @@ BEGIN
 
    -- определяется уровень доступа
    vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
-   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
+   vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0; 
+   
+   IF vbUserId = 9457 THEN  vbIsConstraint= false; END IF;
 /*
 if vbUserId = 80971
 then

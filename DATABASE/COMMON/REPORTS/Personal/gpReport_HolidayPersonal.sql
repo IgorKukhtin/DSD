@@ -443,7 +443,7 @@ BEGIN
                         , tmpData.MemberId
                         , tmpData.isHolidayNoZp  --отдельно отпуск без оплаты
                         , SUM (DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart) +1)  :: TFloat AS Day_holiday
-                        , ROW_NUMBER(*) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MemberId) AS Ord
+                        , ROW_NUMBER(*) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MemberId, tmpData.isHolidayNoZp) AS Ord
                         , SUM ( SUM(DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart) +1 ) )  OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MemberId) AS Day_holiday_All
                    FROM tmpMov_Holiday AS tmpData
                    GROUP BY CASE WHEN inIsDetail = TRUE THEN tmpData.InvNumber     ELSE ''   END
