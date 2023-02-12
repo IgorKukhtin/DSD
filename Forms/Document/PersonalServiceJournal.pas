@@ -131,8 +131,7 @@ type
     bbExport_dbf: TdxBarButton;
     actGet_Export_FileNameZp_dbf: TdsdExecStoredProc;
     spSelectExport_dbf: TdsdStoredProc;
-    actSelect_Export_dbf: TdsdExecStoredProc;
-    actExport_Grid_DBF: TExportGrid;
+    spGet_Export_FileNameZP_dbf: TdsdStoredProc;
   private
     { Private declarations }
   public

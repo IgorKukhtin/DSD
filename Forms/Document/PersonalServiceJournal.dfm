@@ -4,6 +4,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -57
   ExplicitWidth = 1237
   ExplicitHeight = 744
   PixelsPerInch = 96
@@ -1061,17 +1062,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   inherited ActionList: TActionList
     Left = 23
     Top = 194
-    object actExport_Grid_DBF: TExportGrid [0]
-      Category = 'Export_dbf'
-      MoveParams = <>
-      ExportType = cxegExportToDbf
-      Grid = ExportXmlGrid
-      Caption = 'actExport_Grid_DBF'
-      OpenAfterCreate = False
-      DefaultFileName = 'Aval_'
-      DefaultFileExt = 'dbf'
-    end
-    object macExportZP: TMultiAction [1]
+    object macExportZP: TMultiAction [0]
       Category = 'Export'
       MoveParams = <>
       ActionList = <
@@ -1089,18 +1080,18 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         #1055'"'
       ImageIndex = 30
     end
-    object actGet_Export_FileNameZp_dbf: TdsdExecStoredProc [2]
+    object actGet_Export_FileNameZp_dbf: TdsdExecStoredProc [1]
       Category = 'Export_dbf'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_FileNameZP
+      StoredProc = spGet_Export_FileNameZP_dbf
       StoredProcList = <
         item
-          StoredProc = spGet_Export_FileNameZP
+          StoredProc = spGet_Export_FileNameZP_dbf
         end>
       Caption = 'actGet_Export_Email'
     end
-    object actGet_Export_FileNameZp: TdsdExecStoredProc [3]
+    object actGet_Export_FileNameZp: TdsdExecStoredProc [2]
       Category = 'Export'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1111,7 +1102,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         end>
       Caption = 'actGet_Export_Email'
     end
-    object actExport_dbf: TdsdStoredProcExportToFile [5]
+    object actExport_dbf: TdsdStoredProcExportToFile [4]
       Category = 'Export_dbf'
       MoveParams = <>
       dsdStoredProcName = spSelectExport_dbf
@@ -1133,18 +1124,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Left = 1192
       Top = 216
     end
-    object actSelect_Export_dbf: TdsdExecStoredProc [6]
-      Category = 'Export_dbf'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spSelectExport_dbf
-      StoredProcList = <
-        item
-          StoredProc = spSelectExport_dbf
-        end>
-      Caption = 'actSelect_Export_dbf'
-    end
-    object macExport_dbf: TMultiAction [7]
+    object macExport_dbf: TMultiAction [5]
       Category = 'Export_dbf'
       MoveParams = <>
       ActionList = <
@@ -1160,7 +1140,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
       Caption = #1069#1082#1089#1087#1086#1088#1090' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1085#1072' '#1082#1072#1088#1090#1086#1095#1082#1091' '#1076#1083#1103' "'#1056#1072#1081#1092#1092#1072#1081#1079#1077#1085'"'
       Hint = #1069#1082#1089#1087#1086#1088#1090' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1085#1072' '#1082#1072#1088#1090#1086#1095#1082#1091' '#1076#1083#1103' "'#1056#1072#1081#1092#1092#1072#1081#1079#1077#1085'"'
-      ImageIndex = 59
+      ImageIndex = 61
     end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TPersonalServiceForm'
@@ -1202,7 +1182,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           StoredProc = spSelect
         end>
     end
-    object actPrint: TdsdPrintAction [26]
+    object actPrint: TdsdPrintAction [24]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1253,7 +1233,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_All: TdsdPrintAction [27]
+    object actPrint_All: TdsdPrintAction [25]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1303,7 +1283,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Detail: TdsdPrintAction [28]
+    object actPrint_Detail: TdsdPrintAction [26]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1355,7 +1335,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsertUpdateMISignYes: TdsdExecStoredProc [31]
+    object actInsertUpdateMISignYes: TdsdExecStoredProc [29]
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2371,7 +2351,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       end
       item
         Name = 'outFileExt'
-        Value = '.dbf'
+        Value = '.txt'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -2584,8 +2564,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 392
-    Top = 512
+    Left = 504
+    Top = 440
   end
   object spGet_Export_FileNameCSV: TdsdStoredProc
     StoredProcName = 'gpGet_PersonalService_FileNameCSV'
@@ -2661,8 +2641,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 600
-    Top = 512
+    Left = 624
+    Top = 488
   end
   object spSelectExport_dbf: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PersonalService_export_dbf'
@@ -2686,7 +2666,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumber'
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2695,7 +2675,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         Component = MasterCDS
         ComponentItem = 'TotalSummCardRecalc'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2704,11 +2684,42 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         Component = MasterCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 581
     Top = 413
+  end
+  object spGet_Export_FileNameZP_dbf: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Export_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileNamePrefix'
+        Value = Null
+        Component = actExport_dbf
+        ComponentItem = 'FileNamePrefix'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileExt'
+        Value = '.dbf'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 738
+    Top = 410
   end
 end
