@@ -716,6 +716,10 @@ begin
       else CString := FConnectionList.CurrentConnection[ctMain].CString;
 
     try
+    // TEST!!!
+    //AMaxAtempt:=1;
+    //!!!
+
       repeat
         for AttemptCount := 1 to AMaxAtempt do
         Begin
