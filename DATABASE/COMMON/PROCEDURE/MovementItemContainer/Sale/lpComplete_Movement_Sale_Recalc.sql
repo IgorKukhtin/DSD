@@ -53,7 +53,7 @@ BEGIN
                              );
 
 
-     -- таблица остатки для  inUnitId = 8459
+     -- таблица остатки для ВСЕХ
      CREATE TEMP TABLE _tmpRemains (GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
      --
      INSERT INTO _tmpRemains (GoodsId, GoodsKindId, Amount)
@@ -63,9 +63,9 @@ BEGIN
                                 FROM MovementItemContainer AS MIContainer
                                 WHERE MIContainer.MovementId = vbMovementId_Peresort
                                   AND MIContainer.DescId     = zc_MIContainer_Count()
-                                  --  !!!Розподільчий комплекс!!!
-                                  AND  inUnitId = 8459
-                                  AND vbOperDate < '01.02.2023'
+                                --!!!Розподільчий комплекс!!!
+                                --AND inUnitId = 8459
+                                --AND vbOperDate < '01.02.2023'
                                   
                                 GROUP BY MIContainer.ObjectId_Analyzer
                                        , MIContainer.ObjectIntId_Analyzer
@@ -79,9 +79,9 @@ BEGIN
                                                               AND RemainsOLAPTable.UnitId      = inUnitId
                                                               AND RemainsOLAPTable.OperDate    = DATE_TRUNC ('MONTH', vbOperDate)
 
-                              --  !!!Розподільчий комплекс!!!
-                              WHERE inUnitId = 8459
-                                  AND vbOperDate < '01.02.2023'
+                              --!!!Розподільчий комплекс!!!
+                              --WHERE inUnitId = 8459
+                              WHERE vbOperDate >= '01.01.2023'
                              )
        , tmpContainer_all AS (SELECT _tmpItem.GoodsId
                                    , _tmpItem.GoodsKindId
@@ -100,11 +100,11 @@ BEGIN
                                    LEFT JOIN ContainerLinkObject AS CLO_Account
                                                                  ON CLO_Account.ContainerId = Container.Id
                                                                 AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
-                              --  !!!Розподільчий комплекс!!!
-                              WHERE inUnitId = 8459
-                                -- без Товар в пути
-                                AND CLO_Account.ObjectId IS NULL
-                                  AND vbOperDate < '01.02.2023'
+                              -- без Товар в пути
+                              WHERE CLO_Account.ObjectId IS NULL
+                                AND vbOperDate >= '01.01.2023'
+                              --!!!Розподільчий комплекс!!!
+                              --AND inUnitId = 8459
                              )
        , tmpMIContainer_all AS (SELECT tmpContainer_all.ContainerId
                                      , tmpContainer_all.GoodsId
@@ -236,6 +236,7 @@ END IF;
      IF (NOT EXISTS (SELECT 1 FROM _tmpItemPeresort_new WHERE _tmpItemPeresort_new.ReceipId_gp_to > 0)
       AND inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
         )
+      AND vbOperDate < '01.02.2023'
        -- !!!Розподільчий комплекс!!!
        --OR (vbMovementId_Peresort > 0 AND inUnitId = 8459)
        -- !!! только для Ночной пересчет

@@ -66,7 +66,7 @@ BEGIN
              , 0                         AS BrandId
              , CAST ('' AS TVarChar)     AS BrandName
              , CAST ('' AS TVarChar)     AS CIN
-             , NULL AS TDateTime         AS DateBegin
+             , NULL :: TDateTime         AS DateBegin
              , CAST ('' AS TVarChar)     AS Comment
              , FALSE :: Boolean          AS isChild_Recalc
              , 0                         AS MovementId_Invoice

@@ -12,33 +12,52 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderClient_NPP(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId  Integer;
+   DECLARE vbNPP_old TFloat;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
-    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderClient());
-    vbUserId := lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderClient());
+     vbUserId := lpGetUserBySession (inSession);
 
 
-     -- сохранили значение <NPP>
+     -- нашли
+     vbNPP_old:= (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inId AND MovementFloat.DescId = zc_MovementFloat_NPP());
+
+     -- сохранили новое значение <NPP>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NPP(), inId, inNPP);
 
-    --проверка / замена
-    /*если при вводе такой номер встречается тогда в остальных документах он сдвигается на +1, т.е. были документы 1,2,3;4,5 .... добавили новый док и поставили там №-3, тогда 3,4,5 превращаются в 4,5,6*/
-     
-     IF EXISTS (SELECT 1
-                FROM MovementFloat
-                WHERE MovementFloat.DescId = zc_MovementFloat_NPP()
-                  AND COALESCE (MovementFloat.ValueData,0) = inNPP
-                  AND MovementFloat.MovementId <> inId)
+     -- Если стал = 0
+     IF ioNPP = 0 AND vbNPP_old > 0
      THEN
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NPP(), MovementFloat.MovementId, COALESCE (MovementFloat.ValueData,0) + 1 )
+         -- тогда всех подтягиваем к этому номеру
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NPP(), MovementFloat.MovementId, MovementFloat.ValueData - 1)
          FROM MovementFloat
              INNER JOIN Movement ON Movement.Id = MovementFloat.MovementId
                                 AND Movement.DescId = zc_Movement_OrderClient()
                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
          WHERE MovementFloat.DescId = zc_MovementFloat_NPP()
-           AND COALESCE (MovementFloat.ValueData,0) >= inNPP
-           AND MovementFloat.MovementId <> inId;
+           AND MovementFloat.ValueData  >= vbNPP_old
+           AND MovementFloat.MovementId <> inId
+          ;
+
+     -- если с "новым" NPP есть другой, тогда всех сдвигаем на +1
+     ELSEIF EXISTS (SELECT 1
+                    FROM MovementFloat
+                    WHERE MovementFloat.DescId = zc_MovementFloat_NPP()
+                      AND COALESCE (MovementFloat.ValueData,0) = inNPP
+                      AND MovementFloat.MovementId <> inId
+                   )
+     THEN
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NPP(), MovementFloat.MovementId, MovementFloat.ValueData + 1)
+         FROM MovementFloat
+             INNER JOIN Movement ON Movement.Id = MovementFloat.MovementId
+                                AND Movement.DescId = zc_Movement_OrderClient()
+                                AND Movement.StatusId <> zc_Enum_Status_Erased()
+         WHERE MovementFloat.DescId = zc_MovementFloat_NPP()
+           AND MovementFloat.ValueData  >= inNPP
+           AND MovementFloat.MovementId <> inId
+          ;
+
      END IF; 
  
      -- сохранили свойство <>

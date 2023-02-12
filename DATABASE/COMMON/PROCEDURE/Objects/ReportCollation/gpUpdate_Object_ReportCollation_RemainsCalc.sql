@@ -22,6 +22,9 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_ReportCollation());
 
+
+   return;
+
    -- находим элементы по вх. параметрам и расчитываем остатки
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReportCollation_StartRemainsCalc(), tmpObject.Id, SUM (tmpreport.StartRemains))
          , lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReportCollation_EndRemainsCalc(), tmpObject.Id, SUM (tmpreport.EndRemains)) 
@@ -70,6 +73,10 @@ BEGIN
            AND Object_ReportCollation.isErased = FALSE
            AND ObjectDate_Start.ValueData >= inStartDate
            AND ObjectDate_End.ValueData <= inEndDate
+           AND (ObjectDate_End.ValueData = (ObjectDate_Start.ValueData + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+             OR ObjectDate_End.ValueData = (ObjectDate_Start.ValueData + INTERVAL '2 MONTH' - INTERVAL '1 DAY')
+             OR ObjectDate_End.ValueData = (ObjectDate_Start.ValueData + INTERVAL '3 MONTH' - INTERVAL '1 DAY')
+               )
            AND (COALESCE (ObjectLink_ReportCollation_Juridical.ChildObjectId, 0) = inJuridicalId OR inJuridicalId = 0)
            AND (COALESCE (ObjectLink_ReportCollation_Partner.ChildObjectId, 0)   = inPartnerId  OR inPartnerId = 0)
            AND (COALESCE (ObjectLink_ReportCollation_Contract.ChildObjectId, 0)  = inContractId OR inContractId = 0)
@@ -92,3 +99,14 @@ END;$BODY$
  28.11.18         *
  15.10.18         *
 */
+
+-- тест
+SELECT * FROM gpUpdate_Object_ReportCollation_RemainsCalc (DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '10 MONTH')
+                                                         , CURRENT_DATE
+                                                         , 0 -- inJuridicalId
+                                                         , 0 -- inPartnerId
+                                                         , 0 -- inContractId
+                                                         , 0 -- inPaidKindId
+                                                         , 0 -- inInfoMoneyId
+                                                         ,zc_Enum_Process_Auto_PrimeCost() :: TVarChar
+                                                         );
