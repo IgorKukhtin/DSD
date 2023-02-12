@@ -103,16 +103,22 @@ object OrderInternalForm: TOrderInternalForm
       Top = 63
       Properties.Buttons = <
         item
-          Action = CompleteMovement
+          Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+          ImageIndex = 12
+          Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
           Kind = bkGlyph
         end
         item
-          Action = UnCompleteMovement
+          Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
           Default = True
+          ImageIndex = 11
+          Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
           Kind = bkGlyph
         end
         item
-          Action = DeleteMovement
+          Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+          ImageIndex = 13
+          Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
           Kind = bkGlyph
         end>
       Properties.Images = dmMain.ImageList
@@ -223,14 +229,14 @@ object OrderInternalForm: TOrderInternalForm
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 0
-        object cxGrid: TcxGrid
+        object cxGrid_Master: TcxGrid
           Left = 1
           Top = 1
           Width = 1086
           Height = 206
-          Align = alClient
+          Align = alTop
           TabOrder = 1
-          object cxGridDBTableView: TcxGridDBTableView
+          object cxGrid_MasterDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
             DataController.Filter.Options = [fcoCaseInsensitive]
@@ -353,7 +359,7 @@ object OrderInternalForm: TOrderInternalForm
               Width = 120
             end
             object GoodsGroupName: TcxGridDBColumn
-              Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074'.'
+              Caption = #1043#1088#1091#1087#1087#1072
               DataBinding.FieldName = 'GoodsGroupName'
               Visible = False
               HeaderAlignmentHorz = taCenter
@@ -375,7 +381,7 @@ object OrderInternalForm: TOrderInternalForm
               PropertiesClassName = 'TcxButtonEditProperties'
               Properties.Buttons = <
                 item
-                  Action = actGoodsChoiceForm
+                  Caption = 'GoodsForm'
                   Default = True
                   Kind = bkEllipsis
                 end>
@@ -390,7 +396,7 @@ object OrderInternalForm: TOrderInternalForm
               PropertiesClassName = 'TcxButtonEditProperties'
               Properties.Buttons = <
                 item
-                  Action = actGoodsChoiceForm
+                  Caption = 'GoodsForm'
                   Default = True
                   Kind = bkEllipsis
                 end>
@@ -409,19 +415,6 @@ object OrderInternalForm: TOrderInternalForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 70
-            end
-            object Article_all: TcxGridDBColumn
-              Caption = '***Artikel Nr'
-              DataBinding.FieldName = 'Article_all'
-              PropertiesClassName = 'TcxButtonEditProperties'
-              Properties.Buttons = <
-                item
-                  Default = True
-                  Kind = bkEllipsis
-                end>
-              Properties.ReadOnly = True
-              Visible = False
               Width = 70
             end
             object GoodsName: TcxGridDBColumn
@@ -485,6 +478,23 @@ object OrderInternalForm: TOrderInternalForm
               Options.Editing = False
               Width = 70
             end
+            object Comment: TcxGridDBColumn
+              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+              DataBinding.FieldName = 'Comment'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 150
+            end
+            object FromName: TcxGridDBColumn
+              Caption = 'Kunden'
+              DataBinding.FieldName = 'FromName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+              Options.Editing = False
+              Width = 120
+            end
             object InvNumberFull_OrderClient: TcxGridDBColumn
               Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
               DataBinding.FieldName = 'InvNumberFull_OrderClient'
@@ -497,7 +507,7 @@ object OrderInternalForm: TOrderInternalForm
               Properties.ReadOnly = True
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
+              HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
               Width = 70
             end
             object CIN: TcxGridDBColumn
@@ -506,6 +516,7 @@ object OrderInternalForm: TOrderInternalForm
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
               Options.Editing = False
               Width = 100
             end
@@ -515,45 +526,44 @@ object OrderInternalForm: TOrderInternalForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderGlyphAlignmentHorz = taCenter
+              HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
               Options.Editing = False
               Width = 100
             end
-            object FromName: TcxGridDBColumn
-              Caption = 'Kunden'
-              DataBinding.FieldName = 'FromName'
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderHint = #1054#1090' '#1082#1086#1075#1086
-              Options.Editing = False
-              Width = 120
-            end
-            object Comment: TcxGridDBColumn
-              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-              DataBinding.FieldName = 'Comment'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Width = 267
-            end
             object InsertName: TcxGridDBColumn
-              Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1083
+              Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
               DataBinding.FieldName = 'InsertName'
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1085#1080#1077
               Options.Editing = False
               Width = 70
             end
             object InsertDate: TcxGridDBColumn
-              Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
+              Caption = #1044#1072#1090#1072'/'#1074#1088'. ('#1089#1086#1079#1076'.)'
               DataBinding.FieldName = 'InsertDate'
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1077
               Options.Editing = False
               Width = 70
             end
-            object IsErased: TcxGridDBColumn
+            object Article_all: TcxGridDBColumn
+              Caption = '***Artikel Nr'
+              DataBinding.FieldName = 'Article_all'
+              PropertiesClassName = 'TcxButtonEditProperties'
+              Properties.Buttons = <
+                item
+                  Default = True
+                  Kind = bkEllipsis
+                end>
+              Properties.ReadOnly = True
+              Visible = False
+              Width = 70
+            end
+            object isErased: TcxGridDBColumn
               Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
               DataBinding.FieldName = 'isErased'
               Visible = False
@@ -563,18 +573,18 @@ object OrderInternalForm: TOrderInternalForm
               Width = 70
             end
           end
-          object cxGridLevel: TcxGridLevel
-            GridView = cxGridDBTableView
+          object cxGrid_MasterLevel: TcxGridLevel
+            GridView = cxGrid_MasterDBTableView
           end
         end
-        object cxGrid1: TcxGrid
+        object cxGrid_Child: TcxGrid
           Left = 1
-          Top = 215
+          Top = 393
           Width = 1086
           Height = 117
           Align = alBottom
           TabOrder = 2
-          object cxGridDBTableView1: TcxGridDBTableView
+          object cxGridDBTableView_child: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ChildDS
             DataController.Filter.Options = [fcoCaseInsensitive]
@@ -678,7 +688,6 @@ object OrderInternalForm: TOrderInternalForm
             OptionsCustomize.ColumnsQuickCustomization = True
             OptionsData.Deleting = False
             OptionsData.DeletingConfirmation = False
-            OptionsData.Editing = False
             OptionsData.Inserting = False
             OptionsView.Footer = True
             OptionsView.GroupByBox = False
@@ -716,8 +725,9 @@ object OrderInternalForm: TOrderInternalForm
               PropertiesClassName = 'TcxButtonEditProperties'
               Properties.Buttons = <
                 item
-                  Action = actChoiceFormOrderClientItem
+                  Caption = 'actGoodsChoiceForm'
                   Default = True
+                  Hint = 'actGoodsChoiceForm'
                   Kind = bkEllipsis
                 end>
               Properties.ReadOnly = True
@@ -742,7 +752,6 @@ object OrderInternalForm: TOrderInternalForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1096#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080')'
-              Options.Editing = False
               Width = 70
             end
             object AmountReserv_ch3: TcxGridDBColumn
@@ -827,7 +836,7 @@ object OrderInternalForm: TOrderInternalForm
             end
           end
           object cxGridLevel3: TcxGridLevel
-            GridView = cxGridDBTableView1
+            GridView = cxGridDBTableView_child
           end
         end
         object cxTopSplitter: TcxSplitter
@@ -836,16 +845,18 @@ object OrderInternalForm: TOrderInternalForm
           Width = 1086
           Height = 8
           HotZoneClassName = 'TcxMediaPlayer8Style'
-          AlignSplitter = salBottom
-          Control = cxGrid1
+          AlignSplitter = salTop
+          Control = cxGrid_Master
         end
         object cxGrid_Detail: TcxGrid
           Left = 1
-          Top = 340
+          Top = 215
           Width = 1086
           Height = 170
-          Align = alBottom
+          Align = alClient
           TabOrder = 0
+          ExplicitLeft = 2
+          ExplicitTop = 221
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -995,7 +1006,7 @@ object OrderInternalForm: TOrderInternalForm
               PropertiesClassName = 'TcxButtonEditProperties'
               Properties.Buttons = <
                 item
-                  Action = actReceiptServiceChoiceForm
+                  Action = actChoiceFormReceiptService
                   Default = True
                   Kind = bkEllipsis
                 end>
@@ -1092,12 +1103,12 @@ object OrderInternalForm: TOrderInternalForm
         end
         object cxSplitter2: TcxSplitter
           Left = 1
-          Top = 332
+          Top = 385
           Width = 1086
           Height = 8
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
-          Control = cxGrid_Detail
+          Control = cxGrid_Child
         end
       end
     end
@@ -1266,7 +1277,7 @@ object OrderInternalForm: TOrderInternalForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actReceiptServiceChoiceForm_DetAll
+                Action = actChoiceFormReceiptService_DetAll
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1288,7 +1299,7 @@ object OrderInternalForm: TOrderInternalForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actPersonal_ObjectChoiceForm
+                Action = actPersonalChoiceForm_DetAll
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1369,7 +1380,7 @@ object OrderInternalForm: TOrderInternalForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actGoodsChoiceForm
+                Caption = 'GoodsForm'
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1608,7 +1619,15 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'bbAddMask'
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -1620,19 +1639,11 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceFormOrderClientItem'
+          ItemName = 'BarSubItemGoods'
         end
         item
           Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemProtocol'
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -1644,39 +1655,7 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateRecordBoat'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErasedMI_Master'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErasedChild'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErasedChild'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIChildProtocolOpenForm'
+          ItemName = 'BarSubItemBoat'
         end
         item
           Visible = True
@@ -1692,35 +1671,11 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'bbSetErasedDetail'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErasedDetail'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIDetailProtocolOpenForm'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbInsertRecordDetailAll'
         end
         item
           Visible = True
-          ItemName = 'bbSetErasedDetail_All'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErasedDetail_All'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIDetailAllProtocolOpenForm'
+          ItemName = 'BarSubItemReceiptService'
         end
         item
           Visible = True
@@ -1732,7 +1687,23 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbInsertRecordChild'
+        end
+        item
+          Visible = True
+          ItemName = 'BarSubItemGoodsChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErasedMI_Master'
         end
         item
           Visible = True
@@ -1798,90 +1769,40 @@ object OrderInternalForm: TOrderInternalForm
       Action = actRefresh
       Category = 0
     end
-    object bbPrintAgilis: TdxBarButton
-      Action = actPrintAgilis
-      Category = 0
-    end
     object bbGridToExel: TdxBarButton
-      Action = GridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object bbErased: TdxBarButton
-      Action = SetErased
+      Action = actSetErased
       Category = 0
     end
     object bbUnErased: TdxBarButton
-      Action = SetUnErased
+      Action = actSetUnErased
       Category = 0
     end
     object bbMIContainer: TdxBarButton
-      Action = actMIContainer
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Category = 0
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Visible = ivAlways
+      ImageIndex = 57
     end
     object bbMovementItemProtocol: TdxBarButton
-      Action = MIMasterProtocolOpenForm
+      Action = actMIMasterProtocolOpenForm
       Category = 0
-    end
-    object bbCalcAmountPartner: TdxBarControlContainerItem
-      Caption = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
-      Category = 0
-      Hint = #1040#1074#1090#1086' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077'  <'#1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.>'
-      Visible = ivAlways
-    end
-    object bbAddMask: TdxBarButton
-      Action = macInsert_MI_byorderclient
-      Category = 0
-    end
-    object bbInsertRecord: TdxBarButton
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
-      Category = 0
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099'>'
-      Visible = ivAlways
-      ImageIndex = 0
-      ShortCut = 45
-    end
-    object bbCompleteCost: TdxBarButton
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Category = 0
-      Enabled = False
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Visible = ivAlways
-      ImageIndex = 12
-    end
-    object bbactUnCompleteCost: TdxBarButton
-      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Category = 0
-      Enabled = False
-      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Visible = ivAlways
-      ImageIndex = 11
-    end
-    object bbactSetErasedCost: TdxBarButton
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Category = 0
-      Enabled = False
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Visible = ivAlways
-      ImageIndex = 13
     end
     object bbShowErasedCost: TdxBarButton
-      Action = actShowErasedCost
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Category = 0
-    end
-    object bbInsertRecordGoods: TdxBarButton
-      Action = InsertRecordGoods
-      Category = 0
+      Enabled = False
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Visible = ivAlways
+      ImageIndex = 64
     end
     object bbPrintSticker: TdxBarButton
       Action = actPrint
       Category = 0
-    end
-    object bbPrintStickerTermo: TdxBarButton
-      Caption = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      Category = 0
-      Hint = #1055#1077#1095#1072#1090#1100' '#1085#1072' '#1090#1077#1088#1084#1086#1087#1088#1080#1085#1090#1077#1088' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
-      Visible = ivAlways
-      ImageIndex = 20
     end
     object bbMIContainerCost: TdxBarButton
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1079#1072#1090#1088#1072#1090'>'
@@ -1891,36 +1812,8 @@ object OrderInternalForm: TOrderInternalForm
       Visible = ivAlways
       ImageIndex = 57
     end
-    object bbOpenFormTransport: TdxBarButton
-      Action = macOpenFormTransport
-      Category = 0
-    end
-    object bbOpenFormService: TdxBarButton
-      Action = macOpenFormService
-      Category = 0
-    end
-    object bbPrintStructure: TdxBarButton
-      Action = actPrintStructure
-      Category = 0
-    end
-    object bbPrintTender: TdxBarButton
-      Action = actPrintOrderConfirmation
-      Category = 0
-    end
-    object bbInsertRecordInfo: TdxBarButton
-      Action = InsertRecordInfo
-      Category = 0
-    end
     object bbMIChildProtocolOpenForm: TdxBarButton
-      Action = MIChildProtocolOpenForm
-      Category = 0
-    end
-    object bbInsert_MI_byOrderClient: TdxBarButton
-      Action = actInsert_MI_byOrderClient
-      Category = 0
-    end
-    object bbSetErasedChild: TdxBarButton
-      Action = SetErasedChild
+      Action = actMIChildProtocolOpenForm
       Category = 0
     end
     object bbOpenDocument: TdxBarButton
@@ -1932,12 +1825,8 @@ object OrderInternalForm: TOrderInternalForm
       Category = 0
       ImageIndex = 52
     end
-    object bbSetErasedDetail: TdxBarButton
-      Action = SetErasedDetail
-      Category = 0
-    end
-    object bbSetUnErasedDetail: TdxBarButton
-      Action = SetUnErasedDetail
+    object bbSetErasedChild: TdxBarButton
+      Action = SetErasedChild
       Category = 0
     end
     object bbSetUnErasedChild: TdxBarButton
@@ -1945,40 +1834,272 @@ object OrderInternalForm: TOrderInternalForm
       Category = 0
     end
     object bbb: TdxBarButton
-      Action = InsertRecordBoat
+      Action = actInsertRecordBoat
       Category = 0
     end
     object bbUpdateRecordBoat: TdxBarButton
-      Action = actOrderClientInsertBoatForm
+      Action = actChoiceFormOrderClient
+      Category = 0
+    end
+    object bbInsertRecordGoods: TdxBarButton
+      Action = actInsertRecordGoods
       Category = 0
     end
     object bbChoiceFormOrderClientItem: TdxBarButton
       Action = actChoiceFormOrderClientItem
       Category = 0
     end
+    object bbInsertRecordDetail: TdxBarButton
+      Action = actInsertRecordDetail
+      Category = 0
+    end
     object bbInsertRecordDetailAll: TdxBarButton
-      Action = InsertRecordDetailAll
+      Action = actInsertRecordDetailAll
+      Category = 0
+    end
+    object bbChoiceFormReceiptService: TdxBarButton
+      Action = actChoiceFormReceiptService
+      Category = 0
+    end
+    object bbChoiceFormReceiptService_DetAll: TdxBarButton
+      Action = actChoiceFormReceiptService_DetAll
+      Category = 0
+    end
+    object bbSetErasedDetail: TdxBarButton
+      Action = actSetErasedDetail
       Category = 0
     end
     object bbSetErasedDetail_All: TdxBarButton
-      Action = SetErasedDetail_All
+      Action = actSetErasedDetail_All
+      Category = 0
+    end
+    object bbSetUnErasedDetail: TdxBarButton
+      Action = actSetUnErasedDetail
       Category = 0
     end
     object bbSetUnErasedDetail_All: TdxBarButton
       Action = SetUnErasedDetail_All
       Category = 0
     end
-    object bbInsertRecordDetail: TdxBarButton
-      Action = InsertRecordDetail
-      Category = 0
-    end
     object bbMIDetailProtocolOpenForm: TdxBarButton
-      Action = MIDetailProtocolOpenForm
+      Action = actMIDetailProtocolOpenForm
       Category = 0
     end
     object bbMIDetailAllProtocolOpenForm: TdxBarButton
-      Action = MIDetailAllProtocolOpenForm
+      Action = actMIDetailAllProtocolOpenForm
       Category = 0
+    end
+    object BarSubItemBoat: TdxBarSubItem
+      Caption = #1051#1086#1076#1082#1072
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdateRecordBoat'
+        end
+        item
+          Visible = True
+          ItemName = 'BarSubItemBoatSep1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased_boat'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased_boat'
+        end
+        item
+          Visible = True
+          ItemName = 'BarSubItemBoatSep2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIMasterBoatProtocolOpenForm'
+        end>
+    end
+    object BarSubItemGoods: TdxBarSubItem
+      Caption = #1059#1079#1077#1083
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbChoiceFormOrderClientItem'
+        end
+        item
+          Visible = True
+          ItemName = 'BarSubItemGoodsSep1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'BarSubItemGoodsSep2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end>
+    end
+    object BarSubItemReceiptService: TdxBarSubItem
+      Caption = #1056#1072#1073#1086#1090#1099
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbChoiceFormReceiptService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceFormReceiptService_DetAll'
+        end
+        item
+          Visible = True
+          ItemName = 'BarSubItemDetailSep1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedDetail'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedDetail_All'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedDetail'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedDetail_All'
+        end
+        item
+          Visible = True
+          ItemName = 'BarSubItemDetailSep2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIDetailProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIDetailAllProtocolOpenForm'
+        end>
+    end
+    object BarSubItemGoodsChild: TdxBarSubItem
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbOpenGoodsChoiceForm'
+        end
+        item
+          Visible = True
+          ItemName = 'BarSubItemChildSep1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'BarSubItemChildSep2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIChildProtocolOpenForm'
+        end>
+    end
+    object BarSubItemGoodsSep1: TdxBarSeparator
+      Caption = 'BarSubItemGoodsSep1'
+      Category = 0
+      Hint = 'BarSubItemGoodsSep1'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object BarSubItemGoodsSep2: TdxBarSeparator
+      Caption = 'BarSubItemGoodsSep2'
+      Category = 0
+      Hint = 'BarSubItemGoodsSep2'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbSetErased_boat: TdxBarButton
+      Action = actSetErased_boat
+      Category = 0
+    end
+    object bbSetUnErased_boat: TdxBarButton
+      Action = actSetUnErased_boat
+      Category = 0
+    end
+    object bbMIMasterBoatProtocolOpenForm: TdxBarButton
+      Action = actMIMasterBoatProtocolOpenForm
+      Category = 0
+    end
+    object BarSubItemBoatSep1: TdxBarSeparator
+      Caption = 'BarSubItemBoatSep1'
+      Category = 0
+      Hint = 'BarSubItemBoatSep1'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object BarSubItemBoatSep2: TdxBarSeparator
+      Caption = 'BarSubItemBoatSep2'
+      Category = 0
+      Hint = 'BarSubItemBoatSep2'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object BarSubItemDetailSep1: TdxBarSeparator
+      Caption = 'BarSubItemDetailSep1'
+      Category = 0
+      Hint = 'BarSubItemDetailSep1'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object BarSubItemDetailSep2: TdxBarSeparator
+      Caption = 'BarSubItemDetailSep2'
+      Category = 0
+      Hint = 'BarSubItemDetailSep2'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbInsertRecordChild: TdxBarButton
+      Action = actInsertRecordChild
+      Category = 0
+    end
+    object bbOpenGoodsChoiceForm: TdxBarButton
+      Action = acChoiceFormGoods_child
+      Category = 0
+    end
+    object BarSubItemChildSep1: TdxBarSeparator
+      Caption = 'BarSubItemChildSep1'
+      Category = 0
+      Hint = 'BarSubItemChildSep1'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object BarSubItemChildSep2: TdxBarSeparator
+      Caption = 'BarSubItemChildSep2'
+      Category = 0
+      Hint = 'BarSubItemChildSep2'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -2017,13 +2138,13 @@ object OrderInternalForm: TOrderInternalForm
       ImageIndex = 14
       ShortCut = 113
     end
-    object MIDetailAllProtocolOpenForm: TdsdOpenForm
+    object actMIDetailAllProtocolOpenForm: TdsdOpenForm
       Category = 'Protocol'
       TabSheet = cxTabSheet1
       MoveParams = <>
       Enabled = False
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083'>'
       ImageIndex = 34
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
@@ -2048,24 +2169,6 @@ object OrderInternalForm: TOrderInternalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-    end
-    object actShowErasedCost: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      StoredProcList = <
-        item
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 64
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 65
-      ImageIndexFalse = 64
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -2095,22 +2198,21 @@ object OrderInternalForm: TOrderInternalForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
-    object SetErasedDetail_All: TdsdUpdateErased
+    object actSetErasedDetail: TdsdUpdateErased
       Category = 'Detail'
-      TabSheet = cxTabSheet1
+      TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
-      StoredProc = spErasedMIDetailAll
+      StoredProc = spErasedMIDetail
       StoredProcList = <
         item
-          StoredProc = spErasedMIDetailAll
+          StoredProc = spErasedMIDetail
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = DetailDS_All
+      DataSource = DetailDS
     end
     object actUpdateDetailDS: TdsdUpdateDataSet
       Category = 'Detail'
@@ -2124,7 +2226,7 @@ object OrderInternalForm: TOrderInternalForm
         item
           StoredProc = spSelectMI_Detail
         end>
-      Caption = 'actUpdateMasterDS'
+      Caption = 'actUpdateDetailDS'
       DataSource = DetailDS
     end
     object actShowAll: TBooleanStoredProcAction
@@ -2156,6 +2258,58 @@ object OrderInternalForm: TOrderInternalForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actSetUnErasedDetail: TdsdUpdateErased
+      Category = 'Detail'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      StoredProc = spUnErasedMIDetail
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIDetail
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DetailDS
+    end
+    object actSetErasedDetail_All: TdsdUpdateErased
+      Category = 'Detail'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spErasedMIDetailAll
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIDetailAll
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = DetailDS_All
+    end
+    object actUpdateDetailDS_All: TdsdUpdateDataSet
+      Category = 'Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIDetailAll
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIDetailAll
+        end
+        item
+          StoredProc = spSelectMI_DetailAll
+        end
+        item
+          StoredProc = spSelectMI_Detail
+        end>
+      Caption = 'actUpdateDetailDS_All'
+      DataSource = DetailDS_All
+    end
     object SetUnErasedDetail_All: TdsdUpdateErased
       Category = 'Detail'
       TabSheet = cxTabSheet1
@@ -2174,69 +2328,6 @@ object OrderInternalForm: TOrderInternalForm
       isSetErased = False
       DataSource = DetailDS_All
     end
-    object actUpdateDataSetInfoDS: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end
-        item
-        end>
-      Caption = 'actUpdateInfoDS'
-    end
-    object actUpdateDetailrDS_All: TdsdUpdateDataSet
-      Category = 'Detail'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMIDetailAll
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMIDetailAll
-        end
-        item
-          StoredProc = spSelectMI_DetailAll
-        end
-        item
-          StoredProc = spSelectMI_Detail
-        end>
-      Caption = 'actUpdateMasterDS'
-      DataSource = DetailDS_All
-    end
-    object actPersonalChoiceForm_DetAll: TOpenChoiceForm
-      Category = 'Detail'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'PersonalFormAll'
-      FormName = 'TPersonalForm'
-      FormNameParam.Value = 'TPersonalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = DetailCDS_All
-          ComponentItem = 'PersonalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = DetailCDS_All
-          ComponentItem = 'PersonalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Code'
-          Value = Null
-          Component = DetailCDS_All
-          ComponentItem = 'PersonalCode'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -2251,18 +2342,6 @@ object OrderInternalForm: TOrderInternalForm
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
-    end
-    object actRefreshInfo: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <
-        item
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -2317,23 +2396,7 @@ object OrderInternalForm: TOrderInternalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object SetErasedDetail: TdsdUpdateErased
-      Category = 'Detail'
-      TabSheet = cxTabSheetMain
-      MoveParams = <>
-      StoredProc = spErasedMIDetail
-      StoredProcList = <
-        item
-          StoredProc = spErasedMIDetail
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = DetailDS
-    end
-    object GridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -2343,7 +2406,7 @@ object OrderInternalForm: TOrderInternalForm
       ShortCut = 16472
     end
     object SetErasedChild: TdsdUpdateErased
-      Category = 'DSDLib'
+      Category = 'Child'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spErasedMIChild
@@ -2351,36 +2414,19 @@ object OrderInternalForm: TOrderInternalForm
         item
           StoredProc = spErasedMIChild
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
     end
-    object SetUnErasedDetail: TdsdUpdateErased
-      Category = 'Detail'
-      TabSheet = cxTabSheetMain
-      MoveParams = <>
-      StoredProc = spUnErasedMIDetail
-      StoredProcList = <
-        item
-          StoredProc = spUnErasedMIDetail
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DetailDS
-    end
-    object MIChildProtocolOpenForm: TdsdOpenForm
+    object actMIChildProtocolOpenForm: TdsdOpenForm
       Category = 'Protocol'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083'>'
       ImageIndex = 34
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
@@ -2406,12 +2452,12 @@ object OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = False
     end
-    object MIDetailProtocolOpenForm: TdsdOpenForm
+    object actMIDetailProtocolOpenForm: TdsdOpenForm
       Category = 'Protocol'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083'>'
       ImageIndex = 34
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
@@ -2437,7 +2483,7 @@ object OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = False
     end
-    object SetErased: TdsdUpdateErased
+    object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -2446,14 +2492,14 @@ object OrderInternalForm: TOrderInternalForm
         item
           StoredProc = spErasedMIMaster
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1079#1077#1083'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1079#1077#1083'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
-    object SetUnErased: TdsdUpdateErased
+    object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -2470,122 +2516,12 @@ object OrderInternalForm: TOrderInternalForm
       isSetErased = False
       DataSource = MasterDS
     end
-    object UnCompleteMovement: TChangeGuidesStatus
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spChangeStatus
-      StoredProcList = <
-        item
-          StoredProc = spChangeStatus
-        end
-        item
-        end
-        item
-        end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 11
-      Status = mtUncomplete
-      Guides = StatusGuides
-    end
-    object actPersonal_ObjectChoiceForm: TOpenChoiceForm
-      Category = 'Detail'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'Personal_ObjectForm'
-      FormName = 'TPersonalForm'
-      FormNameParam.Value = 'TPersonalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = DetailCDS_All
-          ComponentItem = 'PersonalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = DetailCDS_All
-          ComponentItem = 'PersonalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Code'
-          Value = Null
-          Component = DetailCDS_All
-          ComponentItem = 'PersonalCode'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object CompleteMovement: TChangeGuidesStatus
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spChangeStatus
-      StoredProcList = <
-        item
-          StoredProc = spChangeStatus
-        end
-        item
-        end
-        item
-        end>
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
-      Status = mtComplete
-      Guides = StatusGuides
-    end
-    object DeleteMovement: TChangeGuidesStatus
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spChangeStatus
-      StoredProcList = <
-        item
-          StoredProc = spChangeStatus
-        end
-        item
-        end
-        item
-        end>
-      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      ImageIndex = 13
-      Status = mtDelete
-      Guides = StatusGuides
-    end
-    object actMIContainer: TdsdOpenForm
-      Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      ImageIndex = 57
-      FormName = 'TMovementItemContainerForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object MIMasterProtocolOpenForm: TdsdOpenForm
+    object actMIMasterProtocolOpenForm: TdsdOpenForm
       Category = 'Protocol'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083
       ImageIndex = 34
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
@@ -2611,68 +2547,40 @@ object OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = False
     end
-    object actGoodsKindChoice: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actGoodsKindChoice'
-      FormName = 'TGoodsKind_ObjectForm'
-      FormNameParam.Value = 'TGoodsKind_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actAddMask: TdsdExecStoredProc
-      Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertMaskMIMaster
-      StoredProcList = <
-        item
-          StoredProc = spInsertMaskMIMaster
-        end
-        item
-          StoredProc = spSelectMI
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
-      ImageIndex = 54
-    end
-    object InsertRecordDetail: TInsertRecord
+    object actInsertRecordDetail: TInsertRecord
       Category = 'Detail'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
       View = cxGridDBTableView_Det
-      Action = actReceiptServiceChoiceForm
+      Action = actChoiceFormReceiptService
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 0
     end
-    object actReceiptServiceChoiceForm: TOpenChoiceForm
+    object actInsertRecordDetailAll: TInsertRecord
       Category = 'Detail'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView_DetAll
+      Action = acChoiceFormOrderInternalMaster_DetAll
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1059#1079#1077#1083'/'#1051#1086#1076#1082#1072
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1059#1079#1077#1083'/'#1051#1086#1076#1082#1072
+      ImageIndex = 0
+    end
+    object actChoiceFormReceiptService: TOpenChoiceForm
+      Category = 'Detail'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'GoodsForm'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      ImageIndex = 1
       FormName = 'TReceiptServiceForm'
       FormNameParam.Value = 'TReceiptServiceForm'
       FormNameParam.DataType = ftString
@@ -2702,47 +2610,13 @@ object OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = True
     end
-    object actGoodsChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'GoodsForm'
-      FormName = 'TUnion_Goods_ReceiptServiceForm'
-      FormNameParam.Value = 'TUnion_Goods_ReceiptServiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Code'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsCode'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object InsertRecordGoods: TInsertRecord
+    object actInsertRecordGoods: TInsertRecord
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
-      View = cxGridDBTableView
+      View = cxGrid_MasterDBTableView
       Action = actChoiceFormOrderClientItem
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
@@ -2750,369 +2624,17 @@ object OrderInternalForm: TOrderInternalForm
       ShortCut = 45
       ImageIndex = 0
     end
-    object actPrintStructure: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrintStructure
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintStructure
-        end>
-      Caption = 'Print Structure'
-      Hint = 'Print Structure'
-      ImageIndex = 15
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'NPP;ProdColorGroupName'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintProduct_Structure'
-      ReportNameParam.Value = 'PrintProduct_Structure'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-      PictureFields.Strings = (
-        'photo1')
-    end
-    object actPrintOrderConfirmation: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrintOrderConfirmation
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintOrderConfirmation
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' OrderConfirmation'
-      Hint = 'Print OrderConfirmation'
-      ImageIndex = 18
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsColorCDS
-          UserName = 'frxDBDChild'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintProduct_OrderConfirmation'
-      ReportNameParam.Value = 'PrintProduct_OrderConfirmation'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actCheckDescService: TdsdExecStoredProc
-      Category = 'OpenForm'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actCheckRight'
-    end
-    object actCheckDescTransport: TdsdExecStoredProc
-      Category = 'OpenForm'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actCheckRight'
-    end
-    object actOpenFormService: TdsdOpenForm
-      Category = 'OpenForm'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      ImageIndex = 29
-      FormName = 'TTransportServiceForm'
-      FormNameParam.Value = 'TTransportServiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actOpenFormTransport: TdsdOpenForm
-      Category = 'OpenForm'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
-      ImageIndex = 29
-      FormName = 'TTransportForm'
-      FormNameParam.Value = 'TTransportForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object macOpenFormService: TMultiAction
-      Category = 'OpenForm'
-      MoveParams = <>
-      Enabled = False
-      ActionList = <
-        item
-          Action = actCheckDescService
-        end
-        item
-          Action = actOpenFormService
-        end>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1059#1089#1083#1091#1075'>'
-      ImageIndex = 29
-    end
-    object macOpenFormTransport: TMultiAction
-      Category = 'OpenForm'
-      MoveParams = <>
-      Enabled = False
-      ActionList = <
-        item
-          Action = actCheckDescTransport
-        end
-        item
-          Action = actOpenFormTransport
-        end>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1058#1088#1072#1085#1089#1087#1086#1088#1090'>'
-      ImageIndex = 25
-    end
-    object actChoiceFormOrderClient: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'OrderClientJournalChoiceForm'
-      ImageIndex = 47
-      FormName = 'TOrderClientJournalChoiceForm'
-      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'MovementId_OrderClient'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actPrintAgilis: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrintOffer
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintOffer
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' Offer'
-      Hint = 'Print Offer'
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintProduct_Offer'
-      ReportNameParam.Value = 'PrintProduct_Offer'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actInsert_MI_byOrderClient: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsert_MI_byOrderClient
-      StoredProcList = <
-        item
-          StoredProc = spInsert_MI_byOrderClient
-        end
-        item
-          StoredProc = spSelectMI
-        end
-        item
-          StoredProc = spSelectMI_Child
-        end>
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1047#1072#1082#1072#1079#1072#1084' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1047#1072#1082#1072#1079#1072#1084' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
-      ImageIndex = 27
-    end
-    object InsertRecordBoat: TInsertRecord
-      Category = 'DSDLib'
+    object actInsertRecordBoat: TInsertRecord
+      Category = 'Boat'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
-      View = cxGridDBTableView
-      Action = actOrderClientInsertBoatForm
+      View = cxGrid_MasterDBTableView
+      Action = actChoiceFormOrderClient
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
-      ImageIndex = 0
-    end
-    object actOpenForm: TdsdOpenForm
-      Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
-      ImageIndex = 28
-      FormName = 'TOrderClientForm'
-      FormNameParam.Value = 'TOrderClientForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MovementId_OrderClient'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = Null
-          Component = edOperDate
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object macErasedMI_Master_list: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = SetErased
-        end>
-      View = cxGridDBTableView
-      Caption = 'macErasedMI_Master_list'
-    end
-    object macErasedMI_Master: TMultiAction
-      Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = macErasedMI_Master_list
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'?'
-      InfoAfterExecute = #1057#1090#1088#1086#1082#1080' '#1091#1076#1072#1083#1077#1085#1099
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-    end
-    object InsertRecordInfo: TInsertRecord
-      Category = 'DSDLib'
-      MoveParams = <>
-      Enabled = False
-      PostDataSetBeforeExecute = False
-      Params = <>
-      Caption = 'Add Info'
-      Hint = 'Add Info'
       ImageIndex = 0
     end
     object actChoiceFormOrderClientItem: TOpenChoiceForm
@@ -3120,7 +2642,7 @@ object OrderInternalForm: TOrderInternalForm
       TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1059#1079#1077#1083'>'
       ImageIndex = 1
       FormName = 'TOrderClientJournalChoiceItemForm'
@@ -3206,63 +2728,105 @@ object OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = True
     end
-    object macInsert_MI_byorderclient: TMultiAction
+    object actOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
+      ImageIndex = 28
+      FormName = 'TOrderClientForm'
+      FormNameParam.Value = 'TOrderClientForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_OrderClient'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macErasedMI_Master_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSetErased
+        end>
+      View = cxGrid_MasterDBTableView
+      Caption = 'macErasedMI_Master_list'
+    end
+    object macErasedMI_Master: TMultiAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       ActionList = <
         item
-          Action = actChoiceFormOrderClient
-        end
-        item
-          Action = actInsert_MI_byOrderClient
+          Action = macErasedMI_Master_list
         end
         item
           Action = actRefresh
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
-      ImageIndex = 54
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'?'
+      InfoAfterExecute = #1057#1090#1088#1086#1082#1080' '#1091#1076#1072#1083#1077#1085#1099
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
-    object actPersonalChoiceForm: TOpenChoiceForm
+    object actChoiceFormReceiptService_DetAll: TOpenChoiceForm
       Category = 'Detail'
+      TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
-      Caption = 'PersonalForm'
-      FormName = 'TPersonalForm'
-      FormNameParam.Value = 'TPersonalForm'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      ImageIndex = 1
+      FormName = 'TReceiptServiceForm'
+      FormNameParam.Value = 'TReceiptServiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
-          Component = DetailCDS
-          ComponentItem = 'PersonalId'
+          Component = DetailCDS_All
+          ComponentItem = 'ReceiptServiceId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = DetailCDS
-          ComponentItem = 'PersonalName'
+          Component = DetailCDS_All
+          ComponentItem = 'ReceiptServiceName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
-          Component = DetailCDS
-          ComponentItem = 'PersonalCode'
+          Component = DetailCDS_All
+          ComponentItem = 'ReceiptServiceCode'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
-    object actMasterChoiceForm: TOpenChoiceForm
+    object acChoiceFormOrderInternalMaster_DetAll: TOpenChoiceForm
       Category = 'Detail'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'MasterChoiceForm'
+      Caption = 'acChoiceFormOrderInternalMaster_DetAll'
       FormName = 'TOrderInternalMasterChoiceForm'
       FormNameParam.Value = 'TOrderInternalMasterChoiceForm'
       FormNameParam.DataType = ftString
@@ -3395,8 +2959,76 @@ object OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = True
     end
+    object actPersonalChoiceForm: TOpenChoiceForm
+      Category = 'Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PersonalForm'
+      FormName = 'TPersonalForm'
+      FormNameParam.Value = 'TPersonalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'PersonalCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actPersonalChoiceForm_DetAll: TOpenChoiceForm
+      Category = 'Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PersonalFormAll'
+      FormName = 'TPersonalForm'
+      FormNameParam.Value = 'TPersonalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = DetailCDS_All
+          ComponentItem = 'PersonalCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object SetUnErasedChild: TdsdUpdateErased
-      Category = 'DSDLib'
+      Category = 'Child'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spUnErasedMIChild
@@ -3412,64 +3044,12 @@ object OrderInternalForm: TOrderInternalForm
       isSetErased = False
       DataSource = ChildDS
     end
-    object actUpdateRecordBoat2: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
-      ImageIndex = 1
-      FormName = 'TOrderClientJournalChoiceForm'
-      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'MovementId_OrderClient'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InvNumber_Full'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InvNumberFull_OrderClient'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ProductId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ProductName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'FromName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'FromName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actOrderClientInsertBoatForm: TOpenChoiceForm
-      Category = 'DSDLib'
+    object actChoiceFormOrderClient: TOpenChoiceForm
+      Category = 'Boat'
       TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
       ImageIndex = 1
       FormName = 'TOrderClientJournalChoiceForm'
@@ -3531,103 +3111,134 @@ object OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = True
     end
-    object actUpdateRecordBoat: TdsdInsertUpdateAction
-      Category = 'DSDLib'
+    object actSetErased_boat: TdsdUpdateErased
+      Category = 'Boat'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
-      ImageIndex = 1
-      FormName = 'TOrderClientJournalChoiceForm'
-      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+      StoredProc = spErasedMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMaster
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
+    object actSetUnErased_boat: TdsdUpdateErased
+      Category = 'Boat'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      StoredProc = spUnErasedMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIMaster
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS
+    end
+    object actMIMasterBoatProtocolOpenForm: TdsdOpenForm
+      Category = 'Protocol'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'key'
+          Name = 'Id'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'MovementId_OrderClient'
+          ComponentItem = 'Id'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'InvNumber_Full'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InvNumberFull_OrderClient'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ProductId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ProductName'
+          Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'FromName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'FromName'
-          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-      IdFieldName = 'Id'
     end
-    object actReceiptServiceChoiceForm_DetAll: TOpenChoiceForm
-      Category = 'Detail'
+    object actInsertRecordChild: TInsertRecord
+      Category = 'Child'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'GoodsForm'
-      FormName = 'TReceiptServiceForm'
-      FormNameParam.Value = 'TReceiptServiceForm'
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView_child
+      Action = acChoiceFormGoods_child
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      ImageIndex = 0
+    end
+    object acChoiceFormGoods_child: TOpenChoiceForm
+      Category = 'Child'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      ImageIndex = 1
+      FormName = 'TGoodsForm'
+      FormNameParam.Value = 'TGoodsForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
-          Component = DetailCDS_All
-          ComponentItem = 'ReceiptServiceId'
+          Component = ChildCDS
+          ComponentItem = 'GoodsId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = DetailCDS_All
-          ComponentItem = 'ReceiptServiceName'
+          Component = ChildCDS
+          ComponentItem = 'GoodsName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
-          Component = DetailCDS_All
-          ComponentItem = 'ReceiptServiceCode'
+          Component = ChildCDS
+          ComponentItem = 'GoodsCode'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
-    object InsertRecordDetailAll: TInsertRecord
-      Category = 'Detail'
-      TabSheet = cxTabSheet1
+    object actUpdateChildDS: TdsdUpdateDataSet
+      Category = 'Child'
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
-      View = cxGridDBTableView_DetAll
-      Action = actMasterChoiceForm
-      Params = <>
-      Caption = 'InsertRecordNew'
-      ImageIndex = 0
+      StoredProc = spInsertUpdateMIChild
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIChild
+        end
+        item
+          StoredProc = spSelectMI_Detail
+        end>
+      Caption = 'actUpdateChildDS'
+      DataSource = ChildDS
     end
   end
   object MasterDS: TDataSource
@@ -4390,7 +4001,7 @@ object OrderInternalForm: TOrderInternalForm
   end
   object actDBViewAddOnChild: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
+    View = cxGridDBTableView_child
     OnDblClickActionList = <
       item
       end
@@ -4451,7 +4062,7 @@ object OrderInternalForm: TOrderInternalForm
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView
+    View = cxGrid_MasterDBTableView
     OnDblClickActionList = <
       item
       end
@@ -4624,13 +4235,13 @@ object OrderInternalForm: TOrderInternalForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 704
-    Top = 583
+    Left = 632
+    Top = 559
   end
   object DetailDS: TDataSource
     DataSet = DetailCDS
-    Left = 750
-    Top = 583
+    Left = 694
+    Top = 559
   end
   object DetailViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4658,8 +4269,8 @@ object OrderInternalForm: TOrderInternalForm
       end>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 795
-    Top = 585
+    Left = 747
+    Top = 553
   end
   object spSelectMI_Detail: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_OrderInternal_Detail'
@@ -4789,8 +4400,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 438
-    Top = 511
+    Left = 62
+    Top = 415
   end
   object spErasedMIDetail: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderInternal_SetErased_Detail'
@@ -5114,5 +4725,100 @@ object OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 846
     Top = 391
+  end
+  object spInsertUpdateMIChild: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_OrderInternal_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'PersonalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptServiceName'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'ReceiptServiceName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmount'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperPrice'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'OperPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inHours'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'Hours'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSumm'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'Summ'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 70
+    Top = 567
   end
 end

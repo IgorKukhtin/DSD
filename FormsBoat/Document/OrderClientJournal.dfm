@@ -199,21 +199,21 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Width = 70
       end
       object NPP: TcxGridDBColumn
-        Caption = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1089#1073#1086#1088#1082#1080
+        Caption = #8470' '#1087'/'#1087' '#1060#1072#1082#1090
         DataBinding.FieldName = 'NPP'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 85
+        Width = 70
       end
       object NPP_2: TcxGridDBColumn
-        Caption = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1087#1083#1072#1085
+        Caption = #8470' '#1087'/'#1087' '#1055#1083#1072#1085
         DataBinding.FieldName = 'NPP_2'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100'  '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1089#1073#1086#1088#1082#1080
         Options.Editing = False
-        Width = 85
+        Width = 70
       end
       object StatusCode: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
@@ -839,16 +839,16 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Category = 'NPP'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_NPP_Plus
+      StoredProc = spUpdate_NPP_Minus
       StoredProcList = <
         item
-          StoredProc = spUpdate_NPP_Plus
+          StoredProc = spUpdate_NPP_Minus
         end
         item
           StoredProc = spSelect
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' +1'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' +1'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1056#1072#1085#1100#1096#1077
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1056#1072#1085#1100#1096#1077' (-1)'
       ImageIndex = 81
     end
     object ExecuteDialog: TExecuteDialog
@@ -900,16 +900,16 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Category = 'NPP'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_NPP_Minus
+      StoredProc = spUpdate_NPP_Plus
       StoredProcList = <
         item
-          StoredProc = spUpdate_NPP_Minus
+          StoredProc = spUpdate_NPP_Plus
         end
         item
           StoredProc = spSelect
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' -1'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' -1'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1055#1086#1079#1078#1077
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1055#1086#1079#1078#1077' (+1)'
       ImageIndex = 82
     end
     object dsdGridToExcel: TdsdGridToExcel

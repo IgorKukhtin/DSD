@@ -212,6 +212,7 @@
         object isSale: TcxGridDBColumn
           Caption = #1055#1088#1086#1076#1072#1085#1072' ('#1076#1072'/'#1085#1077#1090')'
           DataBinding.FieldName = 'isSale'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1055#1088#1086#1076#1072#1085#1072' ('#1076#1072'/'#1085#1077#1090')'
@@ -243,21 +244,21 @@
           Width = 70
         end
         object NPP_OrderClient: TcxGridDBColumn
-          Caption = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1089#1073#1086#1088#1082#1080
+          Caption = #8470' '#1087'/'#1087' '#1060#1072#1082#1090
           DataBinding.FieldName = 'NPP_OrderClient'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 85
+          Width = 70
         end
         object NPP_2: TcxGridDBColumn
-          Caption = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1087#1083#1072#1085
+          Caption = #8470' '#1087'/'#1087' '#1055#1083#1072#1085
           DataBinding.FieldName = 'NPP_2'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100'  '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1089#1073#1086#1088#1082#1080
           Options.Editing = False
-          Width = 85
+          Width = 70
         end
         object Code: TcxGridDBColumn
           Caption = 'Interne Nr'
@@ -1160,7 +1161,7 @@
       Width = 627
       Height = 17
       Align = alTop
-      Caption = 'Options'
+      Caption = #1054#1087#1094#1080#1080
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
@@ -1468,10 +1469,12 @@
       Width = 553
       Height = 17
       Align = alTop
-      Caption = 'Items Boat Structure'
+      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
       Color = clLime
       ParentBackground = False
       TabOrder = 1
+      ExplicitLeft = 2
+      ExplicitTop = 1
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -1808,7 +1811,7 @@
         end>
     end
     object BarSubItemColor: TdxBarSubItem
-      Caption = 'Boat Structure'
+      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -1826,7 +1829,7 @@
         end>
     end
     object BarSubItemOption: TdxBarSubItem
-      Caption = 'Options'
+      Caption = #1054#1087#1094#1080#1080
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -3306,22 +3309,6 @@
       Category = 'NPP'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_NPP_Plus
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_NPP_Plus
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' +1'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' +1'
-      ImageIndex = 81
-    end
-    object actUpdate_NPP_Minus: TdsdExecStoredProc
-      Category = 'NPP'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
       StoredProc = spUpdate_NPP_Minus
       StoredProcList = <
         item
@@ -3330,8 +3317,21 @@
         item
           StoredProc = spSelect
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' -1'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' -1'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1056#1072#1085#1100#1096#1077
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1056#1072#1085#1100#1096#1077' (-1)'
+      ImageIndex = 81
+    end
+    object actUpdate_NPP_Minus: TdsdExecStoredProc
+      Category = 'NPP'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_NPP_Plus
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_NPP_Plus
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1055#1086#1079#1078#1077
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1055#1086#1079#1078#1077' (+1)'
       ImageIndex = 82
     end
   end

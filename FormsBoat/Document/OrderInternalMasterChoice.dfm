@@ -95,8 +95,6 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = -120
-    ExplicitTop = 37
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -141,7 +139,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
         Width = 120
       end
       object GoodsGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074'.'
+        Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -155,7 +153,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 64
+        Width = 55
       end
       object Article: TcxGridDBColumn
         Caption = 'Artikel Nr'
@@ -194,20 +192,6 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
-      object Article_all: TcxGridDBColumn
-        Caption = '***Artikel Nr'
-        DataBinding.FieldName = 'Article_all'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        Visible = False
         Options.Editing = False
         Width = 70
       end
@@ -273,6 +257,24 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
         Options.Editing = False
         Width = 70
       end
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 150
+      end
+      object FromName: TcxGridDBColumn
+        Caption = 'Kunden'
+        DataBinding.FieldName = 'FromName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+        Options.Editing = False
+        Width = 120
+      end
       object InvNumberFull_OrderClient: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
         DataBinding.FieldName = 'InvNumberFull_OrderClient'
@@ -285,7 +287,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Options.Editing = False
         Width = 70
       end
@@ -295,6 +297,7 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Options.Editing = False
         Width = 100
       end
@@ -304,26 +307,9 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Options.Editing = False
         Width = 100
-      end
-      object FromName: TcxGridDBColumn
-        Caption = 'Kunden'
-        DataBinding.FieldName = 'FromName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1054#1090' '#1082#1086#1075#1086
-        Options.Editing = False
-        Width = 120
-      end
-      object Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 267
       end
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1083
@@ -340,6 +326,20 @@ object OrderInternalMasterChoiceForm: TOrderInternalMasterChoiceForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object Article_all: TcxGridDBColumn
+        Caption = '***Artikel Nr'
+        DataBinding.FieldName = 'Article_all'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
         Options.Editing = False
         Width = 70
       end

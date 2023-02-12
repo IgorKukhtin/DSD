@@ -952,10 +952,12 @@ object OrderClientForm: TOrderClientForm
             Width = 536
             Height = 17
             Align = alTop
-            Caption = 'Items Boat Structure'
+            Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
             Color = clLime
             ParentBackground = False
             TabOrder = 1
+            ExplicitLeft = 2
+            ExplicitTop = -3
           end
         end
         object PanelProdOptItems: TPanel
@@ -1338,10 +1340,12 @@ object OrderClientForm: TOrderClientForm
             Width = 803
             Height = 17
             Align = alTop
-            Caption = 'Options'
+            Caption = #1054#1087#1094#1080#1080
             Color = clAqua
             ParentBackground = False
             TabOrder = 1
+            ExplicitLeft = -2
+            ExplicitTop = 5
           end
         end
         object cxSplitter1: TcxSplitter

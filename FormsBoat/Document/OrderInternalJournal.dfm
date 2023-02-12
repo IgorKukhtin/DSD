@@ -122,6 +122,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
           end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
         Width = 55
       end
       object InvNumber: TcxGridDBColumn
@@ -129,7 +130,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1079#1072#1082#1072#1079' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
         Width = 55
       end
       object OperDate: TcxGridDBColumn
@@ -137,7 +138,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1079#1072#1082#1072#1079' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
         Width = 80
       end
       object FromName: TcxGridDBColumn
@@ -154,7 +155,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         DataBinding.FieldName = 'InvNumberFull_OrderClient'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Options.Editing = False
         Width = 200
       end
@@ -164,6 +165,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Options.Editing = False
         Width = 200
       end
@@ -173,6 +175,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Options.Editing = False
         Width = 100
       end
@@ -181,6 +184,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         DataBinding.FieldName = 'ItemName_goods'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
         Width = 70
       end
       object Article: TcxGridDBColumn
@@ -188,6 +192,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         DataBinding.FieldName = 'Article'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
         Width = 120
       end
       object GoodsCode: TcxGridDBColumn
@@ -203,6 +208,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
         Options.Editing = False
         Width = 70
       end
@@ -211,6 +217,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
         Options.Editing = False
         Width = 200
       end
@@ -219,6 +226,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         DataBinding.FieldName = 'Comment_goods'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
         Width = 100
       end
       object Amount: TcxGridDBColumn
@@ -230,6 +238,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
         Options.Editing = False
         Width = 55
       end
@@ -238,6 +247,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
         Options.Editing = False
         Width = 297
       end
@@ -247,6 +257,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
         Options.Editing = False
         Width = 125
       end
@@ -256,17 +267,17 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
+        HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1085#1080#1077' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
         Options.Editing = False
         Width = 101
       end
       object InsertDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+        Caption = #1044#1072#1090#1072'/'#1074#1088'. ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertDate'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077')'
+        HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1077' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
         Options.Editing = False
         Width = 78
       end
@@ -276,17 +287,17 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
+        HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
         Options.Editing = False
         Width = 101
       end
       object UpdateDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+        Caption = #1044#1072#1090#1072'/'#1074#1088'. ('#1082#1086#1088#1088'.)'
         DataBinding.FieldName = 'UpdateDate'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
+        HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
         Options.Editing = False
         Width = 78
       end
@@ -296,15 +307,17 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1077' ('#1101#1083#1077#1084#1077#1085#1090')'
         Options.Editing = False
         Width = 70
       end
       object InsertDate_mi: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103' ('#1101#1083#1077#1084#1077#1085#1090')'
+        Caption = #1044#1072#1090#1072'/'#1074#1088'. '#1089#1086#1079#1076'. ('#1101#1083#1077#1084#1077#1085#1090')'
         DataBinding.FieldName = 'InsertDate_mi'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1077' ('#1101#1083#1077#1084#1077#1085#1090')'
         Options.Editing = False
         Width = 70
       end
@@ -317,6 +330,7 @@ object OrderInternalJournalForm: TOrderInternalJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
         Width = 125
       end
     end
