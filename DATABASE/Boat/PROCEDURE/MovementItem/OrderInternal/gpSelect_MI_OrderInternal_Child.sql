@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , ProdColorName_goods TVarChar
              , Comment_goods TVarChar
              , Amount NUMERIC (16, 8), AmountReserv NUMERIC (16, 8), AmountSend NUMERIC (16, 8)
+             , ForCount TFloat
              , UnitId Integer, UnitName TVarChar
              , ReceiptLevelId Integer, ReceiptLevelName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
@@ -98,6 +99,9 @@ BEGIN
                          THEN zfCalc_Value_ForCount (MovementItem.Amount, MIFloat_ForCount.ValueData)
                     ELSE 0
                END :: NUMERIC (16, 8) AS AmountSend
+               
+             , MIFloat_ForCount.ValueData  ::TFloat AS ForCount
+
              , Object_Unit.Id                       AS UnitId
              , Object_Unit.ValueData                AS UnitName
              , Object_ReceiptLevel.Id               AS ReceiptLevelId

@@ -855,8 +855,6 @@ object OrderInternalForm: TOrderInternalForm
           Height = 170
           Align = alClient
           TabOrder = 0
-          ExplicitLeft = 2
-          ExplicitTop = 221
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -3981,8 +3979,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 160
-    Top = 407
+    Left = 200
+    Top = 559
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
@@ -4305,8 +4303,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 160
-    Top = 535
+    Left = 216
+    Top = 399
   end
   object spInsertUpdateMIDetail: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_OrderInternal_Detail'
@@ -4452,8 +4450,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 182
-    Top = 479
+    Left = 150
+    Top = 415
   end
   object spErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderInternal_SetErased_Child'
@@ -4734,7 +4732,7 @@ object OrderInternalForm: TOrderInternalForm
       item
         Name = 'ioId'
         Value = Null
-        Component = DetailCDS
+        Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -4756,69 +4754,91 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalId'
+        Name = 'inObjectId'
         Value = Null
-        Component = DetailCDS
-        ComponentItem = 'PersonalId'
+        Component = ChildCDS
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReceiptServiceName'
+        Name = 'inReceiptLevelId'
         Value = Null
-        Component = DetailCDS
-        ComponentItem = 'ReceiptServiceName'
-        DataType = ftString
+        Component = ChildCDS
+        ComponentItem = 'ReceiptLevelId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioAmount'
+        Name = 'inColorPatternId'
         Value = Null
-        Component = DetailCDS
+        Component = ChildCDS
+        ComponentItem = 'ColorPatternId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdColorPatternId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'ProdColorPatternId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProdOptionsId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'ProdOptionsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = ChildCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioOperPrice'
+        Name = 'inAmountReserv'
         Value = Null
-        Component = DetailCDS
-        ComponentItem = 'OperPrice'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inHours'
-        Value = Null
-        Component = DetailCDS
-        ComponentItem = 'Hours'
+        Component = ChildCDS
+        ComponentItem = 'AmountReserv'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSumm'
+        Name = 'inAmountSend'
         Value = Null
-        Component = DetailCDS
-        ComponentItem = 'Summ'
+        Component = ChildCDS
+        ComponentItem = 'AmountSend'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inComment'
+        Name = 'inForCount'
         Value = Null
-        Component = DetailCDS
-        ComponentItem = 'Comment'
-        DataType = ftString
+        Component = ChildCDS
+        ComponentItem = 'ForCount'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 70
-    Top = 567
+    Left = 54
+    Top = 543
   end
 end
