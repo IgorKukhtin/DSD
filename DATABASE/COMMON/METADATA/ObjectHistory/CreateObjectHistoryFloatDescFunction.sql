@@ -64,9 +64,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_CashSettings_FixedPercent() RET
 INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
 SELECT zc_ObjectHistory_CashSettings(), 'zc_ObjectHistoryFloat_CashSettings_FixedPercent','Фиксированный процент выполнения плана' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_CashSettings_FixedPercent());
 
+CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_CashSettings_PenMobApp() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryFloatDesc WHERE Code = 'zc_ObjectHistoryFloat_CashSettings_PenMobApp'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
+SELECT zc_ObjectHistory_CashSettings(), 'zc_ObjectHistoryFloat_CashSettings_PenMobApp','Сумма штрафа за 1% невыполнения плана по мобильному приложению' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_CashSettings_PenMobApp());
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Шаблий О.В.
+ 13.02.23                                                                        * zc_ObjectHistoryFloat_CashSettings_PenMobApp
  05.02.23                                                                        * zc_ObjectHistoryFloat_CashSettings_FixedPercent
  09.06.21                                                                        * zc_ObjectHistoryFloat_PriceSite_Value
  30.04.21                                                                        * zc_ObjectHistoryFloat_PriceChange_Multiplicity

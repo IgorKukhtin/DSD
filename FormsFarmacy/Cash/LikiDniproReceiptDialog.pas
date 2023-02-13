@@ -219,13 +219,13 @@ begin
       MainCashForm.Label30.Caption := '     Мед.уч.: ';
       MainCashForm.Label7.Caption := 'ФИО Врача:';
 
-      MainCashForm.lblPartnerMedicalName.Caption := '  ' + MainCashForm.FormParams.ParamByName('PartnerMedicalName').Value;
+      MainCashForm.lblPartnerMedicalName.Text := '  ' + MainCashForm.FormParams.ParamByName('PartnerMedicalName').Value;
       MainCashForm.lblMedicSP.Caption := '  ' + MainCashForm.FormParams.ParamByName('MedicKashtanName').Value +
         '  /  № ' + MainCashForm.FormParams.ParamByName('InvNumberSP').Value + ' от ' +
         DateToStr(MainCashForm.FormParams.ParamByName('OperDateSP').Value);
-      MainCashForm.lblMemberSP.Caption := '  ' + MainCashForm.FormParams.ParamByName('MemberKashtanName').Value;
+      MainCashForm.lblMemberSP.Text := '  ' + MainCashForm.FormParams.ParamByName('MemberKashtanName').Value;
       if MainCashForm.FormParams.ParamByName('Category1303Name').Value <> '' then
-        MainCashForm.lblMemberSP.Caption := MainCashForm.lblMemberSP.Caption + ' / ' + MainCashForm.FormParams.ParamByName('Category1303Name').Value;
+        MainCashForm.lblMemberSP.Text := MainCashForm.lblMemberSP.Text + ' / ' + MainCashForm.FormParams.ParamByName('Category1303Name').Value;
       MainCashForm.pnlSP.Visible := MainCashForm.FormParams.ParamByName('InvNumberSP').Value <> '';
       MainCashForm.pnlSP.Visible := True;
     end;

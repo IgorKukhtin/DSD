@@ -26,6 +26,11 @@ BEGIN
        -- определяется <Торговая сеть>
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
      
+     IF COALESCE (ioId, 0) = 0 AND ABS(inOperDate::Date - CURRENT_DATE) > 3
+     THEN
+       inOperDate := CURRENT_DATE;
+     END IF;
+     
      IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
                WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
         AND vbUserId <> 8037524
