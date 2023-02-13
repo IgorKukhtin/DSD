@@ -4,7 +4,7 @@ unit Storage;
 
 interface
 
-uses SysUtils, System.Classes, IdSSLOpenSSL;
+uses SysUtils, System.Classes, IdSSLOpenSSL, IdHTTP, IDComponent;
 
 type
 
@@ -37,7 +37,9 @@ type
     procedure LoadReportPriorityState(AProcName: string; var ASecond_pause :Integer;
                                       var AMessage_pause: String; ASession: string);
     function ReportPriorityPause(AProcName, ASession: string) : Boolean;
+    function GetIdHTTP : TIdHTTP;
     property Connection: String read GetConnection;
+    property IdHTTP: TIdHTTP read GetIdHTTP;
   end;
 
   TStorageFactory = class
@@ -58,8 +60,8 @@ type
 
 implementation
 
-uses IdHTTP, Xml.XMLDoc, XMLIntf, ZLibEx, idGlobal, UtilConst, System.Variants,
-     UtilConvert, MessagesUnit, Dialogs, StrUtils, IDComponent, SimpleGauge,
+uses Xml.XMLDoc, XMLIntf, ZLibEx, idGlobal, UtilConst, System.Variants,
+     UtilConvert, MessagesUnit, Dialogs, StrUtils, SimpleGauge,
      Forms, Log, IdStack, IdExceptionCore, SyncObjS, CommonData, System.AnsiStrings,
      Datasnap.DBClient, System.Contnrs, Vcl.Controls, PriorityPause;
 
@@ -131,6 +133,7 @@ type
     function ReportPriorityPause(AProcName, ASession: string) : Boolean;
     function CheckConnectionType(pData: string): TConnectionType;
     procedure InsertReportProtocol(pData: string);
+    function GetIdHTTP : TIdHTTP;
   public
     property Connection: String read GetConnection;
     class function NewInstance: TObject; override;
@@ -440,6 +443,12 @@ begin
 
   NewInstance := Instance;
 end;
+
+function TStorage.GetIdHTTP : TIdHTTP;
+begin
+  Result := IdHTTP;
+end;
+
 
 procedure TIdHTTPWork.IdHTTPWork(ASender: TObject; AWorkMode: TWorkMode;
   AWorkCount: Int64);
@@ -803,7 +812,12 @@ begin
           except
             on E: EIdSocketError do
             Begin
-              if LastAttempt then
+              if gc_allowLocalConnection AND gc_BreakingConnection then
+              begin
+                gc_User.Local := True;
+                gc_BreakingConnection := False;
+                raise Exception.Create('Соеденение прервано по таймауту.');
+              end else if LastAttempt then
               Begin
                 if ANeedShowException then
                 Begin
@@ -875,7 +889,12 @@ begin
             End;
             on E: Exception do
             Begin
-              if LastAttempt then
+              if gc_allowLocalConnection AND gc_BreakingConnection then
+              begin
+                gc_User.Local := True;
+                gc_BreakingConnection := False;
+                raise Exception.Create('Соеденение прервано по таймауту.');
+              end else if LastAttempt then
               Begin
                 raise Exception.Create('Ошибка соединения с Web сервером.'+#10+#13+'Обратитесь к разработчику.'+#10+#13+E.Message);
               End

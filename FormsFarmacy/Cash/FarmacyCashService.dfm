@@ -90,84 +90,6 @@ object MainCashForm2: TMainCashForm2
     Left = 168
     Top = 80
   end
-  object CheckDS: TDataSource
-    DataSet = CheckCDS
-    Left = 120
-    Top = 224
-  end
-  object CheckCDS: TClientDataSet
-    Aggregates = <>
-    Filter = 'Amount > 0'
-    Filtered = True
-    FieldDefs = <
-      item
-        Name = 'Id'
-        DataType = ftInteger
-      end
-      item
-        Name = 'ParentId'
-        DataType = ftInteger
-      end
-      item
-        Name = 'GoodsId'
-        DataType = ftInteger
-      end
-      item
-        Name = 'GoodsCode'
-        DataType = ftInteger
-      end
-      item
-        Name = 'GoodsName'
-        DataType = ftString
-        Size = 250
-      end
-      item
-        Name = 'Amount'
-        DataType = ftFloat
-      end
-      item
-        Name = 'Price'
-        DataType = ftFloat
-      end
-      item
-        Name = 'Summ'
-        DataType = ftFloat
-      end
-      item
-        Name = 'NDS'
-        DataType = ftFloat
-      end
-      item
-        Name = 'PriceSale'
-        DataType = ftFloat
-      end
-      item
-        Name = 'ChangePercent'
-        DataType = ftFloat
-      end
-      item
-        Name = 'SummChangePercent'
-        DataType = ftFloat
-      end
-      item
-        Name = 'AmountOrder'
-        DataType = ftFloat
-      end
-      item
-        Name = 'isErased'
-        DataType = ftBoolean
-      end
-      item
-        Name = 'LIST_UID'
-        DataType = ftString
-        Size = 50
-      end>
-    IndexDefs = <>
-    Params = <>
-    StoreDefs = True
-    Left = 88
-    Top = 224
-  end
   object spSelectRemains: TdsdStoredProc
     StoredProcName = 'gpSelect_CashRemains_ver2'
     DataSet = RemainsCDS
@@ -192,8 +114,6 @@ object MainCashForm2: TMainCashForm2
   end
   object RemainsCDS: TClientDataSet
     Aggregates = <>
-    Filter = 'Remains <> 0 or Reserved <> 0'
-    Filtered = True
     FieldDefs = <>
     IndexDefs = <>
     IndexFieldNames = 'Id'
@@ -204,8 +124,8 @@ object MainCashForm2: TMainCashForm2
   end
   object RemainsDS: TDataSource
     DataSet = RemainsCDS
-    Left = 336
-    Top = 56
+    Left = 352
+    Top = 32
   end
   object spSelect_CashRemains_Diff: TdsdStoredProc
     StoredProcName = 'gpSelect_CashRemains_Diff_ver2'
@@ -266,8 +186,8 @@ object MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     AfterExecute = spCheck_RemainsErrorAfterExecute
-    Left = 176
-    Top = 200
+    Left = 296
+    Top = 144
   end
   object spGet_User_IsAdmin: TdsdStoredProc
     StoredProcName = 'gpGet_User_IsAdmin'

@@ -3,7 +3,8 @@ unit FormStorage;
 interface
 
 uses
-  Classes, Forms, dsdDB, Xml.XMLDoc, ParentForm, UnilWin;
+  Classes, Forms, dsdDB, Xml.XMLDoc, ParentForm, UnilWin, UtilConst,
+  StorageSQLite;
 
 type
 
@@ -189,6 +190,7 @@ begin
           end;
         end;
   end;
+
   LoadStoredProc.ParamByName('FormName').Value := FormName;
   for AttemptCount := 1 to 3 do
   try
@@ -196,7 +198,9 @@ begin
       // Создаем форму
       Application.CreateForm(TParentForm, Result);
       Result.FormClassName := FormName;
-      FormStr := ReConvertConvert(LoadStoredProc.Execute);
+      if gc_User.Local and (SQLiteFile <> '') then
+        FormStr := ReConvertConvert(LoadSQLiteFormData(FormName, 'FormData', gc_User.Session))
+      else FormStr := ReConvertConvert(LoadStoredProc.Execute);
       StringStream.WriteString(FormStr);
       if StringStream.Size = 0 then
          raise Exception.Create('Форма "' + FormName + '" не загружена из базы данных');
@@ -281,7 +285,12 @@ end;
 function TdsdFormStorage.LoadUserFormSettings(FormName: String): String;
 begin
   LoadUserFormSettingsStoredProc.ParamByName('inFormName').Value := FormName;
-  Result := LoadUserFormSettingsStoredProc.Execute;
+  if gc_User.Local and (SQLiteFile <> '') then
+  begin
+    Result := LoadSQLiteFormData(FormName, 'FormSettings', gc_User.Session)
+  end else if not gc_User.Local then
+    Result := LoadUserFormSettingsStoredProc.Execute
+  else Result := '';
 end;
 
 procedure TdsdFormStorage.Save(Form: TComponent);

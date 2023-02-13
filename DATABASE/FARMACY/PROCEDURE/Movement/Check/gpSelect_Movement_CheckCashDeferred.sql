@@ -139,10 +139,9 @@ BEGIN
                                AND tmpRemains.GoodsId = tmpMI.GoodsId);
                                
     ANALYSE tmpErr;
-                               
-    OPEN Cursor1 FOR (
-        WITH
-            tmpMovement AS (SELECT Movement.Id
+    
+    CREATE TEMP TABLE tmpMovement ON COMMIT DROP AS (
+                            SELECT Movement.Id
                                  , Movement.isShowVIP 
                                  , Movement.isShowTabletki 
                                  , Movement.isShowLiki24
@@ -160,8 +159,13 @@ BEGIN
 
                             WHERE Movement.isDeferred = True
                               AND (inType = 0 OR inType = 1 AND Movement.isShowVIP = TRUE OR inType = 2 AND Movement.isShowTabletki = TRUE OR inType in (1, 3) AND Movement.isShowLiki24 = TRUE)
-                            )
-          , tmpMovementBoolean AS (SELECT * FROM MovementBoolean WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                            );
+
+    ANALYSE tmpMovement;
+                               
+    OPEN Cursor1 FOR (
+        WITH
+            tmpMovementBoolean AS (SELECT * FROM MovementBoolean WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                           )
           , tmpMovementString AS (SELECT * FROM MovementString WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                           )
@@ -469,28 +473,10 @@ BEGIN
        );
 
     RETURN NEXT Cursor1;
-
-    OPEN Cursor2 FOR (
+    
+    CREATE TEMP TABLE tmpMI_all ON COMMIT DROP AS (
         WITH
-            tmpMovement AS (SELECT Movement.Id
-                                 , Movement.isShowTabletki 
-                                 , Movement.isShowLiki24
-                            FROM tmpMov as Movement
-                            
-                                 LEFT JOIN tmpErr ON tmpErr.MovementId = Movement.Id
-
-                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
-                                                              ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
-                                                             AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
-
-                                 LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                                         ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                                        AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-
-                            WHERE Movement.isDeferred = True
-                              AND (inType = 0 OR inType = 1 AND Movement.isShowVIP = TRUE OR inType = 2 AND Movement.isShowTabletki = TRUE OR inType in (1, 3) AND Movement.isShowLiki24 = TRUE)
-                            )
-          , tmpGoodsPairSunMain AS (SELECT Object_Goods_Retail.GoodsPairSunId                          AS ID
+            tmpGoodsPairSunMain AS (SELECT Object_Goods_Retail.GoodsPairSunId                          AS ID
                                          , Min(Object_Goods_Retail.Id)::Integer                        AS MainID
                                     FROM Object_Goods_Retail
                                     WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
@@ -502,7 +488,8 @@ BEGIN
                                 FROM Object_Goods_Retail
                                 WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
                                   AND Object_Goods_Retail.RetailId = 4)
-           , tmpMI_all AS (SELECT MovementItem.Id
+                                  
+                          SELECT MovementItem.Id
                                , MovementItem.Amount
                                , MovementItem.ObjectId
                                , MovementItem.MovementId
@@ -523,8 +510,13 @@ BEGIN
                           WHERE MovementItem.MovementId in (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
-                     )
-          , tmpMI AS (SELECT tmpMI_all.MovementId, tmpMI_all.ObjectId AS GoodsId, SUM (tmpMI_all.Amount) AS Amount
+                     );
+                     
+    ANALYSE tmpMI_all;
+    
+    OPEN Cursor2 FOR (
+        WITH
+            tmpMI AS (SELECT tmpMI_all.MovementId, tmpMI_all.ObjectId AS GoodsId, SUM (tmpMI_all.Amount) AS Amount
                       FROM tmpMI_all
                            INNER JOIN tmpMov ON tmpMov.ID = tmpMI_all.MovementId
                       WHERE tmpMov.CommentError <> '' OR tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete()

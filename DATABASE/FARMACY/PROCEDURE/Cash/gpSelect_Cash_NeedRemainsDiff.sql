@@ -42,7 +42,7 @@ BEGIN
    END IF;
    
 
-   IF EXISTS(SELECT * FROM MovementItemContainer
+   IF EXISTS(SELECT 1 FROM MovementItemContainer
              WHERE OperDate > vbLastRemainsDiff
              AND WhereObjectId_Analyzer = vbUnitId)
    THEN
@@ -63,4 +63,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Cash_NeedRemainsDiff('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3')
+-- 
+SELECT * FROM gpSelect_Cash_NeedRemainsDiff('{97F4F76A-F627-47B2-8147-0B2A79B6C09D}', '3')

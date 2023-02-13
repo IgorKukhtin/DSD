@@ -428,10 +428,8 @@ type
     spCheckItem_SPKind_1303: TdsdStoredProc;
     Panel2: TPanel;
     Panel3: TPanel;
-    lblPartnerMedicalName: TLabel;
     Label30: TLabel;
     Label31: TLabel;
-    lblMemberSP: TLabel;
     actTechnicalRediscountCurr: TdsdOpenForm;
     actTechnicalRediscountCashier: TdsdOpenForm;
     actTechnicalRediscount: TAction;
@@ -637,6 +635,8 @@ type
     N67: TMenuItem;
     N68: TMenuItem;
     acrRefreshName: TAction;
+    lblPartnerMedicalName: TcxMemo;
+    lblMemberSP: TcxMemo;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -2106,13 +2106,13 @@ begin
         .Value) + '% : ' + FormParams.ParamByName('SPKindName').Value
     else
       lblSPKindName.Caption := '  ' + FormParams.ParamByName('SPKindName').Value;
-    lblPartnerMedicalName.Caption := '  ' + FormParams.ParamByName
+    lblPartnerMedicalName.Text := '  ' + FormParams.ParamByName
       ('PartnerMedicalName').Value;
     // + '  /  № амб. ' + FormParams.ParamByName('Ambulance').Value;
     lblMedicSP.Caption := '  ' + FormParams.ParamByName('MedicSP').Value +
       '  /  № ' + FormParams.ParamByName('InvNumberSP').Value + ' от ' +
       DateToStr(FormParams.ParamByName('OperDateSP').Value);
-    lblMemberSP.Caption := '  ' + FormParams.ParamByName('MemberSP').Value;
+    lblMemberSP.Text := '  ' + FormParams.ParamByName('MemberSP').Value;
     pnlSP.Visible := FormParams.ParamByName('InvNumberSP').Value <> '';
     btnGoodsSPReceiptList.Visible := false;
 
@@ -6313,6 +6313,12 @@ var
   nPriceSite: boolean;
 begin
 
+  if gc_User.Local then
+  Begin
+    ShowMessage('В Offline отпустить ДП нет возможности...');
+    exit;
+  End;
+
   if pnlManualDiscount.Visible or pnlPromoCode.Visible or pnlSiteDiscount.Visible
   then
   Begin
@@ -7072,15 +7078,15 @@ begin
     if FormParams.ParamByName('isPaperRecipeSP').Value = True then
     begin
       Label30.Caption := '       ФИО Врача: ';
-      lblPartnerMedicalName.Caption := '  ' + FormParams.ParamByName('MedicSP').Value;
+      lblPartnerMedicalName.Text := '  ' + FormParams.ParamByName('MedicSP').Value;
     end else
     begin
       Label30.Caption := '     Медикамент.: ';
-      lblPartnerMedicalName.Caption := '  ' + HelsiName;
+      lblPartnerMedicalName.Text := '  ' + HelsiName;
     end;
     Label7.Caption := 'Вып.';
     Label31.Caption := 'Программа.';
-    lblMemberSP.Caption := '  ' + HelsiProgramName;
+    lblMemberSP.Text := '  ' + HelsiProgramName;
 
     // + '  /  № амб. ' + Ambulance;
     RemainsCDS.DisableControls;
@@ -7171,13 +7177,13 @@ begin
     Label7.Caption := 'ФИО Врача:';
     Label31.Caption := 'ФИО Пациента:';
 
-    lblPartnerMedicalName.Caption := '  ' + FormParams.ParamByName
+    lblPartnerMedicalName.Text := '  ' + FormParams.ParamByName
       ('PartnerMedicalName').Value;
     // + '  /  № амб. ' + FormParams.ParamByName('Ambulance').Value;
     lblMedicSP.Caption := '  ' + FormParams.ParamByName('MedicSP').Value +
       '  /  № ' + FormParams.ParamByName('InvNumberSP').Value + ' от ' +
       DateToStr(FormParams.ParamByName('OperDateSP').Value);
-    lblMemberSP.Caption := '  ' + FormParams.ParamByName('MemberSP').Value;
+    lblMemberSP.Text := '  ' + FormParams.ParamByName('MemberSP').Value;
     pnlSP.Visible := FormParams.ParamByName('InvNumberSP').Value <> '';
     btnGoodsSPReceiptList.Visible := false;
   end;
@@ -7360,8 +7366,8 @@ begin
     Label30.Caption := '     Медикамент.: ';
     Label7.Caption := 'Вып.';
     Label31.Caption := 'Программа.';
-    lblPartnerMedicalName.Caption := '  ' + HelsiName;
-    lblMemberSP.Caption := ' ' + ProgramName;
+    lblPartnerMedicalName.Text := '  ' + HelsiName;
+    lblMemberSP.Text := ' ' + ProgramName;
     // + '  /  № амб. ' + Ambulance;
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := false;
@@ -10673,7 +10679,6 @@ begin
   end;
 end;
 
-
 { ------------------------------------------------------------------------------ }
 
 procedure TMainCashForm2.UpdateRemainsFromDiff(ADiffCDS: TClientDataSet);
@@ -11375,12 +11380,14 @@ begin
       begin
         WaitForSingleObject(MutexRemains, INFINITE);
         try
+          RemainsCDS.Filtered := False;
           SaveLocalData(RemainsCDS, Remains_lcl);
         finally
           ReleaseMutex(MutexRemains);
         end;
         WaitForSingleObject(MutexGoodsExpirationDate, INFINITE);
         try
+          ExpirationDateCDS.Filtered := False;
           SaveLocalData(ExpirationDateCDS, GoodsExpirationDate_lcl);
         finally
           ReleaseMutex(MutexGoodsExpirationDate);
@@ -15605,13 +15612,13 @@ begin
     end else if MedicalProgramSPGoodsCDS.RecordCount = 1 then
     begin
       FormParams.ParamByName('MedicalProgramSPId').Value := MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPId').AsInteger;
-      lblMemberSP.Caption := MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPName').AsString;
+      lblMemberSP.Text := MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPName').AsString;
     end else
     begin
       if ChoiceMedicalProgramSPExecute then
       begin
         FormParams.ParamByName('MedicalProgramSPId').Value := MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPId').AsInteger;
-        lblMemberSP.Caption := MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPName').AsString;
+        lblMemberSP.Text := MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPName').AsString;
       end else raise Exception.Create('Ошибка не выбрана медицинская программа.');
     end;
     MedicalProgramSPGoodsCDS.Close;

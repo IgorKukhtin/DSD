@@ -144,6 +144,7 @@ type
   TCheckConnectThread = class(TThread)
   private
   { Private declarations }
+    FDataStart: TDateTime;
   protected
     procedure Execute; override;
   end;
@@ -163,8 +164,6 @@ type
     ActionList: TActionList;
     actRefreshAll: TAction; //+
     actRefresh: TdsdDataSetRefresh;
-    CheckDS: TDataSource;
-    CheckCDS: TClientDataSet;
     actRefreshLite: TdsdDataSetRefresh;
     actShowMessage: TShowMessageAction;
     pmServise: TPopupMenu;
@@ -301,11 +300,16 @@ procedure TCheckConnectThread.Execute;
 begin
   while True do
   begin
+    Sleep(1000);
     if TStorageFactory.GetStorage.IdHTTP.Connected then
     begin
-      TStorageFactory.GetStorage.IdHTTP.Disconnect;
-    end;
-
+      if MinutesBetween(Now, FDataStart) >= 8 then
+      begin
+        TStorageFactory.GetStorage.IdHTTP.Disconnect;
+        gc_BreakingConnection := True;
+        FDataStart := Now;
+      end;
+    end else FDataStart := Now;
   end;
 end;
 
@@ -411,6 +415,8 @@ end;
 procedure TMainCashForm2.ChangeStatus(AStatus: String);
 Begin
   tiServise.BalloonHint := AStatus;
+  tiServise.ShowBalloonHint;
+  tiServise.BalloonHint:='';
 End;
 
 function TMainCashForm2.ExistNotCompletedCheck: boolean;
@@ -507,19 +513,20 @@ begin
       // Меняем хинт
       if gc_User.Local then
       begin
-        tiServise.BalloonHint:='Обрыв соединения';
+        ChangeStatus('Обрыв соединения');
       end else
       begin
-        tiServise.BalloonHint:='Разница в остатках получена.';
+        tiServise.Hint := 'Разница в остатках получена.';
       end;
-      tiServise.Hint := 'Ожидание задания.';
       end else
     begin
-      tiServise.BalloonHint:='Ошибка связи с сервером.';
+      tiServise.Hint := 'Ошибка связи с сервером.';
       TimerNeedRemainsDiff.Interval := 10000;
     end;
   finally
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+    if not gc_User.Local then tiServise.Hint := 'Ожидание задания.'
+    else tiServise.Hint := 'Локальный режим';
     Application.ProcessMessages;
     TimerNeedRemainsDiff.Enabled := True;
   end;
@@ -541,7 +548,7 @@ begin   //yes
   if ExistNotCompletedCheck then Exit; // нельзя запускать, пока есть неотгруженные чеки
   // обновления данных с сервера
   Add_Log('Refresh all start');
-  bError := false;
+  bError := True;
   try
 
     // Проверяем и архивируем
@@ -599,30 +606,27 @@ begin   //yes
       if not gc_User.Local then SaveImplementationPlanEmployeeUser;
       //Получение акционных товаров
       if not gc_User.Local then SaveSalePromoGoods;
-      //Получение справочника аналогов
-//        if not gc_User.Local then SaveGoodsAnalog;
 
-      PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
+      if not bError then PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
       // Вывод уведомления сервиса
       if gc_User.Local then
       begin
-        tiServise.BalloonHint:='Обрыв соединения';
-        tiServise.ShowBalloonHint;
+        ChangeStatus('Обрыв соединения');
       end else
       begin
-        tiServise.BalloonHint:='Остатки обновлены.';
-        tiServise.ShowBalloonHint;
+        ChangeStatus('Остатки обновлены.');
         FirstRemainsReceived := true;
       end;
-      tiServise.Hint := 'Ожидание задания.';
     end else
     begin
-      tiServise.BalloonHint:='Ошибка связи с сервером.';
+      tiServise.Hint := 'Ошибка связи с сервером.';
       TimerGetRemains.Interval := 10000;
     end;
   finally
-    if not bError then ChangeStatus('Сохранили');
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+    // if not bError then ChangeStatus('Сохранили');
+    if not gc_User.Local then tiServise.Hint := 'Ожидание задания.'
+    else tiServise.Hint := 'Локальный режим';
     Application.ProcessMessages;
     Add_Log('Refresh all end');
   end;
@@ -651,7 +655,7 @@ begin
   InitMutex;
   FHasError := false;
   //сгенерили гуид для определения сессии
-  ChangeStatus('Установка первоначальных параметров');
+  tiServise.Hint := 'Установка первоначальных параметров';
 
   FormParams.ParamByName('CashSessionId').Value := iniLocalGUIDSave(GenerateGUID);
   FormParams.ParamByName('CashRegister').Value := iniCashRegister;
@@ -662,7 +666,7 @@ begin
     exit;
   End;
 
-  ChangeStatus('Инициализация локального хранилища');
+  tiServise.Hint := 'Инициализация локального хранилища';
 
   if not InitLocalStorage then
   Begin
@@ -672,9 +676,10 @@ begin
 
   FCheckConnectThread := TCheckConnectThread.Create(true);
   FCheckConnectThread.FreeOnTerminate:=true;
+  FCheckConnectThread.FDataStart := Now;
   FCheckConnectThread.Resume;
 
-  ChangeStatus('Инициализация локального хранилища - да');
+  tiServise.Hint := 'Инициализация локального хранилища - да';
   FSaveRealAllRunning := false;
   TimerSaveReal.Enabled := false;
   if SetFarmacyNameByUser then
@@ -689,15 +694,13 @@ begin
     SendEmployeeSchedule;  // Отправляем времени работы сотрудников
     SendPickUpLogsAndDBF;  // Отправляем логи
   end;
-  if not FHasError then
-    ChangeStatus('Получение остатков')
+  if not FHasError then tiServise.Hint := 'Получение остатков'
   else tiServise.Hint := 'Ожидание задания.';
   FirstRemainsReceived := false;
   //PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 2); // запрос кеш сесии у приложения
   TimerGetRemains.Enabled := true;
  //}
-  if not FHasError then
-    ChangeStatus('Готово');
+  if not FHasError then tiServise.Hint := 'Готово';
 end;
 
 // процедура обновляет параметры для введения нового чека
@@ -730,13 +733,11 @@ begin
     try
       spGet_User_IsAdmin.Execute;
       gc_User.Local := False;
-      tiServise.BalloonHint:='Режим работы: В сети';
-      tiServise.ShowBalloonHint;
+      ChangeStatus('Режим работы: В сети');
     except
       Begin
         gc_User.Local := True;
-        tiServise.BalloonHint:='Режим работы: Автономно';
-        tiServise.ShowBalloonHint;
+        ChangeStatus('Режим работы: Автономно');
       End;
     end;
   finally
@@ -800,9 +801,8 @@ begin
       //Проверка количества столбцов в новом наборе
       if (nRemainsFieldCount > RemainsCDS.Fields.Count) then
       begin
-        tiServise.BalloonHint:='Ошибка при получении остатков - были получены неполные данные.';
-        tiServise.ShowBalloonHint;
         Result := true;
+        ChangeStatus('Ошибка при получении остатков - были получены неполные данные.');
         Add_Log('Ошибка при получении остатков');
         Add_Log('Remains: было столбцов: '+ IntToStr(nRemainsFieldCount) + ', получено: '+ IntToStr(RemainsCDS.Fields.Count));
         Exit;
@@ -810,7 +810,10 @@ begin
       //Сохранение остатков в локальной базе
       SaveLocalData(RemainsCDS,Remains_lcl);
     Except ON E:Exception do
-      Add_Log('Ошибка при получении остатков:' + E.Message);
+      begin
+        Result := true;
+        Add_Log('Ошибка при получении остатков:' + E.Message);
+      end;
     end;
   finally
     RemainsCDS.EnableControls;
@@ -859,8 +862,8 @@ begin
     except
       if gc_User.Local then
       begin
-         tiServise.BalloonHint:='Локальный режим';
-         tiServise.ShowBalloonHint;
+         ChangeStatus('Локальный режим');
+         tiServise.Hint := 'Локальный режим';
       end;
     end;
   finally
@@ -1076,16 +1079,17 @@ begin
   try
     if SetFarmacyNameByUser then
     begin
-      SaveRealAll;
-      SaveListDiff;
-      SendZReport;
-      SaveZReportLog;
-      SendEmployeeWorkLog;
-      SendEmployeeSchedule;
-      SendPickUpLogsAndDBF;
+      if not gc_User.Local then SaveRealAll;
+      if not gc_User.Local then SaveListDiff;
+      if not gc_User.Local then SendZReport;
+      if not gc_User.Local then SaveZReportLog;
+      if not gc_User.Local then SendEmployeeWorkLog;
+      if not gc_User.Local then SendEmployeeSchedule;
+      if not gc_User.Local then SendPickUpLogsAndDBF;
     end;
   finally
-    tiServise.Hint := 'Ожидание задания.';
+    if not gc_User.Local then tiServise.Hint := 'Ожидание задания.'
+    else tiServise.Hint := 'Локальный режим';
     TimerSaveReal.Enabled := True;
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
     Application.ProcessMessages;
@@ -1160,12 +1164,14 @@ begin
 
     end else
     begin
-      tiServise.BalloonHint:='Ошибка связи с сервером.';
-      TimerNeedRemainsDiff.Interval := 10000;
+      tiServise.Hint := 'Ошибка связи с сервером.';
     end;
   finally
+    if gc_User.Local then TimerNeedRemainsDiff.Interval := 10000;
     TimerNeedRemainsDiff.Enabled := not TimerGetRemains.Enabled;
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+    if not gc_User.Local then tiServise.Hint := 'Ожидание задания.'
+    else tiServise.Hint := 'Локальный режим';
     Application.ProcessMessages;
   end;
 end;
@@ -1204,8 +1210,8 @@ begin
         begin
           gc_User.Local := False;
           Add_Log('-- Связь востановлена');
-          tiServise.BalloonHint := 'Связь востановлена';
-          tiServise.ShowBalloonHint;
+          MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+          ChangeStatus('Связь востановлена');
           PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 6);
         end;
       end;
@@ -1218,8 +1224,7 @@ begin
         begin
           gc_User.Local := True;
           Add_Log('-- Нет связи с интернетом');
-          tiServise.BalloonHint := 'Локальный режим';
-          tiServise.ShowBalloonHint;
+          ChangeStatus('Локальный режим');
           PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 6);
         end;
         tiServise.Hint := 'Локальный режим';
@@ -1287,8 +1292,8 @@ begin
       begin
         gc_User.Local := False;
         Add_Log('-- Связь востановлена');
-        tiServise.BalloonHint := 'Связь востановлена';
-        tiServise.ShowBalloonHint;
+        MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+        ChangeStatus('Связь востановлена');
         PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 6);
       end;
     except on E: Exception do
@@ -1298,8 +1303,7 @@ begin
         begin
           gc_User.Local := True;
           Add_Log('-- Нет связи с интернетом');
-          tiServise.BalloonHint := 'Локальный режим';
-          tiServise.ShowBalloonHint;
+          ChangeStatus('Локальный режим');
           PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 6);
         end;
         Exit;
@@ -1332,8 +1336,7 @@ begin
         // Выходим из цикла при получении указания постоять или перехода в локальный режим
         if AllowedConduct or gc_User.Local then
         begin
-          tiServise.BalloonHint := 'Останавливаем проведение чеков';
-          tiServise.ShowBalloonHint;
+          ChangeStatus('Останавливаем проведение чеков');
           Exit;
         end;
 
@@ -1379,8 +1382,7 @@ begin
           if (FSaveUID = UID) and (FSaveTryCount > 2) then
           begin
             Add_Log('Повторная попытка отгрузить чек ' + UID);
-            tiServise.BalloonHint := 'Внимание! Повторная попытка отгрузить чек, дальнейшая выгрузка чеков в офис прекращена!';
-            tiServise.ShowBalloonHint;
+            ChangeStatus('Внимание! Повторная попытка отгрузить чек, дальнейшая выгрузка чеков в офис прекращена!');
             FHasError := true;
             Exit;
           end;
@@ -1859,8 +1861,7 @@ begin
                   FHasError := true;
                   if gc_User.Local then
                   begin
-                    tiServise.BalloonHint := 'Останавливаем проведение чеков';
-                    tiServise.ShowBalloonHint;
+                    ChangeStatus('Останавливаем проведение чеков');
                     Exit;
                   end;
                   // -nw               SendError(E.Message);
@@ -1901,8 +1902,7 @@ begin
                   FHasError := true;
                   if gc_User.Local then
                   begin
-                    tiServise.BalloonHint := 'Останавливаем проведение чеков';
-                    tiServise.ShowBalloonHint;
+                    ChangeStatus('Останавливаем проведение чеков');
                     Exit;
                   end;
                 End;
@@ -2819,8 +2819,7 @@ begin
   //          IncDay(Date, - spLoadFTPParam.ParamByName('outPort').Value) then
   //          TFile.Delete(sl.Strings[i]);
 
-          tiServise.BalloonHint := 'Z отчеты отправлены';
-          tiServise.ShowBalloonHint;
+          ChangeStatus('Z отчеты отправлены');
         finally
           IdFTP.Disconnect;
         end;

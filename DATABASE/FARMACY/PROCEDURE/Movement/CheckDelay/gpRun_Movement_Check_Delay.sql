@@ -77,11 +77,9 @@ BEGIN
 
     WHERE CASE WHEN MovementDate_Delay.ValueData is not Null 
                     THEN MovementDate_Delay.ValueData + INTERVAL '2 DAY'
-               WHEN MovementDate_UserConfirmedKind.ValueData is not Null AND COALESCE (MovementString_InvNumberOrder.ValueData, '') = '' AND
-                    COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> zc_Enum_CheckSourceKind_Tabletki() 
+               WHEN MovementDate_UserConfirmedKind.ValueData is not Null AND COALESCE (MovementString_InvNumberOrder.ValueData, '') = ''
                     THEN MovementDate_UserConfirmedKind.ValueData + INTERVAL '2 DAY'
-               WHEN MovementDate_UserConfirmedKind.ValueData is not Null AND (COALESCE (MovementString_InvNumberOrder.ValueData, '') <> '' OR
-                    COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki()) 
+               WHEN MovementDate_UserConfirmedKind.ValueData is not Null AND COALESCE (MovementString_InvNumberOrder.ValueData, '') <> ''
                     THEN MovementDate_UserConfirmedKind.ValueData + INTERVAL '1 DAY'
                WHEN MovementLinkObject_CheckSourceKind.ObjectId = zc_Enum_CheckSourceKind_Tabletki() 
                     THEN Movement.OperDate
