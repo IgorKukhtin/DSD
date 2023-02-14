@@ -1164,12 +1164,16 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_TabletkiRecreateForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_FulfillmentPlanMobileAppForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_FulfillmentPlanMobileAppDialogForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_TabletkiRecreateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_TabletkiRecreateForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_TabletkiRecreateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_TabletkiRecreateDialogForm');
 
-  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUsersSiteProfileForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUsersSiteProfileForm');
 
@@ -3746,7 +3750,7 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserNickForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserNickForm');
-}
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserCashForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserCashForm');
 
@@ -3759,7 +3763,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TUserHelsiEditForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
- {   exit;
+    exit;
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');

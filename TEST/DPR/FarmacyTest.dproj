@@ -4616,6 +4616,14 @@
 				<Form>CashSettingsHistoryForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_FulfillmentPlanMobileAppDialog.pas">
+				<Form>Report_FulfillmentPlanMobileAppDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_FulfillmentPlanMobileApp.pas">
+				<Form>Report_FulfillmentPlanMobileAppForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

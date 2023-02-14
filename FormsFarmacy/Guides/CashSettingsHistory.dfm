@@ -12,17 +12,17 @@ inherited CashSettingsHistoryForm: TCashSettingsHistoryForm
     Width = 563
     Height = 327
     ExplicitTop = 27
-    ExplicitWidth = 504
+    ExplicitWidth = 563
     ExplicitHeight = 327
     ClientRectBottom = 327
     ClientRectRight = 563
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 504
+      ExplicitWidth = 563
       ExplicitHeight = 327
       inherited cxGrid: TcxGrid
         Width = 563
         Height = 327
-        ExplicitWidth = 504
+        ExplicitWidth = 563
         ExplicitHeight = 327
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
@@ -44,7 +44,18 @@ inherited CashSettingsHistoryForm: TCashSettingsHistoryForm
             DataBinding.FieldName = 'FixedPercent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072#9
             Width = 126
+          end
+          object PenMobApp: TcxGridDBColumn
+            Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1087#1083#1072#1085#1072' '#1087#1086' '#1084#1086#1073#1102' '#1087#1088#1077#1083#1086#1078'.'
+            DataBinding.FieldName = 'PenMobApp'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072' '#1087#1086' '#1084#1086#1073#1080#1083#1100#1085#1086#1084#1091' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102
+            Width = 114
           end
         end
       end
@@ -172,6 +183,15 @@ inherited CashSettingsHistoryForm: TCashSettingsHistoryForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'FixedPercent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPenMobApp'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PenMobApp'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
