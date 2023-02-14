@@ -88,9 +88,10 @@ BEGIN
           , Object_ReceiptLevel.ValueData  AS ReceiptLevelName
           , Object_ProdOptions.Id          AS ProdOptionsId
           , Object_ProdOptions.ValueData   AS ProdOptionsName
-          , Object_ProdColorPattern.Id     AS ProdColorPatternName
+          , Object_ProdColorPattern.Id     AS ProdColorPatternId
           , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData, Object_ProdColorPattern.ValueData, Object_Model_pcp.ValueData, Object_ProdColorPattern.isErased) :: TVarChar AS ProdColorPatternName
-          , Object_ColorPattern.ValueData      AS ColorPatternName
+          , Object_ColorPattern.Id         AS ColorPatternId
+          , Object_ColorPattern.ValueData  AS ColorPatternName
 
           , MovementItem.Amount   :: TFloat AS Amount
           , (tmpMIContainer.Amount / CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount ELSE 1 END) ::TFloat AS Price
