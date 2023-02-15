@@ -1205,7 +1205,11 @@ raise notice 'Value 12: %', CLOCK_TIMESTAMP();
        
      ANALYSE _tmpRemains_all;
 
-raise notice 'Value 13: %', CLOCK_TIMESTAMP();
+raise notice 'Value 13: % % % % %', CLOCK_TIMESTAMP(),
+                                  (SELECT COUNT(*) FROM _tmpRemains_all), 
+                                  (SELECT COUNT(*) FROM _tmpRemains_all WHERE _tmpRemains_all.GoodsId = 52945 AND _tmpRemains_all.UnitId = 375626),
+                                  (SELECT COUNT(*) FROM _tmpRemains), 
+                                  (SELECT COUNT(*) FROM _tmpRemains WHERE _tmpRemains.GoodsId = 52945 AND _tmpRemains.UnitId = 375626);
 
 
 /*     raise notice 'Ошибка. % % %',
@@ -1587,8 +1591,9 @@ raise notice 'Value 15_6: %', CLOCK_TIMESTAMP();
                                      INNER JOIN Container ON Container.ParentId = tmpNotSold.ContainerId
                                                          AND Container.DescId   = zc_Container_CountPartionDate()
                                                          AND Container.Amount   > 0
-                                     INNER JOIN _tmpRemains ON _tmpRemains.UnitID = tmpNotSold.UnitID
-                                                           AND _tmpRemains.GoodsID =  tmpNotSold.GoodsID
+                                     LEFT JOIN _tmpRemains_all AS _tmpRemains 
+                                                               ON _tmpRemains.UnitID = tmpNotSold.UnitID
+                                                              AND _tmpRemains.GoodsID =  tmpNotSold.GoodsID
                                      LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                                    ON CLO_PartionGoods.ContainerId = Container.Id
                                                                   AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
@@ -1703,11 +1708,17 @@ raise notice 'Value 15_6: %', CLOCK_TIMESTAMP();
                                                                ON CLO_PartionGoods.ContainerId = Container.ContainerId
                                  INNER JOIN tmpOD_PartionGoods_Value AS ObjectDate_PartionGoods_Value
                                                                      ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                 INNER JOIN _tmpRemains_all AS _tmpRemains 
+                                                            ON _tmpRemains.UnitID = Container.UnitID
+                                                           AND _tmpRemains.GoodsID =  Container.GoodsID
                                  -- если товар среди парных
                                  LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
                                            ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = Container.GoodsId
                             -- !!!если это парный товар, здесь его уберем, потом возьмем "весь" остаток
                             WHERE _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
+                              AND COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd()) > CURRENT_DATE + 
+                                  (CASE WHEN COALESCE(_tmpRemains.isGoodsCategory, FALSE) = True THEN '200' ELSE '90' END||' DAY')::INTERVAL  --vbDate_3
+
                            )
              -- SUN-1 - Cроки + парные
            , tmpRes_SUN AS (-- SUN-1
@@ -2702,8 +2713,7 @@ raise notice 'Value 20: %', CLOCK_TIMESTAMP();
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
           AND COALESCE(tmpGoodsPromo.GoodsId, 0) = 0
           AND (_tmpUnit_SUN.isOnlyTimingSUN = False OR _tmpRemains_Partion.ContainerDescId = zc_Container_CountPartionDate())
-        ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
-       ;
+        ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId;
      -- начало цикла по курсору1
      LOOP
          -- данные по курсору1
@@ -3322,6 +3332,7 @@ raise notice 'Value 25: %', CLOCK_TIMESTAMP();
                                         , _tmpResult_Partion.GoodsId
                                         , _tmpResult_Partion.UnitId_from
                                         , _tmpResult_Partion.UnitId_to
+                                 ORDER BY 6 DESC
                                 );
      -- начало цикла по курсору1
      LOOP

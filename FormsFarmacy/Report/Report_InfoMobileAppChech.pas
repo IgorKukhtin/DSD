@@ -1,4 +1,4 @@
-unit Report_FulfillmentPlanMobileApp;
+unit Report_InfoMobileAppChech;
 
 interface
 
@@ -28,11 +28,8 @@ uses
   cxGridBandedTableView, cxGridDBBandedTableView, cxDBEdit;
 
 type
-  TReport_FulfillmentPlanMobileAppForm = class(TAncestorReportForm)
-    cxLabel3: TcxLabel;
-    ceUnit: TcxButtonEdit;
+  TReport_InfoMobileAppChechForm = class(TAncestorReportForm)
     rdUnit: TRefreshDispatcher;
-    GuidesUnit: TdsdGuides;
     dxBarButton1: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
@@ -44,19 +41,12 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     actRefreshJuridical: TdsdDataSetRefresh;
-    spUpdate_Price_MCSIsClose: TdsdStoredProc;
     bbMoneyBoxSun: TdxBarButton;
     UnitName: TcxGridDBColumn;
-    ProcPlan: TcxGridDBColumn;
-    CountChech: TcxGridDBColumn;
-    CountSite: TcxGridDBColumn;
-    CountUser: TcxGridDBColumn;
-    ProcFact: TcxGridDBColumn;
-    CountChechUser: TcxGridDBColumn;
-    CountMobileUser: TcxGridDBColumn;
-    UserName: TcxGridDBColumn;
-    PenaltiMobApp: TcxGridDBColumn;
-    QuantityMobile: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
+    CountCheck: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
@@ -64,7 +54,7 @@ type
   end;
 
 var
-  Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppForm;
+  Report_InfoMobileAppChechForm: TReport_InfoMobileAppChechForm;
 
 implementation
 
@@ -72,5 +62,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_FulfillmentPlanMobileAppForm)
+  RegisterClass(TReport_InfoMobileAppChechForm)
 end.

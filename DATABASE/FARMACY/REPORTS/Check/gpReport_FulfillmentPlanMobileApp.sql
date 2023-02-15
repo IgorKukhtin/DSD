@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_FulfillmentPlanMobileApp(
 RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar
              , CountChech TFloat, CountSite TFloat, CountUser Integer, ProcPlan TFloat
              , UserId Integer, UserCode Integer, UserName TVarChar
-             , CountChechUser TFloat, CountMobileUser TFloat, ProcFact TFloat
+             , CountChechUser TFloat, CountMobileUser TFloat, QuantityMobile Integer, ProcFact TFloat
              , PenaltiMobApp TFloat
               )
 AS
@@ -62,7 +62,7 @@ BEGIN
      WHERE Movement.DescId = zc_Movement_Check()
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.OperDate >= date_trunc('MONTH', inOperDate) - INTERVAL '1 MONTH'
-       AND Movement.OperDate < date_trunc('MONTH', inOperDate) + INTERVAL '1 MONTH' + INTERVAL '1 DAY';
+       AND Movement.OperDate < date_trunc('MONTH', inOperDate) + INTERVAL '1 MONTH';
         
      ANALYSE tmpMov;
      
@@ -142,6 +142,7 @@ BEGIN
                                 , SUM(CASE WHEN Movement.isMobileApplication = FALSE
                                             AND Movement.isSite = False THEN Movement.TotalSumm ELSE 0 END)::TFloat      AS CountChech
                                 , SUM(CASE WHEN Movement.isMobileApplication THEN Movement.TotalSumm ELSE 0 END)::TFloat AS CountMobile
+                                , SUM(CASE WHEN Movement.isMobileApplication THEN 1 ELSE 0 END)::Integer                 AS QuantityMobile
                            FROM tmpMov AS Movement
                            
                                 INNER JOIN tmpMovementProtocol ON tmpMovementProtocol.MovementId = Movement.Id
@@ -169,6 +170,7 @@ BEGIN
            , Object_User.ValueData                                 AS UserName
            , tmpMovFact.CountChech                                 AS CountChechUser
            , tmpMovFact.CountMobile                                AS CountMobileUser
+           , tmpMovFact.QuantityMobile                             AS QuantityMobile
            , Round(1.0 * tmpMovFact.CountMobile / 
              NullIf(tmpMovFact.CountChech, 0) * 100, 1)::TFloat    AS ProcFact
            , CASE WHEN Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /

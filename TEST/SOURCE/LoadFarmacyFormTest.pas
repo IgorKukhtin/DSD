@@ -1190,10 +1190,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMobileDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMobileDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ApplicationAwardForm'));
+
   TdsdFormStorageFactory.GetStorage.Load('TReport_ApplicationAwardForm');
+}  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InfoMobileAppChechForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_InfoMobileAppChechForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ConductedSalesMobileForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ConductedSalesMobileForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ApplicationAwardUserForm'));
+ {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ApplicationAwardUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ApplicationAwardUserForm');
 
 
