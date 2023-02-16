@@ -186,7 +186,7 @@ BEGIN
                       , tmpMI.Comment                                 AS Comment
                       , tmpMI.MinimumLot                              AS MinimumLot
                       , tmpMI.CalcAmount                              AS CalcAmount
-                      , FALSE                                         AS isErased
+                      , COALESCE(tmpMI.isErased , FALSE)              AS isErased
                  FROM tmpGoods
                       FULL JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                  )
@@ -346,7 +346,7 @@ BEGIN
            
            , tmpMI.PartionGoodsDate     AS PartionGoodsDate
            , tmpMI.Comment              AS Comment
-           , FALSE                      AS isErased
+           , tmpMI.isErased             AS isErased
            , COALESCE (tmpMainParam.isSP, FALSE)           ::Boolean AS isSP
            , COALESCE (GoodsParam_Close.ValueData, FALSE)  ::Boolean AS isClose
            , COALESCE (GoodsParam_First.ValueData, FALSE)  ::Boolean AS isFirst
@@ -454,4 +454,4 @@ $BODY$
 -- SELECT * FROM gpSelect_MovementItem_OrderExternal (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
 --
 
-select * from gpSelect_MovementItem_OrderExternal(inMovementId := 29591024 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_OrderExternal(inMovementId := 31044249 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

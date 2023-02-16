@@ -1,12 +1,13 @@
 -- Function: gpInsertUpdate_ObjectHistory_CashSettings ()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_CashSettings (Integer, Integer, TDateTime, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_CashSettings (Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_CashSettings(
  INOUT ioId              Integer,    -- ключ объекта <Элемент истории Общие настройки касс>
     IN inCashSettingsId  Integer,    -- Общие настройки касс
     IN inStartDate       TDateTime,  -- Дата действия прайса
     IN inFixedPercent    TFloat,     -- Фиксированный процент выполнения плана	
+    IN inPenMobApp       TFloat,     -- Сумма штрафа за 1% невыполнения плана по мобильному приложению
     IN inSession         TVarChar    -- сессия пользователя
 )
 AS
@@ -29,6 +30,9 @@ BEGIN
    
    -- Фиксированный процент выполнения плана	
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_CashSettings_FixedPercent(), ioId, inFixedPercent);
+   
+   -- Сумма штрафа за 1% невыполнения плана по мобильному приложению
+   PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_CashSettings_PenMobApp(), ioId, inPenMobApp);
         
 END;
 $BODY$

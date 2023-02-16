@@ -277,7 +277,8 @@ AS
                                AND ObjectLink_Retail.DescId = zc_ObjectLink_Juridical_Retail()
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
         AND (OH_JuridicalDetails.OKPO IN ('35275230','25288083','35231874') -- '39143745' перенесли в др.группу ритейл
-             OR ObjectLink_Retail.ChildObjectId IN (310862) -- Рост Харьков
+             OR (ObjectLink_Retail.ChildObjectId IN (310862) -- Рост Харьков   
+                  AND OH_JuridicalDetails.OKPO <> '43094673')      --другая печать   ДЛК "ПІЛОТ"
             )
       UNION
 -- Omega+РТЦ ТОВ(Варус)
@@ -443,8 +444,23 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32437180')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-
       UNION
+
+      --   ДЛК "ПІЛОТ"
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale43094673' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('43094673') 
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
+      
       -- налоговая
       SELECT
              zc_Movement_Sale()

@@ -1275,7 +1275,10 @@ uses
   PartionDateWages in '..\..\FormsFarmacy\Guides\PartionDateWages.pas' {PartionDateWagesForm: TParentForm},
   Report_Check_TabletkiRecreateDialog in '..\..\FormsFarmacy\Report\Report_Check_TabletkiRecreateDialog.pas' {Report_Check_TabletkiRecreateDialogForm: TParentForm},
   Report_Check_TabletkiRecreate in '..\..\FormsFarmacy\Report\Report_Check_TabletkiRecreate.pas' {Report_Check_TabletkiRecreateForm: TParentForm},
-  CashSettingsHistory in '..\..\FormsFarmacy\Guides\CashSettingsHistory.pas' {CashSettingsHistoryForm: TParentForm};
+  CashSettingsHistory in '..\..\FormsFarmacy\Guides\CashSettingsHistory.pas' {CashSettingsHistoryForm: TParentForm},
+  Report_FulfillmentPlanMobileAppDialog in '..\..\FormsFarmacy\Report\Report_FulfillmentPlanMobileAppDialog.pas' {Report_FulfillmentPlanMobileAppDialogForm: TParentForm},
+  Report_FulfillmentPlanMobileApp in '..\..\FormsFarmacy\Report\Report_FulfillmentPlanMobileApp.pas' {Report_FulfillmentPlanMobileAppForm: TParentForm},
+  Report_InfoMobileAppChech in '..\..\FormsFarmacy\Report\Report_InfoMobileAppChech.pas' {Report_InfoMobileAppChechForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

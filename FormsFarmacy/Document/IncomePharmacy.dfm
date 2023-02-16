@@ -3,27 +3,27 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
   ClientHeight = 524
   ClientWidth = 985
   AddOnFormData.ClosePUSHMessage = actPUSH_CloseIncome
-  ExplicitWidth = 1001
-  ExplicitHeight = 563
+  ExplicitWidth = 1003
+  ExplicitHeight = 571
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 146
+    Top = 147
     Width = 985
-    Height = 378
-    ExplicitTop = 146
+    Height = 377
+    ExplicitTop = 147
     ExplicitWidth = 985
-    ExplicitHeight = 378
-    ClientRectBottom = 378
+    ExplicitHeight = 377
+    ClientRectBottom = 377
     ClientRectRight = 985
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 985
-      ExplicitHeight = 354
+      ExplicitHeight = 353
       inherited cxGrid: TcxGrid
         Width = 985
-        Height = 354
+        Height = 353
         ExplicitWidth = 985
-        ExplicitHeight = 354
+        ExplicitHeight = 353
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -316,7 +316,12 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
                 Action = ChoiceReasonDifferences
                 Default = True
                 Kind = bkEllipsis
+              end
+              item
+                Action = actClearReasonDifferences
+                Kind = bkGlyph
               end>
+            Properties.Images = dmMain.ImageList
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
             Width = 131
@@ -1326,6 +1331,29 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end>
       isShowModal = False
     end
+    object actClearReasonDifferences: TdsdSetDefaultParams
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1095#1080#1085#1091' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
+      Hint = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1095#1080#1085#1091' '#1088#1072#1079#1085#1086#1075#1083#1072#1089#1080#1103
+      ImageIndex = 52
+      DefaultParams = <
+        item
+          Param.Value = Null
+          Param.Component = MasterCDS
+          Param.ComponentItem = 'ReasonDifferencesId'
+          Param.MultiSelectSeparator = ','
+          Value = Null
+        end
+        item
+          Param.Value = Null
+          Param.Component = MasterCDS
+          Param.ComponentItem = 'ReasonDifferencesName'
+          Param.DataType = ftString
+          Param.MultiSelectSeparator = ','
+          Value = Null
+        end>
+    end
   end
   inherited MasterDS: TDataSource
     Top = 376
@@ -1382,7 +1410,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <

@@ -5412,6 +5412,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object acTReport_FulfillmentPlanMobileApp: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102
+      FormName = 'TReport_FulfillmentPlanMobileAppForm'
+      FormNameParam.Value = 'TReport_FulfillmentPlanMobileAppForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6263,6 +6274,9 @@
       end
       object N364: TMenuItem
         Action = actReport_CheckMobile
+      end
+      object N374: TMenuItem
+        Action = acTReport_FulfillmentPlanMobileApp
       end
     end
     object N36: TMenuItem [5]

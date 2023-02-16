@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_CashSettings(
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, StartDate TDateTime, EndDate TDateTime, 
-               FixedPercent TFloat)
+               FixedPercent TFloat, PenMobApp TFloat)
 AS
 $BODY$
 BEGIN
@@ -42,12 +42,17 @@ BEGIN
           , ObjectHistory_CashSettings.StartDate                            AS StartDate
           , ObjectHistory_CashSettings.EndDate                              AS EndDate
           , ObjectHistoryFloat_CashSettings_FixedPercent.ValueData          AS FixedPercent
+          , ObjectHistoryFloat_CashSettings_PenMobApp.ValueData             AS PenMobApp
         FROM 
             ObjectHistory_CashSettings
 
             LEFT JOIN tmpObjectHistoryFloat AS ObjectHistoryFloat_CashSettings_FixedPercent
                                             ON ObjectHistoryFloat_CashSettings_FixedPercent.ObjectHistoryId = ObjectHistory_CashSettings.Id
                                            AND ObjectHistoryFloat_CashSettings_FixedPercent.DescId = zc_ObjectHistoryFloat_CashSettings_FixedPercent()
+
+            LEFT JOIN tmpObjectHistoryFloat AS ObjectHistoryFloat_CashSettings_PenMobApp
+                                            ON ObjectHistoryFloat_CashSettings_PenMobApp.ObjectHistoryId = ObjectHistory_CashSettings.Id
+                                           AND ObjectHistoryFloat_CashSettings_PenMobApp.DescId = zc_ObjectHistoryFloat_CashSettings_PenMobApp()
                                            
         ORDER BY ObjectHistory_CashSettings.StartDate;
 

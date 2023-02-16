@@ -138,6 +138,7 @@ type
     actPUSHNewPretension: TdsdShowPUSHMessage;
     actPretensionJournalIncome: TdsdOpenForm;
     dxBarButton6: TdxBarButton;
+    actClearReasonDifferences: TdsdSetDefaultParams;
   private
     { Private declarations }
   public

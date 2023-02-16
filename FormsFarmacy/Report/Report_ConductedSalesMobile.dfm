@@ -3,8 +3,8 @@ inherited Report_ConductedSalesMobileForm: TReport_ConductedSalesMobileForm
   ClientHeight = 575
   ClientWidth = 1058
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1074
-  ExplicitHeight = 614
+  ExplicitWidth = 1076
+  ExplicitHeight = 622
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -195,6 +195,26 @@ inherited Report_ConductedSalesMobileForm: TReport_ConductedSalesMobileForm
     inherited actGridToExcel: TdsdGridToExcel
       TabSheet = tsMain
     end
+    object actReport_InfoMobileAppChech: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077' '#1095#1077#1082#1080' '#1087#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102' '
+      Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077' '#1095#1077#1082#1080' '#1087#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102' '
+      ImageIndex = 42
+      FormName = 'TReport_InfoMobileAppChechForm'
+      FormNameParam.Value = 'TReport_InfoMobileAppChechForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 128
@@ -262,6 +282,10 @@ inherited Report_ConductedSalesMobileForm: TReport_ConductedSalesMobileForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
@@ -313,6 +337,10 @@ inherited Report_ConductedSalesMobileForm: TReport_ConductedSalesMobileForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = deStart
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actReport_InfoMobileAppChech
+      Category = 0
     end
   end
   inherited PeriodChoice: TPeriodChoice

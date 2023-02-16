@@ -11,10 +11,10 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionUnion_Child(
 RETURNS TABLE (Id Integer, NPP Integer, ParentId Integer
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar
              , DescName TVarChar
-             , ReceiptLevelName     TVarChar
-             , ProdOptionsName      TVarChar
-             , ProdColorPatternName TVarChar
-             , ColorPatternName     TVarChar
+             , ReceiptLevelId    Integer , ReceiptLevelName     TVarChar
+             , ProdOptionsId      Integer, ProdOptionsName      TVarChar
+             , ProdColorPatternId Integer, ProdColorPatternName TVarChar
+             , ColorPatternId     Integer, ColorPatternName     TVarChar
              , Amount TFloat
              , Price TFloat
              , Summ TFloat
@@ -84,10 +84,14 @@ BEGIN
           , Object_Object.ObjectCode       AS ObjectCode
           , Object_Object.ValueData        AS ObjectName
           , ObjectDesc.ItemName            AS DescName
+          , Object_ReceiptLevel.Id         AS ReceiptLevelId
           , Object_ReceiptLevel.ValueData  AS ReceiptLevelName
-          , Object_ProdOptions.ValueData       AS ProdOptionsName
+          , Object_ProdOptions.Id          AS ProdOptionsId
+          , Object_ProdOptions.ValueData   AS ProdOptionsName
+          , Object_ProdColorPattern.Id     AS ProdColorPatternId
           , zfCalc_ProdColorPattern_isErased (Object_ProdColorGroup.ValueData, Object_ProdColorPattern.ValueData, Object_Model_pcp.ValueData, Object_ProdColorPattern.isErased) :: TVarChar AS ProdColorPatternName
-          , Object_ColorPattern.ValueData      AS ColorPatternName
+          , Object_ColorPattern.Id         AS ColorPatternId
+          , Object_ColorPattern.ValueData  AS ColorPatternName
 
           , MovementItem.Amount   :: TFloat AS Amount
           , (tmpMIContainer.Amount / CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount ELSE 1 END) ::TFloat AS Price
