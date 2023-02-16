@@ -144,6 +144,15 @@ type
     bbPrintAkt: TdxBarButton;
     ReasonName: TcxGridDBColumn;
     InvNumber_OrderReturnTare: TcxGridDBColumn;
+    actDialog_TTN: TdsdOpenForm;
+    spGet_TTN: TdsdStoredProc;
+    spGetReporNameTTN: TdsdStoredProc;
+    spSelectPrint_TTN: TdsdStoredProc;
+    actGet_TTN: TdsdExecStoredProc;
+    actSPPrintTTNProcName: TdsdExecStoredProc;
+    actPrint_TTN: TdsdPrintAction;
+    mactPrint_TTN: TMultiAction;
+    bbPrint_TTN: TdxBarButton;
   private
     { Private declarations }
   public
