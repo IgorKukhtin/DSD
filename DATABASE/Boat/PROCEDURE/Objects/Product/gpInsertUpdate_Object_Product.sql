@@ -212,7 +212,7 @@ BEGIN
                                                                                               )
                                                                     , inDiscountTax        := inDiscountTax
                                                                     , inDiscountNextTax    := inDiscountNextTax
-                                                                    , inNPP                := inNPP_OrderClient
+                                                                  --, inNPP                := inNPP_OrderClient
                                                                     , inFromId             := inClientId
                                                                     , inToId               := zc_Unit_Production()
                                                                     , inPaidKindId         := zc_Enum_PaidKind_FirstForm()
@@ -232,7 +232,7 @@ BEGIN
                                                  , inVATPercent       := tmp.VATPercent            ::TFloat
                                                  , inDiscountTax      := inDiscountTax             ::TFloat              --пересохраняем
                                                  , inDiscountNextTax  := inDiscountNextTax         ::TFloat              --пересохраняем
-                                                 , inNPP              := inNPP_OrderClient
+                                               --, inNPP              := inNPP_OrderClient
                                                  , inFromId           := inClientId                ::Integer             --пересохраняем
                                                  , inToId             := tmp.ToId                  ::Integer
                                                  , inPaidKindId       := tmp.PaidKindId            ::Integer
