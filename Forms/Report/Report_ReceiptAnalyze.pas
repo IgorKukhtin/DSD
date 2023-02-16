@@ -101,6 +101,25 @@ type
     clReceiptId_parent: TcxGridDBColumn;
     clReceiptId_link: TcxGridDBColumn;
     ReceiptId_link: TcxGridDBColumn;
+    Amount_calc: TcxGridDBColumn;
+    Amount_Weight_calc: TcxGridDBColumn;
+    Amount_out_Weight_calc: TcxGridDBColumn;
+    Price1_calc: TcxGridDBColumn;
+    Price2_calc: TcxGridDBColumn;
+    Price3_calc: TcxGridDBColumn;
+    Price1_cost_calc: TcxGridDBColumn;
+    Price2_cost_calc: TcxGridDBColumn;
+    Price3_cost_calc: TcxGridDBColumn;
+    Amount_in_calc: TcxGridDBColumn;
+    Amount_calc_Child: TcxGridDBColumn;
+    Price1_calc_Child: TcxGridDBColumn;
+    Price2_calc_Child: TcxGridDBColumn;
+    Price3_calc_Child: TcxGridDBColumn;
+    Summ1_calc_Child: TcxGridDBColumn;
+    Summ2_calc_Child: TcxGridDBColumn;
+    Summ3_calc_Child: TcxGridDBColumn;
+    actPrint_calc: TdsdPrintAction;
+    bbPrint_calc: TdxBarButton;
   private
     { Private declarations }
   public
