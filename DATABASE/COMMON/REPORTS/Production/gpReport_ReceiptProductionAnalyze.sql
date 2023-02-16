@@ -289,6 +289,9 @@ BEGIN
 
            , ObjectFloat_Value.ValueData         AS Amount
            , (ObjectFloat_Value.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) :: TFloat AS Amount_Weight
+             -- временно
+           , (ObjectFloat_Value.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) :: TFloat AS Amount_out_Weight
+
            , ObjectFloat_TaxExit.ValueData       AS TaxExit
            , ObjectFloat_TaxLoss.ValueData       AS TaxLoss
            , ObjectBoolean_Main.ValueData        AS isMain

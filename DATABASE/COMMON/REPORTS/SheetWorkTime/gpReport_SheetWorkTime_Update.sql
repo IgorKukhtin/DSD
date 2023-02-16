@@ -91,7 +91,8 @@ BEGIN
                                                      ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id
                                                     AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
                WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-                 AND Movement.DescId = zc_Movement_SheetWorkTime()
+                 AND Movement.DescId   = zc_Movement_SheetWorkTime()
+                 AND Movement.StatusId <> zc_Enum_Status_Erased()
                --AND COALESCE (MIObject_WorkTimeKind.ObjectId,0)<> 0
                )
      --
