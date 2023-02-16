@@ -10,13 +10,17 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbPartionMovementId Integer;
+   DECLARE vbContractId        Integer;
+   DECLARE vbOperDatePartner   TDateTime;
 BEGIN
-   
-   -- 
+
+   --
    IF COALESCE (inMovementId, 0) = 0
-   THEN vbPartionMovementId:= 0; -- !!!будет без партий, и элемент с пустой партией не создается!!!
+   THEN
+       vbPartionMovementId:= 0; -- !!!будет без партий, и элемент с пустой партией не создается!!!
+
    ELSE
-       -- Находим 
+       -- Находим
        vbPartionMovementId:= (SELECT ObjectId FROM ObjectFloat WHERE ValueData = inMovementId AND DescId = zc_ObjectFloat_PartionMovement_MovementId());
 
        IF COALESCE (vbPartionMovementId, 0) = 0
@@ -35,11 +39,30 @@ BEGIN
 
            -- проверка
            IF inPaymentDate IS NULL
-           THEN 
-               RAISE EXCEPTION 'Ошибка.Партия накладной № <%> от <%> не найдена.'
-                              , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
-                              , zfConvert_DateToString ((SELECT MovementDate.ValueData FROM MovementDate WHERE  MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner()))
-                               ;
+           THEN
+               --
+               vbOperDatePartner:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner());
+               --
+               vbContractId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract());
+
+               --
+               inPaymentDate:= (SELECT tmp.OperDate + (tmp.OperDate - zfCalc_DetermentPaymentDate (COALESCE (Object_ContractCondition_View.ContractConditionKindId, 0), COALESCE (Value, 0) :: Integer, tmp.OperDate))
+                                FROM (SELECT vbOperDatePartner AS OperDate) AS tmp
+                                     LEFT JOIN Object_ContractCondition_View
+                                            ON Object_ContractCondition_View.ContractId = vbContractId
+                                           AND Object_ContractCondition_View.ContractConditionKindId IN (zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank())
+                                           AND Object_ContractCondition_View.Value <> 0
+                                           AND vbOperDatePartner BETWEEN Object_ContractCondition_View.StartDate AND Object_ContractCondition_View.EndDate
+                               );
+               --
+               IF inPaymentDate IS NULL
+               THEN
+                   RAISE EXCEPTION 'Ошибка.Партия накладной № <%> от <%> не найдена.'
+                                  , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+                                   , zfConvert_DateToString ((SELECT MovementDate.ValueData FROM MovementDate WHERE  MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner()))
+                                   ;
+               END IF;
+
            END IF;
 
        END IF;
@@ -62,7 +85,7 @@ ALTER FUNCTION lpInsertFind_Object_PartionMovement (Integer, TDateTime) OWNER TO
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 30.04.15                                        * add 
+ 30.04.15                                        * add
  26.04.15                                        * all
  13.02.14                                        * !!!будем без партий!!! но по другому
  27.09.13                                        * !!!будем без партий!!!

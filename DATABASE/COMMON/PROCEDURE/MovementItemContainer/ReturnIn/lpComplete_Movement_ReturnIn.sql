@@ -812,8 +812,10 @@ BEGIN
               -- Партии товара, сформируем позже
             , 0 AS PartionGoodsId
               -- Партии накладны, сформируем позже
-            , CASE WHEN vbIsPartionDoc_Branch = TRUE
+            , CASE WHEN vbIsPartionDoc_Branch = TRUE AND _tmp.MovementId_Partion > 0
                         THEN lpInsertFind_Object_PartionMovement (_tmp.MovementId_Partion, NULL)
+                   WHEN vbIsPartionDoc_Branch = TRUE
+                        THEN 0
                    ELSE 0
               END AS PartionMovementId
 

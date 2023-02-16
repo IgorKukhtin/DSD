@@ -627,6 +627,10 @@ end if;
                                                        ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
                                                       AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
                                                       AND ObjectBoolean_Main.ValueData = TRUE
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_Disabled
+                                                      ON ObjectBoolean_Disabled.ObjectId = Object_Receipt.Id
+                                                     AND ObjectBoolean_Disabled.DescId = zc_ObjectBoolean_Receipt_Disabled()
+                                                     AND ObjectBoolean_Disabled.ValueData = TRUE
 
                               LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_0
                                                    ON ObjectLink_Receipt_Parent_0.ObjectId = Object_Receipt.Id
@@ -636,6 +640,7 @@ end if;
                                                   AND ObjectLink_Receipt_GoodsKind_Parent_0.DescId = zc_ObjectLink_Receipt_GoodsKind()*/
                          WHERE ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId
                            AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                           AND ObjectBoolean_Disabled.ObjectId IS NULL
                         ) AS tmp ON tmp.GoodsId = inGoodsId
 
 
