@@ -873,6 +873,7 @@ BEGIN
 
         WHERE Movement.DescId = zc_Movement_SheetWorkTime()
           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+          AND Movement.StatusId <> zc_Enum_Status_Erased()
 -- and (ObjectFloat_WorkTimeKind_Tax.ValueData = 50 or vbUserId <> 5)
 -- and (MI_SheetWorkTime.ObjectId = 7867165 or vbUserId <> 5)
        )

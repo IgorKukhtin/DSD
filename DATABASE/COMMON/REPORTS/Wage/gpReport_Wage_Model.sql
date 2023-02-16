@@ -873,6 +873,7 @@ AS  (SELECT
 
         WHERE Movement.DescId = zc_Movement_SheetWorkTime()
           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+          AND Movement.StatusId <> zc_Enum_Status_Erased()
        )
          -- табель - кто в какие дни работал
        , MI_SheetWorkTime AS

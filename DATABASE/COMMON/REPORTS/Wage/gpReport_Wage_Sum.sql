@@ -205,6 +205,7 @@ BEGIN
                                                          AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (Setting.PositionLevelId, 0)
            WHERE Movement.DescId = zc_Movement_SheetWorkTime()
              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+             AND Movement.StatusId <> zc_Enum_Status_Erased()
              /*AND (MIObject_Position.ObjectId       = inPositionId OR inPositionId = 0)
              AND (MI_SheetWorkTime.ObjectId        = inMemberId   OR inMemberId = 0)*/
           )

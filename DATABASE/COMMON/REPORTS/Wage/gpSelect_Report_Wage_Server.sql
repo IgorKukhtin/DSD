@@ -244,14 +244,19 @@ BEGIN
        ,Report_2.PersonalGroupName
        ,Report_2.MemberId
        ,Report_2.MemberName
-       ,Report_2.SUM_MemberHours
-       ,CASE WHEN tmpReport_1.MemberId > 0 THEN 0 ELSE Report_2.SheetWorkTime_Amount END AS SheetWorkTime_Amount
+        -- итого часов всех сотрудников (с этой должностью+...)
+       ,CASE WHEN Report_2.Ord_SheetWorkTime = 1 THEN Report_2.SUM_MemberHours ELSE 0 END SUM_MemberHours
+        -- итого часов сотрудника
+       ,CASE WHEN tmpReport_1.MemberId > 0 THEN 0 WHEN Report_2.Ord_SheetWorkTime = 1 THEN Report_2.SheetWorkTime_Amount ELSE 0 END AS SheetWorkTime_Amount
+
      --,CASE WHEN tmpReport_1.MemberId > 0 AND Report_2.SheetWorkTime_Amount = tmpReport_1.SheetWorkTime_Amount THEN 0 ELSE Report_2.SheetWorkTime_Amount END AS SheetWorkTime_Amount
        ,Report_2.StaffListSummKindId   AS ServiceModelCode
        ,Report_2.StaffListSummKindName AS ServiceModelName
        ,Report_2.StaffListSumm_Value   AS Price
        ,Report_2.Summ
-       ,Report_2.Count_Day
+        -- Отраб. дн. 1 чел (инф.)
+       ,CASE WHEN Report_2.Ord_SheetWorkTime = 1 THEN Report_2.Count_Day ELSE 0 END AS Count_Day
+        --
        ,0              AS ModelServiceId
        ,Report_2.StaffListSummKindId
        ,Report_2.Tax_Trainee :: TFloat   AS KoeffHoursWork_car
@@ -674,4 +679,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '01.04.2017', inEndDate:= '02.04.2017', inUnitId:= 8439, inModelServiceId:= 633116, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');
--- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '01.10.2021', inEndDate:= '31.10.2021', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '01.10.2023', inEndDate:= '31.10.2023', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');

@@ -35,6 +35,7 @@ RETURNS TABLE(
     ,Count_Day                      Integer   -- Отраб. дн. 1 чел (инф.)
     ,Summ                           TFloat
     ,Tax_Trainee                    TFloat
+    ,Ord_SheetWorkTime              Integer    -- № п/п - SheetWorkTime
 )
 AS
 $BODY$
@@ -69,7 +70,8 @@ BEGIN
                               , Count_Member,HoursPlan,HoursDay,StaffListSummId,StaffListSumm_Value,StaffListSummKindId,StaffListSummKindName
                                )
     SELECT
-        Object_StaffList.Id                                      AS StaffListId
+      --MAX (Object_StaffList.Id)                                AS StaffListId
+        (Object_StaffList.Id)                                    AS StaffListId
        ,ObjectLink_StaffList_Unit.ChildObjectId                  AS UnitId
        ,Object_Unit.ValueData                                    AS UnitName
        ,ObjectLink_StaffList_Position.ChildObjectId              AS PositionId
@@ -77,10 +79,14 @@ BEGIN
        ,COALESCE (ObjectBoolean_PositionLevel.ValueData, FALSE)  AS isPositionLevel_all
        ,CASE WHEN ObjectBoolean_PositionLevel.ValueData = TRUE THEN 0 ELSE ObjectLink_StaffList_PositionLevel.ChildObjectId END AS PositionLevelId
        ,Object_PositionLevel.ValueData                           AS PositionLevelName
-       ,ObjectFloat_PersonalCount.ValueData::Integer             AS Count_Member
-       ,ObjectFloat_HoursPlan.ValueData                          AS HoursPlan
-       ,ObjectFloat_HoursDay.ValueData                           AS HoursDay
-       ,ObjectLink_StaffListSumm_StaffList.ChildObjectId         AS StaffListSummId
+       ,MAX (ObjectFloat_PersonalCount.ValueData)::Integer       AS Count_Member
+        -- 1.Общ.пл.ч.в мес. на человека
+       ,MAX (ObjectFloat_HoursPlan.ValueData)                    AS HoursPlan
+        -- 2.Дневной пл.ч. на человека
+       ,MAX (ObjectFloat_HoursDay.ValueData)                     AS HoursDay
+        --
+     --,MAX (ObjectLink_StaffListSumm_StaffList.ChildObjectId)   AS StaffListSummId
+       ,(ObjectLink_StaffListSumm_StaffList.ChildObjectId)       AS StaffListSummId
        ,ObjectFloat_StaffListSumm_Value.ValueData                AS StaffListSumm_Value
        ,ObjectLink_StaffListSumm_StaffListSummKind.ChildObjectId AS StaffListSummKindId
        ,Object_StaffListSummKind.ValueData                       AS StaffListSummKindName
@@ -110,7 +116,7 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_PersonalCount 
                               ON ObjectFloat_PersonalCount.ObjectId = Object_StaffList.Id 
                              AND ObjectFloat_PersonalCount.DescId = zc_ObjectFloat_StaffList_PersonalCount()
-        --HoursPlan  1.Общ.пл.ч.в мес. на человека
+        -- HoursPlan  1.Общ.пл.ч.в мес. на человека
         LEFT JOIN ObjectFloat AS ObjectFloat_HoursPlan 
                               ON ObjectFloat_HoursPlan.ObjectId = Object_StaffList.Id 
                              AND ObjectFloat_HoursPlan.DescId = zc_ObjectFloat_StaffList_HoursPlan()
@@ -140,6 +146,21 @@ BEGIN
       AND Object_StaffList.isErased = FALSE
       AND (ObjectLink_StaffList_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
       AND (ObjectLink_StaffList_Position.ChildObjectId = inPositionId OR inPositionId = 0)
+   -- and Object_StaffList.ObjectCode <> 581
+    GROUP BY Object_StaffList.Id
+            ,ObjectLink_StaffList_Unit.ChildObjectId
+            ,Object_Unit.ValueData
+            ,ObjectLink_StaffList_Position.ChildObjectId
+            ,Object_Position.ValueData
+            ,COALESCE (ObjectBoolean_PositionLevel.ValueData, FALSE)
+            ,CASE WHEN ObjectBoolean_PositionLevel.ValueData = TRUE THEN 0 ELSE ObjectLink_StaffList_PositionLevel.ChildObjectId END
+            ,Object_PositionLevel.ValueData
+          --,ObjectFloat_PersonalCount.ValueData::Integer
+             --
+            ,ObjectLink_StaffListSumm_StaffList.ChildObjectId
+            ,ObjectFloat_StaffListSumm_Value.ValueData
+            ,ObjectLink_StaffListSumm_StaffListSummKind.ChildObjectId
+            ,Object_StaffListSummKind.ValueData
    ;
     
     -- результат
@@ -202,6 +223,7 @@ BEGIN
                                                          AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (Setting.PositionLevelId, 0)
            WHERE Movement.DescId = zc_Movement_SheetWorkTime()
              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+             AND Movement.StatusId <> zc_Enum_Status_Erased()
              /*AND (MIObject_Position.ObjectId       = inPositionId OR inPositionId = 0)
              AND (MI_SheetWorkTime.ObjectId        = inMemberId   OR inMemberId = 0)*/
           )
@@ -326,6 +348,15 @@ BEGIN
         END :: TFloat AS Summ
         
        ,(Movement_SheetWorkTime.Tax_Trainee / 100) :: TFloat AS Summ
+
+         -- № п/п - SheetWorkTime
+       /*, ROW_NUMBER() OVER (PARTITION BY COALESCE (Movement_SheetWorkTime.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
+                                       , COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
+                                       , COALESCE (Movement_SheetWorkTime.MemberId, 0)
+                                       , Movement_SheetWorkTime.Tax_Trainee
+                           ) :: Integer AS Ord_SheetWorkTime*/
+       , 1 :: Integer AS Ord_SheetWorkTime
+
     FROM Setting_Wage_2 AS Setting
         LEFT OUTER JOIN Movement_SheetWorkTime ON COALESCE (Movement_SheetWorkTime.PositionId, 0)      = COALESCE (Setting.PositionId, 0)
                                               AND COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (Setting.PositionLevelId, 0)
@@ -337,4 +368,4 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
--- SELECT * FROM gpSelect_Report_Wage_Sum_Server (inStartDate:= '01.04.2021', inEndDate:= '01.04.2021', inUnitId:= 8439, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Sum_Server (inStartDate:= '01.04.2023', inEndDate:= '01.04.2023', inUnitId:= 8439, inMemberId:= 0, inPositionId:= 0, inSession:= '5');
