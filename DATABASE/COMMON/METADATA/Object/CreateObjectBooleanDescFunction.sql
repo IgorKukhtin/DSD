@@ -1340,9 +1340,48 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_PartionDateWages_NotCharge() RETURNS
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_PartionDateWages(), 'zc_ObjectBoolean_PartionDateWages_NotCharge', 'Не начислять ЗП' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PartionDateWages_NotCharge');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_EliminateColdSUN2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_EliminateColdSUN2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_EliminateColdSUN2', 'Исключать Холод из СУН 2' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_EliminateColdSUN2');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_EliminateColdSUN3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_EliminateColdSUN3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_EliminateColdSUN3', 'Исключать Холод из Э-СУН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_EliminateColdSUN3');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_EliminateColdSUN4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_EliminateColdSUN4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_EliminateColdSUN4', 'Исключать Холод из СУН ПИ' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_EliminateColdSUN4');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_EliminateColdSUA() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_EliminateColdSUA'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_EliminateColdSUA', 'Исключать Холод из СУA' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_EliminateColdSUA');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_OnlyColdSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_OnlyColdSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_OnlyColdSUN', 'Только по Холоду СУН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_OnlyColdSUN');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_OnlyColdSUN2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_OnlyColdSUN2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_OnlyColdSUN2', 'Только по Холоду СУН 2' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_OnlyColdSUN2');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_OnlyColdSUN3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_OnlyColdSUN3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_OnlyColdSUN3', 'Только по Холоду Э-СУН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_OnlyColdSUN3');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_OnlyColdSUN4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_OnlyColdSUN4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_OnlyColdSUN4', 'Только по Холоду СУН ПИ' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_OnlyColdSUN4');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_OnlyColdSUA() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_OnlyColdSUA'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_OnlyColdSUA', 'Только по Холоду СУA' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_OnlyColdSUA');
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 16.02.23                                                                                                          * zc_ObjectBoolean_CashSettings_OnlyColdSUN
  18.01.23                                                                                                          * zc_ObjectBoolean_PartionDateWages_NotCharge
  13.01.23                                                                                                          * zc_ObjectBoolean_CashSettings_ShoresSUN
  27.10.22                                                                                                          * zc_ObjectBoolean_User_PhotosOnSite

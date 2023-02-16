@@ -88,6 +88,7 @@ $BODY$
 
    DECLARE vbDOW_curr        Integer;
    DECLARE vbisEliminateColdSUN Boolean;
+   DECLARE vbisOnlyColdSUN Boolean;
    DECLARE vbisShoresSUN Boolean;
 
 BEGIN
@@ -104,14 +105,18 @@ BEGIN
 
      SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
-     INTO vbisEliminateColdSUN, vbisShoresSUN
+          , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbisShoresSUN, vbisOnlyColdSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
-                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN3()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_ShoresSUN
                                   ON ObjectBoolean_CashSettings_ShoresSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_ShoresSUN.DescId = zc_ObjectBoolean_CashSettings_ShoresSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUN
+                                  ON ObjectBoolean_CashSettings_OnlyColdSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_OnlyColdSUN.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUN3()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -598,7 +603,7 @@ raise notice 'Value 7: %', CLOCK_TIMESTAMP();
                                 AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
                                  OR Object_Goods_Main.isColdSUN = TRUE 
                                     )
-                                AND vbisEliminateColdSUN = TRUE
+                                AND (vbisEliminateColdSUN = TRUE OR vbisOnlyColdSUN = TRUE)
                              )
 
      -- 2.1. Результат: EXPRESS - все остатки, продажи => расчет кол-во ПОТРЕБНОСТЬ у получателя: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
@@ -732,7 +737,8 @@ raise notice 'Value 7: %', CLOCK_TIMESTAMP();
            --INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
            --                                 AND Object_Goods.ValueData NOT ILIKE 'ААА%'
      WHERE             -- отбросили !!холод!!
-           tmpConditionsKeep.ObjectId IS NULL
+           ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+             tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE)
  
        ;
      

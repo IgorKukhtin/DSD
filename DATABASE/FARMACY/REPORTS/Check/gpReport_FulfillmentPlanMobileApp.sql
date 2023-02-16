@@ -1,17 +1,18 @@
 -- Function: gpReport_FulfillmentPlanMobileApp()
 
-DROP FUNCTION IF EXISTS gpReport_FulfillmentPlanMobileApp (TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_FulfillmentPlanMobileApp (TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_FulfillmentPlanMobileApp(
     IN inOperDate     TDateTime , --
     IN inUnitId       Integer,    -- Подразделение
+    IN inUserId       Integer,    -- Подразделение
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar
              , CountChech TFloat, CountSite TFloat, CountUser Integer, ProcPlan TFloat
              , UserId Integer, UserCode Integer, UserName TVarChar
              , CountChechUser TFloat, CountMobileUser TFloat, QuantityMobile Integer, ProcFact TFloat
-             , PenaltiMobApp TFloat
+             , PenaltiMobApp TFloat, isShowPlanEmployeeUser Boolean
               )
 AS
 $BODY$
@@ -120,7 +121,8 @@ BEGIN
      FROM MovementProtocol 
      WHERE MovementProtocol.OperDate >= date_trunc('MONTH', inOperDate)
        AND MovementProtocol.OperDate <  date_trunc('MONTH', inOperDate) + INTERVAL '1 MONTH' + INTERVAL '3 DAY'
-       AND MovementProtocol.ProtocolData ILIKE '%Статус" FieldValue = "Проведен%';
+       AND MovementProtocol.ProtocolData ILIKE '%Статус" FieldValue = "Проведен%'
+       AND (MovementProtocol.UserId  = inUserId OR COALESCE (inUserId, 0) = 0);
           
      ANALYSE tmpMovementProtocol;
      
@@ -182,6 +184,7 @@ BEGIN
                               Round(1.0 * tmpMovFact.CountMobile / 
                              NullIf(tmpMovFact.CountChech, 0) * 100, 1)) * vbPenMobApp, 2)                              
                   ELSE 0 END::TFLoat                               AS PenaltiMobApp
+           , COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE):: Boolean         AS isShowPlanEmployeeUser
         FROM tmpMovPlan AS MovPlan 
         
              LEFT JOIN Object AS Object_Unit ON Object_Unit.ID = MovPlan.UnitId
@@ -191,6 +194,10 @@ BEGIN
              LEFT JOIN tmpMovFact ON tmpMovFact.UnitId = MovPlan.UnitId
 
              LEFT JOIN Object AS Object_User ON Object_User.Id = tmpMovFact.UserId
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowPlanEmployeeUser
+                                     ON ObjectBoolean_ShowPlanEmployeeUser.ObjectId = MovPlan.UnitId
+                                    AND ObjectBoolean_ShowPlanEmployeeUser.DescId = zc_ObjectBoolean_Unit_ShowPlanEmployeeUser()
              
         ORDER BY Object_Unit.ValueData , Object_User.ValueData
         ;
@@ -208,4 +215,4 @@ ALTER FUNCTION gpReport_Check_TabletkiRecreate (TDateTime, TDateTime, Integer, T
 */            
 
 -- 
-select * from gpReport_FulfillmentPlanMobileApp (('01.02.2023')::TDateTime, 0, '3');
+select * from gpReport_FulfillmentPlanMobileApp (('01.02.2023')::TDateTime, 0, 0, '3');

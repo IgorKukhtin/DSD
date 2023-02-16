@@ -25,7 +25,8 @@ RETURNS TABLE (
   isReleasedMarketingPlan Boolean,
   CountAmount             Integer,
   CountConsider           Integer,
-  CountRecord             Integer
+  CountRecord             Integer,
+  PenaltiMobApp           TFloat
 )
 AS
 $BODY$
@@ -704,7 +705,8 @@ BEGIN
                                                            ON ObjectBoolean_ReleasedMarketingPlan.ObjectId = Object_Member.Id
                                                           AND ObjectBoolean_ReleasedMarketingPlan.DescId = zc_ObjectBoolean_Member_ReleasedMarketingPlan()
 			
-                              WHERE Object_User.DescId = zc_Object_User())
+                              WHERE Object_User.DescId = zc_Object_User()),
+          tmpFulfillmentPlanMobile AS (select * from gpReport_FulfillmentPlanMobileApp (CURRENT_DATE::TDateTime, vbUnitID, vbUserId, '3'))
 
      SELECT
         Result.ID::Integer,
@@ -726,7 +728,8 @@ BEGIN
         Personal_View.isReleasedMarketingPlan,
         Result.CountAmount,
         Result.CountConsider,
-        Result.CountRecord
+        Result.CountRecord,
+        tmpFulfillmentPlanMobile.PenaltiMobApp
 
      FROM tmpResult AS Result 
 
@@ -737,6 +740,10 @@ BEGIN
           LEFT JOIN tmPersonal_View AS Personal_View 
                                     ON Personal_View.UserID =  Result.UserId
                                    AND Personal_View.Ord = 1  
+                                   
+          LEFT JOIN tmpFulfillmentPlanMobile ON tmpFulfillmentPlanMobile.UserID = Result.UserId 
+                                            AND tmpFulfillmentPlanMobile.PenaltiMobApp > 0
+          
      WHERE Personal_View.isReleasedMarketingPlan = False
      ORDER BY Result.ID;
 
@@ -760,4 +767,4 @@ $BODY$
 
 -- тест
 -- 
-select * from gpReport_ImplementationPlanEmployeeUser(inStartDate := ('01.01.2023')::TDateTime ,  inSession := '20194482');
+select * from gpReport_ImplementationPlanEmployeeUser(inStartDate := CURRENT_DATE::TDateTime ,  inSession := '20194482');

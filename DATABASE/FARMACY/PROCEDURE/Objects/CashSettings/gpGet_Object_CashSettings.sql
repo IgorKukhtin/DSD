@@ -54,6 +54,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , FixedPercent TFloat
              , MobMessSum TFloat
              , MobMessCount Integer
+             , isEliminateColdSUN2 Boolean, isEliminateColdSUN3 Boolean, isEliminateColdSUN4 Boolean, isEliminateColdSUA Boolean
+             , isOnlyColdSUN Boolean, isOnlyColdSUN2 Boolean, isOnlyColdSUN3 Boolean, isOnlyColdSUN4 Boolean, isOnlyColdSUA Boolean
              ) AS
 $BODY$
 BEGIN
@@ -113,6 +115,15 @@ BEGIN
         , ObjectFloat_CashSettings_FixedPercent.ValueData                          AS FixedPercent
         , ObjectFloat_CashSettings_MobMessSum.ValueData                            AS MobMessSum
         , ObjectFloat_CashSettings_MobMessCount.ValueData::Integer                 AS MobMessCount
+        , COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN2.ValueData, FALSE)  AS isEliminateColdSUN2
+        , COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN3.ValueData, FALSE)  AS isEliminateColdSUN3
+        , COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN4.ValueData, FALSE)  AS isEliminateColdSUN4
+        , COALESCE(ObjectBoolean_CashSettings_EliminateColdSUA.ValueData, FALSE)   AS isEliminateColdSUA
+        , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN.ValueData, FALSE)        AS isOnlyColdSUN
+        , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN2.ValueData, FALSE)       AS isOnlyColdSUN2
+        , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN3.ValueData, FALSE)       AS isOnlyColdSUN3
+        , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN4.ValueData, FALSE)       AS isOnlyColdSUN4
+        , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUA.ValueData, FALSE)        AS isOnlyColdSUA
 
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
@@ -178,9 +189,6 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_PairedOnlyPromo
                                 ON ObjectBoolean_CashSettings_PairedOnlyPromo.ObjectId = Object_CashSettings.Id 
                                AND ObjectBoolean_CashSettings_PairedOnlyPromo.DescId = zc_ObjectBoolean_CashSettings_PairedOnlyPromo()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
-                                ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
-                               AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_RequireUkrName
                                 ON ObjectBoolean_CashSettings_RequireUkrName.ObjectId = Object_CashSettings.Id 
@@ -196,6 +204,39 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_ShoresSUN
                                 ON ObjectBoolean_CashSettings_ShoresSUN.ObjectId = Object_CashSettings.Id 
                                AND ObjectBoolean_CashSettings_ShoresSUN.DescId = zc_ObjectBoolean_CashSettings_ShoresSUN()
+
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
+                                ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN2
+                                ON ObjectBoolean_CashSettings_EliminateColdSUN2.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_EliminateColdSUN2.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN2()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN3
+                                ON ObjectBoolean_CashSettings_EliminateColdSUN3.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_EliminateColdSUN3.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN3()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN4
+                                ON ObjectBoolean_CashSettings_EliminateColdSUN4.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_EliminateColdSUN4.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN4()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUA
+                                ON ObjectBoolean_CashSettings_EliminateColdSUA.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_EliminateColdSUA.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUA()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUN
+                                ON ObjectBoolean_CashSettings_OnlyColdSUN.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_OnlyColdSUN.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUN()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUN2
+                                ON ObjectBoolean_CashSettings_OnlyColdSUN2.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_OnlyColdSUN2.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUN2()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUN3
+                                ON ObjectBoolean_CashSettings_OnlyColdSUN3.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_OnlyColdSUN3.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUN3()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUN4
+                                ON ObjectBoolean_CashSettings_OnlyColdSUN4.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_OnlyColdSUN4.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUN4()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUA
+                                ON ObjectBoolean_CashSettings_OnlyColdSUA.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_OnlyColdSUA.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUA()
 
         LEFT JOIN ObjectLink AS ObjectLink_CashSettings_MethodsAssortment
                ON ObjectLink_CashSettings_MethodsAssortment.ObjectId = Object_CashSettings.Id

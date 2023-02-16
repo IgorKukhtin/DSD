@@ -47,6 +47,7 @@ type
     TotalCount: TcxGridDBColumn;
     CountCheck: TcxGridDBColumn;
     FormParams: TdsdFormParams;
+    CountFirstOrder: TcxGridDBColumn;
   private
     { Private declarations }
   public

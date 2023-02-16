@@ -48,6 +48,7 @@ $BODY$
    DECLARE vbDaySendSUN_max  Integer;
    DECLARE vbDaySendSUNAll_max Integer;
    DECLARE vbisEliminateColdSUN Boolean;
+   DECLARE vbisOnlyColdSUN Boolean;
 BEGIN
      --
      vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', inUserId);
@@ -57,12 +58,16 @@ BEGIN
                          ELSE 1500
                     END;
 
-     SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
-     INTO vbisEliminateColdSUN
+     SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUA.ValueData, FALSE) 
+          , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUA.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbisOnlyColdSUN
      FROM Object AS Object_CashSettings
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
-                                  ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
-                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUA
+                                  ON ObjectBoolean_CashSettings_EliminateColdSUA.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_EliminateColdSUA.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUA()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUA
+                                  ON ObjectBoolean_CashSettings_OnlyColdSUA.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_OnlyColdSUA.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUA()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -1439,7 +1444,7 @@ BEGIN
                               WHERE (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
                                  OR Object_Goods_Main.isColdSUN = TRUE 
                                     )
-                                AND vbisEliminateColdSUN = TRUE
+                                AND (vbisEliminateColdSUN = TRUE OR vbisOnlyColdSUN = TRUE)
                              )
              -- отбросили !!НОТ!!
            , tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId
@@ -1518,7 +1523,8 @@ BEGIN
                       ) * COALESCE (_tmpGoods_SUN_SUA.KoeffSUN, 1)
                 > 1
             -- отбросили !!холод!!
-            AND tmpConditionsKeep.ObjectId IS NULL
+            AND ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+                  tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE)
             -- отбросили !!НОТ!!
             AND tmpGoods_NOT.ObjectId IS NULL
           ;

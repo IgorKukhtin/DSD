@@ -15571,7 +15571,9 @@ begin
           if ds.IsEmpty then Exit;
           if (ds.FieldByName('UserID').AsString = gc_User.Session) or (gc_User.Session = '3') then
           begin
-             Self.Caption := Self.Caption + ' <Маркетинг: ' + FormatFloat(',0.00', ds.FieldByName('Total').AsCurrency) + '>'
+             Self.Caption := Self.Caption +
+               ' <Маркетинг: ' + FormatFloat(',0.00', ds.FieldByName('Total').AsCurrency) +
+               '; Приложение: ' + FormatFloat(',0.00', ds.FieldByName('PenaltiMobApp').AsCurrency) + '>'
           end;
 
         Except ON E:Exception do

@@ -2,7 +2,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   Left = 0
   Top = 0
   Caption = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1082#1072#1089#1089
-  ClientHeight = 695
+  ClientHeight = 578
   ClientWidth = 898
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -16,648 +16,775 @@ object CashSettingsEditForm: TCashSettingsEditForm
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
-  object edShareFromPriceName: TcxTextEdit
-    Left = 16
-    Top = 57
-    TabOrder = 0
-    Width = 509
-  end
-  object cxLabel1: TcxLabel
-    Left = 16
-    Top = 37
-    Caption = 
-      #1055#1077#1088#1077#1095#1077#1085#1100' '#1092#1088#1072#1079' '#1074' '#1085#1072#1079#1074#1072#1085#1080#1103#1093' '#1090#1086#1074#1072#1088#1086#1074' '#1082#1086#1090#1086#1088#1099#1077' '#1084#1086#1078#1085#1086' '#1076#1077#1083#1080#1090#1100' '#1089' '#1083#1102#1073#1086#1081' '#1094 +
-      #1077#1085#1086#1081
-  end
-  object cxButton1: TcxButton
-    Left = 240
-    Top = 648
-    Width = 75
-    Height = 25
-    Action = dsdInsertUpdateGuides
-    Default = True
-    ModalResult = 8
-    TabOrder = 2
-  end
-  object cxButton2: TcxButton
-    Left = 614
-    Top = 648
-    Width = 75
-    Height = 25
-    Action = dsdFormClose
-    Cancel = True
-    Caption = #1054#1090#1084#1077#1085#1072
-    ModalResult = 8
-    TabOrder = 3
-  end
-  object edShareFromPriceCode: TcxTextEdit
-    Left = 16
-    Top = 105
+  object cxPageControl1: TcxPageControl
+    Left = 0
+    Top = 30
+    Width = 898
+    Height = 507
+    Align = alClient
     TabOrder = 4
-    Width = 509
-  end
-  object cxLabel2: TcxLabel
-    Left = 16
-    Top = 85
-    Caption = #1055#1077#1088#1077#1095#1077#1085#1100' '#1082#1086#1076#1086#1074' '#1090#1086#1074#1072#1088#1086#1074' '#1082#1086#1090#1086#1088#1099#1077' '#1084#1086#1078#1085#1086' '#1076#1077#1083#1080#1090#1100' '#1089' '#1083#1102#1073#1086#1081' '#1094#1077#1085#1086#1081
-  end
-  object cbGetHardwareData: TcxCheckBox
-    Left = 16
-    Top = 136
-    Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
-    Caption = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 6
-    Width = 215
-  end
-  object edDateBanSUN: TcxDateEdit
-    Left = 191
-    Top = 186
-    EditValue = 42993d
-    Properties.ReadOnly = False
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 7
-    Width = 90
-  end
-  object cxLabel11: TcxLabel
-    Left = 16
-    Top = 187
-    Caption = ' '#1044#1072#1090#1072' '#1079#1072#1087#1088#1077#1090#1072' '#1088#1072#1073#1086#1090#1099' '#1087#1086' '#1057#1059#1053' '
-  end
-  object edSummaFormSendVIP: TcxCurrencyEdit
-    Left = 404
-    Top = 211
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 9
-    Width = 121
-  end
-  object cxLabel3: TcxLabel
-    Left = 20
-    Top = 212
-    Caption = #1057#1091#1084#1084#1072' '#1086#1090' '#1082#1086#1090#1086#1088#1086#1081' '#1087#1086#1082#1072#1079#1072#1085' '#1090#1086#1074#1072#1088' '#1087#1088#1080' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' VIP'
-  end
-  object edSummaUrgentlySendVIP: TcxCurrencyEdit
-    Left = 404
-    Top = 254
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 11
-    Width = 121
-  end
-  object cxLabel4: TcxLabel
-    Left = 20
-    Top = 255
-    Caption = #1057#1091#1084#1084#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1086#1090' '#1082#1086#1090#1086#1088#1086#1081' '#1088#1072#1079#1088#1077#1096#1077#1085' '#1087#1088#1080#1079#1085#1072#1082' '#1089#1088#1086#1095#1085#1086' '
-  end
-  object cbBlockVIP: TcxCheckBox
-    Left = 256
-    Top = 155
-    Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
-    Caption = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' VIP'
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 13
-    Width = 269
-  end
-  object cbPairedOnlyPromo: TcxCheckBox
-    Left = 531
-    Top = 136
-    Hint = #1055#1088#1080' '#1086#1087#1091#1089#1082#1072#1085#1080#1080' '#1087#1072#1088#1085#1099#1093' '#1082#1086#1085#1090#1088#1086#1083#1080#1088#1086#1074#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081
-    Caption = #1055#1088#1080' '#1086#1087#1091#1089#1082#1072#1085#1080#1080' '#1087#1072#1088#1085#1099#1093' '#1082#1086#1085#1090#1088#1086#1083#1080#1088#1086#1074#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 14
-    Width = 338
-  end
-  object edDaySaleForSUN: TcxCurrencyEdit
-    Left = 404
-    Top = 275
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 15
-    Width = 121
-  end
-  object cxLabel5: TcxLabel
-    Left = 20
-    Top = 276
-    Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1082#1086#1085#1090#1088#1086#1083#1103' <'#1055#1088#1086#1076#1072#1085#1086'/'#1055#1088#1086#1076#1072#1078#1072' '#1076#1086' '#1089#1083#1077#1076' '#1057#1059#1053'>'
-  end
-  object edAttemptsSub: TcxCurrencyEdit
-    Left = 404
-    Top = 317
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 17
-    Width = 121
-  end
-  object cxLabel6: TcxLabel
-    Left = 20
-    Top = 318
-    Caption = 
-      #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1086#1087#1099#1090#1086#1082' '#1076#1086' '#1091#1089#1087#1077#1096#1085#1086#1081' '#1089#1076#1072#1095#1080' '#1090#1077#1089#1090#1072' '#1076#1083#1103' '#1087#1088#1077#1076#1083#1086#1078#1077#1085#1080#1103' '#1087#1086#1076#1084#1077 +
-      #1085
-  end
-  object edDayNonCommoditySUN: TcxCurrencyEdit
-    Left = 404
-    Top = 296
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 19
-    Width = 121
-  end
-  object cxLabel7: TcxLabel
-    Left = 20
-    Top = 297
-    Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1082#1086#1085#1090#1088#1086#1083#1103' '#1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103' "'#1053#1077#1090#1086#1074#1072#1088#1085#1099#1081' '#1074#1080#1076'"'
-  end
-  object edLowerLimitPromoBonus: TcxCurrencyEdit
-    Left = 404
-    Top = 360
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 21
-    Width = 121
-  end
-  object edUpperLimitPromoBonus: TcxCurrencyEdit
-    Left = 404
-    Top = 339
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 22
-    Width = 121
-  end
-  object cxLabel8: TcxLabel
-    Left = 20
-    Top = 361
-    Caption = #9#1053#1080#1078#1085#1080#1081' '#1087#1088#1077#1076#1077#1083' '#1089#1088#1072#1074#1085#1077#1085#1080#1103' ('#1084#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099')'
-  end
-  object cxLabel9: TcxLabel
-    Left = 20
-    Top = 340
-    Caption = #1042#1077#1088#1093#1085#1080#1081' '#1087#1088#1077#1076#1077#1083' '#1089#1088#1072#1074#1085#1077#1085#1080#1103' ('#1084#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099')'
-  end
-  object edMinPercentPromoBonus: TcxCurrencyEdit
-    Left = 404
-    Top = 381
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 25
-    Width = 121
-  end
-  object cxLabel10: TcxLabel
-    Left = 20
-    Top = 382
-    Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1085#1072#1094#1077#1085#1082#1072' ('#1084#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099')'
-  end
-  object ceDayCompensDiscount: TcxCurrencyEdit
-    Left = 404
-    Top = 402
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 27
-    Width = 121
-  end
-  object cxLabel12: TcxLabel
-    Left = 20
-    Top = 403
-    Caption = #1044#1085#1077#1081' '#1076#1086' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1077#1082#1090#1072#1084
-  end
-  object edMethodsAssortment: TcxButtonEdit
-    Left = 587
-    Top = 321
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 29
-    Width = 293
-  end
-  object cxLabel13: TcxLabel
-    Left = 540
-    Top = 302
-    Caption = #1052#1077#1090#1086#1076#1099' '#1074#1099#1073#1086#1088#1072' '#1072#1087#1090#1077#1082' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072
-  end
-  object ceAssortmentGeograph: TcxCurrencyEdit
-    Left = 759
-    Top = 343
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 31
-    Width = 73
-  end
-  object cxLabel14: TcxLabel
-    Left = 540
-    Top = 344
-    Caption = #9#1040#1087#1090#1077#1082' '#1072#1085#1072#1083#1080#1090#1080#1082#1086#1074' '#1087#1086' '#1075#1077#1086#1075#1088#1072#1092#1080#1080
-  end
-  object ceAssortmentSales: TcxCurrencyEdit
-    Left = 759
-    Top = 365
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 33
-    Width = 73
-  end
-  object cxLabel15: TcxLabel
-    Left = 640
-    Top = 366
-    Caption = #1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084
-  end
-  object ceCustomerThreshold: TcxCurrencyEdit
-    Left = 404
-    Top = 424
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 35
-    Width = 121
-  end
-  object cxLabel16: TcxLabel
-    Left = 20
-    Top = 426
-    Caption = #1055#1086#1088#1086#1075' '#1089#1088#1072#1073#1072#1090#1099#1074#1072#1085#1080#1077' '#1085#1072' '#1094#1077#1085#1091' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' '#1087#1088#1080' '#1079#1072#1082#1072#1079#1077' '#1082#1083#1080#1077#1085#1090#1091
-  end
-  object cePriceCorrectionDay: TcxCurrencyEdit
-    Left = 404
-    Top = 445
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 37
-    Width = 121
-  end
-  object cxLabel17: TcxLabel
-    Left = 20
-    Top = 447
-    Hint = 
-      #1055#1077#1088#1080#1086#1076' '#1076#1085#1077#1081' '#1076#1083#1103' '#1089#1080#1089#1090#1077#1084#1099' '#1082#1086#1088#1088#1077#1082#1094#1080#1080' '#1094#1077#1085#1099' '#1087#1086' '#1080#1090#1086#1075#1072#1084' '#1088#1086#1089#1090#1072'/'#1087#1072#1076#1077#1085#1080#1103' '#1089 +
-      #1088#1077#1076#1085#1080#1093' '#1087#1088#1086#1076#1072#1078
-    Caption = #1055#1077#1088#1080#1086#1076' '#1076#1085#1077#1081' '#1076#1083#1103' '#1089#1080#1089#1090#1077#1084#1099' '#1082#1086#1088#1088#1077#1082#1094#1080#1080' '#1094#1077#1085#1099
-    ParentShowHint = False
-    ShowHint = True
-  end
-  object cbRequireUkrName: TcxCheckBox
-    Left = 256
-    Top = 136
-    Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
-    Caption = #1058#1088#1077#1073#1086#1074#1072#1090#1100' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1059#1082#1088#1072#1080#1085#1089#1082#1086#1075#1086' '#1085#1072#1079#1074#1072#1085#1080#1103
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 39
-    Width = 269
-  end
-  object cbRemovingPrograms: TcxCheckBox
-    Left = 16
-    Top = 155
-    Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
-    Caption = #1059#1076#1072#1083#1077#1085#1080#1077' '#1089#1090#1086#1088#1086#1085#1085#1080#1093' '#1087#1088#1086#1075#1088#1072#1084#1084
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 40
-    Width = 215
-  end
-  object cePriceSamples: TcxCurrencyEdit
-    Left = 759
-    Top = 211
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 41
-    Width = 121
-  end
-  object cxLabel18: TcxLabel
-    Left = 540
-    Top = 212
-    Caption = #1055#1086#1088#1086#1075' '#1094#1077#1085#1099' '#1057#1101#1084#1087#1083#1086#1074' '#1086#1090
-  end
-  object ceSamples21: TcxCurrencyEdit
-    Left = 759
-    Top = 231
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 43
-    Width = 121
-  end
-  object cxLabel19: TcxLabel
-    Left = 540
-    Top = 232
-    Caption = #1057#1082#1080#1076#1082#1072' '#1089#1101#1084#1087#1083#1086#1074' '#1082#1072#1090' 2.1 ('#1086#1090' 90-200 '#1076#1085#1077#1081')'
-  end
-  object cxLabel20: TcxLabel
-    Left = 540
-    Top = 253
-    Caption = #1057#1082#1080#1076#1082#1072' '#1089#1101#1084#1087#1083#1086#1074' '#1082#1072#1090' 2.2 ('#1086#1090' 50-90 '#1076#1085#1077#1081')'
-  end
-  object ceSamples22: TcxCurrencyEdit
-    Left = 759
-    Top = 252
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 46
-    Width = 121
-  end
-  object cxLabel21: TcxLabel
-    Left = 540
-    Top = 274
-    Caption = #1057#1082#1080#1076#1082#1072' '#1089#1101#1084#1087#1083#1086#1074' '#1082#1072#1090' 3 ('#1086#1090' 0 '#1076#1086' 50 '#1076#1085#1077#1081')'
-  end
-  object ceSamples3: TcxCurrencyEdit
-    Left = 759
-    Top = 273
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 48
-    Width = 121
-  end
-  object edTelegramBotToken: TcxTextEdit
-    Left = 531
-    Top = 105
-    TabOrder = 49
-    Width = 349
-  end
-  object cxLabel22: TcxLabel
-    Left = 531
-    Top = 85
-    Caption = #1058#1086#1082#1077#1085' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1073#1086#1090#1072
-  end
-  object cxLabel23: TcxLabel
-    Left = 20
-    Top = 468
-    Caption = #1055#1088#1086#1094#1077#1085#1090' '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1089#1090#1088#1072#1093#1086#1074#1099#1084' '#1082#1086#1084#1087#1072#1085#1080#1103#1084' '#1076#1083#1103' '#1079'/'#1087' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1072#1084
-  end
-  object cePercentIC: TcxCurrencyEdit
-    Left = 404
-    Top = 467
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 52
-    Width = 121
-  end
-  object cePercentUntilNextSUN: TcxCurrencyEdit
-    Left = 404
-    Top = 488
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 53
-    Width = 121
-  end
-  object cxLabel24: TcxLabel
-    Left = 20
-    Top = 489
-    Caption = #1055#1088#1086#1094#1077#1085#1090' '#1076#1083#1103' '#1087#1086#1076#1089#1074#1077#1090#1082#1080' '#1082#1086#1084#1077#1085#1090#1072' "'#1055#1088#1086#1076#1072#1085#1086'/'#1055#1088#1086#1076#1072#1078#1072' '#1076#1086' '#1089#1083#1077#1076' '#1057#1059#1053'"'
-  end
-  object cbEliminateColdSUN: TcxCheckBox
-    Left = 531
-    Top = 155
-    Hint = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053
-    Caption = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 55
-    Width = 158
-  end
-  object ceTurnoverMoreSUN2: TcxCurrencyEdit
-    Left = 404
-    Top = 509
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00; ;'
-    TabOrder = 56
-    Width = 121
-  end
-  object cxLabel25: TcxLabel
-    Left = 20
-    Top = 510
-    Caption = #1054#1073#1086#1088#1086#1090' '#1073#1086#1083#1100#1096#1077' '#1079#1072' '#1087#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1057#1059#1053' 2'
-  end
-  object ceDeySupplInSUN2: TcxCurrencyEdit
-    Left = 404
-    Top = 551
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0'
-    TabOrder = 58
-    Width = 121
-  end
-  object ceDeySupplOutSUN2: TcxCurrencyEdit
-    Left = 404
-    Top = 530
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0'
-    TabOrder = 59
-    Width = 121
-  end
-  object cxLabel26: TcxLabel
-    Left = 20
-    Top = 552
-    Caption = #1055#1088#1086#1076#1072#1078#1080' '#1076#1085#1077#1081' '#1076#1083#1103' '#1072#1087#1090#1077#1082' '#1082#1091#1076#1072' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1057#1059#1053' 2'
-  end
-  object cxLabel27: TcxLabel
-    Left = 20
-    Top = 531
-    Caption = #1055#1088#1086#1076#1072#1078#1080' '#1076#1085#1077#1081' '#1076#1083#1103' '#1072#1087#1090#1077#1082' '#1086#1090#1082#1091#1076#1072' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1057#1059#1053' 2'
-  end
-  object ceExpressVIPConfirm: TcxCurrencyEdit
-    Left = 404
-    Top = 572
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0'
-    TabOrder = 62
-    Width = 121
-  end
-  object cxLabel28: TcxLabel
-    Left = 20
-    Top = 573
-    Caption = 
-      #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1095#1077#1082#1080' '#1089' '#1082#1086#1083'-'#1074#1086#1084' '#1087#1086#1079#1080#1094#1080#1081'  '#1076#1083#1103' '#1101#1082#1089#1087#1088#1077#1089#1089' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1042#1048 +
-      #1055' '#1076#1086
-  end
-  object edPriceFormSendVIP: TcxCurrencyEdit
-    Left = 404
-    Top = 232
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 64
-    Width = 121
-  end
-  object cxLabel29: TcxLabel
-    Left = 20
-    Top = 233
-    Caption = #1062#1077#1085#1072' '#1086#1090' '#1082#1086#1090#1086#1088#1086#1081' '#1087#1086#1082#1072#1079#1072#1085' '#1090#1086#1074#1072#1088' '#1087#1088#1080' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' VIP'
-  end
-  object ceMinPriceSale: TcxCurrencyEdit
-    Left = 759
-    Top = 402
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    Properties.EditFormat = ',0.00'
-    TabOrder = 66
-    Width = 121
-  end
-  object cxLabel30: TcxLabel
-    Left = 540
-    Top = 403
-    Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1094#1077#1085#1072' '#1090#1086#1074#1072#1088#1072' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077
-  end
-  object ceDeviationsPrice1303: TcxCurrencyEdit
-    Left = 759
-    Top = 424
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    Properties.EditFormat = ',0.00'
-    TabOrder = 68
-    Width = 121
-  end
-  object cxLabel31: TcxLabel
-    Left = 540
-    Top = 425
-    Hint = 
-      #1055#1088#1086#1094#1077#1085#1090' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077' '#1087#1086' 1303 '#1076#1083#1103' '#1073#1083#1086 +
-      #1082#1080#1088#1086#1074#1082#1080
-    Caption = '% '#1073#1083#1086#1082#1072' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1086' 1303'
-  end
-  object cdWagesCheckTesting: TcxCheckBox
-    Left = 531
-    Top = 174
-    Hint = #1050#1086#1085#1090#1088#1086#1083#1100' '#1089#1076#1072#1095#1080' '#1101#1082#1079#1072#1084#1077#1085' '#1087#1088#1080' '#1074#1099#1076#1072#1095#1072' '#1079#1072#1088#1087#1083#1072#1090#1099
-    Caption = #1050#1086#1085#1090#1088#1086#1083#1100' '#1089#1076#1072#1095#1080' '#1101#1082#1079#1072#1084#1077#1085' '#1087#1088#1080' '#1074#1099#1076#1072#1095#1072' '#1079#1072#1088#1087#1083#1072#1090#1099
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 70
-    Width = 338
-  end
-  object edUserUpdateMarketing: TcxButtonEdit
-    Left = 587
-    Top = 490
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 71
-    Width = 293
-  end
-  object cxLabel32: TcxLabel
-    Left = 540
-    Top = 471
-    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1076#1083#1103' '#1088#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1074' '#1047#1055' '#1089#1091#1084#1084#1099' '#1052#1072#1088#1082#1077#1090#1080#1085#1075#1072
-  end
-  object ceNormNewMobileOrders: TcxCurrencyEdit
-    Left = 816
-    Top = 447
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0'
-    Properties.EditFormat = ',0'
-    TabOrder = 73
-    Width = 64
-  end
-  object cxLabel33: TcxLabel
-    Left = 540
-    Top = 448
-    Hint = 
-      #1055#1088#1086#1094#1077#1085#1090' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077' '#1087#1086' 1303 '#1076#1083#1103' '#1073#1083#1086 +
-      #1082#1080#1088#1086#1074#1082#1080
-    Caption = #1053#1086#1088#1084#1072' '#1087#1086' '#1085#1086#1074#1099#1084' '#1079#1072#1082#1072#1079#1072#1084' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
-  end
-  object ceLimitCash: TcxCurrencyEdit
-    Left = 759
-    Top = 513
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    Properties.EditFormat = ',0.00'
-    TabOrder = 75
-    Width = 121
-  end
-  object cxLabel34: TcxLabel
-    Left = 540
-    Top = 514
-    Hint = 
-      #1055#1088#1086#1094#1077#1085#1090' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077' '#1087#1086' 1303 '#1076#1083#1103' '#1073#1083#1086 +
-      #1082#1080#1088#1086#1074#1082#1080
-    Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1088#1080' '#1087#1086#1082#1091#1087#1082#1080' '#1085#1072#1083#1080#1095#1085#1099#1084#1080
-  end
-  object ceAddMarkupTabletki: TcxCurrencyEdit
-    Left = 404
-    Top = 593
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    Properties.EditFormat = ',0.00'
-    TabOrder = 77
-    Width = 121
-  end
-  object cxLabel35: TcxLabel
-    Left = 20
-    Top = 594
-    Hint = #1044#1086#1087' '#1085#1072#1094#1077#1085#1082#1072' '#1085#1072' '#1058#1072#1073#1083#1077#1090#1082#1080' '#1085#1072' '#1087#1086#1079' '#1087#1086' '#1074#1099#1089#1090#1072#1074#1083#1077#1085#1085#1099#1084' '#1085#1072#1094#1077#1085#1082#1072#1084
-    Caption = #1044#1086#1087' '#1085#1072#1094#1077#1085#1082#1072' '#1085#1072' '#1058#1072#1073#1083#1077#1090#1082#1080' '#1085#1072' '#1087#1086#1079' '#1087#1086' '#1074#1099#1089#1090#1072#1074#1083#1077#1085#1085#1099#1084' '#1085#1072#1094#1077#1085#1082#1072#1084
-  end
-  object cbShoresSUN: TcxCheckBox
-    Left = 695
-    Top = 155
-    Hint = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053
-    Caption = #1041#1077#1088#1077#1075#1072' '#1086#1090#1076#1077#1083#1100#1085#1086' '#1087#1086' '#1057#1059#1053
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 79
-    Width = 158
-  end
-  object ceFixedPercent: TcxCurrencyEdit
-    Left = 404
-    Top = 614
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    Properties.EditFormat = ',0.00'
-    TabOrder = 80
-    Width = 121
-  end
-  object cxLabel36: TcxLabel
-    Left = 21
-    Top = 615
-    Hint = #9#1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072
-    Caption = #9#1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072
-  end
-  object cxLabel37: TcxLabel
-    Left = 540
-    Top = 535
-    Caption = #9#1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1087#1086' '#1089#1086#1079#1076#1072#1085#1080#1102' '#1079#1072#1082#1072#1079#1072' '#1087#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102
-  end
-  object ceMobMessSum: TcxCurrencyEdit
-    Left = 759
-    Top = 554
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    Properties.EditFormat = ',0.00'
-    TabOrder = 83
-    Width = 121
-  end
-  object cxLabel38: TcxLabel
-    Left = 540
-    Top = 555
-    Hint = 
-      #1055#1088#1086#1094#1077#1085#1090' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077' '#1087#1086' 1303 '#1076#1083#1103' '#1073#1083#1086 +
-      #1082#1080#1088#1086#1074#1082#1080
-    Caption = #1054#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1086#1074
-  end
-  object ceMobMessCount: TcxCurrencyEdit
-    Left = 759
-    Top = 577
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0'
-    Properties.EditFormat = ',0'
-    TabOrder = 85
-    Width = 121
-  end
-  object cxLabel39: TcxLabel
-    Left = 540
-    Top = 578
-    Hint = 
-      #1055#1088#1086#1094#1077#1085#1090' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077' '#1087#1086' 1303 '#1076#1083#1103' '#1073#1083#1086 +
-      #1082#1080#1088#1086#1074#1082#1080
-    Caption = #1044#1083#1103' '#1082#1072#1078#1076#1086#1075#1086' N '#1095#1077#1082#1072
+    Properties.ActivePage = cxTabSheet1
+    Properties.CustomButtons.Buttons = <>
+    ExplicitLeft = 43
+    ExplicitTop = 50
+    ExplicitHeight = 624
+    ClientRectBottom = 507
+    ClientRectRight = 898
+    ClientRectTop = 24
+    object cxTabSheet1: TcxTabSheet
+      Caption = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080
+      ImageIndex = 0
+      ExplicitHeight = 641
+      object cxLabel1: TcxLabel
+        Left = 14
+        Top = 3
+        Caption = 
+          #1055#1077#1088#1077#1095#1077#1085#1100' '#1092#1088#1072#1079' '#1074' '#1085#1072#1079#1074#1072#1085#1080#1103#1093' '#1090#1086#1074#1072#1088#1086#1074' '#1082#1086#1090#1086#1088#1099#1077' '#1084#1086#1078#1085#1086' '#1076#1077#1083#1080#1090#1100' '#1089' '#1083#1102#1073#1086#1081' '#1094 +
+          #1077#1085#1086#1081
+      end
+      object cxLabel2: TcxLabel
+        Left = 14
+        Top = 44
+        Caption = #1055#1077#1088#1077#1095#1077#1085#1100' '#1082#1086#1076#1086#1074' '#1090#1086#1074#1072#1088#1086#1074' '#1082#1086#1090#1086#1088#1099#1077' '#1084#1086#1078#1085#1086' '#1076#1077#1083#1080#1090#1100' '#1089' '#1083#1102#1073#1086#1081' '#1094#1077#1085#1086#1081
+      end
+      object cxLabel22: TcxLabel
+        Left = 529
+        Top = 44
+        Caption = #1058#1086#1082#1077#1085' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1073#1086#1090#1072
+      end
+      object edShareFromPriceCode: TcxTextEdit
+        Left = 14
+        Top = 64
+        TabOrder = 3
+        Width = 509
+      end
+      object edShareFromPriceName: TcxTextEdit
+        Left = 14
+        Top = 23
+        TabOrder = 4
+        Width = 509
+      end
+      object edTelegramBotToken: TcxTextEdit
+        Left = 529
+        Top = 64
+        TabOrder = 5
+        Width = 349
+      end
+      object cbBlockVIP: TcxCheckBox
+        Left = 260
+        Top = 107
+        Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
+        Caption = #1041#1083#1086#1082#1080#1088#1086#1074#1072#1090#1100' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' VIP'
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 6
+        Width = 269
+      end
+      object cbGetHardwareData: TcxCheckBox
+        Left = 20
+        Top = 89
+        Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
+        Caption = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 7
+        Width = 215
+      end
+      object cbPairedOnlyPromo: TcxCheckBox
+        Left = 535
+        Top = 89
+        Hint = #1055#1088#1080' '#1086#1087#1091#1089#1082#1072#1085#1080#1080' '#1087#1072#1088#1085#1099#1093' '#1082#1086#1085#1090#1088#1086#1083#1080#1088#1086#1074#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081
+        Caption = #1055#1088#1080' '#1086#1087#1091#1089#1082#1072#1085#1080#1080' '#1087#1072#1088#1085#1099#1093' '#1082#1086#1085#1090#1088#1086#1083#1080#1088#1086#1074#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1072#1082#1094#1080#1086#1085#1085#1099#1081
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 8
+        Width = 338
+      end
+      object cbRemovingPrograms: TcxCheckBox
+        Left = 20
+        Top = 108
+        Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
+        Caption = #1059#1076#1072#1083#1077#1085#1080#1077' '#1089#1090#1086#1088#1086#1085#1085#1080#1093' '#1087#1088#1086#1075#1088#1072#1084#1084
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 9
+        Width = 215
+      end
+      object cbRequireUkrName: TcxCheckBox
+        Left = 260
+        Top = 89
+        Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
+        Caption = #1058#1088#1077#1073#1086#1074#1072#1090#1100' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1059#1082#1088#1072#1080#1085#1089#1082#1086#1075#1086' '#1085#1072#1079#1074#1072#1085#1080#1103
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 10
+        Width = 269
+      end
+      object cdWagesCheckTesting: TcxCheckBox
+        Left = 535
+        Top = 107
+        Hint = #1050#1086#1085#1090#1088#1086#1083#1100' '#1089#1076#1072#1095#1080' '#1101#1082#1079#1072#1084#1077#1085' '#1087#1088#1080' '#1074#1099#1076#1072#1095#1072' '#1079#1072#1088#1087#1083#1072#1090#1099
+        Caption = #1050#1086#1085#1090#1088#1086#1083#1100' '#1089#1076#1072#1095#1080' '#1101#1082#1079#1072#1084#1077#1085' '#1087#1088#1080' '#1074#1099#1076#1072#1095#1072' '#1079#1072#1088#1087#1083#1072#1090#1099
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 11
+        Width = 338
+      end
+      object ceCustomerThreshold: TcxCurrencyEdit
+        Left = 402
+        Top = 335
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 12
+        Width = 121
+      end
+      object ceDayCompensDiscount: TcxCurrencyEdit
+        Left = 402
+        Top = 313
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 13
+        Width = 121
+      end
+      object cePercentIC: TcxCurrencyEdit
+        Left = 402
+        Top = 378
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        TabOrder = 14
+        Width = 121
+      end
+      object cePriceCorrectionDay: TcxCurrencyEdit
+        Left = 402
+        Top = 356
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 15
+        Width = 121
+      end
+      object cxLabel10: TcxLabel
+        Left = 18
+        Top = 293
+        Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1085#1072#1094#1077#1085#1082#1072' ('#1084#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099')'
+      end
+      object cxLabel12: TcxLabel
+        Left = 18
+        Top = 314
+        Caption = #1044#1085#1077#1081' '#1076#1086' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1087#1086' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1084' '#1087#1088#1086#1077#1082#1090#1072#1084
+      end
+      object cxLabel16: TcxLabel
+        Left = 18
+        Top = 337
+        Caption = #1055#1086#1088#1086#1075' '#1089#1088#1072#1073#1072#1090#1099#1074#1072#1085#1080#1077' '#1085#1072' '#1094#1077#1085#1091' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' '#1087#1088#1080' '#1079#1072#1082#1072#1079#1077' '#1082#1083#1080#1077#1085#1090#1091
+      end
+      object cxLabel17: TcxLabel
+        Left = 18
+        Top = 358
+        Hint = 
+          #1055#1077#1088#1080#1086#1076' '#1076#1085#1077#1081' '#1076#1083#1103' '#1089#1080#1089#1090#1077#1084#1099' '#1082#1086#1088#1088#1077#1082#1094#1080#1080' '#1094#1077#1085#1099' '#1087#1086' '#1080#1090#1086#1075#1072#1084' '#1088#1086#1089#1090#1072'/'#1087#1072#1076#1077#1085#1080#1103' '#1089 +
+          #1088#1077#1076#1085#1080#1093' '#1087#1088#1086#1076#1072#1078
+        Caption = #1055#1077#1088#1080#1086#1076' '#1076#1085#1077#1081' '#1076#1083#1103' '#1089#1080#1089#1090#1077#1084#1099' '#1082#1086#1088#1088#1077#1082#1094#1080#1080' '#1094#1077#1085#1099
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object cxLabel23: TcxLabel
+        Left = 18
+        Top = 379
+        Caption = #1055#1088#1086#1094#1077#1085#1090' '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1089#1090#1088#1072#1093#1086#1074#1099#1084' '#1082#1086#1084#1087#1072#1085#1080#1103#1084' '#1076#1083#1103' '#1079'/'#1087' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1072#1084
+      end
+      object cxLabel29: TcxLabel
+        Left = 18
+        Top = 185
+        Caption = #1062#1077#1085#1072' '#1086#1090' '#1082#1086#1090#1086#1088#1086#1081' '#1087#1086#1082#1072#1079#1072#1085' '#1090#1086#1074#1072#1088' '#1087#1088#1080' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' VIP'
+      end
+      object cxLabel3: TcxLabel
+        Left = 18
+        Top = 164
+        Caption = #1057#1091#1084#1084#1072' '#1086#1090' '#1082#1086#1090#1086#1088#1086#1081' '#1087#1086#1082#1072#1079#1072#1085' '#1090#1086#1074#1072#1088' '#1087#1088#1080' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' VIP'
+      end
+      object cxLabel4: TcxLabel
+        Left = 18
+        Top = 207
+        Caption = #1057#1091#1084#1084#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1086#1090' '#1082#1086#1090#1086#1088#1086#1081' '#1088#1072#1079#1088#1077#1096#1077#1085' '#1087#1088#1080#1079#1085#1072#1082' '#1089#1088#1086#1095#1085#1086' '
+      end
+      object cxLabel6: TcxLabel
+        Left = 18
+        Top = 229
+        Caption = 
+          #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1087#1086#1087#1099#1090#1086#1082' '#1076#1086' '#1091#1089#1087#1077#1096#1085#1086#1081' '#1089#1076#1072#1095#1080' '#1090#1077#1089#1090#1072' '#1076#1083#1103' '#1087#1088#1077#1076#1083#1086#1078#1077#1085#1080#1103' '#1087#1086#1076#1084#1077 +
+          #1085
+      end
+      object cxLabel8: TcxLabel
+        Left = 18
+        Top = 272
+        Caption = #9#1053#1080#1078#1085#1080#1081' '#1087#1088#1077#1076#1077#1083' '#1089#1088#1072#1074#1085#1077#1085#1080#1103' ('#1084#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099')'
+      end
+      object cxLabel9: TcxLabel
+        Left = 18
+        Top = 251
+        Caption = #1042#1077#1088#1093#1085#1080#1081' '#1087#1088#1077#1076#1077#1083' '#1089#1088#1072#1074#1085#1077#1085#1080#1103' ('#1084#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099')'
+      end
+      object edAttemptsSub: TcxCurrencyEdit
+        Left = 402
+        Top = 228
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 27
+        Width = 121
+      end
+      object edLowerLimitPromoBonus: TcxCurrencyEdit
+        Left = 402
+        Top = 271
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 28
+        Width = 121
+      end
+      object edMinPercentPromoBonus: TcxCurrencyEdit
+        Left = 402
+        Top = 292
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 29
+        Width = 121
+      end
+      object edPriceFormSendVIP: TcxCurrencyEdit
+        Left = 402
+        Top = 184
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 30
+        Width = 121
+      end
+      object edSummaFormSendVIP: TcxCurrencyEdit
+        Left = 402
+        Top = 163
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 31
+        Width = 121
+      end
+      object edSummaUrgentlySendVIP: TcxCurrencyEdit
+        Left = 402
+        Top = 206
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 32
+        Width = 121
+      end
+      object edUpperLimitPromoBonus: TcxCurrencyEdit
+        Left = 402
+        Top = 250
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 33
+        Width = 121
+      end
+      object ceAddMarkupTabletki: TcxCurrencyEdit
+        Left = 402
+        Top = 445
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00'
+        Properties.EditFormat = ',0.00'
+        TabOrder = 34
+        Width = 121
+      end
+      object ceDeviationsPrice1303: TcxCurrencyEdit
+        Left = 759
+        Top = 272
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00'
+        Properties.EditFormat = ',0.00'
+        TabOrder = 35
+        Width = 121
+      end
+      object ceExpressVIPConfirm: TcxCurrencyEdit
+        Left = 402
+        Top = 400
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0'
+        TabOrder = 36
+        Width = 121
+      end
+      object ceFixedPercent: TcxCurrencyEdit
+        Left = 402
+        Top = 422
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00'
+        Properties.EditFormat = ',0.00'
+        TabOrder = 37
+        Width = 121
+      end
+      object ceLimitCash: TcxCurrencyEdit
+        Left = 759
+        Top = 361
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00'
+        Properties.EditFormat = ',0.00'
+        TabOrder = 38
+        Width = 121
+      end
+      object ceMinPriceSale: TcxCurrencyEdit
+        Left = 759
+        Top = 250
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00'
+        Properties.EditFormat = ',0.00'
+        TabOrder = 39
+        Width = 121
+      end
+      object ceMobMessCount: TcxCurrencyEdit
+        Left = 759
+        Top = 433
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0'
+        Properties.EditFormat = ',0'
+        TabOrder = 40
+        Width = 121
+      end
+      object ceMobMessSum: TcxCurrencyEdit
+        Left = 759
+        Top = 411
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00'
+        Properties.EditFormat = ',0.00'
+        TabOrder = 41
+        Width = 121
+      end
+      object ceNormNewMobileOrders: TcxCurrencyEdit
+        Left = 816
+        Top = 295
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0'
+        Properties.EditFormat = ',0'
+        TabOrder = 42
+        Width = 64
+      end
+      object cePriceSamples: TcxCurrencyEdit
+        Left = 759
+        Top = 163
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        TabOrder = 43
+        Width = 121
+      end
+      object ceSamples21: TcxCurrencyEdit
+        Left = 759
+        Top = 184
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        TabOrder = 44
+        Width = 121
+      end
+      object ceSamples22: TcxCurrencyEdit
+        Left = 759
+        Top = 206
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        TabOrder = 45
+        Width = 121
+      end
+      object ceSamples3: TcxCurrencyEdit
+        Left = 759
+        Top = 228
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        TabOrder = 46
+        Width = 121
+      end
+      object cxLabel18: TcxLabel
+        Left = 540
+        Top = 164
+        Caption = #1055#1086#1088#1086#1075' '#1094#1077#1085#1099' '#1057#1101#1084#1087#1083#1086#1074' '#1086#1090
+      end
+      object cxLabel19: TcxLabel
+        Left = 540
+        Top = 185
+        Caption = #1057#1082#1080#1076#1082#1072' '#1089#1101#1084#1087#1083#1086#1074' '#1082#1072#1090' 2.1 ('#1086#1090' 90-200 '#1076#1085#1077#1081')'
+      end
+      object cxLabel20: TcxLabel
+        Left = 540
+        Top = 207
+        Caption = #1057#1082#1080#1076#1082#1072' '#1089#1101#1084#1087#1083#1086#1074' '#1082#1072#1090' 2.2 ('#1086#1090' 50-90 '#1076#1085#1077#1081')'
+      end
+      object cxLabel21: TcxLabel
+        Left = 540
+        Top = 229
+        Caption = #1057#1082#1080#1076#1082#1072' '#1089#1101#1084#1087#1083#1086#1074' '#1082#1072#1090' 3 ('#1086#1090' 0 '#1076#1086' 50 '#1076#1085#1077#1081')'
+      end
+      object cxLabel28: TcxLabel
+        Left = 18
+        Top = 401
+        Caption = 
+          #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1095#1077#1082#1080' '#1089' '#1082#1086#1083'-'#1074#1086#1084' '#1087#1086#1079#1080#1094#1080#1081'  '#1076#1083#1103' '#1101#1082#1089#1087#1088#1077#1089#1089' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1042#1048 +
+          #1055' '#1076#1086
+      end
+      object cxLabel30: TcxLabel
+        Left = 540
+        Top = 251
+        Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1094#1077#1085#1072' '#1090#1086#1074#1072#1088#1072' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077
+      end
+      object cxLabel31: TcxLabel
+        Left = 540
+        Top = 273
+        Hint = 
+          #1055#1088#1086#1094#1077#1085#1090' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077' '#1087#1086' 1303 '#1076#1083#1103' '#1073#1083#1086 +
+          #1082#1080#1088#1086#1074#1082#1080
+        Caption = '% '#1073#1083#1086#1082#1072' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1086' 1303'
+      end
+      object cxLabel32: TcxLabel
+        Left = 540
+        Top = 320
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1076#1083#1103' '#1088#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1074' '#1047#1055' '#1089#1091#1084#1084#1099' '#1052#1072#1088#1082#1077#1090#1080#1085#1075#1072
+      end
+      object cxLabel33: TcxLabel
+        Left = 540
+        Top = 296
+        Hint = 
+          #1055#1088#1086#1094#1077#1085#1090' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077' '#1087#1086' 1303 '#1076#1083#1103' '#1073#1083#1086 +
+          #1082#1080#1088#1086#1074#1082#1080
+        Caption = #1053#1086#1088#1084#1072' '#1087#1086' '#1085#1086#1074#1099#1084' '#1079#1072#1082#1072#1079#1072#1084' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
+      end
+      object cxLabel34: TcxLabel
+        Left = 540
+        Top = 362
+        Hint = 
+          #1055#1088#1086#1094#1077#1085#1090' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077' '#1087#1086' 1303 '#1076#1083#1103' '#1073#1083#1086 +
+          #1082#1080#1088#1086#1074#1082#1080
+        Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1088#1080' '#1087#1086#1082#1091#1087#1082#1080' '#1085#1072#1083#1080#1095#1085#1099#1084#1080
+      end
+      object cxLabel35: TcxLabel
+        Left = 12
+        Top = 449
+        Hint = #1044#1086#1087' '#1085#1072#1094#1077#1085#1082#1072' '#1085#1072' '#1058#1072#1073#1083#1077#1090#1082#1080' '#1085#1072' '#1087#1086#1079' '#1087#1086' '#1074#1099#1089#1090#1072#1074#1083#1077#1085#1085#1099#1084' '#1085#1072#1094#1077#1085#1082#1072#1084
+        Caption = #1044#1086#1087' '#1085#1072#1094#1077#1085#1082#1072' '#1085#1072' '#1058#1072#1073#1083#1077#1090#1082#1080' '#1085#1072' '#1087#1086#1079' '#1087#1086' '#1074#1099#1089#1090#1072#1074#1083#1077#1085#1085#1099#1084' '#1085#1072#1094#1077#1085#1082#1072#1084
+      end
+      object cxLabel36: TcxLabel
+        Left = 19
+        Top = 426
+        Hint = #9#1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072
+        Caption = #9#1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072
+      end
+      object cxLabel37: TcxLabel
+        Left = 540
+        Top = 388
+        Caption = #9#1057#1086#1086#1073#1097#1077#1085#1080#1077' '#1087#1086' '#1089#1086#1079#1076#1072#1085#1080#1102' '#1079#1072#1082#1072#1079#1072' '#1087#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102
+      end
+      object cxLabel38: TcxLabel
+        Left = 538
+        Top = 437
+        Hint = 
+          #1055#1088#1086#1094#1077#1085#1090' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077' '#1087#1086' 1303 '#1076#1083#1103' '#1073#1083#1086 +
+          #1082#1080#1088#1086#1074#1082#1080
+        Caption = #1054#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1086#1074
+      end
+      object cxLabel39: TcxLabel
+        Left = 538
+        Top = 415
+        Hint = 
+          #1055#1088#1086#1094#1077#1085#1090' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1086#1090#1087#1091#1089#1082#1085#1086#1081' '#1094#1077#1085#1099' '#1087#1088#1080' '#1086#1090#1087#1091#1089#1082#1077' '#1087#1086' 1303 '#1076#1083#1103' '#1073#1083#1086 +
+          #1082#1080#1088#1086#1074#1082#1080
+        Caption = #1044#1083#1103' '#1082#1072#1078#1076#1086#1075#1086' N '#1095#1077#1082#1072
+      end
+      object edUserUpdateMarketing: TcxButtonEdit
+        Left = 587
+        Top = 338
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        TabOrder = 62
+        Width = 293
+      end
+    end
+    object cxTabSheet2: TcxTabSheet
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1057#1059#1053
+      ImageIndex = 1
+      ExplicitHeight = 641
+      object cbEliminateColdSUN: TcxCheckBox
+        Left = 535
+        Top = 71
+        Hint = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053
+        Caption = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053' 1'
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 0
+        Width = 179
+      end
+      object cbOnlyColdSUN: TcxCheckBox
+        Left = 720
+        Top = 71
+        Hint = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053
+        Caption = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053' 1'
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 1
+        Width = 166
+      end
+      object cbShoresSUN: TcxCheckBox
+        Left = 535
+        Top = 52
+        Hint = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053
+        Caption = #1041#1077#1088#1077#1075#1072' '#1086#1090#1076#1077#1083#1100#1085#1086' '#1087#1086' '#1057#1059#1053
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 2
+        Width = 179
+      end
+      object cbOnlyColdSUN2: TcxCheckBox
+        Left = 720
+        Top = 88
+        Hint = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053
+        Caption = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053' 2'
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 3
+        Width = 166
+      end
+      object cbEliminateColdSUN2: TcxCheckBox
+        Left = 535
+        Top = 88
+        Hint = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053
+        Caption = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053' 2'
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 4
+        Width = 179
+      end
+      object cbOnlyColdSUN3: TcxCheckBox
+        Left = 720
+        Top = 107
+        Hint = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053
+        Caption = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053' '#1069
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 5
+        Width = 166
+      end
+      object cbEliminateColdSUN3: TcxCheckBox
+        Left = 535
+        Top = 107
+        Hint = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053
+        Caption = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053' '#1069
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 6
+        Width = 179
+      end
+      object cbOnlyColdSUN4: TcxCheckBox
+        Left = 720
+        Top = 126
+        Hint = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053
+        Caption = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053' '#1055#1048
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 7
+        Width = 166
+      end
+      object cbEliminateColdSUN4: TcxCheckBox
+        Left = 535
+        Top = 126
+        Hint = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053
+        Caption = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053' '#1055#1048
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 8
+        Width = 179
+      end
+      object ceAssortmentGeograph: TcxCurrencyEdit
+        Left = 759
+        Top = 216
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 9
+        Width = 73
+      end
+      object ceAssortmentSales: TcxCurrencyEdit
+        Left = 759
+        Top = 238
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 10
+        Width = 73
+      end
+      object ceDeySupplInSUN2: TcxCurrencyEdit
+        Left = 404
+        Top = 157
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0'
+        TabOrder = 11
+        Width = 121
+      end
+      object ceDeySupplOutSUN2: TcxCurrencyEdit
+        Left = 404
+        Top = 136
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0'
+        TabOrder = 12
+        Width = 121
+      end
+      object cePercentUntilNextSUN: TcxCurrencyEdit
+        Left = 404
+        Top = 94
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        TabOrder = 13
+        Width = 121
+      end
+      object ceTurnoverMoreSUN2: TcxCurrencyEdit
+        Left = 404
+        Top = 115
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00; ;'
+        TabOrder = 14
+        Width = 121
+      end
+      object cxLabel13: TcxLabel
+        Left = 540
+        Top = 175
+        Caption = #1052#1077#1090#1086#1076#1099' '#1074#1099#1073#1086#1088#1072' '#1072#1087#1090#1077#1082' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072
+      end
+      object cxLabel14: TcxLabel
+        Left = 540
+        Top = 217
+        Caption = #9#1040#1087#1090#1077#1082' '#1072#1085#1072#1083#1080#1090#1080#1082#1086#1074' '#1087#1086' '#1075#1077#1086#1075#1088#1072#1092#1080#1080
+      end
+      object cxLabel15: TcxLabel
+        Left = 640
+        Top = 239
+        Caption = #1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084
+      end
+      object cxLabel24: TcxLabel
+        Left = 20
+        Top = 95
+        Caption = #1055#1088#1086#1094#1077#1085#1090' '#1076#1083#1103' '#1087#1086#1076#1089#1074#1077#1090#1082#1080' '#1082#1086#1084#1077#1085#1090#1072' "'#1055#1088#1086#1076#1072#1085#1086'/'#1055#1088#1086#1076#1072#1078#1072' '#1076#1086' '#1089#1083#1077#1076' '#1057#1059#1053'"'
+      end
+      object cxLabel25: TcxLabel
+        Left = 20
+        Top = 116
+        Caption = #1054#1073#1086#1088#1086#1090' '#1073#1086#1083#1100#1096#1077' '#1079#1072' '#1087#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1057#1059#1053' 2'
+      end
+      object cxLabel26: TcxLabel
+        Left = 20
+        Top = 158
+        Caption = #1055#1088#1086#1076#1072#1078#1080' '#1076#1085#1077#1081' '#1076#1083#1103' '#1072#1087#1090#1077#1082' '#1082#1091#1076#1072' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1057#1059#1053' 2'
+      end
+      object cxLabel27: TcxLabel
+        Left = 20
+        Top = 137
+        Caption = #1055#1088#1086#1076#1072#1078#1080' '#1076#1085#1077#1081' '#1076#1083#1103' '#1072#1087#1090#1077#1082' '#1086#1090#1082#1091#1076#1072' '#1076#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1057#1059#1053' 2'
+      end
+      object cxLabel5: TcxLabel
+        Left = 20
+        Top = 52
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1082#1086#1085#1090#1088#1086#1083#1103' <'#1055#1088#1086#1076#1072#1085#1086'/'#1055#1088#1086#1076#1072#1078#1072' '#1076#1086' '#1089#1083#1077#1076' '#1057#1059#1053'>'
+      end
+      object cxLabel7: TcxLabel
+        Left = 20
+        Top = 73
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1082#1086#1085#1090#1088#1086#1083#1103' '#1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1103' "'#1053#1077#1090#1086#1074#1072#1088#1085#1099#1081' '#1074#1080#1076'"'
+      end
+      object edDayNonCommoditySUN: TcxCurrencyEdit
+        Left = 404
+        Top = 72
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 24
+        Width = 121
+      end
+      object edDaySaleForSUN: TcxCurrencyEdit
+        Left = 404
+        Top = 51
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 25
+        Width = 121
+      end
+      object edMethodsAssortment: TcxButtonEdit
+        Left = 587
+        Top = 194
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        TabOrder = 26
+        Width = 293
+      end
+      object cxLabel11: TcxLabel
+        Left = 25
+        Top = 19
+        Caption = ' '#1044#1072#1090#1072' '#1079#1072#1087#1088#1077#1090#1072' '#1088#1072#1073#1086#1090#1099' '#1087#1086' '#1057#1059#1053' '
+      end
+      object edDateBanSUN: TcxDateEdit
+        Left = 200
+        Top = 18
+        EditValue = 42993d
+        Properties.ReadOnly = False
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        TabOrder = 28
+        Width = 90
+      end
+      object cbOnlyColdSUA: TcxCheckBox
+        Left = 720
+        Top = 145
+        Hint = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053
+        Caption = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1040
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 29
+        Width = 166
+      end
+      object cbEliminateColdSUA: TcxCheckBox
+        Left = 535
+        Top = 145
+        Hint = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1053
+        Caption = #1048#1089#1082#1083#1102#1095#1072#1090#1100' '#1061#1086#1083#1086#1076' '#1080#1079' '#1057#1059#1040
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 30
+        Width = 179
+      end
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 537
+    Width = 898
+    Height = 41
+    Align = alBottom
+    Caption = 'Panel1'
+    ShowCaption = False
+    TabOrder = 5
+    ExplicitTop = 600
+    object cxButton1: TcxButton
+      Left = 224
+      Top = 6
+      Width = 75
+      Height = 25
+      Action = dsdInsertUpdateGuides
+      Default = True
+      ModalResult = 8
+      TabOrder = 0
+    end
+    object cxButton2: TcxButton
+      Left = 598
+      Top = 6
+      Width = 75
+      Height = 25
+      Action = dsdFormClose
+      Cancel = True
+      Caption = #1054#1090#1084#1077#1085#1072
+      ModalResult = 8
+      TabOrder = 1
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 344
-    Top = 94
+    Left = 408
+    Top = 38
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1096,10 +1223,82 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Component = ceMobMessCount
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisEliminateColdSUN2'
+        Value = Null
+        Component = cbEliminateColdSUN2
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisEliminateColdSUN3'
+        Value = Null
+        Component = cbEliminateColdSUN3
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisEliminateColdSUN4'
+        Value = Null
+        Component = cbEliminateColdSUN4
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisEliminateColdSUA'
+        Value = Null
+        Component = cbEliminateColdSUA
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOnlyColdSUN'
+        Value = Null
+        Component = cbOnlyColdSUN
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOnlyColdSUN2'
+        Value = Null
+        Component = cbOnlyColdSUN2
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOnlyColdSUN3'
+        Value = Null
+        Component = cbOnlyColdSUN3
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOnlyColdSUN4'
+        Value = Null
+        Component = cbOnlyColdSUN4
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOnlyColdSUA'
+        Value = Null
+        Component = cbOnlyColdSUA
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 456
-    Top = 98
+    Left = 696
+    Top = 42
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_CashSettings'
@@ -1438,14 +1637,77 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Value = Null
         Component = ceMobMessCount
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEliminateColdSUN2'
+        Value = Null
+        Component = cbEliminateColdSUN2
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEliminateColdSUN3'
+        Value = Null
+        Component = cbEliminateColdSUN3
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEliminateColdSUN4'
+        Value = Null
+        Component = cbEliminateColdSUN4
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'iscliminateColdSUA'
+        Value = Null
+        Component = cbEliminateColdSUA
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOnlyColdSUN'
+        Value = Null
+        Component = cbOnlyColdSUN
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOnlyColdSUN2'
+        Value = Null
+        Component = cbOnlyColdSUN2
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOnlyColdSUN3'
+        Value = Null
+        Component = cbOnlyColdSUN3
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOnlyColdSUN4'
+        Value = Null
+        Component = cbOnlyColdSUN4
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOnlyColdSUA'
+        Value = Null
+        Component = cbOnlyColdSUA
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 456
+    Left = 608
     Top = 34
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 328
-    Top = 33
+    Left = 792
+    Top = 41
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1459,8 +1721,8 @@ object CashSettingsEditForm: TCashSettingsEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 384
-    Top = 34
+    Left = 520
+    Top = 42
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1469,8 +1731,8 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Value = Null
         MultiSelectSeparator = ','
       end>
-    Left = 448
-    Top = 202
+    Left = 96
+    Top = 306
   end
   object MethodsAssortmentGuides: TdsdGuides
     KeyField = 'Id'
@@ -1498,8 +1760,8 @@ object CashSettingsEditForm: TCashSettingsEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 789
-    Top = 294
+    Left = 757
+    Top = 240
   end
   object UserUpdateMarketingGuides: TdsdGuides
     KeyField = 'Id'
@@ -1527,8 +1789,8 @@ object CashSettingsEditForm: TCashSettingsEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 773
-    Top = 469
+    Left = 781
+    Top = 384
   end
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -1547,8 +1809,8 @@ object CashSettingsEditForm: TCashSettingsEditForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 120
-    Top = 130
+    Left = 344
+    Top = 34
     DockControlHeights = (
       0
       0
