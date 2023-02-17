@@ -124,9 +124,10 @@ begin
     End
     else
       gc_isSetDefault := True;
-    //
-   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainCashForm2, MainCashForm2);
+     //
+    Application.CreateForm(TdmMain, dmMain);
+    Application.CreateForm(TMainCashForm2, MainCashForm2);
+    StartCheckConnectThread(7);
   End;
 
   Application.Run;

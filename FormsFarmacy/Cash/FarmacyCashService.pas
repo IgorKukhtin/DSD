@@ -141,14 +141,6 @@ type
   end;
   TBodyArr = Array of TBodyRecord;
 
-  TCheckConnectThread = class(TThread)
-  private
-  { Private declarations }
-    FDataStart: TDateTime;
-  protected
-    procedure Execute; override;
-  end;
-
   TMainCashForm2 = class(TForm)
     FormParams: TdsdFormParams;
     spDelete_CashSession: TdsdStoredProc;
@@ -226,7 +218,6 @@ type
     FisShowPlanEmployeeUser: boolean;
 
     FSaveLocalVIP: Integer;
-    FCheckConnectThread : TCheckConnectThread;
 
     function SetFarmacyNameByUser : boolean;
 
@@ -293,25 +284,6 @@ var
 implementation
 
 {$R *.dfm}
-
-{ TPUSHThread }
-
-procedure TCheckConnectThread.Execute;
-begin
-  while True do
-  begin
-    Sleep(1000);
-    if TStorageFactory.GetStorage.IdHTTP.Connected then
-    begin
-      if MinutesBetween(Now, FDataStart) >= 8 then
-      begin
-        TStorageFactory.GetStorage.IdHTTP.Disconnect;
-        gc_BreakingConnection := True;
-        FDataStart := Now;
-      end;
-    end else FDataStart := Now;
-  end;
-end;
 
 function TMainCashForm2.GetInterval_CashRemains_Diff: integer;
 var dsdProc: TdsdStoredProc;
@@ -673,11 +645,6 @@ begin
     Application.Terminate;
     exit;
   End;
-
-  FCheckConnectThread := TCheckConnectThread.Create(true);
-  FCheckConnectThread.FreeOnTerminate:=true;
-  FCheckConnectThread.FDataStart := Now;
-  FCheckConnectThread.Resume;
 
   tiServise.Hint := 'Инициализация локального хранилища - да';
   FSaveRealAllRunning := false;
@@ -3035,7 +3002,6 @@ end;
 procedure TMainCashForm2.FormDestroy(Sender: TObject);
 begin
  Add_Log('== Close');
- FCheckConnectThread.Terminate;
  CloseMutex;
 end;
 

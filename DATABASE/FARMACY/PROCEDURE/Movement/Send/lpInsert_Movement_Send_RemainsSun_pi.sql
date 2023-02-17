@@ -100,6 +100,7 @@ $BODY$
    DECLARE vbGoodsId_PairSun Integer;
    DECLARE vbPrice_PairSun   TFloat;
    DECLARE vbisEliminateColdSUN Boolean;
+   DECLARE vbisOnlyColdSUN Boolean;
    DECLARE vbisShoresSUN Boolean;
 
 BEGIN
@@ -121,14 +122,18 @@ BEGIN
 
      SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
-     INTO vbisEliminateColdSUN, vbisShoresSUN
+          , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbisShoresSUN, vbisOnlyColdSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
-                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN4()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_ShoresSUN
                                   ON ObjectBoolean_CashSettings_ShoresSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_ShoresSUN.DescId = zc_ObjectBoolean_CashSettings_ShoresSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUN
+                                  ON ObjectBoolean_CashSettings_OnlyColdSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_OnlyColdSUN.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUN4()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -1544,7 +1549,7 @@ raise notice 'Value 13: %', CLOCK_TIMESTAMP();
                               WHERE (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
                                  OR Object_Goods_Main.isColdSUN = TRUE 
                                     )
-                                AND vbisEliminateColdSUN = TRUE
+                                AND (vbisEliminateColdSUN = TRUE OR vbisOnlyColdSUN = TRUE)
                              )
              -- отбросили !!НОТ!!
            , tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId
@@ -1622,7 +1627,8 @@ raise notice 'Value 13: %', CLOCK_TIMESTAMP();
                       ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                 > 1
             -- отбросили !!холод!!
-            AND tmpConditionsKeep.ObjectId IS NULL
+            AND ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+                 tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE)
             -- отбросили !!НОТ!!
             AND tmpGoods_NOT.ObjectId IS NULL
           ;
@@ -1718,7 +1724,7 @@ raise notice 'Value 16: %', CLOCK_TIMESTAMP();
                               WHERE (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
                                  OR Object_Goods_Main.isColdSUN = TRUE 
                                     )
-                                AND vbisEliminateColdSUN = TRUE
+                                AND (vbisEliminateColdSUN = TRUE OR vbisOnlyColdSUN = TRUE)
                              )
 
         SELECT _tmpRemains_Partion.UnitId AS UnitId_from
@@ -1756,7 +1762,8 @@ raise notice 'Value 16: %', CLOCK_TIMESTAMP();
                                             AND _tmpUnit_SunExclusion_MCS.isMCS_to    = TRUE
                                             AND COALESCE (_tmpRemains_calc.MCS, 0)    = 0
 
-        WHERE tmpConditionsKeep.ObjectId  IS NULL
+        WHERE ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+                tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE)
           AND _tmpUnit_SunExclusion.UnitId_to IS NULL
           AND _tmpUnit_SunExclusion_MCS.UnitId_to IS NULL
 

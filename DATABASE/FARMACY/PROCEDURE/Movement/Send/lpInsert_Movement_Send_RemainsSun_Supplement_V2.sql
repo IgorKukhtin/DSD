@@ -59,6 +59,7 @@ $BODY$
    DECLARE vbNeed TFloat;
    DECLARE vbKoeffSUN TFloat;
    DECLARE vbisEliminateColdSUN Boolean;
+   DECLARE vbisOnlyColdSUN Boolean;
    DECLARE vbDeySupplOut TFloat;
    DECLARE vbDeySupplIn TFloat;
    DECLARE vbisShoresSUN Boolean;
@@ -76,14 +77,16 @@ BEGIN
           , COALESCE(ObjectFloat_CashSettings_DeySupplOutSUN2.ValueData, 40)::Integer 
           , COALESCE(ObjectFloat_CashSettings_DeySupplInSUN2.ValueData, 30)::Integer 
           , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
+          , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN.ValueData, FALSE) 
      INTO vbisEliminateColdSUN
         , vbDeySupplOut
         , vbDeySupplIn
         , vbisShoresSUN
+        , vbisOnlyColdSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
-                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN2()
           LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_DeySupplOutSUN2
                                 ON ObjectFloat_CashSettings_DeySupplOutSUN2.ObjectId = Object_CashSettings.Id 
                                AND ObjectFloat_CashSettings_DeySupplOutSUN2.DescId = zc_ObjectFloat_CashSettings_DeySupplOutSUN2()
@@ -93,6 +96,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_ShoresSUN
                                   ON ObjectBoolean_CashSettings_ShoresSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_ShoresSUN.DescId = zc_ObjectBoolean_CashSettings_ShoresSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUN
+                                  ON ObjectBoolean_CashSettings_OnlyColdSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_OnlyColdSUN.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUN2()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -652,7 +658,7 @@ raise notice 'Value 11: %', CLOCK_TIMESTAMP();
                                   AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
                                    OR Object_Goods_Main.isColdSUN = TRUE 
                                       )
-                                  AND vbisEliminateColdSUN = TRUE
+                                  AND (vbisEliminateColdSUN = TRUE OR vbisOnlyColdSUN = TRUE)
                                )
           -- отбросили !!НОТ!!
         , tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId

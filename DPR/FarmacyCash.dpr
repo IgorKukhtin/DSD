@@ -212,6 +212,7 @@ begin
       Application.CreateForm(TfrmSplash, frmSplash);
 
       EndSplash;
+      StartCheckConnectThread(2);
     end;
   End;
   Application.Run;

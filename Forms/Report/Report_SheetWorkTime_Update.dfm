@@ -29,39 +29,23 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.###'
-              Kind = skSum
-            end
-            item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = Amount
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = #1057#1090#1088#1086#1082': ,0'
-              Kind = skCount
-            end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = MemberName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
             end>
+          OptionsCustomize.DataRowSizing = False
+          OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupByBox = True
@@ -70,6 +54,32 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object StatusCode: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object DayOfWeekName: TcxGridDBColumn
             Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
             DataBinding.FieldName = 'DayOfWeekName'
@@ -101,18 +111,24 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
           object MemberCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'MemberCode'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Options.Moving = False
             Width = 30
           end
           object MemberName: TcxGridDBColumn
             Caption = #1060#1048#1054
             DataBinding.FieldName = 'MemberName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             MinWidth = 70
-            Options.Editing = False
-            Options.Moving = False
             Width = 144
           end
           object DateOut: TcxGridDBColumn
@@ -130,7 +146,6 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
             HeaderHint = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
             MinWidth = 70
             Options.Editing = False
-            Options.Moving = False
             Width = 96
           end
           object PositionName: TcxGridDBColumn
@@ -140,8 +155,17 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
             HeaderAlignmentVert = vaCenter
             MinWidth = 70
             Options.Editing = False
-            Options.Moving = False
             Width = 138
+          end
+          object PersonalGroupName: TcxGridDBColumn
+            Caption = #1041#1088#1080#1075#1072#1076#1072
+            DataBinding.FieldName = 'PersonalGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            MinWidth = 64
+            Options.Editing = False
+            Width = 73
           end
           object PositionLevelName: TcxGridDBColumn
             Caption = #1056#1072#1079#1088#1103#1076
@@ -150,18 +174,7 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
             HeaderAlignmentVert = vaCenter
             MinWidth = 64
             Options.Editing = False
-            Options.Moving = False
             Width = 125
-          end
-          object PersonalGroupName: TcxGridDBColumn
-            Caption = #1041#1088#1080#1075#1072#1076#1072
-            DataBinding.FieldName = 'PersonalGroupName'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            MinWidth = 64
-            Options.Editing = False
-            Options.Moving = False
-            Width = 73
           end
           object StorageLineName: TcxGridDBColumn
             Caption = #1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072
@@ -170,8 +183,19 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
             HeaderAlignmentVert = vaCenter
             MinWidth = 64
             Options.Editing = False
-            Options.Moving = False
             Width = 100
+          end
+          object Amount: TcxGridDBColumn
+            Caption = #1063#1072#1089#1099
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1095#1072#1089#1086#1074
+            MinWidth = 15
+            Options.Editing = False
+            Width = 48
           end
           object WorkTimeKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1089#1084'.'
@@ -185,21 +209,10 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
           object ShortName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1089#1084'.('#1089#1086#1082#1088'.)'
             DataBinding.FieldName = 'ShortName'
-            Options.Editing = False
-            Width = 80
-          end
-          object Amount: TcxGridDBColumn
-            Caption = #1063#1072#1089#1099
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1095#1072#1089#1086#1074
-            MinWidth = 15
             Options.Editing = False
-            Options.Moving = False
-            Width = 48
+            Width = 80
           end
           object OperDate_mi: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1101#1083#1077#1084#1077#1085#1090')'
