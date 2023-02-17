@@ -123,8 +123,10 @@ BEGIN
            , tmpMI.CuterCount
            , tmpMI.CuterCountSecond
            , tmpMI.TermProduction
-           
-           , CASE WHEN tmpGoodsQuality.GoodsId IS NULL THEN NULL ELSE (vbOperDate :: Date + (tmpMI.StartProductionInDays + tmpMI.TermProduction + tmpGoodsQuality.Value2) :: Integer) END :: TDateTime AS KlipsaDate
+             -- 312 ОЛІВ`Є вар., Нашi Ковбаси + М/Б
+           , CASE WHEN tmpMI.GoodsId = 7035 AND tmpMI.GoodsKindId <> 8331 THEN NULL
+                  WHEN tmpGoodsQuality.GoodsId IS NULL THEN NULL 
+                  ELSE (vbOperDate :: Date + (tmpMI.StartProductionInDays + tmpMI.TermProduction + tmpGoodsQuality.Value2) :: Integer) END :: TDateTime AS KlipsaDate
 
        FROM (SELECT tmpMI.ReceiptId_basis
                   , tmpMI.GoodsId

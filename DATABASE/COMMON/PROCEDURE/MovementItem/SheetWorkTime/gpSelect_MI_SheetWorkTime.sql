@@ -139,7 +139,7 @@ BEGIN
                                  , COALESCE (ObjectBoolean_NoSheetCalc.ValueData, FALSE) ::Boolean AS isNoSheetCalc
                                  , COALESCE(MIObject_PersonalGroup.ObjectId, 0)  AS PersonalGroupId
                                  , COALESCE(MIObject_StorageLine.ObjectId, 0)    AS StorageLineId
-                                 , CASE WHEN inUnitId = 8451
+                                 , CASE WHEN inUnitId = 8451 -- ЦЕХ пакування
                                              THEN CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE COALESCE (MIObject_WorkTimeKind.ObjectId, 0) END
                                         ELSE 0
                                    END AS WorkTimeKindId_key
@@ -210,7 +210,7 @@ BEGIN
                                  LEFT JOIN gpSelect_Object_Calendar (vbStartDate, vbEndDate, inSession) AS tmpCalendar ON tmpCalendar.Value = tmpOperDate.OperDate
                             WHERE MovementLinkObject_Unit.ObjectId = inUnitId
                               AND (MI_SheetWorkTime.Amount <> 0
-                                OR inUnitId <> 8451
+                                OR inUnitId <> 8451 -- ЦЕХ пакування
                                 OR MIObject_WorkTimeKind.ObjectId NOT IN (zc_Enum_WorkTimeKind_Work()
                                                                         , zc_Enum_WorkTimeKind_WorkD(), 8302788
                                                                         , zc_Enum_WorkTimeKind_WorkN(), 8302790
@@ -293,7 +293,7 @@ BEGIN
                             FROM tmpMovement_all
                                  -- если в этот день заполнены день 12ч
                                  LEFT JOIN tmpMovement_all AS tmpMovement_all_d
-                                                           ON inUnitId = 8451
+                                                           ON inUnitId = 8451 -- ЦЕХ пакування
                                                           AND tmpMovement_all_d.WorkTimeKindId_key = 2237042 -- день 12ч
                                                           AND tmpMovement_all_d.OperDate           = tmpMovement_all.OperDate
                                                           AND tmpMovement_all_d.MemberId           = tmpMovement_all.MemberId
@@ -305,7 +305,7 @@ BEGIN
                                                           AND tmpMovement_all.WorkTimeKindId_key NOT IN (2237042, 2237043)
                                  -- если в этот день заполнены ночь 12ч
                                  LEFT JOIN tmpMovement_all AS tmpMovement_all_n
-                                                           ON inUnitId = 8451
+                                                           ON inUnitId = 8451 -- ЦЕХ пакування
                                                           AND tmpMovement_all_n.WorkTimeKindId_key = 2237043 -- ночь 12ч
                                                           AND tmpMovement_all_n.OperDate           = tmpMovement_all.OperDate
                                                           AND tmpMovement_all_n.MemberId           = tmpMovement_all.MemberId
@@ -323,11 +323,11 @@ BEGIN
                                                           , tmpMovement_all.StorageLineId
                                                           , tmpMovement_all.WorkTimeKindId_key
                                             FROM tmpMovement_all
-                                            WHERE inUnitId = 8451
+                                            WHERE inUnitId = 8451 -- ЦЕХ пакування
                                               AND tmpMovement_all.WorkTimeKindId_key = 2237042 -- день 12ч
                                               AND tmpMovement_all.Amount             > 0
                                            ) AS tmpMovement_all_d_all
-                                             ON inUnitId = 8451
+                                             ON inUnitId = 8451 -- ЦЕХ пакування
                                             AND tmpMovement_all_d_all.MemberId           = tmpMovement_all.MemberId
                                             AND tmpMovement_all_d_all.PositionId         = tmpMovement_all.PositionId
                                             AND tmpMovement_all_d_all.PositionLevelId    = tmpMovement_all.PositionLevelId
@@ -342,17 +342,18 @@ BEGIN
                                                           , tmpMovement_all.StorageLineId
                                                           , tmpMovement_all.WorkTimeKindId_key
                                             FROM tmpMovement_all
-                                            WHERE inUnitId = 8451
+                                            WHERE inUnitId = 8451 -- ЦЕХ пакування
                                               AND tmpMovement_all.WorkTimeKindId_key = 2237043 -- ночь 12ч
                                               AND tmpMovement_all.Amount             > 0
                                            ) AS tmpMovement_all_n_all
-                                             ON inUnitId = 8451
+                                             ON inUnitId = 8451 -- ЦЕХ пакування
                                             AND tmpMovement_all_n_all.MemberId           = tmpMovement_all.MemberId
                                             AND tmpMovement_all_n_all.PositionId         = tmpMovement_all.PositionId
                                             AND tmpMovement_all_n_all.PositionLevelId    = tmpMovement_all.PositionLevelId
                                             AND tmpMovement_all_n_all.PersonalGroupId    = tmpMovement_all.PersonalGroupId
                                             AND tmpMovement_all_n_all.StorageLineId      = tmpMovement_all.StorageLineId
                                             AND tmpMovement_all.WorkTimeKindId_key NOT IN (2237042, 2237043)
+                            -- ЦЕХ пакування
                             WHERE (tmpMovement_all.WorkTimeKindId_key > 0 OR inUnitId <> 8451 OR tmpMovement_all.Amount > 0)
                            )
             -- связываем даты до приема, после увольнения с текущими
