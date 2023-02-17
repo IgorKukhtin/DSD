@@ -616,9 +616,9 @@ begin
 
   LoadReportFromFile('PrintMovement_TTN_43233918', ReportPath + '\Товарный Учет\PrintMovement_TTN_43233918.fr3');
   exit;
-  LoadReportFromFile('PrintMovement_TTN_071021', ReportPath + '\Товарный Учет\PrintMovement_TTN_071021.fr3');
-  exit;
   }
+  LoadReportFromFile('PrintMovement_TTN_071021', ReportPath + '\Товарный Учет\PrintMovement_TTN_071021.fr3');
+ 
   LoadReportFromFile('PrintMovement_TTN', ReportPath + '\Товарный Учет\PrintMovement_TTN.fr3');
   exit;
   {
