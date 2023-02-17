@@ -4,7 +4,7 @@
   ClientWidth = 547
   AddOnFormData.isSingle = False
   ExplicitWidth = 553
-  ExplicitHeight = 442
+  ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -102,7 +102,7 @@
     Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
   end
   object edFrom: TcxButtonEdit [12]
-    Left = 270
+    Left = 272
     Top = 77
     Properties.Buttons = <
       item
@@ -240,8 +240,8 @@
     Width = 247
   end
   object cxLabel11: TcxLabel [28]
-    Left = 270
-    Top = 257
+    Left = 272
+    Top = 254
     Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1074#1110#1076#1087#1086#1074#1110#1076#1072#1083#1100#1085#1072' '#1086#1089#1086#1073#1072' '#1074#1072#1085#1090#1072#1078#1086#1074#1110#1076#1087#1088#1072#1074'.)'
   end
   object edMember2: TcxButtonEdit [29]
@@ -361,7 +361,7 @@
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -617,7 +617,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'OperDate'
         DataType = ftDateTime
@@ -669,7 +669,7 @@
       end
       item
         Name = 'OperDate_Sale'
-        Value = ''
+        Value = Null
         Component = edOperDate_Sale
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -897,7 +897,7 @@
       end
       item
         Name = 'OperDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate_Sale
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -926,14 +926,14 @@
       end
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1304,8 +1304,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 422
-    Top = 303
+    Left = 414
+    Top = 319
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'

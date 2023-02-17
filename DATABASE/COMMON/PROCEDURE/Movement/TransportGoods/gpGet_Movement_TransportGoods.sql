@@ -245,8 +245,8 @@ BEGIN
            , Object_PersonalDriver.Id         AS PersonalDriverId
            , Object_PersonalDriver.ValueData  AS PersonalDriverName
 
-           , Object_CarJuridical.Id         AS CarJuridicalId
-           , Object_CarJuridical.ValueData  AS CarJuridicalName
+           , COALESCE (Object_Juridical_From.Id, Object_CarJuridical.Id)                AS CarJuridicalId
+           , COALESCE (Object_Juridical_From.ValueData, Object_CarJuridical.ValueData)  AS CarJuridicalName
 
            , CASE WHEN TRIM (Object_Member1.ValueData) = '' THEN 0 ELSE Object_Member1.Id END :: Integer AS MemberId1
            , Object_Member1.ValueData AS MemberName1
@@ -323,8 +323,8 @@ BEGIN
                                  ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
                                 AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical                                                     -- юр.лицо подразделения авто
-                             ON ObjectLink_Unit_Juridical.ObjectId =  ObjectLink_Car_Unit.ChildObjectId
-                            AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                 ON ObjectLink_Unit_Juridical.ObjectId =  ObjectLink_Car_Unit.ChildObjectId
+                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract                                                      --  подразделение  Договор (перевыставление затрат)
                                  ON ObjectLink_Unit_Contract.ObjectId = ObjectLink_Car_Unit.ChildObjectId
                                 AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
@@ -401,7 +401,13 @@ BEGIN
                                   AND MI_Transport.DescId = zc_MI_Master()
                                   AND MI_Transport.isErased = FALSE
                                   AND Movement_Transport.DescId = zc_Movement_TransportService()
-
+  
+            --если возврат   Вантажовідправник - клиент
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_From.Id
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                AND vbDescId_mov = zc_Movement_ReturnIn()
+            LEFT JOIN Object AS Object_Juridical_From ON Object_Juridical_From.Id = ObjectLink_Partner_Juridical.ChildObjectId
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_TransportGoods()
       ;
@@ -420,4 +426,8 @@ ALTER FUNCTION gpGet_Movement_TransportGoods (Integer, Integer, TDateTime, TVarC
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_TransportGoods (inMovementId:= 1, inMovementId_Sale:= 2, inOperDate:= '01.01.2015', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_TransportGoods22 (inMovementId:= 1, inMovementId_Sale:= 2, inOperDate:= '01.01.2015', inSession:= zfCalc_UserAdmin())
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_Movement_TransportGoods22 (ioId:= 149691, inInvNumber:= '1', inOperDate:= '01.10.2013 3:00:00',............, inSession:= '2')
+--select * from gpGet_Movement_TransportGoods(inMovementId := 24561040 , inMovementId_Sale := 24559843 , inOperDate := ('17.02.2023')::TDateTime ,  inSession := '9457');
