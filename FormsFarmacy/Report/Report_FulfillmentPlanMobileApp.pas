@@ -57,6 +57,7 @@ type
     UserName: TcxGridDBColumn;
     PenaltiMobApp: TcxGridDBColumn;
     QuantityMobile: TcxGridDBColumn;
+    isShowPlanEmployeeUser: TcxGridDBColumn;
   private
     { Private declarations }
   public

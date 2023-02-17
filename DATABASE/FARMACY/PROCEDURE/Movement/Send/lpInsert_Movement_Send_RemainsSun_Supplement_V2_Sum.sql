@@ -50,6 +50,7 @@ $BODY$
    DECLARE vbNeed TFloat;
    DECLARE vbKoeffSUN TFloat;
    DECLARE vbisEliminateColdSUN Boolean;
+   DECLARE vbisOnlyColdSUN Boolean;
    DECLARE vbTurnoverMoreSUN2 TFloat;
 BEGIN
      --
@@ -63,14 +64,18 @@ BEGIN
 
      SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
           , COALESCE(ObjectFloat_CashSettings_TurnoverMoreSUN2.ValueData, 1500000) 
-     INTO vbisEliminateColdSUN, vbTurnoverMoreSUN2
+          , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbTurnoverMoreSUN2, vbisOnlyColdSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
-                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN2()
           LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_TurnoverMoreSUN2
                                 ON ObjectFloat_CashSettings_TurnoverMoreSUN2.ObjectId = Object_CashSettings.Id 
                                AND ObjectFloat_CashSettings_TurnoverMoreSUN2.DescId = zc_ObjectFloat_CashSettings_TurnoverMoreSUN2()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUN
+                                  ON ObjectBoolean_CashSettings_OnlyColdSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_OnlyColdSUN.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUN2()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -448,8 +453,11 @@ BEGIN
                                      ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
                                     AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
         WHERE Object_Goods_Retail.RetailID = vbObjectId
-          AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = FALSE AND
-               Object_Goods_Main.isColdSUN = FALSE OR vbisEliminateColdSUN = FALSE);
+          AND ((COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = FALSE AND
+               Object_Goods_Main.isColdSUN = FALSE OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+               (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE OR
+               Object_Goods_Main.isColdSUN = TRUE) AND vbisOnlyColdSUN = TRUE
+               );
                
                              
      -- Выкладки

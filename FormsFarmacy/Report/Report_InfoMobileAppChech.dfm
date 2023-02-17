@@ -1,27 +1,27 @@
 inherited Report_InfoMobileAppChechForm: TReport_InfoMobileAppChechForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077' '#1095#1077#1082#1080' '#1087#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102' >'
   ClientHeight = 480
-  ClientWidth = 743
+  ClientWidth = 742
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 761
+  ExplicitWidth = 760
   ExplicitHeight = 527
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 743
+    Width = 742
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 743
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 743
+    ClientRectRight = 742
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 743
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
-        Width = 743
+        Width = 742
         Height = 421
         ExplicitWidth = 743
         ExplicitHeight = 421
@@ -253,6 +253,11 @@ inherited Report_InfoMobileAppChechForm: TReport_InfoMobileAppChechForm
             item
               Format = '0; ;'
               Kind = skSum
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = CountFirstOrder
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -267,7 +272,7 @@ inherited Report_InfoMobileAppChechForm: TReport_InfoMobileAppChechForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 399
+            Width = 325
           end
           object CountCheck: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1077#1082#1086#1074
@@ -286,7 +291,7 @@ inherited Report_InfoMobileAppChechForm: TReport_InfoMobileAppChechForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 107
+            Width = 98
           end
           object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1095#1077#1082#1086#1074'. '#1075#1088#1085'.'
@@ -296,14 +301,24 @@ inherited Report_InfoMobileAppChechForm: TReport_InfoMobileAppChechForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 107
+            Width = 96
+          end
+          object CountFirstOrder: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1077#1088#1074#1099#1093' '#1087#1086#1082#1091#1087#1086#1082
+            DataBinding.FieldName = 'CountFirstOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0;-,0; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 743
+    Width = 742
     Height = 33
     ExplicitWidth = 743
     ExplicitHeight = 33

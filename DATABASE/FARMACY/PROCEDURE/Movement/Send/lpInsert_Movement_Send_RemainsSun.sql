@@ -108,6 +108,7 @@ $BODY$
    DECLARE vbGoodsId_PairSun Integer;
    DECLARE vbPrice_PairSun   TFloat;
    DECLARE vbisEliminateColdSUN Boolean;
+   DECLARE vbisOnlyColdSUN Boolean;
    DECLARE vbisNotSold100  Boolean;
    DECLARE vbisNotSoldIn Boolean;
    
@@ -143,7 +144,8 @@ BEGIN
 
      SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
-     INTO vbisEliminateColdSUN, vbisShoresSUN
+          , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbisShoresSUN, vbisOnlyColdSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
@@ -151,6 +153,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_ShoresSUN
                                   ON ObjectBoolean_CashSettings_ShoresSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_ShoresSUN.DescId = zc_ObjectBoolean_CashSettings_ShoresSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUN
+                                  ON ObjectBoolean_CashSettings_OnlyColdSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_OnlyColdSUN.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -209,7 +214,7 @@ BEGIN
                    FROM (SELECT EXTRACT(DOW FROM inOperDate) AS RetV) AS tmp
                   );
 
-raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+raise notice 'Value 1: % % %', CLOCK_TIMESTAMP(), vbisEliminateColdSUN, vbisOnlyColdSUN;
 
      -- все Подразделения для схемы SUN
      INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isLock_CheckMa, isOnlyTimingSUN)
@@ -2005,7 +2010,7 @@ raise notice 'Value 16: %', CLOCK_TIMESTAMP();
                               WHERE (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
                                  OR Object_Goods_Main.isColdSUN = TRUE 
                                     )
-                                AND vbisEliminateColdSUN = TRUE
+                                AND (vbisEliminateColdSUN = TRUE OR vbisOnlyColdSUN = TRUE)
                              )
              -- отбросили !!НОТ!!
            , tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId
@@ -2197,7 +2202,8 @@ raise notice 'Value 16: %', CLOCK_TIMESTAMP();
             -- !!!отбрасываем такие сроковые, по которым есть Автозаказ, т.е. распределять их пока не будем
             AND _tmpRemains.GoodsId IS NULL
             -- отбросили !!холод!!
-            AND tmpConditionsKeep.ObjectId IS NULL
+            AND ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+                 tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE)
             -- отбросили !!НОТ!!
             AND tmpGoods_NOT.ObjectId IS NULL
 
@@ -2306,7 +2312,7 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
                               WHERE (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
                                  OR Object_Goods_Main.isColdSUN = TRUE 
                                     )
-                                AND vbisEliminateColdSUN = TRUE
+                                AND (vbisEliminateColdSUN = TRUE OR vbisOnlyColdSUN = TRUE)
                              )
         SELECT _tmpRemains_Partion.UnitId AS UnitId_from
              , _tmpRemains_calc.UnitId    AS UnitId_to
@@ -2334,7 +2340,8 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
              LEFT JOIN _tmpUnit_SunExclusion ON _tmpUnit_SunExclusion.UnitId_from = _tmpRemains_Partion.UnitId
                                             AND _tmpUnit_SunExclusion.UnitId_to   = _tmpRemains_calc.UnitId
 
-        WHERE tmpConditionsKeep.ObjectId IS NULL
+        WHERE ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+               tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE)
           AND _tmpUnit_SunExclusion.UnitId_to IS NULL
 
         GROUP BY _tmpRemains_Partion.UnitId
@@ -3706,4 +3713,4 @@ WHERE Movement.OperDate  >= '01.01.2019'
  SELECT * FROM lpInsert_Movement_Send_RemainsSun (inOperDate:= CURRENT_DATE + INTERVAL '5 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 */
 
-select * from gpReport_Movement_Send_RemainsSun(inOperDate := ('13.02.2023')::TDateTime ,  inSession := '3');
+select * from gpReport_Movement_Send_RemainsSun(inOperDate := ('15.02.2023')::TDateTime ,  inSession := '3');

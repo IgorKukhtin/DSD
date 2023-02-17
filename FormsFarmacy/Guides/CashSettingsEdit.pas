@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dxSkinsdxBarPainter, dxBarExtItems, dxBar, cxClasses;
+  dxSkinsdxBarPainter, dxBarExtItems, dxBar, cxClasses, dxSkinscxPCPainter,
+  cxPCdxBarPopupMenu, Vcl.ExtCtrls, cxPC;
 
 type
   TCashSettingsEditForm = class(TParentForm)
@@ -134,6 +135,19 @@ type
     dxBarButton1: TdxBarButton;
     actProtocolOpenForm: TdsdOpenForm;
     dxBarButton2: TdxBarButton;
+    cbOnlyColdSUN: TcxCheckBox;
+    cbOnlyColdSUN2: TcxCheckBox;
+    cbEliminateColdSUN2: TcxCheckBox;
+    cbOnlyColdSUN3: TcxCheckBox;
+    cbEliminateColdSUN3: TcxCheckBox;
+    cbOnlyColdSUN4: TcxCheckBox;
+    cbEliminateColdSUN4: TcxCheckBox;
+    cxPageControl1: TcxPageControl;
+    cxTabSheet1: TcxTabSheet;
+    cxTabSheet2: TcxTabSheet;
+    Panel1: TPanel;
+    cbOnlyColdSUA: TcxCheckBox;
+    cbEliminateColdSUA: TcxCheckBox;
   private
     { Private declarations }
   public

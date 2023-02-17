@@ -67,6 +67,7 @@ $BODY$
    DECLARE vbNeed TFloat;
    DECLARE vbKoeffSUN TFloat;
    DECLARE vbisEliminateColdSUN Boolean;
+   DECLARE vbisOnlyColdSUN Boolean;
    DECLARE vbisShoresSUN Boolean;
 BEGIN
      --
@@ -80,7 +81,8 @@ BEGIN
 
      SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
-     INTO vbisEliminateColdSUN, vbisShoresSUN
+          , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbisShoresSUN, vbisOnlyColdSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
@@ -88,6 +90,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_ShoresSUN
                                   ON ObjectBoolean_CashSettings_ShoresSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_ShoresSUN.DescId = zc_ObjectBoolean_CashSettings_ShoresSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUN
+                                  ON ObjectBoolean_CashSettings_OnlyColdSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_OnlyColdSUN.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -581,8 +586,11 @@ BEGIN
                                     AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
         WHERE Object_Goods_Retail.RetailID = vbObjectId
           AND COALESCE(_tmpGoods_SUN_Supplement.GoodsId, 0) = 0
-          AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = FALSE AND
-               Object_Goods_Main.isColdSUN = FALSE OR vbisEliminateColdSUN = FALSE);
+          AND ((COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = FALSE AND
+               Object_Goods_Main.isColdSUN = FALSE OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+               (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE OR
+               Object_Goods_Main.isColdSUN = TRUE) AND vbisOnlyColdSUN = TRUE
+               );
                
         ANALYSE _tmpGoods_SUN_Supplement;
 

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpReport_InfoMobileAppChech(
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar
-             , TotalCount TFloat, TotalSumm TFloat, CountCheck Integer
+             , TotalCount TFloat, TotalSumm TFloat, CountCheck Integer, CountFirstOrder Integer
               )
 AS
 $BODY$
@@ -25,6 +25,7 @@ BEGIN
           , MovementLinkObject_Unit.ObjectId                   AS UnitId
           , MovementFloat_TotalCount.ValueData                 AS TotalCount
           , MovementFloat_TotalSumm.ValueData                  AS TotalSumm
+          , COALESCE (MovementBoolean_MobileFirstOrder.ValueData, False)::Boolean    AS isMobileFirstOrder
      FROM Movement
           INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -40,6 +41,9 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                   ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                  AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+          LEFT JOIN MovementBoolean AS MovementBoolean_MobileFirstOrder
+                                    ON MovementBoolean_MobileFirstOrder.MovementId = Movement.Id
+                                   AND MovementBoolean_MobileFirstOrder.DescId = zc_MovementBoolean_MobileFirstOrder()
 
      WHERE Movement.DescId = zc_Movement_Check()
        AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -57,6 +61,7 @@ BEGIN
                                  , SUM(Movement.TotalCount)::TFloat                      AS TotalCount
                                  , SUM(Movement.TotalSumm)::TFloat                       AS TotalSumm
                                  , COUNT(*)::Integer                                     AS CountCheck
+                                 , SUM(CASE WHEN Movement.isMobileFirstOrder THEN 1 ELSE 0 END)::Integer  AS CountFirstOrder
                             FROM tmpMov AS Movement
                             GROUP BY Movement.UnitId
                             )
@@ -69,6 +74,7 @@ BEGIN
            , Movement.TotalCount                                   AS TotalCount
            , Movement.TotalSumm                                    AS TotalSumm
            , Movement.CountCheck                                   AS CountCheck
+           , Movement.CountFirstOrder                              AS CountFirstOrder
            
         FROM tmpMovement AS Movement 
         
@@ -86,7 +92,7 @@ ALTER FUNCTION gpReport_InfoMobileAppChech (TDateTime, TVarChar) OWNER TO postgr
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Шаблий О.В.
- 15.02.23                                                        * 
+ 14.02.23                                                        * 
 */            
 
 -- 

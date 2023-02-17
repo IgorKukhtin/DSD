@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, B
                                                            TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, Boolean, 
                                                            Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TFloat, Integer, 
                                                            Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, Integer, TFloat, TFloat, Boolean, 
-                                                           TFloat, TFloat, Integer, TVarChar);
+                                                           TFloat, TFloat, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -53,6 +53,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inFixedPercent               TFloat    ,     -- Фиксированный процент выполнения плана
     IN inMobMessSum                 TFloat    ,     -- Сообщение по созданию заказа по приложению от суммы чека
     IN inMobMessCount               Integer   ,     -- 	Сообщение по созданию заказа по приложению после чека
+
+    IN inisEliminateColdSUN2        Boolean   ,     -- Исключать Холод из СУН 2
+    IN inisEliminateColdSUN3        Boolean   ,     -- Исключать Холод из Э-СУН
+    IN inisEliminateColdSUN4        Boolean   ,     -- Исключать Холод из СУН ПИ
+    IN inisEliminateColdSUA         Boolean   ,     -- Исключать Холод из СУA
+
+    IN inisOnlyColdSUN              Boolean   ,     -- Только по Холоду СУН 1
+    IN inisOnlyColdSUN2             Boolean   ,     -- Только по Холоду СУН 3
+    IN inisOnlyColdSUN3             Boolean   ,     -- Только по Холоду Э-СУН
+    IN inisOnlyColdSUN4             Boolean   ,     -- Только по Холоду СУН ПИ
+    IN inisOnlyColdSUA              Boolean   ,     -- Только по Холоду СУA
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -124,8 +135,16 @@ BEGIN
    -- сохранили Удаление сторонних программ
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_RemovingPrograms(), vbID, inisRemovingPrograms);
 
-   -- сохранили Исключать Холод из СУН
+   -- сохранили Исключать Холод из СУН 1
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_EliminateColdSUN(), vbID, inisEliminateColdSUN);
+   -- сохранили Исключать Холод из СУН 2
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_EliminateColdSUN2(), vbID, inisEliminateColdSUN2);
+   -- сохранили Исключать Холод из СУН 3
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_EliminateColdSUN3(), vbID, inisEliminateColdSUN3);
+   -- сохранили Исключать Холод из СУН 4
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_EliminateColdSUN4(), vbID, inisEliminateColdSUN4);
+   -- сохранили Исключать Холод из СУA
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_EliminateColdSUA(), vbID, inisEliminateColdSUA);
 
    -- сохранили Порог цены Сэмплов от
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_CashSettings_PriceSamples(), vbID, inPriceSamples);
@@ -197,6 +216,17 @@ BEGIN
    
    -- Берега отдельно по СУН
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_ShoresSUN(), vbID, inisShoresSUN);
+
+   -- Только по Холоду СУН
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_OnlyColdSUN(), vbID, inisOnlyColdSUN);
+   -- Только по Холоду СУН2
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_OnlyColdSUN2(), vbID, inisOnlyColdSUN2);
+   -- Только по Холоду СУН3
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_OnlyColdSUN3(), vbID, inisOnlyColdSUN3);
+   -- Только по Холоду СУН4
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_OnlyColdSUN4(), vbID, inisOnlyColdSUN4);
+   -- Только по Холоду СУA
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_OnlyColdSUA(), vbID, inisOnlyColdSUA);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);

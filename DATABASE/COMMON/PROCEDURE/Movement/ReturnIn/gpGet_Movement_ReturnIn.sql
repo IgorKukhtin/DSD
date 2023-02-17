@@ -37,7 +37,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , isPrinted Boolean
              , isWeighing_inf Boolean  
              , MovementId_OrderReturnTare Integer
-             , InvNumber_OrderReturnTare  TVarChar
+             , InvNumber_OrderReturnTare  TVarChar 
+             
+             , MovementId_TransportGoods Integer
+             , InvNumber_TransportGoods TVarChar
+             , OperDate_TransportGoods TDateTime
              )
 AS
 $BODY$
@@ -123,6 +127,11 @@ BEGIN
              , CAST (FALSE AS Boolean)                  AS isWeighing_inf  
              ,  0                                       AS MovementId_OrderReturnTare
              , '' :: TVarChar                           AS InvNumber_OrderReturnTare
+
+             , 0                   			            AS MovementId_TransportGoods
+             , '' :: TVarChar                           AS InvNumber_TransportGoods
+             , inOperDate                               AS OperDate_TransportGoods
+
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
                LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
@@ -271,6 +280,11 @@ BEGIN
 
            , Movement_OrderReturnTare.Id                                                                                                    AS MovementId_OrderReturnTare
            , ('π ' || Movement_OrderReturnTare.InvNumber || ' ÓÚ ' || Movement_OrderReturnTare.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_OrderReturnTare
+
+           , Movement_TransportGoods.Id             AS MovementId_TransportGoods
+           , Movement_TransportGoods.InvNumber      AS InvNumber_TransportGoods
+           , COALESCE (Movement_TransportGoods.OperDate, Movement.OperDate) AS OperDate_TransportGoods
+
        FROM Movement
             LEFT JOIN tmpMI ON 1 = 1
             LEFT JOIN Movement AS Movement_PartionMovement ON Movement_PartionMovement.Id = tmpMI.MovementId
@@ -442,6 +456,11 @@ BEGIN
                                            ON MovementLinkMovement_OrderReturnTare.MovementId = Movement.Id
                                           AND MovementLinkMovement_OrderReturnTare.DescId = zc_MovementLinkMovement_OrderReturnTare()
             LEFT JOIN Movement AS Movement_OrderReturnTare ON Movement_OrderReturnTare.Id = MovementLinkMovement_OrderReturnTare.MovementChildId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
+                                           ON MovementLinkMovement_TransportGoods.MovementId = Movement.Id
+                                          AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
+            LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.Id = MovementLinkMovement_TransportGoods.MovementChildId
  
          WHERE Movement.Id     =  inMovementId
            AND Movement.DescId = zc_Movement_ReturnIn();
@@ -456,6 +475,7 @@ ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO p
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».     Ã‡Ì¸ÍÓ ƒ.¿.
+ 16.02.23         * TransportGoods
  14.03.22         *
  12.05.18         *
  14.05.16         *

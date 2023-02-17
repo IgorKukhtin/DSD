@@ -251,6 +251,42 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object InvNumber_TransportGoods: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1058#1058#1053
+            DataBinding.FieldName = 'InvNumber_TransportGoods'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDate_TransportGoods: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1058#1058#1053
+            DataBinding.FieldName = 'OperDate_TransportGoods'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PersonalDriverName_TTN: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1058#1058#1053
+            DataBinding.FieldName = 'PersonalDriverName_TTN'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object PersonalName_4_TTN: TcxGridDBColumn
+            Caption = #1050#1083#1072#1076#1086#1074#1097#1080#1080#1082' '#1058#1058#1053
+            DataBinding.FieldName = 'PersonalName_4_TTN'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object OKPO_From: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO_From'
@@ -1524,6 +1560,135 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         end>
       Caption = 'actSPSavePrintState'
     end
+    object actDialog_TTN: TdsdOpenForm
+      Category = 'Print_TTN'
+      MoveParams = <>
+      Caption = 'actDialog_TTN'
+      Hint = 'actDialog_TTN'
+      FormName = 'TTransportGoodsForm'
+      FormNameParam.Value = 'TTransportGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_TransportGoods'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_Sale'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate_TransportGoods_calc'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actGet_TTN: TdsdExecStoredProc
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_TTN
+      StoredProcList = <
+        item
+          StoredProc = spGet_TTN
+        end>
+      Caption = 'actGet_TTN'
+      Hint = 'actGet_TTN'
+    end
+    object actSPPrintTTNProcName: TdsdExecStoredProc
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReporNameTTN
+      StoredProcList = <
+        item
+          StoredProc = spGetReporNameTTN
+        end>
+      Caption = 'actSPPrintTTNProcName'
+    end
+    object actPrint_TTN: TdsdPrintAction
+      Category = 'Print_TTN'
+      MoveParams = <>
+      StoredProc = spSelectPrint_TTN
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_TTN
+        end>
+      Caption = 'actPrint_TTN'
+      Hint = 'actPrint_TTN'
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = ''
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameTTN'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object mactPrint_TTN: TMultiAction
+      Category = 'Print_TTN'
+      TabSheet = tsMain
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actDialog_TTN
+        end
+        item
+          Action = actGet_TTN
+        end
+        item
+          Action = actSPPrintTTNProcName
+        end
+        item
+          Action = actPrint_TTN
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      ImageIndex = 15
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -1709,6 +1874,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_TTN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -1770,6 +1943,10 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     end
     object bbPrintAkt: TdxBarButton
       Action = actPrintAkt
+      Category = 0
+    end
+    object bbPrint_TTN: TdxBarButton
+      Action = mactPrint_TTN
       Category = 0
     end
   end
@@ -2568,5 +2745,103 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     PackSize = 1
     Left = 714
     Top = 162
+  end
+  object spGet_TTN: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_ReturnIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_TransportGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_TransportGoods'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_TransportGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_TransportGoods'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate_TransportGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate_TransportGoods'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 208
+  end
+  object spGetReporNameTTN: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TransportGoods_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_Movement_TransportGoods_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameTTN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 896
+    Top = 224
+  end
+  object spSelectPrint_TTN: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TTN_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 895
+    Top = 176
   end
 end

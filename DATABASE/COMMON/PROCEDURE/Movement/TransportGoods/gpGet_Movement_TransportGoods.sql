@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpGet_Movement_TransportGoods (Integer, Integer, TDateTi
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_TransportGoods(
     IN inMovementId       Integer  , -- ключ Документа
-    IN inMovementId_Sale  Integer  , -- ключ Документа
+    IN inMovementId_Sale  Integer  , -- ключ Документа продажа или возврат 
     IN inOperDate         TDateTime , --
     IN inSession          TVarChar    -- сессия пользователя
 )
@@ -38,11 +38,13 @@ $BODY$
    DECLARE vbIsNik Boolean;
    DECLARE vbBranchId Integer;
    DECLARE vbMemberId_store Integer;
+   DECLARE vbDescId_mov Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_TransportGoods());
      vbUserId:= lpGetUserBySession (inSession);
 
+     vbDescId_mov := (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId_Sale);
 
      -- пытаемся найти по продаже
      IF inMovementId_Sale <> 0 AND COALESCE (inMovementId, 0) = 0
@@ -60,7 +62,7 @@ BEGIN
                                                              AND ObjectLink_Branch_PersonalStore.DescId   = zc_ObjectLink_Branch_PersonalStore()
                                          LEFT JOIN Object_Personal_View AS Object_PersonalStore_View ON Object_PersonalStore_View.PersonalId = ObjectLink_Branch_PersonalStore.ChildObjectId
                                     WHERE MLO_From.MovementId = inMovementId_Sale
-                                      AND MLO_From.DescId     = zc_MovementLinkObject_From()
+                                      AND MLO_From.DescId     = CASE WHEN vbDescId_mov = zc_Movement_Sale() THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_To() END
                                     )
                                   , (SELECT ObjectLink_User_Member.ChildObjectId
                                      FROM Movement
@@ -101,7 +103,7 @@ BEGIN
                                                                                                                              FROM MovementLinkObject AS MLO
                                                                                                                                   LEFT JOIN ObjectLink AS OL_Juridical ON OL_Juridical.ObjectId = MLO.ObjectId AND OL_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                                                                                                                   LEFT JOIN ObjectLink AS OL_Retail ON OL_Retail.ObjectId = OL_Juridical.ChildObjectId AND OL_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                                                                                             WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = zc_MovementLinkObject_To()
+                                                                                                                             WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = CASE WHEN vbDescId_mov = zc_Movement_Sale() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END
                                                                                                                             ) IN (310854, 341640) -- Фозі + Фоззі
                                                                                                           THEN 148689 -- АЕ 12-54 СА
                                                                                                      WHEN vbIsOd = TRUE
@@ -120,7 +122,7 @@ BEGIN
                                                                                                                              FROM MovementLinkObject AS MLO
                                                                                                                                   LEFT JOIN ObjectLink AS OL_Juridical ON OL_Juridical.ObjectId = MLO.ObjectId AND OL_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                                                                                                                   LEFT JOIN ObjectLink AS OL_Retail ON OL_Retail.ObjectId = OL_Juridical.ChildObjectId AND OL_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                                                                                             WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = zc_MovementLinkObject_To()
+                                                                                                                             WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = CASE WHEN vbDescId_mov = zc_Movement_Sale() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END
                                                                                                                             ) IN (310854, 341640) -- Фозі + Фоззі
                                                                                                           THEN 343903 -- Шульгін Олексій Валерійович
                                                                                                      WHEN vbIsOd = TRUE
@@ -141,7 +143,7 @@ BEGIN
                                                                                                                              FROM MovementLinkObject AS MLO
                                                                                                                                   LEFT JOIN ObjectLink AS OL_Juridical ON OL_Juridical.ObjectId = MLO.ObjectId AND OL_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                                                                                                                   LEFT JOIN ObjectLink AS OL_Retail ON OL_Retail.ObjectId = OL_Juridical.ChildObjectId AND OL_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                                                                                             WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = zc_MovementLinkObject_To()
+                                                                                                                             WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = CASE WHEN vbDescId_mov = zc_Movement_Sale() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END
                                                                                                                             ) IN (310854, 341640) -- Фозі + Фоззі
                                                                                                           THEN 343903 -- Шульгін Олексій Валерійович
                                                                                                      WHEN vbIsOd = TRUE

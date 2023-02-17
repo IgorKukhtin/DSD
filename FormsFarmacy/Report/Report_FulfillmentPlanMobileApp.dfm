@@ -1,29 +1,29 @@
 inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102'>'
   ClientHeight = 480
-  ClientWidth = 1253
+  ClientWidth = 1325
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1271
+  ExplicitWidth = 1343
   ExplicitHeight = 527
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 1253
+    Width = 1325
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 1222
+    ExplicitWidth = 1325
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 1253
+    ClientRectRight = 1325
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1222
+      ExplicitWidth = 1325
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
-        Width = 1253
+        Width = 1325
         Height = 421
-        ExplicitWidth = 1222
+        ExplicitWidth = 1325
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -260,6 +260,7 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -366,14 +367,22 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
             HeaderAlignmentVert = vaCenter
             Width = 69
           end
+          object isShowPlanEmployeeUser: TcxGridDBColumn
+            Caption = #1054#1089#1074#1086#1073'. '#1086#1090' '#1087#1083#1072#1085#1072
+            DataBinding.FieldName = 'isShowPlanEmployeeUser'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1253
+    Width = 1325
     Height = 33
-    ExplicitWidth = 1222
+    ExplicitWidth = 1325
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 107
@@ -622,6 +631,12 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserId'
+        Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
