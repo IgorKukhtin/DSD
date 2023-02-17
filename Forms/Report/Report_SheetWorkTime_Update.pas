@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxGridChartView, cxGridDBChartView, cxSplitter;
+  cxGridChartView, cxGridDBChartView, cxSplitter, cxImageComboBox;
 
 type
   TReport_SheetWorkTime_UpdateForm = class(TAncestorReportForm)
@@ -53,6 +53,7 @@ type
     bbMISetErased: TdxBarButton;
     bbMISetUnErased: TdxBarButton;
     bbMovementItemProtocol: TdxBarButton;
+    StatusCode: TcxGridDBColumn;
     ShortName: TcxGridDBColumn;
     OperDate_mi: TcxGridDBColumn;
     UserName_mi: TcxGridDBColumn;
