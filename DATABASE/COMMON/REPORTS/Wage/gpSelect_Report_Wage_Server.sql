@@ -155,7 +155,7 @@ BEGIN
 
         , ModelServiceId                 Integer
         , StaffListSummKindId            Integer
-        
+
         , KoeffHoursWork_car             TFloat
 
          ) ON COMMIT DROP;
@@ -245,17 +245,20 @@ BEGIN
        ,Report_2.MemberId
        ,Report_2.MemberName
         -- итого часов всех сотрудников (с этой должностью+...)
-       ,CASE WHEN Report_2.Ord_SheetWorkTime = 1 THEN Report_2.SUM_MemberHours ELSE 0 END SUM_MemberHours
+     --,CASE WHEN Report_2.Ord_SheetWorkTime = 1 THEN Report_2.SUM_MemberHours ELSE 0 END SUM_MemberHours
+       ,Report_2.SUM_MemberHours
         -- итого часов сотрудника
-       ,CASE WHEN tmpReport_1.MemberId > 0 THEN 0 WHEN Report_2.Ord_SheetWorkTime = 1 THEN Report_2.SheetWorkTime_Amount ELSE 0 END AS SheetWorkTime_Amount
-
-     --,CASE WHEN tmpReport_1.MemberId > 0 AND Report_2.SheetWorkTime_Amount = tmpReport_1.SheetWorkTime_Amount THEN 0 ELSE Report_2.SheetWorkTime_Amount END AS SheetWorkTime_Amount
+        --,CASE WHEN tmpReport_1.MemberId > 0 THEN 0 WHEN Report_2.Ord_SheetWorkTime = 1 THEN Report_2.SheetWorkTime_Amount ELSE 0 END AS SheetWorkTime_Amount
+        --,CASE WHEN tmpReport_1.MemberId > 0 THEN 0 ELSE Report_2.SheetWorkTime_Amount END AS SheetWorkTime_Amount
+       ,Report_2.SheetWorkTime_Amount
+        --
        ,Report_2.StaffListSummKindId   AS ServiceModelCode
        ,Report_2.StaffListSummKindName AS ServiceModelName
        ,Report_2.StaffListSumm_Value   AS Price
        ,Report_2.Summ
         -- Отраб. дн. 1 чел (инф.)
-       ,CASE WHEN Report_2.Ord_SheetWorkTime = 1 THEN Report_2.Count_Day ELSE 0 END AS Count_Day
+        --,CASE WHEN Report_2.Ord_SheetWorkTime = 1 THEN Report_2.Count_Day ELSE 0 END AS Count_Day
+       ,Report_2.Count_Day
         --
        ,0              AS ModelServiceId
        ,Report_2.StaffListSummKindId
@@ -267,11 +270,8 @@ BEGIN
                                         , inPositionId     := inPositionId
                                         , inSession        := inSession
                                          ) AS Report_2
-         LEFT JOIN tmpReport_1 ON tmpReport_1.MemberId = Report_2.MemberId
-                            --AND COALESCE (tmpReport_1.PersonalGroupId, 0) = COALESCE (Report_2.PersonalGroupId, 0)
-                            --AND COALESCE (tmpReport_1.PositionId, 0)      = COALESCE (Report_2.PositionId, 0)
-                            --AND COALESCE (tmpReport_1.PositionLevelId, 0) = COALESCE (Report_2.PositionLevelId, 0)
-                               
+       --LEFT JOIN tmpReport_1 ON tmpReport_1.MemberId = Report_2.MemberId
+
 
     WHERE COALESCE (inModelServiceId, 0) = 0
     --AND vbUserId <> 5
@@ -340,7 +340,57 @@ BEGIN
                                           , lfSelect.Ord
                                      FROM lfSelect_Object_Member_findPersonal(zfCalc_UserAdmin()) AS lfSelect
                                     )
-           , tmpRes AS (
+               -- собраны данные из табеля
+             , Movement_SheetWorkTime AS
+                (SELECT
+                       CASE WHEN inDetailDay = TRUE THEN Movement.OperDate ELSE NULL END :: TDateTime AS OperDate
+                     , MI_SheetWorkTime.ObjectId                      AS MemberId
+                     , MIObject_Position.ObjectId                     AS PositionId
+                     , MIObject_PersonalGroup.ObjectId                AS PersonalGroupId
+                     , COALESCE (MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
+                       -- итого часов сотрудника
+                   --, SUM (CASE WHEN Object_WorkTimeKind.Tax > 0 THEN Object_WorkTimeKind.Tax / 100 ELSE 1 END * MI_SheetWorkTime.Amount) :: TFloat AS SheetWorkTime_Amount
+                     , SUM (MI_SheetWorkTime.Amount) :: TFloat AS SheetWorkTime_Amount
+                 FROM Movement
+                      INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                    ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                   AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                   AND MovementLinkObject_Unit.ObjectId = inUnitId
+                      INNER JOIN MovementItem AS MI_SheetWorkTime
+                                              ON MI_SheetWorkTime.MovementId = Movement.Id
+                                             AND MI_SheetWorkTime.Amount > 0
+                                             AND MI_SheetWorkTime.isErased = FALSE
+
+                      INNER JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
+                                                        ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
+                                                       AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
+                      INNER JOIN Object_WorkTimeKind_Wages_View AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = MIObject_WorkTimeKind.ObjectId
+
+                      LEFT JOIN ObjectFloat AS ObjectFloat_WorkTimeKind_Tax
+                                            ON ObjectFloat_WorkTimeKind_Tax.ObjectId = MIObject_WorkTimeKind.ObjectId
+                                           AND ObjectFloat_WorkTimeKind_Tax.DescId   = zc_ObjectFloat_WorkTimeKind_Tax()
+
+                      LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PersonalGroup
+                                                             ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id
+                                                            AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup()
+                      LEFT OUTER JOIN MovementItemLinkObject AS MIObject_Position
+                                                             ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id
+                                                            AND MIObject_Position.DescId = zc_MILinkObject_Position()
+                      LEFT OUTER JOIN MovementItemLinkObject AS MIObject_PositionLevel
+                                                             ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id
+                                                            AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
+                 WHERE Movement.DescId = zc_Movement_SheetWorkTime()
+                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                   AND Movement.StatusId <> zc_Enum_Status_Erased()
+                 GROUP BY CASE WHEN inDetailDay = TRUE THEN Movement.OperDate ELSE NULL END
+                        , MI_SheetWorkTime.ObjectId                      
+                        , MIObject_Position.ObjectId                     
+                        , MIObject_PersonalGroup.ObjectId                
+                        , COALESCE (MIObject_PositionLevel.ObjectId, 0)  
+                )
+
+        -- Результат
+      , tmpRes_all AS (
             SELECT
                 Res.StaffListId
 
@@ -538,6 +588,18 @@ BEGIN
                ,Res.KoeffHoursWork_car
         )
 
+            -- Результат
+          , tmpRes AS (SELECT tmpRes_all.*
+                              -- № п/п
+                            , ROW_NUMBER() OVER (PARTITION BY tmpRes_all.MemberId
+                                                            , tmpRes_all.PositionId
+                                                            , tmpRes_all.PositionLevelId
+                                                            , tmpRes_all.PersonalGroupId
+                                                            , COALESCE (tmpRes_all.OperDate, zc_DateStart())
+                                                ) AS Ord_SheetWorkTime
+                       FROM tmpRes_all
+                      )
+
         -- Результат
         SELECT
             tmpRes.StaffListId
@@ -577,8 +639,12 @@ BEGIN
           , tmpRes.PersonalGroupName
            ,tmpRes.MemberId
            ,tmpRes.MemberName
+            -- итого часов всех сотрудников (с этой должностью...)
            ,tmpRes.SUM_MemberHours
-           ,tmpRes.SheetWorkTime_Amount
+            -- итого часов сотрудника
+            --,tmpRes.SheetWorkTime_Amount
+           ,Movement_SheetWorkTime.SheetWorkTime_Amount
+            --
            ,tmpRes.ServiceModelCode
            ,tmpRes.ServiceModelName
            ,tmpRes.Price
@@ -597,7 +663,9 @@ BEGIN
            ,tmpRes.GoodsKindComplete_ToName
 
            ,tmpRes.OperDate
-           ,tmpRes.Count_Day                             -- Отраб. дн. 1 чел (инф.)
+            -- Отраб. дн. 1 чел (инф.)
+           ,tmpRes.Count_Day
+            -- 
            ,tmpRes.Count_MemberInDay
            ,tmpRes.Gross
            ,tmpRes.GrossOnOneMember
@@ -618,6 +686,15 @@ BEGIN
 
         FROM
             tmpRes
+            LEFT JOIN Movement_SheetWorkTime ON Movement_SheetWorkTime.MemberId                      = tmpRes.MemberId
+                                            AND COALESCE (Movement_SheetWorkTime.PositionId, 0)      = COALESCE (tmpRes.PositionId, 0)
+                                            AND COALESCE (Movement_SheetWorkTime.PersonalGroupId, 0) = COALESCE (tmpRes.PersonalGroupId, 0)
+                                            AND COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
+                                            AND (Movement_SheetWorkTime.OperDate                     = tmpRes.OperDate
+                                              OR inDetailDay = FALSE
+                                                )
+                                            AND tmpRes.Ord_SheetWorkTime                             = 1
+
             LEFT JOIN tmpPersonal AS Object_Personal
                                                  ON Object_Personal.MemberId                      = tmpRes.MemberId
                                                 AND COALESCE (Object_Personal.PositionId, 0)      = COALESCE (tmpRes.PositionId, 0)
@@ -671,6 +748,96 @@ BEGIN
         -- доступ филиалов только к этим ведомостям
         WHERE tmpMemberPersonalServiceList.PersonalServiceListId > 0 OR vbObjectId_Constraint_Branch = 0
           AND (ObjectLink_Personal_Member_find.ChildObjectId = inMemberId OR COALESCE (inMemberId, 0) = 0)
+
+       UNION ALL
+        SELECT
+            0  :: Integer  AS StaffListId
+          , 0  :: Integer  AS StaffListCode
+          , '' :: TVarChar AS StaffListName
+
+          , 0  :: Integer  AS DocumentKindId
+          , '' :: TVarChar AS DocumentKindName
+
+          , '' :: TVarChar AS PriceName
+
+          , 0  :: TFloat   AS HoursPlan_StaffList
+          , 0  :: TFloat   AS HoursDay_StaffList
+          , 0  :: Integer  AS Count_Member_StaffList
+
+          , 0  :: Integer  AS Count_Member
+
+          , Object_Position.Id              AS UnitId
+          , Object_Position.ValueData       AS UnitName
+          , Object_Position.Id              AS PositionId
+          , Object_Position.ValueData       AS PositionName
+          , Object_PositionLevel.Id         AS PositionLevelId
+          , Object_PositionLevel.ValueData  AS PositionLevelName
+
+          , Object_PersonalGroup.Id         AS PersonalGroupId
+          , Object_PersonalGroup.ValueData  AS PersonalGroupName
+           ,Object_Member.Id                AS MemberId
+           ,Object_Member.ValueData         AS MemberName
+            -- итого часов всех сотрудников (с этой должностью+...)
+           ,0 :: TFloat    AS SUM_MemberHours
+            -- итого часов сотрудника
+           ,Movement_SheetWorkTime.SheetWorkTime_Amount
+            --
+           ,0  :: Integer  AS ServiceModelCode
+           ,'' :: TVarChar AS ServiceModelName
+           ,0  :: TFloat   AS Price
+           ,'' :: TVarChar AS FromName
+           ,'' :: TVarChar AS ToName
+           ,'' :: TVarChar AS MovementDescName
+           ,'' :: TVarChar AS ModelServiceItemChild_FromName
+           ,'' :: TVarChar AS ModelServiceItemChild_ToName
+
+           ,'' :: TVarChar AS StorageLineName_From
+           ,'' :: TVarChar AS StorageLineName_To
+
+           ,'' :: TVarChar AS GoodsKind_FromName
+           ,'' :: TVarChar AS GoodsKindComplete_FromName
+           ,'' :: TVarChar AS GoodsKind_ToName
+           ,'' :: TVarChar AS GoodsKindComplete_ToName
+
+           ,NULL :: TDateTime AS OperDate
+
+            -- Отраб. дн. 1 чел (инф.)
+           ,0  :: Integer  AS Count_Day
+            -- 
+           ,0  :: Integer  AS Count_MemberInDay
+           ,0  :: TFloat   AS Gross
+           ,0  :: TFloat   AS GrossOnOneMember
+           ,0  :: TFloat   AS Amount
+           ,0  :: TFloat   AS AmountOnOneMember
+           ,0  :: Integer  AS PersonalServiceListId
+           ,'' :: TVarChar AS PersonalServiceListName
+           ,0  :: Integer  AS Ord
+           ,'' :: TVarChar AS ServiceModelName_1
+           ,'' :: TVarChar AS ServiceModelName_2
+           ,'' :: TVarChar AS ServiceModelName_3
+           ,'' :: TVarChar AS ServiceModelName_4
+
+           ,0  :: Integer  AS ModelServiceId
+           ,0  :: Integer  AS StaffListSummKindId
+
+           ,0  :: TFloat   AS KoeffHoursWork_car
+
+        FROM
+            Movement_SheetWorkTime
+            LEFT JOIN tmpRes ON Movement_SheetWorkTime.MemberId                      = tmpRes.MemberId
+                            AND COALESCE (Movement_SheetWorkTime.PositionId, 0)      = COALESCE (tmpRes.PositionId, 0)
+                            AND COALESCE (Movement_SheetWorkTime.PersonalGroupId, 0) = COALESCE (tmpRes.PersonalGroupId, 0)
+                            AND COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
+                            AND (Movement_SheetWorkTime.OperDate                     = tmpRes.OperDate
+                              OR inDetailDay = FALSE
+                                )
+            LEFT JOIN Object AS Object_Member        ON Object_Member.Id        = tmpRes.MemberId
+            LEFT JOIN Object AS Object_Position      ON Object_Position.Id      = tmpRes.PositionId
+            LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = tmpRes.PersonalGroupId
+            LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = tmpRes.PositionLevelId
+            LEFT JOIN Object AS Object_Unit          ON Object_Unit.Id          = tmpRes.UnitId
+
+        WHERE tmpRes.MemberId IS NULL
        ;
 
 END;

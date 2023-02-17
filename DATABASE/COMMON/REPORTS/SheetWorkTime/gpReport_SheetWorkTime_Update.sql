@@ -34,8 +34,10 @@ CREATE OR REPLACE FUNCTION gpReport_SheetWorkTime_Update(
                , DateOut    TDateTime
                , OperDate_mi  TDateTime, UserName_mi  TVarChar 
                , OperDate_mov TDateTime, UserName_mov TVarChar 
+               , StatusCode Integer
+               , StatusName TVarChar
                , isErased Boolean
-                 )
+                )
 AS
 $BODY$
 
@@ -61,6 +63,8 @@ BEGIN
                                 THEN CASE WHEN MI_SheetWorkTime.Amount > 0 AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Quit() THEN zc_Enum_WorkTimeKind_Work() ELSE COALESCE (MIObject_WorkTimeKind.ObjectId, 0) END
                            ELSE 0
                       END AS WorkTimeKindId_key
+                    , Object_Status.ObjectCode AS StatusCode
+                    , Object_Status.ValueData  AS StatusName
                     , MI_SheetWorkTime.isErased 
                FROM Movement
                     JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -89,10 +93,12 @@ BEGIN
                                            AND ObjectBoolean_NoSheetCalc.DescId = zc_ObjectBoolean_PositionLevel_NoSheetCalc() 
                     LEFT JOIN MovementItemLinkObject AS MIObject_StorageLine
                                                      ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id
-                                                    AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+                                                    AND MIObject_StorageLine.DescId         = zc_MILinkObject_StorageLine()
+                    LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
                WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                  AND Movement.DescId   = zc_Movement_SheetWorkTime()
-                 AND Movement.StatusId <> zc_Enum_Status_Erased()
+               --AND Movement.StatusId <> zc_Enum_Status_Erased()
                --AND COALESCE (MIObject_WorkTimeKind.ObjectId,0)<> 0
                )
      --
@@ -153,6 +159,8 @@ BEGIN
          , tmpMovProtocol.OperDate   AS OperDate_mov
          , Object_User_mov.ValueData AS UserName_mov
 
+         , tmpMI.StatusCode
+         , tmpMI.StatusName
          , tmpMI.isErased ::Boolean
 
     FROM tmpMI
