@@ -129,6 +129,8 @@ RETURNS TABLE (
            , Color_Calc_29  Integer
            , Color_Calc_30  Integer
            , Color_Calc_31  Integer
+
+           , KeyId          TVarChar
            )
 AS
 $BODY$
@@ -1159,7 +1161,7 @@ BEGIN
            , D.Color_Calc_30 :: Integer
            , D.Color_Calc_31 :: Integer
           
-
+           , (''||Object_Member.Id||'_'||Object_Position.Id||'_'||Object_PositionLevel.Id||'_'||Object_PersonalGroup.Id||'_'||Object_StorageLine.Id) ::TVarChar  AS KeyId
       FROM tmpMI_Group AS D
          LEFT JOIN Object AS Object_Member ON Object_Member.Id = D.MemberId
          LEFT JOIN Object AS Object_Position ON Object_Position.Id = D.PositionId

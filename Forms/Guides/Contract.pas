@@ -322,6 +322,8 @@ type
     macUpdate_isIrna_list: TMultiAction;
     macUpdate_isIrna: TMultiAction;
     bbUpdate_isIrna: TdxBarButton;
+    actShowAll_CCPartner: TBooleanStoredProcAction;
+    bbShowAll_CCPartner: TdxBarButton;
 
   private
     { Private declarations }
