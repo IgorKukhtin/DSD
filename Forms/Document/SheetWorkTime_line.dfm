@@ -117,11 +117,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     Width = 971
     Height = 254
     Align = alClient
-    TabOrder = 4
+    TabOrder = 3
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 8
-    ExplicitTop = 70
-    ExplicitHeight = 154
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -463,9 +460,9 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -957,7 +954,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid1
-    ExplicitWidth = 8
+    ExplicitLeft = 1
+    ExplicitTop = 338
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2100,8 +2098,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 398
-    Top = 199
+    Left = 414
+    Top = 247
   end
   object HeaderCDS: TClientDataSet
     Aggregates = <>
@@ -2501,8 +2499,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
   end
   object DayDS: TDataSource
     DataSet = DayCDS
-    Left = 40
-    Top = 328
+    Left = 48
+    Top = 288
   end
   object DayCDS: TClientDataSet
     Aggregates = <>
@@ -2511,8 +2509,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 80
-    Top = 328
+    Left = 104
+    Top = 280
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2552,7 +2550,22 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     ColorRuleList = <
       item
         ColorColumn = ShortName_1
-        ValueColumn = Color_Calc_1
+        BackGroundValueColumn = Color_Calc_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_2
+        BackGroundValueColumn = Color_Calc_2
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_3
+        BackGroundValueColumn = Color_Calc_3
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_4
+        BackGroundValueColumn = Color_Calc_4
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
@@ -2560,8 +2573,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 176
-    Top = 312
+    Left = 160
+    Top = 280
   end
   object spSelectMI_days: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_SheetWorkTime_line'
