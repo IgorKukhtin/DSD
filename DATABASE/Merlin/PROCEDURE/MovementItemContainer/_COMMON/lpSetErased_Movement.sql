@@ -1,6 +1,5 @@
 -- Function: lpSetErased_Movement (Integer, Integer)
 
-DROP FUNCTION IF EXISTS gpSetErased_Movement (Integer, TVarChar);
 DROP FUNCTION IF EXISTS lpSetErased_Movement (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpSetErased_Movement(
@@ -36,7 +35,8 @@ BEGIN
   -- 1.3. ПРОВЕРКА - Закрытый период + проверка пользователя
   IF vbStatusId_old = zc_Enum_Status_Complete()
   THEN 
-      IF inUserId > 0 OR (vbOperDate < '01.02.2022' AND vbDescId NOT IN (zc_Movement_Service(), zc_Movement_ServiceItemAdd()))
+      IF (inUserId > 0 OR (vbOperDate < '01.02.2022' AND vbDescId NOT IN (zc_Movement_Service(), zc_Movement_ServiceItemAdd())))
+     AND (inUserId > 0 OR vbDescId <> zc_Movement_Cash())
       THEN
           PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
                                     , inMovementId    := inMovementId
