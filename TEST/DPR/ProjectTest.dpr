@@ -1411,7 +1411,9 @@ uses
   Report_StaffList in '..\..\Forms\Report\Report_StaffList.pas' {Report_StaffListForm: TParentForm},
   Report_StaffListDialog in '..\..\Forms\Report\Report_StaffListDialog.pas' {Report_StaffListDialogForm: TParentForm},
   PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
-  StorageSQLite in '..\..\SOURCE\StorageSQLite.pas';
+  StorageSQLite in '..\..\SOURCE\StorageSQLite.pas',
+  SheetWorkTimeJournal_line in '..\..\Forms\Document\SheetWorkTimeJournal_line.pas' {SheetWorkTimeJournal_lineForm: TParentForm},
+  SheetWorkTime_line in '..\..\Forms\Document\SheetWorkTime_line.pas' {SheetWorkTime_lineForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

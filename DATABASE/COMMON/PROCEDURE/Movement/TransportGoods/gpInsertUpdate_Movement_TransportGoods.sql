@@ -141,10 +141,12 @@ BEGIN
      END IF;
 
 
-     IF COALESCE (vbMovementId_Transport, 0) = 0 AND NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inPersonalDriverId AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inPersonalDriverName)
+     IF COALESCE (vbMovementId_Transport, 0) = 0 AND TRIM (inPersonalDriverName) <> ''
+        AND NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inPersonalDriverId AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inPersonalDriverName)
      THEN
          -- нашли <Сотрудник (водитель)>
          inPersonalDriverId:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inPersonalDriverName) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
+         
          IF COALESCE (inPersonalDriverId, 0) = 0 AND TRIM (inPersonalDriverName) <> ''
          THEN
              -- создание
@@ -272,7 +274,6 @@ BEGIN
                                                             );
      END IF;
 
-
      -- сохранили <Документ>
      ioId:= lpInsertUpdate_Movement_TransportGoods (ioId              := ioId
                                                   , inInvNumber       := inInvNumber
@@ -281,7 +282,7 @@ BEGIN
                                                   , inInvNumberMark   := inInvNumberMark
                                                   , inCarId           := vbCarId
                                                   , inCarTrailerId    := inCarTrailerId
-                                                  , inPersonalDriverId:= inPersonalDriverId
+                                                  , inPersonalDriverId:= inPersonalDriverId ::integer
                                                   , inRouteId         := inRouteId
                                                   , inMemberId1       := inMemberId1
                                                   , inMemberId2       := inMemberId2

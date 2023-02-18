@@ -1418,6 +1418,8 @@ type
     miGoodsKindNew: TMenuItem;
     actReport_StaffList: TdsdOpenForm;
     miReport_StaffList: TMenuItem;
+    actSheetWorkTime_line: TdsdOpenForm;
+    miSheetWorkTime_line: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

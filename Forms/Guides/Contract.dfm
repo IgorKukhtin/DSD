@@ -1742,6 +1742,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbShowAll_CCPartner'
+        end
+        item
+          Visible = True
           ItemName = 'bsContract'
         end
         item
@@ -2145,6 +2149,10 @@
     end
     object bbUpdate_isIrna: TdxBarButton
       Action = macUpdate_isIrna
+      Category = 0
+    end
+    object bbShowAll_CCPartner: TdxBarButton
+      Action = actShowAll_CCPartner
       Category = 0
     end
   end
@@ -3788,6 +3796,25 @@
       Caption = 'macUpdate_isIrna_list'
       ImageIndex = 66
     end
+    object actShowAll_CCPartner: TBooleanStoredProcAction
+      Category = 'CCPartner'
+      MoveParams = <>
+      StoredProc = spSelectCCPartner
+      StoredProcList = <
+        item
+          StoredProc = spSelectCCPartner
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1086#1074
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1086#1074
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1086#1074
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1086#1074
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Contract'
@@ -4630,7 +4657,31 @@
       item
         DataSet = CCPartnerCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = Null
+        Component = actShowAll_CCPartner
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 545
     Top = 397

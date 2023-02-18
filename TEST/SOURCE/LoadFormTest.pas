@@ -423,10 +423,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionPartnerValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionPartnerValueForm');
    exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
   exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
    exit;
@@ -1394,6 +1395,11 @@ end;
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTime_lineForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTime_lineForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeJournal_lineForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeJournal_lineForm');
+  exit;
   {
   //справочники
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDayKindForm'));
