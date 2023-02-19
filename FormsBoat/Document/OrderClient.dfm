@@ -48,9 +48,9 @@ object OrderClientForm: TOrderClientForm
       Width = 94
     end
     object cxLabel2: TcxLabel
-      Left = 171
+      Left = 172
       Top = 5
-      Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
+      Caption = #1044#1072#1090#1072
     end
     object edFrom: TcxButtonEdit
       Left = 404
@@ -721,6 +721,7 @@ object OrderClientForm: TOrderClientForm
               OptionsData.Inserting = False
               OptionsView.CellAutoHeight = True
               OptionsView.Footer = True
+              OptionsView.GroupByBox = False
               OptionsView.GroupSummaryLayout = gslAlignWithColumns
               OptionsView.HeaderAutoHeight = True
               OptionsView.HeaderHeight = 40
@@ -729,6 +730,7 @@ object OrderClientForm: TOrderClientForm
               object isEnabled_ch1: TcxGridDBColumn
                 Caption = 'Yes /no'
                 DataBinding.FieldName = 'isEnabled'
+                Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Width = 45
@@ -736,6 +738,8 @@ object OrderClientForm: TOrderClientForm
               object NPP_ch1: TcxGridDBColumn
                 Caption = #8470' '#1087'/'#1087
                 DataBinding.FieldName = 'NPP'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 40
               end
@@ -777,7 +781,6 @@ object OrderClientForm: TOrderClientForm
                 Properties.ReadOnly = True
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
-                HeaderGlyphAlignmentHorz = taCenter
                 Options.Editing = False
                 Width = 58
               end
@@ -904,7 +907,6 @@ object OrderClientForm: TOrderClientForm
                 Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
-                HeaderGlyphAlignmentHorz = taCenter
                 Width = 179
               end
               object InsertDate_ch1: TcxGridDBColumn
@@ -938,6 +940,8 @@ object OrderClientForm: TOrderClientForm
               object Color_fon_ch1: TcxGridDBColumn
                 DataBinding.FieldName = 'Color_fon'
                 Visible = False
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 VisibleForCustomization = False
                 Width = 55
               end
@@ -956,8 +960,6 @@ object OrderClientForm: TOrderClientForm
             Color = clLime
             ParentBackground = False
             TabOrder = 1
-            ExplicitLeft = 2
-            ExplicitTop = -3
           end
         end
         object PanelProdOptItems: TPanel
@@ -1027,6 +1029,7 @@ object OrderClientForm: TOrderClientForm
               OptionsData.DeletingConfirmation = False
               OptionsView.CellAutoHeight = True
               OptionsView.Footer = True
+              OptionsView.GroupByBox = False
               OptionsView.GroupSummaryLayout = gslAlignWithColumns
               OptionsView.HeaderAutoHeight = True
               OptionsView.HeaderHeight = 40
@@ -1094,7 +1097,6 @@ object OrderClientForm: TOrderClientForm
                 Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
-                HeaderGlyphAlignmentHorz = taCenter
                 Options.Editing = False
                 Width = 152
               end
@@ -1290,7 +1292,6 @@ object OrderClientForm: TOrderClientForm
                 DataBinding.FieldName = 'Comment'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
-                HeaderGlyphAlignmentHorz = taCenter
                 Options.Editing = False
                 Width = 179
               end
@@ -1325,6 +1326,8 @@ object OrderClientForm: TOrderClientForm
               object Color_fon_ch2: TcxGridDBColumn
                 DataBinding.FieldName = 'Color_fon'
                 Visible = False
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 VisibleForCustomization = False
                 Width = 55
@@ -1344,8 +1347,6 @@ object OrderClientForm: TOrderClientForm
             Color = clAqua
             ParentBackground = False
             TabOrder = 1
-            ExplicitLeft = -2
-            ExplicitTop = 5
           end
         end
         object cxSplitter1: TcxSplitter

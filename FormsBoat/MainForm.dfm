@@ -1,5 +1,5 @@
 ﻿inherited MainForm: TMainForm
-  Caption = 'ProjectBoat - 32bit'
+  Caption = 'ProjectBoat - 64bit'
   ClientHeight = 168
   ClientWidth = 805
   KeyPreview = True

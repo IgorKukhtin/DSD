@@ -1,7 +1,7 @@
 object ProductEditForm: TProductEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1092#1080#1075#1091#1088#1072#1094#1080#1103' '#1051#1086#1076#1082#1080'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
   ClientHeight = 523
   ClientWidth = 590
   Color = clBtnFace
@@ -37,7 +37,7 @@ object ProductEditForm: TProductEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 91
+    Left = 95
     Top = 485
     Width = 75
     Height = 25
@@ -113,8 +113,8 @@ object ProductEditForm: TProductEditForm
     Caption = 'CIN Nr.'
   end
   object edDateStart: TcxDateEdit
-    Left = 8
-    Top = 348
+    Left = 10
+    Top = 350
     EditValue = 42160d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -122,8 +122,8 @@ object ProductEditForm: TProductEditForm
     Width = 82
   end
   object edDateBegin: TcxDateEdit
-    Left = 113
-    Top = 353
+    Left = 105
+    Top = 350
     EditValue = 42160d
     ParentShowHint = False
     Properties.SaveTime = False
@@ -212,7 +212,7 @@ object ProductEditForm: TProductEditForm
   end
   object cbBasicConf: TcxCheckBox
     Left = 151
-    Top = 5
+    Top = 4
     Caption = 'Basic Conf'
     ParentFont = False
     Style.Font.Charset = DEFAULT_CHARSET
@@ -604,7 +604,7 @@ object ProductEditForm: TProductEditForm
     Top = 487
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 78
+    TabOrder = 77
     Width = 73
   end
   object cxLabel34: TcxLabel

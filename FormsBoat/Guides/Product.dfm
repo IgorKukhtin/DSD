@@ -1,7 +1,7 @@
 ﻿object ProductForm: TProductForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' '#1051#1086#1076#1082#1080'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1051#1086#1076#1082#1072' - '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088'>'
   ClientHeight = 435
   ClientWidth = 1188
   Color = clBtnFace
@@ -204,6 +204,7 @@
         OptionsData.Inserting = False
         OptionsView.CellAutoHeight = True
         OptionsView.Footer = True
+        OptionsView.GroupByBox = False
         OptionsView.GroupSummaryLayout = gslAlignWithColumns
         OptionsView.HeaderAutoHeight = True
         OptionsView.HeaderHeight = 40
@@ -221,11 +222,97 @@
         object isBasicConf: TcxGridDBColumn
           Caption = 'Basic Yes/no'
           DataBinding.FieldName = 'isBasicConf'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1042#1082#1083#1102#1095#1080#1090#1100' '#1073#1072#1079#1086#1074#1091#1102' '#1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1102' '#1052#1086#1076#1077#1083#1080' Yes/no'
           Options.Editing = False
           Width = 55
+        end
+        object NPP_OrderClient: TcxGridDBColumn
+          Caption = #8470' '#1087'/'#1087' '#1060#1072#1082#1090
+          DataBinding.FieldName = 'NPP_OrderClient'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 55
+        end
+        object NPP_2: TcxGridDBColumn
+          Caption = #8470' '#1087'/'#1087' '#1055#1083#1072#1085
+          DataBinding.FieldName = 'NPP_2'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100'  '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1089#1073#1086#1088#1082#1080
+          Options.Editing = False
+          Width = 55
+        end
+        object StateText: TcxGridDBColumn
+          Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
+          DataBinding.FieldName = 'StateText'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 80
+        end
+        object StatusCode_OrderClient: TcxGridDBColumn
+          Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+          DataBinding.FieldName = 'StatusCode_OrderClient'
+          PropertiesClassName = 'TcxImageComboBoxProperties'
+          Properties.Images = dmMain.ImageList
+          Properties.Items = <
+            item
+              Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+              ImageIndex = 11
+              Value = 1
+            end
+            item
+              Description = #1055#1088#1086#1074#1077#1076#1077#1085
+              ImageIndex = 12
+              Value = 2
+            end
+            item
+              Description = #1059#1076#1072#1083#1077#1085
+              ImageIndex = 13
+              Value = 3
+            end>
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+          Width = 80
+        end
+        object OperDate_OrderClient: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+          DataBinding.FieldName = 'OperDate_OrderClient'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+          Options.Editing = False
+          Width = 70
+        end
+        object InvNumber_OrderClient: TcxGridDBColumn
+          Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+          DataBinding.FieldName = 'InvNumber_OrderClient'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+          Options.Editing = False
+          Width = 100
+        end
+        object InfoMoneyName_Client: TcxGridDBColumn
+          Caption = #1059#1055' '#1057#1090#1072#1090#1100#1103' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+          DataBinding.FieldName = 'InfoMoneyName_Client'
+          Visible = False
+          HeaderHint = #1059#1055' '#1057#1090#1072#1090#1100#1103' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+          Options.Editing = False
+          Width = 60
+        end
+        object TaxKind_Value_Client: TcxGridDBColumn
+          Caption = '% '#1053#1044#1057' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+          DataBinding.FieldName = 'TaxKind_Value_Client'
+          Visible = False
+          HeaderHint = '% '#1053#1044#1057' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+          Options.Editing = False
+          Width = 60
         end
         object ClientName: TcxGridDBColumn
           Caption = 'Kunden'
@@ -235,30 +322,6 @@
           HeaderHint = #1050#1083#1080#1077#1085#1090
           Options.Editing = False
           Width = 80
-        end
-        object StateText: TcxGridDBColumn
-          Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
-          DataBinding.FieldName = 'StateText'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 70
-        end
-        object NPP_OrderClient: TcxGridDBColumn
-          Caption = #8470' '#1087'/'#1087' '#1060#1072#1082#1090
-          DataBinding.FieldName = 'NPP_OrderClient'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 70
-        end
-        object NPP_2: TcxGridDBColumn
-          Caption = #8470' '#1087'/'#1087' '#1055#1083#1072#1085
-          DataBinding.FieldName = 'NPP_2'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1054#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100'  '#1087#1083#1072#1085#1080#1088#1091#1077#1084#1086#1075#1086' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1089#1073#1086#1088#1082#1080
-          Options.Editing = False
-          Width = 70
         end
         object Code: TcxGridDBColumn
           Caption = 'Interne Nr'
@@ -319,11 +382,12 @@
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1084#1086#1090#1086#1088#1072
           Options.Editing = False
-          Width = 66
+          Width = 55
         end
         object ReceiptProdModelName: TcxGridDBColumn
           Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1052#1086#1076#1077#1083#1080
           DataBinding.FieldName = 'ReceiptProdModelName'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1052#1086#1076#1077#1083#1080
@@ -637,71 +701,6 @@
           Options.Editing = False
           Width = 78
         end
-        object Color_fon: TcxGridDBColumn
-          DataBinding.FieldName = 'Color_fon'
-          Visible = False
-          VisibleForCustomization = False
-        end
-        object StatusCode_OrderClient: TcxGridDBColumn
-          Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
-          DataBinding.FieldName = 'StatusCode_OrderClient'
-          PropertiesClassName = 'TcxImageComboBoxProperties'
-          Properties.Images = dmMain.ImageList
-          Properties.Items = <
-            item
-              Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
-              ImageIndex = 11
-              Value = 1
-            end
-            item
-              Description = #1055#1088#1086#1074#1077#1076#1077#1085
-              ImageIndex = 12
-              Value = 2
-            end
-            item
-              Description = #1059#1076#1072#1083#1077#1085
-              ImageIndex = 13
-              Value = 3
-            end>
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-          Width = 80
-        end
-        object OperDate_OrderClient: TcxGridDBColumn
-          Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
-          DataBinding.FieldName = 'OperDate_OrderClient'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-          Options.Editing = False
-          Width = 70
-        end
-        object InvNumber_OrderClient: TcxGridDBColumn
-          Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
-          DataBinding.FieldName = 'InvNumber_OrderClient'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-          Options.Editing = False
-          Width = 70
-        end
-        object InfoMoneyName_Client: TcxGridDBColumn
-          Caption = #1059#1055' '#1057#1090#1072#1090#1100#1103' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
-          DataBinding.FieldName = 'InfoMoneyName_Client'
-          Visible = False
-          HeaderHint = #1059#1055' '#1057#1090#1072#1090#1100#1103' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-          Options.Editing = False
-          Width = 60
-        end
-        object TaxKind_Value_Client: TcxGridDBColumn
-          Caption = '% '#1053#1044#1057' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
-          DataBinding.FieldName = 'TaxKind_Value_Client'
-          Visible = False
-          HeaderHint = '% '#1053#1044#1057' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-          Options.Editing = False
-          Width = 60
-        end
         object KeyId: TcxGridDBColumn
           DataBinding.FieldName = 'KeyId'
           Visible = False
@@ -809,6 +808,7 @@
         OptionsData.DeletingConfirmation = False
         OptionsView.CellAutoHeight = True
         OptionsView.Footer = True
+        OptionsView.GroupByBox = False
         OptionsView.GroupSummaryLayout = gslAlignWithColumns
         OptionsView.HeaderAutoHeight = True
         OptionsView.HeaderHeight = 40
@@ -893,6 +893,14 @@
           HeaderAlignmentVert = vaCenter
           Width = 80
         end
+        object Color_ProdColor_ch2: TcxGridDBColumn
+          Caption = '***'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1074#1077#1090
+          Options.Editing = False
+          Width = 45
+        end
         object ProdColorName_ch2: TcxGridDBColumn
           Caption = 'Farbe'
           DataBinding.FieldName = 'ProdColorName'
@@ -907,13 +915,6 @@
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 100
-        end
-        object Color_ProdColor_ch2: TcxGridDBColumn
-          Caption = #1062#1074#1077#1090
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 59
         end
         object Comment_ch2: TcxGridDBColumn
           Caption = '***Material/farbe'
@@ -1141,12 +1142,16 @@
         object Color_fon_ch2: TcxGridDBColumn
           DataBinding.FieldName = 'Color_fon'
           Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
           VisibleForCustomization = False
           Width = 55
         end
         object Color_ProdColorValue_Ch2: TcxGridDBColumn
           DataBinding.FieldName = 'Color_ProdColorValue'
           Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
           Options.Editing = False
           VisibleForCustomization = False
         end
@@ -1215,6 +1220,7 @@
         OptionsData.Inserting = False
         OptionsView.CellAutoHeight = True
         OptionsView.Footer = True
+        OptionsView.GroupByBox = False
         OptionsView.GroupSummaryLayout = gslAlignWithColumns
         OptionsView.HeaderAutoHeight = True
         OptionsView.HeaderHeight = 40
@@ -1223,6 +1229,7 @@
         object isEnabled_ch1: TcxGridDBColumn
           Caption = 'Yes/no'
           DataBinding.FieldName = 'isEnabled'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 45
@@ -1230,6 +1237,8 @@
         object NPP_ch1: TcxGridDBColumn
           Caption = #8470' '#1087'/'#1087
           DataBinding.FieldName = 'NPP'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 40
         end
@@ -1454,6 +1463,8 @@
         object Color_fon_ch1: TcxGridDBColumn
           DataBinding.FieldName = 'Color_fon'
           Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
           Options.Editing = False
           VisibleForCustomization = False
           Width = 55
@@ -1473,8 +1484,6 @@
       Color = clLime
       ParentBackground = False
       TabOrder = 1
-      ExplicitLeft = 2
-      ExplicitTop = 1
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -3415,7 +3424,7 @@
     ChartList = <>
     ColorRuleList = <
       item
-        BackGroundValueColumn = Color_fon
+        BackGroundValueColumn = StateColor
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
