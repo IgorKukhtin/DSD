@@ -2328,7 +2328,7 @@ object MainForm: TMainForm
     end
     object cb100MSec: TCheckBox
       Left = 153
-      Top = 458
+      Top = 459
       Width = 76
       Height = 17
       Caption = '100MSec'
