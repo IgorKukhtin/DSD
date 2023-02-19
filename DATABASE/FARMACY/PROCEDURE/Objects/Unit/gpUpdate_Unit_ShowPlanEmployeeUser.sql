@@ -12,7 +12,13 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
 
-   IF COALESCE(inId, 0) = 0 THEN
+   IF COALESCE(inId, 0) = 0 OR 
+      COALESCE((SELECT ObjectBoolean_ShowPlanEmployeeUser.ValueData 
+                FROM ObjectBoolean AS ObjectBoolean_ShowPlanEmployeeUser
+                WHERE ObjectBoolean_ShowPlanEmployeeUser.ObjectId = COALESCE(inId, 0)
+                  AND ObjectBoolean_ShowPlanEmployeeUser.DescId = zc_ObjectBoolean_Unit_ShowPlanEmployeeUser()), False) <>
+      inisShowPlanEmployeeUser
+   THEN
       RETURN;
    END IF;
 

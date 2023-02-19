@@ -63,6 +63,9 @@ type
     spUpdateBonus: TdsdStoredProc;
     actUpdateBonus: TdsdExecStoredProc;
     dxBarButton1: TdxBarButton;
+    dxBarButton2: TdxBarButton;
+    actLoadPreviousMonth: TdsdExecStoredProc;
+    spLoadPreviousMonth: TdsdStoredProc;
   private
     { Private declarations }
   public

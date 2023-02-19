@@ -36,7 +36,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                isSupplementAddCash Boolean, isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, isShowActiveAlerts Boolean,
                MinPriceSale TFloat, DeviationsPrice1303 TFloat, LimitCash TFloat, 
                SetDateRRO TDateTime, isSetDateRRO boolean, SetDateRROList TVarChar,
-               isReplaceSte2ListDif Boolean, MobMessSum TFloat, MobMessCount Integer
+               isReplaceSte2ListDif Boolean, MobMessSum TFloat, MobMessCount Integer,
+               TelegramBotToken TVarChar, SendCashErrorTelId TVarChar, isSendErrorTelegramBot Boolean
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -195,6 +196,8 @@ BEGIN
                                   , COALESCE(ObjectFloat_CashSettings_LimitCash.ValueData, 0)::TFLoat            AS LimitCash
                                   , COALESCE(ObjectFloat_CashSettings_MobMessSum.ValueData, 0)::TFLoat           AS MobMessSum
                                   , COALESCE(ObjectFloat_CashSettings_MobMessCount.ValueData, 0)::Integer        AS MobMessCount
+                                  , ObjectString_CashSettings_TelegramBotToken.ValueData                         AS TelegramBotToken
+                                  , ObjectString_CashSettings_SendCashErrorTelId.ValueData                       AS SendCashErrorTelId
                              FROM Object AS Object_CashSettings
                                   LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                                          ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id
@@ -232,6 +235,12 @@ BEGIN
                                   LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_MobMessCount
                                                         ON ObjectFloat_CashSettings_MobMessCount.ObjectId = Object_CashSettings.Id 
                                                        AND ObjectFloat_CashSettings_MobMessCount.DescId = zc_ObjectFloat_CashSettings_MobMessCount()
+                                  LEFT JOIN ObjectString AS ObjectString_CashSettings_TelegramBotToken
+                                                         ON ObjectString_CashSettings_TelegramBotToken.ObjectId = Object_CashSettings.Id 
+                                                        AND ObjectString_CashSettings_TelegramBotToken.DescId = zc_ObjectString_CashSettings_TelegramBotToken()
+                                  LEFT JOIN ObjectString AS ObjectString_CashSettings_SendCashErrorTelId
+                                                         ON ObjectString_CashSettings_SendCashErrorTelId.ObjectId = Object_CashSettings.Id 
+                                                        AND ObjectString_CashSettings_SendCashErrorTelId.DescId = zc_ObjectString_CashSettings_SendCashErrorTelId()
                              WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
                              LIMIT 1)
        , tmpPromoCodeDoctor AS (SELECT PromoUnit.ID
@@ -436,6 +445,9 @@ BEGIN
        , COALESCE (ObjectBoolean_ReplaceSte2ListDif.ValueData, FALSE):: Boolean           AS isReplaceSte2ListDif
        , tmpCashSettings.MobMessSum
        , tmpCashSettings.MobMessCount
+       , tmpCashSettings.TelegramBotToken 
+       , tmpCashSettings.SendCashErrorTelId
+       , COALESCE (ObjectBoolean_SendErrorTelegramBot.ValueData, FALSE):: Boolean         AS isSendErrorTelegramBot
 
    FROM Object AS Object_Unit
 
@@ -572,6 +584,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_ReplaceSte2ListDif
                                 ON ObjectBoolean_ReplaceSte2ListDif.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ReplaceSte2ListDif.DescId = zc_ObjectBoolean_Unit_ReplaceSte2ListDif()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SendErrorTelegramBot
+                                ON ObjectBoolean_SendErrorTelegramBot.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_SendErrorTelegramBot.DescId = zc_ObjectBoolean_Unit_SendErrorTelegramBot()
 
         LEFT JOIN tmpLoyalty ON 1 = 1
         LEFT JOIN tmpLoyaltySaveMoney ON 1 = 1

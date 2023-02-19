@@ -115,7 +115,7 @@ BEGIN
         inSession := inUserSession;
     END IF;
     vbUserId := lpGetUserBySession (inSession);
-
+    
     IF inDate is null
     THEN
         inDate := CURRENT_TIMESTAMP::TDateTime;
@@ -135,6 +135,20 @@ BEGIN
                          WHERE Movement.OperDate >= inDate - INTERVAL '3 DAY'
                            AND Movement.DescId = zc_Movement_Check()), 0);
     END IF;
+
+    -- Отменим удаление если вдруг удален
+    IF COALESCE (ioId, 0) <> 0
+    THEN
+      IF EXISTS(SELECT 1 
+                FROM  Movement
+                WHERE ID = ioId
+                  AND DescId = zc_Movement_Check()
+                  AND StatusId = zc_Enum_Status_Erased()
+                )
+      THEN
+        PERFORM gpUnComplete_Movement_Check (inMovementId:= ioId, inSession:= zfCalc_UserAdmin());
+      END IF;    
+    END IF;    
 
     -- определяем признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -477,10 +491,10 @@ BEGIN
 
 
     -- !!!ВРЕМЕННО для ТЕСТА!!!
-    IF inSession = zfCalc_UserAdmin()
+/*    IF inSession = zfCalc_UserAdmin()
     THEN
         RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inUID, inUserSession, inSession;
-    END IF;
+    END IF;*/
 
 
 END;

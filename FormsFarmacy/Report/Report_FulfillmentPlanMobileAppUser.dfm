@@ -1,29 +1,29 @@
-inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1086#1073#1080#1083#1100#1085#1086#1084#1091' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102'>'
+inherited Report_FulfillmentPlanMobileAppUserForm: TReport_FulfillmentPlanMobileAppUserForm
+  Caption = #1054#1090#1095#1077#1090' <'#1054#1090#1089#1077#1090' '#1087#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1086#1073#1080#1083#1100#1085#1086#1084#1091' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091'>'
   ClientHeight = 561
-  ClientWidth = 1325
+  ClientWidth = 1202
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1343
+  ExplicitWidth = 1220
   ExplicitHeight = 608
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 1325
+    Width = 1202
     Height = 502
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 1325
+    ExplicitWidth = 1202
     ExplicitHeight = 502
     ClientRectBottom = 502
-    ClientRectRight = 1325
+    ClientRectRight = 1202
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1325
+      ExplicitWidth = 1202
       ExplicitHeight = 502
       inherited cxGrid: TcxGrid
-        Width = 1325
+        Width = 1202
         Height = 502
-        ExplicitWidth = 1325
+        ExplicitWidth = 1202
         ExplicitHeight = 502
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -256,10 +256,10 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
             item
               Format = '0; ;'
               Kind = skSum
-              Column = QuantityMobile
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -339,16 +339,6 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
             Options.Editing = False
             Width = 88
           end
-          object QuantityMobile: TcxGridDBColumn
-            Caption = #1055#1088#1080#1083#1086#1078'. '#1095#1077#1082#1086#1074
-            DataBinding.FieldName = 'QuantityMobile'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 59
-          end
           object ProcFact: TcxGridDBColumn
             Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1086' '#1089#1086#1090#1088#1091#1076#1085'.'
             DataBinding.FieldName = 'ProcFact'
@@ -369,21 +359,14 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
             Options.Editing = False
             Width = 69
           end
-          object isShowPlanEmployeeUser: TcxGridDBColumn
-            Caption = #1054#1089#1074#1086#1073'. '#1086#1090' '#1087#1083#1072#1085#1072
-            DataBinding.FieldName = 'isShowPlanEmployeeUser'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 62
-          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1325
+    Width = 1202
     Height = 33
-    ExplicitWidth = 1325
+    ExplicitWidth = 1202
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 107
@@ -413,26 +396,6 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
       Visible = False
       ExplicitLeft = 184
       ExplicitTop = 33
-    end
-    object cxLabel3: TcxLabel
-      Left = 249
-      Top = 7
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
-    end
-    object ceUnit: TcxButtonEdit
-      Left = 343
-      Top = 6
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-      Properties.ReadOnly = True
-      Properties.UseNullString = True
-      TabOrder = 5
-      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-      Width = 244
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -529,8 +492,8 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_FulfillmentPlanMobileAppDialogForm'
-      FormNameParam.Value = 'TReport_FulfillmentPlanMobileAppDialogForm'
+      FormName = 'TDataChoiceDialogForm'
+      FormNameParam.Value = 'TDataChoiceDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -542,18 +505,8 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitId'
-          Value = ''
-          Component = GuidesUnit
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = ''
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
+          Name = 'Label'
+          Value = #1042#1099#1073#1077#1088#1077#1090#1077' '#1076#1077#1085#1100' '#1074' '#1084#1077#1089#1103#1094#1077' '#1088#1072#1089#1095#1077#1090#1072
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -594,8 +547,6 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
         item
           Name = 'UnitName'
           Value = ''
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -607,50 +558,6 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actUpdateDataSet: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_SetShowPlanEmployeeUser
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_SetShowPlanEmployeeUser
-        end>
-      Caption = 'actUpdateDataSet'
-      DataSource = MasterDS
-    end
-    object mactUpdate_ShowPlanEmployeeUser: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      ActionList = <
-        item
-          Action = actUpdate_ShowPlanEmployeeUser
-        end>
-      View = cxGridDBTableView
-      QuestionBeforeExecute = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1080#1090#1086#1075' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088 +
-        #1086#1076#1072#1078'"?'
-      Caption = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1080#1090#1086#1075' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088 +
-        #1086#1076#1072#1078'"'
-      Hint = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1080#1090#1086#1075' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088 +
-        #1086#1076#1072#1078'"'
-      ImageIndex = 79
-    end
-    object actUpdate_ShowPlanEmployeeUser: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_ShowPlanEmployeeUser
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_ShowPlanEmployeeUser
-        end>
-      Caption = 'actUpdate_ShowPlanEmployeeUser'
-    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -661,27 +568,13 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
     Top = 160
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_FulfillmentPlanMobileApp'
+    StoredProcName = 'gpReport_FulfillmentPlanMobileAppUser'
     Params = <
       item
         Name = 'inOperDate'
         Value = Null
         Component = deStart
         DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUserId'
-        Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -719,10 +612,6 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
         end
         item
           Visible = True
-          ItemName = 'dxBarButton2'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -756,8 +645,15 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
       ImageIndex = 56
     end
     object dxBarButton2: TdxBarButton
-      Action = mactUpdate_ShowPlanEmployeeUser
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1080#1090#1086#1075' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088 +
+        #1086#1076#1072#1078'"'
       Category = 0
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1080#1090#1086#1075' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088 +
+        #1086#1076#1072#1078'"'
+      Visible = ivAlways
+      ImageIndex = 79
     end
   end
   inherited PeriodChoice: TPeriodChoice
@@ -772,7 +668,6 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
       item
       end
       item
-        Component = GuidesUnit
       end>
     Left = 432
     Top = 216
@@ -783,38 +678,9 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = GuidesUnit
       end>
     Left = 208
     Top = 240
-  end
-  object GuidesUnit: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceUnit
-    FormNameParam.Value = 'TUnitTreeForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitTreeForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 344
   end
   object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'
@@ -824,15 +690,11 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
       item
         Name = 'UnitId'
         Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -848,8 +710,6 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
       item
         Name = 'inUnitId'
         Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -873,57 +733,5 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
     PackSize = 1
     Left = 688
     Top = 240
-  end
-  object spUpdate_SetShowPlanEmployeeUser: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Unit_SetShowPlanEmployeeUser'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'UnitId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisShowPlanEmployeeUser'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isShowPlanEmployeeUser'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 360
-    Top = 307
-  end
-  object spUpdate_ShowPlanEmployeeUser: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Unit_ShowPlanEmployeeUser'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'UnitId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisShowPlanEmployeeUser'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isShowPlanEmployeeUser'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 360
-    Top = 371
   end
 end

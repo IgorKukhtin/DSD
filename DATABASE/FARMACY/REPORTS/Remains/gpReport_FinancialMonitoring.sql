@@ -12,29 +12,43 @@ AS
 $BODY$
    DECLARE cur1 refcursor;
    DECLARE cur2 refcursor;
+   DECLARE vbEndDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
+     
+     
+     IF inEndDate >= CURRENT_DATE
+     THEN
+       vbEndDate := CURRENT_DATE - INTERVAL '1 DAY';
+     ELSE
+       vbEndDate := inEndDate;
+     END IF;
+     
+     
+     
+    CREATE TEMP TABLE tmpUnit ON COMMIT DROP AS
+    SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+         , Object_Juridical.Id                AS JuridicalId
+    FROM ObjectLink AS ObjectLink_Unit_Juridical
+
+       INNER JOIN Object AS Object_Juridical
+                         ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+                        AND Object_Juridical.isErased = False
+
+       INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                            AND ObjectLink_Juridical_Retail.ChildObjectId = 4
+    WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+      AND ObjectLink_Unit_Juridical.ChildObjectId <> 393053;
+                    
+     ANALYSE tmpUnit;
 
 
     --Реализайия + продажи
     CREATE TEMP TABLE tmpSale ON COMMIT DROP AS
     (WITH
-        tmpUnit AS (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
-                         , Object_Juridical.Id                AS JuridicalId
-                    FROM ObjectLink AS ObjectLink_Unit_Juridical
-
-                       INNER JOIN Object AS Object_Juridical
-                                         ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
-                                        AND Object_Juridical.isErased = False
-
-                       INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                             ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                            AND ObjectLink_Juridical_Retail.ChildObjectId = 4
-                    WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                      AND ObjectLink_Unit_Juridical.ChildObjectId <> 393053
-                    ),
         tmpItemContainer AS (SELECT MovementItem.UnitID
                                   , MovementItem.OperDate
                                   , SUM(MovementItem.AmountCheckSum)                                                AS AmountCheckSum
@@ -125,25 +139,11 @@ BEGIN
          ORDER BY tmpUnit.JuridicalId
                 , MovementItem.OperDate);   
                 
+    ANALYSE tmpSale;
+                
     -- Пропишим остаток
     UPDATE tmpSale SET SaldoSum = T1.SaldoSum
     FROM (WITH
-              tmpUnit AS (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
-                               , Object_Juridical.Id                AS JuridicalId
-                          FROM ObjectLink AS ObjectLink_Unit_Juridical
-
-                             INNER JOIN Object AS Object_Juridical
-                                               ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
-                                              AND Object_Juridical.isErased = False
-
-                             INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                                   ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                  AND ObjectLink_Juridical_Retail.ChildObjectId = 4
-                          WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                            AND ObjectLink_Unit_Juridical.ChildObjectId <> 393053
-                          ),
-
               tmpContainer AS (SELECT Movement.UnitID
                                     , SUM(Movement.Price * Movement.Saldo)                                                      AS SaldoSum
                                FROM AnalysisContainer AS Movement
@@ -186,22 +186,6 @@ BEGIN
     -- СП + Дисконт
     CREATE TEMP TABLE tmpChange ON COMMIT DROP AS
     (WITH
-        tmpUnit AS (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
-                         , Object_Juridical.Id                AS JuridicalId
-                    FROM ObjectLink AS ObjectLink_Unit_Juridical
-
-                       INNER JOIN Object AS Object_Juridical
-                                         ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
-                                        AND Object_Juridical.isErased = False
-
-                       INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                             ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                            AND ObjectLink_Juridical_Retail.ChildObjectId = 4
-                    WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                      AND ObjectLink_Unit_Juridical.ChildObjectId <> 393053
-                    ),
-
         tmpSPKind AS (SELECT MovementLinkObject_Unit.ObjectId                     AS UnitID
                            , date_trunc('DAY', Movement.OperDate)                 AS OperDate
                            , sum(CASE WHEN Movement.DescId = zc_Movement_Check() THEN MovementFloat_TotalSummChangePercent.ValueData
@@ -285,25 +269,12 @@ BEGIN
 
          ORDER BY tmpUnit.JuridicalId
                 , COALESCE(SPKind.OperDate, Discount.OperDate));   
+                
+    ANALYSE tmpChange;
 
     --Расходы по расчетному счету
     CREATE TEMP TABLE tmpBankAccount ON COMMIT DROP AS
     (WITH
-        tmpUnit AS (SELECT DISTINCT Object_Juridical.Id                AS JuridicalId
-                    FROM ObjectLink AS ObjectLink_Unit_Juridical
-
-                       INNER JOIN Object AS Object_Juridical
-                                         ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
-                                        AND Object_Juridical.isErased = False
-
-                       INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                             ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                            AND ObjectLink_Juridical_Retail.ChildObjectId = 4
-                    WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                      AND ObjectLink_Unit_Juridical.ChildObjectId <> 393053
-                    ),
-
         tmpBankAccount AS (SELECT
                                    Movement.OperDate - INTERVAL '1 DAY'              AS OperDate
                                  , MovementLinkObject_Juridical.ObjectId             AS JuridicalId
@@ -358,8 +329,49 @@ BEGIN
                 , MovementItem.OperDate
 
          ORDER BY MovementItem.JuridicalId
-                , MovementItem.OperDate);                   
+                , MovementItem.OperDate);    
                 
+    ANALYSE tmpBankAccount;   
+    
+    
+    -- Не оплата приходов
+    CREATE TEMP TABLE tmpSummIncomeNotPay ON COMMIT DROP AS
+    SELECT SUM(Container.Amount) AS SummaNoPay
+    FROM Container
+         INNER JOIN Object AS Object_Movement 
+                           ON Object_Movement.Id = Container.ObjectId
+                          AND Object_Movement.DescId = zc_Object_PartionMovement()
+         INNER JOIN MovementLinkObject AS MLO_Unit 
+                                       ON MLO_Unit.MovementId = Object_Movement.ObjectCode
+                                      AND MLO_Unit.DescId = zc_MovementLinkObject_To()
+                                 
+    WHERE Container.DescId = zc_Container_SummIncomeMovementPayment()
+      AND Container.Amount > 0
+      AND Object_Movement.ObjectCode > 15000000
+      AND MLO_Unit.ObjectId IN (SELECT DISTINCT tmpUnit.UnitId FROM tmpUnit);
+
+    ANALYSE tmpSummIncomeNotPay;   
+            
+    -- Оплаты приходов по дням
+    CREATE TEMP TABLE tmpSummIncomePayment ON COMMIT DROP AS
+    SELECT date_trunc('Day', MovementItemContainer.OperDate) AS OperDate
+         , SUM(MovementItemContainer.Amount)                 AS SummaPay
+    FROM MovementItemContainer                         
+         INNER JOIN Container ON Container.Id =  MovementItemContainer.ContainerId
+         INNER JOIN Object AS Object_Movement 
+                           ON Object_Movement.Id = Container.ObjectId
+                          AND Object_Movement.DescId = zc_Object_PartionMovement()
+         INNER JOIN MovementLinkObject AS MLO_Unit 
+                                       ON MLO_Unit.MovementId = Object_Movement.ObjectCode
+                                      AND MLO_Unit.DescId = zc_MovementLinkObject_To()
+    WHERE MovementItemContainer.DescId = zc_MIContainer_SummIncomeMovementPayment()
+      AND MovementItemContainer.OperDate >= inStartDate
+      AND Object_Movement.ObjectCode > 15000000
+      AND MLO_Unit.ObjectId IN (SELECT DISTINCT tmpUnit.UnitId FROM tmpUnit) 
+    GROUP BY date_trunc('Day', MovementItemContainer.OperDate);    
+
+    ANALYSE tmpSummIncomePayment;   
+                    
     -- Итоги 
   OPEN cur1 FOR
   WITH
@@ -367,20 +379,30 @@ BEGIN
                               COALESCE(Sale.AmountSaleSum , 0) -
                               COALESCE(Sale.AmountReturnInSum , 0))            AS SummaSale 
                         , SUM(Sale.SaldoSum)                                   AS SaldoSum      
-                FROM tmpSale AS Sale
-                ),
+                   FROM tmpSale AS Sale
+                   ),
     tmpChangeSum AS (SELECT SUM(COALESCE(Change.SummChange , 0))               AS SummChange 
                      FROM tmpChange AS Change
                      ),
     tmpBankAccountSum AS (SELECT SUM(COALESCE(BankAccount.AmountOut , 0) - COALESCE(BankAccount.AmountIn, 0))      AS SummaBankAccount 
                           FROM tmpBankAccount AS BankAccount
-                )
-
+                ),
+    tmpSummPayment AS (SELECT max(tmpSummIncomeNotPay.SummaNoPay) - COALESCE(SUM(tmpSummIncomePayment.SummaPay), 0)   AS SummaNoPay
+                       FROM tmpSaleSum AS SaleSum
+                            LEFT JOIN tmpSummIncomePayment ON tmpSummIncomePayment.OperDate >= vbEndDate
+                            LEFT JOIN tmpSummIncomeNotPay ON 1 = 1
+                      ),
+    tmpSaleSumLast AS (SELECT SUM(Sale.SaldoSum)                                   AS SaldoSum      
+                       FROM tmpSale AS Sale
+                       WHERE Sale.OperDate = vbEndDate
+                       )
+                      
     SELECT (COALESCE(Sale.SummaSale, 0) + COALESCE(ChangeSum.SummChange, 0))::TFloat         AS SummaSale
          , BankAccount.SummaBankAccount::TFloat                                              AS SummaBankAccount
          , (COALESCE(Sale.SummaSale, 0) + COALESCE(ChangeSum.SummChange, 0) - 
            COALESCE(BankAccount.SummaBankAccount, 0))::TFloat                                AS SummaDelta
-         , Sale.SaldoSum                                                                     AS SaldoSum
+         , SaleSumLast.SaldoSum::TFloat                                                      AS SaldoSum
+         , SummPayment.SummaNoPay::TFloat                                                    AS SummaNoPay
 
     FROM tmpSaleSum AS Sale
     
@@ -388,7 +410,9 @@ BEGIN
          
          LEFT JOIN tmpChangeSum AS ChangeSum ON 1=1
          
-    
+         LEFT JOIN tmpSummPayment AS SummPayment ON 1=1
+         
+         LEFT JOIN tmpSaleSumLast AS SaleSumLast ON 1=1
     ;
 
   RETURN NEXT cur1;
@@ -413,7 +437,14 @@ BEGIN
                                , SUM(COALESCE(BankAccount.AmountOut , 0) - COALESCE(BankAccount.AmountIn, 0))     AS SummaBankAccount 
                           FROM tmpBankAccount AS BankAccount
                           GROUP BY BankAccount.OperDate
-                          )
+                          ),
+    tmpSummPayment AS (SELECT SaleSum.OperDate
+                            , max(tmpSummIncomeNotPay.SummaNoPay) - COALESCE(SUM(tmpSummIncomePayment.SummaPay), 0)   AS SummaNoPay
+                       FROM tmpSaleSum AS SaleSum
+                            LEFT JOIN tmpSummIncomePayment ON tmpSummIncomePayment.OperDate >= SaleSum.OperDate
+                            LEFT JOIN tmpSummIncomeNotPay ON 1 = 1
+                       GROUP BY SaleSum.OperDate
+                      )
 
     SELECT COALESCE (BankAccount.OperDate, SaleSum.OperDate)::TDateTime                  AS OperDate
          , (COALESCE(SaleSum.SummaSale, 0) + COALESCE(ChangeSum.SummChange, 0))::TFloat  AS SummaSale
@@ -421,11 +452,14 @@ BEGIN
          , (COALESCE(SaleSum.SummaSale, 0) + COALESCE(ChangeSum.SummChange, 0) - 
            COALESCE(BankAccount.SummaBankAccount, 0))::TFloat                            AS SummaDelta
          , SaleSum.SaldoSum
+         , SummPayment.SummaNoPay::TFloat                                                AS SummaNoPay
     FROM tmpSaleSum AS SaleSum
         
          FULL JOIN tmpBankAccountSum AS BankAccount ON BankAccount.OperDate = SaleSum.OperDate
         
          LEFT JOIN tmpChangeSum AS ChangeSum ON ChangeSum.OperDate = COALESCE (BankAccount.OperDate, SaleSum.OperDate)
+         
+         LEFT JOIN tmpSummPayment AS SummPayment ON SummPayment.OperDate = COALESCE (BankAccount.OperDate, SaleSum.OperDate)
          
     WHERE COALESCE (BankAccount.OperDate, SaleSum.OperDate) < CURRENT_DATE
          
@@ -448,3 +482,6 @@ $BODY$
 -- BEGIN TRANSACTION;
 -- select * from gpReport_FinancialMonitoring(inStartDate := ('01.12.2021')::TDateTime , inEndDate := ('31.12.2021')::TDateTime ,  inSession := '3');
 -- COMMIT TRANSACTION;
+
+
+select * from gpReport_FinancialMonitoring(inStartDate := ('01.02.2023')::TDateTime , inEndDate := ('17.02.2023')::TDateTime ,  inSession := '3');

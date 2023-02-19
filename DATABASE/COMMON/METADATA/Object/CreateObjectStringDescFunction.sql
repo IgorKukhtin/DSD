@@ -1524,9 +1524,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_IdSP() RETURNS Integer AS $BODY
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Goods_IdSP', zc_Object_Goods(), 'ID лікарського засобу в СП' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_IdSP');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_CashSettings_SendCashErrorTelId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashSettings_SendCashErrorTelId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_CashSettings_SendCashErrorTelId', zc_Object_CashSettings(), 'ID в телеграм для отправки ошибок на кассах' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashSettings_SendCashErrorTelId');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 19.02.23                                                                                                         * zc_ObjectString_CashSettings_SendCashErrorTelId
  27.01.23         * zc_ObjectString_Partner_Movement
  14.11.22         * zc_ObjectString_MemberReport_Comment
  31.10.22                                                                                                         * zc_ObjectString_Goods_IdSP

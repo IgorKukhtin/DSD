@@ -404,8 +404,8 @@ inherited PromoUnitForm: TPromoUnitForm
           Action = actRefresh
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1076#1072#1085#1085#1099#1093' '#1074' '#1090#1077#1082#1091#1097#1080#1081' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1083#1072#1085' '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1083#1072#1085' '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 41
     end
     object actExecuteDialogKoeff: TExecuteDialog
@@ -476,6 +476,21 @@ inherited PromoUnitForm: TPromoUnitForm
         #1057#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1073#1086#1085#1091#1089#1099' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072'? '#1042#1089#1077' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1074#1074#1077#1076 +
         #1077#1085#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' '#1073#1091#1076#1091#1090' '#1091#1090#1077#1088#1103#1085#1099'. '
     end
+    object actLoadPreviousMonth: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spLoadPreviousMonth
+      StoredProcList = <
+        item
+          StoredProc = spLoadPreviousMonth
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1083#1072#1085' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1083#1072#1085' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072
+      ImageIndex = 30
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1083#1072#1085' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072'?'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_PromoUnit'
@@ -535,6 +550,14 @@ inherited PromoUnitForm: TPromoUnitForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -583,6 +606,10 @@ inherited PromoUnitForm: TPromoUnitForm
     end
     object dxBarButton1: TdxBarButton
       Action = actUpdateBonus
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actLoadPreviousMonth
       Category = 0
     end
   end
@@ -1168,5 +1195,22 @@ inherited PromoUnitForm: TPromoUnitForm
     PackSize = 1
     Left = 798
     Top = 312
+  end
+  object spLoadPreviousMonth: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_PromoUnit_PreviousMonth'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 678
+    Top = 304
   end
 end

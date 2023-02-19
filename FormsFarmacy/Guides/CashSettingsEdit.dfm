@@ -22,19 +22,15 @@ object CashSettingsEditForm: TCashSettingsEditForm
     Width = 898
     Height = 507
     Align = alClient
-    TabOrder = 4
+    TabOrder = 3
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ExplicitLeft = 43
-    ExplicitTop = 50
-    ExplicitHeight = 624
     ClientRectBottom = 507
     ClientRectRight = 898
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080
       ImageIndex = 0
-      ExplicitHeight = 641
       object cxLabel1: TcxLabel
         Left = 14
         Top = 3
@@ -49,7 +45,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
       end
       object cxLabel22: TcxLabel
         Left = 529
-        Top = 44
+        Top = 3
         Caption = #1058#1086#1082#1077#1085' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1073#1086#1090#1072
       end
       object edShareFromPriceCode: TcxTextEdit
@@ -66,7 +62,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
       end
       object edTelegramBotToken: TcxTextEdit
         Left = 529
-        Top = 64
+        Top = 23
         TabOrder = 5
         Width = 349
       end
@@ -497,11 +493,21 @@ object CashSettingsEditForm: TCashSettingsEditForm
         TabOrder = 62
         Width = 293
       end
+      object edSendCashErrorTelId: TcxTextEdit
+        Left = 529
+        Top = 64
+        TabOrder = 63
+        Width = 349
+      end
+      object cxLabel40: TcxLabel
+        Left = 529
+        Top = 44
+        Caption = 'ID '#1074' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1086#1096#1080#1073#1086#1082' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+      end
     end
     object cxTabSheet2: TcxTabSheet
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1057#1059#1053
       ImageIndex = 1
-      ExplicitHeight = 641
       object cbEliminateColdSUN: TcxCheckBox
         Left = 535
         Top = 71
@@ -758,7 +764,6 @@ object CashSettingsEditForm: TCashSettingsEditForm
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 5
-    ExplicitTop = 600
     object cxButton1: TcxButton
       Left = 224
       Top = 6
@@ -1295,10 +1300,18 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSendCashErrorTelId'
+        Value = Null
+        Component = edSendCashErrorTelId
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 696
-    Top = 42
+    Top = 34
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_CashSettings'
@@ -1700,14 +1713,21 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Component = cbOnlyColdSUA
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SendCashErrorTelId'
+        Value = Null
+        Component = edSendCashErrorTelId
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 608
-    Top = 34
+    Left = 616
+    Top = 26
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 792
-    Top = 41
+    Top = 33
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1721,8 +1741,8 @@ object CashSettingsEditForm: TCashSettingsEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 520
-    Top = 42
+    Left = 512
+    Top = 34
   end
   object FormParams: TdsdFormParams
     Params = <

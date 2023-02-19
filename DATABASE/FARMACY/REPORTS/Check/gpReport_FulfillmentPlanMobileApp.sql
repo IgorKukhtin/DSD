@@ -198,7 +198,8 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowPlanEmployeeUser
                                      ON ObjectBoolean_ShowPlanEmployeeUser.ObjectId = MovPlan.UnitId
                                     AND ObjectBoolean_ShowPlanEmployeeUser.DescId = zc_ObjectBoolean_Unit_ShowPlanEmployeeUser()
-             
+
+        WHERE (tmpMovFact.UserId  = inUserId OR COALESCE (inUserId, 0) = 0)             
         ORDER BY Object_Unit.ValueData , Object_User.ValueData
         ;
 
@@ -215,4 +216,4 @@ ALTER FUNCTION gpReport_Check_TabletkiRecreate (TDateTime, TDateTime, Integer, T
 */            
 
 -- 
-select * from gpReport_FulfillmentPlanMobileApp (('01.02.2023')::TDateTime, 0, 0, '3');
+select * from gpReport_FulfillmentPlanMobileApp (('01.02.2023')::TDateTime, 0, 5294897, '3');

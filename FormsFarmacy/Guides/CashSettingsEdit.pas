@@ -148,6 +148,8 @@ type
     Panel1: TPanel;
     cbOnlyColdSUA: TcxCheckBox;
     cbEliminateColdSUA: TcxCheckBox;
+    edSendCashErrorTelId: TcxTextEdit;
+    cxLabel40: TcxLabel;
   private
     { Private declarations }
   public
