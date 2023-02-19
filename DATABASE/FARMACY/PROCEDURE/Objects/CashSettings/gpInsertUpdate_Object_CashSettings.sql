@@ -4,7 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, B
                                                            TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TFloat, Integer, Boolean, 
                                                            Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TFloat, Integer, 
                                                            Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, Integer, TFloat, TFloat, Boolean, 
-                                                           TFloat, TFloat, Integer, Boolean, TVarChar);
+                                                           TFloat, TFloat, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, 
+                                                           Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -64,6 +65,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inisOnlyColdSUN3             Boolean   ,     -- Только по Холоду Э-СУН
     IN inisOnlyColdSUN4             Boolean   ,     -- Только по Холоду СУН ПИ
     IN inisOnlyColdSUA              Boolean   ,     -- Только по Холоду СУA
+    IN inSendCashErrorTelId         TVarChar  ,     -- ID в телеграм для отправки ошибок на кассах
+
     IN inSession                    TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -160,6 +163,8 @@ BEGIN
 
    -- сохранили Токен телеграм бота
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_CashSettings_TelegramBotToken(), vbID, inTelegramBotToken);
+   -- ID в телеграм для отправки ошибок на кассах
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_CashSettings_SendCashErrorTelId(), vbID, inSendCashErrorTelId);
 
       -- сохранили Процент от продажи страховым компаниям для з/п фармацевтам
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_PercentIC(), vbID, inPercentIC);

@@ -1011,6 +1011,8 @@ type
     N373: TMenuItem;
     acTReport_FulfillmentPlanMobileApp: TdsdOpenForm;
     N374: TMenuItem;
+    acTReport_FulfillmentPlanMobileAppUser: TdsdOpenForm;
+    N375: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

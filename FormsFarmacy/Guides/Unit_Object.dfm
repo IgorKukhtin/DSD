@@ -1131,6 +1131,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 84
           end
+          object isSendErrorTelegramBot: TcxGridDBColumn
+            Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1095#1077#1082#1086#1074' '#1074' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1073#1086#1090
+            DataBinding.FieldName = 'isSendErrorTelegramBot'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1095#1077#1082#1086#1074' '#1089#1077#1088#1074#1080#1089#1086#1084' '#1074' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1073#1086#1090
+            Options.Editing = False
+            Width = 103
+          end
         end
       end
     end
@@ -4380,6 +4389,37 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actUpdate_isReplaceSte2ListDif'
     end
+    object mactUpdate_SendErrorTelegramBot: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_SendErrorTelegramBot
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1095#1077#1082#1086#1074' '#1074' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1073#1086 +
+        #1090'"?'
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1095#1077#1082#1086#1074' '#1074' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1073#1086 +
+        #1090'"'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1095#1077#1082#1086#1074' '#1074' '#1090#1077#1083#1077#1075#1088#1072#1084' '#1073#1086 +
+        #1090'"'
+      ImageIndex = 79
+    end
+    object actUpdate_SendErrorTelegramBot: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SendErrorTelegramBot
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SendErrorTelegramBot
+        end>
+      Caption = 'actUpdate_SendErrorTelegramBot'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -5191,6 +5231,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton41'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -5370,6 +5414,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton40: TdxBarButton
       Action = mactUpdate_isReplaceSte2ListDif
+      Category = 0
+    end
+    object dxBarButton41: TdxBarButton
+      Action = mactUpdate_SendErrorTelegramBot
       Category = 0
     end
   end
@@ -8592,8 +8640,8 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 80
-    Top = 475
+    Left = 56
+    Top = 459
   end
   object spUpdate_isShowActiveAlerts: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isShowActiveAlerts'
@@ -8698,5 +8746,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 568
     Top = 547
+  end
+  object spUpdate_SendErrorTelegramBot: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_SendErrorTelegramBot'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSendErrorTelegramBot'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSendErrorTelegramBot'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 176
+    Top = 475
   end
 end
