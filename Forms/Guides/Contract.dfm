@@ -2110,6 +2110,22 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_CCP_Connected_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_CCP_Connected_No'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenFormCCPartner'
         end>
     end
@@ -2155,6 +2171,14 @@
       Action = actShowAll_CCPartner
       Category = 0
     end
+    object bbUpdate_CCP_Connected_Yes: TdxBarButton
+      Action = macUpdate_CCP_Connected_Yes
+      Category = 0
+    end
+    object bbUpdate_CCP_Connected_No: TdxBarButton
+      Action = macUpdate_CCP_Connected_No
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -2170,6 +2194,19 @@
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088')>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088')>'
       ImageIndex = 0
+    end
+    object actRefreshCCPartner: TdsdDataSetRefresh
+      Category = 'CCPartner'
+      MoveParams = <>
+      StoredProc = spSelectCCPartner
+      StoredProcList = <
+        item
+          StoredProc = spSelectCCPartner
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
     end
     object OpenForm_ContractPriceList: TdsdOpenForm
       Category = 'ContractPriceList'
@@ -2308,6 +2345,21 @@
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object macUpdate_CCP_Connected_No: TMultiAction
+      Category = 'CCPartner'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_CCP_Connected_list_No
+        end
+        item
+          Action = actRefreshCCPartner
+        end>
+      QuestionBeforeExecute = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1042#1057#1045' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1058#1058' '#1086#1090' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072'?'
+      Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1042#1057#1045' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1058#1058' '#1086#1090' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1042#1057#1045' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1058#1058' '#1086#1090' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+      ImageIndex = 52
     end
     object macUpdateStateKind_Closed: TMultiAction
       Category = 'Close'
@@ -3815,6 +3867,57 @@
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object macUpdate_CCP_Connected_list_No: TMultiAction
+      Category = 'CCPartner'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = dsdSetErasedCCPartner
+        end>
+      View = cxGridDBTableViewCCPartner
+      Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1042#1057#1045' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1058#1058' '#1082' '#1091#1089#1083#1086#1074#1080#1102' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1042#1057#1045' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1058#1058' '#1082' '#1091#1089#1083#1086#1074#1080#1102' '#1076#1086#1075#1086#1074#1086#1088#1072
+      ImageIndex = 52
+    end
+    object actUpdate_CCP_Connected_Yes: TdsdExecStoredProc
+      Category = 'CCPartner'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CCP_Connected_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CCP_Connected_Yes
+        end>
+      Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072
+      Hint = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072
+    end
+    object macUpdate_CCP_Connected_list_Yes: TMultiAction
+      Category = 'CCPartner'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_CCP_Connected_Yes
+        end>
+      View = cxGridDBTableViewCCPartner
+      Caption = #1055#1086#1076#1082#1083#1102#1095#1080#1090#1100' '#1042#1057#1045' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1058#1058' '#1082' '#1091#1089#1083#1086#1074#1080#1102' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1055#1086#1076#1082#1083#1102#1095#1080#1090#1100' '#1042#1057#1045' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1058#1058' '#1082' '#1091#1089#1083#1086#1074#1080#1102' '#1076#1086#1075#1086#1074#1086#1088#1072
+      ImageIndex = 76
+    end
+    object macUpdate_CCP_Connected_Yes: TMultiAction
+      Category = 'CCPartner'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_CCP_Connected_list_Yes
+        end
+        item
+          Action = actRefreshCCPartner
+        end>
+      QuestionBeforeExecute = #1055#1086#1076#1082#1083#1102#1095#1080#1090#1100' '#1042#1057#1045' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1058#1058' '#1082' '#1091#1089#1083#1086#1074#1080#1102' '#1076#1086#1075#1086#1074#1086#1088#1072'?'
+      Caption = #1055#1086#1076#1082#1083#1102#1095#1080#1090#1100' '#1042#1057#1045' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1058#1058' '#1082' '#1091#1089#1083#1086#1074#1080#1102' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1055#1086#1076#1082#1083#1102#1095#1080#1090#1100' '#1042#1057#1045' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1058#1058' '#1082' '#1091#1089#1083#1086#1074#1080#1102' '#1076#1086#1075#1086#1074#1086#1088#1072
+      ImageIndex = 76
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Contract'
@@ -4898,5 +5001,46 @@
     PackSize = 1
     Left = 352
     Top = 184
+  end
+  object spUpdate_CCP_Connected_Yes: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ContractConditionPartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = CCPartnerCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = CCPartnerCDS
+        ComponentItem = 'Code'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractConditionId'
+        Value = Null
+        Component = CDSContractCondition
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = CCPartnerCDS
+        ComponentItem = 'PartnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 576
+    Top = 448
   end
 end
