@@ -4,7 +4,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -57
   ExplicitWidth = 1237
   ExplicitHeight = 744
   PixelsPerInch = 96
@@ -1121,6 +1120,28 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       FileNamePrefixParam.DataType = ftString
       FileNamePrefixParam.MultiSelectSeparator = ','
       ExportType = spefExportToDbf
+      FieldDefs = <
+        item
+          Name = 'ACCT_CARD'
+          DataType = ftString
+          Size = 29
+        end
+        item
+          Name = 'FIO'
+          DataType = ftString
+          Size = 50
+        end
+        item
+          Name = 'ID_CODE'
+          DataType = ftString
+          Size = 10
+        end
+        item
+          Name = 'SUMA'
+          DataType = ftBCD
+          Precision = 2
+          Size = 10
+        end>
       Left = 1192
       Top = 216
     end
@@ -1414,6 +1435,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       FileNamePrefixParam.Value = ''
       FileNamePrefixParam.DataType = ftString
       FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
       Left = 1192
       Top = 216
     end
@@ -1632,6 +1654,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       FileNamePrefixParam.Value = ''
       FileNamePrefixParam.DataType = ftString
       FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
       Left = 1072
       Top = 240
     end

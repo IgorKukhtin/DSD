@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_export_dbf(
 RETURNS TABLE (ACCT_CARD   VarChar (29)
              , FIO         VarChar (50)
              , ID_CODE     VarChar (10)
-             , SUMA        NUMERIC (10,2)
+             , SUMA        NUMERIC (10,2)                                   
              )
 AS
 $BODY$
