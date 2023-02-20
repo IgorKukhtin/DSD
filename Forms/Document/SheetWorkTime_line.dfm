@@ -117,7 +117,7 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     Width = 971
     Height = 254
     Align = alClient
-    TabOrder = 3
+    TabOrder = 1
     LookAndFeel.NativeStyle = False
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
@@ -390,77 +390,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       DataController.Filter.TranslateBetween = True
       DataController.Filter.TranslateIn = True
       DataController.Filter.TranslateLike = True
-      DataController.Summary.DefaultGroupSummaryItems = <
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.###;-,0.###; ;'
-          Kind = skSum
-        end>
-      DataController.Summary.FooterSummaryItems = <
-        item
-          Format = ',0.###;-,0.###; ;'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end>
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsData.Appending = True
+      OptionsData.CancelOnExit = False
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsView.Footer = True
@@ -573,7 +509,7 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
-      object Color_Calc_71: TcxGridDBColumn
+      object Color_Calc_7: TcxGridDBColumn
         DataBinding.FieldName = 'Color_Calc_7'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -954,8 +890,6 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid1
-    ExplicitLeft = 1
-    ExplicitTop = 338
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1313,7 +1247,7 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     Images = dmMain.ImageList
     Left = 403
     Top = 143
-    object actUpdateMasterDS: TdsdUpdateDataSet
+    object actUpdateDayDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1322,8 +1256,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         item
           StoredProc = spInsertUpdateMI
         end>
-      Caption = 'actUpdateMasterDS'
-      DataSource = MasterDS
+      Caption = 'actUpdateDayDS'
+      DataSource = DayDS
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -1445,7 +1379,7 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
           Action = actOpenWorkTimeKindForm
         end
         item
-          Action = actUpdateMasterDS
+          Action = actUpdateDayDS
         end>
     end
     object actInsert: TdsdInsertUpdateAction
@@ -2062,16 +1996,20 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioValue'
+        Name = 'ioShortName_1'
         Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_1'
         DataType = ftString
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioTypeId'
+        Name = 'inWorkTimeKindId_1'
         Value = Null
-        ParamType = ptInputOutput
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_1'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -2083,14 +2021,6 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outAmountHours'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountHours'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inisPersonalGroup'
         Value = False
         DataType = ftBoolean
@@ -2098,8 +2028,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 414
-    Top = 247
+    Left = 254
+    Top = 359
   end
   object HeaderCDS: TClientDataSet
     Aggregates = <>
@@ -2143,8 +2073,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 368
-    Top = 320
+    Left = 400
+    Top = 296
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMI_SheetWorkTime_SetErased'
@@ -2325,8 +2255,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 872
-    Top = 104
+    Left = 864
+    Top = 112
   end
   object spUpdate_CheckedPersonal: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_SheetWorkTime_Checked'
@@ -2567,11 +2497,147 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         ColorColumn = ShortName_4
         BackGroundValueColumn = Color_Calc_4
         ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_5
+        BackGroundValueColumn = Color_Calc_5
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_6
+        BackGroundValueColumn = Color_Calc_6
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_7
+        BackGroundValueColumn = Color_Calc_7
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_8
+        BackGroundValueColumn = Color_Calc_8
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_9
+        BackGroundValueColumn = Color_Calc_9
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_10
+        BackGroundValueColumn = Color_Calc_10
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_11
+        BackGroundValueColumn = Color_Calc_11
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_12
+        BackGroundValueColumn = Color_Calc_12
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_13
+        BackGroundValueColumn = Color_Calc_13
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_14
+        BackGroundValueColumn = Color_Calc_14
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_15
+        BackGroundValueColumn = Color_Calc_15
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_16
+        BackGroundValueColumn = Color_Calc_16
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_17
+        BackGroundValueColumn = Color_Calc_17
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_18
+        BackGroundValueColumn = Color_Calc_18
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_19
+        BackGroundValueColumn = Color_Calc_19
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_20
+        BackGroundValueColumn = Color_Calc_20
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_21
+        BackGroundValueColumn = Color_Calc_21
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_22
+        BackGroundValueColumn = Color_Calc_22
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_23
+        BackGroundValueColumn = Color_Calc_23
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_24
+        BackGroundValueColumn = Color_Calc_24
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_25
+        BackGroundValueColumn = Color_Calc_25
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_26
+        BackGroundValueColumn = Color_Calc_26
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_27
+        BackGroundValueColumn = Color_Calc_27
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_28
+        BackGroundValueColumn = Color_Calc_28
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_29
+        BackGroundValueColumn = Color_Calc_29
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_30
+        BackGroundValueColumn = Color_Calc_30
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_31
+        BackGroundValueColumn = Color_Calc_31
+        ColorValueList = <>
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    KeepSelectColor = True
     PropertiesCellList = <>
     Left = 160
     Top = 280

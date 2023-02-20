@@ -45,7 +45,7 @@ type
     edUnit: TcxButtonEdit;
     cxLabel4: TcxLabel;
     GuidesUnit: TdsdGuides;
-    actUpdateMasterDS: TdsdUpdateDataSet;
+    actUpdateDayDS: TdsdUpdateDataSet;
     spInsertUpdateMI: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;

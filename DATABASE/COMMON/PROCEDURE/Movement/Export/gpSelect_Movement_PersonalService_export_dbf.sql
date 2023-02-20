@@ -11,10 +11,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_export_dbf(
     --IN inOperDate             TDateTime,
     IN inSession              TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (CARDIBAN TVarChar
-             , FIO TVarChar
-             , ID_CODE TVarChar
-             , SUMA TFloat
+RETURNS TABLE (ACCT_CARD   VarChar (29)
+             , FIO         VarChar (50)
+             , ID_CODE     VarChar (10)
+             , SUMA        NUMERIC (10,2)
              )
 AS
 $BODY$
@@ -119,7 +119,7 @@ BEGIN
              , gpSelect.card         ::TVarChar AS CARDIBAN   -- Номер карточного (или другого) счёта
              , gpSelect.PersonalName ::TVarChar AS FIO        -- Фамилия сотрудника - Прізвище співробітника
              , gpSelect.INN          ::TVarChar AS ID_CODE    -- Табельный номер сотрудника
-             , CAST (COALESCE (gpSelect.SummCardRecalc, 0) AS NUMERIC (16, 2))  :: TFloat AS SUMA        -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
+             , CAST (COALESCE (gpSelect.SummCardRecalc, 0) AS NUMERIC (10, 2))   AS SUMA        -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
         FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId 
                                                   , inShowAll    := FALSE
                                                   , inIsErased   := FALSE
@@ -136,10 +136,10 @@ BEGIN
      -- Результат
      RETURN QUERY   
      
-     SELECT _tmpResult.CARDIBAN
-          , _tmpResult.FIO
-          , _tmpResult.ID_CODE
-          , _tmpResult.SUMA::TFloat
+     SELECT _tmpResult.CARDIBAN ::VarChar (29) AS ACCT_CARD
+          , _tmpResult.FIO      ::VarChar (50)
+          , _tmpResult.ID_CODE  ::VarChar (10)
+          , _tmpResult.SUMA     ::NUMERIC (10,2)
      FROM _tmpResult
      ORDER BY NPP; 
 
