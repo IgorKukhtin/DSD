@@ -283,6 +283,15 @@ BEGIN
                   AND vbOperDate_find >= OH_JuridicalDetails_car.StartDate
                   AND vbOperDate_find <  OH_JuridicalDetails_car.EndDate
                   )
+
+            , tmpOH_Juridical_Basis AS (SELECT *
+                                        FROM ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails
+                                        WHERE OH_JuridicalDetails.JuridicalId = zc_Juridical_Basis()
+                                       AND vbOperDate_find >= OH_JuridicalDetails.StartDate
+                                       AND vbOperDate_find <  OH_JuridicalDetails.EndDate
+                                       )                  
+                  
+                  
        --          
        SELECT 
              Movement.InvNumber                         AS InvNumber_Sale
@@ -322,10 +331,11 @@ BEGIN
                   END
                 ) 
                ELSE 
-                 CASE WHEN vbDescId = zc_Movement_SendOnPrice() AND ObjectString_Unit_Address_from.ValueData <> '' AND ObjectString_Unit_Address_from.ValueData NOT ILIKE '% - O - %'
+                 /*CASE WHEN vbDescId = zc_Movement_SendOnPrice() AND ObjectString_Unit_Address_from.ValueData <> '' AND ObjectString_Unit_Address_from.ValueData NOT ILIKE '% - O - %'
                            THEN ObjectString_Unit_Address_from.ValueData
                       ELSE OH_JuridicalDetails_From.JuridicalAddress
-                 END 
+                 END */
+                 OH_Juridical_Basis.JuridicalAddress
              END   :: TVarChar            AS PartnerAddress_To
 
            /*, (CASE WHEN vbDescId = zc_Movement_SendOnPrice() AND ObjectString_Unit_Address_from.ValueData <> '' AND ObjectString_Unit_Address_from.ValueData NOT ILIKE '% - O - %'
@@ -557,6 +567,8 @@ BEGIN
                    ON OH_JuridicalDetails_car.JuridicalId = vbJuricalId_car
                   AND vbOperDate_find >= OH_JuridicalDetails_car.StartDate
                   AND vbOperDate_find <  OH_JuridicalDetails_car.EndDate
+
+            LEFT JOIN tmpOH_Juridical_Basis AS OH_Juridical_Basis ON vbMovementDescId = zc_Movement_ReturnIn()
 
             LEFT JOIN tmpPackage ON 1=1
 
