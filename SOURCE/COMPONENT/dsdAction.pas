@@ -788,6 +788,7 @@ type
     sdSaveFile: TSaveDialog;
     FExportType: TspExportToFile;
     FFieldDefsCDS: TClientDataSet;
+    FCreateNewFile: boolean;
     //FIncludeFieldNames: Boolean;
 
     procedure SetdsdStoredProcName(Value: TdsdStoredProc);
@@ -826,8 +827,10 @@ type
     property ShowSaveDialog : Boolean read FShowSaveDialog write FShowSaveDialog default True;
     // Формат файла
     property ExportType: TspExportToFile read FExportType write FExportType default spefExportToText;
-    // Jgbcfntkm gjktq
+    // Описатель структурі DBF
     property FieldDefs: TFieldDefs read GetFieldDefs write SetFieldDefs;
+    // Всегда создавать новій файл
+    property CreateNewFile: boolean read FCreateNewFile write FCreateNewFile default True;
   end;
 
   TdsdPartnerMapAction = class(TdsdOpenForm, IFormAction)
@@ -4549,6 +4552,7 @@ begin
   FFieldDefsCDS := TClientDataSet.Create(Nil);
 
   FShowSaveDialog := True;
+  FCreateNewFile := True;
   FExportType := spefExportToText;
 end;
 
@@ -4625,31 +4629,20 @@ begin
   end;
 
   FdsdStoredProcName.Execute();
+
+  if FCreateNewFile and FileExists(FilePaths + '\' + FilenamePrefix + FileNames) then
+    DeleteFile(FilePaths + '\' + FilenamePrefix + FileNames);
+
   if FExportType = spefExportToDbf then
   begin
 
-     if FieldDefs.Count > 0 then
-     begin
-
-       with TFileExternalSave.Create(FieldDefs,
-                                     TdsdStoredProc(FdsdStoredProcName).DataSet,
-                                     FilePaths + '\' + FilenamePrefix + FileNames, true) do
-       try
-         Execute(FileNames);
-       finally
-         Free
-       end;
-     end else
-     begin
-
-       with TFileExternalSave.Create(TdsdStoredProc(FdsdStoredProcName).DataSet.FieldDefs,
-                                     TdsdStoredProc(FdsdStoredProcName).DataSet,
-                                     FilePaths + '\' + FilenamePrefix + FileNames, true) do
-       try
-         Execute(FileNames);
-       finally
-         Free
-       end;
+     with TFileExternalSave.Create(FieldDefs,
+                                   TdsdStoredProc(FdsdStoredProcName).DataSet,
+                                   FilePaths + '\' + FilenamePrefix + FileNames, true) do
+     try
+       Execute(FileNames);
+     finally
+       Free
      end;
   end else
   begin

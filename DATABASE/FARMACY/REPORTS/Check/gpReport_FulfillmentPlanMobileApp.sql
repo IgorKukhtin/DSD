@@ -82,9 +82,18 @@ BEGIN
                                              ON MILinkObject_Unit.MovementItemId = MovementItemMaster.Id
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
 
+           LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                ON ObjectLink_User_Member.ObjectId = MovementItemMaster.ObjectId
+                               AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+
+           LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                                ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                               AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+
      WHERE Movement.OperDate = date_trunc('MONTH', inOperDate) - INTERVAL '1 MONTH'
        AND Movement.DescId = zc_Movement_EmployeeSchedule()
        AND Movement.StatusId <> zc_Enum_Status_Erased()
+       AND ObjectLink_Member_Position.ChildObjectId = 1672498
      GROUP BY MILinkObject_Unit.ObjectId;
           
      ANALYSE tmpESCount;
@@ -216,4 +225,4 @@ ALTER FUNCTION gpReport_Check_TabletkiRecreate (TDateTime, TDateTime, Integer, T
 */            
 
 -- 
-select * from gpReport_FulfillmentPlanMobileApp (('01.02.2023')::TDateTime, 0, 5294897, '3');
+select * from gpReport_FulfillmentPlanMobileApp (('01.02.2023')::TDateTime, 0, 0, '3');

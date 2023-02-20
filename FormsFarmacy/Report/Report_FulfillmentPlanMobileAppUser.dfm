@@ -1,5 +1,5 @@
 inherited Report_FulfillmentPlanMobileAppUserForm: TReport_FulfillmentPlanMobileAppUserForm
-  Caption = #1054#1090#1095#1077#1090' <'#1054#1090#1089#1077#1090' '#1087#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1086#1073#1080#1083#1100#1085#1086#1084#1091' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1054#1090#1095#1077#1090' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1086#1073#1080#1083#1100#1085#1086#1084#1091' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102'>'
   ClientHeight = 561
   ClientWidth = 1202
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -274,7 +274,7 @@ inherited Report_FulfillmentPlanMobileAppUserForm: TReport_FulfillmentPlanMobile
             Width = 246
           end
           object CountChech: TcxGridDBColumn
-            Caption = #1042#1089#1077#1075#1086' '#1095#1077#1082#1086#1074'. '#1075#1088#1085'.'
+            Caption = #1042#1089#1077#1075#1086' '#1095#1077#1082#1086#1074' '#1087#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094'. '#1075#1088#1085'.'
             DataBinding.FieldName = 'CountChech'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -284,7 +284,7 @@ inherited Report_FulfillmentPlanMobileAppUserForm: TReport_FulfillmentPlanMobile
             Width = 107
           end
           object CountSite: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1095#1077#1082#1086#1074' '#1087#1086' '#1089#1072#1081#1090#1091'. '#1075#1088#1085'.'
+            Caption = #1057#1091#1084#1084#1072' '#1095#1077#1082#1086#1074' '#1087#1086' '#1089#1072#1081#1090#1091' '#1087#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094'. '#1075#1088#1085'.'
             DataBinding.FieldName = 'CountSite'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -309,6 +309,7 @@ inherited Report_FulfillmentPlanMobileAppUserForm: TReport_FulfillmentPlanMobile
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Styles.Content = dmMain.cxRemainsContentStyle
             Width = 80
           end
           object UserName: TcxGridDBColumn
@@ -320,7 +321,7 @@ inherited Report_FulfillmentPlanMobileAppUserForm: TReport_FulfillmentPlanMobile
             Width = 204
           end
           object CountChechUser: TcxGridDBColumn
-            Caption = #1042#1089#1077#1075#1086' '#1095#1077#1082#1086#1074' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091'. '#1075#1088#1085'.'
+            Caption = #1042#1089#1077#1075#1086' '#1095#1077#1082#1086#1074' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091'  '#1090#1077#1082#1091#1097#1080#1081' '#1084#1077#1089#1103#1094'. '#1075#1088#1085'.'
             DataBinding.FieldName = 'CountChechUser'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -330,7 +331,7 @@ inherited Report_FulfillmentPlanMobileAppUserForm: TReport_FulfillmentPlanMobile
             Width = 97
           end
           object CountMobileUser: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1095#1077#1082'. '#1087#1086' '#1087#1088#1080#1083#1086#1078'. '#1075#1088#1085'.'
+            Caption = #1057#1091#1084#1084#1072' '#1095#1077#1082'. '#1087#1086' '#1087#1088#1080#1083#1086#1078' '#1090#1077#1082#1091#1097#1080#1081' '#1084#1077#1089#1103#1094'. '#1075#1088#1085'.'
             DataBinding.FieldName = 'CountMobileUser'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -347,6 +348,7 @@ inherited Report_FulfillmentPlanMobileAppUserForm: TReport_FulfillmentPlanMobile
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Styles.Content = dmMain.cxRemainsContentStyle
             Width = 76
           end
           object PenaltiMobApp: TcxGridDBColumn
