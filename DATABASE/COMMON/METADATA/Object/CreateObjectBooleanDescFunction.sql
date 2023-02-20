@@ -1376,11 +1376,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_OnlyColdSUA() RETURNS I
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_OnlyColdSUA', 'Только по Холоду СУA' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_OnlyColdSUA');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_SendErrorTelegramBot() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SendErrorTelegramBot'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_SendErrorTelegramBot', 'Отправлять ошибки отправки чеков в телеграм бот' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_SendErrorTelegramBot');
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 19.02.23                                                                                                          * zc_ObjectBoolean_Unit_SendErrorTelegramBot
  16.02.23                                                                                                          * zc_ObjectBoolean_CashSettings_OnlyColdSUN
  18.01.23                                                                                                          * zc_ObjectBoolean_PartionDateWages_NotCharge
  13.01.23                                                                                                          * zc_ObjectBoolean_CashSettings_ShoresSUN

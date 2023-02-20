@@ -31,7 +31,7 @@ BEGIN
 
      CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
      CREATE TEMP TABLE tmpChildReceiptTable (ReceiptId_parent Integer, ReceiptId_from Integer, ReceiptId Integer, GoodsId_in Integer, GoodsKindId_in Integer, Amount_in TFloat
-                                           , Amount_in_calc TFloat, Amount_out_calc TFloat
+                                           , ReceiptId_calc Integer, Amount_in_calc TFloat, Amount_out_calc TFloat
                                            , ReceiptChildId integer, GoodsId_out Integer, GoodsKindId_out Integer, Amount_out TFloat, Amount_out_start TFloat, isStart Integer, isCost Boolean
                                            , Price1 TFloat, Price2 TFloat, Price3 TFloat
                                            , Price1_calc TFloat, Price2_calc TFloat, Price3_calc TFloat
@@ -73,12 +73,17 @@ BEGIN
    END IF;
 
      -- ВСЕ рецептуры
-     INSERT INTO tmpChildReceiptTable (ReceiptId_parent, ReceiptId_from, ReceiptId, GoodsId_in, GoodsKindId_in, Amount_in, Amount_in_calc, Amount_out_calc
+     INSERT INTO tmpChildReceiptTable (ReceiptId_parent, ReceiptId_from, ReceiptId, GoodsId_in, GoodsKindId_in, Amount_in, ReceiptId_calc, Amount_in_calc, Amount_out_calc
                                      , ReceiptChildId, GoodsId_out, GoodsKindId_out, Amount_out, Amount_out_start, isStart, isCost
                                      , Price1, Price2, Price3, Price1_calc, Price2_calc, Price3_calc
                                       )
           SELECT lpSelect.ReceiptId_parent, lpSelect.ReceiptId_from, lpSelect.ReceiptId, 0 AS GoodsId_in, 0 AS GoodsKindId_in, lpSelect.Amount_in
 
+               , CASE WHEN ObjectLink_Receipt_GoodsKind_parent_two.ChildObjectId = zc_GoodsKind_WorkProgress()
+                           THEN ObjectLink_Receipt_Parent_two.ObjectId
+                      WHEN ObjectLink_Receipt_GoodsKind_parent.ChildObjectId = zc_GoodsKind_WorkProgress()
+                           THEN ObjectLink_Receipt_Parent.ObjectId
+                 END AS ReceiptId_calc
                , CASE WHEN ObjectFloat_Value_find.ValueData > 0 AND ObjectFloat_Value_find.ValueData <> lpSelect.Amount_in AND lpSelect.Amount_in > 0
                            THEN ObjectFloat_Value_find.ValueData
                              / CASE WHEN ObjectLink_Measure.ChildObjectId = ObjectLink_Measure_parent.ChildObjectId
@@ -206,6 +211,11 @@ BEGIN
                                                                        AND PriceList3_gk.GoodsId IS NULL
           GROUP BY lpSelect.ReceiptId_parent, lpSelect.ReceiptId_from, lpSelect.ReceiptId, lpSelect.Amount_in
 
+                 , CASE WHEN ObjectLink_Receipt_GoodsKind_parent_two.ChildObjectId = zc_GoodsKind_WorkProgress()
+                             THEN ObjectLink_Receipt_Parent_two.ObjectId
+                        WHEN ObjectLink_Receipt_GoodsKind_parent.ChildObjectId = zc_GoodsKind_WorkProgress()
+                             THEN ObjectLink_Receipt_Parent.ObjectId
+                   END
                  , CASE WHEN ObjectFloat_Value_find.ValueData > 0 AND ObjectFloat_Value_find.ValueData <> lpSelect.Amount_in AND lpSelect.Amount_in > 0
                              THEN ObjectFloat_Value_find.ValueData
                                / CASE WHEN ObjectLink_Measure.ChildObjectId = ObjectLink_Measure_parent.ChildObjectId
@@ -237,6 +247,7 @@ BEGIN
      WITH  tmpAll AS
            (SELECT tmp.ReceiptId_parent
                  , tmp.ReceiptId
+                 , tmp.ReceiptId_calc
                  , tmp.Amount_in_calc
                  , COALESCE (ObjectLink_Receipt_Goods.ChildObjectId, 0)               AS GoodsId
                  , COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0)           AS GoodsKindId
@@ -262,6 +273,7 @@ BEGIN
 
             FROM (SELECT tmpChildReceiptTable.ReceiptId_parent
                        , tmpChildReceiptTable.ReceiptId
+                       , tmpChildReceiptTable.ReceiptId_calc
                        , tmpChildReceiptTable.Amount_in_calc
 
                        , SUM (tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price1) AS Summ1
@@ -282,6 +294,7 @@ BEGIN
                   WHERE tmpChildReceiptTable.ReceiptId_from = 0
                   GROUP BY tmpChildReceiptTable.ReceiptId_parent
                          , tmpChildReceiptTable.ReceiptId
+                         , tmpChildReceiptTable.ReceiptId_calc
                          , tmpChildReceiptTable.Amount_in_calc
                  ) AS tmp
                  LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
@@ -296,6 +309,7 @@ BEGIN
                  INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = ObjectLink_Receipt_Goods.ChildObjectId
             GROUP BY tmp.ReceiptId_parent
                    , tmp.ReceiptId
+                   , tmp.ReceiptId_calc
                    , tmp.Amount_in_calc
                    , COALESCE (ObjectLink_Receipt_Goods.ChildObjectId, 0)
                    , COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0)
@@ -309,6 +323,7 @@ BEGIN
         , tmpResult AS
            (SELECT tmpAll.ReceiptId_parent
                  , tmpAll.ReceiptId
+                 , tmpAll.ReceiptId_calc
                  , tmpAll.Amount_in_calc
                  , tmpAll.GoodsId
                  , tmpAll.GoodsKindId
@@ -330,6 +345,7 @@ BEGIN
             FROM tmpAll
             GROUP BY tmpAll.ReceiptId_parent
                    , tmpAll.ReceiptId
+                   , tmpAll.ReceiptId_calc
                    , tmpAll.Amount_in_calc
                    , tmpAll.GoodsId
                    , tmpAll.GoodsKindId
@@ -344,6 +360,10 @@ BEGIN
            , ObjectString_Code.ValueData    AS ReceiptCode
            , ObjectString_Comment.ValueData AS Comment
 
+           , Object_Receipt_calc.ObjectCode      AS Code_calc
+           , ObjectString_Code_calc.ValueData    AS ReceiptCode_calc
+           , ObjectString_Comment_calc.ValueData AS Comment_calc
+
            , ObjectFloat_Value.ValueData         AS Amount
            , (ObjectFloat_Value.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) :: TFloat AS Amount_Weight
 
@@ -353,6 +373,10 @@ BEGIN
            , ObjectFloat_TaxExit.ValueData       AS TaxExit
            , ObjectFloat_TaxLoss.ValueData       AS TaxLoss
            , ObjectBoolean_Main.ValueData        AS isMain
+
+           , ObjectFloat_TaxExit_calc.ValueData  AS TaxExit_calc
+           , ObjectFloat_TaxLoss_calc.ValueData  AS TaxLoss_calc
+           , ObjectBoolean_Main_calc.ValueData   AS isMain_calc
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroupAnalyst.ValueData          AS GoodsGroupAnalystName
@@ -456,10 +480,24 @@ BEGIN
                                   AND ObjectString_Comment.DescId = zc_ObjectString_Receipt_Comment()
 
           LEFT JOIN Object AS Object_Receipt_Parent ON Object_Receipt_Parent.Id = tmpResult.ReceiptId_parent
+          LEFT JOIN Object AS Object_Receipt_calc   ON Object_Receipt_calc.Id   = tmpResult.ReceiptId_calc
 
           LEFT JOIN ObjectString AS ObjectString_Code_Parent
                                  ON ObjectString_Code_Parent.ObjectId = Object_Receipt_Parent.Id
-                                AND ObjectString_Code_Parent.DescId = zc_ObjectString_Receipt_Code()
+                                AND ObjectString_Code_Parent.DescId   = zc_ObjectString_Receipt_Code()
+          LEFT JOIN ObjectString AS ObjectString_Code_calc
+                                 ON ObjectString_Code_calc.ObjectId = Object_Receipt_calc.Id
+                                AND ObjectString_Code_calc.DescId   = zc_ObjectString_Receipt_Code()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_TaxExit_calc
+                                  ON ObjectFloat_TaxExit_calc.ObjectId = Object_Receipt_calc.Id
+                                 AND ObjectFloat_TaxExit_calc.DescId   = zc_ObjectFloat_Receipt_TaxExit()
+            LEFT JOIN ObjectFloat AS ObjectFloat_TaxLoss_calc
+                                  ON ObjectFloat_TaxLoss_calc.ObjectId = Object_Receipt_calc.Id
+                                 AND ObjectFloat_TaxLoss_calc.DescId   = zc_ObjectFloat_Receipt_TaxLoss()
+            LEFT JOIN ObjectString AS ObjectString_Comment_calc
+                                   ON ObjectString_Comment_calc.ObjectId = Object_Receipt_calc.Id
+                                  AND ObjectString_Comment_calc.DescId   = zc_ObjectString_Receipt_Comment()
 
           LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_Parent
                                ON ObjectLink_Receipt_Goods_Parent.ObjectId = Object_Receipt_Parent.Id
@@ -483,7 +521,10 @@ BEGIN
 
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Main_Parent
                                   ON ObjectBoolean_Main_Parent.ObjectId = Object_Receipt_Parent.Id
-                                 AND ObjectBoolean_Main_Parent.DescId = zc_ObjectBoolean_Receipt_Main()
+                                 AND ObjectBoolean_Main_Parent.DescId   = zc_ObjectBoolean_Receipt_Main()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Main_calc
+                                  ON ObjectBoolean_Main_calc.ObjectId = Object_Receipt_calc.Id
+                                 AND ObjectBoolean_Main_calc.DescId   = zc_ObjectBoolean_Receipt_Main()
 
           LEFT JOIN (SELECT tmpChildReceiptTable.ReceiptId_parent
                           , tmpChildReceiptTable.ReceiptId

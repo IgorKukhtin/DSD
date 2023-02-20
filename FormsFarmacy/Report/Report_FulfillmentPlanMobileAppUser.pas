@@ -1,4 +1,4 @@
-unit Report_FulfillmentPlanMobileApp;
+unit Report_FulfillmentPlanMobileAppUser;
 
 interface
 
@@ -28,11 +28,8 @@ uses
   cxGridBandedTableView, cxGridDBBandedTableView, cxDBEdit;
 
 type
-  TReport_FulfillmentPlanMobileAppForm = class(TAncestorReportForm)
-    cxLabel3: TcxLabel;
-    ceUnit: TcxButtonEdit;
+  TReport_FulfillmentPlanMobileAppUserForm = class(TAncestorReportForm)
     rdUnit: TRefreshDispatcher;
-    GuidesUnit: TdsdGuides;
     dxBarButton1: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
@@ -56,13 +53,6 @@ type
     CountMobileUser: TcxGridDBColumn;
     UserName: TcxGridDBColumn;
     PenaltiMobApp: TcxGridDBColumn;
-    QuantityMobile: TcxGridDBColumn;
-    isShowPlanEmployeeUser: TcxGridDBColumn;
-    spUpdate_SetShowPlanEmployeeUser: TdsdStoredProc;
-    actUpdateDataSet: TdsdUpdateDataSet;
-    spUpdate_ShowPlanEmployeeUser: TdsdStoredProc;
-    mactUpdate_ShowPlanEmployeeUser: TMultiAction;
-    actUpdate_ShowPlanEmployeeUser: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
   private
     { Private declarations }
@@ -71,7 +61,7 @@ type
   end;
 
 var
-  Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppForm;
+  Report_FulfillmentPlanMobileAppUserForm: TReport_FulfillmentPlanMobileAppUserForm;
 
 implementation
 
@@ -79,5 +69,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_FulfillmentPlanMobileAppForm)
+  RegisterClass(TReport_FulfillmentPlanMobileAppUserForm)
 end.

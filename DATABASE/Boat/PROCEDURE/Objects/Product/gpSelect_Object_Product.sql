@@ -68,11 +68,11 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
                -- ИТОГО Сумма продажи с НДС - без Скидки
              , BasisWVAT_summ_orig   TFloat
 
-               -- Цена продажи с сайта - без НДС, Basis+options 
+               -- Цена продажи с сайта - без НДС, Basis+options
              , OperPrice_load TFloat
                -- Базовая цена продажи модели с сайта
              , BasisPrice_load TFloat
-               -- load Сумма транспорт с сайта 
+               -- load Сумма транспорт с сайта
              , TransportSumm_load TFloat
 
              , SummDiscount1      TFloat
@@ -81,9 +81,10 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , SummDiscount_total TFloat
 
              , isBasicConf Boolean
-             , Color_fon Integer
-             , isErased Boolean
-             , StateText TVarChar--, StateColor Integer
+
+             , StateText   TVarChar
+             , StateColor  Integer
+             , isErased    Boolean
               )
 AS
 $BODY$
@@ -249,7 +250,7 @@ BEGIN
                            -- Цена продажи с НДС (ReceiptProdModel - Basis)
                          , zfCalc_SummWVAT (tmpPriceBasis.ValuePrice, tmpOrderClient.VATPercent) AS BasisPriceWVAT
 
-                           -- Цена продажи с сайта - без НДС, Basis+options 
+                           -- Цена продажи с сайта - без НДС, Basis+options
                          , COALESCE (tmpOrderClient.OperPrice_load, 0)         AS OperPrice_load
                            -- Сумма транспорт с сайта
                          , COALESCE (tmpOrderClient.TransportSumm_load, 0)     AS TransportSumm_load
@@ -322,7 +323,7 @@ BEGIN
                                            --
                                          , lpSelect.ProdColorPatternId
                                        --, lpSelect.ProdOptionsId
-                                       
+
                                     FROM lpSelect_Object_ReceiptProdModelChild_detail (inIsGroup:= TRUE, inUserId:= vbUserId) AS lpSelect
                                          JOIN tmpProduct ON tmpProduct.ReceiptProdModelId = lpSelect.ReceiptProdModelId
                                    )
@@ -553,7 +554,7 @@ BEGIN
                        --, COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
                        , Object_Product.isBasicConf      AS isBasicConf
 
-                         -- Цена продажи с сайта - без НДС, Basis+options 
+                         -- Цена продажи с сайта - без НДС, Basis+options
                        , Object_Product.OperPrice_load
                          -- Сумма транспорт с сайта
                        , Object_Product.TransportSumm_load
@@ -622,22 +623,27 @@ BEGIN
                                             AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
                   )
 
-          --проведенные док. заказ производство и сборка
-   , tmpMIFloat_MovementId AS (SELECT DISTINCT MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
-                                      , Movement.DescId
+     -- Проведенные Заказ производство и Производство-сборка
+   , tmpMIFloat_MovementId AS (SELECT MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
+                                    , Movement.DescId
+                                    , Object.DescId AS ObjectDescId
+                                    , MAX (Movement.Id) AS MovementId
                                FROM MovementItemFloat AS MIFloat_MovementId
-                                    JOIN MovementItem ON MovementItem.Id = MIFloat_MovementId.MovementItemId
+                                    JOIN MovementItem ON MovementItem.Id       = MIFloat_MovementId.MovementItemId
                                                      AND MovementItem.isErased = FALSE
-                                                     AND MovementItem.DescId = zc_MI_Master()
-                                    
-                                    JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                     AND MovementItem.DescId   = zc_MI_Master()
+                                    LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+                                    JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND Movement.DescId IN (zc_Movement_ProductionUnion(), zc_Movement_OrderInternal())
+                                                 AND Movement.DescId   IN (zc_Movement_ProductionUnion(), zc_Movement_OrderInternal())
+
                                WHERE MIFloat_MovementId.MovementItemId = MovementItem.Id
                                  AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
-                                 AND MIFloat_MovementId.ValueData :: Integer IN (SELECT DISTINCT tmpResAll.MovementId_OrderClient FROM tmpResAll)
-                               )
-
+                                 AND MIFloat_MovementId.ValueData IN (SELECT DISTINCT tmpResAll.MovementId_OrderClient :: TFloat FROM tmpResAll)
+                               GROUP BY MIFloat_MovementId.ValueData :: Integer
+                                      , Movement.DescId
+                                      , Object.DescId
+                              )
      -- Результат
     SELECT
            (tmpResAll.Id :: TVarChar || '_' || tmpResAll.MovementId_OrderClient :: TVarChar) :: TVarChar KeyId
@@ -722,11 +728,11 @@ BEGIN
            -- ИТОГО Сумма продажи с НДС - без Скидки
          , (COALESCE (tmpCalc_1.BasisPriceWVAT_summ, 0) + COALESCE (tmpCalc_2.BasisPriceWVAT_summ, 0))    :: TFloat AS BasisWVAT_summ_orig
 
-           -- Цена продажи с сайта - без НДС, Basis+options 
+           -- Цена продажи с сайта - без НДС, Basis+options
          , tmpResAll.OperPrice_load     :: TFloat AS OperPrice_load
            -- Базовая цена продажи модели с сайта
          , tmpResAll.BasisPrice_load    :: TFloat AS BasisPrice_load
-           -- Сумма транспорт с сайта 
+           -- Сумма транспорт с сайта
          , tmpResAll.TransportSumm_load :: TFloat AS TransportSumm_load
 
            -- ИТОГО Сумма Скидки - без НДС
@@ -748,35 +754,36 @@ BEGIN
 
          , tmpResAll.isBasicConf
 
+
+           -- Состояние
+         , zfCalc_Order_State (tmpResAll.isSale
+                             , tmpOrderClient.NPP :: Integer
+                             , COALESCE (tmpOrderInternal_1.MovementId, tmpOrderInternal_2.MovementId)
+                             , COALESCE (tmpProductionUnion_1.MovementId, tmpProductionUnion_2.MovementId)
+                             , COALESCE (tmpOrderInternal_1.ObjectDescId, tmpOrderInternal_2.ObjectDescId)
+                             , COALESCE (tmpProductionUnion_1.ObjectDescId, tmpProductionUnion_2.ObjectDescId)
+                              ) AS StateText
+           -- все состояния подсветить
          , CASE WHEN tmpResAll.isSale THEN zc_Color_Lime()
-                --если состояние готова то выделяем фоном
-                WHEN COALESCE (tmpOrderClient.NPP,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion.MovementId_OrderClient IS NOT NULL THEN zc_Color_GreenL()
+                -- если состояние готова то выделяем фоном
+                WHEN COALESCE (tmpOrderClient.NPP,0) > 0 AND tmpOrderInternal_1.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion_1.MovementId_OrderClient IS NOT NULL THEN zc_Color_GreenL()
                 ELSE
                     -- нет цвета
                     zc_Color_White()
-           END :: Integer AS Color_fon
+           END :: Integer AS StateColor
 
          , tmpResAll.isErased
 
-         -- колонка "Состояние" - если есть NPP>0 тогда "Планируется" если есть проведенный zc_Movement_OrderInternal тогда "В работе"  если есть проведенный zc_Movement_ProductionUnion тогда "Готова" 
-         , CASE WHEN COALESCE (tmpOrderClient.NPP,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion.MovementId_OrderClient IS NOT NULL THEN 'Готова'
-                WHEN COALESCE (tmpOrderClient.NPP,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion.MovementId_OrderClient IS NULL     THEN 'В работе'
-                WHEN COALESCE (tmpOrderClient.NPP,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NULL     AND tmpProductionUnion.MovementId_OrderClient IS NULL     THEN 'Планируется'                  
-                 ELSE NULL
-            END ::TVarChar AS StateText
-          -- - все три состояния подсветить всю строчку фоном
-         /*, CASE WHEN COALESCE (tmpOrderClient.NPP,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion.MovementId_OrderClient IS NOT NULL THEN zc_Color_GreenL()
-                ELSE zc_Color_White()
-           END ::Integer AS StateColor*/
      FROM tmpResAll
           LEFT JOIN tmpCalc AS tmpCalc_1 ON tmpCalc_1.MovementId_OrderClient = tmpResAll.MovementId_OrderClient AND tmpCalc_1.ProductId = tmpResAll.Id AND tmpCalc_1.isBasis = TRUE
           LEFT JOIN tmpCalc AS tmpCalc_2 ON tmpCalc_2.MovementId_OrderClient = tmpResAll.MovementId_OrderClient AND tmpCalc_2.ProductId = tmpResAll.Id AND tmpCalc_2.isBasis = FALSE
 
-          LEFT JOIN tmpOrderClient ON  tmpOrderClient.MovementId = tmpResAll.MovementId_OrderClient AND tmpOrderClient.ProductId = tmpResAll.Id 
+          LEFT JOIN tmpOrderClient ON  tmpOrderClient.MovementId = tmpResAll.MovementId_OrderClient AND tmpOrderClient.ProductId = tmpResAll.Id
 
-          LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal ON tmpOrderInternal.MovementId_OrderClient = tmpResAll.MovementId_OrderClient AND tmpOrderInternal.DescId = zc_Movement_OrderInternal()
-          LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion ON tmpProductionUnion.MovementId_OrderClient = tmpResAll.MovementId_OrderClient AND tmpProductionUnion.DescId = zc_Movement_ProductionUnion()
-
+          LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal_1   ON tmpOrderInternal_1.MovementId_OrderClient   = tmpResAll.MovementId_OrderClient AND tmpOrderInternal_1.DescId   = zc_Movement_OrderInternal()   AND tmpOrderInternal_1.ObjectDescId   = zc_Object_Product()
+          LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal_2   ON tmpOrderInternal_2.MovementId_OrderClient   = tmpResAll.MovementId_OrderClient AND tmpOrderInternal_2.DescId   = zc_Movement_OrderInternal()   AND tmpOrderInternal_2.ObjectDescId   = zc_Object_Goods()
+          LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion_1 ON tmpProductionUnion_1.MovementId_OrderClient = tmpResAll.MovementId_OrderClient AND tmpProductionUnion_1.DescId = zc_Movement_ProductionUnion() AND tmpProductionUnion_1.ObjectDescId = zc_Object_Product()
+          LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion_2 ON tmpProductionUnion_2.MovementId_OrderClient = tmpResAll.MovementId_OrderClient AND tmpProductionUnion_2.DescId = zc_Movement_ProductionUnion() AND tmpProductionUnion_2.ObjectDescId = zc_Object_Goods()
      ;
 
 END;

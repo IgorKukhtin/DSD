@@ -1169,7 +1169,7 @@ var
   calcSec,calcSec2:LongInt;
 begin
      //AddToLog_memo('start Delay ' + FloatToStr(mySec/1000) + ' sec');
-     if mySec > 5000 then myLogMemo_add('start Delay ' + FloatToStr(mySec/1000) + ' sec');
+     if mySec > 6000 then myLogMemo_add('start Delay ' + FloatToStr(mySec/1000) + ' sec');
      //
      Present:=Now;
      DecodeDate(Present, Year, Month, Day);
@@ -1466,8 +1466,8 @@ begin
          if ParamStr(1)='alan_dp_ua' then
          with toZConnection do begin
             Connected:=false;
-            HostName:='integer-srv.alan.dp.ua';
-            //HostName:='192.168.0.219';
+            //HostName:='integer-srv.alan.dp.ua';
+            HostName:='192.168.0.219';
             User:='admin';
             Password:='vas6ok';
             Database:='project';
@@ -3076,7 +3076,12 @@ begin
              end;
              //
              try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=100;except MSec_complete:=100;end;
-             if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); if MSec_complete > 3 * 1000 then myLogMemo_add('SessionIdEdit.Text'); MyDelay(MSec_complete);end;
+             if cb100MSec.Checked then
+             begin SessionIdEdit.Text:=IntToStr(MSec_complete);
+                   //if MSec_complete > 6 * 1000
+                   //then myLogMemo_add('SessionIdEdit.Text');
+                   MyDelay(MSec_complete);
+             end;
              //
              Next;
              Application.ProcessMessages;
@@ -3191,8 +3196,14 @@ begin
                  //
                  if cb100MSec.Checked
                  then begin
-                      try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=500 then MSec_complete:=40 * 1000;except MSec_complete:=40 * 1000;end;
-                      if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
+                      try MSec_complete:=StrToInt(SessionIdEdit.Text);
+                          if MSec_complete<=500 then MSec_complete:=40 * 1000;
+                      except MSec_complete:=40 * 1000;
+                      end;
+                      if cb100MSec.Checked then
+                      begin SessionIdEdit.Text:=IntToStr(MSec_complete);
+                            MyDelay(MSec_complete);
+                      end;
                  end
                  else MyDelay(8 * 1000);
                  //
@@ -3205,7 +3216,10 @@ begin
                  if cb100MSec.Checked
                  then begin
                       try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=3000;except MSec_complete:=3000;end;
-                      if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
+                      if cb100MSec.Checked then
+                      begin SessionIdEdit.Text:=IntToStr(MSec_complete);
+                            MyDelay(MSec_complete);
+                      end;
                  end
                  else MyDelay(4 * 1000);
 

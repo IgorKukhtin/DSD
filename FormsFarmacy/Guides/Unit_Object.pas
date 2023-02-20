@@ -506,6 +506,11 @@ type
     actUpdate_isReplaceSte2ListDif: TdsdExecStoredProc;
     dxBarButton40: TdxBarButton;
     isDividePartionDate: TcxGridDBColumn;
+    isSendErrorTelegramBot: TcxGridDBColumn;
+    spUpdate_SendErrorTelegramBot: TdsdStoredProc;
+    mactUpdate_SendErrorTelegramBot: TMultiAction;
+    actUpdate_SendErrorTelegramBot: TdsdExecStoredProc;
+    dxBarButton41: TdxBarButton;
   private
     { Private declarations }
   public

@@ -2,7 +2,7 @@ object Report_OrderClientDialogForm: TReport_OrderClientDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1047#1072#1082#1072#1079#1072#1084' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1047#1072#1082#1072#1079#1099' '#1050#1083#1080#1077#1085#1090#1072'>'
   ClientHeight = 187
   ClientWidth = 477
   Color = clBtnFace
@@ -79,7 +79,7 @@ object Report_OrderClientDialogForm: TReport_OrderClientDialogForm
   object cxLabel3: TcxLabel
     Left = 11
     Top = 59
-    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
+    Caption = #1050#1076#1080#1077#1085#1090':'
   end
   object cxLabel2: TcxLabel
     Left = 253

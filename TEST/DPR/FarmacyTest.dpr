@@ -1278,7 +1278,8 @@ uses
   CashSettingsHistory in '..\..\FormsFarmacy\Guides\CashSettingsHistory.pas' {CashSettingsHistoryForm: TParentForm},
   Report_FulfillmentPlanMobileAppDialog in '..\..\FormsFarmacy\Report\Report_FulfillmentPlanMobileAppDialog.pas' {Report_FulfillmentPlanMobileAppDialogForm: TParentForm},
   Report_FulfillmentPlanMobileApp in '..\..\FormsFarmacy\Report\Report_FulfillmentPlanMobileApp.pas' {Report_FulfillmentPlanMobileAppForm: TParentForm},
-  Report_InfoMobileAppChech in '..\..\FormsFarmacy\Report\Report_InfoMobileAppChech.pas' {Report_InfoMobileAppChechForm: TParentForm};
+  Report_InfoMobileAppChech in '..\..\FormsFarmacy\Report\Report_InfoMobileAppChech.pas' {Report_InfoMobileAppChechForm: TParentForm},
+  Report_FulfillmentPlanMobileAppUser in '..\..\FormsFarmacy\Report\Report_FulfillmentPlanMobileAppUser.pas' {Report_FulfillmentPlanMobileAppUserForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

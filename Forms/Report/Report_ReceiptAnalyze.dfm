@@ -217,7 +217,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1072' '#1074' '#1079#1072#1082#1083#1072#1076#1082#1077' '#1042#1045#1057
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
             Width = 70
           end
           object Amount_Weight_calc: TcxGridDBColumn
@@ -229,7 +229,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1072' '#1074' '#1079#1072#1082#1083#1072#1076#1082#1077' '#1042#1045#1057
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
             Width = 70
           end
           object Amount_out_Weight_calc: TcxGridDBColumn
@@ -241,7 +241,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1072' '#1074' '#1079#1072#1082#1083#1072#1076#1082#1077' '#1042#1045#1057
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
             Width = 70
           end
           object Price1: TcxGridDBColumn
@@ -327,7 +327,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1072' '#1074' '#1079#1072#1082#1083#1072#1076#1082#1077' '#1042#1045#1057
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
             Width = 55
           end
           object Price2_calc: TcxGridDBColumn
@@ -339,7 +339,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1072' '#1074' '#1079#1072#1082#1083#1072#1076#1082#1077' '#1042#1045#1057
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
             Width = 55
           end
           object Price3_calc: TcxGridDBColumn
@@ -351,7 +351,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1072' '#1074' '#1079#1072#1082#1083#1072#1076#1082#1077' '#1042#1045#1057
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
             Width = 55
           end
           object Price1_cost_calc: TcxGridDBColumn
@@ -363,7 +363,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1072' '#1074' '#1079#1072#1082#1083#1072#1076#1082#1077' '#1042#1045#1057
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
             Width = 55
           end
           object Price2_cost_calc: TcxGridDBColumn
@@ -375,7 +375,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1072' '#1074' '#1079#1072#1082#1083#1072#1076#1082#1077' '#1042#1045#1057
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
             Width = 55
           end
           object Price3_cost_calc: TcxGridDBColumn
@@ -387,7 +387,7 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1072' '#1074' '#1079#1072#1082#1083#1072#1076#1082#1077' '#1042#1045#1057
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
             Width = 55
           end
           object Comment: TcxGridDBColumn
@@ -504,6 +504,54 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
             Visible = False
             VisibleForCustomization = False
             Width = 55
+          end
+          object isMain_calc: TcxGridDBColumn
+            Caption = '***'#1043#1083#1072#1074#1085'. ('#1087#1086#1080#1089#1082')'
+            DataBinding.FieldName = 'isMain_calc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
+            Width = 70
+          end
+          object Code_calc: TcxGridDBColumn
+            Caption = '***'#1050#1086#1076' ('#1087#1086#1080#1089#1082')'
+            DataBinding.FieldName = 'Code_calc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
+            Width = 70
+          end
+          object ReceiptCode_calc: TcxGridDBColumn
+            Caption = '***'#1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1087#1086#1080#1089#1082')'
+            DataBinding.FieldName = 'ReceiptCode_calc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
+            Width = 70
+          end
+          object Comment_calc: TcxGridDBColumn
+            Caption = '***'#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment_calc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
+            Width = 70
+          end
+          object TaxExit_calc: TcxGridDBColumn
+            Caption = '***% '#1074#1099#1093'.'
+            DataBinding.FieldName = 'TaxExit_calc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
+            Width = 70
+          end
+          object TaxLoss_calc: TcxGridDBColumn
+            Caption = '***% '#1087#1086#1090#1077#1088#1100' '
+            DataBinding.FieldName = 'TaxLoss_calc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
+            Width = 70
           end
         end
         object ChildView: TcxGridDBTableView [1]

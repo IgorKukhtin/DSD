@@ -58,12 +58,15 @@ type
   function GetXMLParam_gConnectHost(XMLParam: String): String;
   function GetStringStream(AValue: String): TStringStream;
 
+  procedure StartCheckConnectThread(ATimeuutMin: Integer);
+
 implementation
 
 uses Xml.XMLDoc, XMLIntf, ZLibEx, idGlobal, UtilConst, System.Variants,
      UtilConvert, MessagesUnit, Dialogs, StrUtils, SimpleGauge,
      Forms, Log, IdStack, IdExceptionCore, SyncObjS, CommonData, System.AnsiStrings,
-     Datasnap.DBClient, System.Contnrs, Vcl.Controls, PriorityPause;
+     Datasnap.DBClient, System.Contnrs, Vcl.Controls, PriorityPause,
+     System.DateUtils;
 
 const
 
@@ -73,6 +76,16 @@ const
 
 type
   TConnectionType = (ctMain, ctReport, ctReportLocal);
+
+  // Поток для обрыва соеденений При не ответе сервера
+  TCheckConnectThread = class(TThread)
+  private
+  { Private declarations }
+    FDataStart: TDateTime;
+    FTimeuutMin : Integer;
+  protected
+    procedure Execute; override;
+  end;
 
   TConnection = class
   private
@@ -149,6 +162,27 @@ type
 
   var
     IdHTTPWork: TIdHTTPWork;
+    CheckConnectThread: TCheckConnectThread;
+
+{ TCheckConnectThread }
+
+procedure TCheckConnectThread.Execute;
+begin
+  while True do
+  begin
+    if Terminated then Exit;
+    Sleep(1000);
+    if TStorageFactory.GetStorage.IdHTTP.Connected then
+    begin
+      if MinutesBetween(Now, FDataStart) >= FTimeuutMin then
+      begin
+        TStorageFactory.GetStorage.IdHTTP.Disconnect;
+        gc_BreakingConnection := True;
+        FDataStart := Now;
+      end;
+    end else FDataStart := Now;
+  end;
+end;
 
 function TStorage.GetConnection: string;
 begin
@@ -812,11 +846,13 @@ begin
           except
             on E: EIdSocketError do
             Begin
-              if gc_allowLocalConnection AND gc_BreakingConnection then
+              if gc_BreakingConnection then
               begin
-                gc_User.Local := True;
+                if gc_allowLocalConnection then gc_User.Local := True;
                 gc_BreakingConnection := False;
-                raise Exception.Create('Соеденение прервано по таймауту.');
+                if gc_ProgramName = 'FarmacyCash.exe' then
+                  raise EStorageException.Create('Нет доступа к серверу. Вы работаете в OfflIne режиме. context TStorage. ' + E.Message)
+                else raise Exception.Create('Соеденение прервано по таймауту.');
               end else if LastAttempt then
               Begin
                 if ANeedShowException then
@@ -889,11 +925,13 @@ begin
             End;
             on E: Exception do
             Begin
-              if gc_allowLocalConnection AND gc_BreakingConnection then
+              if gc_BreakingConnection then
               begin
-                gc_User.Local := True;
+                if gc_allowLocalConnection then gc_User.Local := True;
                 gc_BreakingConnection := False;
-                raise Exception.Create('Соеденение прервано по таймауту.');
+                if gc_ProgramName = 'FarmacyCash.exe' then
+                  raise EStorageException.Create('Нет доступа к серверу. Вы работаете в OfflIne режиме. context TStorage. ' + E.Message)
+                else raise Exception.Create('Соеденение прервано по таймауту.');
               end else if LastAttempt then
               Begin
                 raise Exception.Create('Ошибка соединения с Web сервером.'+#10+#13+'Обратитесь к разработчику.'+#10+#13+E.Message);
@@ -1136,10 +1174,31 @@ begin
     Result := TStringStream.Create(AValue);
 end;
 
+procedure StartCheckConnectThread(ATimeuutMin: Integer);
+begin
+  if ATimeuutMin < 1 then
+  begin
+    ShowMessage('');
+    Exit;
+  end;
+  if not Assigned(CheckConnectThread) then
+  begin
+    CheckConnectThread := TCheckConnectThread.Create(true);
+    CheckConnectThread.FreeOnTerminate:=true;
+    CheckConnectThread.FDataStart := Now;
+    CheckConnectThread.FTimeuutMin := ATimeuutMin;
+    CheckConnectThread.Resume;
+  end else CheckConnectThread.FTimeuutMin := ATimeuutMin;
+end;
+
+
 initialization
   IdHTTPWork := TIdHTTPWork.Create;
+  CheckConnectThread := Nil;
 
 finalization
+  if Assigned(CheckConnectThread) then CheckConnectThread.Terminate;
+
   IdHTTPWork.Free;
 
 end.

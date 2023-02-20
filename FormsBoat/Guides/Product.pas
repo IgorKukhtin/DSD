@@ -132,7 +132,6 @@ type
     isSale: TcxGridDBColumn;
     actChoiceFormProdColorPattern: TOpenChoiceForm;
     actChoiceFormProdOptPattern: TOpenChoiceForm;
-    Color_fon: TcxGridDBColumn;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     N2: TMenuItem;

@@ -23,7 +23,7 @@ BEGIN
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_ReportCollation());
 
 
-   return;
+   -- return;
 
    -- находим элементы по вх. параметрам и расчитываем остатки
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReportCollation_StartRemainsCalc(), tmpObject.Id, SUM (tmpreport.StartRemains))

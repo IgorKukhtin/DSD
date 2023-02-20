@@ -120,6 +120,12 @@ type
     Summ3_calc_Child: TcxGridDBColumn;
     actPrint_calc: TdsdPrintAction;
     bbPrint_calc: TdxBarButton;
+    isMain_calc: TcxGridDBColumn;
+    TaxExit_calc: TcxGridDBColumn;
+    TaxLoss_calc: TcxGridDBColumn;
+    Code_calc: TcxGridDBColumn;
+    ReceiptCode_calc: TcxGridDBColumn;
+    Comment_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

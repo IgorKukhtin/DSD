@@ -296,7 +296,7 @@ object MainCashForm2: TMainCashForm2
     Enabled = False
     Interval = 120000
     OnTimer = TimerSaveRealTimer
-    Left = 100
+    Left = 124
     Top = 132
   end
   object tiServise: TTrayIcon
@@ -25897,7 +25897,7 @@ object MainCashForm2: TMainCashForm2
     Enabled = False
     Interval = 120000
     OnTimer = TimerNeedRemainsDiffTimer
-    Left = 172
+    Left = 220
     Top = 132
   end
   object EmployeeScheduleCDS: TClientDataSet
@@ -26132,5 +26132,12 @@ object MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 344
     Top = 272
+  end
+  object UnitConfigCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'Id'
+    Params = <>
+    Left = 24
+    Top = 14
   end
 end

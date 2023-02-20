@@ -180,6 +180,7 @@
 			<DCCReference Include="..\SOURCE\PriorityPause.pas">
 				<Form>PriorityPauseForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\StorageSQLite.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

@@ -1164,6 +1164,9 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_FulfillmentPlanMobileAppUserForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FulfillmentPlanMobileAppForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppDialogForm'));
@@ -1192,11 +1195,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ApplicationAwardForm'));
 
   TdsdFormStorageFactory.GetStorage.Load('TReport_ApplicationAwardForm');
-}  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InfoMobileAppChechForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InfoMobileAppChechForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_InfoMobileAppChechForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ConductedSalesMobileForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ConductedSalesMobileForm');
- {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ApplicationAwardUserForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ApplicationAwardUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ApplicationAwardUserForm');
 
 

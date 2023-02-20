@@ -73,6 +73,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TelegramId TVarChar, isErrorRROToVIP Boolean, isShowMessageSite Boolean, isSupplementAddCash Boolean, isSupplementAdd30Cash Boolean
              , isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, isShowActiveAlerts Boolean
              , SetDateRRO TVarChar, isAutospaceOS Boolean, isReplaceSte2ListDif Boolean, isDividePartionDate Boolean
+             , isSendErrorTelegramBot Boolean
              
 ) AS
 $BODY$
@@ -299,6 +300,8 @@ BEGIN
 
       , COALESCE (ObjectBoolean_ReplaceSte2ListDif.ValueData, FALSE):: Boolean           AS isReplaceSte2ListDif
       , COALESCE (ObjectBoolean_DividePartionDate.ValueData, FALSE):: Boolean            AS isDividePartionDate
+
+      , COALESCE (ObjectBoolean_SendErrorTelegramBot.ValueData, FALSE):: Boolean         AS isSendErrorTelegramBot
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -790,6 +793,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_DividePartionDate
                                 ON ObjectBoolean_DividePartionDate.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_DividePartionDate.DescId = zc_ObjectBoolean_Unit_DividePartionDate()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SendErrorTelegramBot
+                                ON ObjectBoolean_SendErrorTelegramBot.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_SendErrorTelegramBot.DescId = zc_ObjectBoolean_Unit_SendErrorTelegramBot()
 
     WHERE Object_Unit.DescId = zc_Object_Unit()
       AND (inisShowAll = True OR Object_Unit.isErased = False)

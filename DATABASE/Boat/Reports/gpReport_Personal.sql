@@ -126,9 +126,9 @@ BEGIN
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpOperation.InfoMoneyId
 
      WHERE (tmpOperation.StartAmount <> 0
-         OR tmpOperation.EndAmount <> 0
-         OR tmpOperation.DebetSumm <> 0
-         OR tmpOperation.KreditSumm <> 0)
+         OR tmpOperation.EndAmount   <> 0
+         OR tmpOperation.DebetSumm   <> 0
+         OR tmpOperation.KreditSumm  <> 0)
     ;
 
 
@@ -144,4 +144,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_Personal(inStartDate := ('01.01.2019')::TDateTime , inEndDate := ('01.01.2023')::TDateTime , inServiceDate := ('01.01.2019')::TDateTime , inisServiceDate := 'False' , inInfoMoneyId := 0 , inPersonalId := 0 ,  inSession := '5');
+-- SELECT * FROM gpReport_Personal(inStartDate := ('01.01.2019')::TDateTime , inEndDate := ('01.01.2023')::TDateTime , inServiceDate := ('01.01.2019')::TDateTime , inisServiceDate := 'False' , inInfoMoneyId := 0 , inPersonalId := 0 ,  inSession := '5');

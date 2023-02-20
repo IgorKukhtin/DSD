@@ -24,8 +24,8 @@
     object actReport_ProductionPersonal: TdsdOpenForm [1]
       Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1091' - '#1095#1072#1089#1099' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1091' - '#1095#1072#1089#1099' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074'>'
+      Caption = #1063#1072#1089#1099' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' - '#1057#1073#1086#1088#1082#1072
+      Hint = #1063#1072#1089#1099' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' - '#1057#1073#1086#1088#1082#1072
       FormName = 'TReport_ProductionPersonalForm'
       FormNameParam.Value = 'TReport_ProductionPersonalForm'
       FormNameParam.DataType = ftString
@@ -69,7 +69,7 @@
     object actReport_OrderClient: TdsdOpenForm [5]
       Category = #1054#1090#1095#1077#1090#1099' ('#1089#1082#1083#1072#1076')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1047#1072#1082#1072#1079#1072#1084' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Caption = #1047#1072#1082#1072#1079#1099' '#1050#1083#1080#1077#1085#1090#1072
       FormName = 'TReport_OrderClientForm'
       FormNameParam.Value = 'TReport_OrderClientForm'
       FormNameParam.DataType = ftString
@@ -284,7 +284,7 @@
     object actColorPattern: TdsdOpenForm [23]
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1064#1072#1073#1083#1086#1085' Boat Structure'
+      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' - '#1064#1072#1073#1083#1086#1085
       FormName = 'TColorPatternForm'
       FormNameParam.Value = 'TColorPatternForm'
       FormNameParam.DataType = ftString
@@ -394,7 +394,7 @@
     object actProdColorPattern: TdsdOpenForm [33]
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1069#1083#1077#1084#1077#1085#1090#1099' Boat Structure'
+      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' - '#1089#1090#1088#1091#1082#1090#1091#1088#1072
       FormName = 'TProdColorPatternForm'
       FormNameParam.Value = 'TProdColorPatternForm'
       FormNameParam.DataType = ftString
@@ -1046,7 +1046,7 @@
     object actProdColorGroup: TdsdOpenForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1057#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1077' Boat Structure'
+      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' - '#1101#1083#1077#1084#1077#1085#1090#1099
       FormName = 'TProdColorGroupForm'
       FormNameParam.Value = 'TProdColorGroupForm'
       FormNameParam.DataType = ftString
@@ -1057,7 +1057,7 @@
     object actProdColor: TdsdOpenForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1062#1074#1077#1090#1072
+      Caption = #1062#1074#1077#1090
       FormName = 'TProdColorForm'
       FormNameParam.Value = 'TProdColorForm'
       FormNameParam.DataType = ftString
@@ -1068,7 +1068,7 @@
     object actProdColorItems: TdsdOpenForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = '*'#1051#1086#1076#1082#1072' - '#1069#1083#1077#1084#1077#1085#1090#1099' Boat Structure'
+      Caption = '*'#1051#1086#1076#1082#1072' - '#1069#1083#1077#1084#1077#1085#1090#1099' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088#1072
       FormName = 'TProdColorItemsForm'
       FormNameParam.Value = 'TProdColorItemsForm'
       FormNameParam.DataType = ftString
@@ -1296,17 +1296,15 @@
       end
       object miProdColorPattern: TMenuItem
         Action = actProdColorPattern
-        Caption = 'Boat Structure'
       end
       object miProdColorGroup: TMenuItem
         Action = actProdColorGroup
       end
-      object miProdColor: TMenuItem
-        Action = actProdColor
-        Caption = 'Farbe'
-      end
       object miColorPattern: TMenuItem
         Action = actColorPattern
+      end
+      object miProdColor: TMenuItem
+        Action = actProdColor
       end
       object miLine34_: TMenuItem
         Caption = '-'

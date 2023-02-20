@@ -1,5 +1,5 @@
 inherited Report_OrderClientForm: TReport_OrderClientForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1047#1072#1082#1072#1079#1072#1084' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1047#1072#1082#1072#1079#1099' '#1050#1083#1080#1077#1085#1090#1072'>'
   ClientHeight = 341
   ClientWidth = 1071
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -577,14 +577,16 @@ inherited Report_OrderClientForm: TReport_OrderClientForm
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 44197d
+      Top = 4
+      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 118
+      ExplicitTop = 4
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
-      EditValue = 44197d
+      EditValue = 44927d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 30
@@ -600,7 +602,7 @@ inherited Report_OrderClientForm: TReport_OrderClientForm
       ExplicitTop = 31
     end
     object cxLabel3: TcxLabel
-      Left = 216
+      Left = 219
       Top = 31
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077':'
     end
@@ -617,9 +619,9 @@ inherited Report_OrderClientForm: TReport_OrderClientForm
       Width = 209
     end
     object cxLabel8: TcxLabel
-      Left = 249
+      Left = 266
       Top = 6
-      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
+      Caption = #1050#1076#1080#1077#1085#1090':'
     end
     object edPartner: TcxButtonEdit
       Left = 315

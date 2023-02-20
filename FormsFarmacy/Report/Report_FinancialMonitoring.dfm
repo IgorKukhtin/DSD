@@ -3,8 +3,8 @@ inherited Report_FinancialMonitoringForm: TReport_FinancialMonitoringForm
   ClientHeight = 492
   ClientWidth = 776
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 792
-  ExplicitHeight = 531
+  ExplicitWidth = 794
+  ExplicitHeight = 539
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -79,6 +79,26 @@ inherited Report_FinancialMonitoringForm: TReport_FinancialMonitoringForm
             HeaderAlignmentVert = vaCenter
             Width = 132
           end
+          object SaldoSum: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072' '#1085#1072' '#1082#1086#1085'. '#1087#1077#1088#1080#1086#1076#1072', '#1075#1088#1085'.'
+            DataBinding.FieldName = 'SaldoSum'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object SummaNoPay: TcxGridDBColumn
+            Caption = #1053#1077' '#1086#1087#1083#1072#1095#1077#1085#1086' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088'. '#1075#1088#1085'.'
+            DataBinding.FieldName = 'SummaNoPay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
         end
       end
       object cxGrid8: TcxGrid
@@ -142,6 +162,12 @@ inherited Report_FinancialMonitoringForm: TReport_FinancialMonitoringForm
           object cxGridDBChartSeries5: TcxGridDBChartSeries
             DataBinding.FieldName = 'SaldoSum'
             DisplayText = #1054#1089#1090#1072#1090#1086#1082
+            Styles.Values = cxStyle1
+          end
+          object cxGridDBChartView1Series1: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaNoPay'
+            DisplayText = #1053#1077' '#1086#1087#1083#1072#1095#1077#1085#1086
+            Styles.Values = cxStyle2
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -293,6 +319,7 @@ inherited Report_FinancialMonitoringForm: TReport_FinancialMonitoringForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    Left = 96
     Top = 80
   end
   inherited BarManager: TdxBarManager
@@ -385,7 +412,7 @@ inherited Report_FinancialMonitoringForm: TReport_FinancialMonitoringForm
   object cxStyleRepository1: TcxStyleRepository
     Left = 512
     Top = 120
-    PixelsPerInch = 96
+    PixelsPerInch = 120
     object cxStyle1: TcxStyle
       AssignedValues = [svColor]
       Color = clYellow

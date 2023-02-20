@@ -7760,6 +7760,11 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end
       item
+        Name = 'UserKeyId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ConfirmationCodeSP'
         Value = Null
         DataType = ftString

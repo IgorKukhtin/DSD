@@ -15,7 +15,7 @@ uses
   cxDBLookupEdit, cxDBLookupComboBox,  cxCheckBox, cxNavigator, CashInterface,  cxImageComboBox , dsdAddOn,
   Vcl.ImgList, LocalStorage, IdFTPCommon, IdGlobal, IdFTP, IdSSLOpenSSL, IdExplicitTLSClientServerBase,
   UnilWin, System.ImageList, System.Actions, System.Zip, System.RegularExpressions, UnitMyIP,
-  Storage, StorageSQLite;
+  Storage, StorageSQLite, UtilTelegram;
 
 type
  THeadRecord = record
@@ -102,6 +102,8 @@ type
     ISERRORRO  : boolean;       //ВИП чек по ошибке РРО
     //***15.03.22
     ISPAPERRSP  : boolean;       //Бумажный рецепт по СП
+    //***19.02.23
+    USERKEYID  : integer;         //Чей файловый ключ использовался при пробитии чека.
 
   end;
   TBodyRecord = record
@@ -184,6 +186,7 @@ type
     spSendZReportLog: TdsdStoredProc;
     spLoadPickUpLogsAndDBF: TdsdStoredProc;
     spUpdate_PickUpLogsAndDBF: TdsdStoredProc;
+    UnitConfigCDS: TClientDataSet;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -253,6 +256,7 @@ type
     function InitLocalStorage: Boolean;
     function ExistNotCompletedCheck: boolean;
     procedure Add_Log(AMessage: String);
+    procedure SendTelegramBotMessage(AMessage: String);
     function GetTrayIcon: integer;
     function GetInterval_CashRemains_Diff: integer;
 
@@ -277,6 +281,7 @@ var
   csCriticalSection_Save,
   csCriticalSection_All: TRTLCriticalSection;
   AllowedConduct : Boolean = false;
+  TelegramBot: TTelegramBot;
 
   FM_SERVISE: Integer;
 
@@ -617,9 +622,27 @@ var
   F: String;
 begin
   Add_Log('== Start');
-  if ParamStr(1) = 'Админ' then  // показываем меню только для Админа
-    tiServise.PopupMenu:=pmServise
-  else tiServise.PopupMenu:=nil;
+  TimerSaveReal.Enabled := false;
+
+  try
+    spGet_User_IsAdmin.Execute;
+    if spGet_User_IsAdmin.ParamByName('gpGet_User_IsAdmin').Value then  // показываем меню только для Админа
+      tiServise.PopupMenu:=pmServise
+    else tiServise.PopupMenu:=nil;
+  except on E: Exception do
+    if (ParamStr(1) = 'Админ') or (gc_User.Login = 'Админ') then  // показываем меню только для Админа
+      tiServise.PopupMenu:=pmServise
+    else tiServise.PopupMenu:=nil;
+  end;
+
+  Add_Log('Start MutexUnitConfig');
+  WaitForSingleObject(MutexUnitConfig, INFINITE); // Загрузим конфиг
+  try
+    LoadLocalData(UnitConfigCDS, UnitConfig_lcl);
+  finally
+    Add_Log('End MutexUnitConfig');
+    ReleaseMutex(MutexUnitConfig);
+  end;
 
   FSaveLocalVIP := 0;
 
@@ -661,8 +684,7 @@ begin
     SendEmployeeSchedule;  // Отправляем времени работы сотрудников
     SendPickUpLogsAndDBF;  // Отправляем логи
   end;
-  if not FHasError then tiServise.Hint := 'Получение остатков'
-  else tiServise.Hint := 'Ожидание задания.';
+  if not FHasError then tiServise.Hint := 'Получение остатков';
   FirstRemainsReceived := false;
   //PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 2); // запрос кеш сесии у приложения
   TimerGetRemains.Enabled := true;
@@ -786,7 +808,7 @@ begin
     RemainsCDS.EnableControls;
     Add_Log('End MutexRemains 390');
     ReleaseMutex(MutexRemains);
-    tiServise.Hint := 'Ожидание задания.';
+    tiServise.Hint := ' Ожидание задания.';
   end;
 end;
 
@@ -1464,6 +1486,8 @@ begin
                 ISERRORRO := FieldByName('ISERRORRO').AsBoolean;
                 //***15.03.22
                 ISPAPERRSP := FieldByName('ISPAPERRSP').AsBoolean;
+                //***19.02.23
+                USERKEYID := FieldByName('USERKEYID').AsInteger;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1656,6 +1680,8 @@ begin
                   dsdSave.Params.AddParam('inisErrorRRO', ftBoolean, ptInput, Head.ISERRORRO);
                   //***14.12.21
                   dsdSave.Params.AddParam('inisPaperRecipeSP', ftBoolean, ptInput, Head.ISPAPERRSP);
+                  //***19.02.23
+                  dsdSave.Params.AddParam('inUserKeyId', ftInteger, ptInput, Head.USERKEYID);
 
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
@@ -1825,6 +1851,7 @@ begin
                 ON E: Exception do
                 Begin
                   Add_Log('InsertUpdate Check: ' + E.Message);
+                  if FSaveTryCount > 2 then SendTelegramBotMessage(E.Message);
                   FHasError := true;
                   if gc_User.Local then
                   begin
@@ -1865,6 +1892,7 @@ begin
                 on E: Exception do
                 Begin
                   Add_Log('Complete NoDIFF: ' + E.Message);
+                  if FSaveTryCount > 2 then SendTelegramBotMessage(E.Message);
                   // -nw                 SendError(E.Message);
                   FHasError := true;
                   if gc_User.Local then
@@ -1958,10 +1986,7 @@ begin
     end;
   finally
     FSaveRealAllRunning := false;
-    if FHasError then
-      MainCashForm2.tiServise.IconIndex := 6
-    else
-      MainCashForm2.tiServise.IconIndex := GetTrayIcon;
+    MainCashForm2.tiServise.IconIndex := GetTrayIcon;
     Add_Log('SaveReal end');
     TimerSaveReal.Interval := GetInterval_CashRemains_Diff;
     TimerSaveReal.Enabled := true;
@@ -2069,6 +2094,7 @@ begin
         try
           SaveLocalData(ds,UnitConfig_lcl);
           FisShowPlanEmployeeUser := ds.FieldByName('isShowPlanEmployeeUser').AsBoolean;
+          LoadLocalData(UnitConfigCDS,UnitConfig_lcl);
         finally
           Add_Log('End MutexUnitConfig');
           ReleaseMutex(MutexUnitConfig);
@@ -2965,7 +2991,9 @@ end;
 
 function TMainCashForm2.GetTrayIcon: integer;
 begin
-  if gc_User.Local then
+  if FHasError then
+    Result := 6
+  else if gc_User.Local then
     Result := 5
   else
     Result := 0;
@@ -3140,6 +3168,28 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.SendTelegramBotMessage(AMessage: String);
+  var I : Integer; Res : TArray<string>;
+begin
+  if gc_User.Local then Exit;
+  if not UnitConfigCDS.Active then Exit;
+  try
+    if not UnitConfigCDS.FieldByName('isSendErrorTelegramBot').AsBoolean or
+      (Trim(UnitConfigCDS.FieldByName('TelegramBotToken').AsString) = '')or
+      (Trim(UnitConfigCDS.FieldByName('SendCashErrorTelId').AsString) = '') then Exit;
+
+    if not Assigned(TelegramBot) then TelegramBot := TTelegramBot.Create(Trim(UnitConfigCDS.FieldByName('TelegramBotToken').AsString));
+
+    if Pos('CONTEXT', AMessage) > 0 then AMessage := Copy(AMessage, 1, Pos('CONTEXT', AMessage) - 1);
+
+    Res := TRegEx.Split(Trim(UnitConfigCDS.FieldByName('SendCashErrorTelId').AsString), ',');
+    for I := 0 to High(Res) do TelegramBot.SendMessage(Res[I], 'Ошибка проведение чеков'#13#10 +
+      iniLocalUnitNameGet + #13#10 + 'Касса ' + iniCashRegister + #13#10 + AMessage);
+
+  except
+    on E: Exception do Add_Log('Ошибка отправки в телеграм бот: ' + E.Message);
+  end;
+end;
 
 initialization
   RegisterClass(TMainCashForm2);
@@ -3147,7 +3197,9 @@ initialization
   FLocalDataBaseBody := TVKSmartDBF.Create(nil);
   FLocalDataBaseDiff := TVKSmartDBF.Create(nil);
   FM_SERVISE := RegisterWindowMessage('FarmacyCashMessage');
+  TelegramBot:= Nil;
 finalization
+  if Assigned(TelegramBot) then TelegramBot.Free;
   FLocalDataBaseHead.Free;
   FLocalDataBaseBody.Free;
   FLocalDataBaseDiff.Free;

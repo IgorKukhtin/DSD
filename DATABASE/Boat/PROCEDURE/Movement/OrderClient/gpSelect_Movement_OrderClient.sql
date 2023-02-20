@@ -96,21 +96,28 @@ BEGIN
                                    WHERE MovementLinkObject_From.ObjectId = inClientId
                                      OR inClientId = 0
                                   )
-          --проведенные док. заказ производство и сборка
-          , tmpMIFloat_MovementId AS (SELECT DISTINCT MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
-                                             , Movement.DescId
+            -- Проведенные Заказ производство и Производство-сборка
+          , tmpMIFloat_MovementId AS (SELECT MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
+                                           , Movement.DescId
+                                           , Object.DescId AS ObjectDescId
+                                           , MAX (Movement.Id) AS MovementId
                                       FROM MovementItemFloat AS MIFloat_MovementId
-                                           JOIN MovementItem ON MovementItem.Id = MIFloat_MovementId.MovementItemId
+                                           JOIN MovementItem ON MovementItem.Id       = MIFloat_MovementId.MovementItemId
                                                             AND MovementItem.isErased = FALSE
-                                                            AND MovementItem.DescId = zc_MI_Master()
+                                                            AND MovementItem.DescId   = zc_MI_Master()
+                                           LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
                                            
-                                           JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                           JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                         AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                        AND Movement.DescId IN (zc_Movement_ProductionUnion(), zc_Movement_OrderInternal())
+                                                        AND Movement.DescId   IN (zc_Movement_ProductionUnion(), zc_Movement_OrderInternal())
+
                                       WHERE MIFloat_MovementId.MovementItemId = MovementItem.Id
                                         AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
-                                        AND MIFloat_MovementId.ValueData :: Integer IN (SELECT DISTINCT Movement_OrderClient.Id FROM Movement_OrderClient)
-                                      )
+                                        AND MIFloat_MovementId.ValueData IN (SELECT DISTINCT Movement_OrderClient.Id :: TFloat FROM Movement_OrderClient)
+                                      GROUP BY MIFloat_MovementId.ValueData
+                                             , Movement.DescId
+                                             , Object.DescId
+                              )
        /* --проведенные док. заказ производство
         , tmpOrderInternal AS (SELECT DISTINCT MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
                                FROM MovementItemFloat AS MIFloat_MovementId
@@ -191,14 +198,16 @@ BEGIN
              , Object_Update.ValueData                      AS UpdateName
              , MovementDate_Update.ValueData                AS UpdateDate
 
-             -- колонка "Состояние" - если есть NPP>0 тогда "Планируется" если есть проведенный zc_Movement_OrderInternal тогда "В работе"  если есть проведенный zc_Movement_ProductionUnion тогда "Готова" 
-             , CASE WHEN COALESCE (MovementFloat_NPP.ValueData,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion.MovementId_OrderClient IS NOT NULL THEN 'Готова'
-                    WHEN COALESCE (MovementFloat_NPP.ValueData,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion.MovementId_OrderClient IS NULL     THEN 'В работе'
-                    WHEN COALESCE (MovementFloat_NPP.ValueData,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NULL     AND tmpProductionUnion.MovementId_OrderClient IS NULL     THEN 'Планируется'                  
-                     ELSE NULL
-                END ::TVarChar AS StateText
-              -- - все три состояния подсветить всю строчку фоном
-             , CASE WHEN COALESCE (MovementFloat_NPP.ValueData,0) > 0 AND tmpOrderInternal.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion.MovementId_OrderClient IS NOT NULL THEN zc_Color_GreenL()
+               -- Состояние
+             , zfCalc_Order_State (CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END
+                                 , MovementFloat_NPP.ValueData :: Integer
+                                 , COALESCE (tmpOrderInternal_1.MovementId, tmpOrderInternal_2.MovementId)
+                                 , COALESCE (tmpProductionUnion_1.MovementId, tmpProductionUnion_2.MovementId)
+                                 , COALESCE (tmpOrderInternal_1.ObjectDescId, tmpOrderInternal_2.ObjectDescId)
+                                 , COALESCE (tmpProductionUnion_1.ObjectDescId, tmpProductionUnion_2.ObjectDescId)
+                                  ) AS StateText
+               -- все состояния подсветить
+             , CASE WHEN COALESCE (MovementFloat_NPP.ValueData,0) > 0 AND tmpOrderInternal_1.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion_1.MovementId_OrderClient IS NOT NULL THEN zc_Color_GreenL()
                     ELSE zc_Color_White()
                END ::Integer AS StateColor
                
@@ -287,6 +296,10 @@ BEGIN
                                  AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
              LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
 
+             LEFT JOIN ObjectDate AS ObjectDate_DateSale
+                                  ON ObjectDate_DateSale.ObjectId = Object_Product.Id
+                                 AND ObjectDate_DateSale.DescId = zc_ObjectDate_Product_DateSale()
+
              LEFT JOIN ObjectLink AS ObjectLink_Product_ReceiptProdModel
                                   ON ObjectLink_Product_ReceiptProdModel.ObjectId = Object_Product.Id
                                  AND ObjectLink_Product_ReceiptProdModel.DescId   = zc_ObjectLink_Product_ReceiptProdModel()
@@ -296,8 +309,10 @@ BEGIN
                                   ON ObjectDate_DateBegin.ObjectId = Object_Product.Id
                                  AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin()
              
-             LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal ON tmpOrderInternal.MovementId_OrderClient = Movement_OrderClient.Id AND tmpOrderInternal.DescId = zc_Movement_OrderInternal()
-             LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion ON tmpProductionUnion.MovementId_OrderClient = Movement_OrderClient.Id AND tmpProductionUnion.DescId = zc_Movement_ProductionUnion()
+          LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal_1   ON tmpOrderInternal_1.MovementId_OrderClient   = Movement_OrderClient.Id AND tmpOrderInternal_1.DescId   = zc_Movement_OrderInternal()   AND tmpOrderInternal_1.ObjectDescId   = zc_Object_Product()
+          LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal_2   ON tmpOrderInternal_2.MovementId_OrderClient   = Movement_OrderClient.Id AND tmpOrderInternal_2.DescId   = zc_Movement_OrderInternal()   AND tmpOrderInternal_2.ObjectDescId   = zc_Object_Goods()
+          LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion_1 ON tmpProductionUnion_1.MovementId_OrderClient = Movement_OrderClient.Id AND tmpProductionUnion_1.DescId = zc_Movement_ProductionUnion() AND tmpProductionUnion_1.ObjectDescId = zc_Object_Product()
+          LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion_2 ON tmpProductionUnion_2.MovementId_OrderClient = Movement_OrderClient.Id AND tmpProductionUnion_2.DescId = zc_Movement_ProductionUnion() AND tmpProductionUnion_2.ObjectDescId = zc_Object_Goods()
        ;
 
 END;

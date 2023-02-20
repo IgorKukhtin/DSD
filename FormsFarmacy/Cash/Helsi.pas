@@ -139,6 +139,8 @@ function GetKey_expireDate(var AUserId : integer; var AKey_expireDate : TDateTim
 
 function GetKey_User_expireDate(ABase64Key, AKeyPassword : String; var AKey_expireDate : TDateTime) : boolean;
 
+function GetKey_UserKeyId : Integer;
+
 function IsActiveHelsiApi : boolean;
 
 implementation
@@ -1572,6 +1574,13 @@ begin
   end;
 
   Result := HelsiApi.IntegrationClientGetKeyInfo(ABase64Key, AKeyPassword, AKey_expireDate);
+end;
+
+function GetKey_UserKeyId : Integer;
+begin
+  Result := 0;
+
+  if Assigned(HelsiApi) then Result := HelsiApi.FUserId;
 end;
 
 

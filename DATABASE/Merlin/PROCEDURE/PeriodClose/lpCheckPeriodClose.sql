@@ -24,7 +24,7 @@ BEGIN
         -- AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin())
      THEN
          RAISE EXCEPTION 'Ошибка.Для пользователя <%> изменения в документе возможны с <%>.Дата документа = <%>.(<%>)(<%>)'
-                       , lfGet_Object_ValueData_sh (inUserId)
+                       , lfGet_Object_ValueData_sh (inUserId) --, inUserId
                        , zfConvert_DateToString (CURRENT_DATE - INTERVAL '3 DAY')
                        , zfConvert_DateToString (inOperDate)
                        , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = inMovementDescId)
