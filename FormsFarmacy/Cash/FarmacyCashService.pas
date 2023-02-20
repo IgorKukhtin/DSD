@@ -102,6 +102,8 @@ type
     ISERRORRO  : boolean;       //ВИП чек по ошибке РРО
     //***15.03.22
     ISPAPERRSP  : boolean;       //Бумажный рецепт по СП
+    //***19.02.23
+    USERKEYID  : integer;         //Чей файловый ключ использовался при пробитии чека.
 
   end;
   TBodyRecord = record
@@ -1484,6 +1486,8 @@ begin
                 ISERRORRO := FieldByName('ISERRORRO').AsBoolean;
                 //***15.03.22
                 ISPAPERRSP := FieldByName('ISPAPERRSP').AsBoolean;
+                //***19.02.23
+                USERKEYID := FieldByName('USERKEYID').AsInteger;
 
                 FNeedSaveVIP := (MANAGER <> 0);
               end;
@@ -1676,6 +1680,8 @@ begin
                   dsdSave.Params.AddParam('inisErrorRRO', ftBoolean, ptInput, Head.ISERRORRO);
                   //***14.12.21
                   dsdSave.Params.AddParam('inisPaperRecipeSP', ftBoolean, ptInput, Head.ISPAPERRSP);
+                  //***19.02.23
+                  dsdSave.Params.AddParam('inUserKeyId', ftInteger, ptInput, Head.USERKEYID);
 
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);

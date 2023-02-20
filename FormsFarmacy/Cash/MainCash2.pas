@@ -996,8 +996,8 @@ type
       ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
       AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
       AMedicalProgramSPId: Integer; AisManual : Boolean; ACategory1303Id : Integer;
-      ANeedComplete, AisErrorRRO, AisPaperRecipeSP: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
-      AID: Integer; out AUID: String): Boolean;
+      ANeedComplete, AisErrorRRO, AisPaperRecipeSP: Boolean; AUserKeyId : Integer;
+      AZReport : Integer; AFiscalCheckNumber: String; AID: Integer; out AUID: String): Boolean;
 
     procedure pGet_OldSP(var APartnerMedicalId: Integer;
       var APartnerMedicalName, AMedicSP: String; var AOperDateSP: TDateTime);
@@ -1684,6 +1684,7 @@ begin
         False, // NeedComplete
         FErrorRRO, // isErrorRRO
         FormParams.ParamByName('isPaperRecipeSP').Value,
+        FormParams.ParamByName('UserKeyId').Value,
         0,     // ZReport
         '',    // FiscalCheckNumber
         FormParams.ParamByName('CheckId').Value,  // ID чека
@@ -1751,6 +1752,7 @@ begin
   FormParams.ParamByName('ConfirmationCodeSP').Value := '';
   FormParams.ParamByName('HelsiPartialPrescription').Value := False;
   FormParams.ParamByName('HelsiSkipDispenseSign').Value := False;
+  FormParams.ParamByName('UserKeyId').Value := 3;
   // **13.05.19
   FormParams.ParamByName('PartionDateKindId').Value := 0;
   // **07.11.19
@@ -4216,6 +4218,7 @@ begin
         True, // NeedComplete
         False, // isErrorRRO
         FormParams.ParamByName('isPaperRecipeSP').Value,
+        FormParams.ParamByName('UserKeyId').Value,
         ZReport,     // Номер Z отчета
         CheckNumber, // FiscalCheckNumber
         FormParams.ParamByName('CheckId').Value,  // ID чека
@@ -6164,6 +6167,7 @@ begin
     , false // NeedComplete
     , False // isErrorRRO
     , FormParams.ParamByName('isPaperRecipeSP').Value
+    , FormParams.ParamByName('UserKeyId').Value
     , 0  // ZReport
     , '' // FiscalCheckNumber
     , FormParams.ParamByName('CheckId').Value // Id чека
@@ -6283,6 +6287,7 @@ begin
     , false // NeedComplete
     , False // isErrorRRO
     , FormParams.ParamByName('isPaperRecipeSP').Value
+    , FormParams.ParamByName('UserKeyId').Value
     , 0  // ZReport
     , '' // FiscalCheckNumber
     , FormParams.ParamByName('CheckId').Value // Id чека
@@ -6867,7 +6872,7 @@ end;
 
 procedure TMainCashForm2.actSetSPExecute(Sender: TObject);
 var
-  PartnerMedicalId, SPKindId, MemberSPID, I: Integer;
+  PartnerMedicalId, SPKindId, MemberSPID, I, UserKeyId: Integer;
   PartnerMedicalName, MedicSP, Ambulance, InvNumberSP, SPKindName,
     MemberSP: String;
   OperDateSP: TDateTime;
@@ -6951,6 +6956,10 @@ begin
       HelsiProgramId := Self.FormParams.ParamByName('HelsiProgramId').Value;
       HelsiProgramName := Self.FormParams.ParamByName('HelsiProgramName').Value;
       isPaperRecipeSP := False;
+      if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
+      begin
+        UserKeyId := GetKey_UserKeyId;
+      end else UserKeyId := 0;
 
       //
       if Self.FormParams.ParamByName('PartnerMedicalId').Value > 0 then
@@ -7064,6 +7073,7 @@ begin
   FormParams.ParamByName('HelsiPartialPrescription').Value := HelsiPartialPrescription;
   FormParams.ParamByName('HelsiSkipDispenseSign').Value := HelsiSkipDispenseSign;
   FormParams.ParamByName('isPaperRecipeSP').Value := isPaperRecipeSP;
+  FormParams.ParamByName('UserKeyId').Value := UserKeyId;
 
   //
   if FormParams.ParamByName('SPTax').Value <> 0 then
@@ -7196,7 +7206,7 @@ var
   HelsiID, HelsiIDList, HelsiName, ProgramId, ProgramName: string;
   HelsiQty: Currency; PartialPrescription, HelsiSkipDispenseSign : Boolean;
   Res: TArray<string>;
-  I, UserId: Integer;
+  I, UserId, UserKeyId: Integer;
   Key_expireDate : TDateTime;
 begin
 
@@ -7258,6 +7268,7 @@ begin
         NewCheck(false);
         exit;
       end;
+      UserKeyId := GetKey_UserKeyId;
     end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
     begin
       if not GetLikiDniproeHealthReceipt(InvNumberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty,
@@ -7266,6 +7277,7 @@ begin
         NewCheck(false);
         exit;
       end;
+      UserKeyId := 0;
     end;
 
   finally
@@ -7352,6 +7364,7 @@ begin
   FormParams.ParamByName('HelsiProgramName').Value := ProgramName;
   FormParams.ParamByName('HelsiPartialPrescription').Value := PartialPrescription;
   FormParams.ParamByName('HelsiSkipDispenseSign').Value := HelsiSkipDispenseSign;
+  FormParams.ParamByName('UserKeyId').Value := UserKeyId;
 
   //
   if FormParams.ParamByName('SPTax').Value <> 0 then
@@ -7550,6 +7563,7 @@ begin
     , false // NeedComplete
     , False // isErrorRRO
     , FormParams.ParamByName('isPaperRecipeSP').Value
+    , FormParams.ParamByName('UserKeyId').Value
     , 0 // ZReport
     , '' // FiscalCheckNumber
     , FormParams.ParamByName('CheckId').Value // Id чека
@@ -11234,6 +11248,7 @@ begin
   FormParams.ParamByName('ConfirmationCodeSP').Value := '';
   FormParams.ParamByName('HelsiPartialPrescription').Value := False;
   FormParams.ParamByName('HelsiSkipDispenseSign').Value := False;
+  FormParams.ParamByName('UserKeyId').Value := 0;
   // **13.05.19
   FormParams.ParamByName('PartionDateKindId').Value := 0;
   // **07.11.19
@@ -12854,8 +12869,8 @@ function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: Integer;
   ADistributionPromoList: String; AMedicKashtanId, AMemberKashtanId : Integer;
   AisCorrectMarketing, AisCorrectIlliquidAssets, AisDoctors, AisDiscountCommit : Boolean;
   AMedicalProgramSPId: Integer; AisManual : Boolean; ACategory1303Id : Integer;
-  ANeedComplete, AisErrorRRO, AisPaperRecipeSP: Boolean; AZReport : Integer; AFiscalCheckNumber: String;
-  AID: Integer; out AUID: String): Boolean;
+  ANeedComplete, AisErrorRRO, AisPaperRecipeSP: Boolean; AUserKeyId : Integer;
+  AZReport : Integer; AFiscalCheckNumber: String; AID: Integer; out AUID: String): Boolean;
 var
   NextVIPId: Integer;
   myVIPCDS, myVIPListCDS: TClientDataSet;
@@ -13131,7 +13146,8 @@ begin
           AisManual,                // ручной выбор медикаментов
           ACategory1303Id,          // Категория 1303
           AisErrorRRO,              // ВИП чек по ошибке РРО
-          AisPaperRecipeSP         // Бумажный рецепт по СП
+          AisPaperRecipeSP,         // Бумажный рецепт по СП
+          AUserKeyId
           ]));
       End
       else
@@ -13257,6 +13273,8 @@ begin
         FLocalDataBaseHead.FieldByName('ISERRORRO').Value := AisErrorRRO;
         //Бумажный рецепт по СП
         FLocalDataBaseHead.FieldByName('ISPAPERRSP').Value := AisPaperRecipeSP;
+        //Чей файловый ключ использовался при пробитии чека.
+        FLocalDataBaseHead.FieldByName('USERKEYID').Value := AUserKeyId;
         FLocalDataBaseHead.Post;
       End;
     except

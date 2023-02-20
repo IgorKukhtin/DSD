@@ -26,6 +26,7 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Boolean, Integer, Boolean, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Boolean, Integer, Boolean, Boolean, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TVarChar, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Boolean, Integer, Boolean, Boolean, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TVarChar, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Boolean, Integer, Boolean, Boolean, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -77,6 +78,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inCategory1303Id      Integer   , -- Группы населения по постановлению КМУ 1303
     IN inisErrorRRO          Boolean   , -- ВИП чек по ошибке РРО
     IN inisPaperRecipeSP     Boolean   , -- Бумажный рецепт по СП
+    IN inUserKeyId           Integer   , -- Чей файловый ключ использовался при пробитии чека.
     IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -485,16 +487,22 @@ BEGIN
       -- сохранили <>
       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_ErrorRRO(), ioId, inisErrorRRO);
     END IF;
+    
+    IF COALESCE (inUserKeyId, 0) <> 0
+    THEN
+      -- сохранили <Чей файловый ключ использовался при пробитии чека.>
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UserKeyId(), ioId, inUserKeyId);                    
+    END IF;
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
 
     -- !!!ВРЕМЕННО для ТЕСТА!!!
-/*    IF inSession = zfCalc_UserAdmin()
+    IF inSession = zfCalc_UserAdmin()
     THEN
-        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inUID, inUserSession, inSession;
-    END IF;*/
+        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%> <%>', inUID, inUserKeyId, inUserSession, inSession;
+    END IF;
 
 
 END;

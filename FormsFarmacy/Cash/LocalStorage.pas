@@ -111,6 +111,8 @@ begin
       AddBoolField(LocalDataBaseHead, 'ISERRORRO');   //ВИП чек по ошибке РРО
       //***15.03.22
       AddBoolField(LocalDataBaseHead, 'ISPAPERRSP');  //	Бумажный рецепт по СП
+      //***19.02.23
+      AddIntField(LocalDataBaseHead,  'USERKEYID');   //Чей файловый ключ использовался при пробитии чека.
 
       LocalDataBaseHead.CreateTable;
     end
@@ -195,6 +197,8 @@ begin
         if FindField('ISERRORRO') = nil then AddBoolField(LFieldDefs,  'ISERRORRO');     //ВИП чек по ошибке РРО
         //***15.03.22
         if FindField('ISPAPERRSP') = nil then AddBoolField(LFieldDefs,  'ISPAPERRSP');    //	Бумажный рецепт по СП
+        //***19.02.23
+        if FindField('USERKEYID') = nil then AddIntField(LFieldDefs,  'USERKEYID');     //Чей файловый ключ использовался при пробитии чека.
         //***10.09.22
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -289,7 +293,9 @@ begin
         //***14.12.21
         (FindField('ISERRORRO') = nil) or
         //***15.03.22
-        (FindField('ISPAPERRSP') = nil));
+        (FindField('ISPAPERRSP') = nil) or
+        //***19.02.23
+        (FindField('USERKEYID') = nil));
 
       Close;
 
