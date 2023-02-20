@@ -561,12 +561,18 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_UserReferals', 'По рекомендации сотрудника' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_UserReferals');
 
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_UserKeyId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_UserKeyId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_UserKeyId', 'Чей файловый ключ использовался при пробитии чека.' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_UserKeyId');
+
+
 /*-------------------------------------------------------------------------------
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 20.02.23                                                                                     * zc_MovementLinkObject_UserKeyId
  14.06.22         * zc_MovementLinkObject_CarInfo
  29.04.22         * zc_MovementLinkObject_Manager
                     zc_MovementLinkObject_Security

@@ -787,6 +787,7 @@ type
     FShowSaveDialog : Boolean;
     sdSaveFile: TSaveDialog;
     FExportType: TspExportToFile;
+    FFieldDefsCDS: TClientDataSet;
     //FIncludeFieldNames: Boolean;
 
     procedure SetdsdStoredProcName(Value: TdsdStoredProc);
@@ -799,6 +800,8 @@ type
     function GetFileExt: string;
     procedure SetFileNamePrefix(const Value: string);
     function GetFileNamePrefix: string;
+    function GetFieldDefs : TFieldDefs;
+    procedure SetFieldDefs(Value: TFieldDefs);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -823,6 +826,8 @@ type
     property ShowSaveDialog : Boolean read FShowSaveDialog write FShowSaveDialog default True;
     // Формат файла
     property ExportType: TspExportToFile read FExportType write FExportType default spefExportToText;
+    // Jgbcfntkm gjktq
+    property FieldDefs: TFieldDefs read GetFieldDefs write SetFieldDefs;
   end;
 
   TdsdPartnerMapAction = class(TdsdOpenForm, IFormAction)
@@ -1832,6 +1837,7 @@ begin
   RegisterActions('DSDLib', [TdsdDataSetRefresh], TdsdDataSetRefresh);
   RegisterActions('DSDLib', [TdsdDataSetRefreshEx], TdsdDataSetRefreshEx);
   RegisterActions('DSDLib', [TdsdExecStoredProc], TdsdExecStoredProc);
+  RegisterActions('DSDLib', [TdsdStoredProcExportToFile], TdsdStoredProcExportToFile);
   RegisterActions('DSDLib', [TdsdFormClose], TdsdFormClose);
   RegisterActions('DSDLib', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLib', [TdsdInsertUpdateAction], TdsdInsertUpdateAction);
@@ -4516,6 +4522,7 @@ begin
   //inherited;
 end;
 
+
 { TdsdStoredProcToFile }
 
 constructor TdsdStoredProcExportToFile.Create(AOwner: TComponent);
@@ -4539,6 +4546,8 @@ begin
   FFileNamePrefixParam.DataType := ftString;
   FFileNamePrefixParam.Value := '';
 
+  FFieldDefsCDS := TClientDataSet.Create(Nil);
+
   FShowSaveDialog := True;
   FExportType := spefExportToText;
 end;
@@ -4550,6 +4559,7 @@ begin
   FFileNameParam.Free;
   FFileExtParam.Free;
   FFileNamePrefixParam.Free;
+  FFieldDefsCDS.Free;
 
   inherited;
 end;
@@ -4618,13 +4628,28 @@ begin
   if FExportType = spefExportToDbf then
   begin
 
-     with TFileExternalSave.Create(TdsdStoredProc(FdsdStoredProcName).DataSet.FieldDefs,
-                                   TdsdStoredProc(FdsdStoredProcName).DataSet,
-                                   FilePaths + '\' + FilenamePrefix + FileNames, true) do
-     try
-       Execute(FileNames);
-     finally
-       Free
+     if FieldDefs.Count > 0 then
+     begin
+
+       with TFileExternalSave.Create(FieldDefs,
+                                     TdsdStoredProc(FdsdStoredProcName).DataSet,
+                                     FilePaths + '\' + FilenamePrefix + FileNames, true) do
+       try
+         Execute(FileNames);
+       finally
+         Free
+       end;
+     end else
+     begin
+
+       with TFileExternalSave.Create(TdsdStoredProc(FdsdStoredProcName).DataSet.FieldDefs,
+                                     TdsdStoredProc(FdsdStoredProcName).DataSet,
+                                     FilePaths + '\' + FilenamePrefix + FileNames, true) do
+       try
+         Execute(FileNames);
+       finally
+         Free
+       end;
      end;
   end else
   begin
@@ -4648,6 +4673,16 @@ begin
         CloseFile(F);
       end;
   end;
+end;
+
+function TdsdStoredProcExportToFile.GetFieldDefs : TFieldDefs;
+begin
+  Result := FFieldDefsCDS.FieldDefs;
+end;
+
+procedure TdsdStoredProcExportToFile.SetFieldDefs(Value: TFieldDefs);
+begin
+  FFieldDefsCDS.FieldDefs.Assign(Value);
 end;
 
 function TdsdStoredProcExportToFile.GetdsdStoredProcName: TdsdStoredProc;
