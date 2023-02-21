@@ -2126,6 +2126,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbGridToExcelCCP'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenFormCCPartner'
         end>
     end
@@ -2179,6 +2183,10 @@
       Action = macUpdate_CCP_Connected_No
       Category = 0
     end
+    object bbGridToExcelCCP: TdxBarButton
+      Action = actGridToExcelCCP
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -2206,6 +2214,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object OpenForm_ContractPriceList: TdsdOpenForm
@@ -2739,6 +2748,14 @@
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actGridToExcelCCP: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = CCPartner
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072')'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072')'
+      ImageIndex = 6
     end
     object dsdSetErasedGoods: TdsdUpdateErased
       Category = 'DSDLib'
@@ -4668,8 +4685,8 @@
   end
   object CCPartnerDS: TDataSource
     DataSet = CCPartnerCDS
-    Left = 478
-    Top = 493
+    Left = 494
+    Top = 469
   end
   object CCPartnerCDS: TClientDataSet
     Aggregates = <>

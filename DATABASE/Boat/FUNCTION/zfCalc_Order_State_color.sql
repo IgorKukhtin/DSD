@@ -27,7 +27,7 @@ BEGIN
 
                    WHEN inNPP > 0 AND inMovementId_ProductionUnion > 0
                     AND inObjectDescId_ProductionUnion = zc_Object_Goods()
-                   THEN zc_Color_Blue() --'В работе (узлы)'
+                   THEN  16644552 --голубой -- zc_Color_Blue() --'В работе (узлы)'
 
                    WHEN inNPP > 0 AND inMovementId_OrderInternal > 0
                     AND inObjectDescId_OrderInternal = zc_Object_Goods()

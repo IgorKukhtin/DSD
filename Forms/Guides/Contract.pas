@@ -333,6 +333,8 @@ type
     bbUpdate_CCP_Connected_Yes: TdxBarButton;
     bbUpdate_CCP_Connected_No: TdxBarButton;
     actRefreshCCPartner: TdsdDataSetRefresh;
+    actGridToExcelCCP: TdsdGridToExcel;
+    bbGridToExcelCCP: TdxBarButton;
 
   private
     { Private declarations }

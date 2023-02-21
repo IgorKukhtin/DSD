@@ -1420,6 +1420,8 @@ type
     miReport_StaffList: TMenuItem;
     actSheetWorkTime_line: TdsdOpenForm;
     miSheetWorkTime_line: TMenuItem;
+    actCurrencyListMovement: TdsdOpenForm;
+    miCurrencyListMovement: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

@@ -565,6 +565,11 @@ end;
 
 procedure TLoadFormTest.LoadCurrencyMovementFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyListMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyListMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyListJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyListJournalForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCurrencyMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyJournalForm'));

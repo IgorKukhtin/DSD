@@ -160,6 +160,10 @@ CREATE OR REPLACE FUNCTION zc_Movement_Currency() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_Currency', 'Курсовая разница' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_Currency');
 
+CREATE OR REPLACE FUNCTION zc_Movement_CurrencyList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_CurrencyList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_CurrencyList', 'Курсы валют для расчетов' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_CurrencyList');
+
 CREATE OR REPLACE FUNCTION zc_Movement_FounderService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_FounderService'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_FounderService', 'Начисления учредителям' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_FounderService');
@@ -564,6 +568,7 @@ INSERT INTO MovementDesc (Code, ItemName)
  ИСТОР
  ИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 21.02.23         * zc_Movement_CurrencyList
  28.10.22         * zc_Movement_SendDebtMember
  07.09.22                                                                                     * zc_Movement_SalePromoGoods
  03.09.22                                                                                     * zc_Movement_FilesToCheck
