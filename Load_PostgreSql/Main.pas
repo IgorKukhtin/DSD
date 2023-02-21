@@ -20,13 +20,24 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.ActnList, dsdAction;
+  Vcl.ActnList, dsdAction, IdTCPConnection, IdTCPClient
+  , IdHTTP, IdSSLOpenSSL, IdSSLOpenSSLHeaders, IdCTypes;
 
 type
   TCurrencyItem = record
     Name:   string;
   end;
   TArrayCurrencyList = array of TCurrencyItem;
+
+type
+  TCustomIdHTTP = class(TIdHTTP)
+  public
+    constructor Create(AOwner: TComponent);
+    destructor Destroy; override;
+  private
+    procedure OnStatusInfoEx(ASender: TObject; const AsslSocket: PSSL; const AWhere, Aret: TIdC_INT; const AType, AMsg: String);
+  end;
+
 
   TMainForm = class(TForm)
     DataSource: TDataSource;
@@ -366,9 +377,34 @@ var
   MainForm: TMainForm;
 
 implementation
-uses Authentication, CommonData, Storage, SysUtils, Dialogs, Graphics, XMLIntf, XMLDoc, IdHTTP
-, IdTCPConnection, IdTCPClient, IdSSLOpenSSL;
+uses Authentication, CommonData, Storage, SysUtils, Dialogs, Graphics, XMLIntf, XMLDoc;
 {$R *.dfm}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+{ TCustomIdHTTP }
+constructor TCustomIdHTTP.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+  with IOHandler as TIdSSLIOHandlerSocketOpenSSL do begin
+    OnStatusInfoEx := Self.OnStatusInfoEx;
+    SSLOptions.Method := sslvSSLv23;
+    SSLOptions.SSLVersions := [sslvSSLv2, sslvSSLv23, sslvSSLv3, sslvTLSv1];
+  end;
+end;
+
+destructor TCustomIdHTTP.Destroy;
+begin
+  IOHandler.Free;
+  inherited Destroy;
+end;
+
+procedure TCustomIdHTTP.OnStatusInfoEx(ASender: TObject; const AsslSocket: PSSL; const AWhere, Aret: TIdC_INT;
+  const AType, AMsg: String);
+begin
+  SSL_set_tlsext_host_name(AsslSocket, Request.Host);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.GetArrayCurrencyList_Index_byName (Name:String):Integer;
 var i: Integer;
@@ -484,21 +520,15 @@ end;
 procedure TMainForm.pLoad_https_Currency_minfin(OperDate : TDateTime);
   var XML : IXMLDocument; RootNode, xmlNode: IXMLNode;
       i:Integer;
+
+          //------------------------------------------------------------------------------------------------------------------------------------------
           function GetHTTPjson(AURL : string) : String;
             var  mStream: TMemoryStream;
-                 IdHTTP: TIdHTTP;
-                 IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+                 IdHTTP: TCustomIdHTTP;
           begin
             Result := '';
 
-            IdHTTP := TIdHTTP.Create(Nil);
-            IdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
-            IdHTTP.IOHandler := IdSSLIOHandlerSocketOpenSSL;
-            //***TIdSSLMode = (sslmUnassigned, sslmClient, sslmServer, sslmBoth);
-            IdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmUnassigned;
-
-            //***TIdSSLVersion = (sslvSSLv2, sslvSSLv23, sslvSSLv3, sslvTLSv1);
-            IdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv2;
+            IdHTTP := TCustomIdHTTP.Create(Nil);
 
             mStream := TMemoryStream.Create;
 
@@ -519,7 +549,6 @@ procedure TMainForm.pLoad_https_Currency_minfin(OperDate : TDateTime);
             finally
               mStream.Free;
               IdHTTP.Free;
-              IdSSLIOHandlerSocketOpenSSL.Free;
             end;
           end;
 begin
