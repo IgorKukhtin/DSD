@@ -85,15 +85,16 @@ BEGIN
      DELETE FROM RemainsOLAPTable
      WHERE RemainsOLAPTable.UnitId      = inUnitId
        AND RemainsOLAPTable.OperDate    = inStartDate
-       AND RemainsOLAPTable.GoodsId     IN (SELECT _tmpReport.GoodsId
-                               FROM RemainsOLAPTable
-                                    LEFT JOIN _tmpReport
-                                           ON _tmpReport.GoodsId     = RemainsOLAPTable.GoodsId
-                                          AND _tmpReport.GoodsKindId = RemainsOLAPTable.GoodsKindId
-                                          AND _tmpReport.UnitId      = RemainsOLAPTable.UnitId
-                                          AND _tmpReport.OperDate    = RemainsOLAPTable.OperDate
-                               WHERE _tmpReport.GoodsId IS NULL
-                              );
+       AND RemainsOLAPTable.GoodsId     IN (SELECT RemainsOLAPTable.GoodsId
+                                            FROM RemainsOLAPTable
+                                                 LEFT JOIN _tmpReport
+                                                        ON _tmpReport.GoodsId     = RemainsOLAPTable.GoodsId
+                                                       AND _tmpReport.GoodsKindId = RemainsOLAPTable.GoodsKindId
+                                                       AND _tmpReport.UnitId      = RemainsOLAPTable.UnitId
+                                                       AND _tmpReport.OperDate    = RemainsOLAPTable.OperDate
+                                            WHERE RemainsOLAPTable.OperDate = inStartDate
+                                              AND _tmpReport.GoodsId IS NULL
+                                           );
 
      -- Обновляем то что уже есть
      UPDATE RemainsOLAPTable SET AmountStart = _tmpReport.AmountStart
@@ -132,4 +133,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsert_RemainsOLAPTable_peresort('01.01.2023', '01.01.2023', 8459, '5') --  !!!Розподільчий комплекс!!!
+-- SELECT *, gpInsert_RemainsOLAPTable_peresort('01.02.2023', '01.02.2023', ObjectId, '5') FROM (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0 UNION SELECT 8459 AS ObjectId) AS tmp
