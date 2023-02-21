@@ -1,7 +1,7 @@
 object ProdColorPatternForm: TProdColorPatternForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Boat Structure>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080'>'
   ClientHeight = 376
   ClientWidth = 851
   Color = clBtnFace
@@ -125,7 +125,7 @@ object ProdColorPatternForm: TProdColorPatternForm
         Width = 45
       end
       object ColorPatternName: TcxGridDBColumn
-        Caption = #1064#1072#1073#1083#1086#1085' Boat Structure '
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1064#1072#1073#1083#1086#1085#1072
         DataBinding.FieldName = 'ColorPatternName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -397,7 +397,7 @@ object ProdColorPatternForm: TProdColorPatternForm
   object cxLabel6: TcxLabel
     Left = 276
     Top = 155
-    Caption = #1064#1072#1073#1083#1086#1085' Boat Structure:'
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1103' '#1064#1072#1073#1083#1086#1085#1072
   end
   object edColorPattern: TcxButtonEdit
     Left = 276

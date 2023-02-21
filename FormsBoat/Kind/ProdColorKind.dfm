@@ -1,7 +1,7 @@
 object ProdColorKindForm: TProdColorKindForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076#1099' Boat Structure>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076' '#1096#1072#1073#1083#1086#1085#1072'>'
   ClientHeight = 314
   ClientWidth = 484
   Color = clBtnFace
@@ -26,8 +26,6 @@ object ProdColorKindForm: TProdColorKindForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 541
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -388,6 +386,7 @@ object ProdColorKindForm: TProdColorKindForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>

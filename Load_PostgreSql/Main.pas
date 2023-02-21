@@ -343,6 +343,9 @@ type
     procedure pLoad_https_Currency(OperDate : TDateTime);
     procedure pSend_Promo_Message_telegram;
 
+    procedure pLoad_https_Currency_minfin_all;
+    procedure pLoad_https_Currency_minfin(OperDate : TDateTime);
+
     function GetArrayCurrencyList_Index_byName (Name:String):Integer;
 
     procedure myEnabledCB (cb:TCheckBox);
@@ -449,6 +452,143 @@ begin
      if not cbOnlyOpen.Checked then fromZConnection.Connected:=false;
      //
      fStop:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoad_https_Currency_minfin_all;
+var i,count: Integer;
+begin
+    if (not cbCurrency.Checked)or(not cbCurrency.Enabled) then exit;
+    //
+    //toStoredProc_two.StoredProcName:='gpInsertUpdate_Movement_Currency_https';
+    //toStoredProc_two.OutputType := otResult;
+    //toStoredProc_two.Params.Clear;
+    //toStoredProc_two.Params.AddParam ('inOperDate',ftDateTime,ptInput, 0);
+    //toStoredProc_two.Params.AddParam ('inAmount_text',ftString,ptInput, '');
+    //toStoredProc_two.Params.AddParam ('inInternalName',ftString,ptInput, '');
+    //
+    //EndDateCompleteEdit.Text:='22.09.2022';
+    count:= 1;
+    //while StrToDate(StartDateCompleteEdit.Text) + count <= StrToDate(EndDateCompleteEdit.Text)
+    //do count:= count + 1;
+    //
+    myLogMemo_add('__start Currency_minfin_all');
+    myLogMemo_add(DateToStr(Date-1));
+    //
+    for i:= 0 to 0
+    do begin
+       //myLogMemo_add(IntToStr(i));
+       pLoad_https_Currency_minfin(Date-1);
+    end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoad_https_Currency_minfin(OperDate : TDateTime);
+  var XML : IXMLDocument; RootNode, xmlNode: IXMLNode;
+      i:Integer;
+          function GetHTTPjson(AURL : string) : String;
+            var  mStream: TMemoryStream;
+                 IdHTTP: TIdHTTP;
+                 IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+          begin
+            Result := '';
+
+            IdHTTP := TIdHTTP.Create(Nil);
+            IdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
+            IdHTTP.IOHandler := IdSSLIOHandlerSocketOpenSSL;
+            //***TIdSSLMode = (sslmUnassigned, sslmClient, sslmServer, sslmBoth);
+            IdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmUnassigned;
+
+            //***TIdSSLVersion = (sslvSSLv2, sslvSSLv23, sslvSSLv3, sslvTLSv1);
+            IdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvSSLv2;
+
+            mStream := TMemoryStream.Create;
+
+            try
+              IdHTTP.Request.ContentType := 'application/xml';
+              IdHTTP.Request.ContentEncoding := 'utf-8';
+              IdHTTP.Request.CustomHeaders.FoldLines := False;
+
+              try
+                Result := IdHTTP.Get(AURL);
+              except on E:Exception do
+                      begin
+                           myLogMemo_add('__err IdHTTP');
+                           myLogMemo_add(DateToStr(OperDate));
+                           myLogMemo_add(E.Message);
+                      end;
+              end;
+            finally
+              mStream.Free;
+              IdHTTP.Free;
+              IdSSLIOHandlerSocketOpenSSL.Free;
+            end;
+          end;
+begin
+//  Memo1.Lines.Clear;
+  XML := TXMLDocument.Create(nil);
+
+  // if OperDate >= StrToDate('20.03.2022') then ShowMessage(DateToStr(OperDate));
+  try
+  XML.XML.Text := GetHTTPjson('https://api.minfin.com.ua/mb/7edf7a19b4b937c880c1ac621d53e5bcf61f943e'
+                             + '/'
+                             + FormatDateTime('YYYY-MM-DD', OperDate)
+                             + '/'
+                             );
+  except
+       if isMsgCurrency_all = true then ShowMessage(DateToStr(OperDate));
+       //
+       myLogMemo_add('__err-1 open Currency_day');
+       myLogMemo_add(DateToStr(OperDate));
+  end;
+
+  try
+
+  if XML.XML.Text <> '' then
+  begin
+    XML.Active := True;
+    RootNode := XML.DocumentElement;
+    for i :=0 to RootNode.ChildNodes.Count-1 do
+    begin
+      {if (RootNode.ChildNodes[i].ChildNodes['cc'].Text = 'EUR')
+      then begin
+          ShowMessage (RootNode.ChildNodes[i].ChildNodes['cc'].Text);
+          ShowMessage (RootNode.ChildNodes[i].NodeName);
+          ShowMessage (IntToStr(GetArrayCurrencyList_Index_byName (RootNode.ChildNodes[i].ChildNodes['cc'].Text)));
+          ShowMessage (ArrayCurrencyList[0].Name);
+          ShowMessage (ArrayCurrencyList[1].Name);
+      end;}
+
+      if (RootNode.ChildNodes[i].NodeName = 'currency')
+      and (GetArrayCurrencyList_Index_byName (RootNode.ChildNodes[i].ChildNodes['cc'].Text) >= 0)
+      //and (RootNode.ChildNodes[i].ChildNodes['r030'].Text = '840')
+      then begin
+               myLogMemo_add('__start currency');
+               myLogMemo_add(DateToStr(OperDate) + '  ' + RootNode.ChildNodes[i].ChildNodes['cc'].Text + ' ' + RootNode.ChildNodes[i].ChildNodes['rate'].Text);
+               //
+               //toStoredProc_two.Params.ParamByName('inOperDate').Value:=OperDate;
+               //toStoredProc_two.Params.ParamByName('inAmount_text').Value:=RootNode.ChildNodes[i].ChildNodes['rate'].Text;
+               //toStoredProc_two.Params.ParamByName('inInternalName').Value:=RootNode.ChildNodes[i].ChildNodes['cc'].Text;
+               //if not myExecToStoredProc_two then ;
+
+//        Memo1.Lines.Add(RootNode.ChildNodes[i].ChildNodes['r030'].Text);
+//        Memo1.Lines.Add(RootNode.ChildNodes[i].ChildNodes['txt'].Text);
+//        Memo1.Lines.Add(RootNode.ChildNodes[i].ChildNodes['rate'].Text);
+//        Memo1.Lines.Add(RootNode.ChildNodes[i].ChildNodes['exchangedate'].Text);
+
+      end;
+    end;
+    XML.Active := False;
+  end;
+
+  except
+       if isMsgCurrency_all = true then ShowMessage(DateToStr(OperDate));
+       if isMsgCurrency_all = true then ShowMessage(XML.XML.Text);
+       //
+       myLogMemo_add('__err-2 read Currency_day');
+       myLogMemo_add('XML.XML.Text');
+       myLogMemo_add(XML.XML.Text);
+       myLogMemo_add(DateToStr(OperDate));
+  end;
+
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoad_https_Currency_all;
@@ -1416,6 +1556,8 @@ var
   Year, Month, Day, Hour, Min, Sec, MSec: Word;
   i : Integer;
 begin
+     //
+     exit;
      //
      cbHistoryCost_0.Checked   := (ParamStr(5) = 'h_0')or(ParamStr(6) = 'h_0')or(ParamStr(7) = 'h_0')or(ParamStr(8) = 'h_0')or(ParamStr(9) = 'h_0')or(ParamStr(10) = 'h_0')or(ParamStr(11) = 'h_0');
      cbHistoryCost_8379.Checked:= (ParamStr(2) = 'h_8379')or(ParamStr(6) = 'h_8379')or(ParamStr(7) = 'h_8379')or(ParamStr(8) = 'h_8379')or(ParamStr(9) = 'h_8379')or(ParamStr(10) = 'h_8379')or(ParamStr(11) = 'h_8379');
@@ -2403,7 +2545,8 @@ begin
      //EndDateCompleteEdit.Text:=EndDateEdit.Text;
 
      isMsgCurrency_all:= true;
-     pLoad_https_Currency_all;
+     //pLoad_https_Currency_all;
+     pLoad_https_Currency_minfin_all
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.Button2Click(Sender: TObject);

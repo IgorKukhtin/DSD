@@ -1,7 +1,7 @@
 object ProdColorPatternEditForm: TProdColorPatternEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <Boat Structure>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1064#1072#1073#1083#1086#1085' '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080'>'
   ClientHeight = 381
   ClientWidth = 829
   Color = clBtnFace
@@ -120,8 +120,8 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
   end
   object cxLabel6: TcxLabel
     Left = 11
-    Top = 6
-    Caption = #1064#1072#1073#1083#1086#1085' Boat Structure '
+    Top = 5
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1103' '#1096#1072#1073#1083#1086#1085#1072
   end
   object cxLabel7: TcxLabel
     Left = 11
@@ -1052,6 +1052,7 @@ object ProdColorPatternEditForm: TProdColorPatternEditForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
