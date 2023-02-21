@@ -764,13 +764,20 @@ BEGIN
                              , COALESCE (tmpProductionUnion_1.ObjectDescId, tmpProductionUnion_2.ObjectDescId)
                               ) AS StateText
            -- все состояния подсветить
-         , CASE WHEN tmpResAll.isSale THEN zc_Color_Lime()
+     /*    , CASE WHEN tmpResAll.isSale THEN zc_Color_Lime()
                 -- если состояние готова то выделяем фоном
                 WHEN COALESCE (tmpOrderClient.NPP,0) > 0 AND tmpOrderInternal_1.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion_1.MovementId_OrderClient IS NOT NULL THEN zc_Color_GreenL()
                 ELSE
                     -- нет цвета
                     zc_Color_White()
-           END :: Integer AS StateColor
+           END :: Integer AS StateColor */
+         , zfCalc_Order_State_color (tmpResAll.isSale
+                                   , tmpOrderClient.NPP :: Integer
+                                   , COALESCE (tmpOrderInternal_1.MovementId, tmpOrderInternal_2.MovementId)
+                                   , COALESCE (tmpProductionUnion_1.MovementId, tmpProductionUnion_2.MovementId)
+                                   , COALESCE (tmpOrderInternal_1.ObjectDescId, tmpOrderInternal_2.ObjectDescId)
+                                   , COALESCE (tmpProductionUnion_1.ObjectDescId, tmpProductionUnion_2.ObjectDescId)
+                                    ) :: Integer AS StateColor
 
          , tmpResAll.isErased
 
