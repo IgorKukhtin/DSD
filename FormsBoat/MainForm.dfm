@@ -284,7 +284,7 @@
     object actColorPattern: TdsdOpenForm [23]
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' - '#1064#1072#1073#1083#1086#1085
+      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' - '#1053#1072#1079#1074#1072#1085#1080#1103' '#1096#1072#1073#1083#1086#1085#1072
       FormName = 'TColorPatternForm'
       FormNameParam.Value = 'TColorPatternForm'
       FormNameParam.DataType = ftString
@@ -394,7 +394,7 @@
     object actProdColorPattern: TdsdOpenForm [33]
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' - '#1089#1090#1088#1091#1082#1090#1091#1088#1072
+      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' - '#1064#1072#1073#1083#1086#1085' '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080
       FormName = 'TProdColorPatternForm'
       FormNameParam.Value = 'TProdColorPatternForm'
       FormNameParam.DataType = ftString
@@ -1046,7 +1046,7 @@
     object actProdColorGroup: TdsdOpenForm
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' - '#1101#1083#1077#1084#1077#1085#1090#1099
+      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' - '#1069#1083#1077#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1096#1072#1073#1083#1086#1085#1072
       FormName = 'TProdColorGroupForm'
       FormNameParam.Value = 'TProdColorGroupForm'
       FormNameParam.DataType = ftString
