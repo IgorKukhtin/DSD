@@ -411,7 +411,7 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = actOpenWorkTimeKindForm
+            Action = actOpenWorkTimeKindForm1
             Default = True
             Kind = bkEllipsis
           end>
@@ -430,6 +430,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_2: TcxGridDBColumn
         Caption = '2'
         DataBinding.FieldName = 'ShortName_2'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm2
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -445,6 +452,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_3: TcxGridDBColumn
         Caption = '3'
         DataBinding.FieldName = 'ShortName_3'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm3
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -460,6 +474,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_4: TcxGridDBColumn
         Caption = '4'
         DataBinding.FieldName = 'ShortName_4'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm4
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -475,6 +496,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_5: TcxGridDBColumn
         Caption = '5'
         DataBinding.FieldName = 'ShortName_5'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm5
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -490,6 +518,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_6: TcxGridDBColumn
         Caption = '6'
         DataBinding.FieldName = 'ShortName_6'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm6
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -505,6 +540,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_7: TcxGridDBColumn
         Caption = '7'
         DataBinding.FieldName = 'ShortName_7'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm7
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -520,6 +562,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_8: TcxGridDBColumn
         Caption = '8'
         DataBinding.FieldName = 'ShortName_8'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm8
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -535,6 +584,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_9: TcxGridDBColumn
         Caption = '9'
         DataBinding.FieldName = 'ShortName_9'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm9
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -550,6 +606,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_10: TcxGridDBColumn
         Caption = '10'
         DataBinding.FieldName = 'ShortName_10'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm10
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -565,6 +628,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_11: TcxGridDBColumn
         Caption = '11'
         DataBinding.FieldName = 'ShortName_11'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm11
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -580,6 +650,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_12: TcxGridDBColumn
         Caption = '12'
         DataBinding.FieldName = 'ShortName_12'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm12
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -595,6 +672,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_13: TcxGridDBColumn
         Caption = '13'
         DataBinding.FieldName = 'ShortName_13'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm13
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -610,6 +694,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_14: TcxGridDBColumn
         Caption = '14'
         DataBinding.FieldName = 'ShortName_14'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm14
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -625,6 +716,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_15: TcxGridDBColumn
         Caption = '15'
         DataBinding.FieldName = 'ShortName_15'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm15
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -640,6 +738,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_16: TcxGridDBColumn
         Caption = '16'
         DataBinding.FieldName = 'ShortName_16'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm16
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -655,6 +760,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_17: TcxGridDBColumn
         Caption = '17'
         DataBinding.FieldName = 'ShortName_17'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm17
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -670,6 +782,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_18: TcxGridDBColumn
         Caption = '18'
         DataBinding.FieldName = 'ShortName_18'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm18
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -685,6 +804,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_19: TcxGridDBColumn
         Caption = '19'
         DataBinding.FieldName = 'ShortName_19'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm19
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -700,6 +826,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_20: TcxGridDBColumn
         Caption = '20'
         DataBinding.FieldName = 'ShortName_20'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm20
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -715,6 +848,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_21: TcxGridDBColumn
         Caption = '21'
         DataBinding.FieldName = 'ShortName_21'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm21
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -730,6 +870,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_22: TcxGridDBColumn
         Caption = '22'
         DataBinding.FieldName = 'ShortName_22'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm22
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -745,6 +892,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_23: TcxGridDBColumn
         Caption = '23'
         DataBinding.FieldName = 'ShortName_23'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm23
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -760,6 +914,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_24: TcxGridDBColumn
         Caption = '24'
         DataBinding.FieldName = 'ShortName_24'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm24
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -775,6 +936,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_25: TcxGridDBColumn
         Caption = '25'
         DataBinding.FieldName = 'ShortName_25'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm25
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -790,6 +958,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_26: TcxGridDBColumn
         Caption = '26'
         DataBinding.FieldName = 'ShortName_26'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm26
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -805,6 +980,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_27: TcxGridDBColumn
         Caption = '27'
         DataBinding.FieldName = 'ShortName_27'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm27
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -820,6 +1002,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_28: TcxGridDBColumn
         Caption = '28'
         DataBinding.FieldName = 'ShortName_28'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm28
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -835,6 +1024,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_29: TcxGridDBColumn
         Caption = '29'
         DataBinding.FieldName = 'ShortName_29'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm29
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -850,6 +1046,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_30: TcxGridDBColumn
         Caption = '30'
         DataBinding.FieldName = 'ShortName_30'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm30
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -865,6 +1068,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       object ShortName_31: TcxGridDBColumn
         Caption = '31'
         DataBinding.FieldName = 'ShortName_31'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenWorkTimeKindForm31
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -1247,14 +1457,827 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     Images = dmMain.ImageList
     Left = 403
     Top = 143
+    object actOpenWorkTimeKindForm2: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm2'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_2'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_2'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm3: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm3'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_3'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_3'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm4: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm4'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_4'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_4'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm5: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm5'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_5'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_5'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm6: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm6'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_6'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_6'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm7: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm7'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_7'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_7'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm8: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm8'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_8'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_8'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm9: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm9'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_9'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_9'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm10: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm10'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_10'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_10'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm11: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm11'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_11'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_11'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm12: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm12'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_12'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_12'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm13: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm13'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_13'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_13'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm14: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm14'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_14'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_14'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm15: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm15'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_15'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_15'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm16: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm16'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_16'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_16'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm17: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm17'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_17'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_17'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm18: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm18'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_18'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_18'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm19: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm19'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_19'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_19'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm20: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm20'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_20'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_20'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm21: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm21'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_21'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_21'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm22: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm22'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_22'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_22'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm23: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm23'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_23'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_23'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm24: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm24'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_24'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_24'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm25: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm2'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_25'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_25'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm26: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm26'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_26'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_26'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm27: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm27'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_27'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_27'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm28: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm28'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_28'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_28'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm29: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm29'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_29'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_29'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm30: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm30'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_30'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_30'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOpenWorkTimeKindForm31: TOpenChoiceForm
+      Category = 'WorkTimeKind'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenWorkTimeKindForm31'
+      FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'WorkTimeKindId_31'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value'
+          Value = Null
+          Component = DayCDS
+          ComponentItem = 'ShortName_31'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actUpdateDayDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMI
+      StoredProc = spInsertUpdateMI1
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMI
+          StoredProc = spInsertUpdateMI1
+        end
+        item
+          StoredProc = spInsertUpdateMI2
         end>
       Caption = 'actUpdateDayDS'
       DataSource = DayDS
@@ -1311,8 +2334,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actOpenWorkTimeKindForm: TOpenChoiceForm
-      Category = 'DSDLib'
+    object actOpenWorkTimeKindForm1: TOpenChoiceForm
+      Category = 'WorkTimeKind'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       FormName = 'TWorkTimeKind_ObjectForm'
@@ -1376,7 +2399,7 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actOpenWorkTimeKindForm
+          Action = actOpenWorkTimeKindForm1
         end
         item
           Action = actUpdateDayDS
@@ -1933,8 +2956,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     Left = 200
     Top = 8
   end
-  object spInsertUpdateMI: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_SheetWorkTime_line'
+  object spInsertUpdateMI1: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_SheetWorkTime_line1'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1989,8 +3012,7 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       item
         Name = 'inOperDate'
         Value = Null
-        Component = HeaderCDS
-        ComponentItem = 'OperDate'
+        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2005,18 +3027,503 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inWorkTimeKindId_1'
+        Name = 'ioShortName_2'
         Value = Null
         Component = DayCDS
-        ComponentItem = 'WorkTimeKindId_1'
-        ParamType = ptInput
+        ComponentItem = 'ShortName_2'
+        DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioWorkTimeKindId_key'
+        Name = 'ioShortName_3'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'WorkTimeKindId_key'
+        Component = DayCDS
+        ComponentItem = 'ShortName_3'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_4'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_4'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_5'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_5'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_6'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_6'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_7'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_7'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_8'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_8'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_9'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_9'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_10'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_10'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_11'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_11'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_12'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_12'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_13'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_13'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_14'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_14'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_15'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_15'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_1_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_1_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_2_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_2_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_3_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_3_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_4_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_4_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_5_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_5_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_6_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_6_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_7_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_7_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_8_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_8_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_9_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_9_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_10_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_10_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_11_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_11_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_12_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_12_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_13_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_13_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_14_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_14_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_15_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_15_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_1'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_1'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_2'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_2'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_3'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_3'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_4'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_4'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_5'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_5'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_6'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_6'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_7'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_7'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_8'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_8'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_9'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_9'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_10'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_10'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_11'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_11'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_12'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_12'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_13'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_13'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_14'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_14'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_15'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_15'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_1_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_1_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_2_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_2_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_3_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_3_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_4_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_4_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_5_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_5_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_6_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_6_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_7_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_7_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_8_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_8_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_9_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_9_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_10_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_10_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_11_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_11_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_12_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_12_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_13_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_13_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_14_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_14_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_15_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_15_old'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -2028,8 +3535,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 254
-    Top = 359
+    Left = 246
+    Top = 375
   end
   object HeaderCDS: TClientDataSet
     Aggregates = <>
@@ -2677,5 +4184,1747 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     PackSize = 1
     Left = 152
     Top = 367
+  end
+  object spInsertUpdateMI2: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_SheetWorkTime_line2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PositionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionLevelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PositionLevelId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalGroupId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalGroupId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageLineId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StorageLineId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42335d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_16'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_16'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_17'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_17'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_18'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_18'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_19'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_19'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_20'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_20'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_21'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_21'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_22'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_22'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_23'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_23'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_24'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_24'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_25'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_25'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_26'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_26'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_27'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_27'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_28'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_28'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_29'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_29'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_30'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_30'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_31'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_31'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_16_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_16_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_17_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_17_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_18_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_18_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_19_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_19_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_20_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_20_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_21_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_21_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_22_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_22_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_23_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_23_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_24_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_24_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_25_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_25_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_26_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_26_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_27_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_27_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_28_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_28_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_29_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_29_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_30_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_30_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_31_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_31_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_16'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_16'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_17'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_17'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_18'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_18'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_19'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_19'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_20'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_20'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_21'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_21'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_22'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_22'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_23'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_23'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_24'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_24'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_25'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_25'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_26'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_26'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_27'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_27'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_28'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_28'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_29'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_29'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_30'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_30'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_31'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_31'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_16_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_16_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_17_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_17_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_18_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_18_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_19_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_19_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_20_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_20_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_21_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_21_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_22_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_22_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_23_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_23_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_24_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_24_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_25_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_25_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_26_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_26_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_27_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_27_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_28_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_28_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_29_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_29_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_30_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_30_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_31_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_31_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPersonalGroup'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 334
+    Top = 359
+  end
+  object spInsertUpdateMI: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_SheetWorkTime_line'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PositionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionLevelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PositionLevelId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalGroupId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PersonalGroupId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageLineId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StorageLineId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42335d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_1'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_1'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_2'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_2'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_3'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_3'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_4'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_4'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_5'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_5'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_6'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_6'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_7'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_7'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_8'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_8'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_9'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_9'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_10'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_10'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_11'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_11'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_12'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_12'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_13'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_13'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_14'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_14'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_15'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_15'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_16'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_16'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_17'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_17'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_18'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_18'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_19'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_19'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_20'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_20'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_21'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_21'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_22'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_22'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_23'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_23'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_24'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_24'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_25'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_25'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_26'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_26'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_27'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_27'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_28'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_28'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_29'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_29'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_30'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_30'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_31'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_31'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_1_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_1_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_2_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_2_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_3_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_3_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_4_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_4_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_5_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_5_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_6_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_6_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_7_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_7_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_8_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_8_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_9_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_9_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_10_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_10_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_11_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_11_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_12_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_12_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_13_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_13_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_14_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_14_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_15_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_15_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_16_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_16_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_17_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_17_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_18_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_18_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_19_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_19_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_20_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_20_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_21_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_21_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_22_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_22_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_23_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_23_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_24_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_24_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_25_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_25_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_26_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_26_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_27_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_27_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_28_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_28_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_29_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_29_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_30_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_30_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioShortName_31_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'ShortName_31_old'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_1'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_1'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_2'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_2'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_3'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_3'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_4'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_4'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_5'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_5'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_6'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_6'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_7'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_7'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_8'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_8'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_9'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_9'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_10'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_10'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_11'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_11'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_12'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_12'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_13'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_13'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_14'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_14'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_15'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_15'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_16'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_16'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_17'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_17'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_18'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_18'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_19'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_19'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_20'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_20'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_21'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_21'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_22'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_22'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_23'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_23'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_24'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_24'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_25'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_25'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_26'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_26'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_27'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_27'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_28'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_28'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_29'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_29'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_30'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_30'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_31'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_31'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_1_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_1_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_2_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_2_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_3_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_3_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_4_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_4_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_5_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_5_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_6_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_6_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_7_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_7_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_8_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_8_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_9_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_9_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_10_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_10_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_11_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_11_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_12_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_12_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_13_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_13_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_14_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_14_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_15_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_15_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_16_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_16_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_17_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_17_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_18_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_18_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_19_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_19_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_20_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_20_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_21_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_21_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_22_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_22_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_23_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_23_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_24_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_24_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_25_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_25_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_26_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_26_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_27_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_27_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_28_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_28_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_29_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_29_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_30_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_30_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioWorkTimeKindId_31_old'
+        Value = Null
+        Component = DayCDS
+        ComponentItem = 'WorkTimeKindId_31_old'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPersonalGroup'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 238
+    Top = 319
   end
 end

@@ -131,6 +131,71 @@ RETURNS TABLE (
            , Color_Calc_31  Integer
 
            , KeyId          TVarChar
+
+           , WorkTimeKindId_1_old    Integer
+           , WorkTimeKindId_2_old    Integer
+           , WorkTimeKindId_3_old    Integer
+           , WorkTimeKindId_4_old    Integer
+           , WorkTimeKindId_5_old    Integer
+           , WorkTimeKindId_6_old    Integer
+           , WorkTimeKindId_7_old    Integer
+           , WorkTimeKindId_8_old    Integer
+           , WorkTimeKindId_9_old    Integer
+           , WorkTimeKindId_10_old   Integer
+           , WorkTimeKindId_11_old   Integer
+           , WorkTimeKindId_12_old   Integer
+           , WorkTimeKindId_13_old   Integer
+           , WorkTimeKindId_14_old   Integer
+           , WorkTimeKindId_15_old   Integer
+           , WorkTimeKindId_16_old   Integer
+           , WorkTimeKindId_17_old   Integer
+           , WorkTimeKindId_18_old   Integer
+           , WorkTimeKindId_19_old   Integer
+           , WorkTimeKindId_20_old   Integer
+           , WorkTimeKindId_21_old   Integer
+           , WorkTimeKindId_22_old   Integer
+           , WorkTimeKindId_23_old   Integer
+           , WorkTimeKindId_24_old   Integer
+           , WorkTimeKindId_25_old   Integer
+           , WorkTimeKindId_26_old   Integer
+           , WorkTimeKindId_27_old   Integer
+           , WorkTimeKindId_28_old   Integer
+           , WorkTimeKindId_29_old   Integer
+           , WorkTimeKindId_30_old   Integer
+           , WorkTimeKindId_31_old   Integer
+
+           , ShortName_1_old  TVarChar
+           , ShortName_2_old  TVarChar
+           , ShortName_3_old  TVarChar
+           , ShortName_4_old  TVarChar
+           , ShortName_5_old  TVarChar
+           , ShortName_6_old  TVarChar
+           , ShortName_7_old  TVarChar
+           , ShortName_8_old  TVarChar
+           , ShortName_9_old  TVarChar
+           , ShortName_10_old TVarChar
+           , ShortName_11_old TVarChar
+           , ShortName_12_old TVarChar
+           , ShortName_13_old TVarChar
+           , ShortName_14_old TVarChar
+           , ShortName_15_old TVarChar
+           , ShortName_16_old TVarChar
+           , ShortName_17_old TVarChar
+           , ShortName_18_old TVarChar
+           , ShortName_19_old TVarChar
+           , ShortName_20_old TVarChar
+           , ShortName_21_old TVarChar
+           , ShortName_22_old TVarChar
+           , ShortName_23_old TVarChar
+           , ShortName_24_old TVarChar
+           , ShortName_25_old TVarChar
+           , ShortName_26_old TVarChar
+           , ShortName_27_old TVarChar
+           , ShortName_28_old TVarChar
+           , ShortName_29_old TVarChar
+           , ShortName_30_old TVarChar
+           , ShortName_31_old TVarChar
+
            )
 AS
 $BODY$
@@ -1160,8 +1225,76 @@ BEGIN
            , D.Color_Calc_29 :: Integer
            , D.Color_Calc_30 :: Integer
            , D.Color_Calc_31 :: Integer
+
           
-           , (''||Object_Member.Id||'_'||Object_Position.Id||'_'||Object_PositionLevel.Id||'_'||Object_PersonalGroup.Id||'_'||Object_StorageLine.Id) ::TVarChar  AS KeyId
+           , (''||COALESCE(Object_Member.Id,0)||'_'||COALESCE(Object_Position.Id,0)||'_'||COALESCE(Object_PositionLevel.Id,0)||'_'||COALESCE(Object_PersonalGroup.Id,0)||'_'||COALESCE(Object_StorageLine.Id,0)) ::TVarChar  AS KeyId
+
+
+--
+           , D.WorkTimeKindId_1    :: Integer   AS WorkTimeKindId_1_old 
+           , D.WorkTimeKindId_2    :: Integer   AS WorkTimeKindId_2_old 
+           , D.WorkTimeKindId_3    :: Integer   AS WorkTimeKindId_3_old 
+           , D.WorkTimeKindId_4    :: Integer   AS WorkTimeKindId_4_old 
+           , D.WorkTimeKindId_5    :: Integer   AS WorkTimeKindId_5_old 
+           , D.WorkTimeKindId_6    :: Integer   AS WorkTimeKindId_6_old 
+           , D.WorkTimeKindId_7    :: Integer   AS WorkTimeKindId_7_old 
+           , D.WorkTimeKindId_8    :: Integer   AS WorkTimeKindId_8_old 
+           , D.WorkTimeKindId_9    :: Integer   AS WorkTimeKindId_9_old 
+           , D.WorkTimeKindId_10   :: Integer   AS WorkTimeKindId_10_old
+           , D.WorkTimeKindId_11   :: Integer   AS WorkTimeKindId_11_old
+           , D.WorkTimeKindId_12   :: Integer   AS WorkTimeKindId_12_old
+           , D.WorkTimeKindId_13   :: Integer   AS WorkTimeKindId_13_old
+           , D.WorkTimeKindId_14   :: Integer   AS WorkTimeKindId_14_old
+           , D.WorkTimeKindId_15   :: Integer   AS WorkTimeKindId_15_old
+           , D.WorkTimeKindId_16   :: Integer   AS WorkTimeKindId_16_old
+           , D.WorkTimeKindId_17   :: Integer   AS WorkTimeKindId_17_old
+           , D.WorkTimeKindId_18   :: Integer   AS WorkTimeKindId_18_old
+           , D.WorkTimeKindId_19   :: Integer   AS WorkTimeKindId_19_old
+           , D.WorkTimeKindId_20   :: Integer   AS WorkTimeKindId_20_old
+           , D.WorkTimeKindId_21   :: Integer   AS WorkTimeKindId_21_old
+           , D.WorkTimeKindId_22   :: Integer   AS WorkTimeKindId_22_old
+           , D.WorkTimeKindId_23   :: Integer   AS WorkTimeKindId_23_old
+           , D.WorkTimeKindId_24   :: Integer   AS WorkTimeKindId_24_old
+           , D.WorkTimeKindId_25   :: Integer   AS WorkTimeKindId_25_old
+           , D.WorkTimeKindId_26   :: Integer   AS WorkTimeKindId_26_old
+           , D.WorkTimeKindId_27   :: Integer   AS WorkTimeKindId_27_old
+           , D.WorkTimeKindId_28   :: Integer   AS WorkTimeKindId_28_old
+           , D.WorkTimeKindId_29   :: Integer   AS WorkTimeKindId_29_old
+           , D.WorkTimeKindId_30   :: Integer   AS WorkTimeKindId_30_old
+           , D.WorkTimeKindId_31   :: Integer   AS WorkTimeKindId_31_old
+
+           , D.ShortName_1   :: TVarChar AS ShortName_1_old 
+           , D.ShortName_2   :: TVarChar AS ShortName_2_old 
+           , D.ShortName_3   :: TVarChar AS ShortName_3_old 
+           , D.ShortName_4   :: TVarChar AS ShortName_4_old 
+           , D.ShortName_5   :: TVarChar AS ShortName_5_old 
+           , D.ShortName_6   :: TVarChar AS ShortName_6_old 
+           , D.ShortName_7   :: TVarChar AS ShortName_7_old 
+           , D.ShortName_8   :: TVarChar AS ShortName_8_old 
+           , D.ShortName_9   :: TVarChar AS ShortName_9_old 
+           , D.ShortName_10  :: TVarChar AS ShortName_10_old
+           , D.ShortName_11  :: TVarChar AS ShortName_11_old
+           , D.ShortName_12  :: TVarChar AS ShortName_12_old
+           , D.ShortName_13  :: TVarChar AS ShortName_13_old
+           , D.ShortName_14  :: TVarChar AS ShortName_14_old
+           , D.ShortName_15  :: TVarChar AS ShortName_15_old
+           , D.ShortName_16  :: TVarChar AS ShortName_16_old
+           , D.ShortName_17  :: TVarChar AS ShortName_17_old
+           , D.ShortName_18  :: TVarChar AS ShortName_18_old
+           , D.ShortName_19  :: TVarChar AS ShortName_19_old
+           , D.ShortName_20  :: TVarChar AS ShortName_20_old
+           , D.ShortName_21  :: TVarChar AS ShortName_21_old
+           , D.ShortName_22  :: TVarChar AS ShortName_22_old
+           , D.ShortName_23  :: TVarChar AS ShortName_23_old
+           , D.ShortName_24  :: TVarChar AS ShortName_24_old
+           , D.ShortName_25  :: TVarChar AS ShortName_25_old
+           , D.ShortName_26  :: TVarChar AS ShortName_26_old
+           , D.ShortName_27  :: TVarChar AS ShortName_27_old
+           , D.ShortName_28  :: TVarChar AS ShortName_28_old
+           , D.ShortName_29  :: TVarChar AS ShortName_29_old
+           , D.ShortName_30  :: TVarChar AS ShortName_30_old
+           , D.ShortName_31  :: TVarChar AS ShortName_31_old
+
       FROM tmpMI_Group AS D
          LEFT JOIN Object AS Object_Member ON Object_Member.Id = D.MemberId
          LEFT JOIN Object AS Object_Position ON Object_Position.Id = D.PositionId

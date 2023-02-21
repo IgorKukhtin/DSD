@@ -46,7 +46,7 @@ type
     cxLabel4: TcxLabel;
     GuidesUnit: TdsdGuides;
     actUpdateDayDS: TdsdUpdateDataSet;
-    spInsertUpdateMI: TdsdStoredProc;
+    spInsertUpdateMI1: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     bbStatic: TdxBarStatic;
@@ -54,7 +54,7 @@ type
     bbGridToExel: TdxBarButton;
     HeaderCDS: TClientDataSet;
     RefreshDispatcher: TRefreshDispatcher;
-    actOpenWorkTimeKindForm: TOpenChoiceForm;
+    actOpenWorkTimeKindForm1: TOpenChoiceForm;
     MultiAction: TMultiAction;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
@@ -114,6 +114,9 @@ type
     dsdDBViewAddOn_days: TdsdDBViewAddOn;
     spSelectMI_days: TdsdStoredProc;
     cxSplitter1: TcxSplitter;
+    actOpenWorkTimeKindForm2: TOpenChoiceForm;
+    spInsertUpdateMI2: TdsdStoredProc;
+    spInsertUpdateMI: TdsdStoredProc;
   private
   public
   end;
