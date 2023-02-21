@@ -324,6 +324,15 @@ type
     bbUpdate_isIrna: TdxBarButton;
     actShowAll_CCPartner: TBooleanStoredProcAction;
     bbShowAll_CCPartner: TdxBarButton;
+    actUpdate_CCP_Connected_Yes: TdsdExecStoredProc;
+    macUpdate_CCP_Connected_Yes: TMultiAction;
+    macUpdate_CCP_Connected_list_Yes: TMultiAction;
+    spUpdate_CCP_Connected_Yes: TdsdStoredProc;
+    macUpdate_CCP_Connected_list_No: TMultiAction;
+    macUpdate_CCP_Connected_No: TMultiAction;
+    bbUpdate_CCP_Connected_Yes: TdxBarButton;
+    bbUpdate_CCP_Connected_No: TdxBarButton;
+    actRefreshCCPartner: TdsdDataSetRefresh;
 
   private
     { Private declarations }
