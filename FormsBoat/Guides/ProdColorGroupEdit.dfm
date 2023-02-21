@@ -1,7 +1,7 @@
 object ProdColorGroupEditForm: TProdColorGroupEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1086#1089#1090#1072#1074#1083#1103#1102#1097#1080#1077' Boat Structure>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090#1099' '#1076#1083#1103' '#1096#1072#1073#1083#1086#1085#1072'>'
   ClientHeight = 246
   ClientWidth = 295
   Color = clBtnFace
@@ -74,8 +74,8 @@ object ProdColorGroupEditForm: TProdColorGroupEditForm
   end
   object cxLabel4: TcxLabel
     Left = 10
-    Top = 98
-    Caption = #1042#1080#1076' Boat Structure'
+    Top = 97
+    Caption = #1042#1080#1076' '#1096#1072#1073#1083#1086#1085#1072
   end
   object edProdColorKind: TcxButtonEdit
     Left = 10
