@@ -4917,16 +4917,16 @@
 				<Form>SheetWorkTimeJournal_lineForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SheetWorkTime_line.pas">
-				<Form>SheetWorkTime_lineForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CurrencyListJournal.pas">
 				<Form>CurrencyListJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CurrencyListMovement.pas">
 				<Form>CurrencyListMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SheetWorkTime_line.pas">
+				<Form>SheetWorkTime_lineForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

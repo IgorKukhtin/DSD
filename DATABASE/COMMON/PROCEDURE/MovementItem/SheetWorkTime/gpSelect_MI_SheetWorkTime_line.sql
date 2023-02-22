@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_SheetWorkTime_line(
     IN inIsErased    Boolean   , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (
+  RETURNS SETOF refcursor
+/*RETURNS TABLE (
              MemberId            Integer
            , MemberCode          Integer
            , MemberName          TVarChar
@@ -24,7 +25,7 @@ RETURNS TABLE (
            , WorkTimeKindId_key  Integer
            , WorkTimeKindName_key TVarChar
            , DateOut             TDateTime
- --???      --isErased
+           , isErased      Boolean
 
            , AmountHours   TFLoat
            , CountDay      TFloat
@@ -196,12 +197,15 @@ RETURNS TABLE (
            , ShortName_30_old TVarChar
            , ShortName_31_old TVarChar
 
-           )
+           )*/
 AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbStartDate TDateTime;
   DECLARE vbEndDate TDateTime;
+  DECLARE cur1 refcursor;
+          cur2 refcursor;
+          cur3 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -798,8 +802,7 @@ BEGIN
               , tmp.ObjectId
       ;
       ----------------------------------------------------------------
-     RETURN QUERY
-
+    CREATE TEMP TABLE tmpMI_Result ON COMMIT DROP AS
      WITH
      -- добавляем всех сорудников и увольнение
      tmpMIAll AS (
@@ -1120,7 +1123,7 @@ BEGIN
            , Object_WorkTimeKind_key.Id          AS WorkTimeKindId_key
            , Object_WorkTimeKind_key.ValueData   AS WorkTimeKindName_key
            , CASE WHEN COALESCE (tmpListOut.DateOut, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE tmpListOut.DateOut END ::TDateTime AS DateOut
- --???      --, CASE WHEN tmp.isErased = 0 THEN TRUE ELSE FALSE END AS isErased
+           , CASE WHEN tmp.isErased = 0 THEN TRUE ELSE FALSE END AS isErased
 
            , tmp.Amount        ::TFLoat AS AmountHours
            , tmp.CountDay      ::TFloat
@@ -1357,6 +1360,44 @@ BEGIN
 
  
  
+     OPEN cur1 
+          
+      SELECT tmpMI.MemberId
+           , tmpMI.MemberCode
+           , tmpMI.MemberName
+           , tmpMI.PositionId
+           , tmpMI.PositionName
+           , tmpMI.PositionLevelId
+           , tmpMI.PositionLevelName
+           , tmpMI.PersonalGroupId
+           , tmpMI.PersonalGroupName
+           , tmpMI.StorageLineId
+           , tmpMI.StorageLineName
+           , tmpMI.WorkTimeKindId_key
+           , tmpMI.WorkTimeKindName_key
+           , tmpMI.DateOut
+           , tmpMI.isErased
+
+           , tmpMI.AmountHours
+           , tmpMI..CountDay      ::TFloat
+           , tmpMI..Amount_3 ::TFloat
+           , tmpMI..Amount_4 ::TFloat
+           , tmpMI..Amount_5 ::TFloat
+           , tmpMI..Amount_6 ::TFloat 
+           , tmpMI..PersonalId
+           
+           , tmpMI.KeyId
+
+          FROM tmpMI_Result AS tmpMI
+          ;
+     RETURN NEXT cur1;
+
+     OPEN cur2 
+      SELECT tmpMI.*
+      FROM tmpMI_Result AS tmpMI
+     ;
+     RETURN NEXT cur2;
+
  /*
         SELECT tmp.ValueData    AS Name
              , tmp.TotalAmount ::TFloat
@@ -1390,19 +1431,101 @@ BEGIN
                  )AS tmp ON tmp.Id = D.MemberId  
      ORDER BY tmp.Id
          ';
-     OPEN cur2 FOR EXECUTE vbQueryText;
-     RETURN NEXT cur2;
-
-     -- 1)кол-во часов 2)кол-во смен 3)Кол-во шт.ед 4)Кол-во отпуска 5)Кол-во прогулов
-     OPEN cur3 FOR EXECUTE vbQueryText2; 
-     RETURN NEXT cur3;
      
-*/
+     -- 1)кол-во часов 2)кол-во смен 3)Кол-во шт.ед 4)Кол-во отпуска 5)Кол-во прогулов
+
+     OPEN cur3
+     WITH
+     tmpTotalGroup AS (
+        SELECT tmp.ObjectId
+             , SUM (tmp.Amount)  :: TFloat AS Amount
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 1  THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_1
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 2  THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_2
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 3  THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_3
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 4  THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_4
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 5  THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_5
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 6  THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_6
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 7  THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_7
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 8  THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_8
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 9  THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_9
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 10 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_10
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 11 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_11
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 12 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_12
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 13 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_13
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 14 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_14
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 15 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_15
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 16 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_16
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 17 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_17
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 18 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_18
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 19 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_19
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 20 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_20
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 21 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_21
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 22 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_22
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 23 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_23
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 24 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_24
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 25 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_25
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 26 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_26
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 27 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_27
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 28 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_28
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 29 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_29
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 30 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_30
+             , SUM (CASE WHEN EXTRACT (Day FROM tmp.OperDate)::integer = 31 THEN tmp.Amount ELSE 0 END)  :: TFloat AS Amount_31   
+        FROM tmpTotal AS tmp
+        GROUP BY tmp.ObjectId
+        )
+   , tmpTotalText AS (SELECT 1 AS Id, ''1.кол-во часов''    AS ValueData
+                UNION SELECT 2 AS Id, ''2.кол-во смен''     AS ValueData
+                UNION SELECT 3 AS Id, ''3.Кол-во шт.ед''    AS ValueData
+                UNION SELECT 4 AS Id, ''4.Кол-во БЛ''       AS ValueData
+                UNION SELECT 5 AS Id, ''5.Кол-во отпуска''  AS ValueData
+                UNION SELECT 6 AS Id, ''6.Кол-во прогулов'' AS ValueData
+                      )
+ 
+     SELECT tmpTotalText.ValueData    AS Name
+          , tmp.Amount      ::TFloat
+          , tmp.Amount_1    ::TFloat
+          , tmp.Amount_2    ::TFloat
+          , tmp.Amount_3    ::TFloat
+          , tmp.Amount_4    ::TFloat
+          , tmp.Amount_5    ::TFloat
+          , tmp.Amount_6    ::TFloat
+          , tmp.Amount_7    ::TFloat
+          , tmp.Amount_8    ::TFloat
+          , tmp.Amount_9    ::TFloat
+          , tmp.Amount_10   ::TFloat
+          , tmp.Amount_11   ::TFloat
+          , tmp.Amount_12   ::TFloat
+          , tmp.Amount_13   ::TFloat
+          , tmp.Amount_14   ::TFloat
+          , tmp.Amount_15   ::TFloat
+          , tmp.Amount_16   ::TFloat
+          , tmp.Amount_17   ::TFloat
+          , tmp.Amount_18   ::TFloat
+          , tmp.Amount_19   ::TFloat
+          , tmp.Amount_20   ::TFloat
+          , tmp.Amount_21   ::TFloat
+          , tmp.Amount_22   ::TFloat
+          , tmp.Amount_23   ::TFloat
+          , tmp.Amount_24   ::TFloat
+          , tmp.Amount_25   ::TFloat
+          , tmp.Amount_26   ::TFloat
+          , tmp.Amount_27   ::TFloat
+          , tmp.Amount_28   ::TFloat
+          , tmp.Amount_29   ::TFloat
+          , tmp.Amount_30   ::TFloat
+          , tmp.Amount_31   ::TFloat    
+
+        FROM tmpTotalText 
+             LEFT JOIN tmpTotalGroup AS tmp ON tmp.ObjectId = tmpTotalText.Id
+        ORDER BY tmp.Id;    
+     RETURN NEXT cur3;
+
+     
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
+
  
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

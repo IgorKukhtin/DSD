@@ -2,7 +2,7 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1072#1073#1077#1083#1100' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080' *>'
-  ClientHeight = 462
+  ClientHeight = 508
   ClientWidth = 971
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -115,8 +115,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     Left = 0
     Top = 90
     Width = 971
-    Height = 254
-    Align = alClient
+    Height = 183
+    Align = alTop
     TabOrder = 1
     LookAndFeel.NativeStyle = False
     object cxGridDBTableView: TcxGridDBTableView
@@ -370,6 +370,15 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         Options.Filtering = False
         Width = 64
       end
+      object isErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel2: TcxGridLevel
       GridView = cxGridDBTableView
@@ -377,12 +386,14 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
   end
   object cxGrid1: TcxGrid
     Left = 0
-    Top = 352
+    Top = 281
     Width = 971
-    Height = 110
-    Align = alBottom
-    TabOrder = 6
+    Height = 82
+    Align = alClient
+    TabOrder = 4
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 264
+    ExplicitHeight = 99
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DayDS
@@ -1094,12 +1105,354 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
   end
   object cxSplitter1: TcxSplitter
     Left = 0
-    Top = 344
+    Top = 273
+    Width = 971
+    Height = 8
+    AlignSplitter = salTop
+    Control = cxGrid2
+    ExplicitLeft = 1
+    ExplicitTop = 230
+  end
+  object cxGrid3: TcxGrid
+    Left = 0
+    Top = 371
+    Width = 971
+    Height = 137
+    Align = alBottom
+    TabOrder = 8
+    LookAndFeel.NativeStyle = False
+    object cxGridDBTableView2: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = TotalDS
+      DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
+      DataController.Filter.TranslateBetween = True
+      DataController.Filter.TranslateIn = True
+      DataController.Filter.TranslateLike = True
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsView.Footer = True
+      OptionsView.GroupByBox = False
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
+      OptionsView.HeaderAutoHeight = True
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object Name: TcxGridDBColumn
+        Caption = #1044#1072#1085#1085#1099#1077
+        DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 111
+      end
+      object Amount: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086
+        DataBinding.FieldName = 'Amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+      end
+      object Amount1: TcxGridDBColumn
+        Caption = '1'
+        DataBinding.FieldName = 'Amount_1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount2: TcxGridDBColumn
+        Caption = '2'
+        DataBinding.FieldName = 'Amount_2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount3: TcxGridDBColumn
+        Caption = '3'
+        DataBinding.FieldName = 'Amount_3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount4: TcxGridDBColumn
+        Caption = '4'
+        DataBinding.FieldName = 'Amount_4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount5: TcxGridDBColumn
+        Caption = '5'
+        DataBinding.FieldName = 'Amount_5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount6: TcxGridDBColumn
+        Caption = '6'
+        DataBinding.FieldName = 'Amount_6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount7: TcxGridDBColumn
+        Caption = '7'
+        DataBinding.FieldName = 'Amount_7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount8: TcxGridDBColumn
+        Caption = '8'
+        DataBinding.FieldName = 'Amount_8'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount9: TcxGridDBColumn
+        Caption = '9'
+        DataBinding.FieldName = 'Amount_9'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount10: TcxGridDBColumn
+        Caption = '10'
+        DataBinding.FieldName = 'Amount_10'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount11: TcxGridDBColumn
+        Caption = '11'
+        DataBinding.FieldName = 'Amount_11'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount12: TcxGridDBColumn
+        Caption = '12'
+        DataBinding.FieldName = 'Amount_12'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount13: TcxGridDBColumn
+        Caption = '13'
+        DataBinding.FieldName = 'Amount_13'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount14: TcxGridDBColumn
+        Caption = '14'
+        DataBinding.FieldName = 'Amount_14'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount15: TcxGridDBColumn
+        Caption = '15'
+        DataBinding.FieldName = 'Amount_15'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount16: TcxGridDBColumn
+        Caption = '16'
+        DataBinding.FieldName = 'Amount_16'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount17: TcxGridDBColumn
+        Caption = '17'
+        DataBinding.FieldName = 'Amount_17'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount18: TcxGridDBColumn
+        Caption = '18'
+        DataBinding.FieldName = 'Amount_18'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount19: TcxGridDBColumn
+        Caption = '19'
+        DataBinding.FieldName = 'Amount_19'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount20: TcxGridDBColumn
+        Caption = '20'
+        DataBinding.FieldName = 'ShortName_20'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount21: TcxGridDBColumn
+        Caption = '21'
+        DataBinding.FieldName = 'Amount_21'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount22: TcxGridDBColumn
+        Caption = '22'
+        DataBinding.FieldName = 'Amount_22'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount23: TcxGridDBColumn
+        Caption = '23'
+        DataBinding.FieldName = 'Amount_23'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount24: TcxGridDBColumn
+        Caption = '24'
+        DataBinding.FieldName = 'Amount_24'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount25: TcxGridDBColumn
+        Caption = '25'
+        DataBinding.FieldName = 'Amount_25'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount26: TcxGridDBColumn
+        Caption = '26'
+        DataBinding.FieldName = 'Amount_26'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount27: TcxGridDBColumn
+        Caption = '27'
+        DataBinding.FieldName = 'Amount_27'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount28: TcxGridDBColumn
+        Caption = '28'
+        DataBinding.FieldName = 'Amount_28'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount29: TcxGridDBColumn
+        Caption = '29'
+        DataBinding.FieldName = 'Amount_29'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount30: TcxGridDBColumn
+        Caption = '30'
+        DataBinding.FieldName = 'Amount_30'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object Amount31: TcxGridDBColumn
+        Caption = '31'
+        DataBinding.FieldName = 'Amount_31'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+    end
+    object cxGridLevel3: TcxGridLevel
+      GridView = cxGridDBTableView2
+    end
+  end
+  object cxSplitter2: TcxSplitter
+    Left = 0
+    Top = 363
     Width = 971
     Height = 8
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
-    Control = cxGrid1
+    Control = cxGrid3
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1134,7 +1487,14 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     DataSets = <
       item
         DataSet = MasterCDS
+      end
+      item
+        DataSet = DayCDS
+      end
+      item
+        DataSet = TotalCDS
       end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inDate'
@@ -2381,9 +2741,6 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       StoredProcList = <
         item
           StoredProc = spSelectMI
-        end
-        item
-          StoredProc = spSelectMI_days
         end
         item
           StoredProc = spGet
@@ -3806,37 +4163,15 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
   end
   object TotalCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'KeyId'
-    MasterFields = 'KeyId'
-    MasterSource = MasterDS
     ObjectView = False
-    PacketRecords = 0
     Params = <>
     Left = 512
-    Top = 367
+    Top = 359
   end
   object TotalDS: TDataSource
     DataSet = TotalCDS
-    Left = 582
+    Left = 558
     Top = 359
-  end
-  object CrossDBViewAddOnTotal: TCrossDBViewAddOn
-    ErasedFieldName = 'isErased'
-    OnDblClickActionList = <>
-    ActionItemList = <>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ChartList = <>
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
-    ShowFieldImageList = <>
-    PropertiesCellList = <>
-    HeaderDataSet = HeaderCDS
-    HeaderColumnName = 'ValueField'
-    Left = 624
-    Top = 400
   end
   object Get_byProtocol: TdsdStoredProc
     StoredProcName = 'gpGet_MovementItem_SheetWorkTime_byProtocol'
@@ -4146,7 +4481,7 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     ShowFieldImageList = <>
     KeepSelectColor = True
     PropertiesCellList = <>
-    Left = 160
+    Left = 192
     Top = 280
   end
   object spSelectMI_days: TdsdStoredProc
@@ -4183,7 +4518,7 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       end>
     PackSize = 1
     Left = 152
-    Top = 367
+    Top = 391
   end
   object spInsertUpdateMI2: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_SheetWorkTime_line2'
@@ -5926,5 +6261,183 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     PackSize = 1
     Left = 238
     Top = 319
+  end
+  object dsdDBViewAddOn_total: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView2
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = ShortName_1
+        BackGroundValueColumn = Color_Calc_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_2
+        BackGroundValueColumn = Color_Calc_2
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_3
+        BackGroundValueColumn = Color_Calc_3
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_4
+        BackGroundValueColumn = Color_Calc_4
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_5
+        BackGroundValueColumn = Color_Calc_5
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_6
+        BackGroundValueColumn = Color_Calc_6
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_7
+        BackGroundValueColumn = Color_Calc_7
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_8
+        BackGroundValueColumn = Color_Calc_8
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_9
+        BackGroundValueColumn = Color_Calc_9
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_10
+        BackGroundValueColumn = Color_Calc_10
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_11
+        BackGroundValueColumn = Color_Calc_11
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_12
+        BackGroundValueColumn = Color_Calc_12
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_13
+        BackGroundValueColumn = Color_Calc_13
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_14
+        BackGroundValueColumn = Color_Calc_14
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_15
+        BackGroundValueColumn = Color_Calc_15
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_16
+        BackGroundValueColumn = Color_Calc_16
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_17
+        BackGroundValueColumn = Color_Calc_17
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_18
+        BackGroundValueColumn = Color_Calc_18
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_19
+        BackGroundValueColumn = Color_Calc_19
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_20
+        BackGroundValueColumn = Color_Calc_20
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_21
+        BackGroundValueColumn = Color_Calc_21
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_22
+        BackGroundValueColumn = Color_Calc_22
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_23
+        BackGroundValueColumn = Color_Calc_23
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_24
+        BackGroundValueColumn = Color_Calc_24
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_25
+        BackGroundValueColumn = Color_Calc_25
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_26
+        BackGroundValueColumn = Color_Calc_26
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_27
+        BackGroundValueColumn = Color_Calc_27
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_28
+        BackGroundValueColumn = Color_Calc_28
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_29
+        BackGroundValueColumn = Color_Calc_29
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_30
+        BackGroundValueColumn = Color_Calc_30
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ShortName_31
+        BackGroundValueColumn = Color_Calc_31
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    KeepSelectColor = True
+    PropertiesCellList = <>
+    Left = 560
+    Top = 416
   end
 end

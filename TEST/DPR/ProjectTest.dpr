@@ -1413,9 +1413,9 @@ uses
   PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
   StorageSQLite in '..\..\SOURCE\StorageSQLite.pas',
   SheetWorkTimeJournal_line in '..\..\Forms\Document\SheetWorkTimeJournal_line.pas' {SheetWorkTimeJournal_lineForm: TParentForm},
-  SheetWorkTime_line in '..\..\Forms\Document\SheetWorkTime_line.pas' {SheetWorkTime_lineForm: TParentForm},
   CurrencyListJournal in '..\..\Forms\Document\CurrencyListJournal.pas' {CurrencyListJournalForm: TParentForm},
-  CurrencyListMovement in '..\..\Forms\Document\CurrencyListMovement.pas' {CurrencyListMovementForm: TParentForm};
+  CurrencyListMovement in '..\..\Forms\Document\CurrencyListMovement.pas' {CurrencyListMovementForm: TParentForm},
+  SheetWorkTime_line in '..\..\Forms\Document\SheetWorkTime_line.pas' {SheetWorkTime_lineForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

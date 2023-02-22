@@ -89,7 +89,6 @@ type
     bbUpdateCheckedPersonal: TdxBarButton;
     TotalCDS: TClientDataSet;
     TotalDS: TDataSource;
-    CrossDBViewAddOnTotal: TCrossDBViewAddOn;
     actRefreshGet: TdsdDataSetRefresh;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbMovementItemProtocolOpenForm: TdxBarButton;
@@ -117,6 +116,11 @@ type
     actOpenWorkTimeKindForm2: TOpenChoiceForm;
     spInsertUpdateMI2: TdsdStoredProc;
     spInsertUpdateMI: TdsdStoredProc;
+    cxGrid3: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    cxGridLevel3: TcxGridLevel;
+    cxSplitter2: TcxSplitter;
+    dsdDBViewAddOn_total: TdsdDBViewAddOn;
   private
   public
   end;
