@@ -1586,7 +1586,7 @@ var
   i : Integer;
 begin
      //
-     exit;
+     //exit;
      //
      cbHistoryCost_0.Checked   := (ParamStr(5) = 'h_0')or(ParamStr(6) = 'h_0')or(ParamStr(7) = 'h_0')or(ParamStr(8) = 'h_0')or(ParamStr(9) = 'h_0')or(ParamStr(10) = 'h_0')or(ParamStr(11) = 'h_0');
      cbHistoryCost_8379.Checked:= (ParamStr(2) = 'h_8379')or(ParamStr(6) = 'h_8379')or(ParamStr(7) = 'h_8379')or(ParamStr(8) = 'h_8379')or(ParamStr(9) = 'h_8379')or(ParamStr(10) = 'h_8379')or(ParamStr(11) = 'h_8379');
@@ -2574,8 +2574,9 @@ begin
      //EndDateCompleteEdit.Text:=EndDateEdit.Text;
 
      isMsgCurrency_all:= true;
-     //pLoad_https_Currency_all;
-     pLoad_https_Currency_minfin_all
+     pLoad_https_Currency_all;
+     //!!test
+     //pLoad_https_Currency_minfin_all
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.Button2Click(Sender: TObject);
