@@ -654,6 +654,8 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
     object actInsertUpdate_EmployeeSchedule_UserCount: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteDialogUserCount
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate_EmployeeSchedule_UserCount
       StoredProcList = <
@@ -662,14 +664,27 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
         end>
       Caption = 'actUpdate_ShowPlanMobileAppUser'
     end
-    object ExecuteDialog1: TExecuteDialog
+    object actExecuteDialogUserCount: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'ExecuteDialog1'
-      FormNameParam.Value = ''
+      Caption = 'actExecuteDialogUserCount'
+      FormName = 'TIntegerDialogForm'
+      FormNameParam.Value = 'TIntegerDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'Values'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UserCount'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1086#1076' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1074' '#1087#1086' '#1072#1087#1090#1077#1082#1077
+          MultiSelectSeparator = ','
+        end>
       isShowModal = True
       OpenBeforeShow = True
     end
@@ -749,6 +764,14 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_ShowPlanMobileAppUser'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -781,10 +804,15 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
       Action = mactUpdate_ShowPlanMobileAppUser
       Category = 0
     end
+    object bbUpdate_ShowPlanMobileAppUser: TdxBarButton
+      Action = actUpdate_ShowPlanMobileAppUser
+      Category = 0
+      ImageIndex = 55
+    end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 208
-    Top = 16
+    Left = 240
+    Top = 8
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <

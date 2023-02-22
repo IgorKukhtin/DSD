@@ -44,7 +44,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , BuyerPhone TVarChar, BuyerName TVarChar, LoyaltySMDiscount TFloat, LoyaltySMSumma TFloat
              , isCorrectMarketing Boolean , isCorrectIlliquidMarketing Boolean, isDoctors Boolean
              , isDiscountCommit Boolean, isManual Boolean, isOffsetVIP Boolean, isErrorRRO Boolean
-             , Caption TVarChar
+             , Caption TVarChar, isConfirmByPhone Boolean
 )
 AS
 $BODY$
@@ -359,6 +359,7 @@ BEGIN
            , CASE WHEN COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False) = TRUE
                   THEN 'Кассовый ВИП чек резерв для продаж'
                   ELSE 'Кассовый чек' END::TVarChar                       AS Caption
+           , COALESCE(MovementBoolean_ConfirmByPhone.ValueData, False)::Boolean      AS isConfirmByPhone
 
         FROM tmpMovement AS Movement_Check
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
@@ -457,6 +458,10 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_AutoVIPforSales
                                        ON MovementBoolean_AutoVIPforSales.MovementId = Movement_Check.Id
                                       AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
+
+             LEFT JOIN MovementBoolean AS MovementBoolean_ConfirmByPhone
+                                       ON MovementBoolean_ConfirmByPhone.MovementId = Movement_Check.Id
+                                      AND MovementBoolean_ConfirmByPhone.DescId = zc_MovementBoolean_ConfirmByPhone()
                                       
        WHERE Movement_Check.Id = inMovementId;
 

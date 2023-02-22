@@ -67,7 +67,8 @@ type
     actInsertUpdate_EmployeeSchedule_UserCount: TdsdExecStoredProc;
     spInsertUpdate_EmployeeSchedule_UserCount: TdsdStoredProc;
     FormParams: TdsdFormParams;
-    ExecuteDialog1: TExecuteDialog;
+    actExecuteDialogUserCount: TExecuteDialog;
+    bbUpdate_ShowPlanMobileAppUser: TdxBarButton;
   private
     { Private declarations }
   public

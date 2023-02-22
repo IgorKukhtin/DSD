@@ -35,7 +35,7 @@ BEGIN
                                AND MovementItemUser.ObjectId  = inUnitId
                                AND MovementItemUser.DescId = zc_MI_Second()
 
-    WHERE Movement.OperDate = date_trunc('MONTH', inOperDate)
+    WHERE Movement.OperDate = date_trunc('MONTH', inOperDate) - INTERVAL '1 MONTH'
       AND Movement.DescId = zc_Movement_EmployeeSchedule()
       AND Movement.StatusId <> zc_Enum_Status_Erased();
 
@@ -66,4 +66,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- 
+--

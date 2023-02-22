@@ -2,27 +2,27 @@ inherited CheckForm: TCheckForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
   ClientHeight = 600
   ClientWidth = 810
-  ExplicitWidth = 826
-  ExplicitHeight = 639
+  ExplicitWidth = 828
+  ExplicitHeight = 647
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 261
+    Top = 265
     Width = 810
-    Height = 219
-    ExplicitTop = 261
-    ExplicitWidth = 892
-    ExplicitHeight = 219
-    ClientRectBottom = 219
+    Height = 215
+    ExplicitTop = 265
+    ExplicitWidth = 810
+    ExplicitHeight = 215
+    ClientRectBottom = 215
     ClientRectRight = 810
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 892
-      ExplicitHeight = 195
+      ExplicitWidth = 810
+      ExplicitHeight = 191
       inherited cxGrid: TcxGrid
         Width = 810
-        Height = 195
-        ExplicitWidth = 892
-        ExplicitHeight = 195
+        Height = 191
+        ExplicitWidth = 810
+        ExplicitHeight = 191
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -288,7 +288,7 @@ inherited CheckForm: TCheckForm
   inherited DataPanel: TPanel
     Width = 810
     Height = 235
-    ExplicitWidth = 892
+    ExplicitWidth = 810
     ExplicitHeight = 235
     inherited edInvNumber: TcxTextEdit
       Left = 7
@@ -603,15 +603,15 @@ inherited CheckForm: TCheckForm
       Left = 8
       Top = 213
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089#1091#1084#1084#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072' '#1074' '#1047#1055' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
-      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089#1091#1084#1084#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+      Caption = #1050#1086#1088'-'#1082#1072' '#1089#1091#1084#1084#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 44
-      Width = 208
+      Width = 161
     end
     object cbCorrectIlliquidMarketing: TcxCheckBox
-      Left = 214
+      Left = 164
       Top = 213
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1089#1091#1084#1084#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072' '#1074' '#1047#1055' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
       Caption = #1085#1077#1083#1080#1082#1074#1080#1076#1086#1074' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
@@ -622,7 +622,7 @@ inherited CheckForm: TCheckForm
       Width = 263
     end
     object cbDoctors: TcxCheckBox
-      Left = 362
+      Left = 312
       Top = 213
       Hint = #1042#1088#1072#1095#1080
       Caption = #1042#1088#1072#1095#1080
@@ -633,15 +633,15 @@ inherited CheckForm: TCheckForm
       Width = 61
     end
     object cbDiscountCommit: TcxCheckBox
-      Left = 421
+      Left = 368
       Top = 213
       Hint = #1042#1088#1072#1095#1080
-      Caption = #1044#1080#1089#1082#1086#1085#1090' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1089#1072#1081#1090#1077
+      Caption = #1044#1080#1089#1082#1086#1085#1090' '#1087#1088#1086#1074'. '#1085#1072' '#1089#1072#1081#1090#1077
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 47
-      Width = 159
+      Width = 151
     end
     object edZReport: TcxTextEdit
       Left = 667
@@ -656,7 +656,7 @@ inherited CheckForm: TCheckForm
       Caption = 'Z '#1086#1090#1095#1077#1090
     end
     object cbOffsetVIP: TcxCheckBox
-      Left = 586
+      Left = 516
       Top = 213
       Hint = #1042#1088#1072#1095#1080
       Caption = #1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084
@@ -667,7 +667,7 @@ inherited CheckForm: TCheckForm
       Width = 94
     end
     object cbErrorRRO: TcxCheckBox
-      Left = 679
+      Left = 603
       Top = 213
       Hint = #1042#1088#1072#1095#1080
       Caption = #1054#1096#1080#1073#1082#1072' '#1056#1056#1054
@@ -676,6 +676,17 @@ inherited CheckForm: TCheckForm
       ShowHint = True
       TabOrder = 51
       Width = 94
+    end
+    object cbConfirmByPhone: TcxCheckBox
+      Left = 693
+      Top = 213
+      Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1090#1077#1083#1077#1092#1086#1085#1085#1099#1084' '#1079#1074#1086#1085#1082#1086#1084
+      Caption = #1055#1086#1076#1090'. '#1090#1077#1083' '#1079#1074#1086#1085#1082#1086#1084
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 52
+      Width = 108
     end
   end
   object edInvNumberOrder: TcxTextEdit [2]
@@ -728,7 +739,7 @@ inherited CheckForm: TCheckForm
     Left = 602
     Top = 71
     Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
-    Caption = #1057#1090#1072#1090#1091#1089' '#1057#1052#1057
+    Caption = #1057#1090#1072#1090#1091#1089' '#1057#1052#1057'/'#1047#1074#1086#1085#1086#1082
   end
   object cxLabel12: TcxLabel [10]
     Left = 8
@@ -856,7 +867,6 @@ inherited CheckForm: TCheckForm
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 31
-    ExplicitWidth = 892
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DetailDS
@@ -984,7 +994,6 @@ inherited CheckForm: TCheckForm
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid1
-    ExplicitWidth = 892
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 349
@@ -2195,7 +2204,7 @@ inherited CheckForm: TCheckForm
     DockControlHeights = (
       0
       0
-      26
+      30
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -3035,6 +3044,13 @@ inherited CheckForm: TCheckForm
         ComponentItem = 'FormCaption'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isConfirmByPhone'
+        Value = Null
+        Component = cbConfirmByPhone
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 397
@@ -3702,7 +3718,7 @@ inherited CheckForm: TCheckForm
       end>
     PackSize = 1
     Left = 658
-    Top = 201
+    Top = 177
   end
   object spEditAmount: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_Check_AmountAdmin'
