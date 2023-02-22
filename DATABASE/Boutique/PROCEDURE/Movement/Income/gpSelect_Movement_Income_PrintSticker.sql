@@ -99,14 +99,35 @@ BEGIN
                , Object_Goods.Id                AS GoodsId
                , Object_Goods.ObjectCode        AS GoodsCode
                , Object_Goods.ValueData         AS GoodsName
-               , (CASE WHEN Object_Composition.ValueData NOT IN ('-', '') THEN CASE WHEN LENGTH (Object_Composition.ValueData) <= 25 AND zc_Enum_GlobalConst_isTerry() = TRUE THEN 'сост: ' ELSE '' END || Object_Composition.ValueData ELSE '' END) :: TVarChar AS CompositionName
+                 --
+               , (CASE WHEN TRIM (ObjectString_Composition_UKR.ValueData) <> ''
+                            THEN CASE WHEN ObjectString_Composition_UKR.ValueData NOT IN ('-', '')
+                                           THEN CASE WHEN LENGTH (ObjectString_Composition_UKR.ValueData) <= 25
+                                                     THEN 'склад: '
+                                                     ELSE ''
+                                                END || ObjectString_Composition_UKR.ValueData
+                                      ELSE ''
+                                 END
+
+                       WHEN Object_Composition.ValueData NOT IN ('-', '')
+                            THEN CASE WHEN LENGTH (Object_Composition.ValueData) <= 25
+                                      THEN 'склад: '
+                                      ELSE ''
+                                 END || Object_Composition.ValueData
+                       ELSE ''
+                  END) :: TVarChar AS CompositionName
+                  --
                , Object_GoodsInfo.ValueData     AS GoodsInfoName
                , Object_LineFabrica.ValueData   AS LineFabricaName
+                 --
                , CASE WHEN TRIM (ObjectString_Label_UKR.ValueData) <> '' THEN ObjectString_Label_UKR.ValueData ELSE Object_Label.ValueData END :: TVarChar AS LabelName
+                 --
                , ObjectString_Label_UKR.ValueData AS LabelName_UKR
                , Object_GoodsSize.ValueData     AS GoodsSizeName
                , Object_Brand.ValueData         AS BrandName
-               , Object_CountryBrand.ValueData  AS CountryBrandName
+                 --
+               , CASE WHEN TRIM (ObjectString_CountryBrand_UKR.ValueData) <> '' THEN ObjectString_CountryBrand_UKR.ValueData ELSE Object_CountryBrand.ValueData END :: TVarChar AS CountryBrandName
+                 --
                , zfFormat_BarCode (zc_BarCodePref_Object(), tmpMI.PartionId) AS IdBarCode
 
                , COALESCE (tmpPriceList.Price, tmpMI.OperPriceList) :: TFloat AS OperPriceList
@@ -135,18 +156,25 @@ BEGIN
                 LEFT JOIN Object AS Object_Label       ON Object_Label.Id       = Object_PartionGoods.LabelId
                 LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
                 LEFT JOIN Object AS Object_Brand       ON Object_Brand.Id       = Object_PartionGoods.BrandId
-
-                LEFT JOIN ObjectString AS ObjectString_Label_UKR
-                                       ON ObjectString_Label_UKR.ObjectId = Object_PartionGoods.LabelId
-                                      AND ObjectString_Label_UKR.DescId   = zc_ObjectString_Label_UKR()
-                                      AND 1=0
+                LEFT JOIN Object AS Object_Period      ON Object_Period.Id      = Object_PartionGoods.PeriodId
 
                 LEFT JOIN ObjectLink AS Object_Brand_CountryBrand
                                      ON Object_Brand_CountryBrand.ObjectId = Object_Brand.Id
                                     AND Object_Brand_CountryBrand.DescId = zc_ObjectLink_Brand_CountryBrand()
                 LEFT JOIN Object AS Object_CountryBrand ON Object_CountryBrand.Id = Object_Brand_CountryBrand.ChildObjectId
 
-                LEFT JOIN Object AS Object_Period          ON Object_Period.Id     = Object_PartionGoods.PeriodId
+                LEFT JOIN ObjectString AS ObjectString_Label_UKR
+                                       ON ObjectString_Label_UKR.ObjectId = Object_PartionGoods.LabelId
+                                      AND ObjectString_Label_UKR.DescId   = zc_ObjectString_Label_UKR()
+                                    --AND 1=0
+                LEFT JOIN ObjectString AS ObjectString_Composition_UKR
+                                       ON ObjectString_Composition_UKR.ObjectId = Object_PartionGoods.CompositionId
+                                      AND ObjectString_Composition_UKR.DescId   = zc_ObjectString_Composition_UKR()
+                                    --AND 1=0
+                LEFT JOIN ObjectString AS ObjectString_CountryBrand_UKR
+                                       ON ObjectString_CountryBrand_UKR.ObjectId = Object_CountryBrand.Id
+                                      AND ObjectString_CountryBrand_UKR.DescId   = zc_ObjectString_CountryBrand_UKR()
+                                    --AND 1=0
 
            ORDER BY Object_Goods.ObjectCode, Object_GoodsSize.ValueData
            ;
@@ -229,9 +257,9 @@ BEGIN
                                                                    AND ObjectLink_Unit_PriceList.DescId   = zc_ObjectLink_Unit_PriceList()
                                                LEFT JOIN ObjectLink AS OL_currency ON OL_currency.ObjectId = ObjectLink_Unit_PriceList.ChildObjectId
                                                                                   AND OL_currency.DescId   = zc_ObjectLink_PriceList_Currency()
-         
+
                                                LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpGoodsPrint.PartionId
-         
+
                                                INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
                                                                      ON ObjectLink_PriceListItem_Goods.ChildObjectId = Object_PartionGoods.GoodsId
                                                                     AND ObjectLink_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
@@ -239,7 +267,7 @@ BEGIN
                                                                      ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
                                                                     AND ObjectLink_PriceListItem_PriceList.ChildObjectId = COALESCE (ObjectLink_Unit_PriceList.ChildObjectId, zc_PriceList_Basis())
                                                                     AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
-         
+
                                                LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                                        ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                                                       AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
@@ -256,14 +284,35 @@ BEGIN
                , Object_Goods.Id                AS GoodsId
                , Object_Goods.ObjectCode        AS GoodsCode
                , Object_Goods.ValueData         AS GoodsName
-               , (CASE WHEN Object_Composition.ValueData NOT IN ('-', '') THEN CASE WHEN LENGTH (Object_Composition.ValueData) <= 25 THEN 'сост: ' ELSE '' END || Object_Composition.ValueData ELSE '' END) :: TVarChar AS CompositionName
+                 --
+               , (CASE WHEN TRIM (ObjectString_Composition_UKR.ValueData) <> ''
+                            THEN CASE WHEN ObjectString_Composition_UKR.ValueData NOT IN ('-', '')
+                                           THEN CASE WHEN LENGTH (ObjectString_Composition_UKR.ValueData) <= 25
+                                                     THEN 'склад: '
+                                                     ELSE ''
+                                                END || ObjectString_Composition_UKR.ValueData
+                                      ELSE ''
+                                 END
+
+                       WHEN Object_Composition.ValueData NOT IN ('-', '')
+                            THEN CASE WHEN LENGTH (Object_Composition.ValueData) <= 25
+                                      THEN 'склад: '
+                                      ELSE ''
+                                 END || Object_Composition.ValueData
+                       ELSE ''
+                  END) :: TVarChar AS CompositionName
+                 --
                , Object_GoodsInfo.ValueData     AS GoodsInfoName
                , Object_LineFabrica.ValueData   AS LineFabricaName
                , CASE WHEN TRIM (ObjectString_Label_UKR.ValueData) <> '' THEN ObjectString_Label_UKR.ValueData ELSE Object_Label.ValueData END :: TVarChar AS LabelName
+                 --
                , ObjectString_Label_UKR.ValueData AS LabelName_UKR
+                 --
                , Object_GoodsSize.ValueData     AS GoodsSizeName
                , Object_Brand.ValueData         AS BrandName
-               , Object_CountryBrand.ValueData  AS CountryBrandName
+                 --
+               , CASE WHEN TRIM (ObjectString_CountryBrand_UKR.ValueData) <> '' THEN ObjectString_CountryBrand_UKR.ValueData ELSE Object_CountryBrand.ValueData END :: TVarChar AS CountryBrandName
+                 --
                , zfFormat_BarCode (zc_BarCodePref_Object(), tmpGoodsPrint.PartionId) AS IdBarCode
 
                , COALESCE (tmpPriceList.Price, Object_PartionGoods.OperPriceList)    :: TFloat AS OperPriceList
@@ -298,19 +347,26 @@ BEGIN
                 LEFT JOIN Object AS Object_Label       ON Object_Label.Id       = Object_PartionGoods.LabelId
                 LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
                 LEFT JOIN Object AS Object_Brand       ON Object_Brand.Id       = Object_PartionGoods.BrandId
+                LEFT JOIN Object AS Object_Period      ON Object_Period.Id      = Object_PartionGoods.PeriodId
                 LEFT JOIN Object AS Object_Unit        ON Object_Unit.Id        = tmpGoodsPrint.UnitId
-
-                LEFT JOIN ObjectString AS ObjectString_Label_UKR
-                                       ON ObjectString_Label_UKR.ObjectId = Object_PartionGoods.LabelId
-                                      AND ObjectString_Label_UKR.DescId   = zc_ObjectString_Label_UKR()
-                                      AND 1=0
 
                 LEFT JOIN ObjectLink AS Object_Brand_CountryBrand
                                      ON Object_Brand_CountryBrand.ObjectId = Object_Brand.Id
                                     AND Object_Brand_CountryBrand.DescId = zc_ObjectLink_Brand_CountryBrand()
                 LEFT JOIN Object AS Object_CountryBrand ON Object_CountryBrand.Id = Object_Brand_CountryBrand.ChildObjectId
 
-                LEFT JOIN Object AS Object_Period          ON Object_Period.Id     = Object_PartionGoods.PeriodId
+                LEFT JOIN ObjectString AS ObjectString_Label_UKR
+                                       ON ObjectString_Label_UKR.ObjectId = Object_PartionGoods.LabelId
+                                      AND ObjectString_Label_UKR.DescId   = zc_ObjectString_Label_UKR()
+                                    --AND 1=0
+                LEFT JOIN ObjectString AS ObjectString_Composition_UKR
+                                       ON ObjectString_Composition_UKR.ObjectId = Object_PartionGoods.CompositionId
+                                      AND ObjectString_Composition_UKR.DescId   = zc_ObjectString_Composition_UKR()
+                                    --AND 1=0
+                LEFT JOIN ObjectString AS ObjectString_CountryBrand_UKR
+                                       ON ObjectString_CountryBrand_UKR.ObjectId = Object_CountryBrand.Id
+                                      AND ObjectString_CountryBrand_UKR.DescId   = zc_ObjectString_CountryBrand_UKR()
+                                    --AND 1=0
 
            ORDER BY tmpGoodsPrint.Id, Object_Goods.ObjectCode, Object_GoodsSize.ValueData
            ;

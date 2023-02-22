@@ -207,16 +207,13 @@ BEGIN
                                  , COALESCE (tmpProductionUnion_1.ObjectDescId, tmpProductionUnion_2.ObjectDescId)
                                   ) AS StateText
                -- все состояния подсветить
-             --, CASE WHEN COALESCE (MovementFloat_NPP.ValueData,0) > 0 AND tmpOrderInternal_1.MovementId_OrderClient IS NOT NULL AND tmpProductionUnion_1.MovementId_OrderClient IS NOT NULL THEN zc_Color_GreenL()
-             --       ELSE zc_Color_White()
-             --  END    
-               , zfCalc_Order_State_color (CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END
-                                         , MovementFloat_NPP.ValueData :: Integer
-                                         , COALESCE (tmpOrderInternal_1.MovementId, tmpOrderInternal_2.MovementId)
-                                         , COALESCE (tmpProductionUnion_1.MovementId, tmpProductionUnion_2.MovementId)
-                                         , COALESCE (tmpOrderInternal_1.ObjectDescId, tmpOrderInternal_2.ObjectDescId)
-                                         , COALESCE (tmpProductionUnion_1.ObjectDescId, tmpProductionUnion_2.ObjectDescId)
-                                          ) ::Integer AS StateColor
+             , zfCalc_Order_State_color (CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END
+                                       , MovementFloat_NPP.ValueData :: Integer
+                                       , COALESCE (tmpOrderInternal_1.MovementId, tmpOrderInternal_2.MovementId)
+                                       , COALESCE (tmpProductionUnion_1.MovementId, tmpProductionUnion_2.MovementId)
+                                       , COALESCE (tmpOrderInternal_1.ObjectDescId, tmpOrderInternal_2.ObjectDescId)
+                                       , COALESCE (tmpProductionUnion_1.ObjectDescId, tmpProductionUnion_2.ObjectDescId)
+                                        ) ::Integer AS StateColor
                
         FROM Movement_OrderClient
 
