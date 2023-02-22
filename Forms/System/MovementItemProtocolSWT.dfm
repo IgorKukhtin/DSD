@@ -1,4 +1,4 @@
-inherited MovementItemProtocolForm: TMovementItemProtocolForm
+inherited MovementItemProtocolSWTForm: TMovementItemProtocolSWTForm
   Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'> '
   ClientHeight = 293
   ClientWidth = 785
@@ -21,11 +21,10 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
       ExplicitWidth = 785
       ExplicitHeight = 210
       inherited cxGrid: TcxGrid
-        Width = 481
+        Width = 497
         Height = 210
         Align = alLeft
-        ExplicitLeft = -6
-        ExplicitWidth = 481
+        ExplicitWidth = 497
         ExplicitHeight = 210
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
@@ -52,7 +51,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
             DataBinding.FieldName = 'UserName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 169
+            Width = 124
           end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -70,16 +69,27 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
             Options.Editing = False
             Width = 61
           end
+          object OperDate_swt: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1090#1072#1073#1077#1083#1103
+            DataBinding.FieldName = 'OperDate_swt'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
       object cxGridProtocolData: TcxGrid
-        Left = 481
+        Left = 497
         Top = 0
-        Width = 304
+        Width = 288
         Height = 210
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitLeft = 487
+        ExplicitWidth = 298
         object cxGridViewProtocolData: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ProtocolDataDS
@@ -191,17 +201,6 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
       Width = 217
     end
   end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 51
-    Top = 200
-  end
-  inherited cxPropertiesStore: TcxPropertiesStore
-    Top = 216
-  end
-  inherited ActionList: TActionList
-    Left = 111
-    Top = 191
-  end
   inherited MasterDS: TDataSource
     Left = 40
     Top = 88
@@ -210,7 +209,7 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
     Top = 144
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItemProtocol'
+    StoredProcName = 'gpSelect_MovementItemProtocolSWT'
     Params = <
       item
         Name = 'inStartDate'
@@ -237,11 +236,65 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementItemId'
+        Name = 'inMemberId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'Id'
+        ComponentItem = 'inMemberId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPositionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionLevelId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPositionLevelId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'inUnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalGroupId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPersonalGroupId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageLineId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inStorageLineId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 88
@@ -259,10 +312,6 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 416
     Top = 192
-  end
-  inherited PopupMenu: TPopupMenu
-    Left = 168
-    Top = 200
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -315,8 +364,8 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 616
-    Top = 127
+    Left = 584
+    Top = 119
     object ProtocolDataCDSFieldName: TStringField
       FieldName = 'FieldName'
       Size = 100
@@ -328,8 +377,8 @@ inherited MovementItemProtocolForm: TMovementItemProtocolForm
   end
   object ProtocolDataDS: TDataSource
     DataSet = ProtocolDataCDS
-    Left = 680
-    Top = 135
+    Left = 648
+    Top = 119
   end
   object dsdXMLTransform: TdsdXMLTransform
     DataSource = MasterDS

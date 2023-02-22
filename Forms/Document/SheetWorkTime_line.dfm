@@ -390,10 +390,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     Width = 971
     Height = 82
     Align = alClient
-    TabOrder = 4
+    TabOrder = 3
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 264
-    ExplicitHeight = 99
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DayDS
@@ -1110,8 +1108,6 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
     Height = 8
     AlignSplitter = salTop
     Control = cxGrid2
-    ExplicitLeft = 1
-    ExplicitTop = 230
   end
   object cxGrid3: TcxGrid
     Left = 0
@@ -1725,7 +1721,7 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       Category = 0
     end
     object bbMovementItemProtocolOpenForm: TdxBarButton
-      Action = macMovementItemProtocolOpenForm
+      Action = MovementItemProtocolOpenForm
       Category = 0
     end
     object bbOpenProtocolMember: TdxBarButton
@@ -3161,8 +3157,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 34
-      FormName = 'TMovementItemProtocolForm'
-      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormName = 'TMovementItemProtocolSWTForm'
+      FormNameParam.Value = 'TMovementItemProtocolSWTForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -3177,9 +3173,65 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         item
           Name = 'GoodsName'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'outOperDate'
+          Component = MasterCDS
+          ComponentItem = 'MemberName'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMemberId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MemberId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPositionLevelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PositionLevelId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalGroupId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalGroupId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inStorageLineId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageLineId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

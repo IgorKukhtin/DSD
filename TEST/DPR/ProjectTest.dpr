@@ -1415,7 +1415,8 @@ uses
   SheetWorkTimeJournal_line in '..\..\Forms\Document\SheetWorkTimeJournal_line.pas' {SheetWorkTimeJournal_lineForm: TParentForm},
   CurrencyListJournal in '..\..\Forms\Document\CurrencyListJournal.pas' {CurrencyListJournalForm: TParentForm},
   CurrencyListMovement in '..\..\Forms\Document\CurrencyListMovement.pas' {CurrencyListMovementForm: TParentForm},
-  SheetWorkTime_line in '..\..\Forms\Document\SheetWorkTime_line.pas' {SheetWorkTime_lineForm: TParentForm};
+  SheetWorkTime_line in '..\..\Forms\Document\SheetWorkTime_line.pas' {SheetWorkTime_lineForm: TParentForm},
+  MovementItemProtocolSWT in '..\..\Forms\System\MovementItemProtocolSWT.pas' {MovementItemProtocolSWTForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

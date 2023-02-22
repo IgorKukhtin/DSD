@@ -4929,6 +4929,10 @@
 				<Form>SheetWorkTime_lineForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\MovementItemProtocolSWT.pas">
+				<Form>MovementItemProtocolSWTForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

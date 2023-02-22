@@ -1400,10 +1400,14 @@ end;
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolSWTForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolSWTForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTime_lineForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTime_lineForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeJournal_lineForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeJournal_lineForm');
+
   exit;
   {
   //справочники

@@ -24,14 +24,14 @@ BEGIN
 
     -- Для начала определим ID Movement, если таковой имеется. Ключом будет OperDate и UnitId
     outMovementId := (SELECT Movement_SheetWorkTime.Id
-                     FROM Movement AS Movement_SheetWorkTime
-                          JOIN MovementLinkObject AS MovementLinkObject_Unit 
-                                                  ON MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                 AND MovementLinkObject_Unit.MovementId = Movement_SheetWorkTime.Id  
-                                                 AND MovementLinkObject_Unit.ObjectId = inUnitId
-                     WHERE Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime() AND Movement_SheetWorkTime.OperDate = inOperDate
-                       --AND Movement_SheetWorkTime.StatusId <> zc_Enum_Status_Erased()
-                    );
+                      FROM Movement AS Movement_SheetWorkTime
+                           JOIN MovementLinkObject AS MovementLinkObject_Unit 
+                                                   ON MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                  AND MovementLinkObject_Unit.MovementId = Movement_SheetWorkTime.Id  
+                                                  AND MovementLinkObject_Unit.ObjectId = inUnitId
+                      WHERE Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime() AND Movement_SheetWorkTime.OperDate = inOperDate
+                        --AND Movement_SheetWorkTime.StatusId <> zc_Enum_Status_Erased()
+                     );
  
     -- сохранили <Документ>
     IF COALESCE (outMovementId, 0) = 0
