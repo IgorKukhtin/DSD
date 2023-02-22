@@ -12,7 +12,7 @@ RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar
              , CountChech TFloat, CountSite TFloat, CountUser Integer, ProcPlan TFloat
              , UserId Integer, UserCode Integer, UserName TVarChar
              , CountChechUser TFloat, CountMobileUser TFloat, QuantityMobile Integer, ProcFact TFloat
-             , PenaltiMobApp TFloat, isShowPlanEmployeeUser Boolean
+             , PenaltiMobApp TFloat, isShowPlanMobileAppUser Boolean
               )
 AS
 $BODY$
@@ -70,8 +70,8 @@ BEGIN
      raise notice 'Value 2: %', CLOCK_TIMESTAMP();
      
      CREATE TEMP TABLE tmpESCount ON COMMIT DROP AS 
-     SELECT MILinkObject_Unit.ObjectId               AS UnitId
-          , COUNT(*)::Integer                        AS CountUser        
+     SELECT MILinkObject_Unit.ObjectId                                              AS UnitId
+          , COALESCE(NULLIF(MAX(MovementItemUser.Amount), 0), COUNT(*))::Integer   AS CountUser        
      FROM Movement
 
            INNER JOIN MovementItem AS MovementItemMaster
@@ -81,6 +81,11 @@ BEGIN
            INNER JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItemMaster.Id
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+           LEFT JOIN MovementItem AS MovementItemUser
+                                  ON MovementItemUser.MovementId = Movement.Id
+                                 AND MovementItemUser.ObjectId  = MILinkObject_Unit.ObjectId 
+                                 AND MovementItemUser.DescId = zc_MI_Second()
 
            LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                 ON ObjectLink_User_Member.ObjectId = MovementItemMaster.ObjectId
@@ -193,7 +198,7 @@ BEGIN
                               Round(1.0 * tmpMovFact.CountMobile / 
                              NullIf(tmpMovFact.CountChech, 0) * 100, 1)) * vbPenMobApp, 2)                              
                   ELSE 0 END::TFLoat                               AS PenaltiMobApp
-           , COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE):: Boolean         AS isShowPlanEmployeeUser
+           , COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE):: Boolean         AS isShowPlanMobileAppUser
         FROM tmpMovPlan AS MovPlan 
         
              LEFT JOIN Object AS Object_Unit ON Object_Unit.ID = MovPlan.UnitId
@@ -204,9 +209,9 @@ BEGIN
 
              LEFT JOIN Object AS Object_User ON Object_User.Id = tmpMovFact.UserId
 
-             LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowPlanEmployeeUser
-                                     ON ObjectBoolean_ShowPlanEmployeeUser.ObjectId = MovPlan.UnitId
-                                    AND ObjectBoolean_ShowPlanEmployeeUser.DescId = zc_ObjectBoolean_Unit_ShowPlanEmployeeUser()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowPlanMobileAppUser
+                                     ON ObjectBoolean_ShowPlanMobileAppUser.ObjectId = MovPlan.UnitId
+                                    AND ObjectBoolean_ShowPlanMobileAppUser.DescId = zc_ObjectBoolean_Unit_ShowPlanMobileAppUser()
 
         WHERE (tmpMovFact.UserId  = inUserId OR COALESCE (inUserId, 0) = 0)             
         ORDER BY Object_Unit.ValueData , Object_User.ValueData

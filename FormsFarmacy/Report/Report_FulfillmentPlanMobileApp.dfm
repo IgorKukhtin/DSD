@@ -371,7 +371,7 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
           end
           object isShowPlanEmployeeUser: TcxGridDBColumn
             Caption = #1054#1089#1074#1086#1073'. '#1086#1090' '#1087#1083#1072#1085#1072
-            DataBinding.FieldName = 'isShowPlanEmployeeUser'
+            DataBinding.FieldName = 'isShowPlanMobileAppUser'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 62
@@ -612,44 +612,81 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
       MoveParams = <>
       AfterAction = actRefresh
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_SetShowPlanEmployeeUser
+      StoredProc = spUpdate_SetShowPlanMobileAppUser
       StoredProcList = <
         item
-          StoredProc = spUpdate_SetShowPlanEmployeeUser
+          StoredProc = spUpdate_SetShowPlanMobileAppUser
         end>
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
-    object mactUpdate_ShowPlanEmployeeUser: TMultiAction
+    object mactUpdate_ShowPlanMobileAppUser: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       AfterAction = actRefresh
       ActionList = <
         item
-          Action = actUpdate_ShowPlanEmployeeUser
+          Action = actUpdate_ShowPlanMobileAppUser
         end>
       View = cxGridDBTableView
       QuestionBeforeExecute = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1080#1090#1086#1075' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088 +
-        #1086#1076#1072#1078'"?'
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1080#1090#1086#1075' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072' '#1087#1086' '#1084#1086 +
+        #1073#1080#1083#1100#1085#1086#1084#1091' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102'"?'
       Caption = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1080#1090#1086#1075' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088 +
-        #1086#1076#1072#1078'"'
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1080#1090#1086#1075' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072' '#1087#1086' '#1084#1086 +
+        #1073#1080#1083#1100#1085#1086#1084#1091' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102'"'
       Hint = 
-        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1080#1090#1086#1075' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088 +
-        #1086#1076#1072#1078'"'
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1080#1090#1086#1075' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072' '#1087#1086' '#1084#1086 +
+        #1073#1080#1083#1100#1085#1086#1084#1091' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102'"'
       ImageIndex = 79
     end
-    object actUpdate_ShowPlanEmployeeUser: TdsdExecStoredProc
+    object actUpdate_ShowPlanMobileAppUser: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_ShowPlanEmployeeUser
+      StoredProc = spUpdate_ShowPlanMobileAppUser
       StoredProcList = <
         item
-          StoredProc = spUpdate_ShowPlanEmployeeUser
+          StoredProc = spUpdate_ShowPlanMobileAppUser
         end>
-      Caption = 'actUpdate_ShowPlanEmployeeUser'
+      Caption = 'actUpdate_ShowPlanMobileAppUser'
+    end
+    object actInsertUpdate_EmployeeSchedule_UserCount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteDialogUserCount
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_EmployeeSchedule_UserCount
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_EmployeeSchedule_UserCount
+        end>
+      Caption = 'actUpdate_ShowPlanMobileAppUser'
+    end
+    object actExecuteDialogUserCount: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogUserCount'
+      FormName = 'TIntegerDialogForm'
+      FormNameParam.Value = 'TIntegerDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Values'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UserCount'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1086#1076' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1074' '#1087#1086' '#1072#1087#1090#1077#1082#1077
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
   end
   inherited MasterDS: TDataSource
@@ -727,6 +764,14 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_ShowPlanMobileAppUser'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -756,13 +801,18 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
       ImageIndex = 56
     end
     object dxBarButton2: TdxBarButton
-      Action = mactUpdate_ShowPlanEmployeeUser
+      Action = mactUpdate_ShowPlanMobileAppUser
       Category = 0
+    end
+    object bbUpdate_ShowPlanMobileAppUser: TdxBarButton
+      Action = actUpdate_ShowPlanMobileAppUser
+      Category = 0
+      ImageIndex = 55
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 208
-    Top = 16
+    Left = 240
+    Top = 8
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -874,8 +924,8 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
     Left = 688
     Top = 240
   end
-  object spUpdate_SetShowPlanEmployeeUser: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Unit_SetShowPlanEmployeeUser'
+  object spUpdate_SetShowPlanMobileAppUser: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_SetShowPlanMobileAppUser'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -888,10 +938,10 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisShowPlanEmployeeUser'
+        Name = 'inisShowPlanMobileAppUser'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'isShowPlanEmployeeUser'
+        ComponentItem = 'isShowPlanMobileAppUser'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -900,8 +950,8 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
     Left = 360
     Top = 307
   end
-  object spUpdate_ShowPlanEmployeeUser: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Unit_ShowPlanEmployeeUser'
+  object spUpdate_ShowPlanMobileAppUser: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_ShowPlanMobileAppUser'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -914,10 +964,10 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisShowPlanEmployeeUser'
+        Name = 'inisShowPlanMobileAppUser'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'isShowPlanEmployeeUser'
+        ComponentItem = 'isShowPlanMobileAppUser'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -925,5 +975,48 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
     PackSize = 1
     Left = 360
     Top = 371
+  end
+  object spInsertUpdate_EmployeeSchedule_UserCount: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_EmployeeSchedule_UserCount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserCount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserCount'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 592
+    Top = 355
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'UserCount'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 128
+    Top = 376
   end
 end

@@ -58,12 +58,17 @@ type
     PenaltiMobApp: TcxGridDBColumn;
     QuantityMobile: TcxGridDBColumn;
     isShowPlanEmployeeUser: TcxGridDBColumn;
-    spUpdate_SetShowPlanEmployeeUser: TdsdStoredProc;
+    spUpdate_SetShowPlanMobileAppUser: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    spUpdate_ShowPlanEmployeeUser: TdsdStoredProc;
-    mactUpdate_ShowPlanEmployeeUser: TMultiAction;
-    actUpdate_ShowPlanEmployeeUser: TdsdExecStoredProc;
+    spUpdate_ShowPlanMobileAppUser: TdsdStoredProc;
+    mactUpdate_ShowPlanMobileAppUser: TMultiAction;
+    actUpdate_ShowPlanMobileAppUser: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
+    actInsertUpdate_EmployeeSchedule_UserCount: TdsdExecStoredProc;
+    spInsertUpdate_EmployeeSchedule_UserCount: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actExecuteDialogUserCount: TExecuteDialog;
+    bbUpdate_ShowPlanMobileAppUser: TdxBarButton;
   private
     { Private declarations }
   public

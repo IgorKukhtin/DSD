@@ -33,7 +33,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                LikiDneproeHealthURL TVarChar, LikiDneproeLocation TVarChar, LikiDneproeHealthToken TVarChar,
                isRemovingPrograms Boolean, ExpressVIPConfirm Integer, isErrorRROToVIP Boolean, 
                LayoutFileCount Integer, LayoutFileID Integer, FilesToCheckCount Integer, FilesToCheckID Integer, 
-               isSupplementAddCash Boolean, isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, isShowActiveAlerts Boolean,
+               isSupplementAddCash Boolean, isExpressVIPConfirm Boolean, 
+               isShowPlanEmployeeUser Boolean, isShowPlanMobileAppUser Boolean, isShowActiveAlerts Boolean,
                MinPriceSale TFloat, DeviationsPrice1303 TFloat, LimitCash TFloat, 
                SetDateRRO TDateTime, isSetDateRRO boolean, SetDateRROList TVarChar,
                isReplaceSte2ListDif Boolean, MobMessSum TFloat, MobMessCount Integer,
@@ -433,6 +434,7 @@ BEGIN
        , COALESCE (ObjectBoolean_SUN_v2_SupplementAddCash.ValueData, FALSE):: Boolean     AS isSupplementAddCash
        , COALESCE (ObjectBoolean_ExpressVIPConfirm.ValueData, FALSE):: Boolean            AS isExpressVIPConfirm
        , COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE):: Boolean         AS isShowPlanEmployeeUser
+       , COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE):: Boolean        AS isShowPlanMobileAppUser
        , COALESCE (ObjectBoolean_ShowActiveAlerts.ValueData, FALSE):: Boolean             AS isShowActiveAlerts
        
        , tmpCashSettings.MinPriceSale
@@ -569,6 +571,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowPlanEmployeeUser
                                 ON ObjectBoolean_ShowPlanEmployeeUser.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ShowPlanEmployeeUser.DescId = zc_ObjectBoolean_Unit_ShowPlanEmployeeUser()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowPlanMobileAppUser
+                                ON ObjectBoolean_ShowPlanMobileAppUser.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_ShowPlanMobileAppUser.DescId = zc_ObjectBoolean_Unit_ShowPlanMobileAppUser()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowActiveAlerts
                                 ON ObjectBoolean_ShowActiveAlerts.ObjectId = Object_Unit.Id
