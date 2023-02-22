@@ -511,6 +511,11 @@ type
     mactUpdate_SendErrorTelegramBot: TMultiAction;
     actUpdate_SendErrorTelegramBot: TdsdExecStoredProc;
     dxBarButton41: TdxBarButton;
+    isShowPlanMobileAppUser: TcxGridDBColumn;
+    mactUpdate_ShowPlanMobileAppUser: TMultiAction;
+    actUpdate_ShowPlanMobileAppUser: TdsdExecStoredProc;
+    dxBarButton42: TdxBarButton;
+    spUpdate_ShowPlanMobileAppUser: TdsdStoredProc;
   private
     { Private declarations }
   public

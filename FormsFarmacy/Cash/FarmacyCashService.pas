@@ -1249,6 +1249,7 @@ var
   FSaveTryCount: integer;
   bShowDisconnectMsg: boolean;
   BodySaved: boolean;
+  сHasError: string;
 
   function LocateUID(AUID: string; ASave: boolean): boolean;
   begin
@@ -1370,8 +1371,8 @@ begin
         Begin
           if (FSaveUID = UID) and (FSaveTryCount > 2) then
           begin
-            Add_Log('Повторная попытка отгрузить чек ' + UID);
-            ChangeStatus('Внимание! Повторная попытка отгрузить чек, дальнейшая выгрузка чеков в офис прекращена!');
+            Add_Log('Повторная попытка ' + сHasError + ' чек ' + UID);
+            ChangeStatus('Внимание! Повторная попытка ' + сHasError + ', дальнейшая выгрузка чеков в офис прекращена!');
             FHasError := true;
             Exit;
           end;
@@ -1853,6 +1854,7 @@ begin
                   Add_Log('InsertUpdate Check: ' + E.Message);
                   if FSaveTryCount > 2 then SendTelegramBotMessage(E.Message);
                   FHasError := true;
+                  сHasError := 'сохранения чека';
                   if gc_User.Local then
                   begin
                     ChangeStatus('Останавливаем проведение чеков');
@@ -1895,6 +1897,7 @@ begin
                   if FSaveTryCount > 2 then SendTelegramBotMessage(E.Message);
                   // -nw                 SendError(E.Message);
                   FHasError := true;
+                  сHasError := 'проведения чека (красный чек)';
                   if gc_User.Local then
                   begin
                     ChangeStatus('Останавливаем проведение чеков');

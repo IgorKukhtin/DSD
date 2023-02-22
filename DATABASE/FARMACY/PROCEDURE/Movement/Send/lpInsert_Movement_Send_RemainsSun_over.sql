@@ -529,6 +529,26 @@ BEGIN
         FROM tmpSUN;
         
      ANALYSE _tmpGoods_Sun_exception;
+     
+        -- Xолод
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpConditionsKeep'))
+     THEN
+       DROP TABLE tmpConditionsKeep;
+     END IF;
+
+     CREATE TEMP TABLE tmpConditionsKeep ON COMMIT DROP AS
+     SELECT Object_Goods.ID AS ObjectId
+     FROM Object_Goods_Retail AS Object_Goods 
+          LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
+                                  ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
+                                 AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
+     WHERE Object_Goods.RetailId = 4
+       AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
+            OR Object_Goods_Main.isColdSUN = TRUE);
+     
+     ANALYSE tmpConditionsKeep;
+     
         
 --raise notice 'Value 8: %', CLOCK_TIMESTAMP();
 
@@ -1535,19 +1555,6 @@ BEGIN
                             -- товары "убит код" - 25.05.20 -- временно отключил - 21.05.20
                                 (COALESCE (MCS_isClose.ValueData, FALSE) = False OR _tmpUnit_SUN.isLock_ClosePL = FALSE)
                          )
-          -- отбросили !!холод!!
-          , tmpConditionsKeep AS (SELECT tmpGoods.GoodsID AS ObjectId
-                                FROM (SELECT DISTINCT _tmpRemains_Partion_all.GoodsId FROM _tmpRemains_Partion_all) AS tmpGoods
-                                     LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsID
-                                     LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
-                                     LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
-                                                             ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
-                                                            AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
-                                WHERE (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
-                                   OR Object_Goods_Main.isColdSUN = TRUE 
-                                      )
-                                  AND (vbisEliminateColdSUN = TRUE OR vbisOnlyColdSUN = TRUE)
-                               )
              -- отбросили !!НОТ!!
            , tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId
                               FROM ObjectBoolean AS OB_Goods_NOT
@@ -1625,7 +1632,7 @@ BEGIN
                 > 1
             -- отбросили !!холод!!
             AND ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
-                 tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE)
+               tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE)
             -- отбросили !!НОТ!!
             AND tmpGoods_NOT.ObjectId IS NULL
           ;
@@ -1704,20 +1711,6 @@ BEGIN
      -- CREATE TEMP TABLE _tmpSumm_limit (UnitId_from Integer, UnitId_to Integer, Summ TFloat) ON COMMIT DROP;
      --
      INSERT INTO _tmpSumm_limit (UnitId_from, UnitId_to, Summ)
-        WITH
-        -- отбросили !!холод!!
-        tmpConditionsKeep AS (SELECT tmpGoods.GoodsID AS ObjectId
-                              FROM (SELECT DISTINCT _tmpRemains_Partion_all.GoodsId FROM _tmpRemains_Partion_all) AS tmpGoods
-                                   LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsID
-                                   LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
-                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
-                                                           ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
-                                                          AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
-                              WHERE (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
-                                 OR Object_Goods_Main.isColdSUN = TRUE 
-                                    )
-                                AND vbisEliminateColdSUN = TRUE
-                             )
         SELECT _tmpRemains_Partion.UnitId AS UnitId_from
              , _tmpRemains_calc.UnitId    AS UnitId_to
                -- если OVER больше чем в ПОТРЕБНОСТЬ
@@ -1758,7 +1751,8 @@ BEGIN
                                   AND _tmpSUN_oth.UnitId_to   = _tmpRemains_calc.UnitId
                                   AND _tmpSUN_oth.GoodsId     = _tmpRemains_calc.GoodsId
 
-        WHERE tmpConditionsKeep.ObjectId IS NULL
+        WHERE ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+               tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE)
           AND _tmpUnit_SunExclusion.UnitId_to IS NULL
           AND _tmpUnit_SunExclusion_MCS.UnitId_to IS NULL
           AND _tmpSUN_oth.GoodsId IS NULL
@@ -1831,13 +1825,16 @@ BEGIN
                                                   ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_Partion.UnitId
                                                  AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_Partion.GoodsId
 
+             -- а здесь, отбросили !!холод!!
+             --LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_Partion.GoodsId
+             
         WHERE -- !!!Отключили парные!!!
               _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
 
           AND (_tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0)) > 0
 
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
-
+          
 /*          AND CASE -- если у парного ост = 0, не отдаем
                     WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND COALESCE (_tmpRemains_Partion_PairSun.Amount, 0) <=0
                          THEN 0

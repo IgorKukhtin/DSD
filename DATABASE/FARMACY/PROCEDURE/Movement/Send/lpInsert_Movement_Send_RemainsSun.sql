@@ -158,7 +158,7 @@ BEGIN
                                  AND ObjectBoolean_CashSettings_OnlyColdSUN.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
-
+     
      -- !!! накопительно баланс только по срокам
      vbDate_balance_partion:= '22.01.2020';
      -- !!! шаг дл€ зоны уравнивани€ приход/расход - только по срокам
@@ -1499,7 +1499,7 @@ raise notice 'Value 15_4: %', CLOCK_TIMESTAMP();
 
 raise notice 'Value 15_5: %', CLOCK_TIMESTAMP();
 
-               -- IncomeSUN - за X дней - если приходило, SUN уходить уже не может
+     -- IncomeSUN - за X дней - если приходило, SUN уходить уже не может
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpIncomeSUN'))
      THEN
        DROP TABLE tmpIncomeSUN;
@@ -1535,6 +1535,26 @@ raise notice 'Value 15_5: %', CLOCK_TIMESTAMP();
                                );
 
      ANALYSE tmpIncomeSUN;
+          
+        -- Xолод
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpConditionsKeep'))
+     THEN
+       DROP TABLE tmpConditionsKeep;
+     END IF;
+
+     CREATE TEMP TABLE tmpConditionsKeep ON COMMIT DROP AS
+     SELECT Object_Goods.ID AS ObjectId
+     FROM Object_Goods_Retail AS Object_Goods 
+          LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
+                                  ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
+                                 AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
+     WHERE Object_Goods.RetailId = 4
+       AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
+            OR Object_Goods_Main.isColdSUN = TRUE);
+     
+     ANALYSE tmpConditionsKeep;
+     
 
 raise notice 'Value 15_6: %', CLOCK_TIMESTAMP();
 
@@ -1863,9 +1883,8 @@ raise notice 'Value 15_6: %', CLOCK_TIMESTAMP();
        ;
        
      ANALYSE _tmpRemains_Partion_all;
-
+          
 raise notice 'Value 16: %', CLOCK_TIMESTAMP();
-
 
      -- 3.2. остатки у ќ“ѕ–ј¬»“≈Ћя, SUN-1 - дл€ распределени€
      WITH tmpRemains AS (SELECT _tmpRemains_Partion_all.ContainerDescId
@@ -1999,19 +2018,6 @@ raise notice 'Value 16: %', CLOCK_TIMESTAMP();
                              OR COALESCE (tmpMCS_all.MCSValue, 0) <> 0
                              OR COALESCE (tmpMCS_all.Price, 0)    <> 0
                          )
-        -- отбросили !!холод!!
-      , tmpConditionsKeep AS (SELECT tmpGoods.GoodsID AS ObjectId
-                              FROM (SELECT DISTINCT _tmpRemains_Partion_all.GoodsId FROM _tmpRemains_Partion_all) AS tmpGoods
-                                   LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsID
-                                   LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
-                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
-                                                           ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
-                                                          AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
-                              WHERE (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
-                                 OR Object_Goods_Main.isColdSUN = TRUE 
-                                    )
-                                AND (vbisEliminateColdSUN = TRUE OR vbisOnlyColdSUN = TRUE)
-                             )
              -- отбросили !!Ќќ“!!
            , tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId
                               FROM ObjectBoolean AS OB_Goods_NOT
@@ -2300,20 +2306,6 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
      -- CREATE TEMP TABLE _tmpSumm_limit (UnitId_from Integer, UnitId_to Integer, Summ TFloat) ON COMMIT DROP;
      --
      INSERT INTO _tmpSumm_limit (UnitId_from, UnitId_to, Summ)
-        WITH
-        -- отбросили !!холод!!
-        tmpConditionsKeep AS (SELECT tmpGoods.GoodsID AS ObjectId
-                              FROM (SELECT DISTINCT _tmpRemains_Partion_all.GoodsId FROM _tmpRemains_Partion_all) AS tmpGoods
-                                   LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsID
-                                   LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
-                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
-                                                           ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
-                                                          AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
-                              WHERE (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
-                                 OR Object_Goods_Main.isColdSUN = TRUE 
-                                    )
-                                AND (vbisEliminateColdSUN = TRUE OR vbisOnlyColdSUN = TRUE)
-                             )
         SELECT _tmpRemains_Partion.UnitId AS UnitId_from
              , _tmpRemains_calc.UnitId    AS UnitId_to
                -- если сроковых больше чем в јвтозаказе
@@ -2421,6 +2413,9 @@ raise notice 'Value 19: %', CLOCK_TIMESTAMP();
              LEFT JOIN (SELECT tmp.GoodsId FROM gpSelect_Object_GoodsPromo(inOperDate := CURRENT_DATE , inRetailId := 4 , inSession := inUserId::TVarChar) AS tmp 
                         WHERE tmp.isNotUseSUN = TRUE) AS tmpGoodsPromo ON tmpGoodsPromo.GoodsId = _tmpRemains_Partion.GoodsId
              
+             -- а здесь, отбросили !!холод!!
+             -- LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_Partion.GoodsId
+
         WHERE -- !!!ќтключили парные!!!
               COALESCE ( _tmpGoods_SUN_PairSun_find.GoodsId_PairSun, 0) = 0
 
@@ -2431,7 +2426,7 @@ raise notice 'Value 19: %', CLOCK_TIMESTAMP();
           AND COALESCE(tmpGoodsPromo.GoodsId, 0) = 0
           
           AND (_tmpUnit_SUN.isOnlyTimingSUN = False OR _tmpRemains_Partion.ContainerDescId = zc_Container_CountPartionDate())
-
+          
 /*          CASE -- если у парного ост = 0, не отдаем
                     WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND COALESCE (_tmpRemains_Partion_PairSun.Amount, 0) <= 0
                          THEN 0
@@ -2715,6 +2710,9 @@ raise notice 'Value 20: %', CLOCK_TIMESTAMP();
 
              LEFT JOIN (SELECT tmp.GoodsId FROM gpSelect_Object_GoodsPromo(inOperDate := CURRENT_DATE , inRetailId := 4 , inSession := inUserId::TVarChar) AS tmp 
                         WHERE tmp.isNotUseSUN = TRUE) AS tmpGoodsPromo ON tmpGoodsPromo.GoodsId = _tmpRemains_Partion.GoodsId
+
+             -- а здесь, отбросили !!холод!!
+             --LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_Partion.GoodsId
 
         WHERE FLOOR(_tmpRemains_Partion.Amount - COALESCE (tmp.Amount, 0)) > 0
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
@@ -3339,7 +3337,6 @@ raise notice 'Value 25: %', CLOCK_TIMESTAMP();
                                         , _tmpResult_Partion.GoodsId
                                         , _tmpResult_Partion.UnitId_from
                                         , _tmpResult_Partion.UnitId_to
-                                 ORDER BY 6 DESC
                                 );
      -- начало цикла по курсору1
      LOOP
@@ -3713,4 +3710,4 @@ WHERE Movement.OperDate  >= '01.01.2019'
  SELECT * FROM lpInsert_Movement_Send_RemainsSun (inOperDate:= CURRENT_DATE + INTERVAL '5 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 */
 
-select * from gpReport_Movement_Send_RemainsSun(inOperDate := ('15.02.2023')::TDateTime ,  inSession := '3');
+select * from gpReport_Movement_Send_RemainsSun(inOperDate := ('20.02.2023')::TDateTime ,  inSession := '3');
