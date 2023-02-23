@@ -3,7 +3,7 @@ inherited MobilePromoJournalForm: TMobilePromoJournalForm
   ClientHeight = 430
   ClientWidth = 839
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitLeft = -95
+  AddOnFormData.ExecuteDialogAction = ExecuteDialogMember
   ExplicitWidth = 855
   ExplicitHeight = 469
   PixelsPerInch = 96
@@ -322,6 +322,9 @@ inherited MobilePromoJournalForm: TMobilePromoJournalForm
       ReportNameParam.Value = #1040#1082#1094#1080#1103
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -352,7 +355,7 @@ inherited MobilePromoJournalForm: TMobilePromoJournalForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -370,15 +373,44 @@ inherited MobilePromoJournalForm: TMobilePromoJournalForm
           StoredProc = spGet_UserJuridicalBasis
         end
         item
-          StoredProc = spGet_PersonalTrade
-        end
-        item
           StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object ExecuteDialogMember: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMobileMemberDialogForm'
+      FormNameParam.Value = 'TMobileMemberDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MemberId'
+          Value = '0'
+          Component = PersonalTradeGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = ''
+          Component = PersonalTradeGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
   end
   inherited MasterDS: TDataSource

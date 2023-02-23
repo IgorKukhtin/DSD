@@ -131,12 +131,12 @@ type
     isError: TcxGridDBColumn;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;
-    JuridicalBasisGuides: TdsdGuides;
+    GuidesJuridicalBasis: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     edPersonalTrade: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    PersonalTradeGuides: TdsdGuides;
+    GuidesPersonalTrade: TdsdGuides;
     spGet_PersonalTrade: TdsdStoredProc;
     UpdateMobileDate: TcxGridDBColumn;
     PeriodSecMobile: TcxGridDBColumn;

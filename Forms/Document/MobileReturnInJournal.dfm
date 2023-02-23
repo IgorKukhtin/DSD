@@ -5,7 +5,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1130
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -829,16 +829,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
     end
     inherited actSetErased: TdsdChangeMovementStatus [6]
     end
-    inherited actCompleteList: TMultiAction [7]
-      View = cxGridDBTableView
-    end
-    inherited actUnCompleteList: TMultiAction [8]
-      View = cxGridDBTableView
-    end
-    inherited actSetErasedList: TMultiAction [9]
-      View = cxGridDBTableView
-    end
-    object actTaxCorrective: TdsdExecStoredProc [10]
+    object actTaxCorrective: TdsdExecStoredProc [7]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -857,7 +848,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088 +
         #1080#1074#1103#1079#1082#1086#1081')>.'
     end
-    object actCorrective: TdsdExecStoredProc [11]
+    object actCorrective: TdsdExecStoredProc [8]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -876,11 +867,11 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1073#1077#1079' ' +
         #1087#1088#1080#1074#1103#1079#1082#1080')>.'
     end
-    inherited actMovementItemContainer: TdsdOpenForm [12]
+    inherited actMovementItemContainer: TdsdOpenForm [9]
     end
-    inherited actShowErased: TBooleanStoredProcAction [13]
+    inherited actShowErased: TBooleanStoredProcAction [10]
     end
-    object actPrint: TdsdPrintAction [14]
+    object actPrint: TdsdPrintAction [11]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -933,15 +924,27 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    inherited actGridToExcel: TdsdGridToExcel [15]
+    inherited mactReCompleteList: TMultiAction [12]
     end
-    inherited actInsertMask: TdsdInsertUpdateAction [16]
+    inherited actGridToExcel: TdsdGridToExcel [13]
     end
-    inherited actReCompleteList: TMultiAction [17]
+    inherited mactCompleteList: TMultiAction [14]
     end
-    inherited spReCompete: TdsdExecStoredProc [18]
+    inherited actInsertMask: TdsdInsertUpdateAction [15]
+    end
+    inherited mactUnCompleteList: TMultiAction [16]
+    end
+    inherited spReCompete: TdsdExecStoredProc [17]
     end
     inherited MovementProtocolOpenForm: TdsdOpenForm [19]
+    end
+    inherited mactSimpleReCompleteList: TMultiAction [20]
+    end
+    inherited mactSimpleCompleteList: TMultiAction [21]
+    end
+    inherited mactSimpleUncompleteList: TMultiAction [22]
+    end
+    inherited mactSimpleErasedList: TMultiAction [23]
     end
     object actSPPrintProcNamePriceCorr: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1268,8 +1271,8 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TMovement_DateDialogForm'
-      FormNameParam.Value = 'TMovement_DateDialogForm'
+      FormName = 'TMobileMovement_DateDialogForm'
+      FormNameParam.Value = 'TMobileMovement_DateDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1291,9 +1294,34 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
         end
         item
           Name = 'IsPartnerDate'
-          Value = 'False'
+          Value = False
           Component = edIsPartnerDate
           DataType = ftBoolean
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobileDate'
+          Value = Null
+          Component = edIsMobileDate
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = GuidesPersonalTrade
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = Null
+          Component = GuidesPersonalTrade
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1401,9 +1429,6 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
           StoredProc = spGet_UserJuridicalBasis
         end
         item
-          StoredProc = spGet_PersonalTrade
-        end
-        item
           StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
@@ -1441,7 +1466,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       end
       item
         Name = 'inIsPartnerDate'
-        Value = 'False'
+        Value = False
         Component = edIsPartnerDate
         DataType = ftBoolean
         ParamType = ptInput
@@ -1466,7 +1491,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       item
         Name = 'inJuridicalBasisId'
         Value = Null
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1474,7 +1499,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       item
         Name = 'inMemberId'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1575,9 +1600,6 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
-    end
     object bbTaxCorrective: TdxBarButton
       Action = actTaxCorrective
       Category = 0
@@ -1639,10 +1661,10 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
         Component = PeriodChoice
       end
       item
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
       end
       item
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
       end>
     Left = 408
     Top = 344
@@ -1660,7 +1682,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       end
       item
         Name = 'inStartDateSale'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1763,7 +1785,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       end
       item
         Name = 'inStartDateSale'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1778,7 +1800,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       end
       item
         Name = 'inIsLastComplete'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1847,7 +1869,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2015,7 +2037,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       end
       item
         Name = 'inStartDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2306,7 +2328,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
     Left = 80
     Top = 433
   end
-  object JuridicalBasisGuides: TdsdGuides
+  object GuidesJuridicalBasis: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridicalBasis
     Key = '0'
@@ -2319,7 +2341,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       item
         Name = 'Key'
         Value = '0'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2327,7 +2349,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2343,14 +2365,14 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       item
         Name = 'JuridicalBasisId'
         Value = '0'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisName'
         Value = ''
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2359,7 +2381,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
     Left = 760
     Top = 64
   end
-  object PersonalTradeGuides: TdsdGuides
+  object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalTrade
     Key = '0'
@@ -2372,7 +2394,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       item
         Name = 'Key'
         Value = '0'
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2380,7 +2402,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2391,7 +2413,7 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
         Value = '149831'
         MultiSelectSeparator = ','
       end>
-    Left = 687
+    Left = 775
   end
   object spGet_PersonalTrade: TdsdStoredProc
     StoredProcName = 'gpGetMobile_Object_Const'
@@ -2401,14 +2423,14 @@ inherited MobileReturnInJournalForm: TMobileReturnInJournalForm
       item
         Name = 'MemberId'
         Value = '0'
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MemberName'
         Value = ''
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','

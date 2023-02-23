@@ -1417,7 +1417,8 @@ uses
   CurrencyListMovement in '..\..\Forms\Document\CurrencyListMovement.pas' {CurrencyListMovementForm: TParentForm},
   SheetWorkTime_line in '..\..\Forms\Document\SheetWorkTime_line.pas' {SheetWorkTime_lineForm: TParentForm},
   MovementItemProtocolSWT in '..\..\Forms\System\MovementItemProtocolSWT.pas' {MovementItemProtocolSWTForm: TParentForm},
-  MobileMovement_DateDialog in '..\..\Forms\Document\MobileMovement_DateDialog.pas' {MobileMovement_DateDialogForm: TParentForm};
+  MobileMovement_DateDialog in '..\..\Forms\Document\MobileMovement_DateDialog.pas' {MobileMovement_DateDialogForm: TParentForm},
+  MobileMemberDialog in '..\..\Forms\Document\MobileMemberDialog.pas' {MobileMemberDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

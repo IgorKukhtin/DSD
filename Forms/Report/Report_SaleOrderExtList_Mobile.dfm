@@ -833,6 +833,7 @@ object Report_SaleOrderExtList_MobileForm: TReport_SaleOrderExtList_MobileForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -1094,10 +1095,13 @@ object Report_SaleOrderExtList_MobileForm: TReport_SaleOrderExtList_MobileForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 304
     Top = 296
   end
@@ -1217,7 +1221,7 @@ object Report_SaleOrderExtList_MobileForm: TReport_SaleOrderExtList_MobileForm
       end
       item
         Name = 'inIsDiffTax'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

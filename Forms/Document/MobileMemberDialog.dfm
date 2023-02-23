@@ -1,9 +1,9 @@
-object MobileMovement_DateDialogForm: TMobileMovement_DateDialogForm
+object MobileMemberDialogForm: TMobileMemberDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1042#1099#1073#1086#1088' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' '#1076#1083#1103' '#1078#1091#1088#1085#1072#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-  ClientHeight = 243
+  Caption = #1042#1099#1073#1086#1088' '#1058#1086#1088#1075#1086#1074#1086#1075#1086' '#1072#1075#1077#1085#1090#1072
+  ClientHeight = 140
   ClientWidth = 378
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,8 +19,8 @@ object MobileMovement_DateDialogForm: TMobileMovement_DateDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 50
-    Top = 191
+    Left = 42
+    Top = 95
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,8 +29,8 @@ object MobileMovement_DateDialogForm: TMobileMovement_DateDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 224
-    Top = 191
+    Left = 216
+    Top = 95
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -38,30 +38,34 @@ object MobileMovement_DateDialogForm: TMobileMovement_DateDialogForm
     TabOrder = 1
   end
   object deEnd: TcxDateEdit
-    Left = 131
-    Top = 70
+    Left = 339
+    Top = 49
     EditValue = 42370d
     Properties.ShowTime = False
     TabOrder = 2
+    Visible = False
     Width = 90
   end
   object deStart: TcxDateEdit
-    Left = 131
-    Top = 29
+    Left = 339
+    Top = 8
     EditValue = 42370d
     Properties.ShowTime = False
     TabOrder = 3
+    Visible = False
     Width = 90
   end
   object cxLabel6: TcxLabel
-    Left = 34
-    Top = 30
+    Left = 242
+    Top = 9
     Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    Visible = False
   end
   object cxLabel7: TcxLabel
-    Left = 15
-    Top = 71
+    Left = 223
+    Top = 50
     Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    Visible = False
   end
   object edIsMobileDate: TcxCheckBox
     Left = 250
@@ -72,8 +76,8 @@ object MobileMovement_DateDialogForm: TMobileMovement_DateDialogForm
     Width = 265
   end
   object edPersonalTrade: TcxButtonEdit
-    Left = 123
-    Top = 131
+    Left = 115
+    Top = 35
     Properties.Buttons = <
       item
         Default = True
@@ -84,8 +88,8 @@ object MobileMovement_DateDialogForm: TMobileMovement_DateDialogForm
     Width = 230
   end
   object cxLabel1: TcxLabel
-    Left = 28
-    Top = 132
+    Left = 20
+    Top = 36
     Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090':'
   end
   object PeriodChoice: TPeriodChoice
@@ -153,7 +157,7 @@ object MobileMovement_DateDialogForm: TMobileMovement_DateDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 103
+    Left = 71
     Top = 30
   end
   object GuidesPersonalTrade: TdsdGuides
@@ -188,8 +192,8 @@ object MobileMovement_DateDialogForm: TMobileMovement_DateDialogForm
         Value = '149831'
         MultiSelectSeparator = ','
       end>
-    Left = 172
-    Top = 104
+    Left = 164
+    Top = 8
   end
   object spGet_PersonalTrade: TdsdStoredProc
     StoredProcName = 'gpGetMobile_Object_Const'
@@ -212,12 +216,12 @@ object MobileMovement_DateDialogForm: TMobileMovement_DateDialogForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 280
-    Top = 112
+    Left = 272
+    Top = 16
   end
   object ActionList: TActionList
-    Left = 160
-    Top = 176
+    Left = 152
+    Top = 80
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
