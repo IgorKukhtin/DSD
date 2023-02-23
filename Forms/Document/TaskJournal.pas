@@ -44,15 +44,17 @@ type
     actShowMessage: TShowMessageAction;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;
-    JuridicalBasisGuides: TdsdGuides;
+    GuidesJuridicalBasis: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     cxLabel3: TcxLabel;
     edPersonalTrade: TcxButtonEdit;
-    PersonalTradeGuides: TdsdGuides;
+    GuidesPersonalTrade: TdsdGuides;
     PositionName: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
+    GuidesFiller: TGuidesFiller;
+    actRefreshGet: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
