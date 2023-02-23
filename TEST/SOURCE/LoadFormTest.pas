@@ -4136,12 +4136,16 @@ end;
 
 procedure TLoadFormTest.LoadMobileProjectFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileMovement_DateDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileMovement_DateDialogForm');
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePackForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePackForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePackEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePackEditForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileReturnInJournalForm');
   //

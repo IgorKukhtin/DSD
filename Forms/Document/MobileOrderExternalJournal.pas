@@ -75,12 +75,12 @@ type
     actShowMessage: TShowMessageAction;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;
-    JuridicalBasisGuides: TdsdGuides;
+    GuidesJuridicalBasis: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     cxLabel3: TcxLabel;
     edPersonalTrade: TcxButtonEdit;
-    PersonalTradeGuides: TdsdGuides;
+    GuidesPersonalTrade: TdsdGuides;
     spGet_PersonalTrade: TdsdStoredProc;
     UpdateMobileDate: TcxGridDBColumn;
     PeriodSecMobile: TcxGridDBColumn;
