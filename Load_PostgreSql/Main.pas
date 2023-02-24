@@ -3030,12 +3030,14 @@ begin
      if (not cbFillAuto.Checked)or(not cbFillAuto.Enabled) then exit;
      //
      // 15 MONTH
+     myLogMemo_add(trim('gpUpdate_Object_Goods_In' + ' ' + DateToStr(Date) + ' - 15 MONTH'));
      fOpenSqToQuery ('select * from gpUpdate_Object_Goods_In (DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL' +  chr(39) + '15 MONTH' + chr(39) + ')'
                                                          + ', CURRENT_DATE'
                                                          + ','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
                                                          + ')');
      //
      // 15 MONTH
+     myLogMemo_add(trim('gpUpdate_Object_ReportCollation_RemainsCalc' + ' ' + DateToStr(Date) + ' - 15 MONTH'));
      fOpenSqToQuery ('select * from gpUpdate_Object_ReportCollation_RemainsCalc'
                                                          + ' (DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL ' + chr(39) + '15 MONTH' + chr(39) + ')'
                                                          + ', CURRENT_DATE'
@@ -3050,13 +3052,16 @@ begin
      //
      Present:=Now;
      DecodeDate(Present, Year, Month, Day);
-     if Day < 15 then
+     if Day < 15 then begin
      // 15 DAY
+     myLogMemo_add(trim('gpInsertUpdate_ObjectHistory_PriceListItem_Separate' + ' ' + DateToStr(Date) + ' - 15 DAY'));
      fOpenSqToQuery ('select * from gpInsertUpdate_ObjectHistory_PriceListItem_Separate'
                                                          + ' (CURRENT_DATE -INTERVAL ' + chr(39) + '15 DAY' + chr(39)
                                                          + ','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
                                                          + ')');
+     end;
      //CURRENT_DATE
+     myLogMemo_add(trim('gpInsertUpdate_ObjectHistory_PriceListItem_Separate' + ' ' + DateToStr(Date)));
      fOpenSqToQuery ('select * from gpInsertUpdate_ObjectHistory_PriceListItem_Separate'
                                                          + ' (CURRENT_DATE'
                                                          + ','+FormatToVarCharServer_isSpace(zc_Enum_Process_Auto_PrimeCost)
