@@ -133,6 +133,11 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
               Format = ',0.####'
               Kind = skSum
               Column = AmountSh_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithVAT_pr
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -239,6 +244,11 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
               Format = ',0.####'
               Kind = skSum
               Column = AmountSh_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummWithVAT_pr
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -597,6 +607,39 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
           object Summ_pr: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'. '#1055#1056#1040#1049#1057
             DataBinding.FieldName = 'Summ_pr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PriceNoVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057'. '#1055#1056#1040#1049#1057
+            DataBinding.FieldName = 'PriceNoVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057'. '#1055#1056#1040#1049#1057
+            DataBinding.FieldName = 'PriceWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummWithVAT_pr: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'. '#1055#1056#1040#1049#1057
+            DataBinding.FieldName = 'SummWithVAT_pr'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1669,7 +1712,7 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
     Top = 208
   end
   inherited BarManager: TdxBarManager
-    Left = 160
+    Left = 168
     Top = 208
     DockControlHeights = (
       0

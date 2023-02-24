@@ -34,11 +34,16 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , Summ_pr TFloat  
              , Amount_mi TFloat, AmountWeight_mi TFloat, AmountSh_mi TFloat
              , Amount_diff TFloat, AmountWeight_diff TFloat, AmountSh_diff TFloat
+             , PriceWithVAT   TFloat
+             , PriceNoVAT     TFloat
+             , SummWithVAT_pr TFloat
               )
 AS
 $BODY$
  DECLARE vbUserId Integer;
  DECLARE vbIsGroup Boolean;
+ DECLARE vbPriceWithVAT Boolean;
+ DECLARE vbVATPercent TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_GoodsMI_Inventory());
@@ -69,6 +74,21 @@ BEGIN
          CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer, MeasureId Integer, Weight TFloat) ON COMMIT DROP;
          CREATE TEMP TABLE _tmpUnit (UnitId Integer, UnitId_by Integer, isActive Boolean) ON COMMIT DROP;
      END IF;*/
+
+
+     SELECT ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT
+          , ObjectFloat_VATPercent.ValueData     AS VATPercent
+    INTO vbPriceWithVAT, vbVATPercent
+     FROM Object AS Object_PriceList
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
+                                    ON ObjectBoolean_PriceWithVAT.ObjectId = Object_PriceList.Id
+                                   AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
+            LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
+                                  ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
+                                 AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
+       WHERE Object_PriceList.DescId = zc_Object_PriceList()
+         AND Object_PriceList.Id = inPriceListId
+     ;
 
 
     -- Результат
@@ -107,6 +127,8 @@ BEGIN
     , tmpPricePR AS (SELECT lfObjectHistory_PriceListItem.GoodsId
                           , lfObjectHistory_PriceListItem.GoodsKindId
                           , lfObjectHistory_PriceListItem.ValuePrice AS Price
+                          , lfObjectHistory_PriceListItem.ValuePrice * CASE WHEN vbPriceWithVAT = TRUE THEN 1 ELSE (1 + vbVATPercent/100) END              AS PriceWithVAT
+                          , lfObjectHistory_PriceListItem.ValuePrice * CASE WHEN vbPriceWithVAT = TRUE THEN 1 - vbVATPercent/(vbVATPercent+100) ELSE 1 END AS PriceNoVAT                                
                      FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inEndDate) AS lfObjectHistory_PriceListItem
                      WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                     )
@@ -251,7 +273,12 @@ BEGIN
          , tmpOperationGroup.AmountSh_mi     :: TFloat AS AmountSh_mi
          , (tmpOperationGroup.Amount_mi       - (tmpOperationGroup.AmountIn - tmpOperationGroup.AmountOut))               :: TFloat AS Amount_diff
          , (tmpOperationGroup.AmountWeight_mi - (tmpOperationGroup.AmountIn_Weight - tmpOperationGroup.AmountOut_Weight)) :: TFloat AS AmountWeight_diff
-         , (tmpOperationGroup.AmountSh_mi     - (tmpOperationGroup.AmountIn_Sh - tmpOperationGroup.AmountOut_Sh))         :: TFloat AS AmountSh_diff
+         , (tmpOperationGroup.AmountSh_mi     - (tmpOperationGroup.AmountIn_Sh - tmpOperationGroup.AmountOut_Sh))         :: TFloat AS AmountSh_diff 
+         
+         -- цены прайса
+         , tmpPricePR.PriceWithVAT ::TFloat
+         , tmpPricePR.PriceNoVAT   ::TFloat
+         , (tmpPricePR.PriceWithVAT * tmpOperationGroup.Amount) ::TFloat AS SummWithVAT_pr
      FROM (SELECT tmpContainer.UnitId
                 , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE tmpContainer.GoodsId END AS GoodsId
                 , tmpContainer.GoodsKindId
