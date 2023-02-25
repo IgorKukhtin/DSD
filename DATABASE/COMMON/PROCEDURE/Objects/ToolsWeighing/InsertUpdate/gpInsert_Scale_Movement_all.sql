@@ -377,7 +377,15 @@ BEGIN
      vbOperDate_order:= COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.DescId = zc_Movement_OrderExternal() AND Movement.Id = (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()))
                                 , inOperDate);
      -- !!!определяется OperDatePartner заявки, !!!иначе inOperDate!!!
-     vbOperDatePartner_order:= COALESCE ((SELECT MovementDate.ValueData FROM MovementDate JOIN Movement ON Movement.Id = MovementDate.MovementId AND Movement.DescId = zc_Movement_OrderExternal() WHERE MovementDate.DescId = zc_MovementDate_OperDatePartner() AND MovementDate.MovementId = (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()))
+     vbOperDatePartner_order:= COALESCE ((SELECT MovementDate.ValueData
+                                          FROM MovementDate JOIN Movement ON Movement.Id = MovementDate.MovementId AND Movement.DescId = zc_Movement_OrderExternal()
+                                          WHERE MovementDate.DescId = zc_MovementDate_OperDatePartner()
+                                            AND MovementDate.MovementId = (SELECT MLM_Order.MovementChildId
+                                                                           FROM MovementLinkMovement AS MLM_Order
+                                                                           WHERE MLM_Order.MovementId = inMovementId
+                                                                             AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
+                                                                          )
+                                         )
                                        , inOperDate);
      -- !!!если по заявке, тогда берется из неё OperDatePartner, вообще - надо только для филиалов!!!
      inOperDate:= CASE WHEN vbBranchId   = zc_Branch_Basis()

@@ -21,9 +21,23 @@ BEGIN
 
       RETURN QUERY
         WITH tmpProcess AS (SELECT * FROM pg_stat_activity WHERE state ILIKE 'active')
+            , tmpCount AS (SELECT COUNT (*) :: Integer AS Res FROM tmpProcess WHERE query ILIKE ('%' || inProcName || '%'))
             , tmpSecond AS (SELECT CASE WHEN 25 < (SELECT COUNT(*) FROM tmpProcess)
                                              THEN 60
-                                        WHEN 0 < (SELECT COUNT (*) AS Res FROM tmpProcess WHERE query ILIKE ('%' || inProcName || '%'))
+
+                                        WHEN 2 < (SELECT tmpCount.Res FROM tmpCount)
+                                             AND inProcName ILIKE 'gpReport_MotionGoods'
+                                             THEN 25
+
+                                        WHEN 1 < (SELECT tmpCount.Res FROM tmpCount)
+                                             AND inProcName ILIKE 'gpReport_GoodsBalance'
+                                             THEN 25
+
+                                        WHEN inProcName ILIKE 'gpReport_MotionGoods'
+                                          OR inProcName ILIKE 'gpReport_GoodsBalance'
+                                             THEN 0
+
+                                        WHEN 0 < (SELECT tmpCount.Res FROM tmpCount)
                                              THEN 25
                                         ELSE 0
                                    END :: Integer AS Value
@@ -41,9 +55,15 @@ BEGIN
                               || 'Время ожидания = <' || tmpSecond.Value :: TVarChar || '> секунд.'
 
                     WHEN 25 THEN '(' || (SELECT COUNT(*) FROM tmpSecond) :: TVarChar || ') '
-                              || 'Ваш запрос не может быть выполнен, т.к. аналогичный запрос уже выполняется другим пользователем.'
+                              || 'Ваш запрос не может быть выполнен, т.к. аналогичный запрос уже выполняется'
+                              || ' другим' || CASE WHEN 1 < (SELECT tmpCount.Res FROM tmpCount) THEN 'и' ELSE '' END
+                              || ' (' || (SELECT tmpCount.Res FROM tmpCount) :: TVarChar || ')'
+                              || ' пользовател' || CASE WHEN 1 < (SELECT tmpCount.Res FROM tmpCount) THEN 'ями' ELSE 'ем' END
+                              || '.'
                               || CHR (13)
                               || 'Время ожидания = <' || tmpSecond.Value :: TVarChar || '> секунд.'
+                              || CHR (13)
+                              || 'АП = <' || (SELECT COUNT (*) AS Res FROM tmpProcess) :: TVarChar || '>.'
 
                     ELSE ' <' || (SELECT COUNT (*) AS Res FROM tmpProcess) :: TVarChar || '>'
                END :: Text AS Message_pause
