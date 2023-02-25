@@ -71,6 +71,7 @@ BEGIN
 
                                   FROM Object_Contract_ContractKey_View AS View_Contract_ContractKey
                                        LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey_find ON View_Contract_ContractKey_find.ContractKeyId = View_Contract_ContractKey.ContractKeyId
+                                  -- WHERE 1=0
                                  )
                 , tmpContract AS (SELECT DISTINCT
                                          tmpPartner.PartnerId                        AS PartnerId
@@ -238,6 +239,7 @@ BEGIN
                                                             -- AND tmpDayInfo.ContractId = tmpContract.ContractId_Key
                                    WHERE Container_Summ.DescId = zc_Container_Summ()
                                      AND Container_Summ.Amount <> 0.0
+                                   --AND Container_Summ.Id  In (2696933, 2718742)
                                   )
                 , tmpMIContainer AS (SELECT MovementItemContainer.ContainerId
                                           , SUM (MovementItemContainer.Amount)::TFloat AS Summ
@@ -359,7 +361,11 @@ BEGIN
                                                 , zc_PriceList_Basis()))) AS PriceListId
 
                     -- так для возвратов ГП по "старым ценам" - 1) обычный у контрагента 2) обычный у юр.лица 3) zc_PriceList_BasisPrior
-                  , COALESCE (ObjectLink_Partner_PriceListPrior.ChildObjectId, COALESCE (ObjectLink_Juridical_PriceListPrior.ChildObjectId, zc_PriceList_Basis() /*zc_PriceList_BasisPrior()*/)) AS PriceListId_ret
+                --, COALESCE (ObjectLink_Partner_PriceListPrior.ChildObjectId, COALESCE (ObjectLink_Juridical_PriceListPrior.ChildObjectId, zc_PriceList_Basis() /*zc_PriceList_BasisPrior()*/)) AS PriceListId_ret
+                  , COALESCE (ObjectLink_Partner_PriceList.ChildObjectId
+                            , COALESCE (tmpContract_PriceList.PriceListId
+                                      , COALESCE (ObjectLink_Juridical_PriceList.ChildObjectId
+                                                , zc_PriceList_Basis()))) AS PriceListId_ret
 
                   , tmpDebt.ContainerId :: Integer AS ContainerId
 
