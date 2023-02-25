@@ -35,8 +35,11 @@ BEGIN
     INSERT INTO tmpContainer (ContainerId, GoodsId, GoodsKindId, Amount_start, AmountPrIn)
        WITH -- хардкодим - ЦЕХ колбаса+дел-сы (производство)
             tmpUnit_CEH AS (SELECT UnitId, TRUE AS isContainer FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup)
-            -- хардкодим - Склады База + Реализации
-          , tmpUnit_SKLAD   AS (SELECT UnitId, FALSE AS isContainer FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect_Object_Unit_byGroup)
+            -- хардкодим - Склады База + Реализации + Склад Поклейки этикетки
+          , tmpUnit_SKLAD   AS (SELECT UnitId, FALSE AS isContainer FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect_Object_Unit_byGroup
+                               UNION
+                                SELECT 9073781 AS UnitId, FALSE AS isContainer
+                               )
             -- хардкодим - ВСЕ
           , tmpUnit_all   AS (SELECT UnitId, isContainer FROM tmpUnit_CEH UNION SELECT UnitId, isContainer FROM tmpUnit_SKLAD)
             -- хардкодим - товары ГП

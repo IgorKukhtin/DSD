@@ -1,11 +1,12 @@
 ﻿-- Function: gpSelect_Object_ActionByUser()
 
--- DROP FUNCTION gpSelect_Object_ActionByUser();
+-- DROP FUNCTION gpSelect_Object_ActionByUser (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ActionByUser(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (ActionName TVarChar) AS
+RETURNS TABLE (ActionName TVarChar, OperDate TDateTime)
+AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
@@ -18,13 +19,16 @@ BEGIN
      -- возвращаем все 
      RETURN QUERY 
      SELECT 
-        Object.ValueData  AS Name
+            Object.ValueData  AS Name
+          , CURRENT_DATE :: TDateTime
      FROM Object
      WHERE Object.DescId = zc_Object_Action();
   ELSE
      -- Выбираем действия пользователя
      RETURN QUERY
-     SELECT DISTINCT Object_Action.ValueData 
+     SELECT DISTINCT
+            Object_Action.ValueData
+          , CURRENT_DATE :: TDateTime
        FROM Object AS Object_Action
        JOIN ObjectLink_RoleAction_View ON ObjectLink_RoleAction_View.ActionId = Object_Action.Id
        JOIN ObjectLink_UserRole_View ON ObjectLink_UserRole_View.RoleId = ObjectLink_RoleAction_View.RoleId

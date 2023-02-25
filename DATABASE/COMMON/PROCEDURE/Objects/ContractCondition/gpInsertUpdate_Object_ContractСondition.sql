@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_ContractCondition(Integer, TFloat, Integer, Integer, TVarChar)
+ -- Function: gpInsertUpdate_Object_ContractCondition(Integer, TFloat, Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
@@ -55,9 +55,15 @@ BEGIN
                                              ON ObjectDate_StartDate.ObjectId  = ObjectLink_ContractCondition_Contract.ObjectId
                                             AND ObjectDate_StartDate.DescId    = zc_ObjectDate_ContractCondition_StartDate()
                                             AND ObjectDate_StartDate.ValueData = inStartDate
+                       -- еще такая группировка
+                       LEFT JOIN ObjectLink AS ObjectLink_BonusKind
+                                            ON ObjectLink_BonusKind.ObjectId      = ObjectLink_Contract.ObjectId
+                                           AND ObjectLink_BonusKind.DescId        = zc_ObjectLink_ContractCondition_BonusKind()
                    WHERE ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
                      AND ObjectLink_ContractCondition_Contract.ObjectId <> ioId
-                     AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract())
+                     AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                     AND COALESCE (ObjectLink_BonusKind.ChildObjectId, 0) = inBonusKindId
+                 )
         THEN
             RAISE EXCEPTION 'Ошибка.Дата начала действия условия договора не уникальна.';
         END IF;
@@ -97,8 +103,13 @@ BEGIN
                                                                                                 AND ObjectLink_ContractConditionKind.ChildObjectId = inContractConditionKindId
                                                                            INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id       = ObjectLink_Contract.ObjectId
                                                                                                                         AND Object_ContractCondition.isErased = FALSE
+                                                                           -- еще такая группировка
+                                                                           LEFT JOIN ObjectLink AS ObjectLink_BonusKind
+                                                                                                ON ObjectLink_BonusKind.ObjectId      = ObjectLink_Contract.ObjectId
+                                                                                               AND ObjectLink_BonusKind.DescId        = zc_ObjectLink_ContractCondition_BonusKind()
                                                                       WHERE ObjectLink_Contract.ChildObjectId = inContractId
                                                                         AND ObjectLink_Contract.DescId        = zc_ObjectLink_ContractCondition_Contract()
+                                                                        AND COALESCE (ObjectLink_BonusKind.ChildObjectId, 0) = inBonusKindId
                                                                      )
                                                               OR EXISTS (SELECT 1
                                                                          FROM ObjectDate AS ObjectDate_EndDate
@@ -122,8 +133,13 @@ BEGIN
                                                          ON ObjectDate_EndDate.ObjectId  = ObjectLink_Contract.ObjectId
                                                         AND ObjectDate_EndDate.DescId    = zc_ObjectDate_ContractCondition_EndDate()
                                                         AND ObjectDate_EndDate.ValueData IS NOT NULL
+                                   -- еще такая группировка
+                                   LEFT JOIN ObjectLink AS ObjectLink_BonusKind
+                                                        ON ObjectLink_BonusKind.ObjectId      = ObjectLink_Contract.ObjectId
+                                                       AND ObjectLink_BonusKind.DescId        = zc_ObjectLink_ContractCondition_BonusKind()
                               WHERE ObjectLink_Contract.ChildObjectId = inContractId
                                 AND ObjectLink_Contract.DescId        = zc_ObjectLink_ContractCondition_Contract()
+                                AND COALESCE (ObjectLink_BonusKind.ChildObjectId, 0) = inBonusKindId
                              )
              SELECT tmpData.Id
              FROM tmpData

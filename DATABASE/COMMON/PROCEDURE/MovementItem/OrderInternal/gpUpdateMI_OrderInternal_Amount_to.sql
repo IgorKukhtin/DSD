@@ -54,6 +54,12 @@ BEGIN
             --AND MIBoolean_Calculated.MovementItemId IS NULL
            ;
 
+            -- поменяли признак
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), MovementItem.Id, TRUE)
+            FROM MovementItem
+            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Child()
+           ;
+
         ELSEIF inNumber = 3
         THEN
             -- обнулили - AmountNext
@@ -65,6 +71,11 @@ BEGIN
                                               AND MIBoolean_Calculated.ValueData      = FALSE
             WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
             --AND MIBoolean_Calculated.MovementItemId IS NULL
+           ;
+            -- поменяли признак
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), MovementItem.Id, TRUE)
+            FROM MovementItem
+            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Child()
            ;
 
         ELSEIF inNumber = 4
@@ -78,6 +89,11 @@ BEGIN
                                               AND MIBoolean_Calculated.ValueData      = FALSE
             WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
             --AND MIBoolean_Calculated.MovementItemId IS NULL
+           ;
+            -- поменяли признак
+            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), MovementItem.Id, TRUE)
+            FROM MovementItem
+            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Child()
            ;
 
         ELSE

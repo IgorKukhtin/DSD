@@ -407,8 +407,11 @@ BEGIN
                       )
              -- хардкодим - ЦЕХ колбаса+дел-сы (производство)
            , tmpUnit_CEH   AS (SELECT UnitId, TRUE AS isContainer FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup)
-             -- хардкодим - Склады База + Реализации
-           , tmpUnit_SKLAD AS (SELECT UnitId, FALSE AS isContainer FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect_Object_Unit_byGroup)
+             -- хардкодим - Склады База + Реализации + Склад Поклейки этикетки
+           , tmpUnit_SKLAD AS (SELECT UnitId, FALSE AS isContainer FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect_Object_Unit_byGroup
+                              UNION
+                               SELECT 9073781 AS UnitId, FALSE AS isContainer
+                              )
              -- хардкодим - Цех Упаковки
            , tmpUnit_PACK  AS (SELECT 8451 AS UnitId)
              -- Приход - с Цеха Упаковки
@@ -440,8 +443,8 @@ BEGIN
                                   , MIContainer.ObjectIntId_Analyzer
                                   , MIContainer.WhereObjectId_Analyzer
                           )
-             -- Приход пр-во (ФАКТ)
-           , tmpIncome AS (SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
+          -- Приход пр-во (ФАКТ)
+        , tmpIncome_all AS (SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
                                 , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
                                 , SUM (MIContainer.Amount)                       AS Amount
                                 , MIContainer.ObjectExtId_Analyzer               AS UnitId_pf
@@ -466,6 +469,37 @@ BEGIN
                            GROUP BY MIContainer.ObjectId_Analyzer
                                   , MIContainer.ObjectIntId_Analyzer
                                   , MIContainer.ObjectExtId_Analyzer
+ 
+                          UNION
+                           SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
+                                , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
+                                , SUM (MIContainer.Amount)                       AS Amount
+                                , MAX (MIContainer.ObjectExtId_Analyzer)         AS UnitId_pf
+                           FROM MovementItemContainer AS MIContainer
+                                -- Склады База + Реализации
+                                INNER JOIN tmpUnit_SKLAD ON tmpUnit_SKLAD.UnitId = MIContainer.WhereObjectId_Analyzer
+                                -- Ирна
+                                INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                      ON ObjectLink_Goods_InfoMoney.ObjectId      = MIContainer.ObjectId_Analyzer
+                                                     AND ObjectLink_Goods_InfoMoney.DescId        = zc_ObjectLink_Goods_InfoMoney()
+                                                     AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                     )
+                           WHERE MIContainer.OperDate       = vbOperDate
+                             AND MIContainer.DescId         = zc_MIContainer_Count()
+                             AND MIContainer.MovementDescId = zc_Movement_Income()
+                             AND MIContainer.isActive       = TRUE
+                             -- AND 1=0
+                           GROUP BY MIContainer.ObjectId_Analyzer
+                                  , MIContainer.ObjectIntId_Analyzer
+                          )
+             -- Приход пр-во (ФАКТ)
+           , tmpIncome AS (SELECT tmpIncome_all.GoodsId
+                                , tmpIncome_all.GoodsKindId
+                                , SUM (tmpIncome_all.Amount)     AS Amount
+                                , MAX (tmpIncome_all.UnitId_pf)  AS UnitId_pf
+                           FROM tmpIncome_all
+                           GROUP BY tmpIncome_all.GoodsId
+                                  , tmpIncome_all.GoodsKindId
                           )
      -- Сохранили - все MI
      INSERT INTO _tmpMI_All (MovementItemId, ContainerId

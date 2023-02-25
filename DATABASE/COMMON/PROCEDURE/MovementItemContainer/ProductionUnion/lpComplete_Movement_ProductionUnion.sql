@@ -414,7 +414,7 @@ BEGIN
 
 
      -- заполняем таблицу - количественные Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItemChild (MovementItemId_Parent, MovementItemId
+      INSERT INTO _tmpItemChild (MovementItemId_Parent, MovementItemId
                               , ContainerId_GoodsFrom, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate
                               , OperCount, OperCountCount
                               , InfoMoneyDestinationId, InfoMoneyId
@@ -518,35 +518,40 @@ BEGIN
               --   AND Movement.DescId = zc_Movement_ProductionUnion()
               --   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              )
-, tmpContainer_all AS (SELECT tmpMI.MovementItemId
-                            , tmpMI.GoodsId
-                            , tmpMI.OperCount   AS Amount
-                            , Container.Id      AS ContainerId
-                            , Container.Amount  AS Amount_container
-                            , SUM (Container.Amount) OVER (PARTITION BY tmpMI.GoodsId ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()), Container.Id) AS AmountSUM --
-                            , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) DESC, Container.Id DESC) AS Ord       -- !!!Надо отловить ПОСЛЕДНИЙ!!!
-                            , CLO_PartionGoods.ObjectId AS PartionGoodsId
-                       FROM tmpMI
-                            INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
-                                                AND Container.DescId   = zc_Container_Count()
-                                                AND Container.Amount   > 0
-                            INNER JOIN ContainerLinkObject AS CLO_Member
-                                                           ON CLO_Member.ContainerId = Container.Id
-                                                          AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
-                                                          AND CLO_Member.ObjectId    = vbMemberId_From
-                            INNER JOIN ContainerLinkObject AS CLO_PartionGoods
-                                                           ON CLO_PartionGoods.ContainerId = Container.Id
-                                                          AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
-                            LEFT JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
-                                                                    AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
-                       WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
-                                                            , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
-                                                            , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                             )
-                      )
+  -- сначала партии для итого расхода
+, tmpMI_summ  AS (SELECT tmpMI.GoodsId, SUM (tmpMI.OperCount) AS OperCount
+                  FROM tmpMI
+                  WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                       , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                       , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                        )
+                  GROUP BY tmpMI.GoodsId
+                 )
+   , tmpContainer_all AS (SELECT tmpMI.GoodsId
+                               , tmpMI.OperCount   AS Amount
+                               , Container.Id      AS ContainerId
+                               , Container.Amount  AS Amount_container
+                               , SUM (Container.Amount) OVER (PARTITION BY tmpMI.GoodsId ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()), Container.Id) AS AmountSUM
+                                 -- !!!Надо отловить ПОСЛЕДНИЙ!!!
+                               , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) DESC, Container.Id DESC) AS Ord       
+                                 --
+                               , CLO_PartionGoods.ObjectId AS PartionGoodsId
+                          FROM tmpMI_summ AS tmpMI
+                               INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
+                                                   AND Container.DescId   = zc_Container_Count()
+                                                   AND Container.Amount   > 0
+                               INNER JOIN ContainerLinkObject AS CLO_Member
+                                                              ON CLO_Member.ContainerId = Container.Id
+                                                             AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
+                                                             AND CLO_Member.ObjectId    = vbMemberId_From
+                               INNER JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                              ON CLO_PartionGoods.ContainerId = Container.Id
+                                                             AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                               LEFT JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                                       AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                         )
     , tmpContainer AS (SELECT DD.ContainerId
                             , DD.GoodsId
-                            , DD.MovementItemId
                             , DD.PartionGoodsId
                             , CASE WHEN DD.Amount - DD.AmountSUM > 0 AND DD.Ord <> 1
                                         THEN DD.Amount_container
@@ -554,6 +559,20 @@ BEGIN
                               END AS Amount
                        FROM (SELECT * FROM tmpContainer_all) AS DD
                        WHERE DD.Amount - (DD.AmountSUM - DD.Amount_container) > 0
+                      )
+  -- распределяем "пропорционально"
+, tmpContainer_res AS (SELECT tmpContainer.ContainerId
+                            , tmpMI.GoodsId
+                            , tmpMI.MovementItemId
+                            , tmpContainer.PartionGoodsId
+                              -- 
+                            , tmpContainer.Amount * tmpMI.OperCount / tmpMI_summ.OperCount AS Amount
+                       FROM tmpMI
+                            -- итого
+                            INNER JOIN tmpMI_summ ON tmpMI_summ.GoodsId = tmpMI.GoodsId
+                            -- партии
+                            INNER JOIN tmpContainer ON tmpContainer.GoodsId = tmpMI.GoodsId
+                       WHERE tmpMI_summ.OperCount > 0
                       )
         SELECT _tmp.MovementItemId_Parent
              , _tmp.MovementItemId
@@ -587,7 +606,7 @@ BEGIN
                -- Партии товара, сформируем позже
              , 0 AS PartionGoodsId
         FROM tmpMI AS _tmp
-             LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = _tmp.MovementItemId
+             LEFT JOIN tmpContainer_res AS tmpContainer ON tmpContainer.MovementItemId = _tmp.MovementItemId
        ;
 
 

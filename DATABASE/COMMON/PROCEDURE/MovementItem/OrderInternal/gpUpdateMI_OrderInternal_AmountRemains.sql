@@ -41,6 +41,12 @@ BEGIN
                                  WITH tmpUnit AS (SELECT UnitId, zc_MI_Master() AS MIDescId
                                                   FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup
                                                   WHERE UnitId <> 1078643 -- Склад Карантин Тушенка
+
+                                                 UNION
+                                                  -- Склад Поклейки этикетки
+                                                  SELECT 9073781 AS UnitId, zc_MI_Master() AS MIDescId
+                                                  WHERE inFromId = 8457 -- Склады База + Реализации
+
                                                  UNION
                                                   SELECT UnitId, zc_MI_Child() AS MIDescId
                                                   FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect
