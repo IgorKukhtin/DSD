@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GlobalMsg(
     IN inIP          TVarChar,
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (MovementId Integer, NPP Integer, MsgAddr TVarChar, MsgText TVarChar, ColorText_Addr Integer, Color_Addr Integer, ColorText_Text Integer, Color_Text Integer)
+RETURNS TABLE (MovementId Integer, NPP Integer, MsgAddr TVarChar, MsgText TVarChar, ColorText_Addr Integer, Color_Addr Integer, ColorText_Text Integer, Color_Text Integer
+, OperDate TDateTime)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -326,6 +327,9 @@ BEGIN
                         THEN zc_Color_Yelow()
                    ELSE -1
               END AS Color_Text
+
+            , CURRENT_DATE :: TDateTime
+
        WHERE vbCount_1_Member > 0
 
       UNION ALL
@@ -369,6 +373,7 @@ BEGIN
                         THEN zc_Color_Pink()
                    ELSE -1
               END AS Color_Text
+            , CURRENT_DATE :: TDateTime
 
        WHERE COALESCE (vbCount_1_Member, 0) = 0
 
@@ -420,6 +425,8 @@ BEGIN
                         THEN zc_Color_Yelow()
                    ELSE -1
               END AS Color_Text
+            , CURRENT_DATE :: TDateTime
+
        WHERE vbCount_1_Head > 0
 
       UNION ALL
@@ -463,6 +470,7 @@ BEGIN
                         THEN zc_Color_Pink()
                    ELSE -1
               END AS Color_Text
+            , CURRENT_DATE :: TDateTime
 
        WHERE COALESCE (vbCount_1_Head, 0) = 0
 
@@ -513,6 +521,7 @@ BEGIN
                         THEN zc_Color_Lime()
                    ELSE -1
               END AS Color_Text
+            , CURRENT_DATE :: TDateTime
 
        WHERE vbCount_1_Main > 0
 
@@ -557,6 +566,7 @@ BEGIN
                         THEN zc_Color_Aqua()
                    ELSE -1
               END AS Color_Text
+            , CURRENT_DATE :: TDateTime
 
        WHERE COALESCE (vbCount_1_Main, 0) = 0
 
@@ -590,6 +600,7 @@ BEGIN
                         THEN zc_Color_Aqua()
                    ELSE -1
               END AS Color_Text
+            , CURRENT_DATE :: TDateTime
        WHERE vbIsMsg_Contract = TRUE
 
        ORDER BY 2
