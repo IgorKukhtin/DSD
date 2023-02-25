@@ -126,6 +126,8 @@ type
     Code_calc: TcxGridDBColumn;
     ReceiptCode_calc: TcxGridDBColumn;
     Comment_calc: TcxGridDBColumn;
+    Amount_calc_two: TcxGridDBColumn;
+    Amount_Weight_calc_two: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -102,8 +102,10 @@ end;
 procedure TUpdaterTest.UpdateMain64Program;
 begin
   if FileExists(ExtractFileDir(ParamStr(0)) + '\_64\bin\' + gc_ProgramName)
-  then
-      SaveFile(ExtractFileDir(ParamStr(0)) + '\_64\bin\' + gc_ProgramName)
+  then begin
+      ShowMessage(ExtractFileDir(ParamStr(0)) + '\_64\bin\' + gc_ProgramName);
+      SaveFile(ExtractFileDir(ParamStr(0)) + '\_64\bin\' + gc_ProgramName);
+      end
   else
       SaveFile(ExtractFileDir(ParamStr(0)) + '\' + gc_ProgramName);
 end;

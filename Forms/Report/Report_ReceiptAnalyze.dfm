@@ -220,6 +220,17 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
             HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
             Width = 70
           end
+          object Amount_calc_two: TcxGridDBColumn
+            Caption = '*'#1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount_calc_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1055#1060'-'#1043#1055
+            Width = 70
+          end
           object Amount_Weight_calc: TcxGridDBColumn
             Caption = '***'#1050#1086#1083'-'#1074#1086' ('#1074#1077#1089')'
             DataBinding.FieldName = 'Amount_Weight_calc'
@@ -230,6 +241,17 @@ inherited Report_ReceiptAnalyzeForm: TReport_ReceiptAnalyzeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1042#1045#1057
+            Width = 70
+          end
+          object Amount_Weight_calc_two: TcxGridDBColumn
+            Caption = '*'#1050#1086#1083'-'#1074#1086' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'Amount_Weight_calc_two'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1079#1072#1082#1083#1072#1076#1082#1080' '#1055#1060'-'#1043#1055
             Width = 70
           end
           object Amount_out_Weight_calc: TcxGridDBColumn

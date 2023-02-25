@@ -986,11 +986,11 @@ begin
 
       //Logger.AddToLog(' TStorage.ExecuteProc( ... if Ok then Length = ' + IntToStr(Length(DString)) + ' ...');
 
-      //Logger.AddToLog('_DString_:');
-      //Logger.AddToLog('');
-      //Logger.AddToLog(DString);
-      //Logger.AddToLog('');
-      //Logger.AddToLog('_end_DString_:');
+      Logger.AddToLog('_DString_:');
+      Logger.AddToLog('');
+      Logger.AddToLog(DString);
+      Logger.AddToLog('');
+      Logger.AddToLog('_end_DString_:');
 
       ResultType := trim(Copy(DString, 1, ResultTypeLenght));
       isArchive := trim(lowercase(Copy(DString, ResultTypeLenght + 1, IsArchiveLenght))) = 't';
