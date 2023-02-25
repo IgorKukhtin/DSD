@@ -245,6 +245,15 @@ BEGIN
    END IF;
 
 
+   -- Еще записали № п/п
+   PERFORM gpUpdate_Movement_OrderClient_NPP (inId       := inMovementId_OrderClient
+                                            , inProductId:= ioId
+                                            , inDateBegin:= inDateBegin
+                                            , inNPP      := inNPP_OrderClient
+                                            , inSession  := inSession
+                                             );
+
+
    -- только при создании
    IF inIsProdColorPattern = TRUE AND (vbIsInsert = TRUE OR EXISTS (SELECT 1
                                                                     FROM gpSelect_Object_ProdColorItems (inMovementId_OrderClient := inMovementId_OrderClient, inIsShowAll:= TRUE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp

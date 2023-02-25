@@ -27,7 +27,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NPP(), inId, inNPP);
 
      -- Если стал = 0
-     IF ioNPP = 0 AND vbNPP_old > 0
+     IF inNPP = 0 AND vbNPP_old > 0
      THEN
          -- тогда всех подтягиваем к этому номеру
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NPP(), MovementFloat.MovementId, MovementFloat.ValueData - 1)

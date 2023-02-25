@@ -610,6 +610,7 @@ BEGIN
                                               , inMovementId_OrderClient:= ioMovementId_OrderClient
                                               , inInvNumber_OrderClient := (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioMovementId_OrderClient)
                                               , inOperDate_OrderClient  := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = ioMovementId_OrderClient)
+                                              , inNPP_OrderClient       := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_NPP()), 0)
 
                                               , inMovementId_Invoice    := (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.DescId = zc_MovementLinkMovement_Invoice() AND MLM.MovementId = ioMovementId_OrderClient)
                                               , inInvNumber_Invoice     := ''
