@@ -138,13 +138,14 @@ BEGIN
                 , tmpGoodsListSale AS (SELECT MAX (tmpGoodsListSaleKind.Id)  AS Id
                                             , MIN (tmpGoodsListSaleKind.Ord) AS Ord
                                             , tmpGoodsListSaleKind.GoodsId
-                                            , tmpGoodsListSaleKind.GoodsKindId 
+                                            , COALESCE (Object_GoodsKind.Id, zc_GoodsKind_Basis()) AS GoodsKindId
                                             , tmpGoodsListSaleKind.PartnerId
                                             , tmpGoodsListSaleKind.isErased
                                        FROM tmpGoodsListSaleKind
-                                            JOIN Object AS Object_GoodsKind 
-                                                        ON Object_GoodsKind.Id       = tmpGoodsListSaleKind.GoodsKindId
-                                                       AND Object_GoodsKind.isErased = FALSE
+                                            LEFT JOIN Object AS Object_GoodsKind
+                                                             ON Object_GoodsKind.Id       = tmpGoodsListSaleKind.GoodsKindId
+                                                            AND Object_GoodsKind.isErased = FALSE
+
                                             -- Ограничим - ТОЛЬКО если ГП
                                             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpGoodsListSaleKind.GoodsId
@@ -154,8 +155,12 @@ BEGIN
                                                                                                                          , zc_Enum_InfoMoneyDestination_21000() -- Общефирменные + Чапли
                                                                                                                          , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                                                                                           )
+                                       WHERE Object_GoodsKind.Id > 0
+                                          -- Тушенка
+                                          OR Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30102()
+
                                        GROUP BY tmpGoodsListSaleKind.GoodsId
-                                              , tmpGoodsListSaleKind.GoodsKindId
+                                              , COALESCE (Object_GoodsKind.Id, zc_GoodsKind_Basis())
                                               , tmpGoodsListSaleKind.PartnerId
                                               , tmpGoodsListSaleKind.isErased
                                       )
