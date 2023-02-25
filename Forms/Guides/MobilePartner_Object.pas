@@ -70,7 +70,7 @@ type
     bbShowAll: TdxBarButton;
     cxLabel3: TcxLabel;
     edPersonalTrade: TcxButtonEdit;
-    PersonalTradeGuides: TdsdGuides;
+    GuidesPersonalTrade: TdsdGuides;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     spGet_PersonalTrade: TdsdStoredProc;
@@ -98,6 +98,8 @@ type
     bbShowAllPartnerOnMap: TdxBarButton;
     PartnerTagName: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
+    GuidesFiller: TGuidesFiller;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

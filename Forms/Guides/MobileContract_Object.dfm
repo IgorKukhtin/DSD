@@ -14,6 +14,7 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -24,6 +25,8 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
     Height = 438
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = -88
+    ExplicitTop = -46
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -368,11 +371,8 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_PersonalTrade
+      StoredProc = spSelect
       StoredProcList = <
-        item
-          StoredProc = spGet_PersonalTrade
-        end
         item
           StoredProc = spSelect
         end>
@@ -484,6 +484,38 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMobileMemberDialogForm'
+      FormNameParam.Value = 'TMobileMemberDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MemberId'
+          Value = '0'
+          Component = PersonalTradeGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = ''
+          Component = PersonalTradeGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Contract_Mobile'
@@ -532,10 +564,13 @@ object MobileContract_ObjectForm: TMobileContract_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 464
     Top = 288
   end

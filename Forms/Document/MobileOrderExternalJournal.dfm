@@ -5,7 +5,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1066
-  ExplicitHeight = 434
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -584,7 +584,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
     end
     object edIsMobileDate: TcxCheckBox
       Left = 10
-      Top = 26
+      Top = 27
       Action = actRefresh
       Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103' '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090#1088'.>'
       ParentShowHint = False
@@ -612,12 +612,12 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
     Width = 150
   end
   object cxLabel3: TcxLabel [4]
-    Left = 475
-    Top = 6
+    Left = 471
+    Top = 8
     Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090':'
   end
   object edPersonalTrade: TcxButtonEdit [5]
-    Left = 564
+    Left = 566
     Top = 5
     Properties.Buttons = <
       item
@@ -681,7 +681,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
         end
         item
           Name = 'inIsJuridical'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -690,6 +690,9 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactSilentPrint: TMultiAction [1]
       Category = 'Print'
@@ -716,14 +719,6 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
     end
-    inherited actRefresh: TdsdDataSetRefresh
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end
-        item
-        end>
-    end
     object mactSilentList: TMultiAction [4]
       Category = 'Print'
       MoveParams = <
@@ -748,6 +743,14 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       Caption = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
       Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
       ImageIndex = 3
+    end
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+        end>
     end
     inherited actInsert: TdsdInsertUpdateAction
       Enabled = False
@@ -823,7 +826,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
         end
         item
           Name = 'inIsJuridical'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -832,6 +835,9 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actSPSavePrintState: TdsdExecStoredProc
       Category = 'Print'
@@ -876,8 +882,8 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TMovement_PeriodDialogForm'
-      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormName = 'TMobileMovement_DateDialogForm'
+      FormNameParam.Value = 'TMobileMovement_DateDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -896,6 +902,31 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMobileDate'
+          Value = Null
+          Component = edIsMobileDate
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = GuidesPersonalTrade
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = Null
+          Component = GuidesPersonalTrade
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -912,9 +943,6 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       StoredProcList = <
         item
           StoredProc = spGet_UserJuridicalBasis
-        end
-        item
-          StoredProc = spGet_PersonalTrade
         end
         item
           StoredProc = spSelect
@@ -970,7 +998,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       item
         Name = 'inJuridicalBasisId'
         Value = 'False'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -978,7 +1006,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       item
         Name = 'inMemberId'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1063,9 +1091,6 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
-    end
     object bbPrint: TdxBarButton
       Action = mactPrint_Order
       Category = 0
@@ -1092,10 +1117,10 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
         Component = PeriodChoice
       end
       item
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
       end
       item
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
       end>
     Left = 400
     Top = 304
@@ -1258,7 +1283,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       end
       item
         Name = 'inIsJuridical'
-        Value = 'false'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1301,7 +1326,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
     Left = 704
     Top = 320
   end
-  object JuridicalBasisGuides: TdsdGuides
+  object GuidesJuridicalBasis: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridicalBasis
     Key = '0'
@@ -1314,7 +1339,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       item
         Name = 'Key'
         Value = '0'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1322,7 +1347,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1338,14 +1363,14 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       item
         Name = 'JuridicalBasisId'
         Value = '0'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisName'
         Value = ''
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1354,7 +1379,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
     Left = 824
     Top = 48
   end
-  object PersonalTradeGuides: TdsdGuides
+  object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalTrade
     Key = '0'
@@ -1367,7 +1392,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       item
         Name = 'Key'
         Value = '0'
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1375,7 +1400,7 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1396,14 +1421,14 @@ inherited MobileOrderExternalJournalForm: TMobileOrderExternalJournalForm
       item
         Name = 'MemberId'
         Value = '0'
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MemberName'
         Value = ''
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','

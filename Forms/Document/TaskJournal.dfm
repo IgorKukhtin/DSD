@@ -2,9 +2,8 @@ inherited TaskJournalForm: TTaskJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1076#1072#1085#1080#1103' '#1058#1086#1088#1075#1086#1074#1086#1084#1091' '#1072#1075#1077#1085#1090#1091'>'
   ClientHeight = 396
   ClientWidth = 958
-  AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.RefreshAction = actRefreshGet
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -282
   ExplicitWidth = 974
   ExplicitHeight = 435
   PixelsPerInch = 96
@@ -23,8 +22,6 @@ inherited TaskJournalForm: TTaskJournalForm
       inherited cxGrid: TcxGrid
         Width = 958
         Height = 339
-        ExplicitLeft = -40
-        ExplicitTop = -28
         ExplicitWidth = 958
         ExplicitHeight = 339
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -341,6 +338,9 @@ inherited TaskJournalForm: TTaskJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactSilentPrint: TMultiAction [1]
       Category = 'Print'
@@ -367,14 +367,6 @@ inherited TaskJournalForm: TTaskJournalForm
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
     end
-    inherited actRefresh: TdsdDataSetRefresh
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end
-        item
-        end>
-    end
     object mactSilentList: TMultiAction [4]
       Category = 'Print'
       MoveParams = <
@@ -399,6 +391,14 @@ inherited TaskJournalForm: TTaskJournalForm
       Caption = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
       Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
       ImageIndex = 3
+    end
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+        end>
     end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TTaskForm'
@@ -475,6 +475,22 @@ inherited TaskJournalForm: TTaskJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actRefreshGet: TdsdDataSetRefresh [25]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserJuridicalBasis
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserJuridicalBasis
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actSPSavePrintState: TdsdExecStoredProc
       Category = 'Print'
@@ -600,7 +616,7 @@ inherited TaskJournalForm: TTaskJournalForm
       item
         Name = 'inJuridicalBasisId'
         Value = 'False'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -608,7 +624,7 @@ inherited TaskJournalForm: TTaskJournalForm
       item
         Name = 'inMemberId'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -685,9 +701,6 @@ inherited TaskJournalForm: TTaskJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
-    end
     object bbPrint: TdxBarButton
       Action = mactPrint_Order
       Category = 0
@@ -714,10 +727,10 @@ inherited TaskJournalForm: TTaskJournalForm
         Component = PeriodChoice
       end
       item
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
       end
       item
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
       end>
     Left = 400
     Top = 304
@@ -771,8 +784,8 @@ inherited TaskJournalForm: TTaskJournalForm
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 312
+    Left = 128
+    Top = 320
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Task'
@@ -793,8 +806,8 @@ inherited TaskJournalForm: TTaskJournalForm
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 192
-    Top = 288
+    Left = 184
+    Top = 280
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -882,7 +895,7 @@ inherited TaskJournalForm: TTaskJournalForm
     Left = 535
     Top = 248
   end
-  object JuridicalBasisGuides: TdsdGuides
+  object GuidesJuridicalBasis: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridicalBasis
     Key = '0'
@@ -895,7 +908,7 @@ inherited TaskJournalForm: TTaskJournalForm
       item
         Name = 'Key'
         Value = '0'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -903,13 +916,13 @@ inherited TaskJournalForm: TTaskJournalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 903
+    Left = 847
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'
@@ -919,14 +932,14 @@ inherited TaskJournalForm: TTaskJournalForm
       item
         Name = 'JuridicalBasisId'
         Value = '0'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisName'
         Value = ''
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -935,7 +948,7 @@ inherited TaskJournalForm: TTaskJournalForm
     Left = 824
     Top = 48
   end
-  object PersonalTradeGuides: TdsdGuides
+  object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalTrade
     Key = '0'
@@ -948,7 +961,7 @@ inherited TaskJournalForm: TTaskJournalForm
       item
         Name = 'Key'
         Value = '0'
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -956,7 +969,7 @@ inherited TaskJournalForm: TTaskJournalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -968,5 +981,18 @@ inherited TaskJournalForm: TTaskJournalForm
         MultiSelectSeparator = ','
       end>
     Left = 607
+  end
+  object GuidesFiller: TGuidesFiller
+    IdParam.Value = '0'
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    GuidesList = <
+      item
+        Guides = GuidesPersonalTrade
+      end>
+    ActionItemList = <>
+    Left = 512
+    Top = 160
   end
 end

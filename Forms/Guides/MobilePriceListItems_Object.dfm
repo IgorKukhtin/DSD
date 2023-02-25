@@ -14,6 +14,7 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -24,6 +25,7 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
     Height = 438
     Align = alClient
     TabOrder = 0
+    ExplicitTop = -6
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -366,11 +368,8 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_PersonalTrade
+      StoredProc = spSelect
       StoredProcList = <
-        item
-          StoredProc = spGet_PersonalTrade
-        end
         item
           StoredProc = spSelect
         end>
@@ -472,6 +471,38 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMobileMemberDialogForm'
+      FormNameParam.Value = 'TMobileMemberDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MemberId'
+          Value = '0'
+          Component = PersonalTradeGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = ''
+          Component = PersonalTradeGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PriceListItems_Mobile'
@@ -491,7 +522,7 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
       end>
     PackSize = 1
     Left = 80
-    Top = 216
+    Top = 192
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -512,12 +543,15 @@ object MobilePriceListItems_ObjectForm: TMobilePriceListItems_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 464
-    Top = 288
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 560
+    Top = 192
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 424

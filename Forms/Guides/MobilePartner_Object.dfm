@@ -14,6 +14,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -24,6 +25,8 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     Height = 347
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = 72
+    ExplicitTop = 85
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -722,11 +725,8 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_PersonalTrade
+      StoredProc = spSelect
       StoredProcList = <
-        item
-          StoredProc = spGet_PersonalTrade
-        end
         item
           StoredProc = spSelect
         end>
@@ -902,6 +902,38 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       Hint = #1050#1072#1088#1090#1072' Google - '#1042#1057#1045' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       ImageIndex = 40
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMobileMemberDialogForm'
+      FormNameParam.Value = 'TMobileMemberDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MemberId'
+          Value = '0'
+          Component = GuidesPersonalTrade
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = ''
+          Component = GuidesPersonalTrade
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Partner_Mobile'
@@ -914,7 +946,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       item
         Name = 'inMemberId'
         Value = Null
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -974,10 +1006,13 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 464
     Top = 288
   end
@@ -991,7 +1026,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
       end
       item
         Component = GuidesRetail
@@ -1021,7 +1056,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     Left = 376
     Top = 280
   end
-  object PersonalTradeGuides: TdsdGuides
+  object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalTrade
     Key = '0'
@@ -1034,7 +1069,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       item
         Name = 'Key'
         Value = '0'
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1042,7 +1077,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1064,14 +1099,14 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       item
         Name = 'MemberId'
         Value = '0'
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MemberName'
         Value = ''
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1356,7 +1391,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       item
         Name = 'inPersonalTradeId'
         Value = '0'
-        Component = PersonalTradeGuides
+        Component = GuidesPersonalTrade
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1372,5 +1407,18 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     PackSize = 1
     Left = 401
     Top = 202
+  end
+  object GuidesFiller: TGuidesFiller
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    GuidesList = <
+      item
+        Guides = GuidesPersonalTrade
+      end>
+    ActionItemList = <>
+    Left = 512
+    Top = 160
   end
 end

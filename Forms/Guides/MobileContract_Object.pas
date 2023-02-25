@@ -68,6 +68,7 @@ type
     ChangePercent: TcxGridDBColumn;
     DelayDayCalendar: TcxGridDBColumn;
     DelayDayBank: TcxGridDBColumn;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

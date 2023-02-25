@@ -22,6 +22,8 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
       inherited cxGrid: TcxGrid
         Width = 953
         Height = 339
+        ExplicitLeft = -16
+        ExplicitTop = -40
         ExplicitWidth = 953
         ExplicitHeight = 339
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -255,7 +257,11 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
       EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
+      Left = 158
+      Top = -11
       EditValue = 42736d
+      ExplicitLeft = 158
+      ExplicitTop = -11
     end
     object cxLabel3: TcxLabel
       Left = 475
@@ -439,6 +445,12 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
     end
     inherited actUnComplete: TdsdChangeMovementStatus [9]
     end
+    inherited actShowErased: TBooleanStoredProcAction [10]
+    end
+    inherited actRefresh: TdsdDataSetRefresh [11]
+    end
+    inherited actGridToExcel: TdsdGridToExcel [12]
+    end
     object actPrint: TdsdPrintAction [22]
       Category = 'Print'
       MoveParams = <
@@ -519,8 +531,8 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TMovement_PeriodDialogForm'
-      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormName = 'TMobileMovement_DateDialogForm'
+      FormNameParam.Value = 'TMobileMovement_DateDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -539,6 +551,23 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = PersonalTradeGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = Null
+          Component = PersonalTradeGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -555,9 +584,6 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
       StoredProcList = <
         item
           StoredProc = spGet_UserJuridicalBasis
-        end
-        item
-          StoredProc = spGet_PersonalTrade
         end
         item
           StoredProc = spSelect
@@ -712,9 +738,6 @@ inherited RouteMemberJournalForm: TRouteMemberJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
     end
     object bbPrint: TdxBarButton
       Action = mactPrint_Order

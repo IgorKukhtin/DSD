@@ -2,7 +2,6 @@ inherited TaskForm: TTaskForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1076#1072#1085#1080#1077' '#1058#1086#1088#1075#1086#1074#1086#1084#1091' '#1072#1075#1077#1085#1090#1091'>'
   ClientHeight = 426
   ClientWidth = 873
-  ExplicitLeft = -214
   ExplicitWidth = 889
   ExplicitHeight = 465
   PixelsPerInch = 96
@@ -698,7 +697,7 @@ inherited TaskForm: TTaskForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -772,7 +771,7 @@ inherited TaskForm: TTaskForm
       end
       item
         Name = 'InsertDate'
-        Value = 'NULL'
+        Value = Null
         Component = edInsertDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -946,8 +945,8 @@ inherited TaskForm: TTaskForm
       item
         Component = edPersonalTrade
       end>
-    Left = 336
-    Top = 144
+    Left = 360
+    Top = 112
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

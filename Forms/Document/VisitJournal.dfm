@@ -5,7 +5,7 @@ inherited VisitJournalForm: TVisitJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 969
-  ExplicitHeight = 431
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -327,6 +327,9 @@ inherited VisitJournalForm: TVisitJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactSilentPrint: TMultiAction [1]
       Category = 'Print'
@@ -415,6 +418,12 @@ inherited VisitJournalForm: TVisitJournalForm
     end
     inherited actUnComplete: TdsdChangeMovementStatus [9]
     end
+    inherited actShowErased: TBooleanStoredProcAction [10]
+    end
+    inherited actRefresh: TdsdDataSetRefresh [11]
+    end
+    inherited actGridToExcel: TdsdGridToExcel [12]
+    end
     object actPrint: TdsdPrintAction [22]
       Category = 'Print'
       MoveParams = <
@@ -460,6 +469,9 @@ inherited VisitJournalForm: TVisitJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_Order: TMultiAction
       Category = 'Print'
@@ -492,8 +504,8 @@ inherited VisitJournalForm: TVisitJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TMovement_PeriodDialogForm'
-      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormName = 'TMobileMovement_DateDialogForm'
+      FormNameParam.Value = 'TMobileMovement_DateDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -512,6 +524,23 @@ inherited VisitJournalForm: TVisitJournalForm
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = PersonalTradeGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = Null
+          Component = PersonalTradeGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -528,9 +557,6 @@ inherited VisitJournalForm: TVisitJournalForm
       StoredProcList = <
         item
           StoredProc = spGet_UserJuridicalBasis
-        end
-        item
-          StoredProc = spGet_PersonalTrade
         end
         item
           StoredProc = spSelect
@@ -662,9 +688,6 @@ inherited VisitJournalForm: TVisitJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
     end
     object bbPrint: TdxBarButton
       Action = mactPrint_Order

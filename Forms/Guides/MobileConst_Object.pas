@@ -85,6 +85,7 @@ type
     cxLabel14: TcxLabel;
     edReturnDayCount: TcxButtonEdit;
     PersonalTradeGuides: TdsdGuides;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

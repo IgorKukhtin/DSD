@@ -2369,13 +2369,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefermentPaymentOLAPTableDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_DefermentPaymentOLAPTableDialogForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InventoryDetailForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InventoryDetailForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InventoryDetailDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InventoryDetailDialogForm');
-  //exit;
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Trade_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Trade_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Trade_OlapDialogForm'));
@@ -4136,12 +4136,18 @@ end;
 
 procedure TLoadFormTest.LoadMobileProjectFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileMemberDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileMemberDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileMovement_DateDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileMovement_DateDialogForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePackForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePackForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePackEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePackEditForm');
   exit;
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileReturnInJournalForm');
   //
@@ -4150,12 +4156,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePromoForm');
   //
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileOrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileOrderExternalJournalForm');
-  exit;
+  //exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileContract_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileContract_ObjectForm');
@@ -4171,15 +4177,15 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileGoodsByGoodsKind_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileGoodsByGoodsKind_ObjectForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileGoodsListSale_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileGoodsListSale_ObjectForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteMemberJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRouteMemberJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteMemberMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRouteMemberMovementForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPhotoMobileForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPhotoMobileForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPhotoMobileEditForm'));

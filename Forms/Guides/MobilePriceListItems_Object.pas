@@ -64,6 +64,7 @@ type
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     spGet_PersonalTrade: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public
