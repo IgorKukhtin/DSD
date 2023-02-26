@@ -20,7 +20,7 @@ BEGIN
         vbLock := 1;
         WHILE vbLock <> 0 LOOP
            BEGIN
-               PERFORM Container.* FROM Container WHERE Container.Id IN (SELECT MovementItemContainer.ContainerId FROM MovementItemContainer WHERE MovementItemContainer.MovementId = inMovementId) FOR UPDATE;
+               PERFORM Container.* FROM Container WHERE Container.Id IN (SELECT DISTINCT MovementItemContainer.ContainerId FROM MovementItemContainer WHERE MovementItemContainer.MovementId = inMovementId) FOR UPDATE;
                PERFORM MovementItemContainer.* FROM MovementItemContainer WHERE MovementItemContainer.MovementId = inMovementId FOR UPDATE;
                vbLock := 0;
            EXCEPTION 
@@ -52,7 +52,7 @@ BEGIN
             END;
         END LOOP;
     ELSE
-        PERFORM Container.* FROM Container WHERE Container.Id IN (SELECT MovementItemContainer.ContainerId FROM MovementItemContainer WHERE MovementItemContainer.MovementId = inMovementId) FOR UPDATE;
+        PERFORM Container.* FROM Container WHERE Container.Id IN (SELECT DISTINCT MovementItemContainer.ContainerId FROM MovementItemContainer WHERE MovementItemContainer.MovementId = inMovementId) FOR UPDATE;
         PERFORM MovementItemContainer.* FROM MovementItemContainer WHERE MovementItemContainer.MovementId = inMovementId FOR UPDATE;
     END IF;
     END IF;

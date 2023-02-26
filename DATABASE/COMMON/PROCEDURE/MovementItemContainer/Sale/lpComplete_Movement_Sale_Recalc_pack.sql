@@ -47,35 +47,62 @@ end if;
                 , tmpMI.MovementItemId
            FROM
                 -- элементы
-               (WITH tmp AS (SELECT MovementItem.Id                           AS MovementItemId
+               (WITH tmpMI AS (SELECT MovementItem.*
+                                    , MILinkObject_GoodsKind.ObjectId      AS GoodsKindId
+                                    , ObjectFloat_WeightPackage.ValueData  AS WeightPackage
+                                    , ObjectFloat_WeightTotal.ValueData    AS WeightTotal
+                               FROM MovementItem
+                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                    INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                          ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = MovementItem.ObjectId
+                                                         AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                          ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                         AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                         AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = MILinkObject_GoodsKind.ObjectId
+                                    -- вес 1-ого пакета - Вес пакета для УПАКОВКИ
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
+                                                          ON ObjectFloat_WeightPackage.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                         AND ObjectFloat_WeightPackage.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
+                                    -- вес в упаковке - "чистый" вес + вес 1-ого пакета
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                                          ON ObjectFloat_WeightTotal.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                         AND ObjectFloat_WeightTotal.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+                               WHERE MovementItem.MovementId = inMovementId
+                                 AND MovementItem.DescId     = zc_MI_Master()
+                                 AND MovementItem.isErased   = FALSE
+                              )
+                   , tmp AS (SELECT MovementItem.Id                           AS MovementItemId
                                   , MovementItem.DescId                       AS DescId
-                                  , Object_GoodsByGoodsKind_View.GoodsId      AS GoodsId
-                                  , Object_GoodsByGoodsKind_View.GoodsKindId  AS GoodsKindId
+                                  , MovementItem.ObjectId                     AS GoodsId
+                                  , MovementItem.GoodsKindId                  AS GoodsKindId
                                   , MovementItem.MovementId                   AS MovementId
                                   , MovementItem.ParentId                     AS ParentId
                                   , MIB_BarCode.ValueData                     AS isBarCode
                                   , OL_Measure.ChildObjectId                  AS MeasureId
                                   , MovementItem.Amount
                                     -- расчет кол-во шт. упаковки (пока округление до 4-х знаков)
-                                  , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0 AND ObjectFloat_WeightPackage.ValueData <> 0 AND ObjectFloat_WeightTotal.ValueData > ObjectFloat_WeightPackage.ValueData
-                                              THEN CAST (CAST (MIFloat_AmountPartner.ValueData / (1 - ObjectFloat_WeightPackage.ValueData / ObjectFloat_WeightTotal.ValueData) AS NUMERIC (16, 4)) / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 4))
+                                  , CASE WHEN MovementItem.WeightTotal <> 0 AND MovementItem.WeightPackage <> 0 AND MovementItem.WeightTotal > MovementItem.WeightPackage
+                                              THEN CAST (CAST (MIFloat_AmountPartner.ValueData / (1 - MovementItem.WeightPackage / MovementItem.WeightTotal) AS NUMERIC (16, 4)) / MovementItem.WeightTotal AS NUMERIC (16, 4))
                                          ELSE 0
                                     END :: TFloat AS CountPack
                                     -- расчет кол-во Склад
                                   , CAST ((COALESCE (MIFloat_AmountPartner.ValueData, 0)
                                            -- расчет кол-во шт. упаковки (пока округление до 4-х знаков)
-                                         + CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0 AND ObjectFloat_WeightPackage.ValueData <> 0 AND ObjectFloat_WeightTotal.ValueData > ObjectFloat_WeightPackage.ValueData
-                                                     THEN CAST (CAST (MIFloat_AmountPartner.ValueData / (1 - ObjectFloat_WeightPackage.ValueData / ObjectFloat_WeightTotal.ValueData) AS NUMERIC (16, 4)) / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 4))
+                                         + CASE WHEN MovementItem.WeightTotal <> 0 AND MovementItem.WeightPackage <> 0 AND MovementItem.WeightTotal > MovementItem.WeightPackage
+                                                     THEN CAST (CAST (MIFloat_AmountPartner.ValueData / (1 - MovementItem.WeightPackage / MovementItem.WeightTotal) AS NUMERIC (16, 4)) / MovementItem.WeightTotal AS NUMERIC (16, 4))
                                                 ELSE 0
                                            END :: TFloat
                                            -- вес 1-ого пакета, после этого получаем вес всех пакетов
-                                         * COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
+                                         * COALESCE (MovementItem.WeightPackage, 0)
                                           )
                                          -- % скидки Вес
                                         / (1 - CASE WHEN MIFloat_ChangePercentAmount.ValueData < 100 THEN MIFloat_ChangePercentAmount.ValueData/100 ELSE 0 END)
                                          AS NUMERIC (16, 4)) AS Amount_cacl
                      
-                             FROM MovementItem
+                             FROM tmpMI AS MovementItem
                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                              AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
@@ -83,16 +110,16 @@ end if;
                                   LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
                                                               ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
                                                              AND MIFloat_ChangePercentAmount.DescId         = zc_MIFloat_ChangePercentAmount()
-                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                /*LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()*/
                                   LEFT JOIN MovementItemBoolean AS MIB_BarCode
-                                                                  ON MIB_BarCode.MovementItemId = MovementItem.Id
-                                                                 AND MIB_BarCode.DescId         = zc_MIBoolean_BarCode()
+                                                                ON MIB_BarCode.MovementItemId = MovementItem.Id
+                                                               AND MIB_BarCode.DescId         = zc_MIBoolean_BarCode()
                                   LEFT JOIN ObjectLink AS OL_Measure
-                                                         ON OL_Measure.ObjectId      = MovementItem.ObjectId
-                                                        AND OL_Measure.DescId        = zc_ObjectLink_Goods_Measure()
-                                  LEFT JOIN Object_GoodsByGoodsKind_View
+                                                       ON OL_Measure.ObjectId = MovementItem.ObjectId
+                                                      AND OL_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+                                  /*LEFT JOIN Object_GoodsByGoodsKind_View
                                          ON Object_GoodsByGoodsKind_View.GoodsId     = MovementItem.ObjectId
                                         AND Object_GoodsByGoodsKind_View.GoodsKindId = MILinkObject_GoodsKind.ObjectId
                                    -- вес 1-ого пакета - Вес пакета для УПАКОВКИ
@@ -100,12 +127,12 @@ end if;
                                                          ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id
                                                         AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightPackage()
                                    -- вес в упаковке - "чистый" вес + вес 1-ого пакета
-                                   LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
-                                                         ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
-                                                        AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
-                             WHERE MovementItem.MovementId = inMovementId
+                                   LEFT JOIN ObjectFloat AS MovementItem.WeightTotal
+                                                         ON MovementItem.WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                        AND MovementItem.WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()*/
+                           /*WHERE MovementItem.MovementId = inMovementId
                                AND MovementItem.DescId     = zc_MI_Master()
-                               AND MovementItem.isErased   = FALSE
+                               AND MovementItem.isErased   = FALSE*/
                             )
              -- элементы
              SELECT *

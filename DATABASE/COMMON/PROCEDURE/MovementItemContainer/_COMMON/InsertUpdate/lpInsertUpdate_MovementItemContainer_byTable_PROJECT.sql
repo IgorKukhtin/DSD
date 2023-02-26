@@ -21,7 +21,7 @@ BEGIN
         vbLock := 1;
         WHILE vbLock <> 0 LOOP
             BEGIN
-               PERFORM Container.* FROM Container WHERE Container.Id IN (SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert) FOR UPDATE;
+               PERFORM Container.* FROM Container WHERE Container.Id IN (SELECT DISTINCT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert) FOR UPDATE;
                vbLock := 0;
             EXCEPTION 
                      WHEN OTHERS THEN vbLock := vbLock + 1;
@@ -53,7 +53,7 @@ BEGIN
             END;
         END LOOP;
     ELSE
-        PERFORM Container.* FROM Container WHERE Container.Id IN (SELECT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert) FOR UPDATE;
+        PERFORM Container.* FROM Container WHERE Container.Id IN (SELECT DISTINCT _tmpMIContainer_insert.ContainerId FROM _tmpMIContainer_insert) FOR UPDATE;
     END IF;
     END IF;
     
