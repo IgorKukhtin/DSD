@@ -26,6 +26,7 @@ RETURNS TABLE (
   CountAmount             Integer,
   CountConsider           Integer,
   CountRecord             Integer,
+  AddBonusPercentTab      TFloat,
   PenaltiMobApp           TFloat
 )
 AS
@@ -44,7 +45,7 @@ BEGIN
 
     IF inSession = '3'
     THEN
-      vbUserId := 4085634;
+      vbUserId := 19450290;
     END IF;
 
     vbDateStart := date_trunc('month', inStartDate);
@@ -207,7 +208,10 @@ BEGIN
             
             CountAmount        Integer,
             CountConsider      Integer,
-            CountRecord        Integer
+            CountRecord        Integer,
+            
+            FixedPercent       TFloat,
+            AddBonusPercentTab TFloat
       ) ON COMMIT DROP;
 
       -- Заполнение шапки результирующей таблицы
@@ -259,7 +263,8 @@ BEGIN
             AmountPlanMaxTab TFloat,
 
             AmountTheFineTab TFloat,
-            BonusAmountTab TFloat
+            BonusAmountTab TFloat,
+            AddBonusPercentTab TFloat
       ) ON COMMIT DROP;
 
       -- Заполняем данные по продажам
@@ -366,7 +371,7 @@ BEGIN
            , NULLIF(PromoUnit.Koeff, 0)                            AS Koeff
            , PromoUnit.AmountPlan                                  AS AmountPlan
            , PromoUnit.AmountPlanMax                               AS AmountPlanMax
-           , PromoUnit.isFixedPercent                              AS isFixedPercent
+           , COALESCE(PromoUnit.isFixedPercent, FALSE)             AS isFixedPercent
            , PromoUnit.AddBonusPercent                             AS AddBonusPercent
        FROM tmpUserUnitDayTable AS UserUnitDayTable
 
@@ -425,9 +430,9 @@ BEGIN
                                             ON MIFloat_Koeff.MovementItemId = MI_PromoUnit.Id
                                            AND MIFloat_Koeff.DescId = zc_MIFloat_Koeff()
 
-                LEFT JOIN MovementItemBoolean AS MIBoolean_FixedPercent
-                                              ON MIBoolean_FixedPercent.MovementItemId = MI_PromoUnit.Id
-                                             AND MIBoolean_FixedPercent.DescId = zc_MIBoolean_FixedPercent()
+                LEFT JOIN MovementItemFloat AS MIFloat_AddBonusPercent
+                                            ON MIFloat_AddBonusPercent.MovementItemId = MI_PromoUnit.Id
+                                           AND MIFloat_AddBonusPercent.DescId = zc_MIFloat_AddBonusPercent()
 
                 LEFT JOIN MovementItemBoolean AS MIBoolean_FixedPercent
                                               ON MIBoolean_FixedPercent.MovementItemId = MI_PromoUnit.Id
@@ -525,7 +530,10 @@ BEGIN
                                   THEN 1.0 * ROUND(AmountPlanMax * Price * 0.03, 2)
                                   WHEN Amount >= AmountPlanMaxTab AND COALESCE(AmountPlanMax, 0) > 0 AND vbDateStart <> '01.04.2022' AND vbDateStart <> '01.05.2022'
                                   THEN 1.0 * Amount * Price * (UnitCategory.PremiumImplPlan + COALESCE(AddBonusPercent, 0)) / 100 
-                                  ELSE 0 END
+                                  ELSE 0 END,
+            AddBonusPercentTab = CASE WHEN Amount >= AmountPlanMaxTab AND COALESCE(AmountPlanMax, 0) > 0 AND COALESCE(AddBonusPercent, 0) <> 0 AND 
+                                           vbDateStart <> '01.04.2022' AND vbDateStart <> '01.05.2022'
+                                      THEN 1.0 * Amount * Price * COALESCE(AddBonusPercent, 0) / 100 END 
      FROM (SELECT
             Object_UnitCategory.Id                       AS UnitCategoryId
           , ObjectFloat_PenaltyNonMinPlan.ValueData      AS PenaltyNonMinPlan
@@ -561,11 +569,13 @@ BEGIN
       -- Выбираем итоговою сумму штрафа и премии
      UPDATE tmpResult SET
         AmountTheFineTab = COALESCE(Implementation.AmountTheFineTab, 0),
-        BonusAmountTab = COALESCE(Implementation.BonusAmountTab, 0)
+        BonusAmountTab = COALESCE(Implementation.BonusAmountTab, 0),
+        AddBonusPercentTab = COALESCE(Implementation.AddBonusPercentTab, 0)
      FROM (SELECT Implementation.UserID,
             Implementation.UnitID,
             SUM(Implementation.AmountTheFineTab) AS AmountTheFineTab,
-            SUM(Implementation.BonusAmountTab) AS BonusAmountTab
+            SUM(Implementation.BonusAmountTab) AS BonusAmountTab,
+            SUM(Implementation.AddBonusPercentTab) AS AddBonusPercentTab
          FROM tmpImplementation AS Implementation
             INNER JOIN (SELECT tmpResult.UnitID, tmpResult.UserID FROM tmpResult) AS T1
                       ON Implementation.UserID = T1.UserID
@@ -576,11 +586,12 @@ BEGIN
 
        -- Собираем Общий % выполнения построчный:
      UPDATE tmpResult SET
-          TotalExecutionLine = ROUND(CASE WHEN Implementation.CountConsider <> 0 THEN 1.0 * Implementation.CountAmount / Implementation.CountConsider * 100 ELSE 0 END+ 
+          TotalExecutionLine = ROUND(CASE WHEN Implementation.CountConsider <> 0 THEN 1.0 * Implementation.CountAmount / Implementation.CountConsider * 100 ELSE 0 END + 
                                                COALESCE (Implementation.CountFixedPercent * vbFixedPercent, 0), 2)
         , CountAmount   = Implementation.CountAmount
         , CountConsider = Implementation.CountConsider
         , CountRecord   = Implementation.CountRecord
+        , FixedPercent  = COALESCE (Implementation.CountFixedPercent * vbFixedPercent, 0)
      FROM (SELECT Implementation.UserID  AS UserID,
              SUM(CASE WHEN Implementation.Amount > 0 AND Implementation.AmountPlanTab > 0 AND
                  Implementation.Amount >= Implementation.AmountPlanTab then 1 else 0 end)::Integer  AS CountAmount,
@@ -729,7 +740,8 @@ BEGIN
         Result.CountAmount,
         Result.CountConsider,
         Result.CountRecord,
-        tmpFulfillmentPlanMobile.PenaltiMobApp
+        Result.AddBonusPercentTab,
+        (-tmpFulfillmentPlanMobile.PenaltiMobApp)::TFloat
 
      FROM tmpResult AS Result 
 
@@ -767,4 +779,4 @@ $BODY$
 
 -- тест
 -- 
-select * from gpReport_ImplementationPlanEmployeeUser(inStartDate := CURRENT_DATE::TDateTime ,  inSession := '20194482');
+select * from gpReport_ImplementationPlanEmployeeUser(inStartDate := CURRENT_DATE::TDateTime ,  inSession := '3');

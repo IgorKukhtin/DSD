@@ -10,6 +10,7 @@ inherited Report_FinancialMonitoringForm: TReport_FinancialMonitoringForm
   inherited PageControl: TcxPageControl
     Width = 776
     Height = 435
+    Properties.ActivePage = cxTabSheet1
     ExplicitWidth = 776
     ExplicitHeight = 435
     ClientRectBottom = 435
@@ -168,6 +169,26 @@ inherited Report_FinancialMonitoringForm: TReport_FinancialMonitoringForm
             DataBinding.FieldName = 'SummaNoPay'
             DisplayText = #1053#1077' '#1086#1087#1083#1072#1095#1077#1085#1086
             Styles.Values = cxStyle2
+          end
+          object cxGridDBChartView1Series2: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaNoPayBadm'
+            DisplayText = #1053#1077' '#1086#1087#1083#1072#1095#1077#1085#1086' '#1041#1072#1076#1084
+            Styles.Values = cxStyle4
+          end
+          object cxGridDBChartView1Series3: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaNoPayVenta'
+            DisplayText = #1053#1077' '#1086#1087#1083#1072#1095#1077#1085#1086' '#1042#1077#1085#1090#1072
+            Styles.Values = cxStyle5
+          end
+          object cxGridDBChartView1Series4: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaNoPayOptima'
+            DisplayText = #1053#1077' '#1086#1087#1083#1072#1095#1077#1085#1086' '#1054#1087#1090#1080#1084#1072
+            Styles.Values = cxStyle6
+          end
+          object cxGridDBChartView1Series5: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaNoPayOther'
+            DisplayText = #1053#1077' '#1086#1087#1083#1072#1095#1077#1085#1086' '#1086#1089#1090'.'
+            Styles.Values = cxStyle7
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -424,6 +445,22 @@ inherited Report_FinancialMonitoringForm: TReport_FinancialMonitoringForm
     object cxStyle3: TcxStyle
       AssignedValues = [svColor]
       Color = clGreen
+    end
+    object cxStyle4: TcxStyle
+      AssignedValues = [svColor]
+      Color = clHighlight
+    end
+    object cxStyle5: TcxStyle
+      AssignedValues = [svColor]
+      Color = clLime
+    end
+    object cxStyle6: TcxStyle
+      AssignedValues = [svColor]
+      Color = clFuchsia
+    end
+    object cxStyle7: TcxStyle
+      AssignedValues = [svColor]
+      Color = clPurple
     end
   end
 end

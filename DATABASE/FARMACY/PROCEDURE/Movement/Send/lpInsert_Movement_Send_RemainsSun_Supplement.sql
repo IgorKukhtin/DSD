@@ -69,6 +69,7 @@ $BODY$
    DECLARE vbisEliminateColdSUN Boolean;
    DECLARE vbisOnlyColdSUN Boolean;
    DECLARE vbisShoresSUN Boolean;
+   DECLARE vbDays TFloat;
 BEGIN
      --
      --
@@ -99,7 +100,7 @@ BEGIN
      -- все Товары для схемы SUN Supplement
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_SUN_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpGoods_SUN_Supplement   (GoodsId Integer, KoeffSUN TFloat, isSupplementMarkSUN1 Boolean, isSmudge Boolean, SupplementMin Integer, SupplementMinPP Integer, UnitSupplementSUN1InId Integer) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpGoods_SUN_Supplement   (GoodsId Integer, KoeffSUN TFloat, isSupplementMarkSUN1 Boolean, isSmudge Boolean, SupplementMin Integer, SupplementMinPP Integer, UnitSupplementSUN1InId Integer, isMarcCalc Boolean) ON COMMIT DROP;
      END IF;
 
      -- все подразделения отдающие товар SUN Supplement
@@ -280,8 +281,11 @@ BEGIN
        ;
        
      ANALYSE _tmpUnit_SUN_Supplement;
+     
+     vbDays := (CURRENT_DATE -  (CURRENT_DATE - (((SELECT MAX(_tmpUnit_SUN_Supplement.MonthSupplSun1) FROM _tmpUnit_SUN_Supplement))::TVarChar || ' MONTH') :: INTERVAL)::Date);
 
---raise notice 'Value 2: % %', CLOCK_TIMESTAMP(), (SELECT count(*) FROM _tmpUnit_SUN_Supplement);
+
+--raise notice 'Value 2: % % %', CLOCK_TIMESTAMP(), (SELECT count(*) FROM _tmpUnit_SUN_Supplement), vbDays;
 
      -- Товары дисконтных проектов
      
@@ -535,7 +539,7 @@ BEGIN
            ;
            
          ANALYSE _tmpGoods_SUN_PairSun_Supplement;
-           
+                    
            
      -- Товар из перемещения
 /*     IF inOperDate = '01.02.2021'
@@ -564,7 +568,7 @@ BEGIN
      END IF;*/
 
      -- все Товары для схемы SUN Supplement
-     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, isSupplementMarkSUN1, isSmudge, SupplementMin, SupplementMinPP, UnitSupplementSUN1InId)
+     INSERT INTO _tmpGoods_SUN_Supplement (GoodsId, KoeffSUN, isSupplementMarkSUN1, isSmudge, SupplementMin, SupplementMinPP, UnitSupplementSUN1InId, isMarcCalc)
         SELECT Object_Goods_Retail.ID
              , Object_Goods_Retail.KoeffSUN_Supplementv1
              , Object_Goods_Main.isSupplementMarkSUN1
@@ -572,6 +576,12 @@ BEGIN
              , Object_Goods_Main.SupplementMin
              , Object_Goods_Main.SupplementMinPP 
              , Object_Goods_Main.UnitSupplementSUN1InId 
+             , tmpGoodsUnit_SUN.GoodsId IS NULL AND  
+               Object_Goods_Main.isSupplementSmudge = False AND  
+               COALESCE(Object_Goods_Main.SupplementMin, 0) = 0 AND  
+               COALESCE(Object_Goods_Main.SupplementMinPP , 0) = 0 AND
+               COALESCE (Object_Goods_Main.isSupplementMarkSUN1, False) = TRUE AND
+               Object_Goods_Main.isSupplementSUN1 = TRUE
         FROM Object_Goods_Retail
              INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
                                          AND (Object_Goods_Main.isSupplementSUN1 = TRUE OR 
@@ -584,6 +594,8 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
                                      ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
                                     AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
+             LEFT JOIN (SELECT DISTINCT tmpGoodsUnit.GoodsId 
+                        FROM gpSelect_GoodsUnitSupplementSUN1_All(inSession := inUserId::TVarChar) AS tmpGoodsUnit) AS tmpGoodsUnit_SUN ON tmpGoodsUnit_SUN.GoodsId = Object_Goods_Retail.ID
         WHERE Object_Goods_Retail.RetailID = vbObjectId
           AND COALESCE(_tmpGoods_SUN_Supplement.GoodsId, 0) = 0
           AND ((COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = FALSE AND
@@ -614,6 +626,9 @@ BEGIN
         GROUP BY Object_Goods_Retail.ID
               , Object_Goods_Retail.KoeffSUN_Supplementv1;*/
               
+              
+--raise notice 'Value 11: %', CLOCK_TIMESTAMP();
+
      -- все подразделения отдающие товар SUN Supplement
      INSERT INTO _tmpGoodsUnit_SUN_Supplement (GoodsId, UnitOutId)
      SELECT T1.GoodsId, T1.UnitId FROM gpSelect_GoodsUnitSupplementSUN1_All(inSession := inUserId::TVarChar) AS T1
@@ -623,8 +638,7 @@ BEGIN
      WHERE COALESCE (_tmpGoods_SUN_Supplement.isSupplementMarkSUN1, False) = False;
      
      ANALYSE _tmpGoodsUnit_SUN_Supplement;
-              
---raise notice 'Value 11: %', CLOCK_TIMESTAMP();
+         
 
       -- Выкладки
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpLayoutMovement'))
@@ -849,7 +863,12 @@ BEGIN
                       )
         , tmpSalesMonth AS (SELECT _tmpUnit_SUN_Supplement.UnitId
                                  , _tmpGoods_SUN_Supplement.GoodsId
-                                 , SUM (COALESCE (-1 * MIContainer.Amount, 0)) * _tmpUnit_SUN_Supplement.SalesRatio AS AmountSalesMonth
+                                 , CASE WHEN _tmpGoods_SUN_Supplement.isMarcCalc = TRUE
+                                        THEN SUM (COALESCE (-1 * MIContainer.Amount * 
+                                                 CASE WHEN MIContainer.OperDate > CURRENT_DATE - ((vbDays / 2)::TVarChar||' DAY')::Interval 
+                                                 THEN 0.5 ELSE 1.0 END, 0)) * _tmpUnit_SUN_Supplement.SalesRatio                                    
+                                        ELSE SUM (COALESCE (-1 * MIContainer.Amount, 0)) * _tmpUnit_SUN_Supplement.SalesRatio 
+                                        END AS AmountSalesMonth
                             FROM MovementItemContainer AS MIContainer
                                  INNER JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = MIContainer.ObjectId_analyzer
                                  INNER JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = MIContainer.WhereObjectId_analyzer
@@ -873,6 +892,7 @@ BEGIN
                             GROUP BY _tmpUnit_SUN_Supplement.UnitId
                                    , _tmpGoods_SUN_Supplement.GoodsId
                                    , _tmpUnit_SUN_Supplement.SalesRatio
+                                   , _tmpGoods_SUN_Supplement.isMarcCalc
                         )
           -- цены
         , tmpPrice AS (SELECT OL_Price_Unit.ChildObjectId       AS UnitId
@@ -1197,13 +1217,138 @@ BEGIN
 --raise notice 'Value 15: %', CLOCK_TIMESTAMP();
 
 
+     -- Распределение потребностей по новой схеме как в заказах
+     CREATE TEMP TABLE tmpNeed_all_Supplement ON COMMIT DROP AS
+     (WITH
+               -- Количество для распределения
+               tmpMI_Master AS (SELECT _tmpRemains_all_Supplement.GoodsId                             AS GoodsId
+                                     , SUM (_tmpRemains_all_Supplement.AmountRemains - 
+                                            _tmpRemains_all_Supplement.AmountNotSend):: TFloat        AS Amount
+                                     , SUM (COALESCE (_tmpRemains_all_Supplement.AmountRemains,0))    AS Remains
+                                     , SUM (COALESCE (_tmpRemains_all_Supplement.AmountSalesMonth,0)) AS AmountOut_real
+                                     
+                                FROM _tmpRemains_all_Supplement
+                                
+                                     INNER JOIN _tmpGoods_SUN_Supplement ON  _tmpGoods_SUN_Supplement.GoodsId    = _tmpRemains_all_Supplement.GoodsId
+                                                                        AND  _tmpGoods_SUN_Supplement.isMarcCalc = TRUE  
+                                                                        
+                                GROUP BY _tmpRemains_all_Supplement.GoodsId    
+                                )
+             -- расчет кол-ва дней остатка
+             , tmpRemainsDay AS (SELECT tmpMI_Master.GoodsId
+                                      , tmpMI_Master.Amount        AS Amount_Master
+                                      , CASE WHEN COALESCE (tmpMI_Master.AmountOut_real,0) <> 0 AND COALESCE (vbDays,0) <> 0
+                                             THEN (COALESCE (tmpMI_Master.Remains,0) + COALESCE (tmpMI_Master.Amount,0)) / (COALESCE (tmpMI_Master.AmountOut_real,0) / vbDays)
+                                             ELSE 0
+                                        END AS RemainsDay
+                                 FROM tmpMI_Master
+                                )
+            -- расчет коэфф.
+             , tmpMI_Child_Calc AS (SELECT tmpMI_Child.GoodsId
+                                         , tmpMI_Child.UnitId
+                                         , tmpRemainsDay.Amount_Master
+                                         , tmpMI_Child.AmountRemains     AS Remains
+                                         , tmpMI_Child.AmountSalesMonth  AS AmountOut_real
+                                         , (((tmpMI_Child.AmountSalesMonth / vbDays) * tmpRemainsDay.RemainsDay - COALESCE (tmpMI_Child.AmountRemains,0)) / tmpRemainsDay.RemainsDay) :: TFloat AS Koeff
+                                    FROM _tmpRemains_all_Supplement AS tmpMI_Child
+                                         LEFT JOIN tmpRemainsDay ON tmpRemainsDay.GoodsId = tmpMI_Child.GoodsId
+                                    WHERE COALESCE(tmpRemainsDay.RemainsDay, 0) > 0
+                                   )
+             -- Пересчитывает кол-во дней остатка без аптек с отриц. коэфф.
+             , tmpRemainsDay2 AS (SELECT tmpMI_Master.GoodsId
+                                      , CASE WHEN (COALESCE (tmpChild.AmountOut_real,0) / vbDays) <> 0
+                                             THEN (COALESCE (tmpChild.Remains,0) + COALESCE (tmpMI_Master.Amount,0)) / (COALESCE (tmpChild.AmountOut_real,0) / vbDays)
+                                             ELSE 0
+                                        END AS RemainsDay
+                                  FROM tmpMI_Master
+                                      LEFT JOIN (SELECT MovementItem.GoodsId
+                                                      , SUM (COALESCE (MovementItem.Remains,0))        AS Remains
+                                                      , SUM (COALESCE (MovementItem.AmountOut_real,0)) AS AmountOut_real
+                                                 FROM tmpMI_Child_Calc AS MovementItem
+                                                 WHERE COALESCE (MovementItem.Koeff,0) > 0
+                                                 GROUP BY MovementItem.GoodsId
+                                                 ) AS tmpChild ON tmpChild.GoodsId = tmpMI_Master.GoodsId
+                                 )
+             , tmpData AS (SELECT tmpData_all.GoodsId
+                                , tmpData_all.UnitId
+                                , tmpData_all.AmountOut_real
+                                , (((tmpData_all.AmountOut_real /vbDays )* tmpRemainsDay2.RemainsDay - 
+                                     COALESCE (tmpData_all.Remains,0))/tmpRemainsDay2.RemainsDay) AS AmountOut
+                                , tmpData_all.Remains
+                                , tmpData_all.Amount_Master
+                                , SUM (((tmpData_all.AmountOut_real /vbDays )* tmpRemainsDay2.RemainsDay - 
+                                         COALESCE (tmpData_all.Remains,0))/tmpRemainsDay2.RemainsDay) OVER (PARTITION BY tmpData_all.GoodsId) AS AmountOutSUM
+                           FROM tmpMI_Child_Calc AS tmpData_all
+                                LEFT JOIN tmpRemainsDay2 ON tmpRemainsDay2.GoodsId = tmpData_all.GoodsId
+                           WHERE COALESCE (tmpData_all.Koeff,0) > 0
+                             AND (((tmpData_all.AmountOut_real /vbDays )* tmpRemainsDay2.RemainsDay - COALESCE (tmpData_all.Remains,0))/tmpRemainsDay2.RemainsDay) > 0
+                           )
+             , tmpData1 AS (SELECT tmpData.GoodsId
+                                 , tmpData.UnitId
+                                 , tmpData.AmountOut
+                                 , tmpData.AmountOut_real
+                                 , tmpData.Remains
+                                 , CASE WHEN tmpData.AmountOutSUM <> 0
+                                        THEN ROUND ( tmpData.Amount_Master / tmpData.AmountOutSUM * tmpData.AmountOut, 0)
+                                        ELSE 0
+                                   END   AS Amount_Calc
+                           FROM tmpData
+                           )                                
+              -- вспомогательные расчеты для распределения заказа
+             , tmpData111 AS (SELECT tmpData1.GoodsId
+                                   , tmpData1.UnitId
+                                   , tmpMI_Master.Amount          AS Amount_Master
+                                   , tmpData1.Amount_Calc
+                                   , tmpData1.AmountOut
+                                   , tmpData1.AmountOut_real
+                                   , tmpData1.Remains
+                                   , SUM (tmpData1.Amount_Calc) OVER (PARTITION BY tmpData1.GoodsId ORDER BY tmpData1.AmountOut, tmpMI_Master.GoodsId) AS Amount_CalcSUM
+                                   , ROW_NUMBER() OVER (PARTITION BY tmpMI_Master.GoodsId ORDER BY tmpData1.AmountOut DESC) AS DOrd
+                              FROM tmpMI_Master
+                                   INNER JOIN tmpData1 AS tmpData1 ON tmpData1.GoodsId = tmpMI_Master.GoodsId
+                              )
+             -- непосредственно распределение
+             , tmpCalc AS (SELECT DD.GoodsId
+                                , DD.UnitId
+                                , DD.AmountOut_real AS AmountOut
+                                , DD.Remains
+                                , CASE WHEN DD.Amount_Master - DD.Amount_CalcSUM > 0 AND DD.DOrd <> 1
+                                            THEN ceil (DD.Amount_Calc)                                           ---ceil
+                                       ELSE ceil ( DD.Amount_Master - DD.Amount_CalcSUM + DD.Amount_Calc)
+                                  END AS AmountIn
+                           FROM tmpData111 AS DD
+                           WHERE DD.Amount_Master - (DD.Amount_CalcSUM - DD.Amount_Calc) > 0
+                          )
+
+       SELECT _tmpRemains_all_Supplement.GoodsId                             AS GoodsId
+            , _tmpRemains_all_Supplement.UnitId                              AS UnitId
+            , COALESCE (tmpCalc.AmountIn) :: TFloat                          AS Need
+       FROM _tmpRemains_all_Supplement
+       
+            INNER JOIN _tmpGoods_SUN_Supplement ON  _tmpGoods_SUN_Supplement.GoodsId    = _tmpRemains_all_Supplement.GoodsId
+                                               AND  _tmpGoods_SUN_Supplement.isMarcCalc = TRUE    
+                                               
+            LEFT JOIN tmpCalc ON tmpCalc.GoodsId    = _tmpRemains_all_Supplement.GoodsId      
+                             AND tmpCalc.UnitId     = _tmpRemains_all_Supplement.UnitId      
+       
+     );
+     
+     ANALYSE tmpNeed_all_Supplement;
+     
+raise notice 'Value 15 1: % % %', CLOCK_TIMESTAMP(), 
+  (SELECT COUNT(DISTINCT tmpNeed_all_Supplement.GoodsId) FROM tmpNeed_all_Supplement WHERE tmpNeed_all_Supplement.Need > 0 /*AND
+     AND tmpNeed_all_Supplement.GoodsId =     
+     AND tmpNeed_all_Supplement.UnitId = */)
+  , (SELECT string_agg(_tmpGoods_SUN_Supplement.GoodsId::TVarChar, ',') FROM _tmpGoods_SUN_Supplement WHERE  _tmpGoods_SUN_Supplement.isMarcCalc = TRUE);
+     
      -- 2.1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      UPDATE _tmpRemains_all_Supplement SET AverageSalesMonth =(COALESCE (_tmpRemains_all_Supplement.AmountSalesMonth, 0) / extract('DAY' from CURRENT_DATE -
                                                               (CURRENT_DATE - (T1.MonthSupplSun1::TVarChar ||' MONTH') :: INTERVAL)))
-                                         , Need = CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 THEN 0
+                                         , Need = COALESCE (T1.need,
+                                                  CASE WHEN _tmpRemains_all_Supplement.AmountSalesMonth = 0 THEN 0
                                                   ELSE (_tmpRemains_all_Supplement.AmountSalesMonth / extract('DAY' from CURRENT_DATE -
                                                        (CURRENT_DATE - (T1.MonthSupplSun1::TVarChar ||' MONTH') :: INTERVAL))) *
-                                                       T1.StockRatio END
+                                                       T1.StockRatio END)
                                          , AmountUse = 0
      FROM (SELECT _tmpStockRatio_all_Supplement.GoodsId
                 , _tmpUnit_SUN_Supplement.UnitId
@@ -1211,10 +1356,14 @@ BEGIN
                 , CASE WHEN _tmpGoods_SUN_Supplement.isSmudge = TRUE
                        THEN _tmpUnit_SUN_Supplement.MonthSupplSun1
                        ELSE _tmpUnit_SUN_Supplement.MonthSupplSun1 END AS MonthSupplSun1
+                , tmpNeed_all_Supplement.Need
            FROM _tmpStockRatio_all_Supplement
                 LEFT JOIN _tmpUnit_SUN_Supplement ON 1 = 1
                 LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = _tmpStockRatio_all_Supplement.GoodsId
+                LEFT JOIN tmpNeed_all_Supplement ON tmpNeed_all_Supplement.GoodsId = _tmpStockRatio_all_Supplement.GoodsId
+                                                AND tmpNeed_all_Supplement.UnitId = _tmpUnit_SUN_Supplement.UnitId
                 ) AS T1
+                           
      WHERE _tmpRemains_all_Supplement.GoodsId = T1.GoodsId
        AND _tmpRemains_all_Supplement.UnitId = T1.UnitId;
        
@@ -1273,7 +1422,7 @@ BEGIN
      WHERE (_tmpRemains_all_Supplement.AmountRemains + _tmpRemains_all_Supplement.Need) < 0;
                   
                   
-    -- 2.3 Запишем сколько отдаем
+    -- 2.3 Запишем сколько получим
     
     UPDATE _tmpRemains_all_Supplement SET SurplusCalc = T1.Need
     FROM 
@@ -1490,7 +1639,7 @@ BEGIN
 --raise notice 'Value 18: %', CLOCK_TIMESTAMP();
 
        
-    -- 2.4 Запишем сколько надо
+    -- 2.4 Запишем сколько можно отдать
                      
     UPDATE _tmpRemains_all_Supplement SET NeedCalc = T1.Need
     FROM 
@@ -1861,4 +2010,4 @@ $BODY$
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
 
 -- 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);

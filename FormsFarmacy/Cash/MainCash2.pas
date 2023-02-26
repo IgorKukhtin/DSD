@@ -15592,11 +15592,11 @@ begin
           begin
              Self.Caption := Self.Caption + ' <';
              if UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean then Self.Caption := Self.Caption +
-               'Маркетинг: ' + FormatFloat(',0.00', ds.FieldByName('Total').AsCurrency);
+               'Маркет: ' + FormatFloat(',0.00', ds.FieldByName('Total').AsCurrency);
              if UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean and
                 UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean then Self.Caption := Self.Caption + '; ';
              if UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean then Self.Caption := Self.Caption +
-               'Приложение: ' + FormatFloat(',0.00', ds.FieldByName('PenaltiMobApp').AsCurrency);
+               'Прил: ' + FormatFloat(',0.00', ds.FieldByName('PenaltiMobApp').AsCurrency);
 
              Self.Caption := Self.Caption + '>';
           end;

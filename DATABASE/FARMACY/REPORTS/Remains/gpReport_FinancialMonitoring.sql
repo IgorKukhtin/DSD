@@ -337,6 +337,9 @@ BEGIN
     -- Не оплата приходов
     CREATE TEMP TABLE tmpSummIncomeNotPay ON COMMIT DROP AS
     SELECT SUM(Container.Amount) AS SummaNoPay
+         , SUM(CASE WHEN MLO_From.ObjectId = 59610 THEN Container.Amount END) AS SummaNoPayBadm
+         , SUM(CASE WHEN MLO_From.ObjectId = 59612 THEN Container.Amount END) AS SummaNoPayVenta
+         , SUM(CASE WHEN MLO_From.ObjectId = 59611 THEN Container.Amount END) AS SummaNoPayOptima
     FROM Container
          INNER JOIN Object AS Object_Movement 
                            ON Object_Movement.Id = Container.ObjectId
@@ -344,7 +347,9 @@ BEGIN
          INNER JOIN MovementLinkObject AS MLO_Unit 
                                        ON MLO_Unit.MovementId = Object_Movement.ObjectCode
                                       AND MLO_Unit.DescId = zc_MovementLinkObject_To()
-                                 
+         INNER JOIN MovementLinkObject AS MLO_From
+                                       ON MLO_From.MovementId = Object_Movement.ObjectCode
+                                      AND MLO_From.DescId = zc_MovementLinkObject_From()                                 
     WHERE Container.DescId = zc_Container_SummIncomeMovementPayment()
       AND Container.Amount > 0
       AND Object_Movement.ObjectCode > 15000000
@@ -356,6 +361,9 @@ BEGIN
     CREATE TEMP TABLE tmpSummIncomePayment ON COMMIT DROP AS
     SELECT date_trunc('Day', MovementItemContainer.OperDate) AS OperDate
          , SUM(MovementItemContainer.Amount)                 AS SummaPay
+         , SUM(CASE WHEN MLO_From.ObjectId = 59610 THEN MovementItemContainer.Amount END) AS SummaPayBadm
+         , SUM(CASE WHEN MLO_From.ObjectId = 59612 THEN MovementItemContainer.Amount END) AS SummaPayVenta
+         , SUM(CASE WHEN MLO_From.ObjectId = 59611 THEN MovementItemContainer.Amount END) AS SummaPayOptima
     FROM MovementItemContainer                         
          INNER JOIN Container ON Container.Id =  MovementItemContainer.ContainerId
          INNER JOIN Object AS Object_Movement 
@@ -364,6 +372,9 @@ BEGIN
          INNER JOIN MovementLinkObject AS MLO_Unit 
                                        ON MLO_Unit.MovementId = Object_Movement.ObjectCode
                                       AND MLO_Unit.DescId = zc_MovementLinkObject_To()
+         INNER JOIN MovementLinkObject AS MLO_From
+                                       ON MLO_From.MovementId = Object_Movement.ObjectCode
+                                      AND MLO_From.DescId = zc_MovementLinkObject_From()
     WHERE MovementItemContainer.DescId = zc_MIContainer_SummIncomeMovementPayment()
       AND MovementItemContainer.OperDate >= inStartDate
       AND Object_Movement.ObjectCode > 15000000
@@ -440,6 +451,13 @@ BEGIN
                           ),
     tmpSummPayment AS (SELECT SaleSum.OperDate
                             , max(tmpSummIncomeNotPay.SummaNoPay) - COALESCE(SUM(tmpSummIncomePayment.SummaPay), 0)   AS SummaNoPay
+                            , max(tmpSummIncomeNotPay.SummaNoPayBadm) - COALESCE(SUM(tmpSummIncomePayment.SummaPayBadm), 0)   AS SummaNoPayBadm
+                            , max(tmpSummIncomeNotPay.SummaNoPayVenta) - COALESCE(SUM(tmpSummIncomePayment.SummaPayVenta), 0)   AS SummaNoPayVenta
+                            , max(tmpSummIncomeNotPay.SummaNoPayOptima) - COALESCE(SUM(tmpSummIncomePayment.SummaPayOptima), 0)   AS SummaNoPayOptima
+                            , (max(tmpSummIncomeNotPay.SummaNoPay) - COALESCE(SUM(tmpSummIncomePayment.SummaPay), 0)) -
+                              (max(tmpSummIncomeNotPay.SummaNoPayBadm) - COALESCE(SUM(tmpSummIncomePayment.SummaPayBadm), 0)) -
+                              (max(tmpSummIncomeNotPay.SummaNoPayVenta) - COALESCE(SUM(tmpSummIncomePayment.SummaPayVenta), 0)) -
+                              (max(tmpSummIncomeNotPay.SummaNoPayOptima) - COALESCE(SUM(tmpSummIncomePayment.SummaPayOptima), 0))   AS SummaNoPayOther
                        FROM tmpSaleSum AS SaleSum
                             LEFT JOIN tmpSummIncomePayment ON tmpSummIncomePayment.OperDate >= SaleSum.OperDate
                             LEFT JOIN tmpSummIncomeNotPay ON 1 = 1
@@ -453,6 +471,10 @@ BEGIN
            COALESCE(BankAccount.SummaBankAccount, 0))::TFloat                            AS SummaDelta
          , SaleSum.SaldoSum
          , SummPayment.SummaNoPay::TFloat                                                AS SummaNoPay
+         , SummPayment.SummaNoPayBadm::TFloat                                            AS SummaNoPayBadm
+         , SummPayment.SummaNoPayVenta::TFloat                                           AS SummaNoPayVenta
+         , SummPayment.SummaNoPayOptima::TFloat                                          AS SummaNoPayOptima
+         , SummPayment.SummaNoPayOther::TFloat                                           AS SummaNoPayOther
     FROM tmpSaleSum AS SaleSum
         
          FULL JOIN tmpBankAccountSum AS BankAccount ON BankAccount.OperDate = SaleSum.OperDate

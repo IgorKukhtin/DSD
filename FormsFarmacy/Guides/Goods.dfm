@@ -3,25 +3,29 @@ inherited GoodsForm: TGoodsForm
   ClientHeight = 544
   ClientWidth = 1165
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 1181
-  ExplicitHeight = 583
+  ExplicitWidth = 1183
+  ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 30
     Width = 1165
-    Height = 518
+    Height = 514
+    ExplicitTop = 30
     ExplicitWidth = 1165
-    ExplicitHeight = 518
-    ClientRectBottom = 518
+    ExplicitHeight = 514
+    ClientRectBottom = 514
     ClientRectRight = 1165
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1165
-      ExplicitHeight = 518
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
         Width = 1165
-        Height = 518
+        Height = 514
+        ExplicitLeft = 3
+        ExplicitTop = 3
         ExplicitWidth = 1165
-        ExplicitHeight = 518
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1853,7 +1857,7 @@ inherited GoodsForm: TGoodsForm
     DockControlHeights = (
       0
       0
-      26
+      30
       0)
     inherited Bar: TdxBar
       ItemLinks = <

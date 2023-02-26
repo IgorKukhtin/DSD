@@ -939,8 +939,8 @@ BEGIN
            , tmpGoodsSPRegistry_1303.PriceSale :: TFloat                                                            AS PriceOOC
            , ROUND(tmpGoodsSPRegistry_1303.PriceSale * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat AS SumCompOOC
                    
-           , NULLIF(ROUND(tmpGoodsSPRegistry_1303.PriceSale * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat - 
-                   CAST ((tmpData.SummOriginal - tmpData.SummSale) AS NUMERIC (16,2))  :: TFloat , 0)::TFloat   AS DSummaSP
+           , NULLIF(CAST ( (CASE WHEN tmpData.Amount <>0 THEN tmpData.SummOriginal/tmpData.Amount ELSE 0 END)  AS NUMERIC (16,2) ) :: TFloat - 
+                  tmpGoodsSPRegistry_1303.PriceSale  , 0)::TFloat   AS DSummaSP
            , CASE WHEN COALESCE(tmpGoodsSPRegistry_1303.PriceSale, 0)= 0  THEN zfCalc_Color(255, 165, 0)
                   WHEN tmpData.isUsePriceOOC = TRUE AND
                        ROUND(tmpGoodsSPRegistry_1303.PriceSale * tmpData.Amount * tmpData.ChangePercent / 100.0, 2) :: TFloat >=
@@ -1101,3 +1101,6 @@ $BODY$
 -- SELECT * FROM gpReport_Sale_SP (inStartDate:= '01.05.2022', inEndDate:= '05.05.2022', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inGroupMemberSPId:= 0, inPercentSP:= 0, inisGroupMemberSP:= TRUE, inNDSKindId := 0, inSession:= zfCalc_UserAdmin());
 
 -- select * from gpReport_Sale_SP(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('12.08.2022')::TDateTime , inJuridicalId := 2886776 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 9 ,  inSession := '3');
+
+select * from gpReport_Sale_SP(inStartDate := ('24.02.2023')::TDateTime , inEndDate := ('24.02.2023')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');
+

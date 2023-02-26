@@ -256,6 +256,7 @@ type
     function InitLocalStorage: Boolean;
     function ExistNotCompletedCheck: boolean;
     procedure Add_Log(AMessage: String);
+    procedure Add_LogStatus(AMessage: String);
     procedure SendTelegramBotMessage(AMessage: String);
     function GetTrayIcon: integer;
     function GetInterval_CashRemains_Diff: integer;
@@ -391,8 +392,10 @@ end;
 
 procedure TMainCashForm2.ChangeStatus(AStatus: String);
 Begin
+  Add_LogStatus(AStatus);
   tiServise.BalloonHint := AStatus;
   tiServise.ShowBalloonHint;
+  Sleep(2000);
   tiServise.BalloonHint:='';
 End;
 
@@ -2806,6 +2809,7 @@ begin
             IdFTP.Put(p + sl.Strings[i], sl.Strings[i], False);
             TFile.Copy(p + sl.Strings[i], p + 'Send\' + sl.Strings[i], true);
             TFile.Delete(p + sl.Strings[i]);
+            Add_Log('Send ZReport file: ' + p + sl.Strings[i]);
           end;
 
             // ”даление старых файлов
@@ -2815,6 +2819,8 @@ begin
   //          IncDay(Date, - spLoadFTPParam.ParamByName('outPort').Value) then
   //          TFile.Delete(sl.Strings[i]);
 
+          ChangeStatus('Z отчеты отправлены');
+          Sleep(2000);
           ChangeStatus('Z отчеты отправлены');
         finally
           IdFTP.Disconnect;
@@ -3014,6 +3020,26 @@ begin
   try
     AssignFile(F,ChangeFileExt(Application.ExeName,'.log'));
     if not fileExists(ChangeFileExt(Application.ExeName,'.log')) then
+    begin
+      Rewrite(F);
+    end
+    else
+      Append(F);
+    //
+    try  Writeln(F,DateTimeToStr(Now) + ': ' + AMessage);
+    finally CloseFile(F);
+    end;
+  except
+  end;
+end;
+
+// что б отловить ошибки - запишим в лог чек - во врем€ пробити€ чека через Ё  ј
+procedure TMainCashForm2.Add_LogStatus(AMessage: String);
+var F: TextFile;
+begin
+  try
+    AssignFile(F,ChangeFileExt(Application.ExeName,'_Status.log'));
+    if not fileExists(ChangeFileExt(Application.ExeName,'_Status.log')) then
     begin
       Rewrite(F);
     end
