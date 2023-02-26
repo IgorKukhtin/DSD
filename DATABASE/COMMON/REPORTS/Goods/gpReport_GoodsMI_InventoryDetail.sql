@@ -36,7 +36,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , Amount_diff TFloat, AmountWeight_diff TFloat, AmountSh_diff TFloat
              , PriceWithVAT   TFloat
              , PriceNoVAT     TFloat
-             , SummWithVAT_pr TFloat
+             , SummWithVAT_pr TFloat 
+             , SummNoVAT_pr   TFloat
               )
 AS
 $BODY$
@@ -276,9 +277,10 @@ BEGIN
          , (tmpOperationGroup.AmountSh_mi     - (tmpOperationGroup.AmountIn_Sh - tmpOperationGroup.AmountOut_Sh))         :: TFloat AS AmountSh_diff 
          
          -- цены прайса
-         , tmpPricePR.PriceWithVAT ::TFloat
-         , tmpPricePR.PriceNoVAT   ::TFloat
-         , (tmpPricePR.PriceWithVAT * tmpOperationGroup.Amount) ::TFloat AS SummWithVAT_pr
+         , COALESCE (tmpPricePR_Kind.PriceWithVAT, tmpPricePR.PriceWithVAT) ::TFloat AS PriceWithVAT
+         , COALESCE (tmpPricePR_Kind.PriceNoVAT, tmpPricePR.PriceNoVAT)     ::TFloat AS PriceNoVAT
+         , (COALESCE (tmpPricePR_Kind.PriceWithVAT,tmpPricePR.PriceWithVAT) * tmpOperationGroup.Amount) ::TFloat AS SummWithVAT_pr  
+         , (COALESCE (tmpPricePR_Kind.PriceNoVAT, tmpPricePR.PriceNoVAT) * tmpOperationGroup.Amount)    ::TFloat AS SummNoVAT_pr 
      FROM (SELECT tmpContainer.UnitId
                 , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE tmpContainer.GoodsId END AS GoodsId
                 , tmpContainer.GoodsKindId
