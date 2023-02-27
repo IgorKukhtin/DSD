@@ -18,6 +18,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
              , PartionGoods TVarChar
+             , GoodsCode_basis Integer, GoodsName_basis TVarChar
              , LocationId Integer, LocationCode Integer, LocationName TVarChar
              , AmountIn TFloat, AmountIn_Weight TFloat, AmountIn_Sh TFloat
              , AmountOut TFloat, AmountOut_Weight TFloat, AmountOut_Sh TFloat 
@@ -210,6 +211,28 @@ BEGIN
                               , CASE WHEN inisPartion = TRUE THEN MIContainer.MovementId ELSE 0 END 
                      )
 
+   --
+   , tmpGoodsByGoodsKindParam AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                                       , Object_GoodsByGoodsKind_View.GoodsKindId
+                                       , Object_Goods_basis.ObjectCode        AS GoodsCode_basis
+                                       , Object_Goods_basis.ValueData         AS GoodsName_basis
+                                       --, Object_Goods_main.ObjectCode         AS GoodsCode_main
+                                       --, Object_Goods_main.ValueData          AS GoodsName_main
+                                  FROM Object_GoodsByGoodsKind_View
+                                        LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis
+                                                             ON ObjectLink_GoodsByGoodsKind_GoodsBasis.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsBasis.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsBasis()
+                                        LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = ObjectLink_GoodsByGoodsKind_GoodsBasis.ChildObjectId
+
+                                        /*LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsMain
+                                                             ON ObjectLink_GoodsByGoodsKind_GoodsMain.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsMain.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
+                                        LEFT JOIN Object AS Object_Goods_main ON Object_Goods_main.Id = ObjectLink_GoodsByGoodsKind_GoodsMain.ChildObjectId*/
+                                  WHERE COALESCE (ObjectLink_GoodsByGoodsKind_GoodsBasis.ChildObjectId, 0) <> 0
+                                    -- OR COALESCE (ObjectLink_GoodsByGoodsKind_GoodsMain.ChildObjectId, 0) <> 0
+                                  )
+
+
    -- Результат
     SELECT Movement.Id                                AS MovementId
          , Movement.InvNumber
@@ -224,6 +247,9 @@ BEGIN
          , Object_Measure.ValueData                   AS MeasureName
          , Object_TradeMark.ValueData                 AS TradeMarkName
          , Object_PartionGoods.ValueData              AS PartionGoods
+
+         , tmpGoodsByGoodsKindParam.GoodsCode_basis
+         , tmpGoodsByGoodsKindParam.GoodsName_basis
 
          , Object_Location.Id         AS LocationId
          , Object_Location.ObjectCode AS LocationCode
@@ -359,7 +385,10 @@ BEGIN
           LEFT JOIN tmpPricePR ON tmpPricePR.GoodsId = Object_Goods.Id
                               AND tmpPricePR.GoodsKindId IS NULL   
 
-
+          LEFT JOIN tmpGoodsByGoodsKindParam ON tmpGoodsByGoodsKindParam.GoodsId = tmpOperationGroup.GoodsId
+                                            AND COALESCE (tmpGoodsByGoodsKindParam.GoodsKindId, 0) = COALESCE (tmpOperationGroup.GoodsKindId, 0)
+          LEFT JOIN tmpGoodsByGoodsKindParam ON tmpGoodsByGoodsKindParam.GoodsId = tmpOperationGroup.GoodsId
+                                            AND COALESCE (tmpGoodsByGoodsKindParam.GoodsKindId, 0) = COALESCE (tmpOperationGroup.GoodsKindId, 0)
   ;
 
 END;
