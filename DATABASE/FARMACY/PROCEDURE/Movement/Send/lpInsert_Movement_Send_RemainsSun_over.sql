@@ -192,7 +192,7 @@ BEGIN
        
      ANALYSE _tmpGoods_SUN;
 
---raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
 
      -- все Подразделения для схемы SUN-v2
      INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, Value_T1, Value_T2, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isLockSale, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isLock_CheckMa)
@@ -1771,10 +1771,10 @@ BEGIN
 raise notice 'Value 18: %', CLOCK_TIMESTAMP();
      
      -- Подсчитаем корректирующее количество
-     vbIndex := 50;
+     vbIndex := 10;
      WHILE vbIndex > 0 LOOP
 
-       UPDATE _tmpRemains_Partion SET AmountCorrec = AmountCorrec + 1
+       UPDATE _tmpRemains_Partion SET AmountCorrec = AmountCorrec + tmpAmountCorrec.Amount
        FROM (
          WITH tmpOutAll AS (SELECT _tmpRemains_Partion.GoodsId
                                  , _tmpRemains_Partion.UnitId 
@@ -1819,6 +1819,7 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
                               AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0)     
             , tmpOut AS (SELECT tmpOutAll.GoodsId
                               , SUM(tmpOutAll.AmountPot)  AS AmountPot
+                              , COUNT(*)                  AS CountOut
                          FROM tmpOutAll
                          GROUP BY tmpOutAll.GoodsId
                         )
@@ -1843,30 +1844,31 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
                         GROUP BY _tmpRemains_calc.GoodsId
                         )
                           
-            SELECT tmpOutAll.GoodsId
-                 , tmpOutAll.UnitId 
+            SELECT tmpOut.GoodsId
+                 , Trunc((tmpOut.AmountPot - tmpIn.AmountResult) / tmpOut.CountOut) AS Amount
             FROM tmpOut
 
                  INNER JOIN tmpIn ON tmpIn.GoodsId = tmpOut.GoodsId
                  
-                 INNER JOIN tmpOutAll ON tmpOutAll.GoodsId = tmpOut.GoodsId
-                                     AND tmpOutAll.AmountPot >= 2
-                                     AND tmpOutAll.Ord = 1
-                                     
                  
-            WHERE tmpIn.AmountResult < tmpOut.AmountPot) AS tmpAmountCorrec
-       WHERE _tmpRemains_Partion.GoodsId = tmpAmountCorrec.GoodsId
-         AND _tmpRemains_Partion.UnitId  = tmpAmountCorrec.UnitId;
+            WHERE Trunc((tmpOut.AmountPot - tmpIn.AmountResult) / tmpOut.CountOut) >= 1) AS tmpAmountCorrec
+       WHERE _tmpRemains_Partion.GoodsId = tmpAmountCorrec.GoodsId;
          
        GET DIAGNOSTICS vbRowCount = ROW_COUNT;
-
+         
        raise notice 'Value 18 1: % -> % %', CLOCK_TIMESTAMP(), vbIndex, vbRowCount;
        
        IF vbRowCount <= 0 THEN EXIT; END IF;
 
+       ANALYSE _tmpRemains_Partion;
+
        -- теперь следуюющий
        vbIndex := vbIndex - 1;
      END LOOP; 
+
+     ANALYSE _tmpRemains_Partion;
+
+       raise notice 'Value 18 2: % -> % %', CLOCK_TIMESTAMP(), vbIndex, vbRowCount;
 
      -- 6.1.1. распределяем-1 остатки OVER (Сверх запас) - по всем аптекам
      -- CREATE TEMP TABLE _tmpResult_Partion (DriverId Integer, UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount_next TFloat, Summ_next TFloat, MovementId Integer, MovementItemId Integer) ON COMMIT DROP;
@@ -1920,8 +1922,9 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
                COALESCE(_tmpGoods_PromoUnit.Amount, 0) - COALESCE(_tmpRemains_Partion.AmountCorrec, 0)) > 0
 
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
-          
-        ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
+                    
+        ORDER BY _tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0) DESC, 
+                 tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1
      LOOP
@@ -2287,7 +2290,7 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
 
        FROM _tmpRemains_calc
             -- оставили только те, где есть Перемещения
-            INNER JOIN (SELECT DISTINCT _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId FROM _tmpResult_Partion
+            LEFT JOIN (SELECT DISTINCT _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId FROM _tmpResult_Partion
                        ) AS _tmpResult ON _tmpResult.UnitId_to = _tmpRemains_calc.UnitId
                                       AND _tmpResult.GoodsId   = _tmpRemains_calc.GoodsId
             -- ?оставили? только те, куда сумма перемещения "возможна" больше ЛИМИТА

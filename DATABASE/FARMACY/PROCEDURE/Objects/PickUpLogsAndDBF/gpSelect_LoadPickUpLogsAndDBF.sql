@@ -52,7 +52,7 @@ BEGIN
       outPort := 12021;
       outUsername := 'logdbf';
       outPassword := '63CxUbbUGfYh';
-      outFileList := 'FarmacyCash.log;FarmacyCash_RRO.log;FarmacyCashServise.log;default.log;'||
+      outFileList := 'FarmacyCash.log;FarmacyCash_RRO.log;FarmacyCashServise.log;default.log;FarmacyCashServise_Status.log;'||
                      'FarmacyCash_DiscontLog.xml;FarmacyCash_log.xml;'||
                      'FarmacyCashBody.dbf;FarmacyCashDiff.dbf;FarmacyCashHead.dbf;'||
                      'FarmacyCashServise_SQLite.log;FarmacyCashSQLite.db';

@@ -2820,8 +2820,6 @@ begin
   //          TFile.Delete(sl.Strings[i]);
 
           ChangeStatus('Z отчеты отправлены');
-          Sleep(2000);
-          ChangeStatus('Z отчеты отправлены');
         finally
           IdFTP.Disconnect;
         end;
@@ -3092,7 +3090,7 @@ begin
     try
       spLoadPickUpLogsAndDBF.ParamByName('inCashSessionId').Value := iniLocalGUIDSave(GenerateGUID);
       spLoadPickUpLogsAndDBF.ParamByName('outSend').Value := False;
-      spLoadPickUpLogsAndDBF.ParamByName('vbisGetArchive').Value := False;
+      spLoadPickUpLogsAndDBF.ParamByName('outisGetArchive').Value := False;
       spLoadPickUpLogsAndDBF.Execute;
       if not spLoadPickUpLogsAndDBF.ParamByName('outSend').Value then Exit;
 
@@ -3128,7 +3126,7 @@ begin
           ReleaseMutex(MutexDBF);
         end;
 
-        if spLoadPickUpLogsAndDBF.ParamByName('vbisGetArchive').Value and DirectoryExists(p + 'LogArchive\') then
+        if spLoadPickUpLogsAndDBF.ParamByName('outisGetArchive').Value and DirectoryExists(p + 'LogArchive\') then
         begin
           sl := TStringList.Create;
           try

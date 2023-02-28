@@ -26104,11 +26104,11 @@ object MainCashForm2: TMainCashForm2
       item
         Name = 'outFileList'
         Value = Null
-        DataType = ftString
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'vbisGetArchive'
+        Name = 'outisGetArchive'
         Value = Null
         DataType = ftBoolean
         MultiSelectSeparator = ','
