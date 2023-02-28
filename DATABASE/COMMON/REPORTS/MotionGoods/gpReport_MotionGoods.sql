@@ -699,7 +699,9 @@ BEGIN
         , ObjectDate_PartionGoods_Value.ValueData  :: TDateTime AS OperDate_Partion
         , ObjectFloat_PartionGoods_Price.ValueData :: TFloat    AS Price_Partion
         , Object_Storage.ValueData                 :: TVarChar  AS Storage_Partion
-        , Object_Unit.ValueData                    :: TVarChar  AS Unit_Partion
+        , (COALESCE (Object_Unit.ValueData, '') 
+           || CASE WHEN tmpMIContainer_group.PartionGoodsId > 0 AND COALESCE (Object_Unit.ValueData, '') = '' THEN ' ' || COALESCE (tmpMIContainer_group.PartionGoodsId, 0) :: TVarChar ELSE '' END
+          ) :: TVarChar AS Unit_Partion
 
         , Object_AssetTo.ObjectCode      AS AssetToCode
         , Object_AssetTo.ValueData       AS AssetToName
