@@ -40,6 +40,18 @@ BEGIN
              , 'gpReport_GoodsBalance'            :: TVarChar AS Name
              , FALSE                              :: Boolean  AS isErased
 
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 5                                  :: Integer  AS Code
+             , 'gpReport_GoodsBalance_Server'     :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 6                                  :: Integer  AS Code
+             , 'gpUpdate_Movement_ReturnIn_Auto'  :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+
         ORDER BY 2
        ;
 

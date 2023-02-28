@@ -26,15 +26,22 @@ BEGIN
                                              THEN 60
 
                                         WHEN 2 < (SELECT tmpCount.Res FROM tmpCount)
-                                             AND inProcName ILIKE 'gpReport_MotionGoods'
+                                             AND (inProcName ILIKE 'gpReport_MotionGoods'
+                                               OR inProcName ILIKE 'gpUpdate_Movement_ReturnIn_Auto'
+                                                 )
                                              THEN 25
 
                                         WHEN 1 < (SELECT tmpCount.Res FROM tmpCount)
-                                             AND inProcName ILIKE 'gpReport_GoodsBalance'
+                                             AND (inProcName ILIKE 'gpReport_GoodsBalance'
+                                               OR inProcName ILIKE 'gpReport_GoodsBalance_Server'
+                                                 )
                                              THEN 25
 
                                         WHEN inProcName ILIKE 'gpReport_MotionGoods'
                                           OR inProcName ILIKE 'gpReport_GoodsBalance'
+                                          OR inProcName ILIKE 'gpReport_GoodsBalance_Server'
+                                          --
+                                          OR inProcName ILIKE 'gpUpdate_Movement_ReturnIn_Auto'
                                              THEN 0
 
                                         WHEN 0 < (SELECT tmpCount.Res FROM tmpCount)
