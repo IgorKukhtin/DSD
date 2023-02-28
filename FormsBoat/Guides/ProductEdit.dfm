@@ -162,7 +162,7 @@ object ProductEditForm: TProductEditForm
   object cxLabel11: TcxLabel
     Left = 10
     Top = 195
-    Caption = 'Brand'
+    Caption = #1052#1072#1088#1082#1072
   end
   object edBrand: TcxButtonEdit
     Left = 10
@@ -179,7 +179,7 @@ object ProductEditForm: TProductEditForm
   object cxLabel12: TcxLabel
     Left = 10
     Top = 102
-    Caption = 'Model'
+    Caption = #1052#1086#1076#1077#1083#1100
   end
   object edModel: TcxButtonEdit
     Left = 10
@@ -196,7 +196,7 @@ object ProductEditForm: TProductEditForm
   object cxLabel13: TcxLabel
     Left = 10
     Top = 241
-    Caption = 'Engine'
+    Caption = #1052#1086#1090#1086#1088
   end
   object edEngine: TcxButtonEdit
     Left = 10
@@ -211,9 +211,9 @@ object ProductEditForm: TProductEditForm
     Width = 273
   end
   object cbBasicConf: TcxCheckBox
-    Left = 151
-    Top = 4
-    Caption = 'Basic Conf'
+    Left = 148
+    Top = 8
+    Caption = #1041#1072#1079#1086#1074#1072#1103' '#1082#1086#1085#1092'.'
     ParentFont = False
     Style.Font.Charset = DEFAULT_CHARSET
     Style.Font.Color = clBlue
@@ -222,14 +222,14 @@ object ProductEditForm: TProductEditForm
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
     TabOrder = 26
-    Width = 132
+    Width = 155
   end
   object cbProdColorPattern: TcxCheckBox
-    Left = 151
-    Top = 37
-    Caption = 'Add Boat Structure'
+    Left = 148
+    Top = 36
+    Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
     TabOrder = 27
-    Width = 132
+    Width = 152
   end
   object cxLabel14: TcxLabel
     Left = 10
@@ -1981,6 +1981,13 @@ object ProductEditForm: TProductEditForm
         Value = ''
         Component = GuidesStatus
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsChild_Recalc'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
