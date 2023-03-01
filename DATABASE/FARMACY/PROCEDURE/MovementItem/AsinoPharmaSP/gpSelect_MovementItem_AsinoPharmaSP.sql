@@ -70,7 +70,8 @@ BEGIN
 
         WHERE MovementItem.DescId = zc_MI_Master()
           AND MovementItem.MovementId = inMovementId
-          AND (MovementItem.isErased = FALSE OR inIsErased = TRUE);
+          AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+        ORDER BY MovementItem.Amount;
 
 END;
 $BODY$
@@ -79,7 +80,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 07.04.22                                                       *
+ 01.03.23                                                       *
 */
 
 --ТЕСТ

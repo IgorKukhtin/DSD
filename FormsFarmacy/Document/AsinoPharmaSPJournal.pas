@@ -36,6 +36,8 @@ type
     actInsertMask1: TdsdInsertUpdateAction;
     actInsertMaskMulti: TMultiAction;
     ChoiceGuides: TdsdChoiceGuides;
+    OperDateStart: TcxGridDBColumn;
+    OperDateEnd: TcxGridDBColumn;
   private
     { Private declarations }
   public

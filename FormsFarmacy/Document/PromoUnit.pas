@@ -67,6 +67,9 @@ type
     actLoadPreviousMonth: TdsdExecStoredProc;
     spLoadPreviousMonth: TdsdStoredProc;
     MakerPromoName: TcxGridDBColumn;
+    actUpdatePrice: TdsdExecStoredProc;
+    bbUpdatePrice: TdxBarButton;
+    spUpdatePrice: TdsdStoredProc;
   private
     { Private declarations }
   public

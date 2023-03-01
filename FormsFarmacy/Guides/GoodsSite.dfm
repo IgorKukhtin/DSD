@@ -3,25 +3,27 @@ inherited GoodsSiteForm: TGoodsSiteForm
   ClientHeight = 544
   ClientWidth = 1178
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 1194
-  ExplicitHeight = 583
+  ExplicitWidth = 1196
+  ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 30
     Width = 1178
-    Height = 518
+    Height = 514
+    ExplicitTop = 30
     ExplicitWidth = 1178
-    ExplicitHeight = 518
-    ClientRectBottom = 518
+    ExplicitHeight = 514
+    ClientRectBottom = 514
     ClientRectRight = 1178
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1178
-      ExplicitHeight = 518
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
         Width = 1178
-        Height = 518
+        Height = 514
         ExplicitWidth = 1178
-        ExplicitHeight = 518
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1913,6 +1915,31 @@ inherited GoodsSiteForm: TGoodsSiteForm
         end>
       Caption = 'actUpdate_isStealthBonuses'
     end
+    object mactUpdate_isNotUploadSites_Revert: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_isNotUploadSites_Revert
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1074#1099#1075#1088#1091#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1090#1086#1088#1086#1085#1085#1080#1093' '#1089#1072#1081#1090#1086#1074'"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1074#1099#1075#1088#1091#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1090#1086#1088#1086#1085#1085#1080#1093' '#1089#1072#1081#1090#1086#1074'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1074#1099#1075#1088#1091#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1090#1086#1088#1086#1085#1085#1080#1093' '#1089#1072#1081#1090#1086#1074'"'
+      ImageIndex = 79
+    end
+    object actUpdate_isNotUploadSites_Revert: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isNotUploadSites_Revert
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isNotUploadSites_Revert
+        end>
+      Caption = 'actUpdate_isStealthBonuses'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -1947,7 +1974,7 @@ inherited GoodsSiteForm: TGoodsSiteForm
     DockControlHeights = (
       0
       0
-      26
+      30
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -2256,6 +2283,10 @@ inherited GoodsSiteForm: TGoodsSiteForm
         item
           Visible = True
           ItemName = 'dxBarButton29'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton30'
         end
         item
           Visible = True
@@ -2615,6 +2646,10 @@ inherited GoodsSiteForm: TGoodsSiteForm
     end
     object dxBarButton29: TdxBarButton
       Action = mactUpdate_isStealthBonuses
+      Category = 0
+    end
+    object dxBarButton30: TdxBarButton
+      Action = mactUpdate_isNotUploadSites_Revert
       Category = 0
     end
   end
@@ -3950,5 +3985,31 @@ inherited GoodsSiteForm: TGoodsSiteForm
     PackSize = 1
     Left = 840
     Top = 400
+  end
+  object spUpdate_isNotUploadSites_Revert: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isNotUploadSites_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotUploadSites'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isNotUploadSites'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 264
   end
 end

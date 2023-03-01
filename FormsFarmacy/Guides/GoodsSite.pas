@@ -209,6 +209,10 @@ type
     mactUpdate_isStealthBonuses: TMultiAction;
     actUpdate_isStealthBonuses: TdsdExecStoredProc;
     dxBarButton29: TdxBarButton;
+    spUpdate_isNotUploadSites_Revert: TdsdStoredProc;
+    mactUpdate_isNotUploadSites_Revert: TMultiAction;
+    actUpdate_isNotUploadSites_Revert: TdsdExecStoredProc;
+    dxBarButton30: TdxBarButton;
   private
     { Private declarations }
   public

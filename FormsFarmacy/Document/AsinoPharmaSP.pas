@@ -24,11 +24,11 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  ExternalLoad;
+  ExternalLoad, cxSplitter;
 
 type
   TAsinoPharmaSPForm = class(TAncestorDocumentForm)
-    GoodsCode: TcxGridDBColumn;
+    Queue: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint_GoodsSP: TdsdStoredProc;
@@ -39,32 +39,58 @@ type
     bbComplete: TdxBarButton;
     spMovementComplete: TdsdStoredProc;
     actComplete: TdsdExecStoredProc;
-    actIntenalSPChoice: TOpenChoiceForm;
-    actKindOutSPChoice: TOpenChoiceForm;
-    actBrandSPChoice: TOpenChoiceForm;
-    actChoiceMovGoodsSP: TOpenChoiceForm;
-    macInsertMI: TMultiAction;
     actInsertMI: TdsdExecStoredProc;
     actRefreshMI: TdsdDataSetRefresh;
     bbInsertMI: TdxBarButton;
-    actDoLoad: TExecuteImportSettingsAction;
-    actGetImportSetting: TdsdExecStoredProc;
-    actSetErasedGoodsSp: TdsdExecStoredProc;
-    macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     actDoLoadDop: TExecuteImportSettingsAction;
     actGetImportSettingDop: TdsdExecStoredProc;
     macStartLoadDop: TMultiAction;
     bbStartLoadDop: TdxBarButton;
     macStartLoadHelsi: TMultiAction;
-    actGetImportSettingHelsi: TdsdExecStoredProc;
-    actDoLoadHelsi: TExecuteImportSettingsAction;
     bbStartLoadHelsi: TdxBarButton;
-    GoodsNameUkr: TcxGridDBColumn;
-    PriceSaleRegistry: TcxGridDBColumn;
-    PriceOptSPRegistry: TcxGridDBColumn;
-    MorionCode: TcxGridDBColumn;
-    PriceOOC: TcxGridDBColumn;
+    GoodsNamePresent: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    edOperDateEnd: TcxDateEdit;
+    cxLabel4: TcxLabel;
+    edOperDateStart: TcxDateEdit;
+    cxLabel3: TcxLabel;
+    Panel: TPanel;
+    Splitter: TcxSplitter;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    chGoodsCode: TcxGridDBColumn;
+    chGoodsName: TcxGridDBColumn;
+    chAmount: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    PanelChild: TPanel;
+    PanelSecond: TPanel;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    cxGridDBColumn1: TcxGridDBColumn;
+    cxGridDBColumn2: TcxGridDBColumn;
+    cxGridDBColumn3: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    SplitterCh: TcxSplitter;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    SecondDS: TDataSource;
+    SecondCDS: TClientDataSet;
+    spSelectChild: TdsdStoredProc;
+    spSelectSecond: TdsdStoredProc;
+    actInsertMIChild: TdsdExecStoredProc;
+    spInsertMIChild: TdsdStoredProc;
+    spInsertUpdateeMIChild: TdsdStoredProc;
+    actGoodsMain: TOpenChoiceForm;
+    dxBarButton1: TdxBarButton;
+    spInsertUpdateeMISecond: TdsdStoredProc;
+    spInsertMISecond: TdsdStoredProc;
+    actInsertMISecond: TdsdExecStoredProc;
+    dxBarButton2: TdxBarButton;
+    actUpdateChildDS: TdsdUpdateDataSet;
+    actUpdateSecondDS: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
