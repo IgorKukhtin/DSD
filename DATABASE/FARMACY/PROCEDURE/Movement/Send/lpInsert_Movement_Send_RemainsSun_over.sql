@@ -102,6 +102,9 @@ $BODY$
    DECLARE vbisEliminateColdSUN Boolean;
    DECLARE vbisOnlyColdSUN Boolean;
    DECLARE vbisShoresSUN Boolean;
+   
+   DECLARE vbIndex Integer;
+   DECLARE vbRowCount Integer;
 
 BEGIN
 
@@ -189,7 +192,7 @@ BEGIN
        
      ANALYSE _tmpGoods_SUN;
 
---raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
 
      -- все Подразделения для схемы SUN-v2
      INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, Value_T1, Value_T2, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isLockSale, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isLock_CheckMa)
@@ -1563,7 +1566,7 @@ BEGIN
                              )
                              
        -- Результат: все остатки, OVER (Сверх запас) - для распределения
-       INSERT INTO _tmpRemains_Partion (ContainerDescId, UnitId, GoodsId, MCSValue, Amount_sale, Amount, Amount_save, Amount_real)
+       INSERT INTO _tmpRemains_Partion (ContainerDescId, UnitId, GoodsId, MCSValue, Amount_sale, Amount, Amount_save, Amount_real, AmountCorrec)
           SELECT 0 AS ContainerDescId
                , tmp.UnitId
                , tmp.GoodsId
@@ -1590,6 +1593,8 @@ BEGIN
 
                  -- остатки, OVER (Сверх запас) без корректировки
                , tmp.Amount_notSold     AS Amount_real
+               
+               , 0                      AS AmountCorrec
 
           FROM tmpGoods_sum AS tmp
                -- ПОТРЕБНОСТЬ
@@ -1762,37 +1767,119 @@ BEGIN
        ;
        
      ANALYSE _tmpSumm_limit;
+     
+raise notice 'Value 18: %', CLOCK_TIMESTAMP();
+     
+     -- Подсчитаем корректирующее количество
+     vbIndex := 10;
+     WHILE vbIndex > 0 LOOP
 
---raise notice 'Value 18: %', CLOCK_TIMESTAMP();
+       UPDATE _tmpRemains_Partion SET AmountCorrec = AmountCorrec + tmpAmountCorrec.Amount
+       FROM (
+         WITH tmpOutAll AS (SELECT _tmpRemains_Partion.GoodsId
+                                 , _tmpRemains_Partion.UnitId 
+                                 , _tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - 
+                                   COALESCE(_tmpGoods_PromoUnit.Amount, 0) - COALESCE(_tmpRemains_Partion.AmountCorrec, 0) AS AmountPot
+                                 , ROW_NUMBER() OVER (PARTITION BY _tmpRemains_Partion.GoodsId  
+                                                      ORDER BY _tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - 
+                                                               COALESCE(_tmpGoods_PromoUnit.Amount, 0) - 
+                                                               COALESCE(_tmpRemains_Partion.AmountCorrec, 0) DESC) AS Ord
+                            FROM _tmpRemains_Partion
+                                 -- товары - для Кратность
+                                 LEFT JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = _tmpRemains_Partion.GoodsId
+                                 -- нашли - есть ли у товара парный
+                                 LEFT JOIN _tmpGoods_SUN_PairSun ON _tmpGoods_SUN_PairSun.GoodsId = _tmpRemains_Partion.GoodsId
+                                 LEFT JOIN _tmpRemains_Partion AS _tmpRemains_Partion_PairSun
+                                                               ON _tmpRemains_Partion_PairSun.GoodsId = _tmpGoods_SUN_PairSun.GoodsId_PairSun
+                                                              AND _tmpRemains_Partion_PairSun.UnitId  = _tmpRemains_Partion.UnitId
+                                 -- товар есть среди парных
+                                 LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
+                                           ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = _tmpRemains_Partion.GoodsId
+
+                                 LEFT JOIN _tmpGoods_PromoUnit ON _tmpGoods_PromoUnit.UnitId = _tmpRemains_Partion.UnitId
+                                                              AND _tmpGoods_PromoUnit.GoodsId = _tmpRemains_Partion.GoodsId
+                                                              
+                                 LEFT JOIN _tmpGoods_Layout ON _tmpGoods_Layout.UnitId = _tmpRemains_Partion.UnitId
+                                                           AND _tmpGoods_Layout.GoodsId = _tmpRemains_Partion.GoodsId
+
+                                 -- найдем дисконтній товар
+                                 LEFT JOIN _tmpGoods_DiscountExternal AS _tmpGoods_DiscountExternal
+                                                                      ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_Partion.UnitId
+                                                                     AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_Partion.GoodsId
+
+                                 -- а здесь, отбросили !!холод!!
+                                 --LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_Partion.GoodsId
+                                 
+                            WHERE -- !!!Отключили парные!!!
+                                  _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
+
+                              AND (_tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - 
+                                   COALESCE(_tmpGoods_PromoUnit.Amount, 0) - COALESCE(_tmpRemains_Partion.AmountCorrec, 0)) > 0
+
+                              AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0)     
+            , tmpOut AS (SELECT tmpOutAll.GoodsId
+                              , SUM(tmpOutAll.AmountPot)  AS AmountPot
+                              , COUNT(*)                  AS CountOut
+                         FROM tmpOutAll
+                         GROUP BY tmpOutAll.GoodsId
+                        )
+            , tmpIn AS (SELECT _tmpRemains_calc.GoodsId 
+                             , Sum(_tmpRemains_calc.AmountResult) AS AmountResult
+                        FROM _tmpRemains_calc
+
+                             -- найдем дисконтній товар
+                             LEFT JOIN _tmpGoods_DiscountExternal AS _tmpGoods_DiscountExternal
+                                                                  ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_calc.UnitId
+                                                                 AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_calc.GoodsId
+
+                                                      
+                             -- отключена Получать товар который отдавался
+                             LEFT JOIN _tmpGoods_Sun_exception AS _tmpGoods_Sun_exception
+                                                               ON _tmpGoods_Sun_exception.UnitId  = _tmpRemains_calc.UnitId
+                                                              AND _tmpGoods_Sun_exception.GoodsId = _tmpRemains_calc.GoodsId
+
+                        WHERE _tmpRemains_calc.AmountResult > 0
+                          AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+                          AND COALESCE(_tmpGoods_Sun_exception.Amount, 0) = 0
+                        GROUP BY _tmpRemains_calc.GoodsId
+                        )
+                          
+            SELECT tmpOut.GoodsId
+                 , Trunc((tmpOut.AmountPot - tmpIn.AmountResult) / tmpOut.CountOut) AS Amount
+            FROM tmpOut
+
+                 INNER JOIN tmpIn ON tmpIn.GoodsId = tmpOut.GoodsId
+                 
+                 
+            WHERE Trunc((tmpOut.AmountPot - tmpIn.AmountResult) / tmpOut.CountOut) >= 1) AS tmpAmountCorrec
+       WHERE _tmpRemains_Partion.GoodsId = tmpAmountCorrec.GoodsId;
+         
+       GET DIAGNOSTICS vbRowCount = ROW_COUNT;
+         
+       raise notice 'Value 18 1: % -> % %', CLOCK_TIMESTAMP(), vbIndex, vbRowCount;
+       
+       IF vbRowCount <= 0 THEN EXIT; END IF;
+
+       ANALYSE _tmpRemains_Partion;
+
+       -- теперь следуюющий
+       vbIndex := vbIndex - 1;
+     END LOOP; 
+
+     ANALYSE _tmpRemains_Partion;
+
+       raise notice 'Value 18 2: % -> % %', CLOCK_TIMESTAMP(), vbIndex, vbRowCount;
 
      -- 6.1.1. распределяем-1 остатки OVER (Сверх запас) - по всем аптекам
      -- CREATE TEMP TABLE _tmpResult_Partion (DriverId Integer, UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount_next TFloat, Summ_next TFloat, MovementId Integer, MovementItemId Integer) ON COMMIT DROP;
      --
      -- курсор1 - все остатки, OVER (Сверх запас) + OVER (Сверх запас) без корректировки
      OPEN curPartion FOR
-        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId
-               --
-               -- Отдаем весь товар невзирая на парный
-/*             , CASE -- если у парного ост = 0, не отдаем
-                    WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND COALESCE (_tmpRemains_Partion_PairSun.Amount, 0) <=0
-                         THEN 0
-                    -- если у парного ост < чем у "основного", меняем на меньшее
-                    WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND _tmpRemains_Partion_PairSun.Amount < _tmpRemains_Partion.Amount
-                         THEN _tmpRemains_Partion_PairSun.Amount
-                    -- инче берем ост "основного"
-                    ELSE _tmpRemains_Partion.Amount
-               END AS Amount */
-             , _tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0) AS Amount
+        SELECT _tmpRemains_Partion.UnitId AS UnitId_from
+             , _tmpRemains_Partion.GoodsId
+             , _tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - 
+               COALESCE(_tmpGoods_PromoUnit.Amount, 0) - COALESCE(_tmpRemains_Partion.AmountCorrec, 0) AS Amount
                -- для получения дробной части, нужен весь ост.
-/*             , CASE -- если у парного ост = 0, не отдаем
-                    WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND COALESCE (_tmpRemains_Partion_PairSun.Amount_save, 0) <=0
-                         THEN 0
-                    -- если у парного ост < чем у "основного", меняем на меньшее
-                    WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND _tmpRemains_Partion_PairSun.Amount_save < _tmpRemains_Partion.Amount_save
-                         THEN _tmpRemains_Partion_PairSun.Amount_save
-                    -- инче берем ост "основного"
-                    ELSE _tmpRemains_Partion.Amount_save
-               END AS Amount_save*/
              , _tmpRemains_Partion.Amount_save AS Amount_save
                --
              , COALESCE (_tmpGoods_SUN.KoeffSUN, 0)
@@ -1831,21 +1918,13 @@ BEGIN
         WHERE -- !!!Отключили парные!!!
               _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
 
-          AND (_tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0)) > 0
+          AND (_tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - 
+               COALESCE(_tmpGoods_PromoUnit.Amount, 0) - COALESCE(_tmpRemains_Partion.AmountCorrec, 0)) > 0
 
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
-          
-/*          AND CASE -- если у парного ост = 0, не отдаем
-                    WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND COALESCE (_tmpRemains_Partion_PairSun.Amount, 0) <=0
-                         THEN 0
-                    -- если у парного ост < чем у "основного", меняем на меньшее
-                    WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND _tmpRemains_Partion_PairSun.Amount < _tmpRemains_Partion.Amount
-                         THEN _tmpRemains_Partion_PairSun.Amount
-                    -- инче берем ост "основного"
-                    ELSE _tmpRemains_Partion.Amount
-               END > 0
-*/
-        ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
+                    
+        ORDER BY _tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0) DESC, 
+                 tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1
      LOOP
@@ -1856,7 +1935,11 @@ BEGIN
 
          -- курсор2. - ПОТРЕБНОСТЬ МИНУС сколько уже распределили для vbGoodsId
          OPEN curResult FOR
-            SELECT _tmpRemains_calc.UnitId AS UnitId_to, _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) AS AmountResult, _tmpRemains_calc.Price, COALESCE (_tmpRemains_calc_PairSun.Price, _tmpRemains_calc.Price) AS Price_PairSun
+            SELECT _tmpRemains_calc.UnitId AS UnitId_to
+                 , _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) AS AmountResult
+                 , _tmpRemains_calc.Price
+                 , COALESCE (_tmpRemains_calc_PairSun.Price
+                 , _tmpRemains_calc.Price) AS Price_PairSun
             FROM _tmpRemains_calc
                  -- сколько уже пришло после распределения-1
                  LEFT JOIN (SELECT _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId, SUM (_tmpResult_Partion.Amount) AS Amount FROM _tmpResult_Partion GROUP BY _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
@@ -2207,7 +2290,7 @@ BEGIN
 
        FROM _tmpRemains_calc
             -- оставили только те, где есть Перемещения
-            INNER JOIN (SELECT DISTINCT _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId FROM _tmpResult_Partion
+            LEFT JOIN (SELECT DISTINCT _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId FROM _tmpResult_Partion
                        ) AS _tmpResult ON _tmpResult.UnitId_to = _tmpRemains_calc.UnitId
                                       AND _tmpResult.GoodsId   = _tmpRemains_calc.GoodsId
             -- ?оставили? только те, куда сумма перемещения "возможна" больше ЛИМИТА

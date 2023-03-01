@@ -66,6 +66,7 @@ type
     dxBarButton2: TdxBarButton;
     actLoadPreviousMonth: TdsdExecStoredProc;
     spLoadPreviousMonth: TdsdStoredProc;
+    MakerPromoName: TcxGridDBColumn;
   private
     { Private declarations }
   public

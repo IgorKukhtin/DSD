@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer
              , Comment TVarChar
              , isFixedPercent Boolean
              , AddBonusPercent TFloat
+             , MakerPromoName  TVarChar
              , isErased Boolean
               )
 AS
@@ -34,6 +35,25 @@ BEGIN
 
     vbUnitId := (SELECT ML.ObjectId FROM MovementLinkObject AS ML WHERE  ML.MovementId = inMovementId AND ML.DescId = zc_MovementLinkObject_Unit());
     vbUnitCategoryId := (SELECT ML.ObjectId FROM MovementLinkObject AS ML WHERE  ML.MovementId = inMovementId AND ML.DescId = zc_MovementLinkObject_UnitCategory());
+    
+     -- Маркетинговый контракт
+     CREATE TEMP TABLE _tmpGoodsPromo ON COMMIT DROP AS (
+      WITH GoodsPromoAll AS (SELECT tmp.GoodsId                     AS GoodsId  -- главный товар
+                                  , Object_Maker.ValueData          AS MakerPromoName
+                                  , tmp.GoodsGroupPromoName
+                                  , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId ORDER BY tmp.MovementId DESC) AS Ord
+                             FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp   --CURRENT_DATE
+                                  INNER JOIN Object AS Object_Maker
+                                                    ON Object_Maker.Id = tmp.MakerId
+                             )
+
+      SELECT GoodsPromoAll.GoodsId
+           , GoodsPromoAll.MakerPromoName
+           , GoodsPromoAll.GoodsGroupPromoName
+      FROM GoodsPromoAll 
+      WHERE GoodsPromoAll.Ord = 1);
+      
+     ANALYSE _tmpGoodsPromo;
     
     -- Результат
     IF inShowAll THEN
@@ -104,10 +124,12 @@ BEGIN
                  , COALESCE(MI_PromoUnit.Comment, '') ::TVarChar AS Comment
                  , COALESCE(MI_PromoUnit.isFixedPercent, False) ::BOOLEAN AS isFixedPercent
                  , MI_PromoUnit.AddBonusPercent              AS AddBonusPercent
+                 , GoodsPromo.MakerPromoName                                                                  AS MakerPromoName 
                  , COALESCE(MI_PromoUnit.IsErased,FALSE)     AS isErased
             FROM tmpPrice
                 FULL OUTER JOIN MI_PromoUnit ON tmpPrice.GoodsId = MI_PromoUnit.GoodsId
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(MI_PromoUnit.GoodsId,tmpPrice.GoodsId)
+                LEFT JOIN _tmpGoodsPromo AS GoodsPromo ON GoodsPromo.GoodsId = Object_Goods.Id
             WHERE Object_Goods.isErased = FALSE 
                OR MI_PromoUnit.id is not null;
     ELSE
@@ -125,6 +147,7 @@ BEGIN
                 , MIString_Comment.ValueData       ::TVarChar AS Comment
                 , COALESCE (MIBoolean_FixedPercent.ValueData, FALSE)                                         AS isFixedPercent
                 , MIFloat_AddBonusPercent.ValueData                                                          AS AddBonusPercent
+                , GoodsPromo.MakerPromoName                                                                  AS MakerPromoName 
                 , MI_PromoUnit.IsErased
            FROM MovementItem AS MI_PromoUnit
               LEFT JOIN MovementItemString AS MIString_Comment
@@ -145,7 +168,10 @@ BEGIN
                                             ON MIBoolean_FixedPercent.MovementItemId = MI_PromoUnit.Id
                                            AND MIBoolean_FixedPercent.DescId = zc_MIBoolean_FixedPercent()
 
-              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_PromoUnit.ObjectId                                         
+              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_PromoUnit.ObjectId              
+              
+              LEFT JOIN _tmpGoodsPromo AS GoodsPromo ON GoodsPromo.GoodsId = MI_PromoUnit.ObjectId
+              
            WHERE MI_PromoUnit.MovementId = inMovementId
              AND MI_PromoUnit.DescId = zc_MI_Master()
              AND (MI_PromoUnit.isErased = FALSE or inIsErased = TRUE);
@@ -164,4 +190,4 @@ $BODY$
 
 --
 
-select * from gpSelect_MovementItem_PromoUnit(inMovementId := 30890062 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_PromoUnit(inMovementId := 30890062 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

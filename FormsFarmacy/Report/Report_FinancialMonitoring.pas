@@ -58,6 +58,14 @@ type
     cxGridDBChartView1Series1: TcxGridDBChartSeries;
     SaldoSum: TcxGridDBColumn;
     SummaNoPay: TcxGridDBColumn;
+    cxGridDBChartView1Series2: TcxGridDBChartSeries;
+    cxGridDBChartView1Series3: TcxGridDBChartSeries;
+    cxGridDBChartView1Series4: TcxGridDBChartSeries;
+    cxGridDBChartView1Series5: TcxGridDBChartSeries;
+    cxStyle4: TcxStyle;
+    cxStyle5: TcxStyle;
+    cxStyle6: TcxStyle;
+    cxStyle7: TcxStyle;
   private
     { Private declarations }
   public

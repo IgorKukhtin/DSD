@@ -102,7 +102,7 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Summ_pr
+              Column = SummNoVAT_pr
             end
             item
               Format = ',0.####'
@@ -213,7 +213,7 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Summ_pr
+              Column = SummNoVAT_pr
             end
             item
               Format = ',0.####'
@@ -333,6 +333,22 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 141
+          end
+          object GoodsCode_basis: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1094#1077#1093')'
+            DataBinding.FieldName = 'GoodsCode_basis'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object GoodsName_basis: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1094#1077#1093')'
+            DataBinding.FieldName = 'GoodsName_basis'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
           end
           object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -604,9 +620,20 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
             Options.Editing = False
             Width = 83
           end
-          object Summ_pr: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'. '#1055#1056#1040#1049#1057
-            DataBinding.FieldName = 'Summ_pr'
+          object SummNoVAT_pr: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'. '#1055#1056#1040#1049#1057
+            DataBinding.FieldName = 'SummNoVAT_pr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummWithVAT_pr: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'. '#1055#1056#1040#1049#1057
+            DataBinding.FieldName = 'SummWithVAT_pr'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -629,17 +656,6 @@ inherited Report_GoodsMI_InventoryDetailForm: TReport_GoodsMI_InventoryDetailFor
           object PriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057'. '#1055#1056#1040#1049#1057
             DataBinding.FieldName = 'PriceWithVAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object SummWithVAT_pr: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' (-)'#1091#1073#1099#1083#1100' (+)'#1101#1082#1086#1085#1086#1084'. '#1055#1056#1040#1049#1057
-            DataBinding.FieldName = 'SummWithVAT_pr'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
