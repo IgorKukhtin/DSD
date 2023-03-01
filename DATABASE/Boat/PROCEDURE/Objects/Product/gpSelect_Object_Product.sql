@@ -716,16 +716,16 @@ BEGIN
          , tmpCalc_2.BasisPrice_summ       :: TFloat AS Basis_summ2_orig
          , tmpCalc_2.BasisPriceWVAT_summ   :: TFloat AS BasisWVAT_summ2_orig
 
-           -- ИТОГО Сумма вх. без НДС
+           -- ИТОГО Сумма вх. без НДС, Basis+options
          , (COALESCE (tmpCalc_1.EKPrice_summ, 0)        + COALESCE (tmpCalc_2.EKPrice_summ, 0))           :: TFloat AS EKPrice_summ
-           -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками
+           -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками, Basis+options
          , (COALESCE (tmpCalc_1.BasisPrice_summ_disc_2, 0)   + COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0))      :: TFloat AS Basis_summ
-           -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками
+           -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками, Basis+options
          , (COALESCE (tmpCalc_1.BasisPriceWVAT_summ_disc, 0) + COALESCE (tmpCalc_2.BasisPriceWVAT_summ_disc, 0))    :: TFloat AS BasisWVAT_summ
 
-           -- ИТОГО Сумма продажи без НДС - без Скидки
+           -- ИТОГО Сумма продажи без НДС - без Скидки, Basis+options
          , (COALESCE (tmpCalc_1.BasisPrice_summ, 0)     + COALESCE (tmpCalc_2.BasisPrice_summ, 0))        :: TFloat AS Basis_summ_orig
-           -- ИТОГО Сумма продажи с НДС - без Скидки
+           -- ИТОГО Сумма продажи с НДС - без Скидки, Basis+options
          , (COALESCE (tmpCalc_1.BasisPriceWVAT_summ, 0) + COALESCE (tmpCalc_2.BasisPriceWVAT_summ, 0))    :: TFloat AS BasisWVAT_summ_orig
 
            -- Цена продажи с сайта - без НДС, Basis+options
