@@ -847,27 +847,20 @@
           HeaderAlignmentVert = vaCenter
           Width = 60
         end
-        object Code_ch2: TcxGridDBColumn
-          Caption = #1050#1086#1076
-          DataBinding.FieldName = 'Code'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = ',0.##;-,0.##; ;'
-          Visible = False
+        object MaterialOptionsName_ch2: TcxGridDBColumn
+          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
+          DataBinding.FieldName = 'MaterialOptionsName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = actChoiceFormMaterialOptions
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 43
-        end
-        object Amount_ch2: TcxGridDBColumn
-          Caption = 'Amount Opt.'
-          DataBinding.FieldName = 'Amount'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1087#1094#1080#1081
-          Width = 54
+          Width = 80
         end
         object ProdOptPatternName_ch2: TcxGridDBColumn
           Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -886,6 +879,17 @@
           HeaderGlyphAlignmentHorz = taCenter
           Options.Editing = False
           Width = 152
+        end
+        object Code_ch2: TcxGridDBColumn
+          Caption = #1050#1086#1076
+          DataBinding.FieldName = 'Code'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.##;-,0.##; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 43
         end
         object ProdOptionsName_ch2: TcxGridDBColumn
           Caption = #1054#1087#1094#1080#1103
@@ -938,22 +942,7 @@
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderGlyphAlignmentHorz = taCenter
-          Width = 179
-        end
-        object MaterialOptionsName_ch2: TcxGridDBColumn
-          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
-          DataBinding.FieldName = 'MaterialOptionsName'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Action = actChoiceFormMaterialOptions
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 70
+          Width = 110
         end
         object GoodsGroupNameFull_ch2: TcxGridDBColumn
           Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -963,6 +952,17 @@
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 150
+        end
+        object Amount_ch2: TcxGridDBColumn
+          Caption = 'Amount Opt.'
+          DataBinding.FieldName = 'Amount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1087#1094#1080#1081
+          Width = 54
         end
         object GoodsGroupName_ch2: TcxGridDBColumn
           Caption = #1043#1088#1091#1087#1087#1072
@@ -1057,6 +1057,19 @@
           Options.Editing = False
           Width = 50
         end
+        object EKPrice_summ_ch2: TcxGridDBColumn
+          Caption = 'Total EK'
+          DataBinding.FieldName = 'EKPrice_summ'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
+          Options.Editing = False
+          Width = 70
+        end
         object SalePrice_ch2: TcxGridDBColumn
           Caption = 'Ladenpreis'
           DataBinding.FieldName = 'SalePrice'
@@ -1080,18 +1093,6 @@
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
-          Options.Editing = False
-          Width = 70
-        end
-        object EKPrice_summ_ch2: TcxGridDBColumn
-          Caption = 'Total EK'
-          DataBinding.FieldName = 'EKPrice_summ'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
           Options.Editing = False
           Width = 70
         end

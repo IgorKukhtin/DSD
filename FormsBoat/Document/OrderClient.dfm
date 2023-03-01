@@ -1078,11 +1078,20 @@ object OrderClientForm: TOrderClientForm
                 DataBinding.FieldName = 'Amount'
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.####;-,0.####; ;'
+                Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 HeaderHint = #1050#1086#1083'-'#1074#1086' '#1086#1087#1094#1080#1081
                 Options.Editing = False
                 Width = 54
+              end
+              object MaterialOptionsName_ch2: TcxGridDBColumn
+                Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
+                DataBinding.FieldName = 'MaterialOptionsName'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Options.Editing = False
+                Width = 80
               end
               object ProdOptPatternName_ch2: TcxGridDBColumn
                 Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -1128,13 +1137,13 @@ object OrderClientForm: TOrderClientForm
                 HeaderAlignmentVert = vaCenter
                 Width = 100
               end
-              object MaterialOptionsName_ch2: TcxGridDBColumn
-                Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
-                DataBinding.FieldName = 'MaterialOptionsName'
+              object Comment_ch2: TcxGridDBColumn
+                Caption = '***Material/farbe'
+                DataBinding.FieldName = 'Comment'
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 70
+                Width = 110
               end
               object GoodsGroupNameFull_ch2: TcxGridDBColumn
                 Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -1256,6 +1265,7 @@ object OrderClientForm: TOrderClientForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DecimalPlaces = 4
                 Properties.DisplayFormat = ',0.####;-,0.####; ;'
+                Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
@@ -1286,14 +1296,6 @@ object OrderClientForm: TOrderClientForm
                 HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
                 Options.Editing = False
                 Width = 80
-              end
-              object Comment_ch2: TcxGridDBColumn
-                Caption = '***Material/farbe'
-                DataBinding.FieldName = 'Comment'
-                HeaderAlignmentHorz = taCenter
-                HeaderAlignmentVert = vaCenter
-                Options.Editing = False
-                Width = 179
               end
               object InsertDate_ch2: TcxGridDBColumn
                 Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
@@ -6063,8 +6065,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1010
-    Top = 320
+    Left = 1002
+    Top = 376
   end
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
