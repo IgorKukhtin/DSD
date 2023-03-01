@@ -1,8 +1,8 @@
--- Function: gpMovementItem_AsinoPharmaSP_SetErased (Integer, Integer, TVarChar)
+-- Function: gpMovementItem_AsinoPharmaSP_SetErased_Child (Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpMovementItem_AsinoPharmaSP_SetErased (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpMovementItem_AsinoPharmaSP_SetErased_Child (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpMovementItem_AsinoPharmaSP_SetErased(
+CREATE OR REPLACE FUNCTION gpMovementItem_AsinoPharmaSP_SetErased_Child(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
@@ -13,7 +13,6 @@ $BODY$
    DECLARE vbMovementId Integer;
    DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
-   DECLARE vbQueue Integer;
 BEGIN
   vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MI_GoodsSP());
 
@@ -24,12 +23,6 @@ BEGIN
   UPDATE MovementItem SET isErased = TRUE WHERE Id = inMovementItemId
          RETURNING MovementId INTO vbMovementId;
 
-  vbQueue := (SELECT MovementItem.Amount
-              FROM MovementItem
-              WHERE MovementItem.DescId = zc_MI_Master()
-                AND MovementItem.MovementId = vbMovementId
-                AND MovementItem.Id = inMovementItemId)::Integer;
-
   -- определяем <Статус>
   vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
   -- проверка - проведенные/удаленные документы Изменять нельзя
@@ -38,26 +31,6 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
   END IF;
   
-  -- Если надо перенумеровываем
-  IF EXISTS(SELECT 1
-            FROM MovementItem
-            WHERE MovementItem.DescId = zc_MI_Master()
-              AND MovementItem.MovementId = vbMovementId
-              AND MovementItem.Amount > vbQueue
-              AND MovementItem.isErased = FALSE) 
-  THEN
-    
-    PERFORM lpInsertUpdate_MovementItem_AsinoPharmaSP (ioId                  := MovementItem.Id
-                                                     , inMovementId          := vbMovementId
-                                                     , inQueue               := (MovementItem.Amount - 1)::Integer
-                                                     , inUserId              := vbUserId)
-    FROM MovementItem
-    WHERE MovementItem.DescId = zc_MI_Master()
-      AND MovementItem.MovementId = vbMovementId
-      AND MovementItem.Amount > vbQueue
-      AND MovementItem.isErased = FALSE;
-  END IF;  
-
   -- пересчитали Итоговые суммы по накладной
   --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
 
@@ -72,4 +45,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpMovementItem_AsinoPharmaSP_SetErased (inMovementItemId:= 55, inSession:= '3')
+-- select * from gpMovementItem_AsinoPharmaSP_SetErased_Child(inMovementItemId := 579599661 ,  inSession := '3');

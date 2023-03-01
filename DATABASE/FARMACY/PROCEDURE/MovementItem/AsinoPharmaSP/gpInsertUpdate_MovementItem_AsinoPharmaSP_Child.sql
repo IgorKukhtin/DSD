@@ -18,6 +18,19 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_GoodsSP_1303());
     vbUserId:= lpGetUserBySession (inSession);
+    
+    -- проверяем может такой товар уже есть
+    IF EXISTS(SELECT 1
+              FROM MovementItem
+              WHERE MovementItem.DescId = zc_MI_Child()
+                AND MovementItem.MovementId = inMovementId
+                AND MovementItem.ParentId = inParentId
+                AND MovementItem.Id <> COALESCE (ioId, 0)
+                AND MovementItem.ObjectId = inGoodsId) 
+    THEN
+      RAISE EXCEPTION 'Ошибка.Товар <%> уже использован в акции .', lfGet_Object_ValueData (inGoodsId);
+    END IF;  
+    
 
     -- определяется признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;

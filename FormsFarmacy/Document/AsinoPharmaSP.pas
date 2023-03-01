@@ -67,9 +67,9 @@ type
     PanelSecond: TPanel;
     cxGrid2: TcxGrid;
     cxGridDBTableView2: TcxGridDBTableView;
-    cxGridDBColumn1: TcxGridDBColumn;
-    cxGridDBColumn2: TcxGridDBColumn;
-    cxGridDBColumn3: TcxGridDBColumn;
+    seGoodsCode: TcxGridDBColumn;
+    seGoodsName: TcxGridDBColumn;
+    seAmount: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     SplitterCh: TcxSplitter;
     cxLabel5: TcxLabel;
@@ -91,6 +91,22 @@ type
     dxBarButton2: TdxBarButton;
     actUpdateChildDS: TdsdUpdateDataSet;
     actUpdateSecondDS: TdsdUpdateDataSet;
+    spErasedMIMaster_Child: TdsdStoredProc;
+    spUnErasedMIMaster_Child: TdsdStoredProc;
+    spUnErasedMIMaster_Second: TdsdStoredProc;
+    spErasedMIMaster_Second: TdsdStoredProc;
+    actErasedMIMaster_Child: TdsdUpdateErased;
+    actUnErasedMIMaster_Child: TdsdUpdateErased;
+    actErasedMIMaster_Second: TdsdUpdateErased;
+    actUnErasedMIMaster_Second: TdsdUpdateErased;
+    dxBarButton3: TdxBarButton;
+    dxBarButton4: TdxBarButton;
+    dxBarButton5: TdxBarButton;
+    dxBarButton6: TdxBarButton;
+    DBViewAddOnChild: TdsdDBViewAddOn;
+    DBViewAddOnSecond: TdsdDBViewAddOn;
+    chisErased: TcxGridDBColumn;
+    seisErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

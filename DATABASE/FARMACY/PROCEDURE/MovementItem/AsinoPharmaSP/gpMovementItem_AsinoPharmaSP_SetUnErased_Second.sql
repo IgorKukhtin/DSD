@@ -1,8 +1,8 @@
--- Function: gpMovementItem_AsinoPharmaSP_SetUnErased (Integer, Integer, TVarChar)
+-- Function: gpMovementItem_AsinoPharmaSP_SetUnErased_Second (Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpMovementItem_AsinoPharmaSP_SetUnErased (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpMovementItem_AsinoPharmaSP_SetUnErased_Second (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpMovementItem_AsinoPharmaSP_SetUnErased(
+CREATE OR REPLACE FUNCTION gpMovementItem_AsinoPharmaSP_SetUnErased_Second(
     IN inMovementItemId      Integer              , -- ключ объекта <Ёлемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
@@ -13,7 +13,6 @@ $BODY$
    DECLARE vbMovementId Integer;
    DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
-   DECLARE vbQueue Integer;
 BEGIN
   vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_GoodsSP());
   
@@ -32,22 +31,6 @@ BEGIN
       RAISE EXCEPTION 'ќшибка.»зменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
   END IF;
   
-  vbQueue := COALESCE((SELECT count(*)
-                       FROM MovementItem
-                       WHERE MovementItem.DescId = zc_MI_Master()
-                         AND MovementItem.MovementId = vbMovementId
-                         AND MovementItem.isErased = FALSE), 0)::Integer;  
-
-  PERFORM lpInsertUpdate_MovementItem_AsinoPharmaSP (ioId                  := MovementItem.Id
-                                                   , inMovementId          := vbMovementId
-                                                   , inQueue               := vbQueue
-                                                   , inUserId              := vbUserId)
-  FROM MovementItem
-  WHERE MovementItem.DescId = zc_MI_Master()
-    AND MovementItem.MovementId = vbMovementId
-    AND MovementItem.Id = inMovementItemId
-    AND MovementItem.isErased = FALSE;
-
   -- пересчитали »тоговые суммы по накладной
   --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
 
@@ -62,4 +45,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpMovementItem_AsinoPharmaSP_SetUnErased (inMovementId:= 55, inSession:= '2')
+-- SELECT * FROM gpMovementItem_AsinoPharmaSP_SetUnErased_Second (inMovementId:= 55, inSession:= '2')

@@ -88,6 +88,7 @@ inherited AsinoPharmaSPForm: TAsinoPharmaSPForm
           inherited colIsErased: TcxGridDBColumn
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
+            VisibleForCustomization = False
           end
         end
       end
@@ -169,6 +170,12 @@ inherited AsinoPharmaSPForm: TAsinoPharmaSPForm
                 HeaderAlignmentVert = vaCenter
                 Width = 69
               end
+              object chisErased: TcxGridDBColumn
+                DataBinding.FieldName = 'isErased'
+                Visible = False
+                Options.Editing = False
+                VisibleForCustomization = False
+              end
             end
             object cxGridLevel1: TcxGridLevel
               GridView = cxGridDBTableView1
@@ -209,7 +216,7 @@ inherited AsinoPharmaSPForm: TAsinoPharmaSPForm
                 item
                   Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
                   Kind = skCount
-                  Column = cxGridDBColumn2
+                  Column = seGoodsName
                 end>
               DataController.Summary.SummaryGroups = <>
               Images = dmMain.SortImageList
@@ -225,7 +232,7 @@ inherited AsinoPharmaSPForm: TAsinoPharmaSPForm
               OptionsView.HeaderAutoHeight = True
               OptionsView.Indicator = True
               Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-              object cxGridDBColumn1: TcxGridDBColumn
+              object seGoodsCode: TcxGridDBColumn
                 Caption = #1050#1086#1076
                 DataBinding.FieldName = 'GoodsCode'
                 GroupSummaryAlignment = taCenter
@@ -234,7 +241,7 @@ inherited AsinoPharmaSPForm: TAsinoPharmaSPForm
                 Options.Editing = False
                 Width = 55
               end
-              object cxGridDBColumn2: TcxGridDBColumn
+              object seGoodsName: TcxGridDBColumn
                 Caption = #1058#1086#1074#1072#1088
                 DataBinding.FieldName = 'GoodsName'
                 GroupSummaryAlignment = taCenter
@@ -243,7 +250,7 @@ inherited AsinoPharmaSPForm: TAsinoPharmaSPForm
                 Options.Editing = False
                 Width = 250
               end
-              object cxGridDBColumn3: TcxGridDBColumn
+              object seAmount: TcxGridDBColumn
                 Caption = #1050#1086#1083'-'#1074#1086
                 DataBinding.FieldName = 'Amount'
                 PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -251,6 +258,12 @@ inherited AsinoPharmaSPForm: TAsinoPharmaSPForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Width = 69
+              end
+              object seisErased: TcxGridDBColumn
+                DataBinding.FieldName = 'isErased'
+                Visible = False
+                Options.Editing = False
+                VisibleForCustomization = False
               end
             end
             object cxGridLevel2: TcxGridLevel
@@ -353,6 +366,23 @@ inherited AsinoPharmaSPForm: TAsinoPharmaSPForm
     Top = 320
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Left'
+          'Top'
+          'Width'
+          'Height')
+      end
+      item
+        Component = PanelSecond
+        Properties.Strings = (
+          'Left'
+          'Top'
+          'Width'
+          'Height')
+      end>
     Left = 704
     Top = 176
   end
@@ -446,7 +476,7 @@ inherited AsinoPharmaSPForm: TAsinoPharmaSPForm
       ImageIndex = 48
       WithoutNext = True
     end
-    object macStartLoadHelsi: TMultiAction [7]
+    object macStartLoadHelsi: TMultiAction [6]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -680,6 +710,82 @@ inherited AsinoPharmaSPForm: TAsinoPharmaSPForm
       Caption = 'actUpdateSecondDS'
       DataSource = SecondDS
     end
+    object actErasedMIMaster_Child: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIMaster_Child
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMaster_Child
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1086#1089#1085#1086#1074#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1086#1089#1085#1086#1074#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = ChildDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
+    end
+    object actUnErasedMIMaster_Child: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErasedMIMaster_Child
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIMaster_Child
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ChildDS
+    end
+    object actErasedMIMaster_Second: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIMaster_Second
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMaster_Second
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1087#1086#1076#1072#1088#1086#1082'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1087#1086#1076#1072#1088#1086#1082'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = SecondDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
+    end
+    object actUnErasedMIMaster_Second: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErasedMIMaster_Second
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIMaster_Second
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = SecondDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 600
@@ -781,7 +887,11 @@ inherited AsinoPharmaSPForm: TAsinoPharmaSPForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
         end
         item
           Visible = True
@@ -791,6 +901,18 @@ inherited AsinoPharmaSPForm: TAsinoPharmaSPForm
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton6'
         end
         item
           Visible = True
@@ -841,6 +963,22 @@ inherited AsinoPharmaSPForm: TAsinoPharmaSPForm
     end
     object dxBarButton2: TdxBarButton
       Action = actInsertMISecond
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actErasedMIMaster_Child
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actUnErasedMIMaster_Child
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actErasedMIMaster_Second
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = actUnErasedMIMaster_Second
       Category = 0
     end
   end
@@ -1095,12 +1233,12 @@ inherited AsinoPharmaSPForm: TAsinoPharmaSPForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_AsinoPharmaSP_SetErased'
-    Left = 598
-    Top = 432
+    Left = 622
+    Top = 320
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_AsinoPharmaSP_SetUnErased'
-    Left = 590
+    Left = 726
     Top = 320
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
@@ -1547,5 +1685,157 @@ inherited AsinoPharmaSPForm: TAsinoPharmaSPForm
     PackSize = 1
     Left = 728
     Top = 488
+  end
+  object spErasedMIMaster_Child: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_AsinoPharmaSP_SetErased_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 38
+    Top = 544
+  end
+  object spUnErasedMIMaster_Child: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_AsinoPharmaSP_SetUnErased_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 142
+    Top = 544
+  end
+  object spUnErasedMIMaster_Second: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_AsinoPharmaSP_SetUnErased_Second'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = SecondCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = SecondCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 558
+    Top = 544
+  end
+  object spErasedMIMaster_Second: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_AsinoPharmaSP_SetErased_Second'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = SecondCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = SecondCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 454
+    Top = 544
+  end
+  object DBViewAddOnChild: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 5
+      end>
+    ShowFieldImageList = <>
+    SearchAsFilter = False
+    PropertiesCellList = <>
+    Left = 222
+    Top = 473
+  end
+  object DBViewAddOnSecond: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView2
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 5
+      end>
+    ShowFieldImageList = <>
+    SearchAsFilter = False
+    PropertiesCellList = <>
+    Left = 526
+    Top = 465
   end
 end
