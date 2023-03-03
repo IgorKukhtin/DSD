@@ -130,6 +130,7 @@ type
     bbOpenReportCheckForm: TdxBarButton;
     bbUpdateAuto: TdxBarButton;
     LineNum: TcxGridDBColumn;
+    bbbPrint: TdxBarButton;
   private
     { Private declarations }
   public

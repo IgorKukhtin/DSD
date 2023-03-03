@@ -17,10 +17,10 @@ BEGIN
 
 
      -- создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_CreateTemp();
+     --PERFORM lpComplete_Movement_CreateTemp();
      -- проводим Документ
      outMessageText:= lpComplete_Movement_ChangePercent (inMovementId := inMovementId
-                                                          , inUserId     := vbUserId);
+                                                       , inUserId     := vbUserId);
 
 END;
 $BODY$

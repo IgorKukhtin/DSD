@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ChangePercent (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ChangePercent (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ChangePercent (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ChangePercent(
@@ -18,7 +19,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ChangePercent(
     IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
     IN inPartnerId           Integer   , -- Контрагент кому 
-    IN inDocumentTaxKindId   Integer   , --
+    IN inDocumentTaxKindId   Integer   , -- 
+    IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -100,6 +102,9 @@ BEGIN
      
      -- сохранили связь с <Тип формирования налогового документа>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), ioId, inDocumentTaxKindId);
+
+     -- Комментарий
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
      
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);

@@ -1,14 +1,13 @@
 -- Function: lpInsertUpdate_MI_ChangePercent_byTax()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ChangePercent_byTax (integer, integer, integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ChangePercent_byTax (integer, integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ChangePercent_byTax(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inUserId              Integer     -- сессия пользователя
 )
-RETURNS RECORD
+RETURNS VOID
 AS
 $BODY$
    DECLARE vbToId       Integer;
@@ -24,13 +23,13 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
      END IF;
-     
+
      --данные их документа
      SELECT MovementLinkObject_To.ObjectId       AS ToId
           , MovementLinkObject_Contract.ObjectId AS ContractId
-          , MovementLinkObject_Partner.ObjectId  AS PartnerId
           , Movement.OperDate
-    INTO vbToId, vbContractId, vbPartnerId, vbOperDate
+          --, MovementLinkObject_Partner.ObjectId  AS PartnerId
+    INTO vbToId, vbContractId, vbOperDate--, vbPartnerId
      FROM Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
@@ -40,9 +39,10 @@ BEGIN
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+            /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            */
 
      WHERE Movement.Id = inMovementId
      ;
@@ -59,6 +59,13 @@ BEGIN
      vbStartDate := DATE_TRUNC ('MONTH', vbOperDate);
      vbEndDate   := DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
 
+     --перед записью удаляем сущ. строки
+      UPDATE MovementItem
+      SET isErased = TRUE
+      WHERE MovementItem.MovementId = inMovementId
+        AND MovementItem.DescId     = zc_MI_Master()
+        AND MovementItem.isErased   = FALSE;
+     
      -- сохранили <Элемент документа>
      PERFORM lpInsertUpdate_MovementItem_ChangePercent (ioId            := 0
                                                       , inMovementId    := inMovementId
@@ -82,12 +89,12 @@ BEGIN
                                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                        AND MovementLinkObject_Contract.ObjectId = vbContractId
 
-                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                           /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                                       AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                                                       AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()*/
                       WHERE Movement.DescId = zc_Movement_Tax()
                         AND Movement.OperDate BETWEEN vbStartDate AND vbEndDate
-                        AND (MovementLinkObject_Partner.ObjectId = vbPartnerId OR vbPartnerId = 0) 
+                        --AND (MovementLinkObject_Partner.ObjectId = vbPartnerId OR vbPartnerId = 0) 
                       )
          , tmpMI AS (SELECT MovementItem.ObjectId           AS GoodsId
                           , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
@@ -115,7 +122,7 @@ BEGIN
                             , MIFloat_Price.ValueData
                             , MIFloat_CountForPrice.ValueData 
                      )
-         SELECT 
+         SELECT *
          FROM tmpMI
           ) AS tmp;
 

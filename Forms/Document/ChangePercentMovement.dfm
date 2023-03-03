@@ -852,8 +852,8 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = ''
-      Hint = ''
+      Caption = #1055#1077#1095#1072#1090#1100' '#1040#1082#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1040#1082#1090#1072
       ImageIndex = -1
       DataSets = <
         item
@@ -872,8 +872,8 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportName = 'PrintMovement_ChangePercent'
+      ReportNameParam.Value = 'PrintMovement_ChangePercent'
       ReportNameParam.Component = FormParams
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.ParamType = ptInput
@@ -1466,9 +1466,6 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
           ItemName = 'dxBarStatic'
         end>
     end
-    inherited bbPrint: TdxBarButton
-      Action = mactPrint
-    end
     object bbPrintTaxCorrective_Client: TdxBarButton [5]
       Action = mactPrint_TaxCorrective_Client
       Category = 0
@@ -1528,6 +1525,11 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
     object bbUpdateAuto: TdxBarButton
       Action = actUpdateAuto
       Category = 0
+    end
+    object bbbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+      ImageIndex = 3
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1599,7 +1601,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
       end
       item
         Name = 'ReportName'
-        Value = 'PrintMovement_TaxCorrective'
+        Value = 'PrintMovement_ChangePercent'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2058,6 +2060,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
       item
         Control = edPartner
       end>
+    ActionAfterExecute = actRefresh
     Left = 232
     Top = 193
   end
@@ -2252,7 +2255,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
     Top = 310
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
+    StoredProcName = 'gpSelect_Movement_ChangePercent_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

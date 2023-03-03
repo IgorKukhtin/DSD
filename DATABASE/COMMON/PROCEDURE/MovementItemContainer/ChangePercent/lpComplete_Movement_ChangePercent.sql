@@ -15,7 +15,7 @@ BEGIN
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := vbMovementDescId
+                                , inDescId     := zc_Movement_ChangePercent()
                                 , inUserId     := inUserId
                                  );
 

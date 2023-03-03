@@ -25,30 +25,52 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ChangePercent(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbToId Integer;
+   DECLARE vbContractId Integer;
+   
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ChangePercent());
 
-     -- сохранили <Документ>
-     ioId:= lpInsertUpdate_Movement_ChangePercent (ioId    := ioId
-                                                  , inInvNumber        := inInvNumber
-                                                  , inInvNumberPartner := inInvNumberPartner
-                                                  , inOperDate         := inOperDate
-                                                  , inChecked          := inChecked
-                                                  , inPriceWithVAT     := inPriceWithVAT
-                                                  , inVATPercent       := inVATPercent
-                                                  , inChangePercent    := inChangePercent
-                                                  , inFromId           := inFromId
-                                                  , inToId             := inToId
-                                                  , inPaidKindId       := inPaidKindId
-                                                  , inContractId       := inContractId
-                                                  , inPartnerId        := inPartnerId
-                                                  , inDocumentTaxKindId := inDocumentTaxKindId
-                                                  , inUserId           := vbUserId
-                                                   ) AS tmp;
+     --выбираем прошлые данные для сравнения
+     SELECT MovementLinkObject_Contract.ObjectId AS ContractId
+          , MovementLinkObject_To.ObjectId       AS ToId
+     INTO vbContractId, vbToId
+     FROM Movement
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
-     -- Комментарий
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+     WHERE Movement.Id = COALESCE (ioId,0);
+     
+     -- сохранили <Документ>
+     ioId:= lpInsertUpdate_Movement_ChangePercent (ioId                := ioId
+                                                 , inInvNumber         := inInvNumber
+                                                 , inInvNumberPartner  := inInvNumberPartner
+                                                 , inOperDate          := inOperDate
+                                                 , inChecked           := inChecked
+                                                 , inPriceWithVAT      := inPriceWithVAT
+                                                 , inVATPercent        := inVATPercent
+                                                 , inChangePercent     := inChangePercent
+                                                 , inFromId            := inFromId
+                                                 , inToId              := inToId
+                                                 , inPaidKindId        := inPaidKindId
+                                                 , inContractId        := inContractId
+                                                 , inPartnerId         := inPartnerId
+                                                 , inDocumentTaxKindId := inDocumentTaxKindId
+                                                 , inComment           := inComment
+                                                 , inUserId            := vbUserId
+                                                  ) AS tmp;
+
+     --проверка, если новый документ или изменили договор/Юр.лицо перезаписывает строки
+     IF COALESCE(vbToId,0) <> inToId OR COALESCE (vbContractId,0) <> inContractId
+     THEN
+         --
+         PERFORM lpInsertUpdate_MI_ChangePercent_byTax (ioId, vbUserId);
+     END IF;
 
 END;
 $BODY$
