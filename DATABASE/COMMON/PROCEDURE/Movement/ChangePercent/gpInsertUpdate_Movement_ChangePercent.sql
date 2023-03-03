@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_TransferDebtIn()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ChangePercent (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ChangePercent (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ChangePercent(
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ChangePercent(
     IN inContractId          Integer   , -- Договор 
     IN inPaidKindId          Integer   , -- Виды форм оплаты 
     IN inPartnerId           Integer   , -- Контрагент
+    IN inDocumentTaxKindId   Integer   , 
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -41,6 +43,7 @@ BEGIN
                                                   , inPaidKindId       := inPaidKindId
                                                   , inContractId       := inContractId
                                                   , inPartnerId        := inPartnerId
+                                                  , inDocumentTaxKindId := inDocumentTaxKindId
                                                   , inUserId           := vbUserId
                                                    ) AS tmp;
 

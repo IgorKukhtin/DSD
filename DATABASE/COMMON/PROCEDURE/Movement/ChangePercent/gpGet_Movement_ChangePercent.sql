@@ -74,13 +74,14 @@ BEGIN
              , 0                     	AS PaidKindId
              , CAST ('' as TVarChar) 	AS PaidKindName
 
-             , 0                     	AS DocumentTaxKindId
-             , CAST ('' as TVarChar) 	AS DocumentTaxKindName
+             , Object_TaxKind.Id        AS DocumentTaxKindId
+             , Object_TaxKind.ValueData AS DocumentTaxKindName
              , CAST ('' as TVarChar) 	AS Comment
 
           FROM (SELECT CAST (NEXTVAL ('movement_ChangePercent_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
                LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1 = 1
-               LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
+               LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate 
+               LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = zc_Enum_DocumentTaxKind_ChangePercent()
          ;
 
 

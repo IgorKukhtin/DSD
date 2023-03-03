@@ -34,6 +34,7 @@ BEGIN
                                                  , inPaidKindId       := tmp.PaidKindId
                                                  , inContractId       := tmp.ContractId
                                                  , inPartnerId        := tmp.PartnerId
+                                                 , inDocumentTaxKindId:= tmp.DocumentTaxKindId
                                                  , inUserId           := vbUserId
                                                    )
      INTO vbMovementId

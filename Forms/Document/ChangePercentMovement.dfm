@@ -1980,6 +1980,14 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDocumentTaxKindId'
+        Value = Null
+        Component = GuidesDocumentTaxKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
