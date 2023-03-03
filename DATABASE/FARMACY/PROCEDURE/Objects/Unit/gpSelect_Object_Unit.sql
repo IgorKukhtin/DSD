@@ -73,7 +73,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TelegramId TVarChar, isErrorRROToVIP Boolean, isShowMessageSite Boolean, isSupplementAddCash Boolean, isSupplementAdd30Cash Boolean
              , isExpressVIPConfirm Boolean, isShowPlanEmployeeUser Boolean, isShowPlanMobileAppUser Boolean, isShowActiveAlerts Boolean
              , SetDateRRO TVarChar, isAutospaceOS Boolean, isReplaceSte2ListDif Boolean, isDividePartionDate Boolean
-             , isSendErrorTelegramBot Boolean
+             , isSendErrorTelegramBot Boolean, isColdOutSUN Boolean
              
 ) AS
 $BODY$
@@ -303,6 +303,7 @@ BEGIN
       , COALESCE (ObjectBoolean_DividePartionDate.ValueData, FALSE):: Boolean            AS isDividePartionDate
 
       , COALESCE (ObjectBoolean_SendErrorTelegramBot.ValueData, FALSE):: Boolean         AS isSendErrorTelegramBot
+      , COALESCE (ObjectBoolean_ColdOutSUN.ValueData, FALSE):: Boolean                   AS isColdOutSUN
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -801,6 +802,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SendErrorTelegramBot
                                 ON ObjectBoolean_SendErrorTelegramBot.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_SendErrorTelegramBot.DescId = zc_ObjectBoolean_Unit_SendErrorTelegramBot()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdOutSUN
+                                ON ObjectBoolean_ColdOutSUN.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_ColdOutSUN.DescId = zc_ObjectBoolean_Unit_ColdOutSUN()
 
     WHERE Object_Unit.DescId = zc_Object_Unit()
       AND (inisShowAll = True OR Object_Unit.isErased = False)

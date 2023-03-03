@@ -17,9 +17,18 @@ $BODY$
   DECLARE vbTotal TFloat;
   DECLARE vbisAP Boolean;
   DECLARE vbUnitCategoryCode Integer;
+  DECLARE vbPrizeThreshold TFloat;
 BEGIN
 
   vbTotal := 0;
+  
+
+  vbPrizeThreshold := COALESCE ((SELECT History_CashSettings.PrizeThreshold 
+                                 FROM gpSelect_ObjectHistory_CashSettings (0, zfCalc_UserAdmin()) AS History_CashSettings
+                                 WHERE History_CashSettings.StartDate <= date_trunc('month', inOperDate)
+                                   AND History_CashSettings.EndDate > date_trunc('month', inOperDate)), 0);
+
+  
 
   IF  date_trunc('month', inOperDate) >= '01.11.2022'
   THEN
@@ -39,25 +48,29 @@ BEGIN
     THEN
       vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
                       WHEN ROUND(inTotalExecutionLine, 2) < 55 THEN - inAmountTheFineTab / 3  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 85 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
+                      WHEN ROUND(inTotalExecutionLine, 2) < 85 + vbPrizeThreshold 
+                      THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
                       ELSE inBonusAmountTab END;      
     ELSEIF vbUnitCategoryCode = 3 -- B
     THEN
       vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 35 THEN - inAmountTheFineTab / 2  
                       WHEN ROUND(inTotalExecutionLine, 2) < 50 THEN - inAmountTheFineTab / 3  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
+                      WHEN ROUND(inTotalExecutionLine, 2) < 80 + vbPrizeThreshold  
+                      THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
                       ELSE inBonusAmountTab END;          
     ELSEIF vbUnitCategoryCode = 5 -- C
     THEN
       vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 THEN - inAmountTheFineTab / 2  
                       WHEN ROUND(inTotalExecutionLine, 2) < 42 THEN - inAmountTheFineTab / 3  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 75 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
+                      WHEN ROUND(inTotalExecutionLine, 2) < 75 + vbPrizeThreshold  
+                      THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
                       ELSE inBonusAmountTab END;              
     ELSEIF vbUnitCategoryCode = 8 -- D
     THEN
       vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 25 THEN - inAmountTheFineTab / 2  
                       WHEN ROUND(inTotalExecutionLine, 2) < 37 THEN - inAmountTheFineTab / 3  
-                      WHEN ROUND(inTotalExecutionLine, 2) < 60 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
+                      WHEN ROUND(inTotalExecutionLine, 2) < 60 + vbPrizeThreshold  
+                      THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
                       ELSE inBonusAmountTab END;              
     END IF;
     
@@ -73,12 +86,14 @@ BEGIN
       THEN
         vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
                         WHEN ROUND(inTotalExecutionLine, 2) < 60 THEN - inAmountTheFineTab / 3  
-                        WHEN ROUND(inTotalExecutionLine, 2) < 90 THEN inBonusAmountTab - inAmountTheFineTab
+                        WHEN ROUND(inTotalExecutionLine, 2) < 90 + vbPrizeThreshold  
+                        THEN inBonusAmountTab - inAmountTheFineTab
                         ELSE inBonusAmountTab  END;  
       ELSE
         vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
                         WHEN ROUND(inTotalExecutionLine, 2) < 60 THEN - inAmountTheFineTab / 3  
-                        WHEN ROUND(inTotalExecutionLine, 2) < 90 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
+                        WHEN ROUND(inTotalExecutionLine, 2) < 90 + vbPrizeThreshold  
+                        THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
                         ELSE inBonusAmountTab  END;  
       END IF;
     ELSEIF inScaleCalcMarketingPlanID = zc_Enum_ScaleCalcMarketingPlan_CC1()
@@ -87,18 +102,21 @@ BEGIN
       THEN
         vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 THEN - inAmountTheFineTab / 2  
                         WHEN ROUND(inTotalExecutionLine, 2) < 50 THEN - inAmountTheFineTab / 3  
-                        WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN inBonusAmountTab - inAmountTheFineTab
+                        WHEN ROUND(inTotalExecutionLine, 2) < 80 + vbPrizeThreshold  
+                        THEN inBonusAmountTab - inAmountTheFineTab
                         ELSE inBonusAmountTab  END;      
       ELSEIF inOperDate < '01.08.2021'
       THEN
         vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
                         WHEN ROUND(inTotalExecutionLine, 2) < 50 THEN - inAmountTheFineTab / 3  
-                        WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN inBonusAmountTab - inAmountTheFineTab
+                        WHEN ROUND(inTotalExecutionLine, 2) < 80 + vbPrizeThreshold  
+                        THEN inBonusAmountTab - inAmountTheFineTab
                         ELSE inBonusAmountTab  END;          
       ELSE
         vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 2  
                         WHEN ROUND(inTotalExecutionLine, 2) < 50 THEN - inAmountTheFineTab / 3  
-                        WHEN ROUND(inTotalExecutionLine, 2) < 80 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
+                        WHEN ROUND(inTotalExecutionLine, 2) < 80 + vbPrizeThreshold  
+                        THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
                         ELSE inBonusAmountTab  END;          
       END IF;
     ELSEIF inScaleCalcMarketingPlanID = zc_Enum_ScaleCalcMarketingPlan_D()
@@ -110,12 +128,14 @@ BEGIN
       THEN
         vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 THEN - inAmountTheFineTab / 2  
                         WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 3  
-                        WHEN ROUND(inTotalExecutionLine, 2) < 70 THEN inBonusAmountTab - inAmountTheFineTab
+                        WHEN ROUND(inTotalExecutionLine, 2) < 70 + vbPrizeThreshold  
+                        THEN inBonusAmountTab - inAmountTheFineTab
                         ELSE inBonusAmountTab  END;          
       ELSE
         vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 THEN - inAmountTheFineTab / 2  
                         WHEN ROUND(inTotalExecutionLine, 2) < 40 THEN - inAmountTheFineTab / 3  
-                        WHEN ROUND(inTotalExecutionLine, 2) < 70 THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
+                        WHEN ROUND(inTotalExecutionLine, 2) < 70 + vbPrizeThreshold  
+                        THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
                         ELSE inBonusAmountTab  END;          
       END IF;
     ELSE
@@ -142,4 +162,4 @@ ALTER FUNCTION zfCalc_MarketingPlan_Scale (Integer, TDateTime, Integer, TFloat, 
 */
 
 -- тест 
-SELECT * FROM zfCalc_MarketingPlan_Scale (zc_Enum_ScaleCalcMarketingPlan_CC1(), '01.11.2022', 10779386, 36.96, 607.45, 99.44)	
+SELECT * FROM zfCalc_MarketingPlan_Scale (zc_Enum_ScaleCalcMarketingPlan_CC1(), '01.02.2023', 10779386, 36.96, 607.45, 99.44)	

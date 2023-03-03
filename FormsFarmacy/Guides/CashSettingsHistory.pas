@@ -31,6 +31,7 @@ type
     spInsertUpdate_ObjectHistory_CashSettings: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     PenMobApp: TcxGridDBColumn;
+    PrizeThreshold: TcxGridDBColumn;
   private
     { Private declarations }
   public
