@@ -676,10 +676,12 @@ BEGIN
        AND _tmpItem_pr.MovementItemId = tmpItemChild.MovementItemId_Parent
     ;
 
+  --RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmpItem_pr where _tmpItem_pr.PartionGoodsId_child > 0);
 
      -- формируются Партии товара для Master(ПРИХОД)-элементы, ЕСЛИ надо ...
      UPDATE _tmpItem_pr SET PartionGoodsId = CASE -- Спецодежда
                                                   WHEN _tmpItem_pr.InfoMoneyId = zc_Enum_InfoMoney_20202() AND _tmpItem_pr.PartionGoodsId_child > 0
+                                                       AND 0 < (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem_pr.PartionGoodsId_child AND OL.DescId  = zc_ObjectLink_PartionGoods_Unit())
                                                        THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem_pr.PartionGoodsId_child AND OL.DescId  = zc_ObjectLink_PartionGoods_Unit())
                                                                                             , inGoodsId       := _tmpItem_pr.GoodsId
                                                                                             , inStorageId     := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem_pr.PartionGoodsId_child AND OL.DescId  = zc_ObjectLink_PartionGoods_Storage())

@@ -742,12 +742,24 @@ end if;
 
                                                     -- Спецодежда
                                                     WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20202() AND _tmpItem.PartionGoods <> '' AND _tmpItem.PartionGoodsId_mi <> 0
+                                                         AND 0 < (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.PartionGoodsId_mi AND OL.DescId  = zc_ObjectLink_PartionGoods_Unit())
                                                          THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.PartionGoodsId_mi AND OL.DescId  = zc_ObjectLink_PartionGoods_Unit())
                                                                                               , inGoodsId       := _tmpItem.GoodsId
                                                                                               , inStorageId     := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.PartionGoodsId_mi AND OL.DescId  = zc_ObjectLink_PartionGoods_Storage())
                                                                                               , inInvNumber     := _tmpItem.PartionGoods
                                                                                               , inOperDate      := (SELECT OD.ValueData  FROM ObjectDate  AS OD  WHERE OD.ObjectId  = _tmpItem.PartionGoodsId_mi AND OD.DescId  = zc_ObjectDate_PartionGoods_Value())
                                                                                               , inPrice         := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = _tmpItem.PartionGoodsId_mi AND OFl.DescId = zc_ObjectFloat_PartionGoods_Price())
+                                                                                               )
+
+                                                    -- Спецодежда
+                                                    WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20202() AND _tmpItem.PartionGoods <> '' AND _tmpItem.PartionGoodsId_from <> 0
+                                                         AND 0 < (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.PartionGoodsId_from AND OL.DescId  = zc_ObjectLink_PartionGoods_Unit())
+                                                         THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.PartionGoodsId_from AND OL.DescId  = zc_ObjectLink_PartionGoods_Unit())
+                                                                                              , inGoodsId       := _tmpItem.GoodsId
+                                                                                              , inStorageId     := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.PartionGoodsId_from AND OL.DescId  = zc_ObjectLink_PartionGoods_Storage())
+                                                                                              , inInvNumber     := CASE WHEN _tmpItem.PartionGoods ILIKE 'цена%' THEN '' ELSE _tmpItem.PartionGoods END
+                                                                                              , inOperDate      := (SELECT OD.ValueData  FROM ObjectDate  AS OD  WHERE OD.ObjectId  = _tmpItem.PartionGoodsId_from AND OD.DescId  = zc_ObjectDate_PartionGoods_Value())
+                                                                                              , inPrice         := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = _tmpItem.PartionGoodsId_from AND OFl.DescId = zc_ObjectFloat_PartionGoods_Price())
                                                                                                )
 
                                                     -- Спецодежда

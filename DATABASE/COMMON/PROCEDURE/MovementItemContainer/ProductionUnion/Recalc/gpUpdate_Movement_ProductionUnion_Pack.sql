@@ -61,7 +61,6 @@ END IF;*/
                                                  ON MLO_To.MovementId = Movement.Id
                                                 AND MLO_To.DescId     = zc_MovementLinkObject_To()
                                                 AND MLO_To.ObjectId   = inUnitId
-
               WHERE Movement.OperDate = inStartDate
                 AND Movement.DescId   = zc_Movement_ProductionUnion()
                 AND Movement.StatusId = zc_Enum_Status_Complete()

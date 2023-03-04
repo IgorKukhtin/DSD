@@ -29,9 +29,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
               )
 AS
 $BODY$
+    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_SendOnPrice());
+     vbUserId:= lpGetUserBySession (inSession);
 
     IF COALESCE (inMovementId, 0) < 0
     THEN
@@ -228,7 +229,9 @@ BEGIN
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
        WHERE Movement.Id = inMovementId
-         AND Movement.DescId = zc_Movement_SendOnPrice();
+         AND Movement.DescId = zc_Movement_SendOnPrice()
+       LIMIT CASE WHEN vbUserId = 5 THEN 10 ELSE 1 END
+      ;
      END IF;
 
 END;
