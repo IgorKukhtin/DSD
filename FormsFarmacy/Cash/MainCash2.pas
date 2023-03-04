@@ -2992,6 +2992,22 @@ begin
             ON E: Exception do
               Add_Log('Marc_PUSH err=' + E.Message);
           end;
+        end else if NOT PUSHDS.FieldByName('isPoll').AsBoolean and
+           (PUSHDS.FieldByName('FormName').AsString = '') and
+           NOT PUSHDS.FieldByName('isExecStoredProc').AsBoolean and
+           NOT PUSHDS.FieldByName('isSpecialLighting').AsBoolean  then
+        begin
+          ShowTrayMessage(PUSHDS.FieldByName('Text').AsString);
+          if PUSHDS.FieldByName('Id').AsInteger > 1000 then
+          try
+            spInsert_MovementItem_PUSH.ParamByName('inMovement').Value :=
+              PUSHDS.FieldByName('Id').AsInteger;
+            spInsert_MovementItem_PUSH.ParamByName('inResult').Value := '';
+            spInsert_MovementItem_PUSH.Execute;
+          except
+            ON E: Exception do
+              Add_Log('Marc_PUSH err=' + E.Message);
+          end;
         end else if ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString, cResult,
           PUSHDS.FieldByName('isPoll').AsBoolean,
           PUSHDS.FieldByName('FormName').AsString,

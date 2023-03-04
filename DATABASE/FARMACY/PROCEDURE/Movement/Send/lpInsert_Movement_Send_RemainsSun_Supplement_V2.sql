@@ -105,7 +105,7 @@ BEGIN
      -- все Подразделения для схемы SUN Supplement_V2
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpUnit_SUN_Supplement_V2'))
      THEN
-       CREATE TEMP TABLE _tmpUnit_SUN_Supplement_V2 (UnitId Integer, DeySupplOut Integer, DeySupplIn Integer, isSUN_Supplement_V2_in Boolean, isSUN_Supplement_V2_out Boolean, isSUN_Supplement_V2_Priority Boolean, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean, isLock_CheckMa Boolean) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpUnit_SUN_Supplement_V2 (UnitId Integer, DeySupplOut Integer, DeySupplIn Integer, isSUN_Supplement_V2_in Boolean, isSUN_Supplement_V2_out Boolean, isSUN_Supplement_V2_Priority Boolean, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean, isLock_CheckMa Boolean, isColdOutSUN Boolean) ON COMMIT DROP;
      END IF;
 
      -- Выкладки
@@ -200,7 +200,7 @@ BEGIN
 raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
      -- все Подразделения для схемы SUN
-     INSERT INTO _tmpUnit_SUN_Supplement_V2 (UnitId, DeySupplOut, DeySupplIn, isSUN_Supplement_V2_in, isSUN_Supplement_V2_out, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isLock_CheckMa)
+     INSERT INTO _tmpUnit_SUN_Supplement_V2 (UnitId, DeySupplOut, DeySupplIn, isSUN_Supplement_V2_in, isSUN_Supplement_V2_out, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isLock_CheckMa, isColdOutSUN)
         SELECT OB.ObjectId
              , vbDeySupplOut            AS DeySupplOut  -- 120
              , vbDeySupplIn             AS DeySupplIn   -- 60
@@ -214,6 +214,7 @@ raise notice 'Value 1: %', CLOCK_TIMESTAMP();
              , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 5 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_ClosePL
                -- TRUE = НЕТ товаров "маркетинг"
              , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 7 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_CloseMa
+             , COALESCE (OB_ColdOutSUN.ValueData, FALSE)                       AS isColdOutSUN
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectString  AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
              LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_Supplement_V2_in
@@ -222,6 +223,9 @@ raise notice 'Value 1: %', CLOCK_TIMESTAMP();
              LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_Supplement_V2_out
                                      ON ObjectBoolean_SUN_v2_Supplement_V2_out.ObjectId = OB.ObjectId
                                     AND ObjectBoolean_SUN_v2_Supplement_V2_out.DescId = zc_ObjectBoolean_Unit_SUN_v2_Supplement_out()                                    
+             LEFT JOIN ObjectBoolean AS OB_ColdOutSUN    
+                                     ON OB_ColdOutSUN.ObjectId = OB.ObjectId 
+                                    AND OB_ColdOutSUN.DescId = zc_ObjectBoolean_Unit_ColdOutSUN()
              LEFT JOIN ObjectString  AS OS_LL  ON OS_LL.ObjectId  = OB.ObjectId AND OS_LL.DescId  = zc_ObjectString_Unit_SUN_v2_Lock()
              -- !!!только для этого водителя!!!
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Driver
@@ -623,6 +627,27 @@ raise notice 'Value 10: %', CLOCK_TIMESTAMP();
            ;
       
      ANALYSE _tmpGoods_SUN_PairSun_Supplement_V2;
+     
+        -- Xолод
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpConditionsKeep'))
+     THEN
+       DROP TABLE tmpConditionsKeep;
+     END IF;
+
+     CREATE TEMP TABLE tmpConditionsKeep ON COMMIT DROP AS
+     SELECT Object_Goods.ID AS ObjectId
+     FROM Object_Goods_Retail AS Object_Goods 
+          LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
+                                  ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
+                                 AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
+     WHERE Object_Goods.RetailId = 4
+       AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
+            OR Object_Goods_Main.isColdSUN = TRUE);
+     
+     ANALYSE tmpConditionsKeep;
+     
+     
 
 raise notice 'Value 11: %', CLOCK_TIMESTAMP();
 
@@ -647,19 +672,6 @@ raise notice 'Value 11: %', CLOCK_TIMESTAMP();
                              AND Container.Amount <> 0
                              AND COALESCE (_tmpGoods_TP_exception_Supplement_V2.GoodsId, 0) = 0
                           )
-          -- отбросили !!холод!!
-        , tmpConditionsKeep AS (SELECT Object_Goods.Id AS ObjectId
-                                FROM Object_Goods_Retail AS Object_Goods
-                                     LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
-                                     LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
-                                                             ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
-                                                            AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
-                                WHERE Object_Goods.RetailId = 4
-                                  AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
-                                   OR Object_Goods_Main.isColdSUN = TRUE 
-                                      )
-                                  AND (vbisEliminateColdSUN = TRUE OR vbisOnlyColdSUN = TRUE)
-                               )
           -- отбросили !!НОТ!!
         , tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId
                            FROM ObjectBoolean AS OB_Goods_NOT
@@ -703,9 +715,6 @@ raise notice 'Value 11: %', CLOCK_TIMESTAMP();
                                                                ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id, MI_Income.Id) 
                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
 
-                              -- а здесь, отбросили !!холод!!
-                              LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = Container.ObjectId
-                             
                               -- а здесь, отбросили !!НОТ!!
                               LEFT JOIN tmpGoods_NOT ON tmpGoods_NOT.ObjectId = Container.ObjectId
 
@@ -717,7 +726,6 @@ raise notice 'Value 11: %', CLOCK_TIMESTAMP();
                          WHERE Container.DescId = zc_Container_Count()
                            AND Container.Amount <> 0
                            AND COALESCE (_tmpGoods_TP_exception_Supplement_V2.GoodsId, 0) = 0
-                           AND tmpConditionsKeep.ObjectId IS NULL
                            AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
                            -- отбросили !!НОТ!!
                            AND tmpGoods_NOT.ObjectId IS NULL
@@ -1009,11 +1017,18 @@ raise notice 'Value 13: %', CLOCK_TIMESTAMP();
             LEFT JOIN tmpIncome ON tmpIncome.GoodsID = _tmpRemains_all_Supplement_V2.GoodsId
                                AND tmpIncome.UnitId = _tmpRemains_all_Supplement_V2.UnitId  
 
+             -- а здесь, отбросили !!холод!!
+             LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_all_Supplement_V2.GoodsId
+
        WHERE _tmpRemains_all_Supplement_V2.Give > 0
          AND COALESCE(_tmpSUN_Send_Supplement_V2.GoodsID, 0) = 0
          AND COALESCE(_tmpSUN_Send_SupplementAll_V2.GoodsID, 0) = 0
          AND COALESCE (_tmpGoods_SUN_PairSun_find.GoodsId_PairSun, 0) = 0
          AND COALESCE(tmpIncome.GoodsID, 0) = 0
+             -- отбросили !!холод!!
+         AND ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+             tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE OR
+             _tmpUnit_SUN_Supplement_V2.isColdOutSUN = TRUE)
        ORDER BY _tmpRemains_all_Supplement_V2.Give DESC
               , _tmpRemains_all_Supplement_V2.UnitId
               , _tmpRemains_all_Supplement_V2.GoodsId
@@ -1144,12 +1159,19 @@ raise notice 'Value 14: %', CLOCK_TIMESTAMP();
                   LEFT JOIN _tmpUnit_SunExclusion_Supplement_v2 ON _tmpUnit_SunExclusion_Supplement_v2.UnitId_from = vbUnitId_from
                                                                AND _tmpUnit_SunExclusion_Supplement_v2.UnitId_to   = _tmpRemains_all_Supplement_v2.UnitId
 
+                  -- а здесь, отбросили !!холод!!
+                  LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_Partion.GoodsId
+
              WHERE CASE WHEN COALESCE (vbKoeffSUN, 0) = 0 
                         THEN FLOOR(_tmpRemains_all_Supplement_v2.Need - _tmpRemains_all_Supplement_v2.AmountUse)
                         ELSE FLOOR (FLOOR(_tmpRemains_all_Supplement_v2.Need - _tmpRemains_all_Supplement_v2.AmountUse) / vbKoeffSUN) * vbKoeffSUN END > 0
                AND _tmpRemains_all_Supplement_v2.UnitId <> vbUnitId_from
                AND _tmpRemains_all_Supplement_v2.GoodsId = vbGoodsId
                AND _tmpUnit_SunExclusion_Supplement_v2.UnitId_to IS NULL
+                   -- отбросили !!холод!!
+               AND ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+                   tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE OR
+                   _tmpUnit_SUN_Supplement_V2.isColdOutSUN = TRUE)
              ORDER BY _tmpRemains_all_Supplement_v2.AmountUse
                     , FLOOR(_tmpRemains_all_Supplement_v2.Need - _tmpRemains_all_Supplement_v2.AmountUse) DESC
                     , _tmpRemains_all_Supplement_v2.UnitId
@@ -1336,4 +1358,4 @@ $BODY$
 
 -- 
 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement_V2 (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inDriverId:= 0, inUserId:= 3);
