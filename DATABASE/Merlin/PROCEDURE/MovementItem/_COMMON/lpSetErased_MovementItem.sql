@@ -36,6 +36,24 @@
        RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
    END IF;
  
+   IF vbMovementDescId = zc_Movement_Cash() AND vbDescId = zc_MI_Child()
+   THEN
+       -- Если Корректировка подтверждена
+       IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = vbMovementId AND MB.DescId = zc_MovementBoolean_Sign() AND MB.ValueData = TRUE)
+       THEN
+           RAISE EXCEPTION 'Ошибка.Нельзя удалять, корректировка уже подтверждена.';
+       ELSE
+           -- Удаляем ВСЕ подписи
+           PERFORM lpSetErased_MovementItem (inMovementItemId:= MovementItem.Id, inUserId:= inUserId)
+           FROM MovementItem
+           WHERE MovementItem.MovementId = vbMovementId
+             AND MovementItem.DescId     = zc_MI_Sign()
+             AND MovementItem.isErased   = FALSE
+            ;
+       END IF;
+
+   END IF;
+
    -- 
    /*IF vbDescId <> zc_MI_Sign()
    THEN
