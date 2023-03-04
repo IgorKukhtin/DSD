@@ -13,8 +13,10 @@ $BODY$
    DECLARE vbMovementId Integer;
    DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
+   DECLARE vbQueue Integer;
 BEGIN
-  vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MI_GoodsSP());
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId := inSession;
 
   -- устанавливаем новое значение
   outIsErased := TRUE;
@@ -23,6 +25,12 @@ BEGIN
   UPDATE MovementItem SET isErased = TRUE WHERE Id = inMovementItemId
          RETURNING MovementId INTO vbMovementId;
 
+  vbQueue := (SELECT MovementItem.Amount
+              FROM MovementItem
+              WHERE MovementItem.DescId = zc_MI_Master()
+                AND MovementItem.MovementId = vbMovementId
+                AND MovementItem.Id = inMovementItemId)::Integer;
+
   -- определяем <Статус>
   vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
   -- проверка - проведенные/удаленные документы Изменять нельзя
@@ -30,9 +38,29 @@ BEGIN
   THEN
       RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
   END IF;
+  
+  -- Если надо перенумеровываем
+  IF EXISTS(SELECT 1
+            FROM MovementItem
+            WHERE MovementItem.DescId = zc_MI_Master()
+              AND MovementItem.MovementId = vbMovementId
+              AND MovementItem.Amount > vbQueue
+              AND MovementItem.isErased = FALSE) 
+  THEN
+    
+    PERFORM lpInsertUpdate_MovementItem_AsinoPharmaSP (ioId                  := MovementItem.Id
+                                                     , inMovementId          := vbMovementId
+                                                     , inQueue               := (MovementItem.Amount - 1)::Integer
+                                                     , inUserId              := vbUserId)
+    FROM MovementItem
+    WHERE MovementItem.DescId = zc_MI_Master()
+      AND MovementItem.MovementId = vbMovementId
+      AND MovementItem.Amount > vbQueue
+      AND MovementItem.isErased = FALSE;
+  END IF;  
 
   -- пересчитали Итоговые суммы по накладной
-  PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
+  --PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
 
 END;
 $BODY$
@@ -41,8 +69,8 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 07.04.22                                                       *
+ 28.02.23                                                       *
 */
 
 -- тест
--- SELECT * FROM gpMovementItem_AsinoPharmaSP_SetErased (inMovementId:= 55, inSession:= '3')
+-- SELECT * FROM gpMovementItem_AsinoPharmaSP_SetErased (inMovementItemId:= 55, inSession:= '3')

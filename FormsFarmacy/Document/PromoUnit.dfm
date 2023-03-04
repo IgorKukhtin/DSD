@@ -499,6 +499,21 @@ inherited PromoUnitForm: TPromoUnitForm
       ImageIndex = 30
       QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1083#1072#1085' '#1089' '#1087#1088#1077#1076#1099#1076#1091#1097#1077#1075#1086' '#1084#1077#1089#1103#1094#1072'?'
     end
+    object actUpdatePrice: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatePrice
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePrice
+        end>
+      Caption = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1089#1088#1077#1076#1085#1077#1081
+      Hint = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1089#1088#1077#1076#1085#1077#1081
+      ImageIndex = 75
+      QuestionBeforeExecute = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1089#1088#1077#1076#1085#1077#1081'?'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_PromoUnit'
@@ -590,6 +605,14 @@ inherited PromoUnitForm: TPromoUnitForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdatePrice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -618,6 +641,10 @@ inherited PromoUnitForm: TPromoUnitForm
     end
     object dxBarButton2: TdxBarButton
       Action = actLoadPreviousMonth
+      Category = 0
+    end
+    object bbUpdatePrice: TdxBarButton
+      Action = actUpdatePrice
       Category = 0
     end
   end
@@ -1220,5 +1247,22 @@ inherited PromoUnitForm: TPromoUnitForm
     PackSize = 1
     Left = 678
     Top = 304
+  end
+  object spUpdatePrice: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_PromoUnit_UpdatePrice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 686
+    Top = 360
   end
 end

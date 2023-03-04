@@ -1418,7 +1418,9 @@ uses
   SheetWorkTime_line in '..\..\Forms\Document\SheetWorkTime_line.pas' {SheetWorkTime_lineForm: TParentForm},
   MovementItemProtocolSWT in '..\..\Forms\System\MovementItemProtocolSWT.pas' {MovementItemProtocolSWTForm: TParentForm},
   MobileMovement_DateDialog in '..\..\Forms\Document\MobileMovement_DateDialog.pas' {MobileMovement_DateDialogForm: TParentForm},
-  MobileMemberDialog in '..\..\Forms\Document\MobileMemberDialog.pas' {MobileMemberDialogForm: TParentForm};
+  MobileMemberDialog in '..\..\Forms\Document\MobileMemberDialog.pas' {MobileMemberDialogForm: TParentForm},
+  ChangePercentJournal in '..\..\Forms\Document\ChangePercentJournal.pas' {ChangePercentJournalForm: TParentForm},
+  ChangePercentMovement in '..\..\Forms\Document\ChangePercentMovement.pas' {ChangePercentMovementForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

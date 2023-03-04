@@ -1,29 +1,29 @@
 inherited AsinoPharmaSPJournalForm: TAsinoPharmaSPJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1086#1089#1090'. 1303 ('#1088#1091#1095#1085#1086#1081' '#1074#1074#1086#1076'-'#1086#1090#1087#1091#1097#1077#1085#1085#1086' '#1087#1086' '#1082#1072#1089#1089#1077')>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1086#1094#1080#1072#1083#1100#1085#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072' '#1040#1089#1080#1085#1086' '#1060#1072#1088#1084#1072' '#1057#1090#1072#1088#1090'>'
   ClientHeight = 556
-  ClientWidth = 541
+  ClientWidth = 686
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.AddOnFormRefresh.SelfList = 'Loss'
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
-  ExplicitWidth = 557
-  ExplicitHeight = 595
+  ExplicitWidth = 704
+  ExplicitHeight = 603
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 541
+    Width = 686
     Height = 499
     TabOrder = 3
     ExplicitWidth = 541
     ExplicitHeight = 499
     ClientRectBottom = 499
-    ClientRectRight = 541
+    ClientRectRight = 686
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 541
       ExplicitHeight = 499
       inherited cxGrid: TcxGrid
-        Width = 541
+        Width = 686
         Height = 499
         ExplicitWidth = 541
         ExplicitHeight = 499
@@ -64,12 +64,26 @@ inherited AsinoPharmaSPJournalForm: TAsinoPharmaSPJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 96
           end
+          object OperDateStart: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1076#1077#1081#1089#1090#1074#1080
+            DataBinding.FieldName = 'OperDateStart'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 87
+          end
+          object OperDateEnd: TcxGridDBColumn
+            Caption = #1054#1082#1086#1085#1095'. '#1076#1077#1081#1089#1090#1074#1080#1103
+            DataBinding.FieldName = 'OperDateEnd'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 87
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 541
+    Width = 686
     ExplicitWidth = 541
     inherited deStart: TcxDateEdit
       EditValue = 43101d

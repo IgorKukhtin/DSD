@@ -42,7 +42,10 @@ BEGIN
     END IF;
 
     -- нашли цену товара
-    vbPrice := (SELECT ROUND(SUM(Price_Value.ValueData) / COUNT(*),2)::TFloat  AS Price 
+    vbPrice := (SELECT ROUND(SUM(CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                       AND ObjectFloat_Goods_Price.ValueData > 0
+                                      THEN ObjectFloat_Goods_Price.ValueData
+                                      ELSE Price_Value.ValueData END) / COUNT(*), 2)::TFloat  AS Price 
                 FROM ObjectLink AS ObjectLink_Price_Unit
                      INNER JOIN ObjectLink AS ObjectLink_Unit_Category
                              ON ObjectLink_Unit_Category.ObjectId = ObjectLink_Price_Unit.ChildObjectId
@@ -54,6 +57,13 @@ BEGIN
                      LEFT JOIN ObjectFloat AS Price_Value
                             ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                            AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                     -- Фикс цена для всей Сети
+                     LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                            ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                           AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                     LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                             ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                            AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
                 WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                   AND Price_Goods.ChildObjectId = vbGoodsId);
     

@@ -1808,8 +1808,10 @@ begin
                         FLocalDataBaseBody.First;
                         while not FLocalDataBaseBody.eof do
                         Begin
-                          if (trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = UID) AND not FLocalDataBaseBody.Deleted AND
-                            (FLocalDataBaseBody.FieldByName('GOODSID').AsInteger = Body[I].GOODSID) then
+                          if (trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = UID) AND
+                            not FLocalDataBaseBody.Deleted AND
+                            (FLocalDataBaseBody.FieldByName('GOODSID').AsInteger = Body[I].GOODSID) AND
+                            (trim(FLocalDataBaseBody.FieldByName('LIST_UID').AsString) = Body[I].LIST_UID) then
                           Begin
                             FLocalDataBaseBody.Edit;
                             FLocalDataBaseBody.FieldByName('ID').AsInteger := Body[I].ID;
@@ -3199,6 +3201,7 @@ procedure TMainCashForm2.SendTelegramBotMessage(AMessage: String);
   var I : Integer; Res : TArray<string>;
 begin
   if gc_User.Local then Exit;
+  if gc_User.Session = '3' then Exit;
   if not UnitConfigCDS.Active then Exit;
   try
     if not UnitConfigCDS.FieldByName('isSendErrorTelegramBot').AsBoolean or

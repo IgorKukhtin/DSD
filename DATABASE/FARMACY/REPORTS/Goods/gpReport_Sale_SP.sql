@@ -871,6 +871,9 @@ BEGIN
                   WHEN tmpMovDetails.JuridicalId = 1311462  
                    AND Object_PartnerMedical.Id = 4212299 
                   THEN 'UA833077700000026002711126394' 
+                  WHEN tmpMovDetails.JuridicalId = 393038   
+                   AND Object_PartnerMedical.Id = 4474509  
+                  THEN 'UA553223130000026001000030333' 
                   ELSE tmpMovDetails.BankAccount END ::TVarChar
            , tmpMovDetails.Phone
            , tmpMovDetails.MainName
@@ -891,6 +894,9 @@ BEGIN
                   WHEN tmpMovDetails.JuridicalId = 1311462  
                    AND Object_PartnerMedical.Id = 4212299 
                   THEN 'АТ "А-БАНК"' 
+                  WHEN tmpMovDetails.JuridicalId = 393038   
+                   AND Object_PartnerMedical.Id = 4474509  
+                  THEN 'AT "Укрексімбанк"' 
                   ELSE tmpMovDetails.BankName END ::TVarChar
            , CASE WHEN tmpMovDetails.JuridicalId = 2886776 
                   THEN '370770'  
@@ -905,6 +911,9 @@ BEGIN
                   WHEN tmpMovDetails.JuridicalId = 1311462  
                    AND Object_PartnerMedical.Id = 4212299 
                   THEN '307770' 
+                  WHEN tmpMovDetails.JuridicalId = 393038   
+                   AND Object_PartnerMedical.Id = 4474509  
+                  THEN '322313' 
                   ELSE tmpMovDetails.MFO END      ::TVarChar
 
            , Object_PartnerMedicalJuridical.ValueData AS PartnerMedical_JuridicalName

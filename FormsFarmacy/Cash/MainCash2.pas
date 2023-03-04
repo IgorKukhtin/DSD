@@ -637,6 +637,7 @@ type
     acrRefreshName: TAction;
     lblPartnerMedicalName: TcxMemo;
     lblMemberSP: TcxMemo;
+    TrayIcon: TTrayIcon;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1025,6 +1026,7 @@ type
     procedure MoveLogFile;
     procedure SaveUnitConfig;
     procedure ActiveControlChanged(Sender: TObject) ;
+    procedure ShowTrayMessage(AMessage: String);
 
     property SoldRegim: Boolean read FSoldRegim write SetSoldRegim;
   end;
@@ -2833,6 +2835,13 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.ShowTrayMessage(AMessage: String);
+Begin
+  TrayIcon.BalloonHint := AMessage;
+  TrayIcon.ShowBalloonHint;
+  TrayIcon.BalloonHint:='';
+End;
+
 procedure TMainCashForm2.TimerPUSHTimer(Sender: TObject);
 var
   cResult: string;
@@ -2905,17 +2914,26 @@ begin
         end;
       end;
 
-      ShowPUSHMessageCash('Уважаемые коллеги!'#13#10#13#10 +
+      ShowTrayMessage('Уважаемые коллеги!'#13#10#13#10 +
         '1. Сделайте Х-отчет, убедитесь, что он пустой 0,00.'#13#10 +
         '   Форс-Мажор РРО: звоним в любое время Татьяна (099-641-59-21), Юлия (0957767101)'#13#10
         + '2. Сделайте нулевой чек, проверьте дату и время.'#13#10 +
-        '3. Сделайте внесение 100,00 грн.', cResult);
+        '3. Сделайте внесение 100,00 грн.');
+
+//      ShowPUSHMessageCash('Уважаемые коллеги!'#13#10#13#10 +
+//        '1. Сделайте Х-отчет, убедитесь, что он пустой 0,00.'#13#10 +
+//        '   Форс-Мажор РРО: звоним в любое время Татьяна (099-641-59-21), Юлия (0957767101)'#13#10
+//        + '2. Сделайте нулевой чек, проверьте дату и время.'#13#10 +
+//        '3. Сделайте внесение 100,00 грн.', cResult);
 
       if isServiseOld then
         ShowPUSHMessageCash('Не обновлена служба FCash Service.'#13#10#13#10'Обратитесь в IT отдел.', cResult);
 
-      ShowPUSHMessageCash('Коллеги, по всем вопросам и предложениям для улучшения мобильного приложения ПРОСЬБА обращаться к Олегу либо к Кристине.'#13#10 +
-                          'Чем лучше будет приложение тем больше новых клиентов сможем подтянуть, а это ваши дополнительные +грн к зп!!!', cResult);
+      ShowTrayMessage('Коллеги, по всем вопросам и предложениям для улучшения мобильного приложения ПРОСЬБА обращаться к Олегу либо к Кристине.'#13#10 +
+                      'Чем лучше будет приложение тем больше новых клиентов сможем подтянуть, а это ваши дополнительные +грн к зп!!!');
+
+//      ShowPUSHMessageCash('Коллеги, по всем вопросам и предложениям для улучшения мобильного приложения ПРОСЬБА обращаться к Олегу либо к Кристине.'#13#10 +
+//                          'Чем лучше будет приложение тем больше новых клиентов сможем подтянуть, а это ваши дополнительные +грн к зп!!!', cResult);
 
       Load_PUSH(True);
     end
@@ -3517,88 +3535,109 @@ begin
   TimerDroppedDown.Enabled := True;
   CheckOldId := 0;
 
-  if pnlPosition.Visible then
-  begin
-    ShowMessage('Ошибка. Закончите подбор медикаментов по рецепту.');
-    exit;
-  end;
+  try
+    Add_Log('Start PutCheckToCash');
 
-  if FormParams.ParamByName('isAutoVIPforSales').Value = TRUE then
-  begin
-    ShowMessage('Ошибка. ВИП чек для резерва под продажи проводить запрещено.');
-    exit;
-  end;
-
-  if (FormParams.ParamByName('CheckId').Value <> 0) and
-    (FormParams.ParamByName('ConfirmedKindName').AsString = 'Не подтвержден')
-  then
-  begin
-    ShowMessage('Ошибка.VIP-чек <Не подтвержден>.');
-    exit;
-  end;
-
-  if (FormParams.ParamByName('CheckId').Value = 0) and
-    (FormParams.ParamByName('SiteDiscount').Value > 0) then
-  begin
-    ShowMessage
-      ('Ошибка.Установлен признак <Скидка через сайт> необходимо установить VIP-чек.');
-    exit;
-  end;
-
-  if (FormParams.ParamByName('CheckId').Value = 0) and
-     (UnitConfigCDS.FindField('MobMessSum').AsCurrency > 0) and
-     (UnitConfigCDS.FindField('MobMessCount').AsCurrency > 0) and
-     (FTotalSumm > UnitConfigCDS.FindField('MobMessSum').AsCurrency) then
-  begin
-    if UnitConfigCDS.FindField('MobMessCount').AsCurrency <= FMobMessCount then
+    if pnlPosition.Visible then
     begin
-      FMobMessCount := 0;
-      ShowMessage('Чек свыше 200 грн!'#13#10#13#10 +
-                  'Можно сделать заказ через мобильное приложение и получить 20 грн.');
-    end else Inc(FMobMessCount);
-  end;
+      ShowMessage('Ошибка. Закончите подбор медикаментов по рецепту.');
+      exit;
+    end;
 
-  if fBanCash then
-  begin
-    if gc_User.Local then
+    if FormParams.ParamByName('isAutoVIPforSales').Value = TRUE then
     begin
-      if MessageDlg('Вы отметились в табеле?', mtConfirmation, mbYesNo, 0) = mrYes then
-        fBanCash := False
+      ShowMessage('Ошибка. ВИП чек для резерва под продажи проводить запрещено.');
+      exit;
+    end;
+
+    if (FormParams.ParamByName('CheckId').Value <> 0) and
+      (FormParams.ParamByName('ConfirmedKindName').AsString = 'Не подтвержден')
+    then
+    begin
+      ShowMessage('Ошибка.VIP-чек <Не подтвержден>.');
+      exit;
+    end;
+
+    if (FormParams.ParamByName('CheckId').Value = 0) and
+      (FormParams.ParamByName('SiteDiscount').Value > 0) then
+    begin
+      ShowMessage
+        ('Ошибка.Установлен признак <Скидка через сайт> необходимо установить VIP-чек.');
+      exit;
+    end;
+
+    if (FormParams.ParamByName('CheckId').Value = 0) and
+       (UnitConfigCDS.FindField('MobMessSum').AsCurrency > 0) and
+       (UnitConfigCDS.FindField('MobMessCount').AsCurrency > 0) and
+       (FTotalSumm > UnitConfigCDS.FindField('MobMessSum').AsCurrency) then
+    begin
+      if UnitConfigCDS.FindField('MobMessCount').AsCurrency <= FMobMessCount then
+      begin
+        FMobMessCount := 0;
+        ShowMessage('Чек свыше 200 грн!'#13#10#13#10 +
+                    'Можно сделать заказ через мобильное приложение и получить 20 грн.');
+      end else Inc(FMobMessCount);
     end;
 
     if fBanCash then
     begin
-      ShowMessage('Уважаемые коллеги, вы не поставили отметку времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
-      exit;
-    end;
-  end;
+      if gc_User.Local then
+      begin
+        if MessageDlg('Вы отметились в табеле?', mtConfirmation, mbYesNo, 0) = mrYes then
+          fBanCash := False
+      end;
 
-  if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode <> 0) and
-    (FormParams.ParamByName('isDiscountCommit').Value = False) then
-  begin
-    ShowMessage('По дисконтрой программе не запрошена возможность продажи!');
-    exit;
-  end;
-
-  if (FormParams.ParamByName('HelsiID').Value <> '') then
-  begin
-    if CheckCDS.RecordCount <> 1 then
-    begin
-      ShowMessage('Ошибка.В чеке для Соц.проекта должен быть один товар.');
-      exit;
+      if fBanCash then
+      begin
+        ShowMessage('Уважаемые коллеги, вы не поставили отметку времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
+        exit;
+      end;
     end;
 
-    if cbSpec.Checked or cbSpecCorr.Checked then
+    if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode <> 0) and
+      (FormParams.ParamByName('isDiscountCommit').Value = False) then
     begin
-      ShowMessage('Ошибка.Пробейте снова, чек по СП не погашен поскольку проходит галкой.');
+      ShowMessage('По дисконтрой программе не запрошена возможность продажи!');
       exit;
     end;
 
-    if (FormParams.ParamByName('HelsiPartialPrescription').Value = True) then
+    if (FormParams.ParamByName('HelsiID').Value <> '') then
     begin
-      if Round(RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
-         CheckCDS.FieldByName('Amount').asCurrency, -2) * 100) >
-         Round(FormParams.ParamByName('HelsiQty').Value * 100) then
+      if CheckCDS.RecordCount <> 1 then
+      begin
+        ShowMessage('Ошибка.В чеке для Соц.проекта должен быть один товар.');
+        exit;
+      end;
+
+      if cbSpec.Checked or cbSpecCorr.Checked then
+      begin
+        ShowMessage('Ошибка.Пробейте снова, чек по СП не погашен поскольку проходит галкой.');
+        exit;
+      end;
+
+      if (FormParams.ParamByName('HelsiPartialPrescription').Value = True) then
+      begin
+        if Round(RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
+           CheckCDS.FieldByName('Amount').asCurrency, -2) * 100) >
+           Round(FormParams.ParamByName('HelsiQty').Value * 100) then
+        begin
+          ShowMessage('Ошибка.'#13#10'В рецепте выписано: ' + FormatCurr('0.####',
+            FormParams.ParamByName('HelsiQty').Value) + ' единиц'#13#10'В чеке: ' +
+            FormatCurr('0.####', RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
+            CheckCDS.FieldByName('Amount').asCurrency, -2)) +
+            ' единиц'#13#10'Проверьте количество товара, опущенного в чек.');
+          exit;
+        end else if Round(RoundTo(CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
+          ('Amount').asCurrency, -2) * 100) < Round(FormParams.ParamByName('HelsiQty').Value * 100) then
+          if MessageDlg('В рецепте выписано: ' + FormatCurr('0.####',
+            FormParams.ParamByName('HelsiQty').Value) + ' единиц'#13#10'В чеке: ' +
+            FormatCurr('0.####', RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
+            CheckCDS.FieldByName('Amount').asCurrency, -2)) +
+            ' единиц'#13#10'Производит отпуск ментшего количества чем выписано ?...',
+            mtConfirmation, mbYesNo, 0) <> mrYes then Exit;
+      end else if Round(RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
+                  CheckCDS.FieldByName('Amount').asCurrency, -2) * 100) <>
+                  Round(FormParams.ParamByName('HelsiQty').Value * 100) then
       begin
         ShowMessage('Ошибка.'#13#10'В рецепте выписано: ' + FormatCurr('0.####',
           FormParams.ParamByName('HelsiQty').Value) + ' единиц'#13#10'В чеке: ' +
@@ -3606,730 +3645,740 @@ begin
           CheckCDS.FieldByName('Amount').asCurrency, -2)) +
           ' единиц'#13#10'Проверьте количество товара, опущенного в чек.');
         exit;
-      end else if Round(RoundTo(CheckCDS.FieldByName('CountSP').asCurrency * CheckCDS.FieldByName
-        ('Amount').asCurrency, -2) * 100) < Round(FormParams.ParamByName('HelsiQty').Value * 100) then
-        if MessageDlg('В рецепте выписано: ' + FormatCurr('0.####',
-          FormParams.ParamByName('HelsiQty').Value) + ' единиц'#13#10'В чеке: ' +
-          FormatCurr('0.####', RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
-          CheckCDS.FieldByName('Amount').asCurrency, -2)) +
-          ' единиц'#13#10'Производит отпуск ментшего количества чем выписано ?...',
-          mtConfirmation, mbYesNo, 0) <> mrYes then Exit;
-    end else if Round(RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
-                CheckCDS.FieldByName('Amount').asCurrency, -2) * 100) <>
-                Round(FormParams.ParamByName('HelsiQty').Value * 100) then
-    begin
-      ShowMessage('Ошибка.'#13#10'В рецепте выписано: ' + FormatCurr('0.####',
-        FormParams.ParamByName('HelsiQty').Value) + ' единиц'#13#10'В чеке: ' +
-        FormatCurr('0.####', RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
-        CheckCDS.FieldByName('Amount').asCurrency, -2)) +
-        ' единиц'#13#10'Проверьте количество товара, опущенного в чек.');
-      exit;
+      end;
+
+      if not InputQuery('Введите код подтверждения рецепта',
+        'Код подтверждения: ', ConfirmationCode) then
+        exit;
+      FormParams.ParamByName('ConfirmationCodeSP').Value := ConfirmationCode;
     end;
 
-    if not InputQuery('Введите код подтверждения рецепта',
-      'Код подтверждения: ', ConfirmationCode) then
-      exit;
-    FormParams.ParamByName('ConfirmationCodeSP').Value := ConfirmationCode;
-  end;
-
-  if FormParams.ParamByName('PartnerMedicalId').Value <> 0 then
-    if not CheckSP then
-      exit;
-
-  ClearDistributionPromo;
-
-  // Контроль чека до печати
-  GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
-  PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
-  NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
-  DiscountExternalID := RemainsCDS.FieldByName('DiscountExternalID').AsVariant;
-  DivisionPartiesID := RemainsCDS.FieldByName('DivisionPartiesID').AsVariant;
-  nPresent := 0; nGoodsNotUKTZED := 0; nGoodsUKTZED := 0;
-  isPromoForSale := False;
-  try
-    RemainsCDS.DisableControls;
-    RemainsCDS.Filtered := false;
-    with CheckCDS do
+    if FormParams.ParamByName('PartnerMedicalId').Value <> 0 then
     begin
-      First;
-      while not Eof do
+      Add_Log('Проверка работы по соц проекту');
+      if not CheckSP then exit;
+    end;
+
+    ClearDistributionPromo;
+
+    // Контроль чека до печати
+    Add_Log('Контроль чека до печати');
+    GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
+    PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+    NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
+    DiscountExternalID := RemainsCDS.FieldByName('DiscountExternalID').AsVariant;
+    DivisionPartiesID := RemainsCDS.FieldByName('DivisionPartiesID').AsVariant;
+    nPresent := 0; nGoodsNotUKTZED := 0; nGoodsUKTZED := 0;
+    isPromoForSale := False;
+    try
+      RemainsCDS.DisableControls;
+      RemainsCDS.Filtered := false;
+      with CheckCDS do
       begin
-
-        RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
-            VarArrayOf([FieldByName('GoodsId').AsInteger,
-            FieldByName('PartionDateKindId').AsVariant,
-            FieldByName('NDSKindId').AsVariant,
-            FieldByName('DiscountExternalID').AsVariant,
-            FieldByName('DivisionPartiesID').AsVariant]), []);
-
-        if (FieldByName('Multiplicity').asCurrency <> 0) and
-          (FieldByName('Price').asCurrency <> FieldByName('PriceSale').asCurrency)
-          and (FormParams.ParamByName('MobileDiscount').Value = 0)
-          and (trunc(FieldByName('Amount').asCurrency /
-          FieldByName('Multiplicity').asCurrency * 100) mod 100 <> 0) then
+        First;
+        while not Eof do
         begin
-          ShowMessage('Для медикамента '#13#10 + FieldByName('GoodsName').AsString
-            + #13#10'установлена кратность при отпуске со скидкой.'#13#10#13#10 +
-            'Отпускать со скидкой разрешено кратно ' + FieldByName('Multiplicity')
-            .AsString + ' упаковки.');
-          exit;
-        end;
 
-        if (FieldByName('PartionDateKindId').AsInteger <> 0) and
-          (FieldByName('AmountMonth').AsInteger = 0) and
-          not(actSpecCorr.Checked or actSpec.Checked) and
-          (FieldByName('Amount').AsCurrency <> 0) and
-          (FormParams.ParamByName('isCorrectMarketing').Value = False) and
-          (FormParams.ParamByName('isCorrectIlliquidAssets').Value = False) then
-        begin
-          ShowMessage('Ошибка.В чеке использован просроченный товар '#13#10 +
-            FieldByName('GoodsName').AsString);
-          exit;
-        end;
+          RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+              VarArrayOf([FieldByName('GoodsId').AsInteger,
+              FieldByName('PartionDateKindId').AsVariant,
+              FieldByName('NDSKindId').AsVariant,
+              FieldByName('DiscountExternalID').AsVariant,
+              FieldByName('DivisionPartiesID').AsVariant]), []);
 
-        if DiscountServiceForm.gCode <> 0 then
-        begin
-          if RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> DiscountServiceForm.gDiscountExternalId then
+          if (FieldByName('Multiplicity').asCurrency <> 0) and
+            (FieldByName('Price').asCurrency <> FieldByName('PriceSale').asCurrency)
+            and (FormParams.ParamByName('MobileDiscount').Value = 0)
+            and (trunc(FieldByName('Amount').asCurrency /
+            FieldByName('Multiplicity').asCurrency * 100) mod 100 <> 0) then
           begin
-            ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + FormParams.ParamByName('DiscountExternalName').Value + '!');
+            ShowMessage('Для медикамента '#13#10 + FieldByName('GoodsName').AsString
+              + #13#10'установлена кратность при отпуске со скидкой.'#13#10#13#10 +
+              'Отпускать со скидкой разрешено кратно ' + FieldByName('Multiplicity')
+              .AsString + ' упаковки.');
             exit;
           end;
 
-          if (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency > 0) and
-             (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
+          if (FieldByName('PartionDateKindId').AsInteger <> 0) and
+            (FieldByName('AmountMonth').AsInteger = 0) and
+            not(actSpecCorr.Checked or actSpec.Checked) and
+            (FieldByName('Amount').AsCurrency <> 0) and
+            (FormParams.ParamByName('isCorrectMarketing').Value = False) and
+            (FormParams.ParamByName('isCorrectIlliquidAssets').Value = False) then
+          begin
+            ShowMessage('Ошибка.В чеке использован просроченный товар '#13#10 +
+              FieldByName('GoodsName').AsString);
+            exit;
+          end;
+
+          if DiscountServiceForm.gCode <> 0 then
+          begin
+            if RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> DiscountServiceForm.gDiscountExternalId then
+            begin
+              ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> не участвует в дисконтной программе ' + FormParams.ParamByName('DiscountExternalName').Value + '!');
+              exit;
+            end;
+
+            if (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency > 0) and
+               (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
+               (FieldByName('Amount').AsCurrency > 0) then
+            begin
+              ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Калининой Кристине...');
+              exit;
+            end;
+
+          end else if RemainsCDS.FieldByName('isGoodsForProject').AsBoolean and (RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> 0) then
+          begin
+            ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> предназначен для дисконтной программе ' + RemainsCDS.FindField('GoodsDiscountName').AsString + '!');
+            exit;
+          end;
+
+          if RemainsCDS.FieldByName('isOnlySP').AsBoolean and (FormParams.ParamByName('HelsiID').Value = '') and (gc_User.Session <> '3') then
+          begin
+            ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> предназначен для программы "Доступні ліки"!');
+            exit;
+          end;
+
+          if FieldByName('isGoodsPairSun').AsBoolean then
+          begin
+
+            // Только целое количество
+            if (Round(FieldByName('Amount').AsCurrency) <> FieldByName('Amount').AsCurrency) then
+            begin
+              ShowMessage('Товар по соц.проекту должен продаваться целыми упаковками...');
+              exit;
+            end;
+
+            // Проверим наличие парного
+            nRecNo := RecNo;
+            nAmountPS := 0;
+            try
+              GoodsIdPS := FieldByName('GoodsId').AsInteger;
+              First;
+              while not Eof do
+              begin
+                if (FieldByName('GoodsPairSunMainId').AsInteger = GoodsIdPS) and
+                   ((FieldByName('GoodsPairSunAmount').AsCurrency = 1) or (FieldByName('JuridicalId').AsInteger <> 0)) then
+                  nAmountPS := nAmountPS + FieldByName('Amount').AsCurrency * FieldByName('GoodsPairSunAmount').AsCurrency;
+                Next;
+              end;
+            finally
+              RecNo := nRecNo;
+            end;
+
+            if nAmountPS < FieldByName('Amount').AsCurrency then
+            begin
+              ShowMessage('Количество товара <' + FieldByName('GoodsName').AsString + '> по соц.проекту больше количества парного товара...');
+              exit;
+            end;
+          end;
+
+          if (FieldByName('MultiplicitySale').AsCurrency > 0) and (Frac(FieldByName('Amount').AsCurrency) <> 0) then
+          begin
+            if Frac(FieldByName('Amount').AsCurrency / FieldByName('MultiplicitySale').AsCurrency) <> 0 then
+            begin
+              if not FieldByName('isMultiplicityError').AsBoolean or (RemainsCDS.FieldByName('Remains').AsCurrency > 0) then
+              begin
+                ShowMessage('Деление медикамента разрешено кратно ' + FieldByName('MultiplicitySale').AsString + ' !');
+                exit;
+              end;
+            end;
+          end;
+
+          if (FieldByName('Amount').AsCurrency > 0) and not FieldByName('isPresent').AsBoolean then
+          begin
+            if RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean then
+              nGoodsUKTZED := FieldByName('GoodsId').AsInteger
+            else nGoodsNotUKTZED := FieldByName('GoodsId').AsInteger;
+          end;
+
+  //        if (FieldByName('Amount').AsCurrency > 0) and FieldByName('isPresent').AsBoolean and
+  //           (FormParams.ParamByName('LoyaltyGoodsId').Value <> FieldByName('GoodsId').AsInteger)  then
+  //        begin
+  //          ShowMessage('Подарки можно продавать только по акции!');
+  //          exit;
+  //        end;
+
+          if FieldByName('isPresent').AsBoolean  then nPresent := nPresent + FieldByName('Amount').AsCurrency;
+
+          if not isPromoForSale then isPromoForSale := RemainsCDS.FieldByName('isPromoForSale').AsBoolean;
+
+          isYes := False;
+          if (RemainsCDS.FieldByName('RelatedProductId').AsInteger <> 0) then
+          begin
+
+            for I := Low(aRelatedProductId) to High(aRelatedProductId) do
+              if aRelatedProductId[I] = RemainsCDS.FieldByName('RelatedProductId').AsInteger then
+            begin
+              if aRelatedProductPrice[I] < RemainsCDS.FieldByName('Price').AsCurrency then
+                aRelatedProductPrice[I] := RemainsCDS.FieldByName('Price').AsCurrency;
+              isYes := True;
+            end;
+
+            if not isYes then
+            begin
+              SetLength(aRelatedProductId, Length(aRelatedProductId) + 1);
+              SetLength(aRelatedProductPrice, Length(aRelatedProductPrice) + 1 );
+              aRelatedProductId[High(aRelatedProductId)] := RemainsCDS.FieldByName('RelatedProductId').AsInteger;
+              aRelatedProductPrice[High(aRelatedProductPrice)] := RemainsCDS.FieldByName('Price').AsCurrency;
+            end;
+
+          end;
+
+          if (RemainsCDS.FieldByName('DistributionPromoID').AsInteger <> 0) and
              (FieldByName('Amount').AsCurrency > 0) then
           begin
-            ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Калининой Кристине...');
-            exit;
+            AddDistributionPromo (RemainsCDS.FieldByName('DistributionPromoID').AsInteger, FieldByName('Amount').AsCurrency, FieldByName('Summ').AsCurrency);
           end;
 
-        end else if RemainsCDS.FieldByName('isGoodsForProject').AsBoolean and (RemainsCDS.FieldByName('GoodsDiscountId').AsInteger <> 0) then
-        begin
-          ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> предназначен для дисконтной программе ' + RemainsCDS.FindField('GoodsDiscountName').AsString + '!');
-          exit;
-        end;
-
-        if RemainsCDS.FieldByName('isOnlySP').AsBoolean and (FormParams.ParamByName('HelsiID').Value = '') and (gc_User.Session <> '3') then
-        begin
-          ShowMessage('Ошибка.Товар <' + FieldByName('GoodsName').AsString + '> предназначен для программы "Доступні ліки"!');
-          exit;
-        end;
-
-        if FieldByName('isGoodsPairSun').AsBoolean then
-        begin
-
-          // Только целое количество
-          if (Round(FieldByName('Amount').AsCurrency) <> FieldByName('Amount').AsCurrency) then
+          if (Frac(FieldByName('Amount').AsCurrency) <> 0) and (DiscountServiceForm.gCode <> 0) then
           begin
-            ShowMessage('Товар по соц.проекту должен продаваться целыми упаковками...');
+            ShowMessage('Деление медикамента для дисконтных программ запрещено!');
             exit;
           end;
 
-          // Проверим наличие парного
-          nRecNo := RecNo;
-          nAmountPS := 0;
-          try
-            GoodsIdPS := FieldByName('GoodsId').AsInteger;
-            First;
-            while not Eof do
+          if (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger <> 0) and
+             (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger <> DiscountServiceForm.gDiscountExternalId) and
+             ((FieldByName('Amount').AsCurrency > 0) and (Frac(FieldByName('Amount').AsCurrency) = 0) and (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger = 4521216) or
+             (FormParams.ParamByName('isDiscountCommit').Value = False) and FieldByName('isPriceDiscount').AsBoolean) and
+             (FormParams.ParamByName('SPKindId').Value = 0) then
+          begin
+            if not gc_User.Local then
             begin
-              if (FieldByName('GoodsPairSunMainId').AsInteger = GoodsIdPS) and
-                 ((FieldByName('GoodsPairSunAmount').AsCurrency = 1) or (FieldByName('JuridicalId').AsInteger <> 0)) then
-                nAmountPS := nAmountPS + FieldByName('Amount').AsCurrency * FieldByName('GoodsPairSunAmount').AsCurrency;
-              Next;
+              spGet_Goods_CodeRazom.ParamByName('inDiscountExternal').Value  := RemainsCDS.FieldByName('GoodsDiscountID').AsInteger;
+              spGet_Goods_CodeRazom.ParamByName('inGoodsId').Value  := FieldByName('GoodsId').AsInteger;
+              spGet_Goods_CodeRazom.ParamByName('inAmount').Value  := FieldByName('Amount').AsCurrency;
+              spGet_Goods_CodeRazom.ParamByName('outCodeRazom').Value := 0;
+              spGet_Goods_CodeRazom.Execute;
+              if spGet_Goods_CodeRazom.ParamByName('outCodeRazom').AsFloat <> 0 then
+              begin
+                ShowMessage('Пробейте товар по ДП через ввод карты (F7 - проект ' + RemainsCDS.FieldByName('GoodsDiscountName').AsString + ')');
+                exit;
+              end;
+            end
+            else
+            begin
+              if RemainsCDS.FieldByName('GoodsDiscountID').AsInteger = 4521216 then
+              begin
+                ShowMessage('Пробейте товар по ДП через ввод карты (F7 - проект ' + RemainsCDS.FieldByName('GoodsDiscountName').AsString + ')');
+                exit;
+              end;
+            end;
+          end;
+
+          if (FormParams.ParamByName('isDiscountCommit').Value = False) then
+          begin
+            if (FieldByName('Price').AsCurrency = FieldByName('PriceSale').AsCurrency) and
+               (FieldByName('Amount').AsCurrency > 0) and FieldByName('isPriceDiscount').AsBoolean then
+            begin
+              ShowMessage('Со скидкой товар <' + FieldByName('GoodsName').AsString +
+                '> не кратный упаковки отпускать запрещено, обнулите количество и пробейте отдельным чеком (без скидки)');
+              exit;
+            end;
+          end;
+
+  //        if (FieldByName('Amount').AsCurrency > 0) and
+  //           ((FieldByName('Price').AsCurrency < UnitConfigCDS.FieldByName('MinPriceSale').AsCurrency) and (DiscountServiceForm.gCode = 0) and (FormParams.ParamByName('SPKindId').Value = 0) or
+  //           (FieldByName('Price').AsCurrency < UnitConfigCDS.FieldByName('MinPriceSale').AsCurrency) and (FieldByName('Price').AsCurrency > 0) AND
+  //           ((DiscountServiceForm.gCode <> 0) or (FormParams.ParamByName('SPKindId').Value <> 0))) then
+  //        begin
+  //          ShowMessage('Продажа товаров с ценой менее ' + UnitConfigCDS.FieldByName('MinPriceSale').AsString + ' грн. запрещена');
+  //          exit;
+  //        end;
+
+          Next;
+        end;
+      end;
+    finally
+      RemainsCDS.Filtered := True;
+      RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+        VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
+      RemainsCDS.EnableControls;
+    end;
+
+    Add_Log('Контроль УКТВЭД');
+    if not UnitConfigCDS.FieldByName('isGoodsUKTZEDRRO').AsBoolean and (nGoodsUKTZED <> 0) then
+    begin
+      try
+        if CheckCDS.Locate('GoodsID', nGoodsUKTZED, []) then
+        begin
+
+          if UnitConfigCDS.FieldByName('isCheckUKTZED').AsBoolean and (nGoodsNotUKTZED <> 0) then
+          begin
+            ShowMessage('В чеке есть позиция по УКТВЭД, чтобы не передавать большие суммы в бухгалтерию - можно данный код пробить в отдельном чеке.'#13#10#13#10 +
+              CheckCDS.FieldByName('GoodsCode').AsString + ' - ' + CheckCDS.FieldByName('GoodsName').AsString);
+            Exit;
+          end;
+
+          if not actSpec.Checked then
+          begin
+            if not gc_User.Local then
+            begin
+              actShowPUSH_UKTZED.Execute
+            end else ShowMessage('Товар <' + CheckCDS.FieldByName('GoodsName').AsString + '> из выбранной партии по техническим причинам пробивается по служебному чеку (зеленая галка)...');
+            exit;
+          end;
+        end else Exit;
+      finally
+      end;
+    end;
+
+    // Выбор сопутствующего товара
+    isYes := False;
+    if Length(aRelatedProductId) > 0 then
+    begin
+      Add_Log('Выбор сопутствующего товара');
+      for I := Low(aRelatedProductId) to High(aRelatedProductId) do
+      begin
+        MainCashForm.RemainsCDS.DisableControls;
+        MainCashForm.RemainsCDS.Filtered := false;
+        try
+          with TChoosingRelatedProductForm.Create(nil) do
+          try
+            if not SetRelatedProduct(aRelatedProductId[I], aRelatedProductPrice[I]) then Continue;
+            if ShowModal = mrOk then
+            begin
+              ChoosingRelatedProductCDS.First;
+              while not ChoosingRelatedProductCDS.Eof do
+              begin
+                if ChoosingRelatedProductCDS.FieldByName('Amount').AsCurrency > 0 then
+                begin
+                  if RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+                            VarArrayOf([ChoosingRelatedProductCDS.FieldByName('GoodsId').AsInteger,
+                                        ChoosingRelatedProductCDS.FieldByName('PartionDateKindId').AsVariant,
+                                        ChoosingRelatedProductCDS.FieldByName('NDSKindId').AsVariant,
+                                        ChoosingRelatedProductCDS.FieldByName('DiscountExternalID').AsVariant,
+                                        ChoosingRelatedProductCDS.FieldByName('DivisionPartiesID').AsVariant]), []) and
+                    (RemainsCDS.FieldByName('Remains').AsCurrency >= ChoosingRelatedProductCDS.FieldByName('Amount').AsCurrency) then
+                  try
+                    edAmount.Text := CurrToStr(ChoosingRelatedProductCDS.FieldByName('Amount').AsCurrency);
+                    InsertUpdateBillCheckItems;
+                    isYes := True;
+                  finally
+                  end;
+                end;
+                ChoosingRelatedProductCDS.Next;
+              end;
             end;
           finally
-            RecNo := nRecNo;
+            Free;
           end;
-
-          if nAmountPS < FieldByName('Amount').AsCurrency then
-          begin
-            ShowMessage('Количество товара <' + FieldByName('GoodsName').AsString + '> по соц.проекту больше количества парного товара...');
-            exit;
-          end;
+        finally
+          MainCashForm.RemainsCDS.Filtered := True;
+          MainCashForm.RemainsCDS.EnableControls;
         end;
-
-        if (FieldByName('MultiplicitySale').AsCurrency > 0) and (Frac(FieldByName('Amount').AsCurrency) <> 0) then
-        begin
-          if Frac(FieldByName('Amount').AsCurrency / FieldByName('MultiplicitySale').AsCurrency) <> 0 then
-          begin
-            if not FieldByName('isMultiplicityError').AsBoolean or (RemainsCDS.FieldByName('Remains').AsCurrency > 0) then
-            begin
-              ShowMessage('Деление медикамента разрешено кратно ' + FieldByName('MultiplicitySale').AsString + ' !');
-              exit;
-            end;
-          end;
-        end;
-
-        if (FieldByName('Amount').AsCurrency > 0) and not FieldByName('isPresent').AsBoolean then
-        begin
-          if RemainsCDS.FieldByName('isBanFiscalSale').AsBoolean then
-            nGoodsUKTZED := FieldByName('GoodsId').AsInteger
-          else nGoodsNotUKTZED := FieldByName('GoodsId').AsInteger;
-        end;
-
-//        if (FieldByName('Amount').AsCurrency > 0) and FieldByName('isPresent').AsBoolean and
-//           (FormParams.ParamByName('LoyaltyGoodsId').Value <> FieldByName('GoodsId').AsInteger)  then
-//        begin
-//          ShowMessage('Подарки можно продавать только по акции!');
-//          exit;
-//        end;
-
-        if FieldByName('isPresent').AsBoolean  then nPresent := nPresent + FieldByName('Amount').AsCurrency;
-
-        if not isPromoForSale then isPromoForSale := RemainsCDS.FieldByName('isPromoForSale').AsBoolean;
-
-        isYes := False;
-        if (RemainsCDS.FieldByName('RelatedProductId').AsInteger <> 0) then
-        begin
-
-          for I := Low(aRelatedProductId) to High(aRelatedProductId) do
-            if aRelatedProductId[I] = RemainsCDS.FieldByName('RelatedProductId').AsInteger then
-          begin
-            if aRelatedProductPrice[I] < RemainsCDS.FieldByName('Price').AsCurrency then
-              aRelatedProductPrice[I] := RemainsCDS.FieldByName('Price').AsCurrency;
-            isYes := True;
-          end;
-
-          if not isYes then
-          begin
-            SetLength(aRelatedProductId, Length(aRelatedProductId) + 1);
-            SetLength(aRelatedProductPrice, Length(aRelatedProductPrice) + 1 );
-            aRelatedProductId[High(aRelatedProductId)] := RemainsCDS.FieldByName('RelatedProductId').AsInteger;
-            aRelatedProductPrice[High(aRelatedProductPrice)] := RemainsCDS.FieldByName('Price').AsCurrency;
-          end;
-
-        end;
-
-        if (RemainsCDS.FieldByName('DistributionPromoID').AsInteger <> 0) and
-           (FieldByName('Amount').AsCurrency > 0) then
-        begin
-          AddDistributionPromo (RemainsCDS.FieldByName('DistributionPromoID').AsInteger, FieldByName('Amount').AsCurrency, FieldByName('Summ').AsCurrency);
-        end;
-
-        if (Frac(FieldByName('Amount').AsCurrency) <> 0) and (DiscountServiceForm.gCode <> 0) then
-        begin
-          ShowMessage('Деление медикамента для дисконтных программ запрещено!');
-          exit;
-        end;
-
-        if (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger <> 0) and
-           (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger <> DiscountServiceForm.gDiscountExternalId) and
-           ((FieldByName('Amount').AsCurrency > 0) and (Frac(FieldByName('Amount').AsCurrency) = 0) and (RemainsCDS.FieldByName('GoodsDiscountID').AsInteger = 4521216) or
-           (FormParams.ParamByName('isDiscountCommit').Value = False) and FieldByName('isPriceDiscount').AsBoolean) and
-           (FormParams.ParamByName('SPKindId').Value = 0) then
-        begin
-          if not gc_User.Local then
-          begin
-            spGet_Goods_CodeRazom.ParamByName('inDiscountExternal').Value  := RemainsCDS.FieldByName('GoodsDiscountID').AsInteger;
-            spGet_Goods_CodeRazom.ParamByName('inGoodsId').Value  := FieldByName('GoodsId').AsInteger;
-            spGet_Goods_CodeRazom.ParamByName('inAmount').Value  := FieldByName('Amount').AsCurrency;
-            spGet_Goods_CodeRazom.ParamByName('outCodeRazom').Value := 0;
-            spGet_Goods_CodeRazom.Execute;
-            if spGet_Goods_CodeRazom.ParamByName('outCodeRazom').AsFloat <> 0 then
-            begin
-              ShowMessage('Пробейте товар по ДП через ввод карты (F7 - проект ' + RemainsCDS.FieldByName('GoodsDiscountName').AsString + ')');
-              exit;
-            end;
-          end
-          else
-          begin
-            if RemainsCDS.FieldByName('GoodsDiscountID').AsInteger = 4521216 then
-            begin
-              ShowMessage('Пробейте товар по ДП через ввод карты (F7 - проект ' + RemainsCDS.FieldByName('GoodsDiscountName').AsString + ')');
-              exit;
-            end;
-          end;
-        end;
-
-        if (FormParams.ParamByName('isDiscountCommit').Value = False) then
-        begin
-          if (FieldByName('Price').AsCurrency = FieldByName('PriceSale').AsCurrency) and
-             (FieldByName('Amount').AsCurrency > 0) and FieldByName('isPriceDiscount').AsBoolean then
-          begin
-            ShowMessage('Со скидкой товар <' + FieldByName('GoodsName').AsString +
-              '> не кратный упаковки отпускать запрещено, обнулите количество и пробейте отдельным чеком (без скидки)');
-            exit;
-          end;
-        end;
-
-//        if (FieldByName('Amount').AsCurrency > 0) and
-//           ((FieldByName('Price').AsCurrency < UnitConfigCDS.FieldByName('MinPriceSale').AsCurrency) and (DiscountServiceForm.gCode = 0) and (FormParams.ParamByName('SPKindId').Value = 0) or
-//           (FieldByName('Price').AsCurrency < UnitConfigCDS.FieldByName('MinPriceSale').AsCurrency) and (FieldByName('Price').AsCurrency > 0) AND
-//           ((DiscountServiceForm.gCode <> 0) or (FormParams.ParamByName('SPKindId').Value <> 0))) then
-//        begin
-//          ShowMessage('Продажа товаров с ценой менее ' + UnitConfigCDS.FieldByName('MinPriceSale').AsString + ' грн. запрещена');
-//          exit;
-//        end;
-
-        Next;
       end;
+      if isYes then Exit;
     end;
-  finally
-    RemainsCDS.Filtered := True;
-    RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
-      VarArrayOf([GoodsId, PartionDateKindId, NDSKindId, DiscountExternalID, DivisionPartiesID]), []);
-    RemainsCDS.EnableControls;
-  end;
 
-  if not UnitConfigCDS.FieldByName('isGoodsUKTZEDRRO').AsBoolean and (nGoodsUKTZED <> 0) then
-  begin
-    try
-      if CheckCDS.Locate('GoodsID', nGoodsUKTZED, []) then
-      begin
-
-        if UnitConfigCDS.FieldByName('isCheckUKTZED').AsBoolean and (nGoodsNotUKTZED <> 0) then
-        begin
-          ShowMessage('В чеке есть позиция по УКТВЭД, чтобы не передавать большие суммы в бухгалтерию - можно данный код пробить в отдельном чеке.'#13#10#13#10 +
-            CheckCDS.FieldByName('GoodsCode').AsString + ' - ' + CheckCDS.FieldByName('GoodsName').AsString);
-          Exit;
-        end;
-
-        if not actSpec.Checked then
-        begin
-          if not gc_User.Local then
-          begin
-            actShowPUSH_UKTZED.Execute
-          end else ShowMessage('Товар <' + CheckCDS.FieldByName('GoodsName').AsString + '> из выбранной партии по техническим причинам пробивается по служебному чеку (зеленая галка)...');
-          exit;
-        end;
-      end else Exit;
-    finally
-    end;
-  end;
-
-  // Выбор сопутствующего товара
-  isYes := False;
-  if Length(aRelatedProductId) > 0 then for I := Low(aRelatedProductId) to High(aRelatedProductId) do
-  begin
-    MainCashForm.RemainsCDS.DisableControls;
-    MainCashForm.RemainsCDS.Filtered := false;
-    try
-      with TChoosingRelatedProductForm.Create(nil) do
-      try
-        if not SetRelatedProduct(aRelatedProductId[I], aRelatedProductPrice[I]) then Continue;
-        if ShowModal = mrOk then
-        begin
-          ChoosingRelatedProductCDS.First;
-          while not ChoosingRelatedProductCDS.Eof do
-          begin
-            if ChoosingRelatedProductCDS.FieldByName('Amount').AsCurrency > 0 then
-            begin
-              if RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
-                        VarArrayOf([ChoosingRelatedProductCDS.FieldByName('GoodsId').AsInteger,
-                                    ChoosingRelatedProductCDS.FieldByName('PartionDateKindId').AsVariant,
-                                    ChoosingRelatedProductCDS.FieldByName('NDSKindId').AsVariant,
-                                    ChoosingRelatedProductCDS.FieldByName('DiscountExternalID').AsVariant,
-                                    ChoosingRelatedProductCDS.FieldByName('DivisionPartiesID').AsVariant]), []) and
-                (RemainsCDS.FieldByName('Remains').AsCurrency >= ChoosingRelatedProductCDS.FieldByName('Amount').AsCurrency) then
-              try
-                edAmount.Text := CurrToStr(ChoosingRelatedProductCDS.FieldByName('Amount').AsCurrency);
-                InsertUpdateBillCheckItems;
-                isYes := True;
-              finally
-              end;
-            end;
-            ChoosingRelatedProductCDS.Next;
-          end;
-        end;
-      finally
-        Free;
-      end;
-    finally
-      MainCashForm.RemainsCDS.Filtered := True;
-      MainCashForm.RemainsCDS.EnableControls;
-    end;
-  end;
-  if isYes then Exit;
-
-  // Заполнение врача и покупателя для продажи
-  if isPromoForSale then
-  begin
-    if not ShowSelectionFromDirectory('врача для вставки в документ', 'Ф.И.О. врача',
-             'MedicForSale', 'gpSelect_Object_MedicForSale', 'Name', S) then Exit;
-    FormParams.ParamByName('MedicForSale').Value := S;
-    if not ShowSelectionFromDirectory('покупателя для вставки в документ', 'Ф.И.О. покупателя', 'Номер телефона',
-             'BuyerForSale', 'gpSelect_Object_BuyerForSale', 'Name', 'Phone', S, S1) then Exit;
-    FormParams.ParamByName('BuyerForSale').Value := S;
-    FormParams.ParamByName('BuyerForSalePhone').Value := S1;
-  end;
-
-  if (nPresent > 0) and not FormParams.ParamByName('LoyaltyPresent').Value then
-  begin
-    ShowMessage('Подарки можно продавать только по акции!');
-    exit;
-  end;
-
-  if nPresent > FormParams.ParamByName('LoyaltyAmountPresent').Value then
-  begin
-    ShowMessage('Количество подарков в чеке превышает количество по акции!');
-    exit;
-  end;
-
-  if not CheckSalePromoGoods then Exit;
-
-  if UnitConfigCDS.FieldByName('LoyaltySaveMoneyCount').AsInteger > 0 then
-  begin
-    if not pnlLoyaltySaveMoney.Visible then
-      SetLoyaltySaveMoney;
-    if not SetLoyaltySaveMoneyDiscount then
-      exit;
-  end;
-
-  // Контроль суммы скидки
-  if FormParams.ParamByName('LoyaltyChangeSumma').Value <> 0 then
-  begin
-    nSumAll := 0;
-    CheckCDS.First;
-    while not CheckCDS.Eof do
+    // Заполнение врача и покупателя для продажи
+    if isPromoForSale then
     begin
-      if CheckCDS.FieldByName('PriceDiscount').asCurrency > 0 then
-        nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-          CheckCDS.FieldByName('PriceDiscount').asCurrency,
-          FormParams.ParamByName('RoundingDown').Value)
-      else
-        nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-          CheckCDS.FieldByName('PriceSale').asCurrency,
-          FormParams.ParamByName('RoundingDown').Value);
-      CheckCDS.Next;
+      Add_Log('Заполнение врача и покупателя для продажи');
+      if not ShowSelectionFromDirectory('врача для вставки в документ', 'Ф.И.О. врача',
+               'MedicForSale', 'gpSelect_Object_MedicForSale', 'Name', S) then Exit;
+      FormParams.ParamByName('MedicForSale').Value := S;
+      if not ShowSelectionFromDirectory('покупателя для вставки в документ', 'Ф.И.О. покупателя', 'Номер телефона',
+               'BuyerForSale', 'gpSelect_Object_BuyerForSale', 'Name', 'Phone', S, S1) then Exit;
+      FormParams.ParamByName('BuyerForSale').Value := S;
+      FormParams.ParamByName('BuyerForSalePhone').Value := S1;
     end;
 
-    if nSumAll < FormParams.ParamByName('LoyaltyChangeSumma').Value then
+    if (nPresent > 0) and not FormParams.ParamByName('LoyaltyPresent').Value then
     begin
-      ShowMessage('Cумма отпускаемого товара ' + FormatCurr(',0.00', nSumAll) +
-        ' должна быть больше суммы скидки ' + FormatCurr(',0.00',
-        FormParams.ParamByName('LoyaltyChangeSumma').Value) + '.');
+      ShowMessage('Подарки можно продавать только по акции!');
       exit;
     end;
-  end;
 
-  // проверили что есть остаток
-  if not gc_User.Local then
-    if fCheck_RemainsError = false then
-      exit;
-
-  if not ShowDistributionPromo then Exit;
-
-  // Commit Дисконт из CDS - по всем
-  if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
-     (FormParams.ParamByName('isDiscountCommit').Value = False) then
-  begin
-
-    if not ShowPUSHMessageCash('Провести продажу по дисконтной программе на сумму ' + lblTotalSumm.Caption + ' грн.?', cResult) then Exit;
-
-    if Assigned(Cash) then CheckNumber := IntToStr(Cash.GetLastCheckId + 1);
-
-    if not DiscountServiceForm.fCommitCDS_Discount(CheckNumber,
-      CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value,
-      FormParams.ParamByName('DiscountCardNumber').Value, isDiscountCommit) then Exit;
-    FormParams.ParamByName('isDiscountCommit').Value := isDiscountCommit;
-
-    FormParams.ParamByName('isDiscountCommit').Value := True;
-  end;
-
-  if FormParams.ParamByName('SPKindId').Value = 4823010 then if not OrdersСreateCheck1303(CheckCDS) then exit;
-
-  Add_Log('PutCheckToCash');
-  PaidType := ptMoney;
-  // спросили сумму и тип оплаты
-  if not fShift then
-  begin // если с Shift, то считаем, что дали без сдачи
-    if not CashCloseDialogExecute(FTotalSumm, ASalerCash, ASalerCashAdd,
-      PaidType, nBankPOSTerminal, nPOSTerminalCode) then
-    Begin
-      if Self.ActiveControl <> edAmount then
-        Self.ActiveControl := MainGrid;
-      exit;
-    End;
-    // ***02.11.18
-    FormParams.ParamByName('SummPayAdd').Value := ASalerCashAdd;
-    // ***20.02.19
-    FormParams.ParamByName('BankPOSTerminal').Value := nBankPOSTerminal;
-  end
-  else
-    ASalerCash := FTotalSumm;
-
-  if (UnitConfigCDS.FieldByName('LimitCash').AsCurrency > 0) and (
-     (UnitConfigCDS.FieldByName('LimitCash').AsCurrency < FTotalSumm) and
-     (PaidType = ptMoney) or
-     (UnitConfigCDS.FieldByName('LimitCash').AsCurrency < ASalerCashAdd) and
-     (PaidType = ptCardAdd)) then
-  begin
-    ShowPUSHMessageCash('ЧЕК НА ТОВАР ОТ 1-го ПОКУПАТЕЛЯ НЕ ДОЛЖЕН ПРЕВЫШАТЬ 50 000 ГРН НАЛИЧНЫМИ!', cResult);
-    Exit;
-  end;
-
-  HelsiError := false;
-  if (FormParams.ParamByName('HelsiID').Value <> '') then
-  begin
-    HelsiError := True;
-    if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
+    if nPresent > FormParams.ParamByName('LoyaltyAmountPresent').Value then
     begin
-      if not CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
-        CheckCDS.FieldByName('ProgramIdSP').AsString,
-        RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
-        CheckCDS.FieldByName('Amount').asCurrency, -2),
-        CheckCDS.FieldByName('PriceSale').asCurrency,
-        RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-        CheckCDS.FieldByName('PriceSale').asCurrency, -2),
-        RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-        CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
-        RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-        CheckCDS.FieldByName('PaymentSP').asCurrency, -2),
-        CheckCDS.FieldByName('Summ').asCurrency, ConfirmationCode) then
-      begin
-        if Self.ActiveControl <> edAmount then
-          Self.ActiveControl := MainGrid;
+      ShowMessage('Количество подарков в чеке превышает количество по акции!');
+      exit;
+    end;
+
+    if not CheckSalePromoGoods then Exit;
+
+    if UnitConfigCDS.FieldByName('LoyaltySaveMoneyCount').AsInteger > 0 then
+    begin
+      Add_Log('Установка скидки SetLoyaltySaveMoney');
+      if not pnlLoyaltySaveMoney.Visible then
+        SetLoyaltySaveMoney;
+      if not SetLoyaltySaveMoneyDiscount then
         exit;
-      end;
-    end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
+    end;
+
+    // Контроль суммы скидки
+    if FormParams.ParamByName('LoyaltyChangeSumma').Value <> 0 then
     begin
-      if not CreateLikiDniproeHealthNewDispense(CheckCDS.FieldByName('IdSP').AsString,
-        CheckCDS.FieldByName('ProgramIdSP').AsString,
-        RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
-        CheckCDS.FieldByName('Amount').asCurrency, -2),
-        CheckCDS.FieldByName('PriceSale').asCurrency,
-        RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-        CheckCDS.FieldByName('PriceSale').asCurrency, -2),
-        RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-        CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
-        RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-        CheckCDS.FieldByName('PaymentSP').asCurrency, -2), ConfirmationCode) then
+      Add_Log('Контроль суммы скидки LoyaltyChangeSumma');
+      nSumAll := 0;
+      CheckCDS.First;
+      while not CheckCDS.Eof do
       begin
-        if Self.ActiveControl <> edAmount then
-          Self.ActiveControl := MainGrid;
+        if CheckCDS.FieldByName('PriceDiscount').asCurrency > 0 then
+          nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+            CheckCDS.FieldByName('PriceDiscount').asCurrency,
+            FormParams.ParamByName('RoundingDown').Value)
+        else
+          nSumAll := nSumAll + GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+            CheckCDS.FieldByName('PriceSale').asCurrency,
+            FormParams.ParamByName('RoundingDown').Value);
+        CheckCDS.Next;
+      end;
+
+      if nSumAll < FormParams.ParamByName('LoyaltyChangeSumma').Value then
+      begin
+        ShowMessage('Cумма отпускаемого товара ' + FormatCurr(',0.00', nSumAll) +
+          ' должна быть больше суммы скидки ' + FormatCurr(',0.00',
+          FormParams.ParamByName('LoyaltyChangeSumma').Value) + '.');
         exit;
       end;
     end;
-  end;
 
-  // показали что началась печать
-  ShapeState.Brush.Color := clYellow;
-  ShapeState.Repaint;
-  Application.ProcessMessages;
+    // проверили что есть остаток
+    if not gc_User.Local then
+    begin
+      Add_Log('Проверили что есть остаток');
+      if fCheck_RemainsError = false then
+        exit;
+    end;
 
-  // проверили что этот чек Не был проведен другой кассой - 04.02.2017
-  if not gc_User.Local and (FormParams.ParamByName('CheckId').Value <> 0) then
-  begin
-    dsdSave := TdsdStoredProc.Create(nil);
-    try
-      // Проверить в каком состоянии документ.
-      dsdSave.StoredProcName := 'gpGet_Movement_CheckState';
-      dsdSave.OutputType := otResult;
-      dsdSave.Params.Clear;
-      dsdSave.Params.AddParam('inId', ftInteger, ptInput,
-        FormParams.ParamByName('CheckId').Value);
-      dsdSave.Params.AddParam('outState', ftInteger, ptOutput, Null);
-      dsdSave.Execute(false, false);
-      if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then
-      // проведен
+    if not ShowDistributionPromo then Exit;
+
+    // Commit Дисконт из CDS - по всем
+    if (FormParams.ParamByName('DiscountExternalId').Value > 0) and
+       (FormParams.ParamByName('isDiscountCommit').Value = False) then
+    begin
+
+      Add_Log('Commit Дисконт из CDS');
+
+      if not ShowPUSHMessageCash('Провести продажу по дисконтной программе на сумму ' + lblTotalSumm.Caption + ' грн.?', cResult) then Exit;
+
+      if Assigned(Cash) then CheckNumber := IntToStr(Cash.GetLastCheckId + 1);
+
+      if not DiscountServiceForm.fCommitCDS_Discount(CheckNumber,
+        CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value,
+        FormParams.ParamByName('DiscountCardNumber').Value, isDiscountCommit) then Exit;
+      FormParams.ParamByName('isDiscountCommit').Value := isDiscountCommit;
+
+      FormParams.ParamByName('isDiscountCommit').Value := True;
+    end;
+
+    if FormParams.ParamByName('SPKindId').Value = 4823010 then
+    begin
+      Add_Log('Проведение продажи по соц. проекту 1303');
+      if not OrdersСreateCheck1303(CheckCDS) then exit;
+    end;
+
+    PaidType := ptMoney;
+    // спросили сумму и тип оплаты
+    if not fShift then
+    begin // если с Shift, то считаем, что дали без сдачи
+      Add_Log('Спросили сумму и тип оплаты');
+      if not CashCloseDialogExecute(FTotalSumm, ASalerCash, ASalerCashAdd,
+        PaidType, nBankPOSTerminal, nPOSTerminalCode) then
       Begin
-        ShowMessage
-          ('Ошибка.Данный чек уже сохранен другой кассой.Для продолжения - необходимо обнулить чек и набрать позиции заново.');
-        Add_Log('Ошибка.Данный чек уже сохранен другой кассой.Для продолжения - необходимо обнулить чек и набрать позиции заново.');
+        if Self.ActiveControl <> edAmount then
+          Self.ActiveControl := MainGrid;
         exit;
       End;
-    finally
-      freeAndNil(dsdSave);
+      // ***02.11.18
+      FormParams.ParamByName('SummPayAdd').Value := ASalerCashAdd;
+      // ***20.02.19
+      FormParams.ParamByName('BankPOSTerminal').Value := nBankPOSTerminal;
+
+      Add_Log('Подтвердили сумму и тип оплаты');
+    end
+    else
+      ASalerCash := FTotalSumm;
+
+    if (UnitConfigCDS.FieldByName('LimitCash').AsCurrency > 0) and (
+       (UnitConfigCDS.FieldByName('LimitCash').AsCurrency < FTotalSumm) and
+       (PaidType = ptMoney) or
+       (UnitConfigCDS.FieldByName('LimitCash').AsCurrency < ASalerCashAdd) and
+       (PaidType = ptCardAdd)) then
+    begin
+      ShowPUSHMessageCash('ЧЕК НА ТОВАР ОТ 1-го ПОКУПАТЕЛЯ НЕ ДОЛЖЕН ПРЕВЫШАТЬ 50 000 ГРН НАЛИЧНЫМИ!', cResult);
+      Exit;
     end;
-  end;
 
-  FormParams.ParamByName('PartionDateKindId').Value := GetPartionDateKindId;
-
-  // послали на печать
-  try
-
-    Add_Log('Печать чека');
-    if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd,
-      MainCashForm.PaidType, ZReport, FFiscalNumber, CheckNumber, nPOSTerminalCode) then
-    Begin
-      Add_Log('Печать чека завершена');
-
-      Add_Log('Сохранение чека');
-      ShapeState.Brush.Color := clRed;
-      ShapeState.Repaint;
-      if SaveLocal(CheckCDS, FormParams.ParamByName('ManagerId').Value,
-        FormParams.ParamByName('ManagerName').Value,
-        FormParams.ParamByName('BayerName').Value,
-        // ***16.08.16
-        FormParams.ParamByName('BayerPhone').Value,
-        FormParams.ParamByName('ConfirmedKindName').Value,
-        FormParams.ParamByName('InvNumberOrder').Value,
-        FormParams.ParamByName('ConfirmedKindClientName').Value,
-        // ***20.07.16
-        FormParams.ParamByName('DiscountExternalId').Value,
-        FormParams.ParamByName('DiscountExternalName').Value,
-        FormParams.ParamByName('DiscountCardNumber').Value,
-        // ***08.04.17
-        FormParams.ParamByName('PartnerMedicalId').Value,
-        FormParams.ParamByName('PartnerMedicalName').Value,
-        FormParams.ParamByName('Ambulance').Value,
-        FormParams.ParamByName('MedicSP').Value,
-        FormParams.ParamByName('InvNumberSP').Value,
-        FormParams.ParamByName('OperDateSP').Value,
-        // ***15.06.17
-        FormParams.ParamByName('SPKindId').Value,
-        FormParams.ParamByName('SPKindName').Value,
-        FormParams.ParamByName('SPTax').Value,
-        // ***05.02.18
-        FormParams.ParamByName('PromoCodeID').Value,
-        // ***27.06.18
-        FormParams.ParamByName('ManualDiscount').Value,
-        // ***02.11.18
-        FormParams.ParamByName('SummPayAdd').Value,
-        // ***14.01.19
-        FormParams.ParamByName('MemberSPID').Value,
-        // ***20.02.19
-        FormParams.ParamByName('BankPOSTerminal').Value,
-        // ***25.02.19
-        FormParams.ParamByName('JackdawsChecksCode').Value,
-        // ***28.01.19
-        FormParams.ParamByName('SiteDiscount').Value,
-        // ***02.04.19
-        FormParams.ParamByName('RoundingDown').Value,
-        // ***13.05.19
-        FormParams.ParamByName('PartionDateKindId').Value,
-        FormParams.ParamByName('ConfirmationCodeSP').Value,
-        // ***07.11.19
-        FormParams.ParamByName('LoyaltySignID').Value,
-        // ***08.01.20
-        FormParams.ParamByName('LoyaltySMID').Value,
-        FormParams.ParamByName('LoyaltySMSumma').Value,
-        // ***16.08.20
-        FormParams.ParamByName('DivisionPartiesID').Value,
-        FormParams.ParamByName('DivisionPartiesName').Value,
-        // ***11.10.20
-        FormParams.ParamByName('MedicForSale').Value,
-        FormParams.ParamByName('BuyerForSale').Value,
-        FormParams.ParamByName('BuyerForSalePhone').Value,
-        FormParams.ParamByName('DistributionPromoList').Value,
-        // ***05.03.21
-        FormParams.ParamByName('MedicKashtanId').Value,
-        FormParams.ParamByName('MemberKashtanId').Value,
-        // ***19.03.21
-        FormParams.ParamByName('isCorrectMarketing').Value,
-        FormParams.ParamByName('isCorrectIlliquidAssets').Value,
-        FormParams.ParamByName('isDoctors').Value,
-        FormParams.ParamByName('isDiscountCommit').Value,
-        FormParams.ParamByName('MedicalProgramSPId').Value,
-        FormParams.ParamByName('isManual').Value,
-        FormParams.ParamByName('Category1303Id').Value,
-
-        True, // NeedComplete
-        False, // isErrorRRO
-        FormParams.ParamByName('isPaperRecipeSP').Value,
-        FormParams.ParamByName('UserKeyId').Value,
-        ZReport,     // Номер Z отчета
-        CheckNumber, // FiscalCheckNumber
-        FormParams.ParamByName('CheckId').Value,  // ID чека
-        UID // out AUID
-        ) then
-      Begin
-
-        if FormParams.ParamByName('SPKindId').Value = 4823010 then OrdersСreate1303(CheckNumber);
-
-        if (FormParams.ParamByName('HelsiID').Value <> '') then
+    HelsiError := false;
+    if (FormParams.ParamByName('HelsiID').Value <> '') then
+    begin
+      Add_Log('Создания запроса на погашение рецепта по СП');
+      HelsiError := True;
+      if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
+      begin
+        if not CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
+          CheckCDS.FieldByName('ProgramIdSP').AsString,
+          RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
+          CheckCDS.FieldByName('Amount').asCurrency, -2),
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+          CheckCDS.FieldByName('PriceSale').asCurrency, -2),
+          RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+          CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
+          RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+          CheckCDS.FieldByName('PaymentSP').asCurrency, -2),
+          CheckCDS.FieldByName('Summ').asCurrency, ConfirmationCode) then
         begin
+          if Self.ActiveControl <> edAmount then
+            Self.ActiveControl := MainGrid;
+          exit;
+        end;
+      end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
+      begin
+        if not CreateLikiDniproeHealthNewDispense(CheckCDS.FieldByName('IdSP').AsString,
+          CheckCDS.FieldByName('ProgramIdSP').AsString,
+          RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
+          CheckCDS.FieldByName('Amount').asCurrency, -2),
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+          CheckCDS.FieldByName('PriceSale').asCurrency, -2),
+          RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+          CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
+          RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+          CheckCDS.FieldByName('PaymentSP').asCurrency, -2), ConfirmationCode) then
+        begin
+          if Self.ActiveControl <> edAmount then
+            Self.ActiveControl := MainGrid;
+          exit;
+        end;
+      end;
+    end;
 
-//          if (gc_User.Session = '3') then HelsiError := True
-//          else
-          if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
+    // показали что началась печать
+    ShapeState.Brush.Color := clYellow;
+    ShapeState.Repaint;
+    Application.ProcessMessages;
+
+    // проверили что этот чек Не был проведен другой кассой - 04.02.2017
+    if not gc_User.Local and (FormParams.ParamByName('CheckId').Value <> 0) then
+    begin
+      Add_Log('Проверили что этот чек Не был проведен другой кассой');
+      dsdSave := TdsdStoredProc.Create(nil);
+      try
+        // Проверить в каком состоянии документ.
+        dsdSave.StoredProcName := 'gpGet_Movement_CheckState';
+        dsdSave.OutputType := otResult;
+        dsdSave.Params.Clear;
+        dsdSave.Params.AddParam('inId', ftInteger, ptInput,
+          FormParams.ParamByName('CheckId').Value);
+        dsdSave.Params.AddParam('outState', ftInteger, ptOutput, Null);
+        dsdSave.Execute(false, false);
+        if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then
+        // проведен
+        Begin
+          ShowMessage
+            ('Ошибка.Данный чек уже сохранен другой кассой.Для продолжения - необходимо обнулить чек и набрать позиции заново.');
+          Add_Log('Ошибка.Данный чек уже сохранен другой кассой.Для продолжения - необходимо обнулить чек и набрать позиции заново.');
+          exit;
+        End;
+      finally
+        freeAndNil(dsdSave);
+      end;
+    end;
+
+    Add_Log('Заполнили PartionDateKindId');
+    FormParams.ParamByName('PartionDateKindId').Value := GetPartionDateKindId;
+
+    // послали на печать
+    try
+
+      Add_Log('Печать чека');
+      if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd,
+        MainCashForm.PaidType, ZReport, FFiscalNumber, CheckNumber, nPOSTerminalCode) then
+      Begin
+        Add_Log('Печать чека завершена');
+
+        Add_Log('Сохранение чека');
+        ShapeState.Brush.Color := clRed;
+        ShapeState.Repaint;
+        if SaveLocal(CheckCDS, FormParams.ParamByName('ManagerId').Value,
+          FormParams.ParamByName('ManagerName').Value,
+          FormParams.ParamByName('BayerName').Value,
+          // ***16.08.16
+          FormParams.ParamByName('BayerPhone').Value,
+          FormParams.ParamByName('ConfirmedKindName').Value,
+          FormParams.ParamByName('InvNumberOrder').Value,
+          FormParams.ParamByName('ConfirmedKindClientName').Value,
+          // ***20.07.16
+          FormParams.ParamByName('DiscountExternalId').Value,
+          FormParams.ParamByName('DiscountExternalName').Value,
+          FormParams.ParamByName('DiscountCardNumber').Value,
+          // ***08.04.17
+          FormParams.ParamByName('PartnerMedicalId').Value,
+          FormParams.ParamByName('PartnerMedicalName').Value,
+          FormParams.ParamByName('Ambulance').Value,
+          FormParams.ParamByName('MedicSP').Value,
+          FormParams.ParamByName('InvNumberSP').Value,
+          FormParams.ParamByName('OperDateSP').Value,
+          // ***15.06.17
+          FormParams.ParamByName('SPKindId').Value,
+          FormParams.ParamByName('SPKindName').Value,
+          FormParams.ParamByName('SPTax').Value,
+          // ***05.02.18
+          FormParams.ParamByName('PromoCodeID').Value,
+          // ***27.06.18
+          FormParams.ParamByName('ManualDiscount').Value,
+          // ***02.11.18
+          FormParams.ParamByName('SummPayAdd').Value,
+          // ***14.01.19
+          FormParams.ParamByName('MemberSPID').Value,
+          // ***20.02.19
+          FormParams.ParamByName('BankPOSTerminal').Value,
+          // ***25.02.19
+          FormParams.ParamByName('JackdawsChecksCode').Value,
+          // ***28.01.19
+          FormParams.ParamByName('SiteDiscount').Value,
+          // ***02.04.19
+          FormParams.ParamByName('RoundingDown').Value,
+          // ***13.05.19
+          FormParams.ParamByName('PartionDateKindId').Value,
+          FormParams.ParamByName('ConfirmationCodeSP').Value,
+          // ***07.11.19
+          FormParams.ParamByName('LoyaltySignID').Value,
+          // ***08.01.20
+          FormParams.ParamByName('LoyaltySMID').Value,
+          FormParams.ParamByName('LoyaltySMSumma').Value,
+          // ***16.08.20
+          FormParams.ParamByName('DivisionPartiesID').Value,
+          FormParams.ParamByName('DivisionPartiesName').Value,
+          // ***11.10.20
+          FormParams.ParamByName('MedicForSale').Value,
+          FormParams.ParamByName('BuyerForSale').Value,
+          FormParams.ParamByName('BuyerForSalePhone').Value,
+          FormParams.ParamByName('DistributionPromoList').Value,
+          // ***05.03.21
+          FormParams.ParamByName('MedicKashtanId').Value,
+          FormParams.ParamByName('MemberKashtanId').Value,
+          // ***19.03.21
+          FormParams.ParamByName('isCorrectMarketing').Value,
+          FormParams.ParamByName('isCorrectIlliquidAssets').Value,
+          FormParams.ParamByName('isDoctors').Value,
+          FormParams.ParamByName('isDiscountCommit').Value,
+          FormParams.ParamByName('MedicalProgramSPId').Value,
+          FormParams.ParamByName('isManual').Value,
+          FormParams.ParamByName('Category1303Id').Value,
+
+          True, // NeedComplete
+          False, // isErrorRRO
+          FormParams.ParamByName('isPaperRecipeSP').Value,
+          FormParams.ParamByName('UserKeyId').Value,
+          ZReport,     // Номер Z отчета
+          CheckNumber, // FiscalCheckNumber
+          FormParams.ParamByName('CheckId').Value,  // ID чека
+          UID // out AUID
+          ) then
+        Begin
+
+          if FormParams.ParamByName('SPKindId').Value = 4823010 then OrdersСreate1303(CheckNumber);
+
+          if (FormParams.ParamByName('HelsiID').Value <> '') then
           begin
-            HelsiError := not SetPayment(CheckNumber,
-              CheckCDS.FieldByName('Summ').asCurrency);
-            if not HelsiError then
-              HelsiError := not IntegrationClientSign;
-            if not HelsiError then
-              HelsiError := not ProcessSignedDispense;
 
-            if HelsiError then
+  //          if (gc_User.Session = '3') then HelsiError := True
+  //          else
+            if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1 then
             begin
-              RejectDispense;
-
-              if CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
-                CheckCDS.FieldByName('ProgramIdSP').AsString,
-                RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
-                CheckCDS.FieldByName('Amount').asCurrency, -2),
-                CheckCDS.FieldByName('PriceSale').asCurrency,
-                RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-                CheckCDS.FieldByName('PriceSale').asCurrency, -2),
-                RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-                CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
-                RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
-                CheckCDS.FieldByName('PaymentSP').asCurrency, -2),
-                CheckCDS.FieldByName('Summ').asCurrency,
-                ConfirmationCode) then
-              begin
-                HelsiError := not SetPayment(CheckNumber,
-                  CheckCDS.FieldByName('Summ').asCurrency);
-                if not HelsiError then
-                  HelsiError := not IntegrationClientSign;
-                if not HelsiError then
-                  HelsiError := not ProcessSignedDispense;
-              end;
+              HelsiError := not SetPayment(CheckNumber,
+                CheckCDS.FieldByName('Summ').asCurrency);
+              if not HelsiError then
+                HelsiError := not IntegrationClientSign;
+              if not HelsiError then
+                HelsiError := not ProcessSignedDispense;
 
               if HelsiError then
+              begin
                 RejectDispense;
-            end;
 
-            if not GetStateReceipt then
-            begin
-              // pnlHelsiError.Visible := True;
-              // edHelsiError.Text := FormParams.ParamByName('InvNumberSP').Value;
+                if CreateNewDispense(CheckCDS.FieldByName('IdSP').AsString,
+                  CheckCDS.FieldByName('ProgramIdSP').AsString,
+                  RoundTo(CheckCDS.FieldByName('CountSP').asCurrency *
+                  CheckCDS.FieldByName('Amount').asCurrency, -2),
+                  CheckCDS.FieldByName('PriceSale').asCurrency,
+                  RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+                  CheckCDS.FieldByName('PriceSale').asCurrency, -2),
+                  RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+                  CheckCDS.FieldByName('PriceRetSP').asCurrency, -2) -
+                  RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+                  CheckCDS.FieldByName('PaymentSP').asCurrency, -2),
+                  CheckCDS.FieldByName('Summ').asCurrency,
+                  ConfirmationCode) then
+                begin
+                  HelsiError := not SetPayment(CheckNumber,
+                    CheckCDS.FieldByName('Summ').asCurrency);
+                  if not HelsiError then
+                    HelsiError := not IntegrationClientSign;
+                  if not HelsiError then
+                    HelsiError := not ProcessSignedDispense;
+                end;
 
-              nOldColor := Screen.MessageFont.Color;
-              try
-                Screen.MessageFont.Color := clRed;
-                Screen.MessageFont.Size := Screen.MessageFont.Size + 2;
-                MessageDlg
-                  ('РЕЦЕПТ НЕ ПРОШЕЛ ПО ХЕЛСИ !!!'#13#10#13#10'Нужно его погасить в FCASH в "Чеки->Сверка Чеков с Хелси"!',
-                  mtError, [mbOK], 0);
-              finally
-                Screen.MessageFont.Size := Screen.MessageFont.Size - 2;
-                Screen.MessageFont.Color := nOldColor;
+                if HelsiError then
+                  RejectDispense;
               end;
-            end;
-          end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
-          begin
-            if not SignRecipeLikiDniproeHealth then
-            begin
-              nOldColor := Screen.MessageFont.Color;
-              try
-                Screen.MessageFont.Color := clRed;
-                Screen.MessageFont.Size := Screen.MessageFont.Size + 2;
-                MessageDlg
-                  ('РЕЦЕПТ НЕ ПРОШЕЛ ПО ХЕЛСИ !!!'#13#10#13#10'Нужно его погасить в FCASH в "Чеки->Сверка Чеков с Хелси"!',
-                  mtError, [mbOK], 0);
-              finally
-                Screen.MessageFont.Size := Screen.MessageFont.Size - 2;
-                Screen.MessageFont.Color := nOldColor;
-              end;
-            end;
-          end else
-          begin
-            MessageDlg('Не определен механизм подписи рецепта!', mtError, [mbOK], 0);
-          end;
-        End;
 
-        Add_Log('Чек сохранен');
-        CheckOldId := FormParams.ParamByName('CheckOldId').Value;
-        NewCheck(false);
+              if not GetStateReceipt then
+              begin
+                // pnlHelsiError.Visible := True;
+                // edHelsiError.Text := FormParams.ParamByName('InvNumberSP').Value;
+
+                nOldColor := Screen.MessageFont.Color;
+                try
+                  Screen.MessageFont.Color := clRed;
+                  Screen.MessageFont.Size := Screen.MessageFont.Size + 2;
+                  MessageDlg
+                    ('РЕЦЕПТ НЕ ПРОШЕЛ ПО ХЕЛСИ !!!'#13#10#13#10'Нужно его погасить в FCASH в "Чеки->Сверка Чеков с Хелси"!',
+                    mtError, [mbOK], 0);
+                finally
+                  Screen.MessageFont.Size := Screen.MessageFont.Size - 2;
+                  Screen.MessageFont.Color := nOldColor;
+                end;
+              end;
+            end else if UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 2 then
+            begin
+              if not SignRecipeLikiDniproeHealth then
+              begin
+                nOldColor := Screen.MessageFont.Color;
+                try
+                  Screen.MessageFont.Color := clRed;
+                  Screen.MessageFont.Size := Screen.MessageFont.Size + 2;
+                  MessageDlg
+                    ('РЕЦЕПТ НЕ ПРОШЕЛ ПО ХЕЛСИ !!!'#13#10#13#10'Нужно его погасить в FCASH в "Чеки->Сверка Чеков с Хелси"!',
+                    mtError, [mbOK], 0);
+                finally
+                  Screen.MessageFont.Size := Screen.MessageFont.Size - 2;
+                  Screen.MessageFont.Color := nOldColor;
+                end;
+              end;
+            end else
+            begin
+              MessageDlg('Не определен механизм подписи рецепта!', mtError, [mbOK], 0);
+            end;
+          End;
+
+          Add_Log('Чек сохранен');
+          CheckOldId := FormParams.ParamByName('CheckOldId').Value;
+          NewCheck(false);
+        end;
+      End;
+
+      if HelsiError and (UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1) then RejectDispense;
+
+    finally
+      ShapeState.Brush.Color := clGreen;
+      ShapeState.Repaint;
+
+      if (CheckOldId <> 0) and (MessageDlg('Загрузить разбитый ВИП чек?', mtConfirmation, mbYesNo, 0) = mrYes) then
+      begin
+         spSelectCheckId.ParamByName('inMovementId').Value := CheckOldId;
+         spSelectCheckId.Execute;
+         spSelectCheck.Execute;
+         LoadVIPCheck;
       end;
-    End;
-
-    if HelsiError and (UnitConfigCDS.FieldByName('eHealthApi').AsInteger = 1) then RejectDispense;
-
-  finally
-    ShapeState.Brush.Color := clGreen;
-    ShapeState.Repaint;
-
-    if (CheckOldId <> 0) and (MessageDlg('Загрузить разбитый ВИП чек?', mtConfirmation, mbYesNo, 0) = mrYes) then
-    begin
-       spSelectCheckId.ParamByName('inMovementId').Value := CheckOldId;
-       spSelectCheckId.Execute;
-       spSelectCheck.Execute;
-       LoadVIPCheck;
     end;
+  finally
+    Add_Log('Finish PutCheckToCash ');
   end;
 end;
 
@@ -8753,6 +8802,8 @@ begin
   begin
     if Abs(MinutesBetween(Cash.GetTime, Now)) > 2 then Cash.SetTime;
   end;
+
+  TrayIcon.Hint := Self.Caption;
 end;
 
 function TMainCashForm2.InitLocalStorage: Boolean;
@@ -14544,6 +14595,7 @@ begin
   Result := True;
   if SalePromoGoodsCDS.IsEmpty then Exit;
 
+  Add_Log('Проверка акционного товара');
   CheckCDS.DisableConstraints;
   Bookmark := CheckCDS.GetBookmark;
   CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
@@ -15450,6 +15502,7 @@ begin
   FormParams.ParamByName('DistributionPromoList').Value := '';
 
   if Length(aDistributionPromoId) = 0 then Exit;
+  Add_Log('Заполнение DistributionPromoList');
 
   try
 
@@ -15612,6 +15665,7 @@ begin
     end;
   end;
 
+  TrayIcon.Hint := Self.Caption;
 end;
 
 procedure TMainCashForm2.ClearAll;

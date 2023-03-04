@@ -516,6 +516,11 @@ type
     actUpdate_ShowPlanMobileAppUser: TdsdExecStoredProc;
     dxBarButton42: TdxBarButton;
     spUpdate_ShowPlanMobileAppUser: TdsdStoredProc;
+    spUpdate_ColdOutSUN: TdsdStoredProc;
+    mactUpdate_ColdOutSUN: TMultiAction;
+    actUpdate_ColdOutSUN: TdsdExecStoredProc;
+    isColdOutSUN: TcxGridDBColumn;
+    dxBarButton43: TdxBarButton;
   private
     { Private declarations }
   public

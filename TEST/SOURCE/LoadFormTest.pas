@@ -53,6 +53,7 @@ type
     procedure LoadContractTradeMarkFormTest;
     procedure LoadCorrespondentAccountFormTest;
     procedure LoadCostFormTest;
+    procedure LoadChangePercentMovementFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadCurrencyMovementFormTest;
     procedure LoadDefaultFormTest;
@@ -561,6 +562,14 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCostJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCostJournalChoiceForm');
+end;
+
+procedure TLoadFormTest.LoadChangePercentMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangePercentMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChangePercentMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangePercentJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChangePercentJournalForm');
 end;
 
 procedure TLoadFormTest.LoadCurrencyMovementFormTest;

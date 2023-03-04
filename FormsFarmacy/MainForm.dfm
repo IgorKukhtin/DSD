@@ -5434,6 +5434,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actAsinoPharmaSPJournal: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1057#1086#1094#1080#1072#1083#1100#1085#1072#1103' '#1087#1088#1086#1075#1088#1072#1084#1084#1072' '#1040#1089#1080#1085#1086' '#1060#1072#1088#1084#1072' '#1057#1090#1072#1088#1090
+      FormName = 'TAsinoPharmaSPJournalForm'
+      FormNameParam.Value = 'TAsinoPharmaSPJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5770,6 +5781,9 @@
         end
         object N368: TMenuItem
           Action = actSalePromoGoodsJournal
+        end
+        object N376: TMenuItem
+          Action = actAsinoPharmaSPJournal
         end
         object N212: TMenuItem
           Caption = '-'

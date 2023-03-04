@@ -61,7 +61,10 @@ BEGIN
         RETURN QUERY
             WITH 
             tmpPrice AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
-                              , MAX(ROUND(Price_Value.ValueData,2))::TFloat  AS Price 
+                              , ROUND(SUM(CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                                AND ObjectFloat_Goods_Price.ValueData > 0
+                                               THEN ObjectFloat_Goods_Price.ValueData
+                                               ELSE Price_Value.ValueData END) / COUNT(*), 2)::TFloat  AS Price 
                          FROM ObjectLink AS ObjectLink_Price_Unit
                               LEFT JOIN ObjectLink AS Price_Goods
                                      ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -69,6 +72,13 @@ BEGIN
                               LEFT JOIN ObjectFloat AS Price_Value
                                      ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                                     AND Price_Value.DescId =  zc_ObjectFloat_Price_Value()
+                              -- Фикс цена для всей Сети
+                              LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                     ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                                    AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                      ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                                     AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
                          WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                            AND (ObjectLink_Price_Unit.ChildObjectId = vbUnitId     
                             OR ObjectLink_Price_Unit.ChildObjectId in (SELECT ObjectLink.ObjectId 
@@ -190,4 +200,4 @@ $BODY$
 
 --
 
-select * from gpSelect_MovementItem_PromoUnit(inMovementId := 30890062 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_MovementItem_PromoUnit(inMovementId := 30890062 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

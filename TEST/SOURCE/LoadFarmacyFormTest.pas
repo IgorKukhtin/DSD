@@ -22,6 +22,7 @@ type
     procedure LoadArticleLossEditFormTest;
     procedure LoadArticleLossFormTest;
     procedure LoadAreaFormTest;
+    procedure LoadAsinoPharmaSPFormTest;
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
     procedure LoadBankAccountDocumentFormTest;
@@ -305,6 +306,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAreaForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaEditForm');
+end;
+
+procedure TLoadFormTest.LoadAsinoPharmaSPFormTest;
+begin
+  // Регионы
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAsinoPharmaSPJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAsinoPharmaSPJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAsinoPharmaSPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAsinoPharmaSPForm');
 end;
 
 procedure TLoadFormTest.LoadDiffKindFormTest;

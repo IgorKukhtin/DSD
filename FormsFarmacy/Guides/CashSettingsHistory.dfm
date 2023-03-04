@@ -57,6 +57,14 @@ inherited CashSettingsHistoryForm: TCashSettingsHistoryForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072' '#1087#1086' '#1084#1086#1073#1080#1083#1100#1085#1086#1084#1091' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102
             Width = 114
           end
+          object PrizeThreshold: TcxGridDBColumn
+            Caption = #1050#1086#1088'-'#1082#1072' '#1087#1086#1088#1086#1075#1072' '#1087#1086' '#1087#1088#1077#1084#1080#1080' '#1087#1083#1072#1085#1072' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            DataBinding.FieldName = 'PrizeThreshold'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1087#1086#1088#1086#1075#1072' '#1087#1086' '#1087#1088#1077#1084#1080#1080' '#1087#1088#1080' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1080' '#1087#1083#1072#1085#1072' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+            Width = 98
+          end
         end
       end
     end
@@ -192,6 +200,15 @@ inherited CashSettingsHistoryForm: TCashSettingsHistoryForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PenMobApp'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrizeThreshold'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PrizeThreshold'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

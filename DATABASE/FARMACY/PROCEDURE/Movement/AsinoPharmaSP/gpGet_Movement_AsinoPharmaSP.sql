@@ -1,10 +1,9 @@
 -- Function: gpGet_Movement_AsinoPharmaSP()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_AsinoPharmaSP (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_AsinoPharmaSP (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_AsinoPharmaSP(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -68,4 +67,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpGet_Movement_AsinoPharmaSP (inMovementId:= 1, inOperDate:= '01.01.2018', inSession:= '3')
+-- SELECT * FROM gpGet_Movement_AsinoPharmaSP (inMovementId:= 1, inSession:= '3')

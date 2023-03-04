@@ -1013,6 +1013,8 @@ type
     N374: TMenuItem;
     acTReport_FulfillmentPlanMobileAppUser: TdsdOpenForm;
     N375: TMenuItem;
+    actAsinoPharmaSPJournal: TdsdOpenForm;
+    N376: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
