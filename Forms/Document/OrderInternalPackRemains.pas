@@ -269,6 +269,9 @@ type
     AmountPartnerTotal_diff: TcxGridDBColumn;
     Income_CEH_diff: TcxGridDBColumn;
     chAmountPartnerTotal_diff: TcxGridDBColumn;
+    RemainsRK: TcxGridDBColumn;
+    chRemainsRK: TcxGridDBColumn;
+    chtRemainsRK: TcxGridDBColumn;
   private
     { Private declarations }
   public
