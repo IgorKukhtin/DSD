@@ -57,6 +57,10 @@ $BODY$
    DECLARE vbPeriod_t1    Integer;
    DECLARE vbPeriod_t2    Integer;
    DECLARE vbPeriod_t_max Integer;
+
+   DECLARE vbisEliminateColdSUN Boolean;
+   DECLARE vbisOnlyColdSUN Boolean;
+   DECLARE vbisShoresSUN Boolean;
 BEGIN
      --
      vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', inUserId);
@@ -70,6 +74,23 @@ BEGIN
      vbPeriod_t1    := 35;
      vbPeriod_t2    := 25;     
 
+     SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
+          , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
+          , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbisShoresSUN, vbisOnlyColdSUN
+     FROM Object AS Object_CashSettings
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
+                                  ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_EliminateColdSUN.DescId = zc_ObjectBoolean_CashSettings_EliminateColdSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_ShoresSUN
+                                  ON ObjectBoolean_CashSettings_ShoresSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_ShoresSUN.DescId = zc_ObjectBoolean_CashSettings_ShoresSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUN
+                                  ON ObjectBoolean_CashSettings_OnlyColdSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_OnlyColdSUN.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUN()
+     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+     LIMIT 1;
+
      -- все Товары для схемы SUN UKTZED
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpGoods_SUN_UKTZED'))
      THEN
@@ -79,7 +100,7 @@ BEGIN
      -- все Подразделения для схемы SUN UKTZED
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpUnit_SUN_UKTZED'))
      THEN
-       CREATE TEMP TABLE _tmpUnit_SUN_UKTZED (UnitId Integer, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer, DaySendSUN Integer, DaySendSUNAll Integer, Limit_N TFloat, isOutUKTZED_SUN1 Boolean) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpUnit_SUN_UKTZED (UnitId Integer, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer, DaySendSUN Integer, DaySendSUNAll Integer, Limit_N TFloat, isOutUKTZED_SUN1 Boolean, isColdOutSUN Boolean) ON COMMIT DROP;
      END IF;
 
      -- Товары дисконтных проектов
@@ -150,7 +171,7 @@ BEGIN
      DELETE FROM _tmpResult_UKTZED;
 
      -- все Подразделения для схемы SUN
-     INSERT INTO _tmpUnit_SUN_UKTZED (UnitId, Value_T1, Value_T2, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isOutUKTZED_SUN1)
+     INSERT INTO _tmpUnit_SUN_UKTZED (UnitId, Value_T1, Value_T2, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isOutUKTZED_SUN1, isColdOutSUN)
         SELECT OB.ObjectId
              , CASE WHEN OF_T1.ValueData > 0 THEN OF_T1.ValueData ELSE vbPeriod_t1 END    AS Value_T1
              , CASE WHEN OF_T2.ValueData > 0 THEN OF_T2.ValueData ELSE vbPeriod_t2 END    AS Value_T2
@@ -158,7 +179,8 @@ BEGIN
              , CASE WHEN OF_DS.ValueData >  0 THEN OF_DS.ValueData ELSE 10 END :: Integer AS DaySendSUN
              , CASE WHEN OF_DSA.ValueData > 0 THEN OF_DSA.ValueData ELSE 0 END :: Integer AS DaySendSUNAll
              , CASE WHEN OF_SN.ValueData >  0 THEN OF_SN.ValueData ELSE 0  END :: TFloat  AS Limit_N
-             , COALESCE (ObjectBoolean_OutUKTZED_SUN1.ValueData, FALSE)  :: Boolean      AS isOutUKTZED_SUN1
+             , COALESCE (ObjectBoolean_OutUKTZED_SUN1.ValueData, FALSE)  :: Boolean       AS isOutUKTZED_SUN1
+             , COALESCE (OB_ColdOutSUN.ValueData, FALSE)                                  AS isColdOutSUN
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectFloat   AS OF_T1  ON OF_T1.ObjectId  = OB.ObjectId AND OF_T1.DescId  = zc_ObjectFloat_Unit_T1_SUN_v2()
              LEFT JOIN ObjectFloat   AS OF_T2  ON OF_T2.ObjectId  = OB.ObjectId AND OF_T2.DescId  = zc_ObjectFloat_Unit_T2_SUN_v2()
@@ -171,6 +193,9 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_OutUKTZED_SUN1
                                      ON ObjectBoolean_OutUKTZED_SUN1.ObjectId = OB.ObjectId
                                     AND ObjectBoolean_OutUKTZED_SUN1.DescId = zc_ObjectBoolean_Unit_OutUKTZED_SUN1()
+             LEFT JOIN ObjectBoolean AS OB_ColdOutSUN    
+                                     ON OB_ColdOutSUN.ObjectId    = OB.ObjectId 
+                                     AND OB_ColdOutSUN.DescId    = zc_ObjectBoolean_Unit_ColdOutSUN()
         WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN()
           -- если указан день недели - проверим его
           AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
@@ -286,6 +311,25 @@ BEGIN
         SELECT tmpSUN.UnitId, tmpSUN.GoodsId, tmpSUN.Amount
         FROM tmpSUN;
 
+        -- Xолод
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpConditionsKeep'))
+     THEN
+       DROP TABLE tmpConditionsKeep;
+     END IF;
+
+     CREATE TEMP TABLE tmpConditionsKeep ON COMMIT DROP AS
+     SELECT Object_Goods.ID AS ObjectId
+     FROM Object_Goods_Retail AS Object_Goods 
+          LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
+                                  ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
+                                 AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
+     WHERE Object_Goods.RetailId = 4
+       AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
+            OR Object_Goods_Main.isColdSUN = TRUE);
+     
+     ANALYSE tmpConditionsKeep;
+     
      -- все Товары для схемы SUN UKTZED
      WITH tmpRemains AS (SELECT Container.ObjectId     AS GoodsId
                          FROM Container
@@ -854,9 +898,16 @@ BEGIN
                                                         ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_all_UKTZED.UnitId
                                                        AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_all_UKTZED.GoodsId
 
+            -- а здесь, отбросили !!холод!!
+            LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_all_UKTZED.GoodsId
+
        WHERE _tmpUnit_SUN_UKTZED.isOutUKTZED_SUN1 = True
          AND _tmpRemains_all_UKTZED.AmountRemains - _tmpRemains_all_UKTZED.AmountNotSend > 0
          AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+             -- отбросили !!холод!!
+         AND ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+             tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE OR
+             _tmpUnit_SUN_UKTZED.isColdOutSUN = TRUE)
        ORDER BY _tmpRemains_all_UKTZED.UnitId
               , _tmpRemains_all_UKTZED.GoodsId
        ;

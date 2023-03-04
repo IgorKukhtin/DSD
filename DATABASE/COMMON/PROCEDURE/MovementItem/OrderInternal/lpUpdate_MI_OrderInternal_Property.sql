@@ -4,7 +4,8 @@ DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, In
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Integer);
-DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Boolean, Integer);
+-- DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, Boolean, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MI_OrderInternal_Property (Integer, Integer, Integer, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Integer, TFloat, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderInternal_Property(
     IN ioId                       Integer   , -- Ключ объекта <Элемент документа>
@@ -23,6 +24,7 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_OrderInternal_Property(
     IN inDescId_ParamNext         Integer   DEFAULT 0    ,
     IN inAmount_ParamNextPromo    TFloat    DEFAULT 0    , --
     IN inDescId_ParamNextPromo    Integer   DEFAULT 0    ,
+    IN inAmountRK_start           TFloat    DEFAULT 0    , --
     IN inIsPack                   Boolean   DEFAULT NULL , --
     IN inIsParentMulti            Boolean   DEFAULT FALSE, -- надо ли раскладывать по разным ГП
     IN inUserId                   Integer   DEFAULT 0      -- пользователь
@@ -66,7 +68,7 @@ BEGIN
      THEN
          DELETE FROM _tmpParentMulti;
      ELSE
-         CREATE TEMP TABLE _tmpParentMulti (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, GoodsId_child Integer, GoodsKindId_child Integer, ReceipId Integer, Amount_Param TFloat, Amount_ParamOrder TFloat) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpParentMulti (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, GoodsId_child Integer, GoodsKindId_child Integer, ReceipId Integer, Amount_Param TFloat, Amount_ParamOrder TFloat, AmountRK_start TFloat) ON COMMIT DROP;
      END IF;
      -- нашли - надо ли раскладывать по разным ГП
      IF inIsParentMulti = TRUE
@@ -103,7 +105,7 @@ end if;
      -- если товар раскладывается на несколько
      IF vbIsParentMulti_goods = TRUE
      THEN
-         INSERT INTO _tmpParentMulti (MovementItemId, GoodsId, GoodsKindId, GoodsId_child, GoodsKindId_child, ReceipId, Amount_Param, Amount_ParamOrder)
+         INSERT INTO _tmpParentMulti (MovementItemId, GoodsId, GoodsKindId, GoodsId_child, GoodsKindId_child, ReceipId, Amount_Param, Amount_ParamOrder, AmountRK_start)
             WITH -- Рецепт
                  tmpReceiptChild AS
               (SELECT ObjectLink_Receipt_Goods.ObjectId               AS ReceiptId
@@ -206,6 +208,7 @@ end if;
                 , tmpReceiptChild.ReceiptId
                 , CASE WHEN COALESCE (tmpMI.Ord, 1) = 1 AND tmpReceiptChild.Value > 0 THEN tmpReceiptChild.Value * inAmount_Param      / tmpReceiptChild_sum.Value ELSE 0 END AS Amount_Param
                 , CASE WHEN COALESCE (tmpMI.Ord, 1) = 1 AND tmpReceiptChild.Value > 0 THEN tmpReceiptChild.Value * inAmount_ParamOrder / tmpReceiptChild_sum.Value ELSE 0 END AS Amount_ParamOrder
+                , CASE WHEN COALESCE (tmpMI.Ord, 1) = 1 AND tmpReceiptChild.Value > 0 THEN tmpReceiptChild.Value * inAmountRK_start    / tmpReceiptChild_sum.Value ELSE 0 END AS AmountRK_start
            FROM tmpMI
                 FULL JOIN tmpReceiptChild ON tmpReceiptChild.GoodsId           = tmpMI.GoodsId
                                          AND tmpReceiptChild.GoodsKindId       = tmpMI.GoodsKindId
@@ -217,8 +220,8 @@ end if;
 
      ELSE
          -- если товар НЕ раскладывается на несколько
-         INSERT INTO _tmpParentMulti (MovementItemId, GoodsId, GoodsKindId, GoodsId_child, GoodsKindId_child, ReceipId, Amount_Param, Amount_ParamOrder)
-            SELECT COALESCE (ioId, 0), inGoodsId, inGoodsKindId, inGoodsId, inGoodsKindId, 0, inAmount_Param, inAmount_ParamOrder
+         INSERT INTO _tmpParentMulti (MovementItemId, GoodsId, GoodsKindId, GoodsId_child, GoodsKindId_child, ReceipId, Amount_Param, Amount_ParamOrder, AmountRK_start)
+            SELECT COALESCE (ioId, 0), inGoodsId, inGoodsKindId, inGoodsId, inGoodsKindId, 0, inAmount_Param, inAmount_ParamOrder, inAmountRK_start
            ;
      END IF;
 
@@ -891,6 +894,7 @@ end if;
                                                         , inDescId_ParamNext      := 0
                                                         , inAmount_ParamNextPromo := 0
                                                         , inDescId_ParamNextPromo := 0
+                                                        , inAmountRK_start        := 0
                                                         , inIsPack                := NULL -- что б не формировать св-ва
                                                         , inIsParentMulti         := TRUE
                                                         , inUserId                := inUserId
@@ -915,6 +919,11 @@ end if;
      -- сохранили свойство
      PERFORM lpInsertUpdate_MovementItemFloat (inDescId_Param, _tmpParentMulti.MovementItemId, _tmpParentMulti.Amount_Param)
      FROM _tmpParentMulti;
+
+     -- сохранили свойство
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountRemainsRK(), _tmpParentMulti.MovementItemId, COALESCE (_tmpParentMulti.AmountRK_start, 0))
+     FROM _tmpParentMulti;
+
      -- сохранили свойство
      IF inDescId_ParamOrder <> 0
      THEN

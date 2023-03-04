@@ -171,8 +171,12 @@ BEGIN
                                        AND CLI_Unit.descid      = zc_ContainerLinkObject_Unit()
                                        AND CLI_Unit.ObjectId    = vbUnitId
                JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+               -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+               LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                           ON MIFloat_MovementItem.MovementItemId = Object_PartionMovementItem.ObjectCode
+                                          AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
                -- Партия Прихода
-               JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+               JOIN MovementItem ON MovementItem.Id = COALESCE(MIFloat_MovementItem.ValueData :: Integer, Object_PartionMovementItem.ObjectCode)
                JOIN Movement ON Movement.Id = MovementItem.MovementId
 
           WHERE Container.Amount > 0.0

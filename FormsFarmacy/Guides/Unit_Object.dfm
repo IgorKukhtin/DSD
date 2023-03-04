@@ -1148,6 +1148,13 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 108
           end
+          object isColdOutSUN: TcxGridDBColumn
+            Caption = #1054#1090#1076#1072#1074#1072#1090#1100' '#1093#1086#1083#1086#1076' '#1087#1086' '#1057#1059#1053
+            DataBinding.FieldName = 'isColdOutSUN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 69
+          end
         end
       end
     end
@@ -4459,6 +4466,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actUpdate_ShowPlanMobileAppUser'
     end
+    object mactUpdate_ColdOutSUN: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_ColdOutSUN
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1076#1072#1074#1072#1090#1100' '#1093#1086#1083#1086#1076' '#1087#1086' '#1057#1059#1053'"?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1076#1072#1074#1072#1090#1100' '#1093#1086#1083#1086#1076' '#1087#1086' '#1057#1059#1053'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1054#1090#1076#1072#1074#1072#1090#1100' '#1093#1086#1083#1086#1076' '#1087#1086' '#1057#1059#1053'"'
+      ImageIndex = 79
+    end
+    object actUpdate_ColdOutSUN: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ColdOutSUN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ColdOutSUN
+        end>
+      Caption = 'actUpdate_ColdOutSUN'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -5278,6 +5310,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton43'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton11'
         end>
     end
@@ -5465,6 +5501,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton42: TdxBarButton
       Action = mactUpdate_ShowPlanMobileAppUser
+      Category = 0
+    end
+    object dxBarButton43: TdxBarButton
+      Action = mactUpdate_ColdOutSUN
       Category = 0
     end
   end
@@ -8845,5 +8885,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 352
     Top = 459
+  end
+  object spUpdate_ColdOutSUN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_ColdOutSUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisColdOutSUN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isColdOutSUN'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1288
+    Top = 443
   end
 end

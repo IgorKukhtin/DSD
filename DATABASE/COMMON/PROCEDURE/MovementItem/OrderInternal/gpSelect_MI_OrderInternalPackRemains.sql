@@ -88,6 +88,7 @@ BEGIN
                                        , Income_PACK_from          TFloat
                                        , Remains                   TFloat
                                        , Remains_pack              TFloat
+                                       , RemainsRK                   TFloat
                                        , AmountPartnerPrior        TFloat
                                        , AmountPartnerPriorPromo   TFloat
                                        , AmountPartnerPriorTotal   TFloat
@@ -147,7 +148,7 @@ BEGIN
                                 , AmountPackNext_calc, AmountPackNextSecond_calc, AmountPackNextTotal_calc, AmountPackAllTotal, AmountPackAllTotal_calc
                                 , Amount_result_two, Amount_result_pack, Amount_result_pack_pack
                                 , Income_PACK_to, Income_PACK_from
-                                , Remains, Remains_pack
+                                , Remains, Remains_pack, RemainsRK
                                 , AmountPartnerPrior, AmountPartnerPriorPromo, AmountPartnerPriorTotal
                                 , AmountPartner, AmountPartnerNext, AmountPartnerPromo
                                 , AmountPartnerNextPromo, AmountPartnerTotal
@@ -236,6 +237,7 @@ BEGIN
 
             , _Result_Child.Remains
             , _Result_Child.Remains_pack
+            , _Result_Child.RemainsRK
 
               -- неотгуж. заявка
             , _Result_Child.AmountPartnerPrior
@@ -548,6 +550,14 @@ BEGIN
                               ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
                                      , _Result_Child.Id ASC
                              ) AS Remains_pack
+                    -- Ост. начальн. - РК
+                  , SUM (_Result_Child.RemainsRK)
+                        OVER (PARTITION BY CASE WHEN inShowAll = TRUE THEN _Result_Child.Id :: TVarChar
+                                                ELSE _Result_Child.KeyId || '_' || COALESCE (Object_Goods.Id, _Result_Child.GoodsId) :: TVarChar  || '_' || COALESCE (Object_GoodsKind.Id, _Result_Child.GoodsKindId) :: TVarChar
+                                           END
+                              ORDER BY CASE WHEN Object_Goods.Id > 0 THEN 0 ELSE _Result_Child.Id END ASC
+                                     , _Result_Child.Id ASC
+                             ) AS RemainsRK
 
                     -- неотгуж. заявка
                   , SUM (_Result_Child.AmountPartnerPrior)
@@ -911,6 +921,7 @@ BEGIN
 
             , _Result_Master.Remains
             , _Result_Master.Remains_pack
+            , _Result_Master.RemainsRK
             , _Result_Master.Remains_CEH
             , _Result_Master.Remains_CEH_Next
 
@@ -1047,6 +1058,7 @@ BEGIN
 
             , _Result_Child.Remains
             , _Result_Child.Remains_pack
+            , _Result_Child.RemainsRK
 
               -- неотгуж. заявка
             , _Result_Child.AmountPartnerPrior
@@ -1201,6 +1213,7 @@ BEGIN
             , _Result_ChildTotal.Remains
             , _Result_ChildTotal.Remains_pack
             , _Result_ChildTotal.Remains_err
+            , _Result_ChildTotal.RemainsRK
 
               -- неотгуж. заявка
             , _Result_ChildTotal.AmountPartnerPrior
@@ -1363,6 +1376,7 @@ BEGIN
 
             , _Result_Child.Remains
             , _Result_Child.Remains_pack
+            , _Result_Child.RemainsRK
 
               -- неотгуж. заявка
             , _Result_Child.AmountPartnerPrior
@@ -1500,6 +1514,7 @@ BEGIN
 
             , 0  :: TFloat   AS Remains
             , 0  :: TFloat   AS Remains_pack
+            , 0  :: TFloat   AS RemainsRK
 
               -- неотгуж. заявка
             , 0  :: TFloat   AS AmountPartnerPrior

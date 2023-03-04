@@ -195,7 +195,7 @@ BEGIN
 raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
 
      -- все Подразделения для схемы SUN-v2
-     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, Value_T1, Value_T2, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isLockSale, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isLock_CheckMa)
+     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, Value_T1, Value_T2, DayIncome, DaySendSUN, DaySendSUNAll, Limit_N, isLockSale, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isLock_CheckMa, isColdOutSUN)
         SELECT OB.ObjectId AS UnitId
              , 0           AS KoeffInSUN
              , 0           AS KoeffOutSUN
@@ -214,6 +214,7 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
              , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 5 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_ClosePL
                -- TRUE = НЕТ товаров "маркетинг"
              , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 7 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_CloseMa
+             , COALESCE (OB_ColdOutSUN.ValueData, FALSE)                                   AS isColdOutSUN
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectString  AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
              LEFT JOIN ObjectFloat   AS OF_T1  ON OF_T1.ObjectId  = OB.ObjectId AND OF_T1.DescId  = zc_ObjectFloat_Unit_T1_SUN_v2()
@@ -223,6 +224,7 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
              LEFT JOIN ObjectFloat   AS OF_DSA ON OF_DSA.ObjectId = OB.ObjectId AND OF_DSA.DescId = zc_ObjectFloat_Unit_HT_SUN_All()
              LEFT JOIN ObjectFloat   AS OF_SN  ON OF_SN.ObjectId  = OB.ObjectId AND OF_SN.DescId  = zc_ObjectFloat_Unit_LimitSUN_N()
              LEFT JOIN ObjectBoolean AS OB_LS  ON OB_LS.ObjectId  = OB.ObjectId AND OB_LS.DescId  = zc_ObjectBoolean_Unit_SUN_v2_LockSale()
+             LEFT JOIN ObjectBoolean AS OB_ColdOutSUN    ON OB_ColdOutSUN.ObjectId    = OB.ObjectId AND OB_ColdOutSUN.DescId    = zc_ObjectBoolean_Unit_ColdOutSUN()
              LEFT JOIN ObjectString  AS OS_LL  ON OS_LL.ObjectId  = OB.ObjectId AND OS_LL.DescId  = zc_ObjectString_Unit_SUN_v2_Lock()
              -- !!!только для этого водителя!!!
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Driver
@@ -1619,7 +1621,7 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
                           AND tmpSUN_oth.GoodsId     = tmp.GoodsId
 
                -- а здесь, отбросили !!холод!!
-               LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = tmp.GoodsId
+               -- LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = tmp.GoodsId
                -- а здесь, отбросили !!НОТ!!
                LEFT JOIN tmpGoods_NOT ON tmpGoods_NOT.ObjectId = tmp.GoodsId
 
@@ -1636,8 +1638,8 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
                       ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                 > 1
             -- отбросили !!холод!!
-            AND ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
-               tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE)
+            --AND ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+            --   tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE)
             -- отбросили !!НОТ!!
             AND tmpGoods_NOT.ObjectId IS NULL
           ;
@@ -1735,11 +1737,6 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
              -- товары для Кратность
              LEFT JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = _tmpRemains_calc.GoodsId
 
-             -- а здесь, отбросили !!холод!!
-             LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_calc.GoodsId
-                                -- AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
-             --LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
-
              -- отбросили !!исключения!!
              LEFT JOIN _tmpUnit_SunExclusion ON _tmpUnit_SunExclusion.UnitId_from = _tmpRemains_Partion.UnitId
                                             AND _tmpUnit_SunExclusion.UnitId_to   = _tmpRemains_calc.UnitId
@@ -1756,9 +1753,7 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
                                   AND _tmpSUN_oth.UnitId_to   = _tmpRemains_calc.UnitId
                                   AND _tmpSUN_oth.GoodsId     = _tmpRemains_calc.GoodsId
 
-        WHERE ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
-               tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE)
-          AND _tmpUnit_SunExclusion.UnitId_to IS NULL
+        WHERE _tmpUnit_SunExclusion.UnitId_to IS NULL
           AND _tmpUnit_SunExclusion_MCS.UnitId_to IS NULL
           AND _tmpSUN_oth.GoodsId IS NULL
 
@@ -1806,9 +1801,6 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
                                  LEFT JOIN _tmpGoods_DiscountExternal AS _tmpGoods_DiscountExternal
                                                                       ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_Partion.UnitId
                                                                      AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_Partion.GoodsId
-
-                                 -- а здесь, отбросили !!холод!!
-                                 --LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_Partion.GoodsId
                                  
                             WHERE -- !!!Отключили парные!!!
                                   _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
@@ -1913,7 +1905,9 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
                                                  AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_Partion.GoodsId
 
              -- а здесь, отбросили !!холод!!
-             --LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_Partion.GoodsId
+             LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_Partion.GoodsId
+
+             LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId  = _tmpRemains_Partion.UnitId
              
         WHERE -- !!!Отключили парные!!!
               _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
@@ -1922,6 +1916,11 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
                COALESCE(_tmpGoods_PromoUnit.Amount, 0) - COALESCE(_tmpRemains_Partion.AmountCorrec, 0)) > 0
 
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+
+              -- отбросили !!холод!!
+          AND ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+              tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE OR
+              _tmpUnit_SUN.isColdOutSUN = TRUE)
                     
         ORDER BY _tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0) DESC, 
                  tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
@@ -2443,7 +2442,7 @@ WHERE Movement.OperDate  >= '01.01.2019'
 -- тест
 /*
      -- все Подразделения для схемы SUN-v2
-     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer, DaySendSUN Integer, DaySendSUNAll Integer, Limit_N TFloat, isLockSale Boolean, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer, DaySendSUN Integer, DaySendSUNAll Integer, Limit_N TFloat, isLockSale Boolean, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean, isColdOutSUN Boolean) ON COMMIT DROP;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      CREATE TEMP TABLE _tmpUnit_SUN_balance (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
 
@@ -2491,4 +2490,4 @@ WHERE Movement.OperDate  >= '01.01.2019'
  SELECT * FROM lpInsert_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ*/
  
  
- SELECT * FROM gpReport_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inSession:= '3'); -- FETCH ALL "<unnamed portal 1>";
+ SELECT * FROM gpReport_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inSession:= '3'); -- FETCH ALL "<unnamed portal 1>";

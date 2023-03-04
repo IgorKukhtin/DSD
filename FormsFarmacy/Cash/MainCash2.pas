@@ -637,6 +637,7 @@ type
     acrRefreshName: TAction;
     lblPartnerMedicalName: TcxMemo;
     lblMemberSP: TcxMemo;
+    TrayIcon: TTrayIcon;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1025,6 +1026,7 @@ type
     procedure MoveLogFile;
     procedure SaveUnitConfig;
     procedure ActiveControlChanged(Sender: TObject) ;
+    procedure ShowTrayMessage(AMessage: String);
 
     property SoldRegim: Boolean read FSoldRegim write SetSoldRegim;
   end;
@@ -2833,6 +2835,13 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.ShowTrayMessage(AMessage: String);
+Begin
+  TrayIcon.BalloonHint := AMessage;
+  TrayIcon.ShowBalloonHint;
+  TrayIcon.BalloonHint:='';
+End;
+
 procedure TMainCashForm2.TimerPUSHTimer(Sender: TObject);
 var
   cResult: string;
@@ -2905,17 +2914,26 @@ begin
         end;
       end;
 
-      ShowPUSHMessageCash('Уважаемые коллеги!'#13#10#13#10 +
+      ShowTrayMessage('Уважаемые коллеги!'#13#10#13#10 +
         '1. Сделайте Х-отчет, убедитесь, что он пустой 0,00.'#13#10 +
         '   Форс-Мажор РРО: звоним в любое время Татьяна (099-641-59-21), Юлия (0957767101)'#13#10
         + '2. Сделайте нулевой чек, проверьте дату и время.'#13#10 +
-        '3. Сделайте внесение 100,00 грн.', cResult);
+        '3. Сделайте внесение 100,00 грн.');
+
+//      ShowPUSHMessageCash('Уважаемые коллеги!'#13#10#13#10 +
+//        '1. Сделайте Х-отчет, убедитесь, что он пустой 0,00.'#13#10 +
+//        '   Форс-Мажор РРО: звоним в любое время Татьяна (099-641-59-21), Юлия (0957767101)'#13#10
+//        + '2. Сделайте нулевой чек, проверьте дату и время.'#13#10 +
+//        '3. Сделайте внесение 100,00 грн.', cResult);
 
       if isServiseOld then
         ShowPUSHMessageCash('Не обновлена служба FCash Service.'#13#10#13#10'Обратитесь в IT отдел.', cResult);
 
-      ShowPUSHMessageCash('Коллеги, по всем вопросам и предложениям для улучшения мобильного приложения ПРОСЬБА обращаться к Олегу либо к Кристине.'#13#10 +
-                          'Чем лучше будет приложение тем больше новых клиентов сможем подтянуть, а это ваши дополнительные +грн к зп!!!', cResult);
+      ShowTrayMessage('Коллеги, по всем вопросам и предложениям для улучшения мобильного приложения ПРОСЬБА обращаться к Олегу либо к Кристине.'#13#10 +
+                      'Чем лучше будет приложение тем больше новых клиентов сможем подтянуть, а это ваши дополнительные +грн к зп!!!');
+
+//      ShowPUSHMessageCash('Коллеги, по всем вопросам и предложениям для улучшения мобильного приложения ПРОСЬБА обращаться к Олегу либо к Кристине.'#13#10 +
+//                          'Чем лучше будет приложение тем больше новых клиентов сможем подтянуть, а это ваши дополнительные +грн к зп!!!', cResult);
 
       Load_PUSH(True);
     end
@@ -2964,6 +2982,22 @@ begin
                             , PUSHDS.FieldByName('TypeParams').AsString
                             , PUSHDS.FieldByName('ValueParams').AsString);
 
+          if PUSHDS.FieldByName('Id').AsInteger > 1000 then
+          try
+            spInsert_MovementItem_PUSH.ParamByName('inMovement').Value :=
+              PUSHDS.FieldByName('Id').AsInteger;
+            spInsert_MovementItem_PUSH.ParamByName('inResult').Value := '';
+            spInsert_MovementItem_PUSH.Execute;
+          except
+            ON E: Exception do
+              Add_Log('Marc_PUSH err=' + E.Message);
+          end;
+        end else if NOT PUSHDS.FieldByName('isPoll').AsBoolean and
+           (PUSHDS.FieldByName('FormName').AsString = '') and
+           NOT PUSHDS.FieldByName('isExecStoredProc').AsBoolean and
+           NOT PUSHDS.FieldByName('isSpecialLighting').AsBoolean  then
+        begin
+          ShowTrayMessage(PUSHDS.FieldByName('Text').AsString);
           if PUSHDS.FieldByName('Id').AsInteger > 1000 then
           try
             spInsert_MovementItem_PUSH.ParamByName('inMovement').Value :=
@@ -8784,6 +8818,8 @@ begin
   begin
     if Abs(MinutesBetween(Cash.GetTime, Now)) > 2 then Cash.SetTime;
   end;
+
+  TrayIcon.Hint := Self.Caption;
 end;
 
 function TMainCashForm2.InitLocalStorage: Boolean;
@@ -15645,6 +15681,7 @@ begin
     end;
   end;
 
+  TrayIcon.Hint := Self.Caption;
 end;
 
 procedure TMainCashForm2.ClearAll;

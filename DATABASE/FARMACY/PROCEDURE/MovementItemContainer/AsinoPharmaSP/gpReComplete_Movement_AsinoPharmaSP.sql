@@ -12,7 +12,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_AsinoPharmaSP());
+--    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_AsinoPharmaSP());
+    vbUserId:= inSession;
 
     -- только если документ проведен
     IF EXISTS(

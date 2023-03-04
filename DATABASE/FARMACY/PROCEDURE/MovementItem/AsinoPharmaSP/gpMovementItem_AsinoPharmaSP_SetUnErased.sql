@@ -15,7 +15,8 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbQueue Integer;
 BEGIN
-  vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_GoodsSP());
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId := inSession;
   
   -- устанавливаем новое значение
   outIsErased := FALSE;

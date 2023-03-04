@@ -112,7 +112,7 @@ BEGIN
      -- все Подразделения для схемы SUN Supplement
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpUnit_SUN_Supplement'))
      THEN
-       CREATE TEMP TABLE _tmpUnit_SUN_Supplement (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isSUN_Supplement_in Boolean, isSUN_Supplement_out Boolean, isSUN_Supplement_Priority Boolean, SalesRatio TFloat, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean, isLock_CheckMa Boolean) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpUnit_SUN_Supplement (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isSUN_Supplement_in Boolean, isSUN_Supplement_out Boolean, isSUN_Supplement_Priority Boolean, SalesRatio TFloat, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean, isLock_CheckMa Boolean, isColdOutSUN Boolean) ON COMMIT DROP;
      END IF;
 
      -- Выкладки
@@ -220,7 +220,7 @@ BEGIN
 --raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
      -- все Подразделения для схемы SUN
-     INSERT INTO _tmpUnit_SUN_Supplement (UnitId, DeySupplSun1, MonthSupplSun1, isSUN_Supplement_in, isSUN_Supplement_out, isSUN_Supplement_Priority, SalesRatio, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isLock_CheckMa)
+     INSERT INTO _tmpUnit_SUN_Supplement (UnitId, DeySupplSun1, MonthSupplSun1, isSUN_Supplement_in, isSUN_Supplement_out, isSUN_Supplement_Priority, SalesRatio, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL, isLock_CheckMa, isColdOutSUN)
         SELECT Object_Unit.Id
              , COALESCE (NULLIF(OF_DeySupplSun1.ValueData, 0), 30)::Integer              AS DeySupplSun1
              , COALESCE (NULLIF(OF_MonthSupplSun1.ValueData, 0), 8)::Integer             AS MonthSupplSun1
@@ -242,6 +242,7 @@ BEGIN
              , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 5 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_ClosePL
                -- TRUE = НЕТ товаров "маркетинг"
              , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 7 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_CloseMa
+             , COALESCE (OB_ColdOutSUN.ValueData, FALSE)                                                          AS isColdOutSUN
         FROM Object AS Object_Unit
              LEFT JOIN ObjectFloat   AS OF_DeySupplSun1  ON OF_DeySupplSun1.ObjectId  = Object_Unit.Id AND OF_DeySupplSun1.DescId     = zc_ObjectFloat_Unit_DeySupplSun1()
              LEFT JOIN ObjectFloat   AS OF_MonthSupplSun1 ON OF_MonthSupplSun1.ObjectId = Object_Unit.Id AND OF_MonthSupplSun1.DescId = zc_ObjectFloat_Unit_MonthSupplSun1()
@@ -258,6 +259,9 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_Supplement_Priority
                                      ON ObjectBoolean_SUN_Supplement_Priority.ObjectId = Object_Unit.Id
                                     AND ObjectBoolean_SUN_Supplement_Priority.DescId = zc_ObjectBoolean_Unit_SUN_Supplement_Priority()
+             LEFT JOIN ObjectBoolean AS OB_ColdOutSUN    
+                                     ON OB_ColdOutSUN.ObjectId = Object_Unit.Id
+                                    AND OB_ColdOutSUN.DescId = zc_ObjectBoolean_Unit_ColdOutSUN()
              LEFT JOIN ObjectDate AS ObjectDate_FirstCheck
                                   ON ObjectDate_FirstCheck.ObjectId = Object_Unit.Id
                                  AND ObjectDate_FirstCheck.DescId = zc_ObjectDate_Unit_FirstCheck()
@@ -273,11 +277,7 @@ BEGIN
                OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr::TVarChar || '%' AND vbisShoresSUN = TRUE AND Object_Driver.ObjectCode = 4 OR
                OS_ListDaySUN.ValueData ILIKE '%' || CASE WHEN vbDOW_curr - 1 = 0 THEN 7 ELSE vbDOW_curr - 1 END::TVarChar || '%' AND vbisShoresSUN = TRUE AND Object_Driver.ObjectCode = 3)
 
-          AND (/*(COALESCE (ObjectBoolean_SUN_Supplement_in.ValueData, FALSE) = TRUE 
-            OR COALESCE (ObjectBoolean_SUN_Supplement_out.ValueData, FALSE) = TRUE) 
-            AND*/ COALESCE (ObjectBoolean_SUN.ValueData, FALSE) = TRUE
-            --OR Object_Unit.ID IN (SELECT DISTINCT Object_Goods_Main.UnitSupplementSUN1InId FROM Object_Goods_Main WHERE Object_Goods_Main.UnitSupplementSUN1InId IS NOT NULL)
-            )         
+          AND COALESCE (ObjectBoolean_SUN.ValueData, FALSE) = TRUE
        ;
        
      ANALYSE _tmpUnit_SUN_Supplement;
@@ -402,6 +402,25 @@ BEGIN
      ANALYSE _tmpGoods_Sun_exception_Supplement;
         
 --raise notice 'Value 5: %', CLOCK_TIMESTAMP();
+
+        -- Xолод
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpConditionsKeep'))
+     THEN
+       DROP TABLE tmpConditionsKeep;
+     END IF;
+
+     CREATE TEMP TABLE tmpConditionsKeep ON COMMIT DROP AS
+     SELECT Object_Goods.ID AS ObjectId
+     FROM Object_Goods_Retail AS Object_Goods 
+          LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
+                                  ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
+                                 AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
+     WHERE Object_Goods.RetailId = 4
+       AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
+            OR Object_Goods_Main.isColdSUN = TRUE);
+     
+     ANALYSE tmpConditionsKeep;
 
      -- Что приходило по СУН и не отдаем
      WITH
@@ -591,18 +610,12 @@ BEGIN
                                          AND Object_Goods_Main.isNot = FALSE
                                          
              LEFT JOIN _tmpGoods_SUN_Supplement ON _tmpGoods_SUN_Supplement.GoodsId = Object_Goods_Retail.ID
-             LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
-                                     ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
-                                    AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
+
              LEFT JOIN (SELECT DISTINCT tmpGoodsUnit.GoodsId 
                         FROM gpSelect_GoodsUnitSupplementSUN1_All(inSession := inUserId::TVarChar) AS tmpGoodsUnit) AS tmpGoodsUnit_SUN ON tmpGoodsUnit_SUN.GoodsId = Object_Goods_Retail.ID
         WHERE Object_Goods_Retail.RetailID = vbObjectId
           AND COALESCE(_tmpGoods_SUN_Supplement.GoodsId, 0) = 0
-          AND ((COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = FALSE AND
-               Object_Goods_Main.isColdSUN = FALSE OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
-               (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE OR
-               Object_Goods_Main.isColdSUN = TRUE) AND vbisOnlyColdSUN = TRUE
-               );
+        ;
                
         ANALYSE _tmpGoods_SUN_Supplement;
 
@@ -1052,7 +1065,7 @@ BEGIN
        
      ANALYSE _tmpRemains_all_Supplement;
                                      
---raise notice 'Value 14: %', CLOCK_TIMESTAMP();
+-- raise notice 'Value 14: % %', CLOCK_TIMESTAMP(), (SELECT count(*) FROM _tmpRemains_all_Supplement);
 
 
      IF EXISTS (SELECT 1
@@ -1334,14 +1347,8 @@ BEGIN
      );
      
      ANALYSE tmpNeed_all_Supplement;
-     
-raise notice 'Value 15 1: % % %', CLOCK_TIMESTAMP(), 
-  (SELECT COUNT(DISTINCT tmpNeed_all_Supplement.GoodsId) FROM tmpNeed_all_Supplement WHERE tmpNeed_all_Supplement.Need > 0 /*AND
-     AND tmpNeed_all_Supplement.GoodsId =     
-     AND tmpNeed_all_Supplement.UnitId = */)
-  , (SELECT string_agg(_tmpGoods_SUN_Supplement.GoodsId::TVarChar, ',') FROM _tmpGoods_SUN_Supplement WHERE  _tmpGoods_SUN_Supplement.isMarcCalc = TRUE);
-     
-     -- 2.1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
+
+   -- 2.1. Результат: все остатки, НТЗ => получаем кол-ва автозаказа: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      UPDATE _tmpRemains_all_Supplement SET AverageSalesMonth =(COALESCE (_tmpRemains_all_Supplement.AmountSalesMonth, 0) / extract('DAY' from CURRENT_DATE -
                                                               (CURRENT_DATE - (T1.MonthSupplSun1::TVarChar ||' MONTH') :: INTERVAL)))
                                          , Need = COALESCE (T1.need,
@@ -1790,8 +1797,17 @@ raise notice 'Value 15 1: % % %', CLOCK_TIMESTAMP(),
               LEFT JOIN (SELECT tmp.GoodsId FROM gpSelect_Object_GoodsPromo(inOperDate := CURRENT_DATE , inRetailId := 4 , inSession := inUserId::TVarChar) AS tmp 
                          WHERE tmp.isNotUseSUN = TRUE) AS tmpGoodsPromo ON tmpGoodsPromo.GoodsId = _tmpRemains_all_Supplement.GoodsId
 
+              LEFT JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId
+
+              -- а здесь, отбросили !!холод!!
+              LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_all_Supplement.GoodsId
+
          WHERE _tmpRemains_all_Supplement.NeedCalc > 0
            AND COALESCE(tmpGoodsPromo.GoodsId, 0) = 0
+              -- отбросили !!холод!!
+           AND ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+               tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE OR
+               _tmpUnit_SUN_Supplement.isColdOutSUN = TRUE)
          ORDER BY _tmpRemains_all_Supplement.NeedCalc DESC
                 , _tmpRemains_all_Supplement.UnitId
                 , _tmpRemains_all_Supplement.GoodsId;
@@ -2010,4 +2026,4 @@ $BODY$
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
 
 -- 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inDriverId:= 0, inUserId:= 3);

@@ -33,9 +33,20 @@ BEGIN
       AND (vbMovementDescId <> zc_Movement_Cash() OR vbDescId <> zc_MI_Child())
    THEN
        RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
-  END IF;
+   END IF;
 
    -- 
+   IF vbMovementDescId = zc_Movement_Cash() AND vbDescId = zc_MI_Child()
+   THEN
+       -- Если Корректировка подтверждена
+       IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = vbMovementId AND MB.DescId = zc_MovementBoolean_Sign() AND MB.ValueData = TRUE)
+       THEN
+           RAISE EXCEPTION 'Ошибка.Нельзя восстанавливать, корректировка уже подтверждена.';
+       END IF;
+
+   END IF;
+
+   
    /*IF vbDescId <> zc_MI_Sign()
    THEN
        -- пересчитали Итоговые суммы по накладной
