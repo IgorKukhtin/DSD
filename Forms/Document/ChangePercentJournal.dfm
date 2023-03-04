@@ -647,6 +647,7 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
         item
           StoredProc = spSelectPrint
         end>
+      ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
@@ -665,11 +666,9 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportName'
+      ReportName = 'PrintMovement_ChangePercent'
+      ReportNameParam.Name = #1040#1082#1090
+      ReportNameParam.Value = 'PrintMovement_ChangePercent'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -703,7 +702,7 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
     end
-    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction
+    object actPrint_by_Tax: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -718,13 +717,13 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrintTaxCorrective_Client
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spSelectPrintTaxCorrective_Client
+          StoredProc = spSelectPrint
         end>
-      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' ('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1082' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084')'
-      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103' ('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1082' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084')'
+      Caption = #1055#1077#1095#1072#1090#1100'  '#1040#1050#1058' 2'
+      Hint = #1055#1077#1095#1072#1090#1100'  '#1040#1050#1058' 2'
       ImageIndex = 21
       DataSets = <
         item
@@ -743,9 +742,9 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReturnIn_By_TaxCorrective'
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
-      ReportNameParam.Value = 'PrintMovement_ReturnIn_By_TaxCorrective'
+      ReportName = 'PrintMovement_ChangePercent'
+      ReportNameParam.Name = 'PrintMovement_ChangePercent'
+      ReportNameParam.Value = 'PrintMovement_ChangePercent'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -1148,7 +1147,8 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
       Action = actInsertMaskMulti
     end
     object bbPrint: TdxBarButton
-      Action = mactPrint
+      Action = actPrint_by_Tax
+      Caption = #1055#1077#1095#1072#1090#1100'  '#1040#1082#1090#1072
       Category = 0
     end
     object bbTaxCorrective: TdxBarButton
@@ -1172,7 +1172,7 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
       Category = 0
     end
     object bbPrint_Return_By_TaxCorrective: TdxBarButton
-      Action = actPrint_ReturnIn_by_TaxCorrective
+      Action = actPrint_by_Tax
       Category = 0
     end
   end
@@ -1357,7 +1357,7 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
     Top = 264
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
+    StoredProcName = 'gpSelect_Movement_ChangePercent_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

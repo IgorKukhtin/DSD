@@ -874,23 +874,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         end>
       ReportName = 'PrintMovement_ChangePercent'
       ReportNameParam.Value = 'PrintMovement_ChangePercent'
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.ParamType = ptInput
-    end
-    object mactPrint: TMultiAction [15]
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSPPrintProcName
-        end
-        item
-          Action = actPrint
-        end>
-      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -908,7 +892,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [18]
+    object actGoodsKindChoice: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1093,16 +1077,16 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
       Status = mtComplete
       DataSource = TaxCorrectiveDS
     end
-    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction
+    object actPrint_by_Tax: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrintTaxCorrective_Client
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spSelectPrintTaxCorrective_Client
+          StoredProc = spSelectPrint
         end>
-      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' ('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1082' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084')'
-      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103' ('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1082' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084')'
+      Caption = #1055#1077#1095#1072#1090#1100'  '#1040#1082#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100'  '#1040#1082#1090#1072
       ImageIndex = 21
       DataSets = <
         item
@@ -1121,9 +1105,9 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReturnIn_By_TaxCorrective'
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
-      ReportNameParam.Value = 'PrintMovement_ReturnIn_By_TaxCorrective'
+      ReportName = 'PrintMovement_ChangePercent'
+      ReportNameParam.Name = 'PrintMovement_ChangePercent'
+      ReportNameParam.Value = 'PrintMovement_ChangePercent'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -1443,7 +1427,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbPrint_by_Tax'
         end
         item
           Visible = True
@@ -1466,12 +1450,8 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
           ItemName = 'dxBarStatic'
         end>
     end
-    object bbPrintTaxCorrective_Client: TdxBarButton [5]
-      Action = mactPrint_TaxCorrective_Client
-      Category = 0
-    end
-    object bbPrintTaxCorrective_Us: TdxBarButton [6]
-      Action = mactPrint_TaxCorrective_Us
+    object bbPrint_by_Tax: TdxBarButton [5]
+      Action = actPrint_by_Tax
       Category = 0
     end
     object bbTaxCorrective: TdxBarButton
@@ -1495,7 +1475,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
       Category = 0
     end
     object bbPrint_ReturnIn_by_TaxCorrective: TdxBarButton
-      Action = actPrint_ReturnIn_by_TaxCorrective
+      Action = actPrint_by_Tax
       Category = 0
     end
     object bbtMeDoc: TdxBarButton
@@ -1525,11 +1505,6 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
     object bbUpdateAuto: TdxBarButton
       Action = actUpdateAuto
       Category = 0
-    end
-    object bbbPrint: TdxBarButton
-      Action = actPrint
-      Category = 0
-      ImageIndex = 3
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2275,8 +2250,8 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 319
-    Top = 208
+    Left = 367
+    Top = 416
   end
   object spGetReportName: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnIn_ReportName'
@@ -3015,7 +2990,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 856
-    Top = 468
+    Left = 848
+    Top = 452
   end
 end
