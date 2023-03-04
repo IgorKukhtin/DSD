@@ -339,6 +339,7 @@ BEGIN
             -- ‘онд за план часов (расчетный) в мес€ц на человека
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursDay()
                 THEN (Setting.StaffListSumm_Value / NULLIF (Setting.HoursDay,0) * Movement_SheetWorkTime.SheetWorkTime_Amount * CASE WHEN Movement_SheetWorkTime.Tax_Trainee > 0 AND 1=0 THEN Movement_SheetWorkTime.Tax_Trainee / 100 ELSE 1 END)
+                -- THEN Movement_SheetWorkTime.SheetWorkTime_Amount
             -- ‘онд посто€нный дл€ факт часов в мес€ц на человека
             WHEN Setting.StaffListSummKindId = zc_Enum_StaffListSummKind_HoursPlanConst()
                 THEN Setting.StaffListSumm_Value

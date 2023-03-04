@@ -649,7 +649,7 @@ BEGIN
             -- итого часов всех сотрудников (с этой должностью...)
            ,tmpRes.SUM_MemberHours
             -- итого часов сотрудника
-            --,tmpRes.SheetWorkTime_Amount
+           --,tmpRes.SheetWorkTime_Amount
            ,Movement_SheetWorkTime.SheetWorkTime_Amount
             --
            ,tmpRes.ServiceModelCode
@@ -679,7 +679,7 @@ BEGIN
            ,ROUND (tmpRes.Amount, 2) :: TFloat            AS Amount
            ,ROUND (tmpRes.AmountOnOneMember, 2) :: TFloat AS AmountOnOneMember
            ,Object_PersonalServiceList.Id                 AS PersonalServiceListId
-           ,Object_PersonalServiceList.ValueData          AS PersonalServiceListName
+           ,(Object_PersonalServiceList.ValueData/* || ' ' || COALESCE (tmpRes.MemberId, 0) :: TVarChar*/) :: TVarChar AS PersonalServiceListName
            ,tmpListServiceModel.Ord
            ,tmpListServiceModel_1.ServiceModelName as ServiceModelName_1
            ,tmpListServiceModel_2.ServiceModelName as ServiceModelName_2
@@ -698,7 +698,9 @@ BEGIN
             LEFT JOIN Movement_SheetWorkTime ON Movement_SheetWorkTime.MemberId                      = tmpRes.MemberId_find
                                             AND COALESCE (Movement_SheetWorkTime.PositionId, 0)      = COALESCE (tmpRes.PositionId, 0)
                                             AND COALESCE (Movement_SheetWorkTime.PersonalGroupId, 0) = COALESCE (tmpRes.PersonalGroupId, 0)
-                                            AND COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
+                                            AND (COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
+                                            --OR COALESCE (tmpRes.PositionLevelId, 0) = 0
+                                                )
                                             AND (Movement_SheetWorkTime.OperDate                     = tmpRes.OperDate
                                               OR inDetailDay = FALSE
                                                 )
@@ -818,8 +820,8 @@ BEGIN
            ,0  :: TFloat   AS GrossOnOneMember
            ,0  :: TFloat   AS Amount
            ,0  :: TFloat   AS AmountOnOneMember
-           ,0  :: Integer  AS PersonalServiceListId
-           ,'' :: TVarChar AS PersonalServiceListName
+           ,Object_PersonalServiceList.Id                 AS PersonalServiceListId
+           ,(Object_PersonalServiceList.ValueData/* || ' ' || COALESCE (Movement_SheetWorkTime.MemberId, 0) :: TVarChar*/) :: TVarChar AS PersonalServiceListName
            ,0  :: Integer  AS Ord
            ,'' :: TVarChar AS ServiceModelName_1
            ,'' :: TVarChar AS ServiceModelName_2
@@ -834,10 +836,22 @@ BEGIN
 
         FROM
             Movement_SheetWorkTime
+
+            -- вдруг здесь PersonalId
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_find
+                                 ON ObjectLink_Personal_Member_find.ObjectId = Movement_SheetWorkTime.MemberId
+                                AND ObjectLink_Personal_Member_find.DescId   = zc_ObjectLink_Personal_Member()
+            LEFT JOIN tmpPersonalServiceList AS tmpPersonalServiceList_find ON tmpPersonalServiceList_find.MemberId = ObjectLink_Personal_Member_find.ChildObjectId
+
+            LEFT JOIN tmpPersonalServiceList ON tmpPersonalServiceList.MemberId = Movement_SheetWorkTime.MemberId
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = COALESCE (tmpPersonalServiceList.PersonalServiceListId, tmpPersonalServiceList_find.PersonalServiceListId) -- COALESCE (ObjectLink_Personal_PersonalServiceList_two.ChildObjectId, COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, tmpPersonalServiceList.PersonalServiceListId))
+
             LEFT JOIN tmpRes ON Movement_SheetWorkTime.MemberId                      = tmpRes.MemberId_find
                             AND COALESCE (Movement_SheetWorkTime.PositionId, 0)      = COALESCE (tmpRes.PositionId, 0)
                             AND COALESCE (Movement_SheetWorkTime.PersonalGroupId, 0) = COALESCE (tmpRes.PersonalGroupId, 0)
-                            AND COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
+                            AND (COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
+                            --OR COALESCE (tmpRes.PositionLevelId, 0) = 0
+                                )
                             AND (Movement_SheetWorkTime.OperDate                     = tmpRes.OperDate
                               OR inDetailDay = FALSE
                                 )
@@ -849,6 +863,7 @@ BEGIN
             LEFT JOIN Object AS Object_Unit          ON Object_Unit.Id          = inUnitId
 
         WHERE tmpRes.MemberId_find IS NULL
+        -- and 1=0
        ;
 
 END;
