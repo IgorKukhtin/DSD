@@ -7,20 +7,20 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 166
+    Top = 155
     Width = 1140
-    Height = 366
+    Height = 377
     ExplicitTop = 166
     ExplicitWidth = 1140
     ExplicitHeight = 366
-    ClientRectBottom = 366
+    ClientRectBottom = 377
     ClientRectRight = 1140
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1140
       ExplicitHeight = 342
       inherited cxGrid: TcxGrid
         Width = 1140
-        Height = 342
+        Height = 353
         ExplicitWidth = 1140
         ExplicitHeight = 342
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -63,6 +63,11 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -168,10 +173,10 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
   end
   inherited DataPanel: TPanel
     Width = 1140
-    Height = 140
+    Height = 129
     TabOrder = 3
     ExplicitWidth = 1140
-    ExplicitHeight = 140
+    ExplicitHeight = 129
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -201,9 +206,9 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
     inherited ceStatus: TcxButtonEdit
       Top = 63
       ExplicitTop = 63
-      ExplicitWidth = 183
+      ExplicitWidth = 172
       ExplicitHeight = 22
-      Width = 183
+      Width = 172
     end
     object cxLabel3: TcxLabel
       Left = 280
@@ -238,14 +243,14 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
       Caption = #1050#1086#1084#1091
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 200
+      Left = 188
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 10
       Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 336
+      Left = 329
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
@@ -253,7 +258,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
       Width = 58
     end
     object cxLabel7: TcxLabel
-      Left = 334
+      Left = 327
       Top = 45
       Caption = '% '#1053#1044#1057
     end
@@ -319,23 +324,23 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
       Width = 93
     end
     object edIsChecked: TcxCheckBox
-      Left = 200
-      Top = 106
+      Left = 9
+      Top = 103
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 21
-      Width = 118
+      Width = 172
     end
     object cxLabel17: TcxLabel
-      Left = 336
-      Top = 88
+      Left = 187
+      Top = 86
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 336
-      Top = 106
+      Left = 186
+      Top = 103
       Properties.ReadOnly = False
       TabOrder = 23
-      Width = 608
+      Width = 758
     end
     object cxLabel18: TcxLabel
       Left = 699
@@ -355,31 +360,15 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
       Width = 245
     end
   end
-  object cxLabel5: TcxLabel [2]
-    Left = 8
-    Top = 88
-    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
-  end
-  object edPriceList: TcxButtonEdit [3]
-    Left = 8
-    Top = 106
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 7
-    Width = 183
-  end
-  object cxLabel14: TcxLabel [4]
+  object cxLabel14: TcxLabel [2]
     Left = 187
     Top = 5
     Caption = #8470' '#1076#1086#1082'.'#1091' '#1082#1086#1085#1090#1088'.'
   end
-  object edInvNumberPartner: TcxTextEdit [5]
+  object edInvNumberPartner: TcxTextEdit [3]
     Left = 187
     Top = 23
-    TabOrder = 9
+    TabOrder = 7
     Width = 84
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1223,6 +1212,24 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
       Category = 'DSDLib'
       MoveParams = <>
     end
+    object actUpdate_MI_ChangePercent: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMIMaster
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1085#1072#1083#1086#1075#1086#1074#1099#1093
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1085#1072#1083#1086#1075#1086#1074#1099#1093
+      ImageIndex = 27
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1085#1072#1083#1086#1075#1086#1074#1099#1093'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1086#1073#1085#1086#1074#1083#1077#1085#1099
+    end
     object mactPrint_TaxCorrective_Us: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1316,30 +1323,6 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPriceListId'
-        Value = ''
-        Component = GuidesPriceList
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inShowAll'
-        Value = False
-        Component = actShowAll
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
@@ -1369,13 +1352,13 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
           ItemName = 'bbShowErased'
         end
         item
-          Visible = True
-          ItemName = 'bbShowAll'
-        end
-        item
           BeginGroup = True
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAddMask'
         end
         item
           Visible = True
@@ -1383,7 +1366,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbAddMask'
+          ItemName = 'bbUpdate_MI_ChangePercent'
         end
         item
           Visible = True
@@ -1399,15 +1382,16 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbOpenReportForm'
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1504,6 +1488,10 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
     end
     object bbUpdateAuto: TdxBarButton
       Action = actUpdateAuto
+      Category = 0
+    end
+    object bbUpdate_MI_ChangePercent: TdxBarButton
+      Action = actUpdate_MI_ChangePercent
       Category = 0
     end
   end
@@ -2475,7 +2463,6 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
   end
   object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPriceList
     FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -2530,7 +2517,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 888
+    Left = 864
     Top = 48
   end
   object spCorrective: TdsdStoredProc
@@ -2992,5 +2979,22 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
     PackSize = 1
     Left = 848
     Top = 452
+  end
+  object spUpdateMIMaster: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_ChangePercent'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 162
+    Top = 416
   end
 end

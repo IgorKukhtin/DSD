@@ -65,8 +65,6 @@ type
     cxLabel11: TcxLabel;
     edContract: TcxButtonEdit;
     GuidesContract: TdsdGuides;
-    cxLabel5: TcxLabel;
-    edPriceList: TcxButtonEdit;
     GuidesPriceList: TdsdGuides;
     actSPPrintProcName: TdsdExecStoredProc;
     cxLabel13: TcxLabel;
@@ -128,6 +126,9 @@ type
     bbOpenReportCheckForm: TdxBarButton;
     bbUpdateAuto: TdxBarButton;
     LineNum: TcxGridDBColumn;
+    spUpdateMIMaster: TdsdStoredProc;
+    actUpdate_MI_ChangePercent: TdsdExecStoredProc;
+    bbUpdate_MI_ChangePercent: TdxBarButton;
   private
     { Private declarations }
   public

@@ -210,6 +210,7 @@ BEGIN
          , Object_Goods.ValueData   AS GoodsName
          , MovementItem.Amount      AS Amount
          , MIFloat_Price.ValueData  AS Price
+         , CAST (MIFloat_Price.ValueData * (1-vbChangePercent / 100) AS NUMERIC (16,2))  AS Price_NoChangePercent
          , MIFloat_CountForPrice.ValueData  AS CountForPrice
 
          , Object_GoodsKind.ValueData AS GoodsKindName
@@ -223,8 +224,8 @@ BEGIN
          , MovementItem.isErased    AS isErased
          
          , vbChangePercent AS ChangePercent
-         , CAST (MIFloat_Price.ValueData * vbChangePercent / 100 AS NUMERIC (16,2))  AS Sum_ChangePercent
-         , CAST ((MIFloat_Price.ValueData * vbChangePercent / 100) * vbVATPercent/100  AS NUMERIC (16,2))  AS Sum_VATPercent
+         , CAST (MovementItem.Amount * (MIFloat_Price.ValueData * vbChangePercent / 100) AS NUMERIC (16,2))  AS Sum_ChangePercent
+         , CAST (MovementItem.Amount * ((MIFloat_Price.ValueData * vbChangePercent / 100) * vbVATPercent/100)  AS NUMERIC (16,2))  AS Sum_VATPercent
 
      FROM MovementItem
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
