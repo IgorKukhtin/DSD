@@ -116,7 +116,14 @@ BEGIN
 
            , DATE_TRUNC ('MONTH', Movement.OperDate)       AS StartDate
            , DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' AS EndDate
-     
+           
+           --Додаткова угода № від
+           , CASE WHEN Object_To.Id = 8793437 THEN ' № 76 від 01.03.2023' ELSE '______________________' END AS Text_ugoda
+           --доверенность
+           , CASE WHEN Object_To.Id = 8793437 THEN ' Довіренність № 2562-201-22' ELSE '______________________' END AS Text_dovir
+           --ответственный
+           , CASE WHEN Object_To.Id = 8793437 THEN ' Євстіфєєв Юрій Костянтинович' ELSE '______________________' END AS Text_upovnovag
+           
        FROM Movement
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id

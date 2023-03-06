@@ -10,19 +10,19 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
     Top = 155
     Width = 1140
     Height = 377
-    ExplicitTop = 166
+    ExplicitTop = 155
     ExplicitWidth = 1140
-    ExplicitHeight = 366
+    ExplicitHeight = 377
     ClientRectBottom = 377
     ClientRectRight = 1140
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1140
-      ExplicitHeight = 342
+      ExplicitHeight = 353
       inherited cxGrid: TcxGrid
         Width = 1140
         Height = 353
         ExplicitWidth = 1140
-        ExplicitHeight = 342
+        ExplicitHeight = 353
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
