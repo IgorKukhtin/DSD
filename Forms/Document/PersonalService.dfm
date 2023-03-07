@@ -2,7 +2,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 749
   ClientWidth = 1034
-  ExplicitTop = -116
   ExplicitWidth = 1050
   ExplicitHeight = 788
   PixelsPerInch = 96
@@ -2486,8 +2485,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '
     end
     object edPersonalServiceList: TcxButtonEdit
-      Left = 292
-      Top = 23
+      Left = 296
+      Top = 16
       Properties.Buttons = <
         item
           Default = True
@@ -2498,8 +2497,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Width = 218
     end
     object cxLabel3: TcxLabel
-      Left = 292
-      Top = 5
+      Left = 296
+      Top = -2
       Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
     end
     object cxLabel4: TcxLabel
@@ -2708,6 +2707,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       FileNamePrefixParam.Value = ''
       FileNamePrefixParam.DataType = ftString
       FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
       Left = 1216
       Top = 168
     end
@@ -3718,6 +3718,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       FileNamePrefixParam.Value = ''
       FileNamePrefixParam.DataType = ftString
       FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
       Left = 1112
       Top = 240
     end
@@ -3768,6 +3769,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       FileNamePrefixParam.Value = ''
       FileNamePrefixParam.DataType = ftString
       FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
       Left = 1144
       Top = 272
     end
@@ -4042,6 +4044,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       FileNamePrefixParam.DataType = ftString
       FileNamePrefixParam.MultiSelectSeparator = ','
       ExportType = spefExportToDbf
+      FieldDefs = <>
       Left = 1192
       Top = 216
     end
