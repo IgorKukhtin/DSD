@@ -446,7 +446,7 @@ BEGIN
                      , MI_SheetWorkTime.ObjectId                      AS MemberId
                      , MIObject_Position.ObjectId                     AS PositionId
                      , MIObject_PersonalGroup.ObjectId                AS PersonalGroupId
-                     , COALESCE (MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
+                   --, COALESCE (MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
                        -- итого часов сотрудника
                    --, SUM (CASE WHEN Object_WorkTimeKind.Tax > 0 THEN Object_WorkTimeKind.Tax / 100 ELSE 1 END * MI_SheetWorkTime.Amount) :: TFloat AS SheetWorkTime_Amount
                      , SUM (MI_SheetWorkTime.Amount) :: TFloat AS SheetWorkTime_Amount
@@ -485,7 +485,7 @@ BEGIN
                         , MI_SheetWorkTime.ObjectId
                         , MIObject_Position.ObjectId
                         , MIObject_PersonalGroup.ObjectId
-                        , COALESCE (MIObject_PositionLevel.ObjectId, 0)
+                      --, COALESCE (MIObject_PositionLevel.ObjectId, 0)
                 )
 
         -- Результат
@@ -690,10 +690,10 @@ BEGIN
                               -- № п/п
                             , ROW_NUMBER() OVER (PARTITION BY COALESCE (ObjectLink_Personal_Member_find.ChildObjectId, tmpRes_all.MemberId)
                                                             , tmpRes_all.PositionId
-                                                            , tmpRes_all.PositionLevelId
+                                                          --, tmpRes_all.PositionLevelId
                                                             , tmpRes_all.PersonalGroupId
                                                             , COALESCE (tmpRes_all.OperDate, zc_DateStart())
-                                                 ORDER BY tmpRes_all.Count_Day DESC
+                                                 ORDER BY tmpRes_all.AmountOnOneMember DESC, tmpRes_all.Amount DESC, tmpRes_all.Count_Day DESC
                                                 ) AS Ord_SheetWorkTime
                             , COALESCE (ObjectLink_Personal_Member_find.ChildObjectId, tmpRes_all.MemberId) AS MemberId_find
                        FROM tmpRes_all
@@ -791,7 +791,7 @@ BEGIN
             LEFT JOIN Movement_SheetWorkTime ON Movement_SheetWorkTime.MemberId                      = tmpRes.MemberId_find
                                             AND COALESCE (Movement_SheetWorkTime.PositionId, 0)      = COALESCE (tmpRes.PositionId, 0)
                                             AND COALESCE (Movement_SheetWorkTime.PersonalGroupId, 0) = COALESCE (tmpRes.PersonalGroupId, 0)
-                                            AND COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
+                                          --AND COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
                                             AND (Movement_SheetWorkTime.OperDate                     = tmpRes.OperDate
                                               OR inDetailDay = FALSE
                                                 )
@@ -938,17 +938,18 @@ BEGIN
             LEFT JOIN tmpRes ON Movement_SheetWorkTime.MemberId                      = tmpRes.MemberId_find
                             AND COALESCE (Movement_SheetWorkTime.PositionId, 0)      = COALESCE (tmpRes.PositionId, 0)
                             AND COALESCE (Movement_SheetWorkTime.PersonalGroupId, 0) = COALESCE (tmpRes.PersonalGroupId, 0)
-                            AND COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
+                          --AND COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
                             AND (Movement_SheetWorkTime.OperDate                     = tmpRes.OperDate
                               OR inDetailDay = FALSE
                                 )
             LEFT JOIN Object AS Object_Member        ON Object_Member.Id        = Movement_SheetWorkTime.MemberId
             LEFT JOIN Object AS Object_Position      ON Object_Position.Id      = Movement_SheetWorkTime.PositionId
             LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = Movement_SheetWorkTime.PersonalGroupId
-            LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = Movement_SheetWorkTime.PositionLevelId
+            LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = NULL -- Movement_SheetWorkTime.PositionLevelId
             LEFT JOIN Object AS Object_Unit          ON Object_Unit.Id          = inUnitId
 
         WHERE tmpRes.MemberId_find IS NULL
+         AND 1=0
        ;
 
 END;

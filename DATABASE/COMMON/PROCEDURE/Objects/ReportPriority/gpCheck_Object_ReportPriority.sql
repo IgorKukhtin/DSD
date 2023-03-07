@@ -21,7 +21,7 @@ BEGIN
 
       RETURN QUERY
         WITH tmpProcess AS (SELECT * FROM pg_stat_activity WHERE state ILIKE 'active')
-            , tmpCount AS (SELECT COUNT (*) :: Integer AS Res FROM tmpProcess WHERE query ILIKE ('%' || inProcName || '%'))
+            , tmpCount AS (SELECT COUNT (*) :: Integer AS Res FROM tmpProcess WHERE query ILIKE ('%' || inProcName || '(%'))
             , tmpSecond AS (SELECT CASE WHEN 25 < (SELECT COUNT(*) FROM tmpProcess)
                                              THEN 60
 

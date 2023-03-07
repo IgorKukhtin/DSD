@@ -112,6 +112,20 @@ else*/
     inNumber:= 400;
 
 
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpGoods_delik')
+    THEN
+        -- таблица - элементы продаж для распределения Затрат по накладным
+        CREATE TEMP TABLE _tmpGoods_delik ON COMMIT DROP
+           AS SELECT lfSelect.GoodsId
+              FROM Object
+                   CROSS JOIN lfSelect_Object_Goods_byGoodsGroup (Object.Id) AS lfSelect
+              WHERE Object.DescId = zc_Object_GoodsGroup()
+                AND Object.ValueData ILIKE 'Дел%'
+             ;
+    END IF;
+
+
+
     -- !!!Временно 2 РАЗА - 2 Алгоритма - что б сравнить!!!
     IF inIsByDay = TRUE
       THEN
@@ -327,7 +341,7 @@ else*/
                 , CASE WHEN inIsPackSecond = TRUE THEN 0 ELSE tmpMI.AmountSecondResult            END AS AmountSecondResult
                 , CASE WHEN inIsPack       = TRUE THEN 0 WHEN tmpMI.isCalculated = FALSE THEN tmpMI.AmountNextResult_two       ELSE 0 /*tmpMI.AmountNextResult*/        END AS AmountNextResult
                 , CASE WHEN inIsPackSecond = TRUE THEN 0 WHEN tmpMI.isCalculated = FALSE THEN tmpMI.AmountNextSecondResult_two ELSE 0 /*tmpMI.AmountNextSecondResult*/  END AS AmountNextSecondResult
-                
+
                 , tmpMI.isCalculated
 
            FROM (SELECT MovementItem.Id                                AS MovementItemId
@@ -453,7 +467,7 @@ else*/
                                   ORDER BY CASE WHEN tmpGoodsByGoodsKind.GoodsId_pack > 0 THEN 0 ELSE MovementItem.Id END ASC
                                          , MovementItem.Id ASC
                                  ) AS AmountNextSecondResult
-                                 
+
                       , SUM (COALESCE (MIFloat_AmountPackNext.ValueData, 0))
                             OVER (PARTITION BY COALESCE (tmpGoodsByGoodsKind.GoodsId_pack, MovementItem.ObjectId) :: TVarChar  || '_' || COALESCE (tmpGoodsByGoodsKind.GoodsKindId_pack, COALESCE (MILinkObject_GoodsKind.ObjectId, 0)) :: TVarChar
                                   ORDER BY CASE WHEN tmpGoodsByGoodsKind.GoodsId_pack > 0 THEN 0 ELSE MovementItem.Id END ASC
@@ -608,7 +622,7 @@ else*/
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.isErased   = FALSE
                    AND COALESCE (MIFloat_ContainerId.ValueData, 0) = 0 -- отбросили остатки на ПР-ВЕ
-                   
+
                   -- AND MIBoolean_Calculated.MovementItemId IS NULL
 
                 ) AS tmpMI
@@ -666,6 +680,7 @@ else*/
                                                                       AND _tmpMI_Child.GoodsKindId_complete = _tmpMI_master.GoodsKindId
                                                LEFT JOIN tmpMI_summ  ON tmpMI_summ.GoodsId_master     = _tmpMI_master.GoodsId
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
+                                               LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.Amount - COALESCE (tmpMI_summ.AmountResult, 0) > 0
@@ -689,16 +704,31 @@ else*/
                                                   - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
 
                                             -- !!!отбросили НАРЕЗКУ!!!
-                                            AND (vbNumber <= vbdaycount_GoodsKind_8333
+                                          /*AND (vbNumber <= vbdaycount_GoodsKind_8333
                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333    -- НАР
-                                                                                              , 6899005 -- нар. 200 
+                                                                                              , 6899005 -- нар. 200
                                                                                               , 9027592 -- т/ф газ нар 0,1
                                                                                               , 8988926 -- т/ф газ нар 0,2
                                                                                               , 8988924 -- изопак скин нар 0,08
                                                                                               , 8988925 -- изопак скин нар 0,1
                                                                                                )
-                                                )
+                                                )*/
+
+                                            -- !!!отбросили НАРЕЗКУ!!!
+                                            AND ((vbNumber <= vbdaycount_GoodsKind_8333
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- НАР
+                                               OR _tmpGoods_delik.GoodsId IS NULL
+                                                 )
+                                             AND (vbNumber <= vbdaycount_GoodsKind_8333
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005 -- нар. 200
+                                                                                               , 9027592 -- т/ф газ нар 0,1
+                                                                                               , 8988926 -- т/ф газ нар 0,2
+                                                                                               , 8988924 -- изопак скин нар 0,08
+                                                                                               , 8988925 -- изопак скин нар 0,1
+                                                                                                )
+                                                ))
                                          )
+
                             -- ИТОГО по Child для ПРОПОРЦИИ
                           , tmpMI_all_summ AS (SELECT tmpMI_all.GoodsId_master
                                                     , tmpMI_all.GoodsKindId_master
@@ -839,7 +869,7 @@ else*/
                                             -- !!!отбросили НАРЕЗКУ!!!
                                             AND (vbNumber <= vbdaycount_GoodsKind_8333
                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333    -- НАР
-                                                                                              , 6899005 -- нар. 200 
+                                                                                              , 6899005 -- нар. 200
                                                                                                )
                                                 )
                                          )
@@ -982,7 +1012,7 @@ else*/
                                             -- !!!отбросили НАРЕЗКУ!!!
                                             AND (vbNumber <= vbdaycount_GoodsKind_8333
                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333    -- НАР
-                                                                                              , 6899005 -- нар. 200 
+                                                                                              , 6899005 -- нар. 200
                                                                                                )
                                                 )
                                          )
@@ -1148,7 +1178,7 @@ else*/
                                             -- !!!отбросили НАРЕЗКУ!!!
                                             AND (vbNumber <= vbdaycount_GoodsKind_8333
                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333    -- НАР
-                                                                                              , 6899005 -- нар. 200 
+                                                                                              , 6899005 -- нар. 200
                                                                                                )
                                                 )
                                          )

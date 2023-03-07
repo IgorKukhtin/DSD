@@ -265,6 +265,18 @@ BEGIN
                              GROUP BY tmpGoods.GoodsId
                                     , tmpGoods.GoodsKindId
                             )
+   , tmpList_ParentMulti AS (-- как-то
+                             SELECT DISTINCT ObjectLink_Receipt_Goods.ChildObjectId AS GoodsId
+                             FROM ObjectLink AS ObjectLink_Receipt_Goods
+                                  INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ObjectLink_Receipt_Goods.ObjectId
+                                                                     AND Object_Receipt.isErased = FALSE
+                                  INNER JOIN ObjectBoolean AS ObjectBoolean_ParentMulti
+                                                           ON ObjectBoolean_ParentMulti.ObjectId  = ObjectLink_Receipt_Goods.ObjectId
+                                                          AND ObjectBoolean_ParentMulti.DescId    = zc_ObjectBoolean_Receipt_ParentMulti()
+                                                          AND ObjectBoolean_ParentMulti.ValueData = TRUE
+                             WHERE ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                            )
+
      /*, tmpMI_result_find AS (-- как-то исправил ошибку
                              SELECT tmp.GoodsId
                              FROM
@@ -298,9 +310,9 @@ BEGIN
                , tmpMI_result.MovementItemId
                , tmpMI_result.ContainerId
                , tmpMI_result.GoodsId
-               , CASE WHEN ObjectBoolean_ParentMulti.ValueData = TRUE THEN -1 ELSE 1 END * COALESCE (tmpReceipt.ReceiptId, 0) AS ReceiptId_in
-               , CASE WHEN ObjectBoolean_ParentMulti.ValueData = TRUE THEN -1 ELSE COALESCE (ObjectLink_Receipt_Parent.ChildObjectId, 0) END AS ReceiptId_child
-               , CASE WHEN ObjectBoolean_ParentMulti.ValueData = TRUE THEN 0  ELSE COALESCE (ObjectLink_Receipt_Goods_parent.ChildObjectId, tmpMI_result.GoodsId) END AS GoodsId_child
+               , CASE WHEN tmpList_ParentMulti.GoodsId > 0 THEN -1 ELSE 1 END * COALESCE (tmpReceipt.ReceiptId, 0) AS ReceiptId_in
+               , CASE WHEN tmpList_ParentMulti.GoodsId > 0 THEN -1 ELSE COALESCE (ObjectLink_Receipt_Parent.ChildObjectId, 0) END AS ReceiptId_child
+               , CASE WHEN tmpList_ParentMulti.GoodsId > 0 THEN 0  ELSE COALESCE (ObjectLink_Receipt_Goods_parent.ChildObjectId, tmpMI_result.GoodsId) END AS GoodsId_child
                , tmpMI_result.DescId_mi
 
                  -- OperCount
@@ -329,9 +341,10 @@ BEGIN
                                            AND tmpMI_child_result.OperDate    = tmpMI_result.OperDate
                LEFT JOIN tmpReceipt ON tmpReceipt.GoodsId = tmpMI_result.GoodsId
                                    AND tmpReceipt.GoodsKindId = tmpMI_result.GoodsKindId
-               LEFT JOIN ObjectBoolean AS ObjectBoolean_ParentMulti
+               LEFT JOIN tmpList_ParentMulti ON tmpList_ParentMulti.GoodsId = tmpMI_result.GoodsId
+             /*LEFT JOIN ObjectBoolean AS ObjectBoolean_ParentMulti
                                        ON ObjectBoolean_ParentMulti.ObjectId = tmpReceipt.ReceiptId
-                                      AND ObjectBoolean_ParentMulti.DescId = zc_ObjectBoolean_Receipt_ParentMulti()
+                                      AND ObjectBoolean_ParentMulti.DescId = zc_ObjectBoolean_Receipt_ParentMulti()*/
                                     --AND 1=0
                LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent
                                     ON ObjectLink_Receipt_Parent.ObjectId = tmpReceipt.ReceiptId
@@ -525,16 +538,29 @@ BEGIN
                        WHERE tmpReceipt_find_all.ReceiptId_in > 0
                          AND tmpReceipt_find_all.ReceiptId_child = 0
                       )
+   , tmpList_ParentMulti AS (-- как-то
+                             SELECT DISTINCT ObjectLink_Receipt_Goods.ChildObjectId AS GoodsId
+                             FROM ObjectLink AS ObjectLink_Receipt_Goods
+                                  INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id       = ObjectLink_Receipt_Goods.ObjectId
+                                                                     AND Object_Receipt.isErased = FALSE
+                                  INNER JOIN ObjectBoolean AS ObjectBoolean_ParentMulti
+                                                           ON ObjectBoolean_ParentMulti.ObjectId  = ObjectLink_Receipt_Goods.ObjectId
+                                                          AND ObjectBoolean_ParentMulti.DescId    = zc_ObjectBoolean_Receipt_ParentMulti()
+                                                          AND ObjectBoolean_ParentMulti.ValueData = TRUE
+                             WHERE ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                            )
       -- ВСЕ - из каких ГП упаковываем НОВЫЕ ГП
     , tmpReceipt_next_find AS (SELECT tmpReceipt_find_all.OperDate, tmpReceipt_find_all.GoodsId, tmpReceipt_find_all.GoodsId_child
                                FROM tmpReceipt_find_all
-                                      LEFT JOIN ObjectBoolean AS ObjectBoolean_ParentMulti
+                                      LEFT JOIN tmpList_ParentMulti ON tmpList_ParentMulti.GoodsId = tmpReceipt_find_all.GoodsId
+                                    /*LEFT JOIN ObjectBoolean AS ObjectBoolean_ParentMulti
                                                               ON ObjectBoolean_ParentMulti.ObjectId  = ABS (tmpReceipt_find_all.ReceiptId_in) :: Integer
                                                              AND ObjectBoolean_ParentMulti.DescId    = zc_ObjectBoolean_Receipt_ParentMulti()
-                                                             AND ObjectBoolean_ParentMulti.ValueData = TRUE
+                                                             AND ObjectBoolean_ParentMulti.ValueData = TRUE*/
                                WHERE tmpReceipt_find_all.GoodsId <> tmpReceipt_find_all.GoodsId_child
-                                 AND ObjectBoolean_ParentMulti.ObjectId > 0
+                               --AND ObjectBoolean_ParentMulti.ObjectId > 0
                                --AND ObjectBoolean_ParentMulti.ObjectId IS NULL
+                                 AND tmpList_ParentMulti.GoodsId > 0
                               )
    -- ВСЕ - Если из А упак В и С, тогда В <-> С
  , tmpReceipt_next AS (-- 

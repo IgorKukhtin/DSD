@@ -448,7 +448,9 @@ BEGIN
               
            WHERE Movement.Id     = inMovementId
              AND Movement.DescId = zc_Movement_Sale()
-             AND COALESCE (Movement_Production.StatusId, 0) <> zc_Enum_Status_Erased();
+             --AND COALESCE (Movement_Production.StatusId, 0) <> zc_Enum_Status_Erased()
+           LIMIT 1
+           ;
 
      END IF;
 

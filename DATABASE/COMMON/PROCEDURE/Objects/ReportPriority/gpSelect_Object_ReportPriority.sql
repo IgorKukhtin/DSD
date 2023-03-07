@@ -52,6 +52,35 @@ BEGIN
              , 'gpUpdate_Movement_ReturnIn_Auto'  :: TVarChar AS Name
              , FALSE                              :: Boolean  AS isErased
 
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 7                                  :: Integer  AS Code
+             , 'gpSelect_Movement_Reestr'         :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 8                                  :: Integer  AS Code
+             , 'gpSelect_Object_ReportCollation'  :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 9                                  :: Integer  AS Code
+             , 'gpReport_Goods'                   :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 10                                 :: Integer  AS Code
+             , 'gpReport_Transport'               :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+             
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 11                                 :: Integer  AS Code
+             , 'gpReport_JuridicalCollation'      :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+
         ORDER BY 2
        ;
 
