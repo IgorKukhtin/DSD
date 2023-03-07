@@ -54,7 +54,7 @@ type
     actChecked: TdsdExecStoredProc;
     bbspChecked: TdxBarButton;
     InvNumberMark: TcxGridDBColumn;
-    actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction;
+    actPrint_by_Tax: TdsdPrintAction;
     bbPrint_Return_By_TaxCorrective: TdxBarButton;
     spGetReportNameTaxCorrective: TdsdStoredProc;
     actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc;

@@ -140,6 +140,9 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+
+  LoadReportFromFile('PrintMovement_ChangePercent', ReportPath + '\Товарный Учет\PrintMovement_ChangePercent.fr3');
+  exit;
   {
   LoadReportFromFile('Отчет - заявки (Резерв минус)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (Резерв минус).fr3');
   LoadReportFromFile('Отчет - заявки (Резерв минус) торг сеть', ReportPath + '\Отчеты (товарные)\Отчет - заявки (Резерв минус) торг сеть.fr3');

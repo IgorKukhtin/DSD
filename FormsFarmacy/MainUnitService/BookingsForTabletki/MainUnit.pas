@@ -89,7 +89,6 @@ type
     procedure btnSaveBookingsClick(Sender: TObject);
     procedure btnUpdateStausClick(Sender: TObject);
     procedure btnAllClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnLoadBookingsClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnOpenBookingClick(Sender: TObject);
@@ -436,11 +435,6 @@ begin
       Add_Log(E.Message);
   end;
 
-end;
-
-procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  Action := caFree;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);

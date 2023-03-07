@@ -54,10 +54,9 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
-    bbPrintTaxCorrective_Client: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
     bbTaxCorrective: TdxBarButton;
-    bbPrintTaxCorrective_Us: TdxBarButton;
+    bbPrint_by_Tax: TdxBarButton;
     colMeasureName: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
     cxLabel10: TcxLabel;
@@ -66,10 +65,7 @@ type
     cxLabel11: TcxLabel;
     edContract: TcxButtonEdit;
     GuidesContract: TdsdGuides;
-    cxLabel5: TcxLabel;
-    edPriceList: TcxButtonEdit;
     GuidesPriceList: TdsdGuides;
-    mactPrint: TMultiAction;
     actSPPrintProcName: TdsdExecStoredProc;
     cxLabel13: TcxLabel;
     edDocumentTaxKind: TcxButtonEdit;
@@ -96,7 +92,7 @@ type
     bbSetErasedTaxCorrective: TdxBarButton;
     bbUnCompleteTaxCorrective: TdxBarButton;
     actTaxJournalChoice: TOpenChoiceForm;
-    actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction;
+    actPrint_by_Tax: TdsdPrintAction;
     bbPrint_ReturnIn_by_TaxCorrective: TdxBarButton;
     spGetReportNameTaxCorrective: TdsdStoredProc;
     actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc;
@@ -130,7 +126,9 @@ type
     bbOpenReportCheckForm: TdxBarButton;
     bbUpdateAuto: TdxBarButton;
     LineNum: TcxGridDBColumn;
-    bbbPrint: TdxBarButton;
+    spUpdateMIMaster: TdsdStoredProc;
+    actUpdate_MI_ChangePercent: TdsdExecStoredProc;
+    bbUpdate_MI_ChangePercent: TdxBarButton;
   private
     { Private declarations }
   public

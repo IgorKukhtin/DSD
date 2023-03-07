@@ -96,35 +96,36 @@ BEGIN
                         AND Movement.OperDate BETWEEN vbStartDate AND vbEndDate
                         --AND (MovementLinkObject_Partner.ObjectId = vbPartnerId OR vbPartnerId = 0) 
                       )
-         , tmpMI AS (SELECT MovementItem.ObjectId           AS GoodsId
-                          , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
-                          , MIFloat_Price.ValueData         AS Price
-                          , MIFloat_CountForPrice.ValueData AS CountForPrice
-                          , SUM (MovementItem.Amount)       AS Amount
-                     FROM tmpTax
-                          INNER JOIN MovementItem ON MovementItem.MovementId = tmpTax.Id
-                                                 AND MovementItem.DescId = zc_MI_Master()
-                                                 AND MovementItem.isErased = FALSE
+         , tmpMI_Tax AS (SELECT MovementItem.ObjectId           AS GoodsId
+                              , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                              , MIFloat_Price.ValueData         AS Price
+                              , MIFloat_CountForPrice.ValueData AS CountForPrice
+                              , SUM (MovementItem.Amount)       AS Amount
+                         FROM tmpTax
+                              INNER JOIN MovementItem ON MovementItem.MovementId = tmpTax.Id
+                                                     AND MovementItem.DescId = zc_MI_Master()
+                                                     AND MovementItem.isErased = FALSE
 
-                          LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                          LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                      ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-
-                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-
-                     GROUP BY MovementItem.ObjectId
-                            , MILinkObject_GoodsKind.ObjectId
-                            , MIFloat_Price.ValueData
-                            , MIFloat_CountForPrice.ValueData 
-                     )
+                              LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                              LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                          ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+ 
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+    
+                         GROUP BY MovementItem.ObjectId
+                                , MILinkObject_GoodsKind.ObjectId
+                                , MIFloat_Price.ValueData
+                                , MIFloat_CountForPrice.ValueData 
+                         )
+        
          SELECT *
-         FROM tmpMI
-          ) AS tmp;
+         FROM tmpMI_Tax
+         ) AS tmp;
 
 
 END;

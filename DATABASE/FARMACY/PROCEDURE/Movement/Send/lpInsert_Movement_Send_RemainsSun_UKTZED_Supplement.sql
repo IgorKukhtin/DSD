@@ -71,7 +71,7 @@ BEGIN
      -- все Подразделения для схемы SUN UKTZED
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpUnit_SUN_UKTZED'))
      THEN
-       CREATE TEMP TABLE _tmpUnit_SUN_UKTZED (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isOutUKTZED_SUN1 Boolean) ON COMMIT DROP;
+       CREATE TEMP TABLE _tmpUnit_SUN_UKTZED (UnitId Integer, DeySupplSun1 Integer, MonthSupplSun1 Integer, isOutUKTZED_SUN1 Boolean, isColdOutSUN Boolean) ON COMMIT DROP;
      END IF;
 
      -- Товары дисконтных проектов

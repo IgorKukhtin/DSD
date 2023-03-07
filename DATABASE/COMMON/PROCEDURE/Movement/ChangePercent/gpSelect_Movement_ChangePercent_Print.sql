@@ -73,7 +73,20 @@ BEGIN
            , Movement.OperDate                          AS OperDate
 
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
-           
+
+           , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
+           , MovementFloat_VATPercent.ValueData         AS VATPercent
+           , MovementFloat_ChangePercent.ValueData      AS ChangePercent
+
+           , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
+           , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
+           , MovementFloat_TotalCount.ValueData         AS TotalCount
+           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+           , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+           , MovementFloat_TotalSumm.ValueData * MovementFloat_ChangePercent.ValueData  / 100  AS TotalSumm_ChangePercent
+
            , Object_From.Id                    	     AS FromId
            , Object_From.ValueData                   AS FromName
            , View_JuridicalDetails_From.OKPO         AS OKPO_From
@@ -81,8 +94,8 @@ BEGIN
            , Object_To.ValueData                     AS ToName
            , View_JuridicalDetails_To.OKPO           AS OKPO_To
 
-           , Object_Partner.ObjectCode              AS PartnerCode
-           , Object_Partner.ValueData               AS PartnerName
+           , Object_Partner.ObjectCode               AS PartnerCode
+           , Object_Partner.ValueData                AS PartnerName
 
            , View_Contract_InvNumber.ContractId      AS ContractId
            , View_Contract_InvNumber.ContractCode    AS ContractCode
@@ -99,22 +112,32 @@ BEGIN
 
            , Object_TaxKind.Id                	    AS DocumentTaxKindId
            , Object_TaxKind.ValueData         	    AS DocumentTaxKindName
-           , MovementString_Comment.ValueData       AS Comment
+           --, MovementString_Comment.ValueData       AS Comment
 
+           , DATE_TRUNC ('MONTH', Movement.OperDate)       AS StartDate
+           , DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' AS EndDate
+           
+           --Додаткова угода № від
+           , CASE WHEN Object_To.Id = 8793437 THEN ' № 76 від 01.03.2023' ELSE '______________________' END AS Text_ugoda
+           --доверенность
+           , CASE WHEN Object_To.Id = 8793437 THEN ' Довіренність № 2562-201-22' ELSE '______________________' END AS Text_dovir
+           --ответственный
+           , CASE WHEN Object_To.Id = 8793437 THEN ' Євстіфєєв Юрій Костянтинович' ELSE '______________________' END AS Text_upovnovag
+           
        FROM Movement
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
             
-            LEFT JOIN MovementString AS MovementString_Comment 
+      /*   LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-          /*  LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+           LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
 
-            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+     */       LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
@@ -148,7 +171,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
-*/
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -194,6 +217,7 @@ BEGIN
          , Object_Goods.ValueData   AS GoodsName
          , MovementItem.Amount      AS Amount
          , MIFloat_Price.ValueData  AS Price
+         , CAST (MIFloat_Price.ValueData * (1-vbChangePercent / 100) AS NUMERIC (16,2))  AS Price_NoChangePercent
          , MIFloat_CountForPrice.ValueData  AS CountForPrice
 
          , Object_GoodsKind.ValueData AS GoodsKindName
@@ -207,8 +231,8 @@ BEGIN
          , MovementItem.isErased    AS isErased
          
          , vbChangePercent AS ChangePercent
-         , CAST (MIFloat_Price.ValueData * vbChangePercent / 100 AS NUMERIC (16,2))  AS Sum_ChangePercent
-         , CAST ((MIFloat_Price.ValueData * vbChangePercent / 100) * vbVATPercent/100  AS NUMERIC (16,2))  AS Sum_VATPercent
+         , CAST (MovementItem.Amount * (MIFloat_Price.ValueData * vbChangePercent / 100) AS NUMERIC (16,2))  AS Sum_ChangePercent
+         , CAST (MovementItem.Amount * ((MIFloat_Price.ValueData * vbChangePercent / 100) * vbVATPercent/100)  AS NUMERIC (16,2))  AS Sum_VATPercent
 
      FROM MovementItem
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId

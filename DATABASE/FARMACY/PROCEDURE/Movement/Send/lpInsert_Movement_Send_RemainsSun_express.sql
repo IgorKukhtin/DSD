@@ -164,12 +164,13 @@ BEGIN
 raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
      -- все Подразделения для схемы SUN-v3
-     INSERT INTO _tmpUnit_SUN (UnitId, isSUN_out, isSUN_in)
+     INSERT INTO _tmpUnit_SUN (UnitId, isSUN_out, isSUN_in, isColdOutSUN)
         SELECT OB.ObjectId AS UnitId
                -- коэф суточного запаса получателя - определяется приход
              , COALESCE (OB_Unit_SUN_out.ValueData, False)
                -- коэф суточного запаса отправителя - определяется расход
              , COALESCE (OB_Unit_SUN_in.ValueData, False)
+             , COALESCE (OB_ColdOutSUN.ValueData, FALSE)                       AS isColdOutSUN
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectString  AS OS_ListDaySUN    ON OS_ListDaySUN.ObjectId    = OB.ObjectId AND OS_ListDaySUN.DescId    = zc_ObjectString_Unit_ListDaySUN()
 
@@ -189,6 +190,10 @@ raise notice 'Value 1: %', CLOCK_TIMESTAMP();
                                  AND ObjectLink_Unit_Driver.DescId        = zc_ObjectLink_Unit_Driver()
              LEFT JOIN Object AS Object_Driver ON Object_Driver.Id = ObjectLink_Unit_Driver.ChildObjectId
 
+             LEFT JOIN ObjectBoolean AS OB_ColdOutSUN    
+                                     ON OB_ColdOutSUN.ObjectId    = OB.ObjectId 
+                                    AND OB_ColdOutSUN.DescId    = zc_ObjectBoolean_Unit_ColdOutSUN()
+                                    
         WHERE (OB.ValueData = TRUE) AND (OB_Unit_SUN_out.ValueData = TRUE OR OB_Unit_SUN_in.ValueData = TRUE)
           AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v3()          
           -- если указан день недели - проверим его
@@ -389,6 +394,25 @@ raise notice 'Value 6: %', CLOCK_TIMESTAMP();
        ;
        
      ANALYSE _tmpSale_express;
+
+        -- Xолод
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpConditionsKeep'))
+     THEN
+       DROP TABLE tmpConditionsKeep;
+     END IF;
+
+     CREATE TEMP TABLE tmpConditionsKeep ON COMMIT DROP AS
+     SELECT Object_Goods.ID AS ObjectId
+     FROM Object_Goods_Retail AS Object_Goods 
+          LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
+                                  ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
+                                 AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
+     WHERE Object_Goods.RetailId = 4
+       AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
+            OR Object_Goods_Main.isColdSUN = TRUE);
+     
+     ANALYSE tmpConditionsKeep;
 
 raise notice 'Value 7: %', CLOCK_TIMESTAMP();
 
@@ -592,19 +616,6 @@ raise notice 'Value 7: %', CLOCK_TIMESTAMP();
                         WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                         --AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
                        )
-        -- отбросили !!холод!!
-      , tmpConditionsKeep AS (SELECT Object_Goods.Id AS ObjectId
-                              FROM Object_Goods_Retail AS Object_Goods
-                                   LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
-                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdSUN
-                                                           ON ObjectBoolean_ColdSUN.ObjectId = Object_Goods_Main.ConditionsKeepId
-                                                          AND ObjectBoolean_ColdSUN.DescId = zc_ObjectBoolean_ConditionsKeep_ColdSUN()
-                              WHERE Object_Goods.RetailId = 4
-                                AND (COALESCE (ObjectBoolean_ColdSUN.ValueData, FALSE) = TRUE
-                                 OR Object_Goods_Main.isColdSUN = TRUE 
-                                    )
-                                AND (vbisEliminateColdSUN = TRUE OR vbisOnlyColdSUN = TRUE)
-                             )
 
      -- 2.1. Результат: EXPRESS - все остатки, продажи => расчет кол-во ПОТРЕБНОСТЬ у получателя: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      INSERT INTO  _tmpRemains_all (UnitId, GoodsId, Price, MCS, Amount_sale, Summ_sale
@@ -727,19 +738,12 @@ raise notice 'Value 7: %', CLOCK_TIMESTAMP();
              LEFT JOIN tmpMI_Reserve ON tmpMI_Reserve.UnitId  = tmpObject_Price.UnitId
                                     AND tmpMI_Reserve.GoodsId = tmpObject_Price.GoodsId
 
-             -- а здесь, отбросили !!холод!!
-             LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = tmpObject_Price.GoodsId
-
              -- отбросили !!закрытые!!
            --INNER JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
            --                            AND Object_Goods_View.IsClose = FALSE
              -- отбросили !!акционные!!
            --INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
-           --                                 AND Object_Goods.ValueData NOT ILIKE 'ААА%'
-     WHERE             -- отбросили !!холод!!
-           ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
-             tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE)
- 
+           --                                 AND Object_Goods.ValueData NOT ILIKE 'ААА%' 
        ;
      
   ANALYSE _tmpRemains_all;
@@ -905,9 +909,18 @@ raise notice 'Value 11: %', CLOCK_TIMESTAMP();
              LEFT JOIN _tmpGoods_DiscountExternal AS _tmpGoods_DiscountExternal
                                                   ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_Partion.UnitId
                                                  AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_Partion.GoodsId
+
+             LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId  = _tmpRemains_Partion.UnitId
+
+             -- а здесь, отбросили !!холод!!
+             LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_Partion.GoodsId
                                                  
         WHERE _tmpRemains_Partion.AmountResult - COALESCE(_tmpRemains_all.MCS, 0) - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0) >= 1
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+              -- отбросили !!холод!!
+          AND ((tmpConditionsKeep.ObjectId IS NULL OR vbisEliminateColdSUN = FALSE) AND vbisOnlyColdSUN = FALSE OR
+              tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE OR
+              _tmpUnit_SUN.isColdOutSUN = TRUE)
         ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1
@@ -1182,7 +1195,7 @@ WHERE Movement.OperDate  >= '01.01.2019'
 -- тест
 /*
      -- все Подразделения для схемы SUN
-     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, isColdOutSUN Boolean) ON COMMIT DROP;
 
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      CREATE TEMP TABLE _tmpRemains_all   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, Amount_sale TFloat, Summ_sale TFloat, AmountResult_in TFloat, AmountResult_out TFloat, AmountRemains TFloat, AmountRemains_calc_in TFloat, AmountRemains_calc_out TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
@@ -1205,4 +1218,4 @@ WHERE Movement.OperDate  >= '01.01.2019'
  SELECT * FROM lpInsert_Movement_Send_RemainsSun_express (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 */
 
-select * from gpReport_Movement_Send_RemainsSun_express(inOperDate := ('16.01.2023')::TDateTime ,  inSession := '3');
+select * from gpReport_Movement_Send_RemainsSun_express(inOperDate := ('06.03.2023')::TDateTime ,  inSession := '3');

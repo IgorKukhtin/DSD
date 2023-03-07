@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_PromoBonus()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PromoBonus (Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PromoBonus (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PromoBonus(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PromoBonus(
     IN inGoodsId             Integer   , -- Товары
     IN inMIPromoId           Integer   , -- MI маркетингового контракта
     IN inAmount              TFloat    , -- Маркетинговый бонус
+    IN inBonusInetOrder      TFloat    , -- Маркет бонусы для инет заказов, %
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -30,6 +31,7 @@ BEGIN
                                         , inGoodsId            := inGoodsId
                                         , inMIPromoId          := inMIPromoId
                                         , inAmount             := inAmount
+                                        , inBonusInetOrder     := inBonusInetOrder
                                         , inUserId             := vbUserId
                                          );
 
