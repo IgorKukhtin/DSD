@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer
              , MakerId Integer, MakerCode Integer, MakerName TVarChar
              , Amount TFloat, MIPromoId Integer, MovementPromoId Integer
              , GoodsGroupPromoID Integer, GoodsGroupPromoName TVarChar
-             , DateUpdate TDateTime, isLearnWeek Boolean
+             , DateUpdate TDateTime, BonusInetOrder TFloat, isLearnWeek Boolean
              , isErased Boolean)
  AS
 $BODY$
@@ -33,6 +33,7 @@ BEGIN
                                       , MIPromo.MovementId                         AS MovementPromoId
                                       , MovementLinkObject_Maker.ObjectId          AS MakerId 
                                       , MIDate_Update.ValueData                    AS DateUpdate
+                                      , MIFloat_BonusInetOrder.ValueData           AS BonusInetOrder
                                       , MovementItem.isErased                      AS isErased
                                  FROM MovementItem
 
@@ -41,6 +42,10 @@ BEGIN
                                                                  ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
                                                                 AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
                                                                 
+                                     LEFT JOIN MovementItemFloat AS MIFloat_BonusInetOrder
+                                                                 ON MIFloat_BonusInetOrder.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_BonusInetOrder.DescId = zc_MIFloat_BonusInetOrder()
+
                                      LEFT JOIN MovementItemDate AS MIDate_Update
                                                                 ON MIDate_Update.MovementItemId = MovementItem.Id
                                                                AND MIDate_Update.DescId = zc_MIDate_Update()
@@ -72,6 +77,7 @@ BEGIN
                     , Object_GoodsGroupPromo.ID              AS GoodsGroupPromoID
                     , Object_GoodsGroupPromo.ValueData       AS GoodsGroupPromoName
                     , date_trunc('day',MI_Master.DateUpdate)::TDateTime AS DateUpdate
+                    , MI_Master.BonusInetOrder                          AS BonusInetOrder
                     , COALESCE (tmpPromoBonus_GoodsWeek.ID, 0) <> 0     AS isLearnWeek
                     , COALESCE(MI_Master.IsErased, False)               AS isErased
                FROM MI_Master

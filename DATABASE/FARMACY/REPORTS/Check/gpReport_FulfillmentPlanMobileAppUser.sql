@@ -22,7 +22,7 @@ BEGIN
 
      IF inSession = '3'
      THEN
-       vbUserId := 19769234;
+       vbUserId := 19450290;
      END IF;
      
           -- Результат
@@ -42,7 +42,7 @@ BEGIN
           , FulfillmentPlanMobile.QuantityMobile 
           , FulfillmentPlanMobile.ProcFact
           , FulfillmentPlanMobile.PenaltiMobApp 
-     FROM gpReport_FulfillmentPlanMobileApp (('01.02.2023')::TDateTime, 0, vbUserId, inSession) AS FulfillmentPlanMobile;
+     FROM gpReport_FulfillmentPlanMobileApp (inOperDate, 0, vbUserId, inSession) AS FulfillmentPlanMobile;
 
          
 END;
@@ -58,5 +58,5 @@ ALTER FUNCTION gpReport_FulfillmentPlanMobileAppUser (TDateTime, TVarChar) OWNER
 
 -- 
 
-select * from gpReport_FulfillmentPlanMobileAppUser(inOperDate := ('19.02.2023')::TDateTime , inSession := '3');
 
+select * from gpReport_FulfillmentPlanMobileAppUser(inOperDate := ('06.03.2023')::TDateTime ,  inSession := '3');

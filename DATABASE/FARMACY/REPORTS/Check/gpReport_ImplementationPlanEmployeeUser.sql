@@ -717,7 +717,7 @@ BEGIN
                                                           AND ObjectBoolean_ReleasedMarketingPlan.DescId = zc_ObjectBoolean_Member_ReleasedMarketingPlan()
 			
                               WHERE Object_User.DescId = zc_Object_User()),
-          tmpFulfillmentPlanMobile AS (select * from gpReport_FulfillmentPlanMobileApp (CURRENT_DATE::TDateTime, vbUnitID, vbUserId, '3'))
+          tmpFulfillmentPlanMobile AS (select * from gpReport_FulfillmentPlanMobileApp (CURRENT_DATE::TDateTime, 0, vbUserId, '3'))
 
      SELECT
         Result.ID::Integer,

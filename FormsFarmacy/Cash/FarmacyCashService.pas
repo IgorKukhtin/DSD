@@ -2097,15 +2097,15 @@ begin
         sp.Params.Clear;
         sp.Params.AddParam('inCashRegister', ftString, ptInput, iniLocalCashRegisterGet);
         sp.Execute;
-        Add_Log('Start MutexUnitConfig');
-        WaitForSingleObject(MutexUnitConfig, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+        Add_Log('Start MutexImplementationPlanEmployeeUser');
+        WaitForSingleObject(MutexImplementationPlanEmployeeUser, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
         try
           SaveLocalData(ds,UnitConfig_lcl);
           FisShowPlanEmployeeUser := ds.FieldByName('isShowPlanEmployeeUser').AsBoolean;
           LoadLocalData(UnitConfigCDS,UnitConfig_lcl);
         finally
-          Add_Log('End MutexUnitConfig');
-          ReleaseMutex(MutexUnitConfig);
+          Add_Log('End MutexImplementationPlanEmployeeUser');
+          ReleaseMutex(MutexImplementationPlanEmployeeUser);
         end;
 
       finally

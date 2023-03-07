@@ -12,7 +12,6 @@ object MainForm: TMainForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
@@ -199,7 +198,7 @@ object MainForm: TMainForm
     end
     object btnAll: TButton
       Left = 16
-      Top = 3
+      Top = 2
       Width = 97
       Height = 25
       Caption = #1042#1089#1077' '#1076#1077#1081#1089#1090#1074#1080#1103'!'
@@ -432,6 +431,8 @@ object MainForm: TMainForm
       Height = 263
       Align = alClient
       TabOrder = 1
+      ExplicitLeft = -4
+      ExplicitTop = 187
       object cxGridDBTableView3: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = dsCheckHead

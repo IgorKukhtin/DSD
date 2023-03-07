@@ -86,6 +86,7 @@
         <DCC_DcuOutput>..\DCU</DCC_DcuOutput>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <BT_BuildType>Debug</BT_BuildType>
+        <Debugger_DebugSourcePath>c:\Common\Component\ZEOSDBO-New\src\dbc\;c:\Common\Component\ZEOSDBO-New\src\core\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>

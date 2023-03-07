@@ -50,35 +50,40 @@ procedure SQLiteChechAndArc;
   var ZQuery: TZQuery; ZipFile: TZipFile;  ZipFileName: string;
 begin
   try
+    Add_SQLiteLog('Start MutexSQLite');
     WaitForSingleObject(MutexSQLite, INFINITE);
-    ZSQLiteConnection.Database := SQLiteFile;
-    ZSQLiteConnection.Connect;
-    ZQuery := TZQuery.Create(Nil);
-    ZQuery.Connection := ZSQLiteConnection;
     try
-
-      ZQuery.SQL.Text := 'SELECT name FROM sqlite_master WHERE type = ''table''';
-      ZQuery.Open;
-
-      ZQuery.Close;
-      ZSQLiteConnection.Disconnect;
-
-      ZipFileName := TPath.GetFileNameWithoutExtension(SQLiteFile) + '.zip';
-
-      ZipFile := TZipFile.Create;
-
+      ZQuery := TZQuery.Create(Nil);
+      ZQuery.Connection := ZSQLiteConnection;
       try
-        ZipFile.Open(ZipFileName, zmWrite);
-        ZipFile.Add(SQLiteFile);
-        ZipFile.Close;
-      finally
-        ZipFile.Free;
-      end;
+        ZSQLiteConnection.Database := SQLiteFile;
+        ZSQLiteConnection.Connect;
 
+        ZQuery.SQL.Text := 'SELECT name FROM sqlite_master WHERE type = ''table''';
+        ZQuery.Open;
+
+        ZQuery.Close;
+        ZSQLiteConnection.Disconnect;
+
+        ZipFileName := TPath.GetFileNameWithoutExtension(SQLiteFile) + '.zip';
+
+        ZipFile := TZipFile.Create;
+
+        try
+          ZipFile.Open(ZipFileName, zmWrite);
+          ZipFile.Add(SQLiteFile);
+          ZipFile.Close;
+        finally
+          ZipFile.Free;
+        end;
+
+      finally
+        ZQuery.Free;
+        ZSQLiteConnection.Disconnect;
+      end;
     finally
-      ZQuery.Free;
-      ZSQLiteConnection.Disconnect;
       ReleaseMutex(MutexSQLite);
+      Add_SQLiteLog('End MutexSQLite');
     end;
   Except on E: Exception do
     Add_SQLiteLog('Ошибка проверки и архивирования базы : ' + SQLiteFile + ' - ' + E.Message);
@@ -93,131 +98,136 @@ begin
   if not ASrc.Active then Exit;
 
   try
-    WaitForSingleObject(MutexSQLite, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
-    ZSQLiteConnection.Database := SQLiteFile;
-    ZSQLiteConnection.Connect;
-    ZQuery := TZQuery.Create(Nil);
-    ZQuery.Connection := ZSQLiteConnection;
-    ASrc.DisableControls;
+    Add_SQLiteLog('Stert MutexSQLite Save: ' + ATableName);
+    WaitForSingleObject(MutexSQLite, INFINITE);
     try
-
-        // Удаляем новую если вдркг остался мусор
-      ZQuery.SQL.Text := 'drop table if exists ' + ATableName+ 'New';
-      ZQuery.ExecSQL;
-
-        // Создаем новую таблицу
-      S :=  'CREATE TABLE ' + ATableName + 'New (';
-      for I := 0 to ASrc.FieldCount - 1 do
-      begin
-        if I > 0 then S := S + ', ';
-        S := S + ASrc.Fields.Fields[I].FieldName + ' ';
-        case ASrc.Fields.Fields[I].DataType of
-          ftInteger, ftLargeint : S := S + 'Integer';
-          ftDateTime : S := S + 'DateTime';
-          ftString, ftWideString :
-            if (ASrc.Fields.Fields[I].Size > 0) and (ASrc.Fields.Fields[I].Size <= 255) then
-              S := S + 'VarChar(255)'
-            else S := S + 'TEXT';
-          ftMemo, ftWideMemo : S := S + 'TEXT';
-          ftFloat, ftCurrency : S := S + 'Float';
-          ftBoolean : S := S + 'Boolean';
-        else
-          Add_SQLiteLog('Ошибка сохранения таблицы: ' + ATableName + ' - Неописанный тип дпнных: ' + ASrc.Fields.Fields[I].FieldName);
-        end;
-      end;
-      S := S + ')';
-
-      ZQuery.SQL.Text := S;
-      ZQuery.ExecSQL;
-
-        // Готовим SQL для заливки
-//      S :=  'INSERT INTO ' + ATableName + 'New (';
-//      for I := 0 to ASrc.FieldCount - 1 do
-//      begin
-//        if I > 0 then S := S + ', ';
-//        S := S + ASrc.Fields.Fields[I].FieldName
-//      end;
-//      S := S + ') VALUES ';
-
-        // Заливаем данные пока медленно но потом может решу чтоб быстрее
-//      ZQuery.Active := False;
-//      ZQuery.SQL.Text := 'select * from ' + ATableName + 'New limit 0';
-//      ZQuery.Active := True;
-//
-//      ASrc.First;
-//      while not ASrc.Eof do
-//      begin
-//        ZQuery.Append;
-//
-//        for I := 0 to ASrc.FieldCount - 1 do
-//        begin
-//          ZQuery.Fields.Fields[I].Value := ASrc.Fields.Fields[I].Value;
-//        end;
-//        ZQuery.Post;
-//
-//        ASrc.Next;
-//      end;
-
-        // Заливаем данные через JSON
-      S :=  '';
-      for I := 0 to ASrc.Fields.Count - 1 do
-      begin
-        if I > 0 then S := S + ', ';
-        S := S + 'json_extract(json_each.VALUE, ''$.' + ASrc.Fields.Fields[I].FieldName + ''')';
-      end;
-
-      JSONA := TJSONArray.Create;
+      ZSQLiteConnection.Database := SQLiteFile;
+      ZSQLiteConnection.Connect;
+      ZQuery := TZQuery.Create(Nil);
+      ZQuery.Connection := ZSQLiteConnection;
+      ASrc.DisableControls;
       try
-        ASrc.First;
-        while not ASrc.Eof do
-        begin
-          jsonItem := TJSONObject.Create;
 
-          for I := 0 to ASrc.Fields.Count - 1 do
-          begin
-            if ASrc.Fields.Fields[I].IsNull then
-              jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONNull.Create)
-            else
-              case ASrc.Fields.Fields[I].DataType of
-                ftInteger, ftLargeint : jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONNumber.Create(ASrc.Fields.Fields[I].AsInteger));
-                ftDateTime : jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONString.Create(FormatDateTime('YYYY-MM-DD HH:NN:SS.ZZZ', ASrc.Fields.Fields[I].AsDateTime)));
-                ftFloat : jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONNumber.Create(ASrc.Fields.Fields[I].AsCurrency));
-                ftBoolean : if ASrc.Fields.Fields[I].AsBoolean then
-                              jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONTrue.Create)
-                            else jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONFalse.Create);
-              else
-                jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONString.Create(ASrc.Fields.Fields[I].AsString));
-              end;
+          // Удаляем новую если вдркг остался мусор
+        ZQuery.SQL.Text := 'drop table if exists ' + ATableName+ 'New';
+        ZQuery.ExecSQL;
+
+          // Создаем новую таблицу
+        S :=  'CREATE TABLE ' + ATableName + 'New (';
+        for I := 0 to ASrc.FieldCount - 1 do
+        begin
+          if I > 0 then S := S + ', ';
+          S := S + ASrc.Fields.Fields[I].FieldName + ' ';
+          case ASrc.Fields.Fields[I].DataType of
+            ftInteger, ftLargeint : S := S + 'Integer';
+            ftDateTime : S := S + 'DateTime';
+            ftString, ftWideString :
+              if (ASrc.Fields.Fields[I].Size > 0) and (ASrc.Fields.Fields[I].Size <= 255) then
+                S := S + 'VarChar(255)'
+              else S := S + 'TEXT';
+            ftMemo, ftWideMemo : S := S + 'TEXT';
+            ftFloat, ftCurrency : S := S + 'Float';
+            ftBoolean : S := S + 'Boolean';
+          else
+            Add_SQLiteLog('Ошибка сохранения таблицы: ' + ATableName + ' - Неописанный тип дпнных: ' + ASrc.Fields.Fields[I].FieldName);
           end;
-          JSONA.AddElement(jsonItem);
-
-          ASrc.Next;
         end;
+        S := S + ')';
 
-        if ASrc.RecordCount > 0 then
+        ZQuery.SQL.Text := S;
+        ZQuery.ExecSQL;
+
+          // Готовим SQL для заливки
+  //      S :=  'INSERT INTO ' + ATableName + 'New (';
+  //      for I := 0 to ASrc.FieldCount - 1 do
+  //      begin
+  //        if I > 0 then S := S + ', ';
+  //        S := S + ASrc.Fields.Fields[I].FieldName
+  //      end;
+  //      S := S + ') VALUES ';
+
+          // Заливаем данные пока медленно но потом может решу чтоб быстрее
+  //      ZQuery.Active := False;
+  //      ZQuery.SQL.Text := 'select * from ' + ATableName + 'New limit 0';
+  //      ZQuery.Active := True;
+  //
+  //      ASrc.First;
+  //      while not ASrc.Eof do
+  //      begin
+  //        ZQuery.Append;
+  //
+  //        for I := 0 to ASrc.FieldCount - 1 do
+  //        begin
+  //          ZQuery.Fields.Fields[I].Value := ASrc.Fields.Fields[I].Value;
+  //        end;
+  //        ZQuery.Post;
+  //
+  //        ASrc.Next;
+  //      end;
+
+          // Заливаем данные через JSON
+        S :=  '';
+        for I := 0 to ASrc.Fields.Count - 1 do
         begin
-          ZQuery.SQL.Text := 'INSERT INTO ' + ATableName + 'New SELECT ' + S + ' FROM json_each(:Json) AS json_each';
-          ZQuery.ParamByName('Json').Value := JSONA.ToString;
-          ZQuery.ExecSQL;
+          if I > 0 then S := S + ', ';
+          S := S + 'json_extract(json_each.VALUE, ''$.' + ASrc.Fields.Fields[I].FieldName + ''')';
         end;
+
+        JSONA := TJSONArray.Create;
+        try
+          ASrc.First;
+          while not ASrc.Eof do
+          begin
+            jsonItem := TJSONObject.Create;
+
+            for I := 0 to ASrc.Fields.Count - 1 do
+            begin
+              if ASrc.Fields.Fields[I].IsNull then
+                jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONNull.Create)
+              else
+                case ASrc.Fields.Fields[I].DataType of
+                  ftInteger, ftLargeint : jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONNumber.Create(ASrc.Fields.Fields[I].AsInteger));
+                  ftDateTime : jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONString.Create(FormatDateTime('YYYY-MM-DD HH:NN:SS.ZZZ', ASrc.Fields.Fields[I].AsDateTime)));
+                  ftFloat : jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONNumber.Create(ASrc.Fields.Fields[I].AsCurrency));
+                  ftBoolean : if ASrc.Fields.Fields[I].AsBoolean then
+                                jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONTrue.Create)
+                              else jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONFalse.Create);
+                else
+                  jsonItem.AddPair(ASrc.Fields.Fields[I].FieldName, TJSONString.Create(ASrc.Fields.Fields[I].AsString));
+                end;
+            end;
+            JSONA.AddElement(jsonItem);
+
+            ASrc.Next;
+          end;
+
+          if ASrc.RecordCount > 0 then
+          begin
+            ZQuery.SQL.Text := 'INSERT INTO ' + ATableName + 'New SELECT ' + S + ' FROM json_each(:Json) AS json_each';
+            ZQuery.ParamByName('Json').Value := JSONA.ToString;
+            ZQuery.ExecSQL;
+          end;
+        finally
+          JSONA.Free;
+        end;
+
+
+          // Удаляем предыдущий вариант
+        ZQuery.SQL.Text := 'drop table if exists ' + ATableName;
+        ZQuery.ExecSQL;
+
+          // Переименовываем
+        ZQuery.SQL.Text := 'ALTER TABLE ' + ATableName + 'New RENAME TO ' + ATableName;
+        ZQuery.ExecSQL;
+
       finally
-        JSONA.Free;
+        ZQuery.Free;
+        ZSQLiteConnection.Disconnect;
+        ASrc.EnableControls;
       end;
-
-
-        // Удаляем предыдущий вариант
-      ZQuery.SQL.Text := 'drop table if exists ' + ATableName;
-      ZQuery.ExecSQL;
-
-        // Переименовываем
-      ZQuery.SQL.Text := 'ALTER TABLE ' + ATableName + 'New RENAME TO ' + ATableName;
-      ZQuery.ExecSQL;
-
     finally
-      ZQuery.Free;
-      ZSQLiteConnection.Disconnect;
       ReleaseMutex(MutexSQLite);
-      ASrc.EnableControls;
+      Add_SQLiteLog('End MutexSQLite');
     end;
   Except on E: Exception do
     Add_SQLiteLog('Ошибка сохранения таблицы: ' + ATableName + ' - ' + E.Message);
@@ -231,63 +241,68 @@ procedure LoadSQLiteData(ADst: TClientDataSet; ATableName: String; AShowError : 
 begin
 
   try
-    WaitForSingleObject(MutexSQLite, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
-    ZSQLiteConnection.Database := SQLiteFile;
-    ZSQLiteConnection.Connect;
-    ZQuery := TZQuery.Create(Nil);
-    ZQuery.Connection := ZSQLiteConnection;
+    Add_SQLiteLog('Stert MutexSQLite Load: ' + ATableName);
+    WaitForSingleObject(MutexSQLite, INFINITE);
     try
-
-        // Проверяем наличие таблицы
-      ZQuery.SQL.Text := 'SELECT name FROM sqlite_master WHERE type = ''table'' AND name= ''' + ATableName + '''';
-      ZQuery.Open;
-
-      if ZQuery.RecordCount < 1 then Exit;
-
-      ZQuery.Close;
-
-      DataSetProvider := TDataSetProvider.Create(Application);
-      DataSetProvider.Name := 'DataSetProvider';
-      DataSetProvider.DataSet := ZQuery;
-      ClientDataSet := TClientDataSet.Create(Application);
-      ClientDataSet.ProviderName := DataSetProvider.Name;
+      ZSQLiteConnection.Database := SQLiteFile;
+      ZSQLiteConnection.Connect;
+      ZQuery := TZQuery.Create(Nil);
+      ZQuery.Connection := ZSQLiteConnection;
       try
 
-          // Получаем данные
-        ZQuery.SQL.Text := 'select * FROM ' + ATableName;
-        ZQuery.Active := True;
+          // Проверяем наличие таблицы
+        ZQuery.SQL.Text := 'SELECT name FROM sqlite_master WHERE type = ''table'' AND name= ''' + ATableName + '''';
+        ZQuery.Open;
 
-        ClientDataSet.Active := True;
+        if ZQuery.RecordCount < 1 then Exit;
 
-        if ADst.Active then ADst.Close;
+        ZQuery.Close;
 
-//        for I := 0 to ZQuery.FieldCount - 1 do
-//        begin
-//          case ZQuery.Fields.Fields[I].DataType of
-//            ftInteger, ftLargeint : ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftInteger);
-//            ftDateTime : ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftDateTime);
-//            ftString, ftMemo, ftWideMemo, ftWideString :
-//              if (ZQuery.Fields.Fields[I].Size <= 255) and (ZQuery.Fields.Fields[I].Size > 0) then
-//                ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftString, 255)
-//              else ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftWideString);
-//            ftFloat : ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftFloat);
-//            ftBoolean : ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftBoolean);
-//          else
-//            Add_SQLiteLog('Ошибка сщоздания таблицы: ' + ATableName + ' - Неописанный тип дпнных: ' + ZQuery.Fields.Fields[I].FieldName);
-//          end;
-//        end;
-//        ADst.CreateDataSet;
+        DataSetProvider := TDataSetProvider.Create(Application);
+        DataSetProvider.Name := 'DataSetProvider';
+        DataSetProvider.DataSet := ZQuery;
+        ClientDataSet := TClientDataSet.Create(Application);
+        ClientDataSet.ProviderName := DataSetProvider.Name;
+        try
 
-        ADst.AppendData(ClientDataSet.Data, False);
+            // Получаем данные
+          ZQuery.SQL.Text := 'select * FROM ' + ATableName;
+          ZQuery.Active := True;
 
+          ClientDataSet.Active := True;
+
+          if ADst.Active then ADst.Close;
+
+  //        for I := 0 to ZQuery.FieldCount - 1 do
+  //        begin
+  //          case ZQuery.Fields.Fields[I].DataType of
+  //            ftInteger, ftLargeint : ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftInteger);
+  //            ftDateTime : ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftDateTime);
+  //            ftString, ftMemo, ftWideMemo, ftWideString :
+  //              if (ZQuery.Fields.Fields[I].Size <= 255) and (ZQuery.Fields.Fields[I].Size > 0) then
+  //                ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftString, 255)
+  //              else ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftWideString);
+  //            ftFloat : ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftFloat);
+  //            ftBoolean : ADst.FieldDefs.Add(ZQuery.Fields.Fields[I].FieldName, ftBoolean);
+  //          else
+  //            Add_SQLiteLog('Ошибка сщоздания таблицы: ' + ATableName + ' - Неописанный тип дпнных: ' + ZQuery.Fields.Fields[I].FieldName);
+  //          end;
+  //        end;
+  //        ADst.CreateDataSet;
+
+          ADst.AppendData(ClientDataSet.Data, False);
+
+        finally
+          ClientDataSet.Free;
+          DataSetProvider.Free;
+        end;
       finally
-        ClientDataSet.Free;
-        DataSetProvider.Free;
+        ZQuery.Free;
+        ZSQLiteConnection.Disconnect;
       end;
     finally
-      ZQuery.Free;
-      ZSQLiteConnection.Disconnect;
       ReleaseMutex(MutexSQLite);
+      Add_SQLiteLog('End MutexSQLite');
     end;
   Except on E: Exception do
     Add_SQLiteLog('Ошибка загрузки таблицы '+ ATableName + ' - ' + E.Message);
@@ -301,38 +316,43 @@ procedure LoadSQLiteSQL(ADst: TClientDataSet; ASQL: String; AShowError : Boolean
 begin
 
   try
-    WaitForSingleObject(MutexSQLite, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
-    ZSQLiteConnection.Database := SQLiteFile;
-    ZSQLiteConnection.Connect;
-    ZQuery := TZQuery.Create(Nil);
-    ZQuery.Connection := ZSQLiteConnection;
+    Add_SQLiteLog('Start MutexSQLite SQL');
+    WaitForSingleObject(MutexSQLite, INFINITE);
     try
-
-      DataSetProvider := TDataSetProvider.Create(Application);
-      DataSetProvider.Name := 'DataSetProvider';
-      DataSetProvider.DataSet := ZQuery;
-      ClientDataSet := TClientDataSet.Create(Application);
-      ClientDataSet.ProviderName := DataSetProvider.Name;
+      ZSQLiteConnection.Database := SQLiteFile;
+      ZSQLiteConnection.Connect;
+      ZQuery := TZQuery.Create(Nil);
+      ZQuery.Connection := ZSQLiteConnection;
       try
 
-          // Получаем данные
-        ZQuery.SQL.Text := ASQL;
-        ZQuery.Active := True;
+        DataSetProvider := TDataSetProvider.Create(Application);
+        DataSetProvider.Name := 'DataSetProvider';
+        DataSetProvider.DataSet := ZQuery;
+        ClientDataSet := TClientDataSet.Create(Application);
+        ClientDataSet.ProviderName := DataSetProvider.Name;
+        try
 
-        ClientDataSet.Active := True;
+            // Получаем данные
+          ZQuery.SQL.Text := ASQL;
+          ZQuery.Active := True;
 
-        if ADst.Active then ADst.Close;
+          ClientDataSet.Active := True;
 
-        ADst.AppendData(ClientDataSet.Data, False);
+          if ADst.Active then ADst.Close;
 
+          ADst.AppendData(ClientDataSet.Data, False);
+
+        finally
+          ClientDataSet.Free;
+          DataSetProvider.Free;
+        end;
       finally
-        ClientDataSet.Free;
-        DataSetProvider.Free;
+        ZQuery.Free;
+        ZSQLiteConnection.Disconnect;
       end;
     finally
-      ZQuery.Free;
-      ZSQLiteConnection.Disconnect;
       ReleaseMutex(MutexSQLite);
+      Add_SQLiteLog('End MutexSQLite');
     end;
   Except on E: Exception do
     Add_SQLiteLog('Ошибка выполнения запроса: '+ ASQL + ' - ' + E.Message);
@@ -364,21 +384,26 @@ procedure DeleteSQLiteData(ATableName: String);
   var  ZQuery: TZQuery;
 begin
   try
-    WaitForSingleObject(MutexSQLite, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
-    ZSQLiteConnection.Database := SQLiteFile;
-    ZSQLiteConnection.Connect;
-    ZQuery := TZQuery.Create(Nil);
-    ZQuery.Connection := ZSQLiteConnection;
+    Add_SQLiteLog('Stert MutexSQLite Delete: ' + ATableName);
+    WaitForSingleObject(MutexSQLite, INFINITE);
     try
+      ZSQLiteConnection.Database := SQLiteFile;
+      ZSQLiteConnection.Connect;
+      ZQuery := TZQuery.Create(Nil);
+      ZQuery.Connection := ZSQLiteConnection;
+      try
 
-        // Удаляем если есть
-      ZQuery.SQL.Text := 'drop table if exists ' + ATableName;
-      ZQuery.ExecSQL;
+          // Удаляем если есть
+        ZQuery.SQL.Text := 'drop table if exists ' + ATableName;
+        ZQuery.ExecSQL;
 
+      finally
+        ZQuery.Free;
+        ZSQLiteConnection.Disconnect;
+      end;
     finally
-      ZQuery.Free;
-      ZSQLiteConnection.Disconnect;
       ReleaseMutex(MutexSQLite);
+      Add_SQLiteLog('End MutexSQLite');
     end;
   Except on E: Exception do
      Add_SQLiteLog('Ошибка удаления таблицы '+ ATableName + ' - ' + E.Message);
@@ -388,6 +413,7 @@ end;
 initialization
 
   MutexSQLite := CreateMutex(nil, false, 'farmacycashMutexSQLite');
+  Add_SQLiteLog('Create MutexSQLite');
   GetLastError;
   ZSQLiteConnection := TZConnection.Create(Nil);
   ZSQLiteConnection.Protocol := 'sqlite-3';

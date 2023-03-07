@@ -1,29 +1,29 @@
 inherited PromoBonusForm: TPromoBonusForm
   Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1089' '#1091#1095#1077#1090#1086#1084' '#1073#1086#1085#1091#1089#1072
   ClientHeight = 560
-  ClientWidth = 750
+  ClientWidth = 954
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 766
-  ExplicitHeight = 599
+  ExplicitWidth = 972
+  ExplicitHeight = 607
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 115
-    Width = 750
-    Height = 445
-    ExplicitTop = 115
+    Top = 116
+    Width = 954
+    Height = 444
+    ExplicitTop = 116
     ExplicitWidth = 750
-    ExplicitHeight = 445
-    ClientRectBottom = 445
-    ClientRectRight = 750
+    ExplicitHeight = 444
+    ClientRectBottom = 444
+    ClientRectRight = 954
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 750
-      ExplicitHeight = 421
+      ExplicitHeight = 420
       inherited cxGrid: TcxGrid
-        Width = 750
-        Height = 421
+        Width = 954
+        Height = 420
         ExplicitWidth = 750
-        ExplicitHeight = 421
+        ExplicitHeight = 420
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -177,6 +177,18 @@ inherited PromoBonusForm: TPromoBonusForm
             Styles.Header = dmMain.cxHeaderL1Style
             Width = 105
           end
+          object BonusInetOrder: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099' '#1076#1083#1103' '#1080#1085#1077#1090' '#1079#1072#1082#1072#1079#1086#1074', %'
+            DataBinding.FieldName = 'BonusInetOrder'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099' '#1076#1083#1103' '#1080#1085#1077#1090' '#1079#1072#1082#1072#1079#1086#1074',%'
+            Styles.Content = dmMain.cxHeaderL1Style
+            Styles.Header = dmMain.cxHeaderL1Style
+            Width = 107
+          end
           object DateUpdate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'DateUpdate'
@@ -190,7 +202,7 @@ inherited PromoBonusForm: TPromoBonusForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 750
+    Width = 954
     Height = 89
     TabOrder = 3
     ExplicitWidth = 750
@@ -567,7 +579,7 @@ inherited PromoBonusForm: TPromoBonusForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1022,6 +1034,15 @@ inherited PromoBonusForm: TPromoBonusForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBonusInetOrder'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'BonusInetOrder'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

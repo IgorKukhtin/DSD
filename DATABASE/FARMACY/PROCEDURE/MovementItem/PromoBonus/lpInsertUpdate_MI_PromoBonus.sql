@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MI_PromoBonus()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_PromoBonus (Integer, Integer, Integer, Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_PromoBonus (Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_PromoBonus(
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_PromoBonus(
     IN inGoodsId             Integer   , -- Товары
     IN inMIPromoId           Integer   , -- MI маркетингового контракта
     IN inAmount              TFloat    , -- Маркетинговый бонус
+    IN inBonusInetOrder      TFloat    , -- Маркет бонусы для инет заказов, %
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -42,8 +43,11 @@ BEGIN
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
 
-     -- Сохранили <Подразделение>
+     -- Сохранили <MI маркетингового контракта>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementItemId(), ioId, inMIPromoId);
+       
+     -- Сохранили <Маркет бонусы для инет заказов, %>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_BonusInetOrder(), ioId, inBonusInetOrder);
        
 
        -- Сохранили <Дату изменения>

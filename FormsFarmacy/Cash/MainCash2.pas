@@ -2068,7 +2068,7 @@ begin
                  (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
                  (FieldByName('Amount').AsCurrency > 0) then
               begin
-                ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Калининой Кристине...');
+                ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Василенко или Грабченко...');
               end;
 
               Next;
@@ -2929,10 +2929,10 @@ begin
       if isServiseOld then
         ShowPUSHMessageCash('Не обновлена служба FCash Service.'#13#10#13#10'Обратитесь в IT отдел.', cResult);
 
-      ShowTrayMessage('Коллеги, по всем вопросам и предложениям для улучшения мобильного приложения ПРОСЬБА обращаться к Олегу либо к Кристине.'#13#10 +
+      ShowTrayMessage('Коллеги, по всем вопросам и предложениям для улучшения мобильного приложения ПРОСЬБА обращаться к Олегу либо к Максим (IT).'#13#10 +
                       'Чем лучше будет приложение тем больше новых клиентов сможем подтянуть, а это ваши дополнительные +грн к зп!!!');
 
-//      ShowPUSHMessageCash('Коллеги, по всем вопросам и предложениям для улучшения мобильного приложения ПРОСЬБА обращаться к Олегу либо к Кристине.'#13#10 +
+//      ShowPUSHMessageCash('Коллеги, по всем вопросам и предложениям для улучшения мобильного приложения ПРОСЬБА обращаться к Олегу либо к Максим (IT).'#13#10 +
 //                          'Чем лучше будет приложение тем больше новых клиентов сможем подтянуть, а это ваши дополнительные +грн к зп!!!', cResult);
 
       Load_PUSH(True);
@@ -3739,7 +3739,7 @@ begin
                (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
                (FieldByName('Amount').AsCurrency > 0) then
             begin
-              ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Калининой Кристине...');
+              ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Василенко или Грабченко...');
               exit;
             end;
 
@@ -6617,7 +6617,7 @@ begin
            (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
            (FieldByName('Amount').AsCurrency > 0) then
         begin
-          ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Калининой Кристине...');
+          ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Василенко или Грабченко...');
         end;
 
         Next;
@@ -8729,6 +8729,15 @@ begin
 
   UserSettingsStorageAddOn.LoadUserSettings;
 
+  LoadUnitConfig;
+  if not FileExists(iniLocalDataBaseSQLite) then
+  Begin
+    ShowMessage('Не создан файл локального хранилища <' + iniLocalDataBaseSQLite + '> обратитесь к системному администратору.');
+    Application.Terminate;
+    exit;
+  End;
+
+
   // Временно переместим план в начало грида
   Color_IPE.Index := 0;
 
@@ -8808,7 +8817,6 @@ begin
 
   LoadGoodsExpirationDate;
   LoadBankPOSTerminal;
-  LoadUnitConfig;
   LoadTaxUnitNight;
   LoadSalePromoGoods;
   SetTaxUnitNight;
@@ -10357,7 +10365,7 @@ begin
                  (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
                  (FieldByName('Amount').AsCurrency > 0) then
               begin
-                ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Калининой Кристине...');
+                ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Василенко или Грабченко...');
               end;
 
               Next;
@@ -10604,7 +10612,7 @@ begin
                  (RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsCurrency < FieldByName('PriceSale').AsCurrency) and
                  (FieldByName('Amount').AsCurrency > 0) then
               begin
-                ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Калининой Кристине...');
+                ShowMessage('Превышена максимально возможная цена на препарат <' + FieldByName('GoodsName').AsString + '>. Обратитесь к Василенко или Грабченко...');
               end;
 
               Next;
@@ -14236,8 +14244,6 @@ var
 
 begin
 
-  WaitForSingleObject(MutexUnitConfig, INFINITE);
-  try
 
     if UnitConfigCDS.Active then
     begin
@@ -14250,13 +14256,19 @@ begin
     try
       UnitConfigCDS.Close;
       LoadLocalData(UnitConfigCDS, UnitConfig_lcl);
-      if not UnitConfigCDS.Active then
-      begin
-        SaveUnitConfig;
-        LoadLocalData(UnitConfigCDS, UnitConfig_lcl);
-      end;
     finally
       ReleaseMutex(MutexUnitConfig);
+    end;
+
+    if not UnitConfigCDS.Active then
+    begin
+      SaveUnitConfig;
+      WaitForSingleObject(MutexUnitConfig, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+      try
+        LoadLocalData(UnitConfigCDS, UnitConfig_lcl);
+      finally
+        ReleaseMutex(MutexUnitConfig);
+      end;
     end;
 
     if bOverload then
@@ -14315,10 +14327,6 @@ begin
       lblActiveAlerts.Visible := True;
       FActiveAlerts := '';
     end;
-
-  finally
-    ReleaseMutex(MutexUnitConfig);
-  end;
 end;
 
 procedure TMainCashForm2.LoadTaxUnitNight;

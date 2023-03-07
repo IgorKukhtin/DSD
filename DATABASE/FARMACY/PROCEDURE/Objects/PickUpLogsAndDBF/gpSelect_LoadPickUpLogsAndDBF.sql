@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_LoadPickUpLogsAndDBF(
     OUT outPort         Integer,
     OUT outUsername     TVarChar,
     OUT outPassword     TVarChar,
-    OUT outFileList     TVarChar,
+    OUT outFileList     TBlob,
+    OUT outisGetArchive Boolean,
     OUT vbisGetArchive  Boolean,
     IN inSession        TVarChar       -- сессия пользователя
 )
@@ -58,7 +59,7 @@ BEGIN
                      'FarmacyCashServise_SQLite.log;FarmacyCashSQLite.db';
                      
       SELECT COALESCE(ObjectBoolean_GetArchive.ValueData, False)
-      INTO vbisGetArchive
+      INTO outisGetArchive 
       FROM Object AS Object_PickUpLogsAndDBF
                                                          
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Loaded
@@ -72,7 +73,10 @@ BEGIN
       WHERE Object_PickUpLogsAndDBF.DescId = zc_Object_PickUpLogsAndDBF()
         AND Object_PickUpLogsAndDBF.isErased = False
         AND COALESCE (ObjectBoolean_Loaded.ValueData, False) = FALSE
-        AND Object_PickUpLogsAndDBF.ValueData = inCashSessionId;                     
+        AND Object_PickUpLogsAndDBF.ValueData = inCashSessionId;    
+        
+      IF outisGetArchive IS NULL THEN outisGetArchive := False; END IF;  
+      vbisGetArchive := outisGetArchive;                 
 
     ELSE
       outSend := False;
