@@ -346,6 +346,7 @@ type
     procedure pLoadFillSoldTable_curr;
     procedure pLoadGoodsListSale;
     procedure pLoadFillAuto;
+    procedure pLoadRemainsOLAPTable_peresort;
 
     // Guides :
 
@@ -2493,7 +2494,6 @@ var tmpDate1,tmpDate2:TDateTime;
     StrTime:String;
 begin
      //ShowMessage('');
-     //exit;
      //
      //
      if System.Pos('auto',ParamStr(2))<=0
@@ -3021,6 +3021,55 @@ begin
                                                +')');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadRemainsOLAPTable_peresort;
+var
+  Present: TDateTime;
+  Year, Month, Day: Word;
+begin
+     Present:=Now;
+     DecodeDate(Present, Year, Month, Day);
+     //
+     if Day < 15 then
+     begin
+         // CURRENT_DATE - 1 MONTH
+         myLogMemo_add('');
+         myLogMemo_add('');
+         myLogMemo_add('RemainsOLAPTable_peresort - CURRENT_DATE - 1 MONTH');
+         fOpenSqToQuery ('SELECT *, gpInsert_RemainsOLAPTable_peresort(DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL ' + chr(39) + '1 MONTH' + chr(39) + ')'
+                      +                                             ', DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL ' + chr(39) + '1 MONTH' + chr(39) + ')'
+                      +                                             ', ObjectId, zfCalc_UserAdmin()'
+                      +                                              ')'
+                      + ' FROM (SELECT OL.ObjectId'
+                      +       ' FROM ObjectLink AS OL'
+                      +       ' WHERE OL.DescId = zc_ObjectLink_Unit_Branch()'
+                      +         ' AND OL.ChildObjectId <> zc_Branch_Basis()'
+                      +         ' AND OL.ChildObjectId > 0'
+                      +      ' UNION'
+                      +       ' SELECT 8459 AS ObjectId'
+                      +       ') AS tmp'
+                       );
+     end;
+     //
+     // CURRENT_DATE
+     myLogMemo_add('');
+     myLogMemo_add('');
+     myLogMemo_add('RemainsOLAPTable_peresort - CURRENT_DATE');
+     fOpenSqToQuery ('SELECT *, gpInsert_RemainsOLAPTable_peresort(DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE)'
+                  +                                             ', DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE)'
+                  +                                             ', ObjectId, zfCalc_UserAdmin()'
+                  +                                              ')'
+                  + ' FROM (SELECT OL.ObjectId'
+                  +       ' FROM ObjectLink AS OL'
+                  +       ' WHERE OL.DescId = zc_ObjectLink_Unit_Branch()'
+                  +         ' AND OL.ChildObjectId <> zc_Branch_Basis()'
+                  +         ' AND OL.ChildObjectId > 0'
+                  +      ' UNION'
+                  +       ' SELECT 8459 AS ObjectId'
+                  +       ') AS tmp'
+                   );
+     //
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadFillAuto;
 var
   Present: TDateTime;
@@ -3029,7 +3078,13 @@ var
 begin
      if (not cbFillAuto.Checked)or(not cbFillAuto.Enabled) then exit;
      //
+     // Perersort
+     pLoadRemainsOLAPTable_peresort;
+     //
+     //
      // 15 MONTH
+     myLogMemo_add('');
+     myLogMemo_add('');
      myLogMemo_add(trim('gpUpdate_Object_Goods_In' + ' ' + DateToStr(Date) + ' - 15 MONTH'));
      fOpenSqToQuery ('select * from gpUpdate_Object_Goods_In (DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL' +  chr(39) + '15 MONTH' + chr(39) + ')'
                                                          + ', CURRENT_DATE'
@@ -3037,6 +3092,8 @@ begin
                                                          + ')');
      //
      // 15 MONTH
+     myLogMemo_add('');
+     myLogMemo_add('');
      myLogMemo_add(trim('gpUpdate_Object_ReportCollation_RemainsCalc' + ' ' + DateToStr(Date) + ' - 15 MONTH'));
      fOpenSqToQuery ('select * from gpUpdate_Object_ReportCollation_RemainsCalc'
                                                          + ' (DATE_TRUNC (' + chr(39) + 'MONTH' + chr(39) + ', CURRENT_DATE - INTERVAL ' + chr(39) + '15 MONTH' + chr(39) + ')'
@@ -3054,6 +3111,8 @@ begin
      DecodeDate(Present, Year, Month, Day);
      if Day < 15 then begin
      // 15 DAY
+     myLogMemo_add('');
+     myLogMemo_add('');
      myLogMemo_add(trim('gpInsertUpdate_ObjectHistory_PriceListItem_Separate' + ' ' + DateToStr(Date) + ' - 15 DAY'));
      fOpenSqToQuery ('select * from gpInsertUpdate_ObjectHistory_PriceListItem_Separate'
                                                          + ' (CURRENT_DATE -INTERVAL ' + chr(39) + '15 DAY' + chr(39)
@@ -3061,6 +3120,8 @@ begin
                                                          + ')');
      end;
      //CURRENT_DATE
+     myLogMemo_add('');
+     myLogMemo_add('');
      myLogMemo_add(trim('gpInsertUpdate_ObjectHistory_PriceListItem_Separate' + ' ' + DateToStr(Date)));
      fOpenSqToQuery ('select * from gpInsertUpdate_ObjectHistory_PriceListItem_Separate'
                                                          + ' (CURRENT_DATE'
