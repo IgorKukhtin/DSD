@@ -18,9 +18,9 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 30
     Width = 1082
-    Height = 414
+    Height = 410
     Align = alClient
     TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
@@ -359,7 +359,7 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -15
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -378,7 +378,7 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
     DockControlHeights = (
       0
       0
-      26
+      30
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -605,7 +605,11 @@ object Report_MovementSiteBonusForm: TReport_MovementSiteBonusForm
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndex = 63

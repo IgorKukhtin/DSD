@@ -50,7 +50,7 @@ function Buyer_lcl: String;
 function DistributionPromo_lcl: String;
 function ImplementationPlanEmployee_lcl: String;
 function ZReportLog_lcl: String;
-function ImplementationPlanEmployeeUser_lcl: String;
+//function ImplementationPlanEmployeeUser_lcl: String;
 function SalePromoGoods_lcl: String;
 
 procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String; ASaveLocal : Boolean = True);
@@ -222,10 +222,10 @@ Begin
   Result := ExtractFilePath(Application.ExeName) + 'ZReportLog.local';
 End;
 
-function ImplementationPlanEmployeeUser_lcl: String;
-Begin
-  Result := ExtractFilePath(Application.ExeName) + 'ImplementationPlanEmployeeUser.local';
-End;
+//function ImplementationPlanEmployeeUser_lcl: String;
+//Begin
+//  Result := ExtractFilePath(Application.ExeName) + 'ImplementationPlanEmployeeUser.local';
+//End;
 
 function SalePromoGoods_lcl: String;
 Begin

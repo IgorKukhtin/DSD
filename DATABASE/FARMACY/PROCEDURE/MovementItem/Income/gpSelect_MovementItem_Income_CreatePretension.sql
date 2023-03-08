@@ -87,11 +87,11 @@ $BODY$
   DECLARE vbPriceWithVAT Boolean;
   DECLARE vbOrderId Integer;
   DECLARE vbUnitId Integer;
-  DECLARE vbUpperLimitPromoBonus TFloat;
-  DECLARE vbLowerLimitPromoBonus TFloat;
-  DECLARE vbMinPercentPromoBonus TFloat;
+  --DECLARE vbUpperLimitPromoBonus TFloat;
+  --DECLARE vbLowerLimitPromoBonus TFloat;
+  --DECLARE vbMinPercentPromoBonus TFloat;
   DECLARE vbMarginCategoryId Integer;
-  DECLARE vbMovPromoBonus Integer;
+  --DECLARE vbMovPromoBonus Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -150,13 +150,13 @@ BEGIN
        WHERE MovementLinkObject_To.ObjectId = Object_MarginCategoryLink.UnitId OR COALESCE (Object_MarginCategoryLink.UnitId, 0) = 0
          AND Object_MarginCategoryLink.isErased = False;
 
-    vbMovPromoBonus := (WITH  tmpMovPromoBonus AS 
+    /*vbMovPromoBonus := (WITH  tmpMovPromoBonus AS 
                               (SELECT Movement.id AS ID FROM Movement
                                WHERE Movement.OperDate <= CURRENT_DATE
                                  AND Movement.DescId = zc_Movement_PromoBonus()
                                  AND Movement.StatusId = zc_Enum_Status_Complete())
     							 
-                        SELECT MAX(tmpMovPromoBonus.ID) AS ID FROM tmpMovPromoBonus);
+                        SELECT MAX(tmpMovPromoBonus.ID) AS ID FROM tmpMovPromoBonus);*/
 
      RETURN QUERY
      WITH
@@ -439,7 +439,7 @@ BEGIN
                                     WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
                                       AND ObjectLink.DescId = zc_ObjectLink_Goods_ConditionsKeep()
                                     )
- , tmpPromoBonus_GoodsWeek AS (SELECT * FROM gpSelect_PromoBonus_GoodsWeek(inSession := inSession))
+ /*, tmpPromoBonus_GoodsWeek AS (SELECT * FROM gpSelect_PromoBonus_GoodsWeek(inSession := inSession))
  , PromoBonus AS (SELECT MovementItem.Id                               AS Id
                        , MovementItem.ObjectId                         AS GoodsId
                        , MovementItem.Amount                           AS Amount
@@ -449,7 +449,7 @@ BEGIN
                   WHERE MovementItem.MovementId = vbMovPromoBonus
                     AND MovementItem.DescId = zc_MI_Master()
                     AND MovementItem.isErased = False
-                    AND MovementItem.Amount > 0)
+                    AND MovementItem.Amount > 0)*/
  , MarginCategoryItem_View AS (SELECT DISTINCT Object_MarginCategoryItem_View.MarginPercent, Object_MarginCategoryItem_View.MinPrice
                                FROM Object_MarginCategoryItem_View
                                     INNER JOIN Object AS Object_MarginCategoryItem ON Object_MarginCategoryItem.Id = Object_MarginCategoryItem_View.Id
@@ -586,9 +586,9 @@ BEGIN
             , Accommodation.AccommodationId                                    AS AccommodationId
             , Object_Accommodation.ValueData                                   AS AccommodationName
               
-            , PromoBonus.Amount                                                AS PromoBonus  
-            , CASE WHEN COALESCE(PromoBonus.Amount, 0) <> 0 THEN MarginCondition.MarginPercent END::TFloat  AS MarginPercentUnit  
-            , COALESCE(PromoBonus.isLearnWeek, FALSE)                          AS isLearnWeek
+            , CAST (NULL AS TFloat) /*PromoBonus.Amount*/                                                AS PromoBonus  
+            , CAST (NULL AS TFloat) /*CASE WHEN COALESCE(PromoBonus.Amount, 0) <> 0 THEN MarginCondition.MarginPercent END::TFloat*/  AS MarginPercentUnit  
+            , False /*COALESCE(PromoBonus.isLearnWeek, FALSE)*/                          AS isLearnWeek
               
           FROM tmpMI AS MovementItem
               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId
@@ -646,7 +646,7 @@ BEGIN
                                                     ON ObjectLink_Goods_ConditionsKeep.GoodsId = MovementItem.GoodsId
                                                       
              -- Маркетинговый бонус
-             LEFT JOIN PromoBonus ON PromoBonus.GoodsId = MovementItem.GoodsId
+             --LEFT JOIN PromoBonus ON PromoBonus.GoodsId = MovementItem.GoodsId
 
              LEFT JOIN MarginCondition ON MarginCondition.MinPrice < MovementItem.PriceWithVAT AND MovementItem.PriceWithVAT <= MarginCondition.MaxPrice
             

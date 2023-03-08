@@ -15674,42 +15674,42 @@ begin
           ' <' + IniUtils.gUnitName + '>' + ' <' + IntToStr(IniUtils.gUserCode) + '>'  + ' - <' + IniUtils.gUserName + '>';
 
   // Пропись итогов выполнения плана по сотруднику
-  if UnitConfigCDS.Active and (UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean or
-     UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean) then
-  begin
-    ds := TClientDataSet.Create(nil);
-    try
-      WaitForSingleObject(MutexImplementationPlanEmployeeUser, INFINITE);
-      try
-        try
-
-          LoadLocalData(ds, ImplementationPlanEmployeeUser_lcl);
-          if not ds.Active then Exit;
-
-          if ds.IsEmpty then Exit;
-          if (ds.FieldByName('UserID').AsString = gc_User.Session) or (gc_User.Session = '3') then
-          begin
-             Self.Caption := Self.Caption + ' <';
-             if UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean then Self.Caption := Self.Caption +
-               'Маркет: ' + FormatFloat(',0.00', ds.FieldByName('Total').AsCurrency);
-             if UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean and
-                UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean then Self.Caption := Self.Caption + '; ';
-             if UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean then Self.Caption := Self.Caption +
-               'Прил: ' + FormatFloat(',0.00', ds.FieldByName('PenaltiMobApp').AsCurrency);
-
-             Self.Caption := Self.Caption + '>';
-          end;
-
-        Except ON E:Exception do
-          Add_Log('Ошибка загрузки итогов выполнения плана сотрудника:' + E.Message);
-        end;
-      finally
-        ReleaseMutex(MutexImplementationPlanEmployeeUser);
-      end;
-    finally
-      freeAndNil(ds);
-    end;
-  end;
+//  if UnitConfigCDS.Active and (UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean or
+//     UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean) then
+//  begin
+//    ds := TClientDataSet.Create(nil);
+//    try
+//      WaitForSingleObject(MutexImplementationPlanEmployeeUser, INFINITE);
+//      try
+//        try
+//
+//          LoadLocalData(ds, ImplementationPlanEmployeeUser_lcl);
+//          if not ds.Active then Exit;
+//
+//          if ds.IsEmpty then Exit;
+//          if (ds.FieldByName('UserID').AsString = gc_User.Session) or (gc_User.Session = '3') then
+//          begin
+//             Self.Caption := Self.Caption + ' <';
+//             if UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean then Self.Caption := Self.Caption +
+//               'Маркет: ' + FormatFloat(',0.00', ds.FieldByName('Total').AsCurrency);
+//             if UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean and
+//                UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean then Self.Caption := Self.Caption + '; ';
+//             if UnitConfigCDS.FieldByName('isShowPlanEmployeeUser').AsBoolean then Self.Caption := Self.Caption +
+//               'Прил: ' + FormatFloat(',0.00', ds.FieldByName('PenaltiMobApp').AsCurrency);
+//
+//             Self.Caption := Self.Caption + '>';
+//          end;
+//
+//        Except ON E:Exception do
+//          Add_Log('Ошибка загрузки итогов выполнения плана сотрудника:' + E.Message);
+//        end;
+//      finally
+//        ReleaseMutex(MutexImplementationPlanEmployeeUser);
+//      end;
+//    finally
+//      freeAndNil(ds);
+//    end;
+//  end;
 
   TrayIcon.Hint := Self.Caption;
 end;

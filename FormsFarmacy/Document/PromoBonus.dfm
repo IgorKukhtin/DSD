@@ -556,7 +556,6 @@ inherited PromoBonusForm: TPromoBonusForm
         item
           Name = 'Label'
           Value = #1042#1074#1077#1076#1080#1090#1077' '#1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1073#1086#1085#1091#1089' '#1076#1083#1103' '#1082#1072#1089#1089#1099', %'
-          Component = FormParams
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -601,15 +600,13 @@ inherited PromoBonusForm: TPromoBonusForm
           Name = 'Summa'
           Value = Null
           Component = FormParams
-          ComponentItem = 'Amount'
+          ComponentItem = 'BonusInetOrder'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end
         item
           Name = 'Label'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'BonusInetOrder'
+          Value = #1042#1074#1077#1076#1080#1090#1077' '#1052#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099' '#1076#1083#1103' '#1080#1085#1077#1090' '#1079#1072#1082#1072#1079#1086#1074', %'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

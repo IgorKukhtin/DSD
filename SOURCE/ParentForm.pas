@@ -383,6 +383,9 @@ begin
            // Изменяем шапку формф если есть FormCaption
            if Assigned(AddOnFormData.Params) and Assigned(AddOnFormData.Params.ParamByName('FormCaption')) then
              Caption := AddOnFormData.Params.ParamByName('FormCaption').Value + ' <' + gc_User.Login + '>';
+           // Изменяем шапку формф если есть FormCaption
+           if Assigned(AddOnFormData.Params) and Assigned(AddOnFormData.Params.ParamByName('FormCaptionLeft')) then
+             Caption := Caption + ' ' + AddOnFormData.Params.ParamByName('FormCaptionLeft').Value;
            // Выводим PUSH сообщение
            if Assigned(AddOnFormData.PUSHMessage) then
               AddOnFormData.PUSHMessage.Execute;
