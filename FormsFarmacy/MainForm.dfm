@@ -6839,9 +6839,6 @@
         object N314: TMenuItem
           Action = actPayrollTypeVIP
         end
-        object N197: TMenuItem
-          Action = actCashSettings
-        end
         object N227: TMenuItem
           Action = actSeasonalityCoefficient
         end
@@ -6923,6 +6920,9 @@
         end
         object N369: TMenuItem
           Action = actInternetRepair
+        end
+        object N197: TMenuItem
+          Action = actCashSettings
         end
         object N335: TMenuItem
           Action = actPickUpLogsAndDBF

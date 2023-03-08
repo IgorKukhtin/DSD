@@ -1,13 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
-	<ActiveMobileDevice>
-		<NoProfile iOSSimulator="iPhone5" Android="3100f69eecef432b"/>
-	</ActiveMobileDevice>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.722,=C:\DSD\DSD.GIT\ProjectMobile\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.401,=C:\DSD\DSD.GIT\ProjectMobile\uCache.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.141,C:\DSD\DSD.GIT\ProjectMobile\Unit1.pas=C:\DSD\DSD.GIT\ProjectMobile\uExec.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.511,C:\DSD\DSD.GIT\ProjectMobile\Unit1.pas=C:\DSD\DSD.GIT\ProjectMobile\uIntf.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.565,=C:\DSD\DSD.GIT\ProjectMobile\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.581,=C:\Users\Oleg\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.872,=C:\Users\Oleg\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.700,C:\Users\Oleg\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Work\Temp\ProjectMobile\uMain.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.944,=C:\Work\Temp\ProjectMobile\Components\dsdException.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.938,=C:\Work\Temp\ProjectMobile\Components\dsdDB.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.388,=C:\Work\Temp\ProjectMobile\Common\CommonData.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.728,=C:\DSD\ProjectMobile\uMain.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.723,C:\DSD\ProjectMobile\uMain.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.108,=C:\Work\Temp\ProjectMobile\Components\Storage.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.218,=C:\Work\Temp\ProjectMobile\Components\UtilConvert.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.942,=C:\DSD\ProjectMobile\ModelSupport_ProjectMobile\default.txaPackage</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.074,C:\Users\Oleg\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Work\Temp\ProjectMobile\ProjectMobile.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.070,=C:\Work\Temp\ProjectMobile\Components\dsdDataSetDataLink.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.975,=C:\Work\Temp\ProjectMobile\Components\dsdXMLTransform.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.038,=C:\Work\Temp\ProjectMobile\Components\LogUtils.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.976,=C:\Work\Temp\ProjectMobile\Components\CursorUtils.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.700,C:\Users\Oleg\Documents\Embarcadero\Studio\Projects\Unit1.fmx=C:\Work\Temp\ProjectMobile\uMain.fmx</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.076,=C:\Work\Temp\ProjectMobile\Components\SimpleGauge.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.022,=C:\Work\Temp\ProjectMobile\Components\Defaults.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.170,=C:\Work\Temp\ProjectMobile\Components\UtilConst.pas</Transaction>
   </Transactions>
 </BorlandProject>

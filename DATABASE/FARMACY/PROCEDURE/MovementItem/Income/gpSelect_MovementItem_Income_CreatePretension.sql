@@ -91,6 +91,7 @@ $BODY$
   DECLARE vbLowerLimitPromoBonus TFloat;
   DECLARE vbMinPercentPromoBonus TFloat;
   DECLARE vbMarginCategoryId Integer;
+  DECLARE vbMovPromoBonus Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -149,6 +150,13 @@ BEGIN
        WHERE MovementLinkObject_To.ObjectId = Object_MarginCategoryLink.UnitId OR COALESCE (Object_MarginCategoryLink.UnitId, 0) = 0
          AND Object_MarginCategoryLink.isErased = False;
 
+    vbMovPromoBonus := (WITH  tmpMovPromoBonus AS 
+                              (SELECT Movement.id AS ID FROM Movement
+                               WHERE Movement.OperDate <= CURRENT_DATE
+                                 AND Movement.DescId = zc_Movement_PromoBonus()
+                                 AND Movement.StatusId = zc_Enum_Status_Complete())
+    							 
+                        SELECT MAX(tmpMovPromoBonus.ID) AS ID FROM tmpMovPromoBonus);
 
      RETURN QUERY
      WITH
@@ -432,17 +440,13 @@ BEGIN
                                       AND ObjectLink.DescId = zc_ObjectLink_Goods_ConditionsKeep()
                                     )
  , tmpPromoBonus_GoodsWeek AS (SELECT * FROM gpSelect_PromoBonus_GoodsWeek(inSession := inSession))
- , MovementPromoBonus AS (SELECT Movement.id FROM Movement
-                          WHERE Movement.OperDate <= CURRENT_DATE
-                            AND Movement.DescId = zc_Movement_PromoBonus()
-                            AND Movement.StatusId = zc_Enum_Status_Complete())
  , PromoBonus AS (SELECT MovementItem.Id                               AS Id
                        , MovementItem.ObjectId                         AS GoodsId
                        , MovementItem.Amount                           AS Amount
                        , COALESCE (tmpPromoBonus_GoodsWeek.ID, 0) <> 0 AS isLearnWeek
                   FROM MovementItem
                        LEFT JOIN tmpPromoBonus_GoodsWeek ON tmpPromoBonus_GoodsWeek.ID = MovementItem.Id 
-                  WHERE MovementItem.MovementId = (SELECT MAX(MovementPromoBonus.id) FROM MovementPromoBonus)
+                  WHERE MovementItem.MovementId = vbMovPromoBonus
                     AND MovementItem.DescId = zc_MI_Master()
                     AND MovementItem.isErased = False
                     AND MovementItem.Amount > 0)

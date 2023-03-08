@@ -507,7 +507,7 @@ begin
           B := DataSets[i].DataSet.GetBookmark;
         if DataSets[i].DataSet is TClientDataSet then begin
 //          TClientDataSet(DataSets[i].DataSet).XMLData := XMLResult[i];
-           FStringStream := TStringStream.Create(XMLResult[i]);
+           FStringStream := TStringStream.Create(String(XMLResult[i]));
            XMLResult[i] := '';
            try
               TClientDataSet(DataSets[i].DataSet).LoadFromStream(FStringStream);

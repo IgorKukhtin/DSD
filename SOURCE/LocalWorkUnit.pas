@@ -53,7 +53,7 @@ function ZReportLog_lcl: String;
 function ImplementationPlanEmployeeUser_lcl: String;
 function SalePromoGoods_lcl: String;
 
-procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
+procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String; ASaveLocal : Boolean = True);
 procedure LoadLocalData(ADst: TClientDataSet; AFileName: String; AShowError : Boolean = True);
 
 function GetFileSizeByName(AFileName: String): DWord;
@@ -389,12 +389,14 @@ begin
   end;
 end;
 
-procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String);
+procedure SaveLocalData(ASrc: TClientDataSet; AFileName: String; ASaveLocal : Boolean = True);
   var I : integer; Tmp: TClientDataSet;
 Begin
   if not ASrc.Active then Exit;
 
   SaveSQLiteData(ASrc, TPath.GetFileNameWithoutExtension(AFileName));
+
+  if not ASaveLocal then Exit;
 
   if FileExists(AFileName) and (GetFileSizeByName(AFileName) > 0) then
     CopyFile(PChar(AFileName), PChar(GetBackupFileName(AFileName)), false);

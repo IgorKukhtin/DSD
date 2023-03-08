@@ -54,7 +54,9 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                PriceSale1303 TFloat,
                BrandSPName TVarChar,
                
-               isSpecial boolean
+               isSpecial boolean,
+               
+               BonusInetOrder TFloat
 
                /*PartionDateKindId_check   Integer,
                Price_check               TFloat,
@@ -90,6 +92,7 @@ $BODY$
 
    DECLARE vbAreaId   Integer;
    DECLARE vbLanguage TVarChar;
+   DECLARE vbMovPromoBonus Integer;
 BEGIN
 -- if inSession = '3' then return; end if;
 
@@ -184,6 +187,13 @@ BEGIN
               
     WHERE Object_User.Id = vbUserId;    
     
+    vbMovPromoBonus := (WITH  tmpMovPromoBonus AS 
+                              (SELECT Movement.id AS ID FROM Movement
+                               WHERE Movement.OperDate <= CURRENT_DATE
+                                 AND Movement.DescId = zc_Movement_PromoBonus()
+                                 AND Movement.StatusId = zc_Enum_Status_Complete())
+    							 
+                        SELECT MAX(tmpMovPromoBonus.ID) AS ID FROM tmpMovPromoBonus);
         
     -- ќбъ€вили новую сессию кассового места / обновили дату последнего обращени€
     PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
@@ -825,8 +835,20 @@ BEGIN
                                             WHERE ObjectLink_GoodsDivisionLock_Unit.DescId        = zc_ObjectLink_GoodsDivisionLock_Unit()
                                               AND ObjectLink_GoodsDivisionLock_Unit.ChildObjectId = vbUnitId
                                             )
-                 
+                 , tmpMIBonusInetOrder AS (SELECT MovementItem.ObjectId                          AS GoodsId
+                                                , MAX(MIFloat_BonusInetOrder.ValueData)::TFloat  AS BonusInetOrder
+                                           FROM MovementItem
 
+                                                INNER JOIN MovementItemFloat AS MIFloat_BonusInetOrder
+                                                                             ON MIFloat_BonusInetOrder.MovementItemId = MovementItem.Id
+                                                                            AND MIFloat_BonusInetOrder.DescId = zc_MIFloat_BonusInetOrder()
+                                                                            AND MIFloat_BonusInetOrder.ValueData > 0
+
+                                           WHERE MovementItem.MovementId = vbMovPromoBonus
+                                             AND MovementItem.DescId = zc_MI_Master()
+                                             AND MovementItem.isErased = False
+                                           GROUP BY MovementItem.ObjectId)
+							 
         -- –езультат
         SELECT
             CashSessionSnapShot.ObjectId,
@@ -1276,6 +1298,7 @@ BEGIN
             AND Object_Goods_Retail.DiscontSiteEnd IS NOT NULL  
             AND Object_Goods_Retail.DiscontSiteStart <= CURRENT_DATE
             AND Object_Goods_Retail.DiscontSiteEnd >= CURRENT_DATE    AS isSpecial
+          , tmpMIBonusInetOrder.BonusInetOrder
 
           /*, CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , zfCalc_PriceCash(CashSessionSnapShot.Price, 
@@ -1378,6 +1401,8 @@ BEGIN
            LEFT JOIN tmpGoodsAutoVIPforSalesCash ON tmpGoodsAutoVIPforSalesCash.GoodsId = CashSessionSnapShot.ObjectId
            
            LEFT JOIN tmpGoodsSP_1303 ON tmpGoodsSP_1303.GoodsId = CashSessionSnapShot.ObjectId
+                      
+           LEFT JOIN tmpMIBonusInetOrder ON tmpMIBonusInetOrder.GoodsId = CashSessionSnapShot.ObjectId
                                    
            LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                             ON MI_IntenalSP.MovementItemId = tmpGoodsSP_1303.MovementItemId

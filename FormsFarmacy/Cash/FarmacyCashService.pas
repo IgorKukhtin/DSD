@@ -187,6 +187,7 @@ type
     spLoadPickUpLogsAndDBF: TdsdStoredProc;
     spUpdate_PickUpLogsAndDBF: TdsdStoredProc;
     UnitConfigCDS: TClientDataSet;
+    TimerTrayIconPUSH: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -203,6 +204,7 @@ type
     procedure TimerNeedRemainsDiffTimer(Sender: TObject);
     procedure CashRemainsDiffExecute;
     procedure spCheck_RemainsErrorAfterExecute(Sender: TObject);
+    procedure TimerTrayIconPUSHTimer(Sender: TObject);
 
   private
     { Private declarations }
@@ -221,6 +223,7 @@ type
     FisShowPlanEmployeeUser: boolean;
 
     FSaveLocalVIP: Integer;
+    TrayIconPUSHList: TStringList;
 
     function SetFarmacyNameByUser : boolean;
 
@@ -245,6 +248,9 @@ type
     procedure SaveZReportLog;
     procedure SaveImplementationPlanEmployeeUser;
     procedure SaveSalePromoGoods;
+    procedure SaveAsinoPharmaSP;
+    procedure SaveGoodsAllSP;
+
 //    procedure SaveGoodsAnalog;
 
     procedure SendZReport;
@@ -392,11 +398,11 @@ end;
 
 procedure TMainCashForm2.ChangeStatus(AStatus: String);
 Begin
-  Add_LogStatus(AStatus);
-  tiServise.BalloonHint := AStatus;
-  tiServise.ShowBalloonHint;
-  Sleep(2000);
-  tiServise.BalloonHint:='';
+  if AStatus <> '' then
+  begin
+    TrayIconPUSHList.Add(AStatus);
+    if not TimerTrayIconPUSH.Enabled then TimerTrayIconPUSH.Enabled := True
+  end;
 End;
 
 function TMainCashForm2.ExistNotCompletedCheck: boolean;
@@ -586,6 +592,11 @@ begin   //yes
       if not gc_User.Local then SaveImplementationPlanEmployeeUser;
       //Получение акционных товаров
       if not gc_User.Local then SaveSalePromoGoods;
+      //Получение товаров социальной программы Асино Фарма Старт
+      if not gc_User.Local then SaveAsinoPharmaSP;
+      //Получение товаров СП для электронных рецептов
+      if not gc_User.Local then SaveGoodsAllSP;
+
 
       if not bError then PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
       // Вывод уведомления сервиса
@@ -626,6 +637,7 @@ var
 begin
   Add_Log('== Start');
   TimerSaveReal.Enabled := false;
+  TrayIconPUSHList := TStringList.Create;
 
   try
     spGet_User_IsAdmin.Execute;
@@ -1085,6 +1097,20 @@ begin
     TimerSaveReal.Enabled := True;
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
     Application.ProcessMessages;
+  end;
+end;
+
+procedure TMainCashForm2.TimerTrayIconPUSHTimer(Sender: TObject);
+begin
+  try
+    if TrayIconPUSHList.Count > 0 then
+    begin
+      tiServise.BalloonHint := TrayIconPUSHList.Strings[0];
+      TrayIconPUSHList.Delete(0);
+    end else tiServise.BalloonHint := '';
+    tiServise.ShowBalloonHint;
+  finally
+    TimerTrayIconPUSH.Enabled := tiServise.BalloonHint <> '';
   end;
 end;
 
@@ -2687,6 +2713,85 @@ begin
   end;
 end;
 
+procedure TMainCashForm2.SaveAsinoPharmaSP;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  tiServise.Hint := 'Получение товаров социальной программы Асино Фарма Старт';
+
+  // Ждем сервер
+  PauseUpdateRemains;
+
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_AsinoPharmaSP_Cash';
+        sp.Params.Clear;
+        sp.Execute;
+        SaveLocalData(ds, 'AsinoPharmaSP', False);
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveAsinoPharmaSP Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
+  end;
+end;
+
+procedure TMainCashForm2.SaveGoodsAllSP;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  tiServise.Hint := 'Получение товаров СП для электронных рецептов';
+
+  // Ждем сервер
+  PauseUpdateRemains;
+
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_GoodsAllSP_Cash';
+        sp.Params.Clear;
+        sp.Execute;
+        SaveLocalData(ds, 'GoodsAllSP', False);
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveSalePromoGoods Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
+  end;
+end;
+
+
 procedure TMainCashForm2.SendZReport;
   var IdFTP : Tidftp;
       s, p: string; sl : TStringList;  i : integer;
@@ -3058,6 +3163,7 @@ end;
 
 procedure TMainCashForm2.FormDestroy(Sender: TObject);
 begin
+ TrayIconPUSHList.Free;
  Add_Log('== Close');
  CloseMutex;
 end;

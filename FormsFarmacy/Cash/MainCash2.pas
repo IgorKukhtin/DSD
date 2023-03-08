@@ -638,6 +638,7 @@ type
     lblPartnerMedicalName: TcxMemo;
     lblMemberSP: TcxMemo;
     TrayIcon: TTrayIcon;
+    TimerTrayIconPUSH: TTimer;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -805,6 +806,7 @@ type
     procedure actOpenFilesToCheckExecute(Sender: TObject);
     procedure cxImageInstructionsClick(Sender: TObject);
     procedure acrRefreshNameExecute(Sender: TObject);
+    procedure TimerTrayIconPUSHTimer(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -865,6 +867,8 @@ type
     FMobMessCount : Integer;
 
     wcActive, wcPrevious : TWinControl;
+
+    TrayIconPUSHList: TStringList;
 
     procedure SetBlinkVIP(isRefresh: Boolean);
     procedure SetBlinkCheck(isRefresh: Boolean);
@@ -2837,9 +2841,11 @@ end;
 
 procedure TMainCashForm2.ShowTrayMessage(AMessage: String);
 Begin
-  TrayIcon.BalloonHint := AMessage;
-  TrayIcon.ShowBalloonHint;
-  TrayIcon.BalloonHint:='';
+  if AMessage <> '' then
+  begin
+    TrayIconPUSHList.Add(AMessage);
+    if not TimerTrayIconPUSH.Enabled then TimerTrayIconPUSH.Enabled := True
+  end;
 End;
 
 procedure TMainCashForm2.TimerPUSHTimer(Sender: TObject);
@@ -8679,6 +8685,7 @@ var
 begin
   inherited;
   FStyle := TcxStyle.Create(nil);
+  TrayIconPUSHList := TStringList.Create;
   FormClassName := Self.ClassName;
 
   MoveLogFile;
@@ -11497,6 +11504,7 @@ begin
   Screen.OnActiveControlChange := nil;
   CloseMutex;
   FStyle.Free;
+  TrayIconPUSHList.Free;
   inherited;
 end;
 
@@ -14067,6 +14075,20 @@ begin
   if TimerServiceRun.Interval <> SERVICE_RUN_INTERVAL then
     TimerServiceRun.Interval := SERVICE_RUN_INTERVAL;
   actServiseRun.Execute; // запуск сервиса  // только 2 форма
+end;
+
+procedure TMainCashForm2.TimerTrayIconPUSHTimer(Sender: TObject);
+begin
+  try
+    if TrayIconPUSHList.Count > 0 then
+    begin
+      TrayIcon.BalloonHint := TrayIconPUSHList.Strings[0];
+      TrayIconPUSHList.Delete(0);
+    end else TrayIcon.BalloonHint := '';
+    TrayIcon.ShowBalloonHint;
+  finally
+    TimerTrayIconPUSH.Enabled := TrayIcon.BalloonHint <> '';
+  end;
 end;
 
 procedure TMainCashForm2.LoadFromLocalStorage;

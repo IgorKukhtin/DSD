@@ -72,9 +72,27 @@ CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_CashSettings_PrizeThreshold() R
 INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
 SELECT zc_ObjectHistory_CashSettings(), 'zc_ObjectHistoryFloat_CashSettings_PrizeThreshold','Корректировка порога по премии при выполнении плана маркетинга' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_CashSettings_PrizeThreshold());
 
+CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_CashSettings_MarkPlanThreshol() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryFloatDesc WHERE Code = 'zc_ObjectHistoryFloat_CashSettings_MarkPlanThreshol'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
+SELECT zc_ObjectHistory_CashSettings(), 'zc_ObjectHistoryFloat_CashSettings_MarkPlanThreshol','Пороги по маркет плану за вычетом премии' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_CashSettings_MarkPlanThreshol());
+
+CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_CashSettings_FixedPercentB() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryFloatDesc WHERE Code = 'zc_ObjectHistoryFloat_CashSettings_FixedPercentB'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
+SELECT zc_ObjectHistory_CashSettings(), 'zc_ObjectHistoryFloat_CashSettings_FixedPercentB','Фиксированный процент выполнения плана категория B' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_CashSettings_FixedPercentB());
+
+CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_CashSettings_FixedPercentC() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryFloatDesc WHERE Code = 'zc_ObjectHistoryFloat_CashSettings_FixedPercentC'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
+SELECT zc_ObjectHistory_CashSettings(), 'zc_ObjectHistoryFloat_CashSettings_FixedPercentC','Фиксированный процент выполнения плана категория C' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_CashSettings_FixedPercentC());
+
+CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_CashSettings_FixedPercentD() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryFloatDesc WHERE Code = 'zc_ObjectHistoryFloat_CashSettings_FixedPercentD'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
+SELECT zc_ObjectHistory_CashSettings(), 'zc_ObjectHistoryFloat_CashSettings_FixedPercentD','Фиксированный процент выполнения плана категория D' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_CashSettings_FixedPercentD());
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Шаблий О.В.
+ 08.03.23                                                                        * zc_ObjectHistoryFloat_CashSettings_FixedPercent...
+ 07.03.23                                                                        * zc_ObjectHistoryFloat_CashSettings_MarkPlanThreshol
  02.03.23                                                                        * zc_ObjectHistoryFloat_CashSettings_PrizeThreshold
  13.02.23                                                                        * zc_ObjectHistoryFloat_CashSettings_PenMobApp
  05.02.23                                                                        * zc_ObjectHistoryFloat_CashSettings_FixedPercent

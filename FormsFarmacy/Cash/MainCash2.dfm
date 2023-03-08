@@ -20752,4 +20752,11 @@ inherited MainCashForm2: TMainCashForm2
     Left = 121
     Top = 128
   end
+  object TimerTrayIconPUSH: TTimer
+    Enabled = False
+    Interval = 5000
+    OnTimer = TimerTrayIconPUSHTimer
+    Left = 712
+    Top = 104
+  end
 end

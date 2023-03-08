@@ -49,7 +49,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isErrorRRO Boolean 
              , isMobileApplication Boolean, isMobileFirstOrder Boolean
              , UserReferalsName TVarChar, UserUnitReferalsName TVarChar, isConfirmByPhone Boolean, DateComing TDateTime 
-             , MobileDiscount TFloat, ApplicationAward TFloat, isEmployeeMessage Boolean
+             , MobileDiscount TFloat, ApplicationAward TFloat, isSalaryException Boolean, isEmployeeMessage Boolean
              , Color_UserReferals Integer
               )
 AS
@@ -233,6 +233,7 @@ BEGIN
            , CASE WHEN Movement_Check.StatusId = zc_Enum_Status_Complete() 
                    AND COALESCE (MovementLinkObject_UserReferals.ObjectId, 0) > 0
                   THEN MovementFloat_ApplicationAward.ValueData END::TFloat           AS ApplicationAward
+           , COALESCE (MovementBoolean_SalaryException.ValueData, FALSE)              AS isSalaryException
            
            , Movement_Check.isEmployeeMessage                             AS isEmployeeMessage
            
@@ -491,6 +492,9 @@ BEGIN
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_MobileFirstOrder
                                       ON MovementBoolean_MobileFirstOrder.MovementId = Movement_Check.Id
                                      AND MovementBoolean_MobileFirstOrder.DescId = zc_MovementBoolean_MobileFirstOrder()
+            LEFT JOIN MovementBoolean AS MovementBoolean_SalaryException
+                                      ON MovementBoolean_SalaryException.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_SalaryException.DescId = zc_MovementBoolean_SalaryException()
 
             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_UserReferals
                                          ON MovementLinkObject_UserReferals.MovementId = Movement_Check.Id
@@ -523,4 +527,4 @@ $BODY$
 -- 
 
 
-select * from gpReport_CheckMobile(inStartDate := ('01.09.2022')::TDateTime , inEndDate := ('30.09.2022')::TDateTime , inUnitId := 0 , inIsUnComplete := 'True' , inIsErased := 'False' , inisEmployeeMessage := 'False' , inisDiscountExternal := 'False',  inSession := '3');
+select * from gpReport_CheckMobile(inStartDate := ('01.03.2023')::TDateTime , inEndDate := ('31.03.2023')::TDateTime , inUnitId := 0 , inIsUnComplete := 'True' , inIsErased := 'False' , inisEmployeeMessage := 'False' , inisDiscountExternal := 'False' ,  inSession := '3');

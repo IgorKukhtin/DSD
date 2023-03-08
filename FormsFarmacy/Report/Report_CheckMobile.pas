@@ -72,6 +72,10 @@ type
     spUpdate_MobileFirstOrder: TdsdStoredProc;
     actUpdate_MobileFirstOrder: TdsdExecStoredProc;
     bbUpdate_MobileFirstOrder: TdxBarButton;
+    spUpdate_SalaryException_Revert: TdsdStoredProc;
+    actUpdate_SalaryException_Revert: TdsdExecStoredProc;
+    dxBarButton5: TdxBarButton;
+    isSalaryException: TcxGridDBColumn;
   private
     { Private declarations }
   public
