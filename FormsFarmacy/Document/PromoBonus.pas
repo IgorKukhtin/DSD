@@ -70,6 +70,16 @@ type
     dxBarButton5: TdxBarButton;
     isLearnWeek: TcxGridDBColumn;
     BonusInetOrder: TcxGridDBColumn;
+    spUpdate_Amount: TdsdStoredProc;
+    spUpdate_BonusInetOrder: TdsdStoredProc;
+    ExecuteDialogAmount: TExecuteDialog;
+    mactUpdate_Amount: TMultiAction;
+    actUpdate_Amount: TdsdExecStoredProc;
+    ExecuteDialogBonusInetOrder: TExecuteDialog;
+    actUpdate_BonusInetOrder: TdsdExecStoredProc;
+    mactUpdate_BonusInetOrder: TMultiAction;
+    dxBarButton6: TdxBarButton;
+    dxBarButton7: TdxBarButton;
   private
     { Private declarations }
   public

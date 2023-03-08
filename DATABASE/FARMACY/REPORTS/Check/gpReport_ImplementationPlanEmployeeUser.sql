@@ -27,6 +27,7 @@ RETURNS TABLE (
   CountConsider           Integer,
   CountRecord             Integer,
   AddBonusPercentTab      TFloat,
+  FixedPercent            TFloat,
   PenaltiMobApp           TFloat
 )
 AS
@@ -37,7 +38,10 @@ $BODY$
    DECLARE vbQueryText Text;
    DECLARE curUnit CURSOR FOR SELECT UnitID FROM tmpImplementation GROUP BY UnitCategoryId, UnitID ORDER BY UnitCategoryId, UnitID;
    DECLARE vbUnitID Integer;
-   DECLARE vbFixedPercent TFloat;
+   DECLARE vbFixedPercentA TFloat;
+   DECLARE vbFixedPercentB TFloat;
+   DECLARE vbFixedPercentC TFloat;
+   DECLARE vbFixedPercentD TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
@@ -51,10 +55,20 @@ BEGIN
     vbDateStart := date_trunc('month', inStartDate);
     vbDateEnd := date_trunc('month', vbDateStart + INTERVAL '1 month');
     
-    vbFixedPercent := COALESCE ((SELECT History_CashSettings.FixedPercent 
-                                 FROM gpSelect_ObjectHistory_CashSettings (0, inSession) AS History_CashSettings
-                                 WHERE History_CashSettings.StartDate <= vbDateStart
-                                   AND History_CashSettings.EndDate > vbDateStart), 0);
+    SELECT History_CashSettings.FixedPercent 
+         , History_CashSettings.FixedPercentB 
+         , History_CashSettings.FixedPercentC 
+         , History_CashSettings.FixedPercentD 
+    INTO vbFixedPercentA, vbFixedPercentB, vbFixedPercentC, vbFixedPercentD   
+    FROM gpSelect_ObjectHistory_CashSettings (0, inSession) AS History_CashSettings
+    WHERE History_CashSettings.StartDate <= vbDateStart
+      AND History_CashSettings.EndDate > vbDateStart;
+      
+    vbFixedPercentA := COALESCE (vbFixedPercentA, 0);
+    vbFixedPercentB := COALESCE (vbFixedPercentB, 0); 
+    vbFixedPercentC := COALESCE (vbFixedPercentC, 0);
+    vbFixedPercentD := COALESCE (vbFixedPercentD, 0);
+
     
       -- Отработано по календарю
     CREATE TEMP TABLE tmpUserUnitDayTable (
@@ -198,6 +212,8 @@ BEGIN
             UnitID             Integer,
             UnitName           TVarChar,
 
+            UnitCategoryCode   Integer,
+
             NormOfManDays      Integer,
             FactOfManDays      Integer,
 
@@ -220,6 +236,7 @@ BEGIN
              UserName,
              UnitID,
              UnitName,
+             UnitCategoryCode,
              TotalExecutionLine,
              AmountTheFineTab,
              BonusAmountTab,
@@ -230,10 +247,16 @@ BEGIN
        Object_Member.ValueData,
        tmpUserUnitDayTable.UnitId,
        Object_Unit.ValueData,
+       COALESCE (Object_UnitCategory.ObjectCode, 0),
        0, 0, 0, 0
     FROM tmpUserUnitDayTable
 
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUserUnitDayTable.UnitId
+
+       LEFT JOIN ObjectLink AS ObjectLink_Unit_Category
+                            ON ObjectLink_Unit_Category.ObjectId = Object_Unit.Id 
+                           AND ObjectLink_Unit_Category.DescId = zc_ObjectLink_Unit_Category()
+       LEFT JOIN Object AS Object_UnitCategory ON Object_UnitCategory.Id = ObjectLink_Unit_Category.ChildObjectId
 
        LEFT JOIN ObjectLink AS ObjectLink_User_Member
                             ON ObjectLink_User_Member.ObjectId = tmpUserUnitDayTable.UserId
@@ -587,11 +610,27 @@ BEGIN
        -- Собираем Общий % выполнения построчный:
      UPDATE tmpResult SET
           TotalExecutionLine = ROUND(CASE WHEN Implementation.CountConsider <> 0 THEN 1.0 * Implementation.CountAmount / Implementation.CountConsider * 100 ELSE 0 END + 
-                                               COALESCE (Implementation.CountFixedPercent * vbFixedPercent, 0), 2)
+                                               COALESCE (Implementation.CountFixedPercent * CASE WHEN UnitCategoryCode = 2
+                                                                                                 THEN vbFixedPercentA
+                                                                                                 WHEN UnitCategoryCode = 3
+                                                                                                 THEN vbFixedPercentB
+                                                                                                 WHEN UnitCategoryCode = 5
+                                                                                                 THEN vbFixedPercentC
+                                                                                                 WHEN UnitCategoryCode = 8
+                                                                                                 THEN vbFixedPercentD
+                                                                                                 ELSE 0 END, 0), 2)
         , CountAmount   = Implementation.CountAmount
         , CountConsider = Implementation.CountConsider
         , CountRecord   = Implementation.CountRecord
-        , FixedPercent  = COALESCE (Implementation.CountFixedPercent * vbFixedPercent, 0)
+        , FixedPercent  = COALESCE (Implementation.CountFixedPercent * CASE WHEN UnitCategoryCode = 2
+                                                                            THEN vbFixedPercentA
+                                                                            WHEN UnitCategoryCode = 3
+                                                                            THEN vbFixedPercentB
+                                                                            WHEN UnitCategoryCode = 5
+                                                                            THEN vbFixedPercentC
+                                                                            WHEN UnitCategoryCode = 8
+                                                                            THEN vbFixedPercentD
+                                                                            ELSE 0 END, 0)
      FROM (SELECT Implementation.UserID  AS UserID,
              SUM(CASE WHEN Implementation.Amount > 0 AND Implementation.AmountPlanTab > 0 AND
                  Implementation.Amount >= Implementation.AmountPlanTab then 1 else 0 end)::Integer  AS CountAmount,
@@ -741,6 +780,7 @@ BEGIN
         Result.CountConsider,
         Result.CountRecord,
         Result.AddBonusPercentTab,
+        Result.FixedPercent,
         (-tmpFulfillmentPlanMobile.PenaltiMobApp)::TFloat
 
      FROM tmpResult AS Result 

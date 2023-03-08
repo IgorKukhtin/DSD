@@ -64,6 +64,10 @@ BEGIN
                              
     WHERE ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId OR inisRetail = FALSE
     ;
+    
+    ANALYSE tmpUnitManager;
+
+--raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
       -- Цены по подразделениям
     CREATE TEMP TABLE tmpUnitPrice (
@@ -115,7 +119,10 @@ BEGIN
          , tmpPrice.Ord
          , tmpPrice.ManagerId
     FROM tmpPrice;
+    
+    ANALYSE tmpUnitPrice;
 
+--raise notice 'Value 2: %', CLOCK_TIMESTAMP();
 
       -- Pезультат
     CREATE TEMP TABLE tmpResult (
@@ -156,7 +163,7 @@ BEGIN
     -- Собираем товары
     
     WITH 
-    tmpPromoBonus_GoodsWeek AS (SELECT * FROM gpSelect_PromoBonus_GoodsWeek(inSession := inSession)),
+    /*tmpPromoBonus_GoodsWeek AS (SELECT * FROM gpSelect_PromoBonus_GoodsWeek(inSession := inSession)),
     PromoBonus AS (SELECT MovementItem.Id                               AS Id
                         , MovementItem.ObjectId                         AS GoodsId
                         , MovementItem.Amount                           AS Amount
@@ -169,7 +176,7 @@ BEGIN
                                                       AND Movement.StatusId = zc_Enum_Status_Complete())
                      AND MovementItem.DescId = zc_MI_Master()
                      AND MovementItem.isErased = False
-                     AND MovementItem.Amount > 0),
+                     AND MovementItem.Amount > 0),*/
     tmpPrice_Site AS (SELECT Object_PriceSite.Id                        AS Id
                            , ROUND(Price_Value.ValueData,2)::TFloat     AS Price
                            , Object_Goods_Retail.GoodsMainId            AS GoodsId
@@ -217,9 +224,12 @@ BEGIN
          , Object_Goods.Name             AS GoodsName
          , Object_Goods.isResolution_224
          , Object_Goods_Retail.IsTop
-         , COALESCE (SUM(PromoBonus.Amount), 0) > 0  AS isPromoBonus
-         , Max(PromoBonus.Amount)                    AS PromoBonus
-         , COALESCE(PromoBonus.isLearnWeek, False)   AS isLearnWeek
+         --, COALESCE (SUM(PromoBonus.Amount), 0) > 0  AS isPromoBonus
+         --, Max(PromoBonus.Amount)                    AS PromoBonus
+         --, COALESCE(PromoBonus.isLearnWeek, False)   AS isLearnWeek
+         , False                                     AS isPromoBonus
+         , NULL::TFloat                              AS PromoBonus
+         , False                                     AS isLearnWeek
          , CASE WHEN Object_Goods_Retail.IsTop = TRUE THEN Object_Goods_Retail.PercentMarkup END
          , tmpGoodsSP.PercentMarkupSP 
          , CASE WHEN Object_Goods_Retail.IsTop = TRUE THEN Object_Goods_Retail.Price END
@@ -244,12 +254,16 @@ BEGIN
          LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = tmpUnitPrice.GoodsId
          LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods.Id
                                       AND Object_Goods_Retail.RetailId = 4
-         LEFT JOIN PromoBonus ON PromoBonus.GoodsId = Object_Goods_Retail.Id
+         -- LEFT JOIN PromoBonus ON PromoBonus.GoodsId = Object_Goods_Retail.Id
          LEFT JOIN tmpPrice_Site AS Price_Site ON Price_Site.GoodsId = tmpUnitPrice.GoodsId
          LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = Object_Goods.Id
     GROUP BY tmpUnitPrice.GoodsId, Object_Goods.ObjectCode, Object_Goods.Name, Object_Goods.isResolution_224
-           , Object_Goods_Retail.IsTop, PromoBonus.isLearnWeek, Object_Goods_Retail.PercentMarkup, tmpGoodsSP.PercentMarkupSP , Object_Goods_Retail.Price, Price_Site.Price
+           , Object_Goods_Retail.IsTop, /*PromoBonus.isLearnWeek,*/ Object_Goods_Retail.PercentMarkup, tmpGoodsSP.PercentMarkupSP , Object_Goods_Retail.Price, Price_Site.Price
     ORDER BY tmpUnitPrice.GoodsId;
+    
+    ANALYSE tmpResult;
+
+--raise notice 'Value 3: %', CLOCK_TIMESTAMP();
 
     -- Расчитываем среднюю цену
     UPDATE tmpResult SET PriceAverage = T1.PriceAverage
@@ -270,11 +284,19 @@ BEGIN
              OR tmpResult.UnitCount > 5 AND tmpUnitPrice.Ord > 2 AND tmpUnitPrice.Ord < tmpResult.UnitCount - 2
           GROUP BY tmpUnitPrice.GoodsId) AS T1
     WHERE tmpResult.GoodsId = T1.GoodsId;
+    
+    ANALYSE tmpResult;
+
+--raise notice 'Value 4: %', CLOCK_TIMESTAMP();
 
     -- Удаляем что номально
     DELETE FROM tmpResult
     WHERE PriceProc < inPercent
        AND isBadPriceSite = False;
+
+    ANALYSE tmpResult;
+
+--raise notice 'Value 5: %', CLOCK_TIMESTAMP();
 
       -- Подразделения
     CREATE TEMP TABLE tmpUnit (
@@ -292,6 +314,10 @@ BEGIN
     WHERE COALESCE(inManagerUnitsOnly, False) = False OR COALESCE(inUserId, 0) = 0 OR COALESCE(inUserId, 0) = tmpUnitPrice.ManagerId
     GROUP BY tmpUnitPrice.UnitID, tmpUnitPrice.ManagerId
     ORDER BY tmpUnitPrice.UnitID;
+
+    ANALYSE tmpUnit;
+
+--raise notice 'Value 6: %', CLOCK_TIMESTAMP();
 
       -- Заполняем подразделение
 
@@ -340,6 +366,9 @@ BEGIN
       WHERE tmpResult.isBadPriceUser = False;
     END IF;
 
+    ANALYSE tmpResult;
+
+--raise notice 'Value 7: %', CLOCK_TIMESTAMP();
 
     -- Ищем последнюю цену в приходах
     UPDATE tmpResult SET PriceIn = T1.PriceWithVAT, DateIn = T1.OperDate, JuridicalInName = T1.FromName
@@ -401,6 +430,10 @@ BEGIN
                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId) AS T1
     WHERE tmpResult.GoodsId = T1.GoodsId;
+
+    ANALYSE tmpResult;
+
+--raise notice 'Value 8: %', CLOCK_TIMESTAMP();
 
     -- Последняя цена из прайса Днепр
     UPDATE tmpResult SET JuridicalPrice = T1.JuridicalPrice, JuridicalPriceAverage = T1.JuridicalPriceAverage
@@ -546,6 +579,9 @@ BEGIN
           WHERE tmpGoodsPriceOrd.Ord = 1) AS T1
     WHERE tmpResult.GoodsId = T1.GoodsId;
 
+    ANALYSE tmpResult;
+
+--raise notice 'Value 9: %', CLOCK_TIMESTAMP();
 
     -- СП- Дост. лек-ва
     UPDATE tmpResult SET isSP = True
@@ -604,6 +640,10 @@ BEGIN
                LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = tmp.GoodsId) AS T1
     WHERE tmpResult.GoodsId = T1.GoodsId;
 
+    ANALYSE tmpResult;
+
+--raise notice 'Value 10: %', CLOCK_TIMESTAMP();
+
        -- Вывод результата
        -- Подразделения для кросса
     OPEN cur1 FOR
@@ -637,4 +677,5 @@ $BODY$
 -- тест 
 -- select * from gpReport_PriceCheck(inPercent := 5, inUserId := 0, inisHideExceptRed := False, inisRetail := False, inManagerUnitsOnly := True, inSession := '3');               
 
-select * from gpReport_PriceCheck(inPercent := 20 , inPercentSite := 10 , inUserId := 0 , inisHideExceptRed := 'False' , inisRetail := 'True' , inManagerUnitsOnly := 'True' ,  inSession := '3');
+
+select * from gpReport_PriceCheck(inPercent := 20 , inPercentSite := 20 , inUserId := 0 , inisHideExceptRed := 'False' , inisRetail := 'True' , inManagerUnitsOnly := 'False' ,  inSession := '3');

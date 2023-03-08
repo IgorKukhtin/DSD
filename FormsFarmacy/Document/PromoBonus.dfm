@@ -12,17 +12,17 @@ inherited PromoBonusForm: TPromoBonusForm
     Width = 954
     Height = 444
     ExplicitTop = 116
-    ExplicitWidth = 750
+    ExplicitWidth = 954
     ExplicitHeight = 444
     ClientRectBottom = 444
     ClientRectRight = 954
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 750
+      ExplicitWidth = 954
       ExplicitHeight = 420
       inherited cxGrid: TcxGrid
         Width = 954
         Height = 420
-        ExplicitWidth = 750
+        ExplicitWidth = 954
         ExplicitHeight = 420
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -166,7 +166,7 @@ inherited PromoBonusForm: TPromoBonusForm
             Width = 86
           end
           object Amount: TcxGridDBColumn
-            Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1073#1086#1085#1091#1089
+            Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1073#1086#1085#1091#1089' '#1076#1083#1103' '#1082#1072#1089#1089#1099', %'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -205,7 +205,7 @@ inherited PromoBonusForm: TPromoBonusForm
     Width = 954
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 750
+    ExplicitWidth = 954
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 9
@@ -536,6 +536,111 @@ inherited PromoBonusForm: TPromoBonusForm
         end>
       isShowModal = False
     end
+    object ExecuteDialogAmount: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'ExecuteDialogAmount'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Amount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1077#1076#1080#1090#1077' '#1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1073#1086#1085#1091#1089' '#1076#1083#1103' '#1082#1072#1089#1089#1099', %'
+          Component = FormParams
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_Amount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Amount
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Amount
+        end>
+      Caption = 'actUpdate_Amount'
+    end
+    object mactUpdate_Amount: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = ExecuteDialogAmount
+      ActionList = <
+        item
+          Action = actUpdate_Amount
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' "'#1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1073#1086#1085#1091#1089' '#1076#1083#1103' '#1082#1072#1089#1089#1099', %" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' "'#1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1073#1086#1085#1091#1089' '#1076#1083#1103' '#1082#1072#1089#1089#1099', %" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 79
+    end
+    object ExecuteDialogBonusInetOrder: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'ExecuteDialogBonusInetOrder'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Amount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BonusInetOrder'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_BonusInetOrder: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_BonusInetOrder
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_BonusInetOrder
+        end>
+      Caption = 'actUpdate_BonusInetOrder'
+    end
+    object mactUpdate_BonusInetOrder: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = ExecuteDialogBonusInetOrder
+      ActionList = <
+        item
+          Action = actUpdate_BonusInetOrder
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' "'#1052#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099' '#1076#1083#1103' '#1080#1085#1077#1090' '#1079#1072#1082#1072#1079#1086#1074', %" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' "'#1052#1072#1088#1082#1077#1090' '#1073#1086#1085#1091#1089#1099' '#1076#1083#1103' '#1080#1085#1077#1090' '#1079#1072#1082#1072#1079#1086#1074', %" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 80
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -666,11 +771,19 @@ inherited PromoBonusForm: TPromoBonusForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     object bbOpenPartionDateKind: TdxBarButton
@@ -715,6 +828,14 @@ inherited PromoBonusForm: TPromoBonusForm
     end
     object dxBarButton5: TdxBarButton
       Action = actReport_Reprice_PromoBonus
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = mactUpdate_Amount
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = mactUpdate_BonusInetOrder
       Category = 0
     end
   end
@@ -781,6 +902,18 @@ inherited PromoBonusForm: TPromoBonusForm
         Name = 'LabelMarketingBonus'
         Value = #1042#1074#1086#1076' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1086#1075#1086' '#1073#1086#1085#1091#1089#1072' '
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BonusInetOrder'
+        Value = 0.000000000000000000
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -1225,5 +1358,57 @@ inherited PromoBonusForm: TPromoBonusForm
     ParamKeyField = 'inMovementId'
     Left = 208
     Top = 400
+  end
+  object spUpdate_Amount: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PromoBonus_Amount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 728
+    Top = 272
+  end
+  object spUpdate_BonusInetOrder: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PromoBonus_BonusInetOrder'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBonusInetOrder'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BonusInetOrder'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 728
+    Top = 360
   end
 end
