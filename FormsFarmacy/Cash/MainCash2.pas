@@ -639,6 +639,7 @@ type
     lblMemberSP: TcxMemo;
     TrayIcon: TTrayIcon;
     TimerTrayIconPUSH: TTimer;
+    MainPromoBonus: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

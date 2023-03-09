@@ -1,7 +1,7 @@
 inherited MainCashForm2: TMainCashForm2
   ActiveControl = lcName
   Caption = #1055#1088#1086#1076#1072#1078#1072
-  ClientHeight = 672
+  ClientHeight = 708
   ClientWidth = 970
   PopupMenu = PopupMenu
   OnCloseQuery = ParentFormCloseQuery
@@ -11,18 +11,20 @@ inherited MainCashForm2: TMainCashForm2
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
+  ExplicitTop = -234
   ExplicitWidth = 986
-  ExplicitHeight = 711
+  ExplicitHeight = 747
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
     Left = 0
-    Top = 519
+    Top = 555
     Width = 970
     Height = 153
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitTop = 519
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
@@ -226,27 +228,30 @@ inherited MainCashForm2: TMainCashForm2
   end
   object cxSplitter2: TcxSplitter [1]
     Left = 0
-    Top = 516
+    Top = 552
     Width = 970
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
+    ExplicitTop = 518
   end
   object MainPanel: TPanel [2]
     Left = 0
     Top = 389
     Width = 970
-    Height = 127
+    Height = 163
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitHeight = 127
     object MainGrid: TcxGrid
       Left = 0
       Top = 21
       Width = 970
-      Height = 61
+      Height = 97
       Align = alClient
       TabOrder = 0
+      ExplicitLeft = 1
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnCanFocusRecord = MainGridDBTableViewCanFocusRecord
@@ -436,6 +441,16 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Styles.OnGetContentStyle = MainFixPercentStylesGetContentStyle
           Width = 89
+        end
+        object MainPromoBonus: TcxGridDBColumn
+          Caption = #1055#1088#1086#1084#1086'. '#1073#1086#1085#1091#1089
+          DataBinding.FieldName = 'PromoBonus'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.##;-,0.##; ;'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Options.AutoWidthSizable = False
+          Width = 62
         end
         object MainColIntenalSPName: TcxGridDBColumn
           Caption = #1052#1110#1078#1085#1072#1088#1086#1076#1085#1072' '#1085#1077#1087#1072#1090#1077#1085#1090#1086#1074#1072#1085#1072' '#1085#1072#1079#1074#1072' ('#1057#1055')'
@@ -1054,11 +1069,12 @@ inherited MainCashForm2: TMainCashForm2
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 82
+      Top = 118
       Width = 970
       Height = 45
       Align = alBottom
       TabOrder = 1
+      ExplicitTop = 82
       object ShapeState: TShape
         Left = 766
         Top = 25

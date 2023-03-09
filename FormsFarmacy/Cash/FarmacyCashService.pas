@@ -246,7 +246,7 @@ type
     procedure SaveDistributionPromo;
     procedure SaveImplementationPlanEmployee;
     procedure SaveZReportLog;
-    procedure SaveImplementationPlanEmployeeUser;
+    //procedure SaveImplementationPlanEmployeeUser;
     procedure SaveSalePromoGoods;
     procedure SaveAsinoPharmaSP;
     procedure SaveGoodsAllSP;
@@ -489,7 +489,7 @@ begin
       //Получение выполнения плана продаж по сотруднику
       if not gc_User.Local then SaveImplementationPlanEmployee;
       //Получение выполнения плана продаж по сотруднику итоги
-      if not gc_User.Local then SaveImplementationPlanEmployeeUser;
+      //if not gc_User.Local then SaveImplementationPlanEmployeeUser;
       //Получение акционных товаров
       if not gc_User.Local then SaveSalePromoGoods;
       // Отправляем логи
@@ -589,7 +589,7 @@ begin   //yes
       //Получение выполнения плана продаж по сотруднику
       if not gc_User.Local then SaveImplementationPlanEmployee;
       //Получение выполнения плана продаж по сотруднику итоги
-      if not gc_User.Local then SaveImplementationPlanEmployeeUser;
+      //if not gc_User.Local then SaveImplementationPlanEmployeeUser;
       //Получение акционных товаров
       if not gc_User.Local then SaveSalePromoGoods;
       //Получение товаров социальной программы Асино Фарма Старт
@@ -2621,50 +2621,50 @@ end;
 //  end;
 //end;
 
-procedure TMainCashForm2.SaveImplementationPlanEmployeeUser;
-var
-  sp : TdsdStoredProc;
-  ds : TClientDataSet;
-begin
-  if not FisShowPlanEmployeeUser then Exit;
-
-  tiServise.Hint := 'Получение Выполнения плана продаж';
-  sp := TdsdStoredProc.Create(nil);
-  try
-    try
-      ds := TClientDataSet.Create(nil);
-      try
-        sp.OutputType := otDataSet;
-        sp.DataSet := ds;
-
-        sp.StoredProcName := 'gpReport_ImplementationPlanEmployeeUser';
-        sp.Params.Clear;
-        sp.Params.AddParam('inStartDate',ftDateTime,ptInput,Date);
-        sp.Execute;
-        Add_Log('Start MutexImplementationPlanEmployeeUser');
-        WaitForSingleObject(MutexImplementationPlanEmployeeUser, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
-        try
-          SaveLocalData(ds,ImplementationPlanEmployeeUser_lcl);
-        finally
-          Add_Log('End MutexImplementationPlanEmployeeUser');
-          ReleaseMutex(MutexImplementationPlanEmployeeUser);
-        end;
-
-      finally
-        ds.free;
-      end;
-    except
-      on E: Exception do
-      begin
-        Add_Log('SaveImplementationPlanEmployeeUser Exception: ' + E.Message);
-        Exit;
-      end;
-    end;
-  finally
-    freeAndNil(sp);
-    tiServise.Hint := 'Ожидание задания.';
-  end;
-end;
+//procedure TMainCashForm2.SaveImplementationPlanEmployeeUser;
+//var
+//  sp : TdsdStoredProc;
+//  ds : TClientDataSet;
+//begin
+//  if not FisShowPlanEmployeeUser then Exit;
+//
+//  tiServise.Hint := 'Получение Выполнения плана продаж';
+//  sp := TdsdStoredProc.Create(nil);
+//  try
+//    try
+//      ds := TClientDataSet.Create(nil);
+//      try
+//        sp.OutputType := otDataSet;
+//        sp.DataSet := ds;
+//
+//        sp.StoredProcName := 'gpReport_ImplementationPlanEmployeeUser';
+//        sp.Params.Clear;
+//        sp.Params.AddParam('inStartDate',ftDateTime,ptInput,Date);
+//        sp.Execute;
+//        Add_Log('Start MutexImplementationPlanEmployeeUser');
+//        WaitForSingleObject(MutexImplementationPlanEmployeeUser, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+//        try
+//          SaveLocalData(ds,ImplementationPlanEmployeeUser_lcl);
+//        finally
+//          Add_Log('End MutexImplementationPlanEmployeeUser');
+//          ReleaseMutex(MutexImplementationPlanEmployeeUser);
+//        end;
+//
+//      finally
+//        ds.free;
+//      end;
+//    except
+//      on E: Exception do
+//      begin
+//        Add_Log('SaveImplementationPlanEmployeeUser Exception: ' + E.Message);
+//        Exit;
+//      end;
+//    end;
+//  finally
+//    freeAndNil(sp);
+//    tiServise.Hint := 'Ожидание задания.';
+//  end;
+//end;
 
 // Получение акционных товаров
 procedure TMainCashForm2.SaveSalePromoGoods;
