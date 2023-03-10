@@ -129,6 +129,8 @@ type
     spUpdateMIMaster: TdsdStoredProc;
     actUpdate_MI_ChangePercent: TdsdExecStoredProc;
     bbUpdate_MI_ChangePercent: TdxBarButton;
+    PrintMovement_ReturnIn_By_TaxCorrective: TdsdPrintAction;
+    bbPrintMovement_ReturnIn_By_TaxCorrective: TdxBarButton;
   private
     { Private declarations }
   public

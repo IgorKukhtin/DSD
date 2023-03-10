@@ -66,7 +66,7 @@ BEGIN
      END IF;
 
      --
-     IF inDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_Corrective(), zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+     IF inDocumentTaxKindId NOT IN (zc_Enum_DocumentTaxKind_Corrective(), zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical(), zc_Enum_DocumentTaxKind_ChangePercent())
      THEN
          RAISE EXCEPTION 'Ошибка.Неверно указан тип корректировки.';
      END IF;
@@ -90,8 +90,11 @@ BEGIN
           , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MovementLinkObject_From.ObjectId ELSE MovementLinkObject_Partner.ObjectId END AS PartnerId
           , COALESCE (MovementLinkObject_ContractFrom.ObjectId, MovementLinkObject_Contract.ObjectId) AS ContractId
           , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS BranchId
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData
+                 WHEN Movement.DescId = zc_Movement_ChangePercent() THEN MovementFloat_ChangePercent.ValueData
+                 ELSE 0
+            END AS DiscountPercent
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 AND Movement.DescId <> zc_Movement_ChangePercent() THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
           , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                       THEN zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical() -- !!!не меняется!!!
                  WHEN Movement.DescId = zc_Movement_PriceCorrective()
@@ -300,7 +303,7 @@ BEGIN
                    , MIFloat_CountForPrice.ValueData
            ;
      ELSE
-         -- выбрали <Возврат от покупателя> или <Перевод долга (приход)> или <Корректировка цены>
+         -- выбрали <Возврат от покупателя> или <Перевод долга (приход)> или <Корректировка цены> или Акт по предоставлению скидки
          INSERT INTO _tmpMI_Return (GoodsId, GoodsKindId, OperPrice, OperPrice_original, CountForPrice, Amount)
             SELECT tmpMI.GoodsId
                  , tmpMI.GoodsKindId
@@ -348,7 +351,7 @@ BEGIN
                          END AS OperPrice_original
                        , MIFloat_CountForPrice.ValueData AS CountForPrice
                        , SUM (CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                                   WHEN vbMovementDescId IN (zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective()) THEN MovementItem.Amount
+                                   WHEN vbMovementDescId IN (zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective(), zc_Movement_ChangePercent()) THEN MovementItem.Amount
                                    ELSE 0
                               END) AS Amount
                   FROM MovementItem
@@ -384,7 +387,7 @@ BEGIN
 
 
 
-     IF (zc_isReturnIn_bySale() = TRUE AND vbMovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn()))
+     IF (zc_isReturnIn_bySale() = TRUE AND vbMovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_ChangePercent() ))
         OR (vbMovementDescId = zc_Movement_PriceCorrective()
         AND EXISTS (SELECT 1
                     FROM MovementItem
@@ -1113,6 +1116,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.03.23         * add zc_Movement_ChangePercent 
  10.05.16         * add inStartDateTax
  31.07.14                                        * add outMovementId_Corrective
  06.06.14                                        * add проверка - проведенные/удаленные документы Изменять нельзя

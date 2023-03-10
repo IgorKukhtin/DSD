@@ -636,9 +636,9 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100'  '#1040#1050#1058' 2'
-      Hint = #1055#1077#1095#1072#1090#1100'  '#1040#1050#1058' 2'
-      ImageIndex = 21
+      Caption = #1055#1077#1095#1072#1090#1100'  '#1040#1050#1058
+      Hint = #1055#1077#1095#1072#1090#1100'  '#1040#1050#1058
+      ImageIndex = 3
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -870,6 +870,55 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintTaxCorrective_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Client
+        end>
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' ('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1082' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084')'
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103' ('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1082' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084')'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_ReturnIn_By_TaxCorrective'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
+      ReportNameParam.Value = 'PrintMovement_ReturnIn_By_TaxCorrective'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actShowMessage: TShowMessageAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1030,11 +1079,15 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbPrint_by_Tax'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_ReturnIn_by_TaxCorrective'
         end
         item
           Visible = True
@@ -1060,7 +1113,7 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
     inherited bbInsertMask: TdxBarButton
       Action = actInsertMaskMulti
     end
-    object bbPrint: TdxBarButton
+    object bbPrint_by_Tax: TdxBarButton
       Action = actPrint_by_Tax
       Caption = #1055#1077#1095#1072#1090#1100'  '#1040#1082#1090#1072
       Category = 0
@@ -1085,8 +1138,8 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
       Action = actChecked
       Category = 0
     end
-    object bbPrint_Return_By_TaxCorrective: TdxBarButton
-      Action = actPrint_by_Tax
+    object bbPrint_ReturnIn_by_TaxCorrective: TdxBarButton
+      Action = actPrint_ReturnIn_by_TaxCorrective
       Category = 0
     end
   end

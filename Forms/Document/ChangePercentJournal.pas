@@ -30,7 +30,7 @@ type
   TChangePercentJournalForm = class(TAncestorJournalForm)
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    bbPrint: TdxBarButton;
+    bbPrint_by_Tax: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     spGetReportName: TdsdStoredProc;
     spSelectPrint: TdsdStoredProc;
@@ -54,7 +54,7 @@ type
     actChecked: TdsdExecStoredProc;
     bbspChecked: TdxBarButton;
     actPrint_by_Tax: TdsdPrintAction;
-    bbPrint_Return_By_TaxCorrective: TdxBarButton;
+    bbPrint_ReturnIn_by_TaxCorrective: TdxBarButton;
     spGetReportNameTaxCorrective: TdsdStoredProc;
     actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc;
     actPrint_TaxCorrective_Us: TdsdPrintAction;
@@ -72,6 +72,7 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction;
   private
     { Private declarations }
   public
