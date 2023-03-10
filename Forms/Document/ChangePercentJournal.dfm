@@ -1281,7 +1281,7 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 400
+    Left = 432
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc
