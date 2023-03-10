@@ -24,7 +24,7 @@ $BODY$
 BEGIN
     vbStartDate := date_trunc('month', inMonth);
     vbEndDate := date_trunc('month', inMonth) + Interval '1 MONTH';
-    vbDayInMonth := (DATE_PART('day', vbEndDate - vbStartDate))::TFloat;
+    vbDayInMonth := (DATE_PART('day', vbEndDate - vbStartDate) + 1)::TFloat;
 
     -- Контролшь использования подразделения
     inUnitId := gpGet_CheckingUser_Unit(inUnitId, inSession);

@@ -6,7 +6,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, System.IOUtils, Vcl.Forms, Vcl.Dialogs,
-  DB, DataSnap.DBClient, Soap.EncdDecd, Windows, UtilConst,
+  DB, DataSnap.DBClient, Soap.EncdDecd, Windows, UtilConst, dsdDB,
   ZAbstractRODataset, ZAbstractDataset, ZDataset, ZAbstractConnection,
   ZConnection, ZEncoding, Datasnap.Provider, System.Zip,
   {$IFDEF DELPHI103RIO} System.JSON {$ELSE} Data.DBXJSON {$ENDIF};
@@ -15,7 +15,7 @@ procedure SQLiteChechAndArc;
 
 procedure SaveSQLiteData(ASrc: TClientDataSet; ATableName: String);
 procedure LoadSQLiteData(ADst: TClientDataSet; ATableName: String; AShowError : Boolean = True);
-procedure LoadSQLiteSQL(ADst: TClientDataSet; ASQL: String; AShowError : Boolean = True);
+procedure LoadSQLiteSQL(ADst: TClientDataSet; ASQL: String; AParams : TdsdParams = Nil; AShowError : Boolean = True);
 
 function LoadSQLiteFormData(AFormName, AData, ASession: String) : string;
 
@@ -23,6 +23,8 @@ procedure DeleteSQLiteData(ATableName: String);
 
 
 implementation
+
+uses MessagesUnit;
 
 var ZSQLiteConnection: TZConnection;
     MutexSQLite: THandle;
@@ -309,10 +311,11 @@ begin
   end;
 end;
 
-procedure LoadSQLiteSQL(ADst: TClientDataSet; ASQL: String; AShowError : Boolean = True);
+procedure LoadSQLiteSQL(ADst: TClientDataSet; ASQL: String; AParams : TdsdParams = Nil; AShowError : Boolean = True);
   var  ZQuery: TZQuery; I : Integer;
        DataSetProvider: TDataSetProvider;
        ClientDataSet: TClientDataSet;
+       cMessages : String;
 begin
 
   try
@@ -334,6 +337,22 @@ begin
 
             // Получаем данные
           ZQuery.SQL.Text := ASQL;
+
+          if Assigned(AParams) then
+            for I := 0 to AParams.Count - 1 do if AParams[I].ParamType in [ptInput, ptInputOutput] then
+              if Assigned(ZQuery.Params.FindParam(AParams[I].Name)) then
+                ZQuery.ParamByName(AParams[I].Name).Value := AParams[I].Value;
+
+          if gc_isDebugMode then
+          begin
+            cMessages :=  ASQL;
+            if Assigned(AParams) then
+              for I := 0 to AParams.Count - 1 do if AParams[I].ParamType in [ptInput, ptInputOutput] then
+                if Assigned(ZQuery.Params.FindParam(AParams[I].Name)) then
+                  cMessages :=  StringReplace(cMessages, ':' + AParams[I].Name, AParams[I].AsString, [rfReplaceAll, rfIgnoreCase]);
+            TMessagesForm.Create(nil).Execute(cMessages, cMessages, true);
+          end;
+
           ZQuery.Active := True;
 
           ClientDataSet.Active := True;

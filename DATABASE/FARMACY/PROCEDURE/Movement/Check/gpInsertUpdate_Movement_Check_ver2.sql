@@ -124,14 +124,14 @@ BEGIN
     END IF;
     
     -- Ищем ID чека по inUID
-    IF COALESCE (ioId, 0) = 0 AND COALESCE (inUID, '') <> ''
+    IF COALESCE (ioId, 0) = 0 AND COALESCE (TRIM(inUID), '') <> ''
     THEN
       ioId := COALESCE ((SELECT Movement.Id
                          FROM Movement 
                            
                               INNER JOIN MovementString ON MovementString.DescId = zc_MIString_UID()
                                                        AND MovementString.MovementId = Movement.Id
-                                                       AND MovementString.ValueData = inUID
+                                                       AND MovementString.ValueData = TRIM(inUID)
                                
                                
                          WHERE Movement.OperDate >= inDate - INTERVAL '3 DAY'
@@ -183,7 +183,7 @@ BEGIN
     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Check(), vbInvNumber::TVarChar, inDate, NULL);
     
     -- сохранили UID элемента чека
-    PERFORM lpInsertUpdate_MovementString(zc_MIString_UID(),ioId,inUID);
+    PERFORM lpInsertUpdate_MovementString(zc_MIString_UID(),ioId,TRIM(inUID));
 
     -- сохранили связь с <Подразделением>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, vbUnitId);

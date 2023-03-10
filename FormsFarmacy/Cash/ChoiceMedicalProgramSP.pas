@@ -49,7 +49,7 @@ begin
     With ChoiceMedicalProgramSPForm do
     Begin
       try
-        if MedicalProgramSPDS.DataSet = Nil then MedicalProgramSPDS.DataSet := MainCashForm.MedicalProgramSPGoodsCDS;
+        if MedicalProgramSPDS.DataSet = Nil then MedicalProgramSPDS.DataSet := MainCashForm.MedicalProgramSPCDS;
         Result := ShowModal = mrOK;
       Except ON E: Exception DO
         MessageDlg(E.Message,mtError,[mbOk],0);

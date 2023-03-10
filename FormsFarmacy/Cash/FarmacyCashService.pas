@@ -1636,7 +1636,7 @@ begin
                   dsdSave.Params.Clear;
                   if Head.ID > 0 then dsdSave.Params.AddParam('ioId', ftInteger, ptInputOutput, Head.ID)
                   else dsdSave.Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
-                  dsdSave.Params.AddParam('inUID', ftString, ptInput, Head.UID);
+                  dsdSave.Params.AddParam('inUID', ftString, ptInput, Trim(Head.UID));
                   dsdSave.Params.AddParam('inDate', ftDateTime, ptInput, Head.DATE);
                   dsdSave.Params.AddParam('inCashRegister', ftString, ptInput, Head.CASH);
                   dsdSave.Params.AddParam('inPaidType', ftInteger, ptInput, Head.PAIDTYPE);

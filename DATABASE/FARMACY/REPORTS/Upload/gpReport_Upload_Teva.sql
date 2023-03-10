@@ -91,6 +91,8 @@ BEGIN
           WHERE Movement_Check.DescId IN (zc_Movement_Check(), zc_Movement_Sale())
             AND Movement_Check.OperDate  >= DATE_TRUNC ('day', inDate)
             AND Movement_Check.OperDate  < DATE_TRUNC ('day', inDate) + INTERVAL '1 DAY'
+            /*AND Movement_Check.OperDate  >= DATE_TRUNC ('month', inDate)
+            AND Movement_Check.OperDate  < DATE_TRUNC ('month', inDate) + INTERVAL '1 MONTH'*/
             AND Movement_Check.StatusId = zc_Enum_Status_Complete()
          );
          
@@ -164,4 +166,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpReport_Upload_Teva (inDate:= '09.01.2023'::TDateTime, inObjectId:= 59610, inSession:= zfCalc_UserAdmin())
+SELECT * FROM gpReport_Upload_Teva (inDate:= '09.03.2023'::TDateTime, inObjectId:= 59610, inSession:= zfCalc_UserAdmin())

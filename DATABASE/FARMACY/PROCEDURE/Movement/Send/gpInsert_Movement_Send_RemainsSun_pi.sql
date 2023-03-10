@@ -305,11 +305,11 @@ BEGIN
 
 
      -- 8. Удаляем документы, что б не мешали
-     PERFORM lpSetErased_Movement (inMovementId := tmp.MovementId
+     /*PERFORM lpSetErased_Movement (inMovementId := tmp.MovementId
                                  , inUserId     := vbUserId
                                   )
      FROM (SELECT DISTINCT _tmpResult_Partion_a.MovementId FROM _tmpResult_Partion_a WHERE _tmpResult_Partion_a.MovementId > 0
-          ) AS tmp;
+          ) AS tmp;*/
 
 
      --
@@ -335,3 +335,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsert_Movement_Send_RemainsSun_pi (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+

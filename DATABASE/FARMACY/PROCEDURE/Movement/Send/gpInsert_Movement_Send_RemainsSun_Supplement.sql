@@ -135,11 +135,11 @@ BEGIN
           ;
 
      -- 8. Удаляем документы, что б не мешали
-     PERFORM lpSetErased_Movement (inMovementId := tmp.MovementId
+     /*PERFORM lpSetErased_Movement (inMovementId := tmp.MovementId
                                  , inUserId     := vbUserId
                                   )
      FROM (SELECT DISTINCT _tmpResult_Supplement.MovementId FROM _tmpResult_Supplement WHERE _tmpResult_Supplement.MovementId > 0
-          ) AS tmp;
+          ) AS tmp;*/
 
      -- Частим маркетинговые контракты
      IF EXISTS(SELECT _tmpResult_Supplement.MovementId FROM _tmpResult_Supplement WHERE _tmpResult_Supplement.MovementId > 0) AND 

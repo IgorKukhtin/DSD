@@ -11,7 +11,6 @@ inherited MainCashForm2: TMainCashForm2
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitTop = -234
   ExplicitWidth = 986
   ExplicitHeight = 747
   PixelsPerInch = 96
@@ -24,7 +23,6 @@ inherited MainCashForm2: TMainCashForm2
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitTop = 519
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
@@ -233,7 +231,6 @@ inherited MainCashForm2: TMainCashForm2
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
-    ExplicitTop = 518
   end
   object MainPanel: TPanel [2]
     Left = 0
@@ -243,7 +240,6 @@ inherited MainCashForm2: TMainCashForm2
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 127
     object MainGrid: TcxGrid
       Left = 0
       Top = 21
@@ -251,7 +247,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 97
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = 1
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnCanFocusRecord = MainGridDBTableViewCanFocusRecord
@@ -1062,6 +1057,13 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Width = 120
         end
+        object MainisElRecipe: TcxGridDBColumn
+          Caption = #1069#1083'. '#1088#1077#1094#1077#1087#1090
+          DataBinding.FieldName = 'isElRecipe'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 59
+        end
       end
       object MainGridLevel: TcxGridLevel
         GridView = MainGridDBTableView
@@ -1074,7 +1076,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 45
       Align = alBottom
       TabOrder = 1
-      ExplicitTop = 82
       object ShapeState: TShape
         Left = 766
         Top = 25
@@ -9742,7 +9743,7 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 857
+    Left = 785
     Top = 445
   end
   object spGet_Movement_TechnicalRediscount_Id: TdsdStoredProc
@@ -10697,71 +10698,6 @@ inherited MainCashForm2: TMainCashForm2
     Left = 864
     Top = 224
   end
-  object spAvailabilityCheckMedicalProgram: TdsdStoredProc
-    StoredProcName = 'gpGet_AvailabilityCheckMedicalProgram'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inSPKindId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inProgramId'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outMedicalProgramSPID'
-        Value = Null
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 864
-    Top = 288
-  end
-  object spMedicalProgramSP_Goods: TdsdStoredProc
-    StoredProcName = 'gpSelect_MedicalProgramSP_Goods'
-    DataSet = MedicalProgramSPGoodsCDS
-    DataSets = <
-      item
-        DataSet = MedicalProgramSPGoodsCDS
-      end>
-    Params = <
-      item
-        Name = 'inSPKindId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMedicalProgramSPId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCashSessionId'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 864
-    Top = 344
-  end
-  object MedicalProgramSPGoodsCDS: TClientDataSet
-    Aggregates = <>
-    IndexFieldNames = 'GoodsId'
-    Params = <>
-    Left = 864
-    Top = 392
-  end
   object spGet_Goods_CodeRazom: TdsdStoredProc
     StoredProcName = 'gpGet_Goods_Juridical_value'
     DataSets = <>
@@ -10933,37 +10869,6 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 344
     Top = 328
-  end
-  object spGetMedicalProgramSP: TdsdStoredProc
-    StoredProcName = 'gpSelect_GetMedicalProgramSP'
-    DataSet = MedicalProgramSPGoodsCDS
-    DataSets = <
-      item
-        DataSet = MedicalProgramSPGoodsCDS
-      end>
-    Params = <
-      item
-        Name = 'inSPKindId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCashSessionId'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 856
-    Top = 544
   end
   object spUpdate_User_KeyExpireDate: TdsdStoredProc
     StoredProcName = 'gpUpdate_User_KeyExpireDate'
@@ -20774,5 +20679,276 @@ inherited MainCashForm2: TMainCashForm2
     OnTimer = TimerTrayIconPUSHTimer
     Left = 712
     Top = 104
+  end
+  object spAvailabilityCheckMedicalProgram: TdsdStoredProcSQLite
+    StoredProcName = 'gpGet_AvailabilityCheckMedicalProgram'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inSPKindId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProgramId'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMedicalProgramSPID'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    SQLList = <
+      item
+        SQL.Strings = (
+          
+            'SELECT gas.MedicalProgramSPID AS outMedicalProgramSPID FROM Good' +
+            'sAllSP gas '
+          'WHERE gas.MedicalProgramIdSP = :inProgramId'
+          '  AND gas.isParticipates = 1'
+          'LIMIT 1')
+      end>
+    Left = 864
+    Top = 260
+  end
+  object spGoodsSPId: TdsdStoredProcSQLite
+    DataSet = GoodsSPIdCDS
+    DataSets = <
+      item
+        DataSet = GoodsSPIdCDS
+      end>
+    Params = <
+      item
+        Name = 'inIdSPList'
+        Value = Null
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProgramSPID'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inQty'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    SQLList = <
+      item
+        SQL.Strings = (
+          ''
+          'WITH tmpCashSessionSnapShot(Id, Price) AS '
+          '   (SELECT DISTINCT Remains.Id'
+          '         , Remains.Price'
+          '    FROM Remains) '
+          ''
+          'SELECT gas.GoodsId'
+          '     , gas.MedicalProgramSPID'
+          '     , gas.IdSP'
+          '     , gas.ProgramIdSP'
+          '     , CashSessionSnapShot.Price'
+          '  , gas.CountSP'
+          '     , gas.PriceRetSP'
+          '    , gas.PaymentSP'
+          #9' --'
+          #9' -- '#1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' '#1076#1083#1103' '#1057#1055
+          #9' --'#9' '
+          '     , ROUND( '
+          '       CASE WHEN COALESCE (gas.PercentPayment, 0) > 0'
+          
+            #9'         THEN ROUND (CASE WHEN CashSessionSnapShot.Price < COAL' +
+            'ESCE (gas.PriceRetSP, 0)'
+          #9'                          THEN CashSessionSnapShot.Price'
+          
+            #9'                          ELSE COALESCE (gas.PriceRetSP, 0) END' +
+            ' * gas.PercentPayment / 100, 2) -- '#1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' % '#1076#1086#1087#1083#1072#1090#1099
+          #9'                               '
+          #9'         WHEN COALESCE (gas.PaymentSP, 0) = 0'
+          #9'              THEN 0 -- '#1087#1086' 0, '#1090'.'#1082'. '#1094#1077#1085#1072' '#1076#1086#1087#1083#1072#1090#1099' = 0'
+          #9
+          
+            #9'         WHEN CashSessionSnapShot.Price < COALESCE (gas.PriceSP' +
+            ', 0)'
+          
+            #9'              THEN 0 -- '#1087#1086' 0, '#1090'.'#1082'. '#1085#1072#1096#1072' '#1084#1077#1085#1100#1096#1077' '#1095#1077#1084' '#1094#1077#1085#1072' '#1074#1086#1079#1084#1077#1097#1077 +
+            #1085#1080#1103
+          #9
+          
+            #9'         -- WHEN CashSessionSnapShot.Price < COALESCE (gas.Paym' +
+            'entSP, 0)'
+          
+            #9'         --      THEN CashSessionSnapShot.Price -- '#1087#1086' '#1085#1072#1096#1077#1081' '#1094#1077#1085 +
+            #1077', '#1090'.'#1082'. '#1086#1085#1072' '#1084#1077#1085#1100#1096#1077' '#1095#1077#1084' '#1094#1077#1085#1072' '#1076#1086#1087#1083#1072#1090#1099
+          #9
+          
+            #9'         WHEN CashSessionSnapShot.Price < COALESCE (gas.PriceSP' +
+            ', 0) + COALESCE (FLOOR (gas.PaymentSP * 100) / 100, 0)'
+          
+            #9'           AND 0 > COALESCE (FLOOR (gas.PaymentSP * 100) / 100,' +
+            ' 0) -- "'#1086#1082#1088#1091#1075#1083#1080#1083#1080' '#1074' '#1084#1077#1085#1100#1096#1091#1102'" '#1080' '#1094#1077#1085#1091' '#1076#1086#1087#1083#1072#1090#1099' '#1091#1084#1077#1085#1100#1096#1080#1084' '#1085#1072' ...'
+          
+            #9'                 - (COALESCE (ROUND (gas.PriceSP * 100) / 100, ' +
+            '0) + COALESCE (FLOOR (gas.PaymentSP * 100) / 100, 0) '
+          #9'                 - CashSessionSnapShot.Price'
+          
+            #9'                   ) -- '#1088#1072#1079#1085#1080#1094#1072' '#1089' '#1094#1077#1085#1086#1081' '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1103' '#1080' "'#1086#1082#1088#1091#1075#1083#1080#1083#1080 +
+            ' '#1074' '#1073#1086#1083#1100#1096#1091#1102'"'
+          #9'              THEN 0'
+          #9
+          
+            #9'         WHEN CashSessionSnapShot.Price < COALESCE (gas.PriceSP' +
+            ', 0) + COALESCE (FLOOR (gas.PaymentSP * 100) / 100, 0)'
+          
+            #9'              THEN COALESCE (FLOOR (gas.PaymentSP * 100) / 100,' +
+            ' 0) -- "'#1086#1082#1088#1091#1075#1083#1080#1083#1080' '#1074' '#1084#1077#1085#1100#1096#1091#1102'" '#1080' '#1094#1077#1085#1091' '#1076#1086#1087#1083#1072#1090#1099' '#1091#1084#1077#1085#1100#1096#1080#1084' '#1085#1072' ...'
+          
+            #9'                 - (COALESCE (ROUND (gas'#9'.PriceSP * 100) / 100,' +
+            ' 0) + COALESCE (FLOOR (gas.PaymentSP * 100) / 100, 0) '
+          #9'                 - CashSessionSnapShot.Price'
+          
+            #9'                   ) -- '#1088#1072#1079#1085#1080#1094#1072' '#1089' '#1094#1077#1085#1086#1081' '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1103' '#1080' "'#1086#1082#1088#1091#1075#1083#1080#1083#1080 +
+            ' '#1074' '#1073#1086#1083#1100#1096#1091#1102'"'
+          #9
+          
+            #9'         ELSE COALESCE (FLOOR (gas.PaymentSP * 100) / 100, 0) -' +
+            '- '#1080#1085#1072#1095#1077' '#1074#1089#1077#1075#1076#1072' '#1094#1077#1085#1072' '#1076#1086#1087#1083#1072#1090#1099' "'#1086#1082#1088#1091#1075#1083#1080#1083#1080' '#1074' '#1084#1077#1085#1100#1096#1091#1102'"'
+          #9
+          #9'    END, 2) AS PriceSP'
+          #9'    '
+          '        --'
+          '        -- '#1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1057#1055
+          '        --'
+          '     , CASE WHEN COALESCE (gas.PercentPayment, 0) > 0'
+          
+            '             THEN CASE WHEN CashSessionSnapShot.Price < COALESCE' +
+            ' (gas.PriceRetSP, 0)'
+          '                       THEN CashSessionSnapShot.Price'
+          
+            '                       ELSE COALESCE (gas.PriceRetSP, 0) END -- ' +
+            #1060#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1081' % '#1076#1086#1087#1083#1072#1090#1099
+          '        ELSE'
+          
+            '          CASE WHEN CashSessionSnapShot.Price < COALESCE (gas.Pr' +
+            'iceSP, 0)'
+          
+            '                    THEN CashSessionSnapShot.Price -- '#1087#1086' '#1085#1072#1096#1077#1081' '#1094 +
+            #1077#1085#1077', '#1090'.'#1082'. '#1086#1085#1072' '#1084#1077#1085#1100#1096#1077' '#1095#1077#1084' '#1094#1077#1085#1072' '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1103
+          ''
+          '               ELSE'
+          ''
+          '          CASE WHEN COALESCE (gas.PaymentSP, 0) = 0'
+          '                    THEN 0 -- '#1087#1086' 0, '#1090'.'#1082'. '#1094#1077#1085#1072' '#1076#1086#1087#1083#1072#1090#1099' = 0'
+          ''
+          
+            '               WHEN CashSessionSnapShot.Price < COALESCE (gas.Pr' +
+            'iceSP, 0)'
+          
+            '                    THEN 0 -- '#1087#1086' 0, '#1090'.'#1082'. '#1085#1072#1096#1072' '#1084#1077#1085#1100#1096#1077' '#1095#1077#1084' '#1094#1077#1085#1072' '#1074#1086 +
+            #1079#1084#1077#1097#1077#1085#1080#1103
+          ''
+          
+            '               WHEN CashSessionSnapShot.Price < COALESCE (gas.Pr' +
+            'iceSP, 0) + COALESCE (FLOOR (gas.PaymentSP * 100) / 100, 0)'
+          
+            '                 AND 0 > COALESCE (FLOOR (gas.PaymentSP * 100) /' +
+            ' 100, 0) -- "'#1086#1082#1088#1091#1075#1083#1080#1083#1080' '#1074' '#1084#1077#1085#1100#1096#1091#1102'" '#1080' '#1094#1077#1085#1091' '#1076#1086#1087#1083#1072#1090#1099' '#1091#1084#1077#1085#1100#1096#1080#1084' '#1085#1072' ...'
+          
+            '                       - (COALESCE (ROUND (gas.PriceSP * 100) / ' +
+            '100, 0) + COALESCE (FLOOR (gas.PaymentSP * 100) / 100, 0) '
+          '                       - CashSessionSnapShot.Price'
+          
+            '                         ) -- '#1088#1072#1079#1085#1080#1094#1072' '#1089' '#1094#1077#1085#1086#1081' '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1103' '#1080' "'#1086#1082#1088#1091 +
+            #1075#1083#1080#1083#1080' '#1074' '#1073#1086#1083#1100#1096#1091#1102'"'
+          '                    THEN 0'
+          ''
+          
+            '               WHEN CashSessionSnapShot.Price < COALESCE (gas.Pr' +
+            'iceSP, 0) + COALESCE (FLOOR (gas.PaymentSP * 100) / 100, 0)'
+          
+            '                    THEN COALESCE (FLOOR (gas.PaymentSP * 100) /' +
+            ' 100, 0) -- "'#1086#1082#1088#1091#1075#1083#1080#1083#1080' '#1074' '#1084#1077#1085#1100#1096#1091#1102'" '#1080' '#1094#1077#1085#1091' '#1076#1086#1087#1083#1072#1090#1099' '#1091#1084#1077#1085#1100#1096#1080#1084' '#1085#1072' ...'
+          
+            '                       - (COALESCE (ROUND (gas.PriceSP * 100) / ' +
+            '100, 0) + COALESCE (FLOOR (gas.PaymentSP * 100) / 100, 0) '
+          '                       - CashSessionSnapShot.Price'
+          
+            '                         ) -- '#1088#1072#1079#1085#1080#1094#1072' '#1089' '#1094#1077#1085#1086#1081' '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1103' '#1080' "'#1086#1082#1088#1091 +
+            #1075#1083#1080#1083#1080' '#1074' '#1073#1086#1083#1100#1096#1091#1102'"'
+          ''
+          
+            '               ELSE COALESCE (FLOOR (gas.PaymentSP * 100) / 100,' +
+            ' 0) -- '#1080#1085#1072#1095#1077' '#1074#1089#1077#1075#1076#1072' '#1094#1077#1085#1072' '#1076#1086#1087#1083#1072#1090#1099' "'#1086#1082#1088#1091#1075#1083#1080#1083#1080' '#1074' '#1084#1077#1085#1100#1096#1091#1102'"'
+          ''
+          '          END'
+          '        + COALESCE (gas.PriceSP, 0)'
+          ''
+          '        END END AS PriceSaleSP'#9'    '
+          'FROM GoodsAllSP gas '
+          
+            '     INNER JOIN tmpCashSessionSnapShot AS CashSessionSnapShot ON' +
+            ' CashSessionSnapShot.Id = gas.GoodsId '
+          'WHERE (:inIdSPList = '#39#39' OR :inIdSPList LIKE '#39'%'#39'||gas.IdSP||'#39'%'#39')'
+          '  AND gas.MedicalProgramSPID = :inProgramSPID'
+          ' AND (gas.CountSPMin <= :inQty OR :inQty = 0)')
+      end>
+    Left = 608
+    Top = 236
+  end
+  object GoodsSPIdCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 608
+    Top = 284
+  end
+  object spGetMedicalProgramSP: TdsdStoredProcSQLite
+    DataSet = MedicalProgramSPCDS
+    DataSets = <
+      item
+        DataSet = MedicalProgramSPCDS
+      end>
+    Params = <
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    SQLList = <
+      item
+        SQL.Strings = (
+          'SELECT gas.GoodsId'
+          '      , gas.MedicalProgramSPID'
+          '      , gas.MedicalProgramSPCode'
+          '      , gas.MedicalProgramSPName'
+          '      , MAX(gas.PriceRetSP) AS PriceRetSP'
+          'FROM GoodsAllSP gas '
+          'WHERE gas.GoodsId = :inGoodsId'
+          'GROUP BY gas.GoodsId'
+          '       , gas.MedicalProgramSPID'
+          '       , gas.MedicalProgramSPCode'
+          '       , gas.MedicalProgramSPName'
+          '  ')
+      end>
+    Left = 864
+    Top = 340
+  end
+  object MedicalProgramSPCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 864
+    Top = 396
   end
 end

@@ -566,9 +566,6 @@ type
     spCheck_PairSunAmount: TdsdStoredProc;
     CheckJuridicalName: TcxGridDBColumn;
     MemDataGOODSDIPR: TCurrencyField;
-    spAvailabilityCheckMedicalProgram: TdsdStoredProc;
-    spMedicalProgramSP_Goods: TdsdStoredProc;
-    MedicalProgramSPGoodsCDS: TClientDataSet;
     spGet_Goods_CodeRazom: TdsdStoredProc;
     MainDeferredTR: TcxGridDBColumn;
     MemDataDEFERENDT: TCurrencyField;
@@ -585,7 +582,6 @@ type
     actAddGoodsSupplement: TAction;
     mmAddGoodsSupplement: TMenuItem;
     spGoods_AddSupplement: TdsdStoredProc;
-    spGetMedicalProgramSP: TdsdStoredProc;
     spUpdate_User_KeyExpireDate: TdsdStoredProc;
     actUser_expireDate: TAction;
     pmUser_expireDate: TMenuItem;
@@ -640,6 +636,12 @@ type
     TrayIcon: TTrayIcon;
     TimerTrayIconPUSH: TTimer;
     MainPromoBonus: TcxGridDBColumn;
+    spAvailabilityCheckMedicalProgram: TdsdStoredProcSQLite;
+    spGoodsSPId: TdsdStoredProcSQLite;
+    GoodsSPIdCDS: TClientDataSet;
+    spGetMedicalProgramSP: TdsdStoredProcSQLite;
+    MedicalProgramSPCDS: TClientDataSet;
+    MainisElRecipe: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1858,7 +1860,8 @@ begin
   // Вычтем из резерва если ВИП чек
   UpdateRemainsFromVIPCheck(False, False);
   // Если грузили СП
-  MedicalProgramSPGoodsCDS.Close;
+  GoodsSPIdCDS.Close;
+  MedicalProgramSPCDS.Close;
   // очистить рецепт
   ClearReceipt1303
 end;
@@ -5138,21 +5141,23 @@ begin
           CheckCDS.FieldByName('Price').asCurrency,
           FormParams.ParamByName('RoundingDown').Value);
       end
-      else if (RemainsCDS.FieldByName('isSP').AsBoolean = True) and
+      else if (Self.FormParams.ParamByName('SPKindId').Value = UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger) and
         (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
         (FormParams.ParamByName('HelsiSkipDispenseSign').Value = False) then
       begin
+        LoadMedicalProgramSPGoods(RemainsCDS.FieldByName('Id').AsInteger);
+
         // на всяк случай - УСТАНОВИМ скидку еще разок
         CheckCDS.FieldByName('PriceSale').asCurrency :=
-          RemainsCDS.FieldByName('PriceSaleSP').asCurrency;
+          GoodsSPIdCDS.FieldByName('PriceSaleSP').asCurrency;
         CheckCDS.FieldByName('Price').asCurrency :=
-          RemainsCDS.FieldByName('PriceSP').asCurrency;
+          GoodsSPIdCDS.FieldByName('PriceSP').asCurrency;
         // и УСТАНОВИМ скидку
         CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
         CheckCDS.FieldByName('SummChangePercent').asCurrency :=
           CheckCDS.FieldByName('Amount').asCurrency *
-          (RemainsCDS.FieldByName('PriceSaleSP').asCurrency -
-          RemainsCDS.FieldByName('PriceSP').asCurrency);
+          (GoodsSPIdCDS.FieldByName('PriceSaleSP').asCurrency -
+          GoodsSPIdCDS.FieldByName('PriceSP').asCurrency);
       end
       else if (DiscountServiceForm.gCode <> 0) and edPrice.Visible and (abs(edPrice.Value) > 0.0001) then
       begin
@@ -6703,6 +6708,8 @@ begin
 
   CheckCDS.DisableControls;
   CheckCDS.Filtered := false;
+  RemainsCDS.DisableControls;
+  RemainsCDS.Filtered := false;
   nRecNo := CheckCDS.RecNo;
   CheckCDS.IndexFieldNames := 'GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent';
   try
@@ -6827,6 +6834,27 @@ begin
         CheckCDS.FieldByName('TypeDiscount').AsInteger := 3;
         CheckCDS.Post;
 
+      end // Если есть бонусная скидка
+      else if (RemainsCDS.FieldByName('PromoBonus').asCurrency > 0) and
+              (CheckCDS.FieldByName('PriceLoad').asCurrency = 0) then
+      begin
+        CheckCDS.Edit;
+        CheckCDS.FieldByName('Price').asCurrency :=
+          GetPrice(IfZero(CheckCDS.FieldByName('PricePartionDate').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency),
+          RemainsCDS.FieldByName('PromoBonus').asCurrency);
+        CheckCDS.FieldByName('ChangePercent').asCurrency :=
+          RemainsCDS.FieldByName('PromoBonus').asCurrency;
+        CheckCDS.FieldByName('Summ').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value) -
+          CheckCDS.FieldByName('Summ').asCurrency;
+        CheckCDS.Post;
       end else
       begin
         CheckCDS.Edit;
@@ -6845,6 +6873,8 @@ begin
   finally
     CheckCDS.IndexFieldNames := '';
     CheckCDS.RecNo := nRecNo;
+    RemainsCDS.Filtered := True;
+    RemainsCDS.EnableControls;
     CheckCDS.Filtered := True;
     CheckCDS.EnableControls;
   end;
@@ -6954,7 +6984,6 @@ var
   HelsiPartialPrescription : Boolean;
   HelsiSkipDispenseSign : Boolean;
   isPaperRecipeSP : Boolean;
-  Res : TArray<string>;
 begin
 
   if not CheckSP then
@@ -7093,7 +7122,8 @@ begin
     end;
   end;
 
-  if SPKindId = UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger then
+  if (SPKindId = UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger) and
+     (HelsiProgramId <> '') then
   begin
     spAvailabilityCheckMedicalProgram.ParamByName('inSPKindId').Value := UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger;
     spAvailabilityCheckMedicalProgram.ParamByName('inProgramId').Value := HelsiProgramId;
@@ -7107,7 +7137,7 @@ begin
       exit;
     end;
     FormParams.ParamByName('MedicalProgramSPId').Value := spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value;
-  end;
+  end else FormParams.ParamByName('MedicalProgramSPId').Value := 0;
 
   if SPKindId = 4823010 then
   begin
@@ -7179,68 +7209,39 @@ begin
         begin
           RemainsCDS.Filter :=
             '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and (';
-          RemainsCDS.Filter := RemainsCDS.Filter + 'IdSP <> '''')';
+          RemainsCDS.Filter := RemainsCDS.Filter + 'isElRecipe = True)';
         end
         else if HelsiIDList <> '' then
         begin
-          Res := TRegEx.Split(HelsiIDList, FormatSettings.ListSeparator);
+          GoodsSPIdCDS.Close;
+          spGoodsSPId.ParamByName('inIdSPList').Value := HelsiIDList;
+          spGoodsSPId.ParamByName('inProgramSPID').Value := FormParams.ParamByName('MedicalProgramSPId').Value;
+          spGoodsSPId.ParamByName('inQty').Value := FormParams.ParamByName('HelsiQty').Value;
+          spGoodsSPId.Execute;
 
-          RemainsCDS.Filter :=
-            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and (';
-          for I := 0 to High(Res) do
+          if GoodsSPIdCDS.Active or (GoodsSPIdCDS.RecordCount > 0) then
           begin
-            if I = 0 then
-              RemainsCDS.Filter := RemainsCDS.Filter + 'IdSP = ' +
-                QuotedStr(Res[I])
-            else
-              RemainsCDS.Filter := RemainsCDS.Filter + ' or IdSP = ' +
-                QuotedStr(Res[I]);
-          end;
-          RemainsCDS.Filter := RemainsCDS.Filter + ')'
+            RemainsCDS.Filter :=
+              '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and (';
+
+            GoodsSPIdCDS.First;
+            while not GoodsSPIdCDS.Eof do
+            begin
+              if GoodsSPIdCDS.RecNo = 1 then
+                RemainsCDS.Filter := RemainsCDS.Filter + 'Id = ' +
+                  GoodsSPIdCDS.FieldByName('GoodsId').AsString
+              else
+                RemainsCDS.Filter := RemainsCDS.Filter + ' or Id = ' +
+                  GoodsSPIdCDS.FieldByName('GoodsId').AsString;
+              GoodsSPIdCDS.Next;
+            end;
+            RemainsCDS.Filter := RemainsCDS.Filter + ')'
+          end else RemainsCDS.Filter :=
+            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and Id = 0';
         end else
           RemainsCDS.Filter :=
-            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and DosageIdSP = '
-            + QuotedStr(HelsiID);
+            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and Id = 0';
 
-        if isPaperRecipeSP = False then
-        begin
-
-           if not HelsiPartialPrescription then
-           begin
-             RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP <> CountSPMin and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value) +
-               ' or CountSP = CountSPMin';
-             RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP = ' +
-              CurrToStr(FormParams.ParamByName('HelsiQty').Value) + ' or CountSP = '
-              + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 2) +
-              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-              / 3) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
-              .Value / 4) + ' or CountSP = ' +
-              CurrToStr(FormParams.ParamByName('HelsiQty').Value / 5) +
-              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-              / 6) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
-              .Value / 7) + ' or CountSP = ' +
-              CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) +
-              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-              / 9) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
-              .Value / 10) + ' or CountSP = ' +
-              CurrToStr(FormParams.ParamByName('HelsiQty').Value / 11) +
-              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-              / 12) + ' or CountSP = ' +
-              CurrToStr(FormParams.ParamByName('HelsiQty').Value / 13) +
-              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-              / 14) + ' or CountSP = ' +
-              CurrToStr(FormParams.ParamByName('HelsiQty').Value / 15) +
-              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-              / 16) + ' or CountSP = ' +
-              CurrToStr(FormParams.ParamByName('HelsiQty').Value / 17) +
-              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-              / 18) + ' or CountSP = ' +
-              CurrToStr(FormParams.ParamByName('HelsiQty').Value / 19) +
-              ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-              / 20) + '))';
-           end else  RemainsCDS.Filter := RemainsCDS.Filter + ' and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value);
-
-        end;
         RemainsCDS.Filtered := True;
       except
         RemainsCDS.Filter :=
@@ -7277,7 +7278,6 @@ var
   OperDateSP: TDateTime;
   HelsiID, HelsiIDList, HelsiName, ProgramId, ProgramName: string;
   HelsiQty: Currency; PartialPrescription, HelsiSkipDispenseSign : Boolean;
-  Res: TArray<string>;
   I, UserId, UserKeyId: Integer;
   Key_expireDate : TDateTime;
 begin
@@ -7460,60 +7460,36 @@ begin
       try
         if HelsiIDList <> '' then
         begin
-          Res := TRegEx.Split(HelsiIDList, FormatSettings.ListSeparator);
-          RemainsCDS.Filter :=
-            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and (';
-          for I := 0 to High(Res) do
+
+          GoodsSPIdCDS.Close;
+          spGoodsSPId.ParamByName('inIdSPList').Value := HelsiIDList;
+          spGoodsSPId.ParamByName('inProgramSPID').Value := FormParams.ParamByName('MedicalProgramSPId').Value;
+          spGoodsSPId.ParamByName('inQty').Value := FormParams.ParamByName('HelsiQty').Value;
+          spGoodsSPId.Execute;
+
+          if GoodsSPIdCDS.Active or (GoodsSPIdCDS.RecordCount > 0) then
           begin
-            if I = 0 then
-              RemainsCDS.Filter := RemainsCDS.Filter + 'IdSP = ' +
-                QuotedStr(Res[I])
-            else
-              RemainsCDS.Filter := RemainsCDS.Filter + ' or IdSP = ' +
-                QuotedStr(Res[I]);
-          end;
-          RemainsCDS.Filter := RemainsCDS.Filter + ')'
+            RemainsCDS.Filter :=
+              '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and (';
+
+            GoodsSPIdCDS.First;
+            while not GoodsSPIdCDS.Eof do
+            begin
+              if GoodsSPIdCDS.RecNo = 1 then
+                RemainsCDS.Filter := RemainsCDS.Filter + 'Id = ' +
+                  GoodsSPIdCDS.FieldByName('GoodsId').AsString
+              else
+                RemainsCDS.Filter := RemainsCDS.Filter + ' or Id = ' +
+                  GoodsSPIdCDS.FieldByName('GoodsId').AsString;
+              GoodsSPIdCDS.Next;
+            end;
+            RemainsCDS.Filter := RemainsCDS.Filter + ')'
+          end else RemainsCDS.Filter :=
+            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and Id = 0';
         end
         else
           RemainsCDS.Filter :=
-            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and DosageIdSP = '
-            + QuotedStr(HelsiID);
-
-        if not PartialPrescription then
-        begin
-
-          RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP <> CountSPMin and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value) +
-             ' or CountSP = CountSPMin';
-          RemainsCDS.Filter := RemainsCDS.Filter + ' and (CountSP = ' +
-                    CurrToStr(FormParams.ParamByName('HelsiQty').Value) + ' or CountSP = '
-                    + CurrToStr(FormParams.ParamByName('HelsiQty').Value / 2) +
-                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-                    / 3) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
-                    .Value / 4) + ' or CountSP = ' +
-                    CurrToStr(FormParams.ParamByName('HelsiQty').Value / 5) +
-                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-                    / 6) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
-                    .Value / 7) + ' or CountSP = ' +
-                    CurrToStr(FormParams.ParamByName('HelsiQty').Value / 8) +
-                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-                    / 9) + ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty')
-                    .Value / 10) + ' or CountSP = ' +
-                    CurrToStr(FormParams.ParamByName('HelsiQty').Value / 11) +
-                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-                    / 12) + ' or CountSP = ' +
-                    CurrToStr(FormParams.ParamByName('HelsiQty').Value / 13) +
-                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-                    / 14) + ' or CountSP = ' +
-                    CurrToStr(FormParams.ParamByName('HelsiQty').Value / 15) +
-                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-                    / 16) + ' or CountSP = ' +
-                    CurrToStr(FormParams.ParamByName('HelsiQty').Value / 17) +
-                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-                    / 18) + ' or CountSP = ' +
-                    CurrToStr(FormParams.ParamByName('HelsiQty').Value / 19) +
-                    ' or CountSP = ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value
-                    / 20) + '))';
-        end else RemainsCDS.Filter := RemainsCDS.Filter + ' and CountSPMin <= ' + CurrToStr(FormParams.ParamByName('HelsiQty').Value);
+            '(Remains <> 0 or Reserved <> 0 or DeferredSend <> 0 or DeferredTR <> 0) and Id = 0';
 
         RemainsCDS.Filtered := True;
       except
@@ -9467,9 +9443,9 @@ begin
       if (Self.FormParams.ParamByName('SPKindId').Value <> 4823010) and
         (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
         (Self.FormParams.ParamByName('SPTax').Value = 0) and
-        (SourceClientDataSet.FieldByName('isSP').AsBoolean = false) then
+        (SourceClientDataSet.FieldByName('isElRecipe').AsBoolean = false) then
       begin
-        ShowMessage('Ошибка.Выбранный код товара не участвует в Соц.проекте!');
+        ShowMessage('Ошибка.Выбранный код товара не участвует в выписке элетронных рецептов!');
         exit;
       end;
 
@@ -9568,6 +9544,14 @@ begin
       lGoodsId_bySoldRegim := SourceClientDataSet.FieldByName('Id').AsInteger;
       lTypeDiscount := 0;
 
+      if (Self.FormParams.ParamByName('SPKindId').Value = UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger) and
+        (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
+        (FormParams.ParamByName('isPaperRecipeSP').Value = True) and
+        (FormParams.ParamByName('MedicalProgramSPId').Value = 0) then
+      begin
+        LoadMedicalProgramSPGoods(SourceClientDataSet.FieldByName('Id').AsInteger);
+      end;
+
       if AisGoodsPresent = True then
       begin
         // цена БЕЗ скидки
@@ -9596,26 +9580,16 @@ begin
         lPrice := SourceClientDataSet.FieldByName('Price').asCurrency *
           (1 - Self.FormParams.ParamByName('SPTax').Value / 100);
       end
-      else if (SourceClientDataSet.FieldByName('isSP').AsBoolean = True) and
+      else if (Self.FormParams.ParamByName('SPKindId').Value = UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger) and
         (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
         (FormParams.ParamByName('HelsiSkipDispenseSign').Value = False) then
       begin
-        if (FormParams.ParamByName('MedicalProgramSPId').Value = SourceClientDataSet.FieldByName('MedicalProgramSPId').AsInteger) then
-        begin
-          // цена БЕЗ скидки
-          lPriceSale := SourceClientDataSet.FieldByName('PriceSaleSP').asCurrency;
-          // цена СО скидкой
-          lPrice := SourceClientDataSet.FieldByName('PriceSP').asCurrency;
-        end else
-        begin
+        LoadMedicalProgramSPGoods(SourceClientDataSet.FieldByName('Id').AsInteger);
 
-          LoadMedicalProgramSPGoods(SourceClientDataSet.FieldByName('Id').AsInteger);
-
-          // цена БЕЗ скидки
-          lPriceSale := MedicalProgramSPGoodsCDS.FieldByName('PriceSaleSP').asCurrency;
-          // цена СО скидкой
-          lPrice := MedicalProgramSPGoodsCDS.FieldByName('PriceSP').asCurrency;
-        end;
+        // цена БЕЗ скидки
+        lPriceSale :=   GoodsSPIdCDS.FieldByName('PriceSaleSP').asCurrency;
+        // цена СО скидкой
+        lPrice := GoodsSPIdCDS.FieldByName('PriceSP').asCurrency;
       end
       else if (DiscountServiceForm.gCode <> 0) and edPrice.Visible and (abs(edPrice.Value) > 0.0001) then
       begin
@@ -9920,6 +9894,18 @@ begin
               end;
           end;
         end
+        else if Assigned(SourceClientDataSet.FindField('PromoBonus')) and
+          (SourceClientDataSet.FieldByName('PromoBonus').asCurrency > 0) and
+          (CheckCDS.FieldByName('PriceLoad').asCurrency = 0) then
+        begin
+          // цена БЕЗ скидки
+          lPriceSale := SourceClientDataSet.FieldByName('Price').asCurrency;
+          // цена СО скидкой
+          lPrice := GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency,
+            SourceClientDataSet.FieldByName('PromoBonus').asCurrency);
+          // Процент скидки
+          lChangePercent := SourceClientDataSet.FieldByName('PromoBonus').asCurrency;
+        end
         else if SourceClientDataSet.FieldByName('PricePartionDate').asCurrency <> 0 then
         begin
           CalcPriceSale(lPriceSale, lPrice, lChangePercent,
@@ -10166,43 +10152,16 @@ begin
           // ***25.04.19
           CheckCDS.FieldByName('IdSP').AsString := SourceClientDataSet.FieldByName('IdSP').AsString;
 
-          if (SourceClientDataSet.FieldByName('isSP').AsBoolean = True) and
-           (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
-           (FormParams.ParamByName('MedicalProgramSPId').Value <> 0)  then
+          if (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
+             (FormParams.ParamByName('MedicalProgramSPId').Value <> 0)  then
           begin
 
-            if FormParams.ParamByName('MedicalProgramSPId').Value = SourceClientDataSet.FieldByName('MedicalProgramSPId').AsInteger  then
-            begin
-              CheckCDS.FieldByName('ProgramIdSP').AsString := SourceClientDataSet.FieldByName('ProgramIdSP').AsString;
-              CheckCDS.FieldByName('CountSP').asCurrency :=
-                SourceClientDataSet.FieldByName('CountSP').asCurrency;
-              CheckCDS.FieldByName('PriceRetSP').asCurrency :=
-                SourceClientDataSet.FieldByName('PriceRetSP').asCurrency;
-              CheckCDS.FieldByName('PaymentSP').asCurrency :=
-                SourceClientDataSet.FieldByName('PaymentSP').asCurrency;
-            end else
-            begin
+            LoadMedicalProgramSPGoods(SourceClientDataSet.FieldByName('Id').AsInteger);
 
-              LoadMedicalProgramSPGoods(SourceClientDataSet.FieldByName('Id').AsInteger);
-
-              CheckCDS.FieldByName('ProgramIdSP').AsString := MedicalProgramSPGoodsCDS.FieldByName('ProgramIdSP').AsString;
-              CheckCDS.FieldByName('CountSP').asCurrency :=
-                MedicalProgramSPGoodsCDS.FieldByName('CountSP').asCurrency;
-              CheckCDS.FieldByName('PriceRetSP').asCurrency :=
-                MedicalProgramSPGoodsCDS.FieldByName('PriceRetSP').asCurrency;
-              CheckCDS.FieldByName('PaymentSP').asCurrency :=
-                MedicalProgramSPGoodsCDS.FieldByName('PaymentSP').asCurrency;
-            end;
-
-          end else
-          begin
-            CheckCDS.FieldByName('ProgramIdSP').AsString := SourceClientDataSet.FieldByName('ProgramIdSP').AsString;
-            CheckCDS.FieldByName('CountSP').asCurrency :=
-              SourceClientDataSet.FieldByName('CountSP').asCurrency;
-            CheckCDS.FieldByName('PriceRetSP').asCurrency :=
-              SourceClientDataSet.FieldByName('PriceRetSP').asCurrency;
-            CheckCDS.FieldByName('PaymentSP').asCurrency :=
-              SourceClientDataSet.FieldByName('PaymentSP').asCurrency;
+            CheckCDS.FieldByName('ProgramIdSP').AsString := GoodsSPIdCDS.FieldByName('ProgramIdSP').AsString;
+            CheckCDS.FieldByName('CountSP').asCurrency := GoodsSPIdCDS.FieldByName('CountSP').asCurrency;
+            CheckCDS.FieldByName('PriceRetSP').asCurrency := GoodsSPIdCDS.FieldByName('PriceRetSP').asCurrency;
+            CheckCDS.FieldByName('PaymentSP').asCurrency := GoodsSPIdCDS.FieldByName('PaymentSP').asCurrency;
           end;
 
           CheckCDS.FieldByName('PartionDateKindId').AsVariant :=
@@ -11448,7 +11407,8 @@ begin
   // Отмена фильтров
   ClearFilterAll;
   // Если грузили СП
-  MedicalProgramSPGoodsCDS.Close;
+  GoodsSPIdCDS.Close;
+  MedicalProgramSPCDS.Close;
   // очистить рецепт
   ClearReceipt1303
 end;
@@ -12173,6 +12133,14 @@ begin
     CheckCDS.First;
     while not CheckCDS.Eof do
     begin
+
+      RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
+          VarArrayOf([CheckCDS.FieldByName('GoodsId').AsInteger,
+          CheckCDS.FieldByName('PartionDateKindId').AsVariant,
+          CheckCDS.FieldByName('NDSKindId').AsVariant,
+          CheckCDS.FieldByName('DiscountExternalID').AsVariant,
+          CheckCDS.FieldByName('DivisionPartiesID').AsVariant]), []);
+
       if ((AGoodsId = 0) or (CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId)
         and (CheckCDS.FieldByName('PartionDateKindId').AsInteger = APartionDateKindId)
         and (CheckCDS.FieldByName('NDSKindId').AsInteger = ANDSKindId)
@@ -12256,40 +12224,24 @@ begin
             CheckCDS.FieldByName('Price').asCurrency,
             FormParams.ParamByName('RoundingDown').Value);
         end
-        else if (RemainsCDS.FieldByName('isSP').AsBoolean = True) and
+        else if (Self.FormParams.ParamByName('SPKindId').Value = UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger) and
           (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
           (FormParams.ParamByName('HelsiSkipDispenseSign').Value = False) then
         begin
 
-          if FormParams.ParamByName('MedicalProgramSPId').Value = RemainsCDS.FieldByName('MedicalProgramSPId').AsInteger  then
-          begin
-            // на всяк случай - УСТАНОВИМ скидку еще разок
-            CheckCDS.FieldByName('PriceSale').asCurrency :=
-              RemainsCDS.FieldByName('PriceSaleSP').asCurrency;
-            CheckCDS.FieldByName('Price').asCurrency :=
-              RemainsCDS.FieldByName('PriceSP').asCurrency;
-            // и УСТАНОВИМ скидку
-            CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
-            CheckCDS.FieldByName('SummChangePercent').asCurrency :=
-              CheckCDS.FieldByName('Amount').asCurrency *
-              (RemainsCDS.FieldByName('PriceSaleSP').asCurrency -
-              RemainsCDS.FieldByName('PriceSP').asCurrency);
-          end else
-          begin
-            LoadMedicalProgramSPGoods(RemainsCDS.FieldByName('Id').AsInteger);
+          LoadMedicalProgramSPGoods(RemainsCDS.FieldByName('Id').AsInteger);
 
-            // на всяк случай - УСТАНОВИМ скидку еще разок
-            CheckCDS.FieldByName('PriceSale').asCurrency :=
-              MedicalProgramSPGoodsCDS.FieldByName('PriceSaleSP').asCurrency;
-            CheckCDS.FieldByName('Price').asCurrency :=
-              MedicalProgramSPGoodsCDS.FieldByName('PriceSP').asCurrency;
-            // и УСТАНОВИМ скидку
-            CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
-            CheckCDS.FieldByName('SummChangePercent').asCurrency :=
-              CheckCDS.FieldByName('Amount').asCurrency *
-              (MedicalProgramSPGoodsCDS.FieldByName('PriceSaleSP').asCurrency -
-              MedicalProgramSPGoodsCDS.FieldByName('PriceSP').asCurrency);
-          end;
+          // на всяк случай - УСТАНОВИМ скидку еще разок
+          CheckCDS.FieldByName('PriceSale').asCurrency :=
+            GoodsSPIdCDS.FieldByName('PriceSaleSP').asCurrency;
+          CheckCDS.FieldByName('Price').asCurrency :=
+            GoodsSPIdCDS.FieldByName('PriceSP').asCurrency;
+          // и УСТАНОВИМ скидку
+          CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
+          CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+            CheckCDS.FieldByName('Amount').asCurrency *
+            (GoodsSPIdCDS.FieldByName('PriceSaleSP').asCurrency -
+            GoodsSPIdCDS.FieldByName('PriceSP').asCurrency);
         end
         else if (DiscountServiceForm.gCode <> 0) and edPrice.Visible and (abs(edPrice.Value) > 0.0001) then
         begin
@@ -12424,8 +12376,25 @@ begin
             GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
             CheckCDS.FieldByName('Price').asCurrency,
             FormParams.ParamByName('RoundingDown').Value);
-        end
-        else if CheckCDS.FieldByName('AmountOrder').asCurrency = 0 then     // Если это не заказ с сайта
+        end else if (RemainsCDS.FieldByName('PromoBonus').asCurrency > 0) and
+                    (CheckCDS.FieldByName('PriceLoad').asCurrency = 0) then
+        begin
+          CheckCDS.FieldByName('Price').asCurrency :=
+            GetPrice(IfZero(CheckCDS.FieldByName('PricePartionDate').asCurrency,
+            CheckCDS.FieldByName('PriceSale').asCurrency),
+            RemainsCDS.FieldByName('PromoBonus').asCurrency);
+          CheckCDS.FieldByName('ChangePercent').asCurrency :=
+            RemainsCDS.FieldByName('PromoBonus').asCurrency;
+          CheckCDS.FieldByName('Summ').asCurrency :=
+            GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+            CheckCDS.FieldByName('Price').asCurrency,
+            FormParams.ParamByName('RoundingDown').Value);
+          CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+            GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+            CheckCDS.FieldByName('PriceSale').asCurrency,
+            FormParams.ParamByName('RoundingDown').Value) -
+            CheckCDS.FieldByName('Summ').asCurrency;
+        end else if CheckCDS.FieldByName('AmountOrder').asCurrency = 0 then     // Если это не заказ с сайта
         begin
           // на всяк случай условие - восстановим если Цена БЕЗ скидки была запонена
           // пересчитаем сумму скидки
@@ -15728,42 +15697,42 @@ begin
   if (FormParams.ParamByName('isPaperRecipeSP').Value = True) and
      (FormParams.ParamByName('MedicalProgramSPId').Value = 0) then
   begin
-    MedicalProgramSPGoodsCDS.Close;
-    spGetMedicalProgramSP.ParamByName('inSPKindId').Value := FormParams.ParamByName('SPKindId').Value;
+    MedicalProgramSPCDS.Close;
     spGetMedicalProgramSP.ParamByName('inGoodsId').Value := AGoodsId;
-    spGetMedicalProgramSP.ParamByName('inCashSessionId').Value := iniLocalGUIDGet;
     spGetMedicalProgramSP.Execute;
 
-    if MedicalProgramSPGoodsCDS.IsEmpty then
+    if MedicalProgramSPCDS.IsEmpty then
     begin
       raise Exception.Create('Ошибка получения медицинской программы медикамента. Возможно к вашей аптеке она не подключена.');
-    end else if MedicalProgramSPGoodsCDS.RecordCount = 1 then
+    end else if MedicalProgramSPCDS.RecordCount = 1 then
     begin
-      FormParams.ParamByName('MedicalProgramSPId').Value := MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPId').AsInteger;
-      lblMemberSP.Text := MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPName').AsString;
+      FormParams.ParamByName('MedicalProgramSPId').Value := MedicalProgramSPCDS.FieldByName('MedicalProgramSPId').AsInteger;
+      lblMemberSP.Text := MedicalProgramSPCDS.FieldByName('MedicalProgramSPName').AsString;
     end else
     begin
       if ChoiceMedicalProgramSPExecute then
       begin
-        FormParams.ParamByName('MedicalProgramSPId').Value := MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPId').AsInteger;
-        lblMemberSP.Text := MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPName').AsString;
+        FormParams.ParamByName('MedicalProgramSPId').Value := MedicalProgramSPCDS.FieldByName('MedicalProgramSPId').AsInteger;
+        lblMemberSP.Text := MedicalProgramSPCDS.FieldByName('MedicalProgramSPName').AsString;
       end else raise Exception.Create('Ошибка не выбрана медицинская программа.');
     end;
-    MedicalProgramSPGoodsCDS.Close;
+    FormParams.ParamByName('HelsiSkipDispenseSign').Value := MedicalProgramSPCDS.FieldByName('PriceRetSP').AsCurrency = 0;
+    MedicalProgramSPCDS.Close;
   end;
 
-  if not MedicalProgramSPGoodsCDS.Active or
-    (MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPID').AsInteger <> FormParams.ParamByName('MedicalProgramSPId').Value) then
+  if not GoodsSPIdCDS.Active or
+    (GoodsSPIdCDS.FieldByName('MedicalProgramSPID').AsInteger <> FormParams.ParamByName('MedicalProgramSPId').Value) then
   begin
-    MedicalProgramSPGoodsCDS.Close;
-    spMedicalProgramSP_Goods.ParamByName('inSPKindId').Value := FormParams.ParamByName('SPKindId').Value;
-    spMedicalProgramSP_Goods.ParamByName('inMedicalProgramSPId').Value := FormParams.ParamByName('MedicalProgramSPId').Value;
-    spMedicalProgramSP_Goods.ParamByName('inCashSessionId').Value := iniLocalGUIDGet;
-    spMedicalProgramSP_Goods.Execute;
+    GoodsSPIdCDS.Close;
+    spGoodsSPId.ParamByName('inIdSPList').Value := '';
+    spGoodsSPId.ParamByName('inProgramSPID').Value := FormParams.ParamByName('MedicalProgramSPId').Value;
+    spGoodsSPId.ParamByName('inQty').Value := 0;
+    spGoodsSPId.Execute;
   end;
 
-  if not MedicalProgramSPGoodsCDS.Active or not MedicalProgramSPGoodsCDS.Locate('GoodsId', AGoodsId, []) or
-    (MedicalProgramSPGoodsCDS.FieldByName('MedicalProgramSPID').AsInteger <> FormParams.ParamByName('MedicalProgramSPId').Value) then
+  if not GoodsSPIdCDS.Active or not GoodsSPIdCDS.Locate('GoodsId', AGoodsId, []) or
+    (GoodsSPIdCDS.FieldByName('MedicalProgramSPID').AsInteger <> FormParams.ParamByName('MedicalProgramSPId').Value) or
+    (GoodsSPIdCDS.FieldByName('GoodsId').AsInteger <> AGoodsId) then
     raise Exception.Create('Ошибка получения данных по программе для медикамента. Покажите это окно системному администратору');
 
 end;

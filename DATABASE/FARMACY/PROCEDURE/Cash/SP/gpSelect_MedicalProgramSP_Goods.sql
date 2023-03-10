@@ -13,9 +13,11 @@ RETURNS TABLE (GoodsId Integer
              , MedicalProgramSPID Integer
              , PercentPayment TFloat 
              , IntenalSPId Integer
+
              , PriceRetSP TFloat
              , PriceSP TFloat
              , PaymentSP TFloat
+             
              , CountSP TFloat
              , CountSPMin TFloat
              , IdSP TVarChar
@@ -251,4 +253,4 @@ ALTER FUNCTION gpSelect_MedicalProgramSP_Goods (Integer, Integer, TVarChar, TVar
 
 -- 
 
-select * from gpSelect_MedicalProgramSP_Goods(inSPKindId := 4823009 , inMedicalProgramSPId := 18078175  , inCashSessionId := '{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}' ,  inSession := '3');
+select * from gpSelect_MedicalProgramSP_Goods(inSPKindId := 4823009 , inMedicalProgramSPId := 18078224 , inCashSessionId := '{B71CE2FC-A542-4586-BF14-D2EFEA1FCBD8}' ,  inSession := '3');

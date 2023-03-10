@@ -1,20 +1,21 @@
 inherited ChoiceMedicalProgramSPForm: TChoiceMedicalProgramSPForm
   BorderIcons = [biSystemMenu]
-  Caption = #1042#1099#1073#1086#1088' POS '#1090#1077#1088#1084#1080#1085#1072#1083#1072
+  Caption = #1042#1099#1073#1086#1088' '#1084#1077#1076#1080#1094#1080#1085#1089#1082#1086#1081' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
   ClientHeight = 222
-  ClientWidth = 360
+  ClientWidth = 535
   Position = poScreenCenter
-  ExplicitWidth = 376
+  ExplicitWidth = 551
   ExplicitHeight = 261
   PixelsPerInch = 96
   TextHeight = 13
   object BankPOSTerminalGrid: TcxGrid [0]
     Left = 0
     Top = 0
-    Width = 360
+    Width = 535
     Height = 181
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 360
     object BankPOSTerminalGridDBTableView: TcxGridDBTableView
       OnDblClick = BankPOSTerminalGridDBTableViewDblClick
       Navigator.Buttons.CustomButtons = <>
@@ -26,6 +27,7 @@ inherited ChoiceMedicalProgramSPForm: TChoiceMedicalProgramSPForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.GridLineColor = clBtnFace
       OptionsView.GroupByBox = False
       OptionsView.Indicator = True
@@ -41,7 +43,7 @@ inherited ChoiceMedicalProgramSPForm: TChoiceMedicalProgramSPForm
         DataBinding.FieldName = 'MedicalProgramSPName'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 250
+        Width = 443
       end
     end
     object BankPOSTerminalGridLevel: TcxGridLevel
@@ -52,12 +54,13 @@ inherited ChoiceMedicalProgramSPForm: TChoiceMedicalProgramSPForm
   object Panel1: TPanel [1]
     Left = 0
     Top = 181
-    Width = 360
+    Width = 535
     Height = 41
     Align = alBottom
     TabOrder = 1
+    ExplicitWidth = 360
     object bbCancel: TcxButton
-      Left = 221
+      Left = 341
       Top = 6
       Width = 75
       Height = 25
@@ -67,7 +70,7 @@ inherited ChoiceMedicalProgramSPForm: TChoiceMedicalProgramSPForm
       TabOrder = 0
     end
     object bbOk: TcxButton
-      Left = 63
+      Left = 119
       Top = 6
       Width = 75
       Height = 25

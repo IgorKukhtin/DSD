@@ -212,6 +212,13 @@ BEGIN
                              , tmpGoods.NumberPlates
                              , tmpGoods.QtyPackage
                              , tmpGoods.Multiplicity
+                             
+                             , ROW_NUMBER() OVER (ORDER BY CASE WHEN COALESCE (tmpContainerRemains.Remains, 0) = 0 THEN 1 ELSE 0 END 
+                                                         , CASE WHEN inSortType = 0 THEN Price_Site.Price END
+                                                         , CASE WHEN inSortType = 1 THEN Price_Site.Price END DESC
+                                                         , CASE WHEN inSortType = 2 THEN CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END END
+                                                         , CASE WHEN inSortType = 3 THEN CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END END DESC
+                                                         , Price_Site.Name DESC) AS Ord
                               
                         FROM tmpPrice_Site AS tmpGoods 
                         
@@ -663,7 +670,9 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_FormDispensing_NameUkr
                                     ON ObjectString_FormDispensing_NameUkr.ObjectId = Object_FormDispensing.Id
                                    AND ObjectString_FormDispensing_NameUkr.DescId = zc_ObjectString_FormDispensing_NameUkr()  
-                                    
+                                   
+        ORDER BY Price_Site.Ord
+                                   
        ;       
 
 END;
@@ -688,4 +697,4 @@ $BODY$
             from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Бустрикс вак', true, zfCalc_UserSite())*/
             
             
-select * from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Гептрал', True, zfCalc_UserSite())
+select * from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 16, 8, 0, 'Корвал', True, zfCalc_UserSite())

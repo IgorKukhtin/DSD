@@ -9,6 +9,12 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsAllSP_Cash(
 RETURNS TABLE (Id            Integer
              , GoodsId       Integer
              
+             , MedicalProgramSPID  Integer
+             , MedicalProgramSPCode Integer
+             , MedicalProgramSPName TVarChar
+             , isParticipates      Boolean
+             , PercentPayment      TFloat
+             
              , MedicalProgramIdSP  TVarChar   
              , IdSP                TVarChar
              , ProgramIdSP         TVarChar
@@ -49,9 +55,22 @@ BEGIN
     
     RETURN QUERY
     WITH -- Товары соц-проект
+           tmpMedicalProgramSPUnit AS (SELECT ObjectLink_MedicalProgramSP.ChildObjectId         AS MedicalProgramSPId
+                                       FROM Object AS Object_MedicalProgramSPLink
+                                            INNER JOIN ObjectLink AS ObjectLink_MedicalProgramSP
+                                                                  ON ObjectLink_MedicalProgramSP.ObjectId = Object_MedicalProgramSPLink.Id
+                                                                 AND ObjectLink_MedicalProgramSP.DescId = zc_ObjectLink_MedicalProgramSPLink_MedicalProgramSP()
+                                            INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                                  ON ObjectLink_Unit.ObjectId = Object_MedicalProgramSPLink.Id
+                                                                 AND ObjectLink_Unit.DescId = zc_ObjectLink_MedicalProgramSPLink_Unit()
+                                        WHERE Object_MedicalProgramSPLink.DescId = zc_Object_MedicalProgramSPLink()
+                                          AND Object_MedicalProgramSPLink.isErased = False
+                                          AND ObjectLink_Unit.ChildObjectId = vbUnitId),
+           
            tmpMovement AS (SELECT Movement.Id
                                 , Movement.OperDate
-                                , MLO_MedicalProgramSP.ObjectId    AS MedicalProgramSPID
+                                , MLO_MedicalProgramSP.ObjectId                                AS MedicalProgramSPID
+                                , COALESCE(MovementFloat_PercentPayment.ValueData, 0)::TFloat  AS PercentPayment
                            FROM Movement
 
                                 INNER JOIN MovementDate AS MovementDate_OperDateStart
@@ -68,11 +87,18 @@ BEGIN
                                                              ON MLO_MedicalProgramSP.MovementId = Movement.Id
                                                             AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
 
+                               LEFT JOIN MovementFloat AS MovementFloat_PercentPayment
+                                                       ON MovementFloat_PercentPayment.MovementId = Movement.Id
+                                                      AND MovementFloat_PercentPayment.DescId = zc_MovementFloat_PercentPayment()
+                                                      
                            WHERE Movement.DescId = zc_Movement_GoodsSP()
                              AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                           ),
            tmpMovementItem AS (SELECT MovementItem.Id
                                     , Object_Goods_Retail.Id                                     AS GoodsId
+                                    
+                                    , Movement.MedicalProgramSPID
+                                    , Movement.PercentPayment
 
                                     , COALESCE (ObjectString_ProgramId.ValueData, '')::TVarChar  AS MedicalProgramIdSP
                                     , COALESCE (MIString_IdSP.ValueData, '')::TVarChar           AS IdSP
@@ -105,6 +131,12 @@ BEGIN
 
         SELECT MovementItem.Id                                       AS Id
              , MovementItem.GoodsId                                  AS GoodsId
+             
+             , MovementItem.MedicalProgramSPID                       AS MedicalProgramSPID
+             , Object_MedicalProgramSP.ObjectCode                    AS MedicalProgramSPCode
+             , Object_MedicalProgramSP.ValueData                     AS MedicalProgramSPName
+             , COALESCE (tmpMedicalProgramSPUnit.MedicalProgramSPId, 0) <> 0 AS isParticipates 
+             , MovementItem.PercentPayment                           AS PercentPayment
              
              , MovementItem.MedicalProgramIdSP                       AS MedicalProgramIdSP
              , MovementItem.IdSP                                     AS IdSP
@@ -149,6 +181,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_PaymentSP
                                         ON MIFloat_PaymentSP.MovementItemId = MovementItem.Id
                                        AND MIFloat_PaymentSP.DescId = zc_MIFloat_PaymentSP()
+                                       
+            LEFT JOIN tmpMedicalProgramSPUnit ON tmpMedicalProgramSPUnit.MedicalProgramSPId = MovementItem.MedicalProgramSPID 
+            
+            LEFT JOIN Object AS Object_MedicalProgramSP ON Object_MedicalProgramSP.Id = MovementItem.MedicalProgramSPID
 
          WHERE MovementItem.Ord = 1
          ;
