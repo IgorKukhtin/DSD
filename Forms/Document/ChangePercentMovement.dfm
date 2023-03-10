@@ -250,7 +250,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
       Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 329
+      Left = 327
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
@@ -268,12 +268,12 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
       TabOrder = 13
-      Width = 144
+      Width = 75
     end
     object cxLabel8: TcxLabel
       Left = 699
       Top = 45
-      Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+      Caption = '% '#1057#1082#1080#1076#1082#1080
     end
     object cxLabel10: TcxLabel
       Left = 403
@@ -308,12 +308,12 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
       Width = 200
     end
     object cxLabel13: TcxLabel
-      Left = 851
+      Left = 784
       Top = 45
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 851
+      Left = 784
       Top = 63
       Properties.Buttons = <
         item
@@ -321,7 +321,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
           Kind = bkEllipsis
         end>
       TabOrder = 20
-      Width = 93
+      Width = 160
     end
     object edIsChecked: TcxCheckBox
       Left = 9
@@ -2517,8 +2517,8 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 864
-    Top = 48
+    Left = 872
+    Top = 56
   end
   object spCorrective: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'

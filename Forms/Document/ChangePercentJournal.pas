@@ -53,7 +53,6 @@ type
     Checked: TcxGridDBColumn;
     actChecked: TdsdExecStoredProc;
     bbspChecked: TdxBarButton;
-    InvNumberMark: TcxGridDBColumn;
     actPrint_by_Tax: TdsdPrintAction;
     bbPrint_Return_By_TaxCorrective: TdxBarButton;
     spGetReportNameTaxCorrective: TdsdStoredProc;
@@ -62,8 +61,7 @@ type
     actPrint_TaxCorrective_Client: TdsdPrintAction;
     mactPrint_TaxCorrective_Client: TMultiAction;
     mactPrint_TaxCorrective_Us: TMultiAction;
-    ContractFromCode: TcxGridDBColumn;
-    ContractToCode: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     actInsertMaskMulti: TMultiAction;
     ExecuteDialog: TExecuteDialog;
