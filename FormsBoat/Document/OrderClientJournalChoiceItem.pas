@@ -105,6 +105,8 @@ type
     Comment_goods: TcxGridDBColumn;
     ReceiptGoodsName: TcxGridDBColumn;
     ReceiptGoodsCode: TcxGridDBColumn;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    StateColor: TcxGridDBColumn;
   private
   public
   end;

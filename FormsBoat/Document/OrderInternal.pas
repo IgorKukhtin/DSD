@@ -254,6 +254,10 @@ type
     BarSubItemChildSep2: TdxBarSeparator;
     actUpdateChildDS: TdsdUpdateDataSet;
     spInsertUpdateMIChild: TdsdStoredProc;
+    Ord: TcxGridDBColumn;
+    actCompleteMovement: TChangeGuidesStatus;
+    actUnCompleteMovement: TChangeGuidesStatus;
+    actDeleteMovement: TChangeGuidesStatus;
 
   private
   public
