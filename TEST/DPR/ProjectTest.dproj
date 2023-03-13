@@ -4949,6 +4949,10 @@
 				<Form>ChangePercentMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_PersonalService_Recalc.pas">
+				<Form>Report_PersonalService_RecalcForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

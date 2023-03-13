@@ -4066,6 +4066,91 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1069#1082#1089#1087#1086#1088#1090' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1085#1072' '#1082#1072#1088#1090#1086#1095#1082#1091' '#1076#1083#1103' "'#1056#1072#1081#1092#1092#1072#1081#1079#1077#1085'"'
       ImageIndex = 61
     end
+    object actOpenReportRecalcForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1085#1080#1103#1084' ('#1076#1083#1103' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055')>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1086' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1085#1080#1103#1084' ('#1076#1083#1103' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055')>'
+      ImageIndex = 24
+      FormName = 'TReport_PersonalService_RecalcForm'
+      FormNameParam.Value = 'TReport_PersonalService_RecalcForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inPersonalServiceListId'
+          Value = ''
+          Component = GuidesPersonalServiceList
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalServiceListName'
+          Value = ''
+          Component = GuidesPersonalServiceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inServiceDate'
+          Value = 42181d
+          Component = edServiceDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'fff'
+          Value = 42181d
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'fff'
+          Value = ''
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'fff'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -4212,6 +4297,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           Visible = True
           ItemName = 'bbInsertUpdateMISignNo'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportRecalcForm'
         end
         item
           Visible = True
@@ -4467,6 +4560,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Visible = True
           ItemName = 'bbExportCSV'
         end>
+    end
+    object bbOpenReportRecalcForm: TdxBarButton
+      Action = actOpenReportRecalcForm
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
