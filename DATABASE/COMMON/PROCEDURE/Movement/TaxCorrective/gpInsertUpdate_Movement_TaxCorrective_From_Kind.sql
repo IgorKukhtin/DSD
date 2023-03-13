@@ -1098,7 +1098,7 @@ BEGIN
      FROM Object AS Object_TaxKind
      WHERE Object_TaxKind.Id = inDocumentTaxKindId;
 
-if vbUserId = 5 AND 1=1
+if (vbUserId = 5 OR vbUserId = 9457) AND 1=1
 then
     RAISE EXCEPTION 'Admin - Errr _end - <%>  <%>'
                   , (SELECT COUNT(*) FROM _tmpResult)
