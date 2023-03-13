@@ -771,11 +771,16 @@ else*/
                    AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Нар. АССОРТИ 300 г/шт
                                                       )
                 ;
-                 -- СОХРАНИЛИ
-                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountResult)
-                 FROM _tmpMI_Child
-                 WHERE _tmpMI_Child.AmountResult <> 0
+                 -- сохранили протокол
+                 PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
+                 FROM (-- СОХРАНИЛИ
+                       SELECT _tmpMI_Child.MovementItemId
+                            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack(),_tmpMI_Child.MovementItemId, _tmpMI_Child.AmountResult)
+                       FROM _tmpMI_Child
+                       WHERE _tmpMI_Child.AmountResult <> 0
+                      ) AS tmp
                 ;
+
              ELSE
                  -- ОБНУЛИЛИ
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack_calc(), MovementItem.Id, 0)
@@ -785,11 +790,16 @@ else*/
                    AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Нар. АССОРТИ 300 г/шт
                                                       )
                 ;
-                 -- СОХРАНИЛИ
-                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountResult)
-                 FROM _tmpMI_Child
-                 WHERE _tmpMI_Child.AmountResult <> 0
+                 -- сохранили протокол
+                 PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
+                 FROM (-- СОХРАНИЛИ
+                       SELECT _tmpMI_Child.MovementItemId
+                            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountResult)
+                       FROM _tmpMI_Child
+                       WHERE _tmpMI_Child.AmountResult <> 0
+                      ) AS tmp
                 ;
+
              END IF;
 
 
@@ -844,6 +854,7 @@ else*/
                                                                       AND _tmpMI_Child.GoodsKindId_complete = _tmpMI_master.GoodsKindId
                                                LEFT JOIN tmpMI_summ  ON tmpMI_summ.GoodsId_master     = _tmpMI_master.GoodsId
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
+                                               LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.AmountSecond - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
@@ -867,11 +878,26 @@ else*/
                                                   - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
 
                                             -- !!!отбросили НАРЕЗКУ!!!
-                                            AND (vbNumber <= vbdaycount_GoodsKind_8333
+                                          /*AND (vbNumber <= vbdaycount_GoodsKind_8333
                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333    -- НАР
                                                                                               , 6899005 -- нар. 200
                                                                                                )
-                                                )
+                                                )*/
+
+                                            -- !!!отбросили НАРЕЗКУ!!!
+                                            AND ((vbNumber <= vbdaycount_GoodsKind_8333
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- НАР
+                                               OR _tmpGoods_delik.GoodsId IS NULL
+                                                 )
+                                             AND (vbNumber <= vbdaycount_GoodsKind_8333
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005 -- нар. 200
+                                                                                               , 9027592 -- т/ф газ нар 0,1
+                                                                                               , 8988926 -- т/ф газ нар 0,2
+                                                                                               , 8988924 -- изопак скин нар 0,08
+                                                                                               , 8988925 -- изопак скин нар 0,1
+                                                                                                )
+                                                ))
+
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ
                           , tmpMI_all_summ AS (SELECT tmpMI_all.GoodsId_master
@@ -915,11 +941,16 @@ else*/
                    AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Нар. АССОРТИ 300 г/шт
                                                       )
                 ;
-                 -- СОХРАНИЛИ
-                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountSecondResult)
-                 FROM _tmpMI_Child
-                 WHERE _tmpMI_Child.AmountSecondResult <> 0
+                 -- сохранили протокол
+                 PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
+                 FROM (-- СОХРАНИЛИ
+                       SELECT _tmpMI_Child.MovementItemId
+                            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountSecondResult)
+                       FROM _tmpMI_Child
+                       WHERE _tmpMI_Child.AmountSecondResult <> 0
+                      ) AS tmp
                 ;
+
              ELSE
                  -- ОБНУЛИЛИ
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond_calc(), MovementItem.Id, 0)
@@ -929,11 +960,16 @@ else*/
                    AND MovementItem.ObjectId   NOT IN (489150 -- select * from object where Id = 489150 -- 2293 - Нар. АССОРТИ 300 г/шт
                                                       )
                 ;
-                 -- СОХРАНИЛИ
-                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountSecondResult)
-                 FROM _tmpMI_Child
-                 WHERE _tmpMI_Child.AmountSecondResult <> 0
+                 -- сохранили протокол
+                 PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
+                 FROM (-- СОХРАНИЛИ
+                       SELECT _tmpMI_Child.MovementItemId
+                            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountSecondResult)
+                       FROM _tmpMI_Child
+                       WHERE _tmpMI_Child.AmountSecondResult <> 0
+                      ) AS tmp
                 ;
+
              END IF;
 
          END IF;
@@ -987,6 +1023,7 @@ else*/
                                                                       AND _tmpMI_Child.GoodsKindId_complete = _tmpMI_master.GoodsKindId
                                                LEFT JOIN tmpMI_summ  ON tmpMI_summ.GoodsId_master     = _tmpMI_master.GoodsId
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
+                                               LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.AmountNext - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
@@ -1010,11 +1047,24 @@ else*/
                                                   - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
 
                                             -- !!!отбросили НАРЕЗКУ!!!
-                                            AND (vbNumber <= vbdaycount_GoodsKind_8333
+                                          /*AND (vbNumber <= vbdaycount_GoodsKind_8333
                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333    -- НАР
                                                                                               , 6899005 -- нар. 200
                                                                                                )
-                                                )
+                                                )*/
+                                            -- !!!отбросили НАРЕЗКУ!!!
+                                            AND ((vbNumber <= vbdaycount_GoodsKind_8333
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- НАР
+                                               OR _tmpGoods_delik.GoodsId IS NULL
+                                                 )
+                                             AND (vbNumber <= vbdaycount_GoodsKind_8333
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005 -- нар. 200
+                                                                                               , 9027592 -- т/ф газ нар 0,1
+                                                                                               , 8988926 -- т/ф газ нар 0,2
+                                                                                               , 8988924 -- изопак скин нар 0,08
+                                                                                               , 8988925 -- изопак скин нар 0,1
+                                                                                                )
+                                                ))
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ
                           , tmpMI_all_summ AS (SELECT tmpMI_all.GoodsId_master
@@ -1063,16 +1113,21 @@ else*/
                                                       )
                    AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
-                 -- СОХРАНИЛИ
-                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextResult)
-                 FROM _tmpMI_Child
-                      LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
-                                                    ON MIBoolean_Calculated.MovementItemId = _tmpMI_Child.MovementItemId
-                                                   AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
-                                                   AND MIBoolean_Calculated.ValueData      = FALSE
-                 WHERE _tmpMI_Child.AmountNextResult <> 0
-                   AND MIBoolean_Calculated.MovementItemId IS NULL
+                 -- сохранили протокол
+                 PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
+                 FROM (-- СОХРАНИЛИ
+                       SELECT _tmpMI_Child.MovementItemId
+                            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext(),_tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextResult)
+                       FROM _tmpMI_Child
+                            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                          ON MIBoolean_Calculated.MovementItemId = _tmpMI_Child.MovementItemId
+                                                         AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                                         AND MIBoolean_Calculated.ValueData      = FALSE
+                       WHERE _tmpMI_Child.AmountNextResult <> 0
+                         AND MIBoolean_Calculated.MovementItemId IS NULL
+                      ) AS tmp
                 ;
+
              ELSE
                  -- ОБНУЛИЛИ
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext_calc(), MovementItem.Id, 0)
@@ -1087,16 +1142,21 @@ else*/
                                                       )
                    AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
-                 -- СОХРАНИЛИ
-                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextResult)
-                 FROM _tmpMI_Child
-                      LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
-                                                    ON MIBoolean_Calculated.MovementItemId = _tmpMI_Child.MovementItemId
-                                                   AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
-                                                   AND MIBoolean_Calculated.ValueData      = FALSE
-                 WHERE _tmpMI_Child.AmountNextResult <> 0
-                   AND MIBoolean_Calculated.MovementItemId IS NULL
+                 -- сохранили протокол
+                 PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
+                 FROM (-- СОХРАНИЛИ
+                       SELECT _tmpMI_Child.MovementItemId
+                            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextResult)
+                       FROM _tmpMI_Child
+                            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                          ON MIBoolean_Calculated.MovementItemId = _tmpMI_Child.MovementItemId
+                                                         AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                                         AND MIBoolean_Calculated.ValueData      = FALSE
+                       WHERE _tmpMI_Child.AmountNextResult <> 0
+                         AND MIBoolean_Calculated.MovementItemId IS NULL
+                      ) AS tmp
                 ;
+
              END IF;
 
          END IF;
@@ -1153,6 +1213,7 @@ else*/
                                                                       AND _tmpMI_Child.GoodsKindId_complete = _tmpMI_master.GoodsKindId
                                                LEFT JOIN tmpMI_summ  ON tmpMI_summ.GoodsId_master     = _tmpMI_master.GoodsId
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
+                                               LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.AmountNextSecond - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
@@ -1176,11 +1237,24 @@ else*/
                                                   - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
 
                                             -- !!!отбросили НАРЕЗКУ!!!
-                                            AND (vbNumber <= vbdaycount_GoodsKind_8333
+                                          /*AND (vbNumber <= vbdaycount_GoodsKind_8333
                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333    -- НАР
                                                                                               , 6899005 -- нар. 200
                                                                                                )
-                                                )
+                                                )*/
+                                            -- !!!отбросили НАРЕЗКУ!!!
+                                            AND ((vbNumber <= vbdaycount_GoodsKind_8333
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- НАР
+                                               OR _tmpGoods_delik.GoodsId IS NULL
+                                                 )
+                                             AND (vbNumber <= vbdaycount_GoodsKind_8333
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005 -- нар. 200
+                                                                                               , 9027592 -- т/ф газ нар 0,1
+                                                                                               , 8988926 -- т/ф газ нар 0,2
+                                                                                               , 8988924 -- изопак скин нар 0,08
+                                                                                               , 8988925 -- изопак скин нар 0,1
+                                                                                                )
+                                                ))
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ
                           , tmpMI_all_summ AS (SELECT tmpMI_all.GoodsId_master
@@ -1229,16 +1303,21 @@ else*/
                                                       )
                    AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
-                 -- СОХРАНИЛИ
-                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond(),      _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextSecondResult)
-                 FROM _tmpMI_Child
-                      LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
-                                                    ON MIBoolean_Calculated.MovementItemId = _tmpMI_Child.MovementItemId
-                                                   AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
-                                                   AND MIBoolean_Calculated.ValueData      = FALSE
-                 WHERE _tmpMI_Child.AmountNextSecondResult <> 0
-                   AND MIBoolean_Calculated.MovementItemId IS NULL
+                 -- сохранили протокол
+                 PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
+                 FROM (-- СОХРАНИЛИ
+                       SELECT _tmpMI_Child.MovementItemId
+                            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextSecondResult)
+                       FROM _tmpMI_Child
+                            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                          ON MIBoolean_Calculated.MovementItemId = _tmpMI_Child.MovementItemId
+                                                         AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                                         AND MIBoolean_Calculated.ValueData      = FALSE
+                       WHERE _tmpMI_Child.AmountNextSecondResult <> 0
+                         AND MIBoolean_Calculated.MovementItemId IS NULL
+                      ) AS tmp
                 ;
+
              ELSE
                  -- ОБНУЛИЛИ
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond_calc(), MovementItem.Id, 0)
@@ -1253,16 +1332,21 @@ else*/
                                                       )
                    AND MIBoolean_Calculated.MovementItemId IS NULL
                 ;
-                 -- СОХРАНИЛИ
-                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextSecondResult)
-                 FROM _tmpMI_Child
-                      LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
-                                                    ON MIBoolean_Calculated.MovementItemId = _tmpMI_Child.MovementItemId
-                                                   AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
-                                                   AND MIBoolean_Calculated.ValueData      = FALSE
-                 WHERE _tmpMI_Child.AmountNextSecondResult <> 0
-                   AND MIBoolean_Calculated.MovementItemId IS NULL
+                 -- сохранили протокол
+                 PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
+                 FROM (-- СОХРАНИЛИ
+                       SELECT _tmpMI_Child.MovementItemId
+                            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond_calc(), _tmpMI_Child.MovementItemId, _tmpMI_Child.AmountNextSecondResult)
+                       FROM _tmpMI_Child
+                            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                          ON MIBoolean_Calculated.MovementItemId = _tmpMI_Child.MovementItemId
+                                                         AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
+                                                         AND MIBoolean_Calculated.ValueData      = FALSE
+                       WHERE _tmpMI_Child.AmountNextSecondResult <> 0
+                         AND MIBoolean_Calculated.MovementItemId IS NULL
+                      ) AS tmp
                 ;
+
              END IF;
 
          END IF;
@@ -1271,15 +1355,15 @@ else*/
     END IF;
 
 IF vbUserId = 5 --AND inIsByDay = TRUE
-AND 1=0
+ AND 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.test ok <%>  <%>  <%> <%>    <%>   <%>'
-             , (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 250377451  AND MIB.DescId = zc_MIBoolean_Calculated())
-             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 250377451  AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
-             , (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 225490363 AND MIB.DescId = zc_MIBoolean_Calculated())
-             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 225490363 AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
-             , (SELECT _tmpMI_Child.AmountNextSecondResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 250377451)
-             , (SELECT _tmpMI_Child.AmountNextSecondResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 225490363)
+             , (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 253294614   AND MIB.DescId = zc_MIBoolean_Calculated())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 253294614   AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
+             , (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 253294614  AND MIB.DescId = zc_MIBoolean_Calculated())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 253294614  AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
+             , (SELECT _tmpMI_Child.AmountNextSecondResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 253294614 )
+             , (SELECT _tmpMI_Child.AmountNextSecondResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 253294614 )
               ;
 END IF;
 
