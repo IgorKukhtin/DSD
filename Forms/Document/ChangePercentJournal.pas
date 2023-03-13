@@ -30,7 +30,7 @@ type
   TChangePercentJournalForm = class(TAncestorJournalForm)
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    bbPrint: TdxBarButton;
+    bbPrint_by_Tax: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     spGetReportName: TdsdStoredProc;
     spSelectPrint: TdsdStoredProc;
@@ -53,17 +53,15 @@ type
     Checked: TcxGridDBColumn;
     actChecked: TdsdExecStoredProc;
     bbspChecked: TdxBarButton;
-    InvNumberMark: TcxGridDBColumn;
     actPrint_by_Tax: TdsdPrintAction;
-    bbPrint_Return_By_TaxCorrective: TdxBarButton;
+    bbPrint_ReturnIn_by_TaxCorrective: TdxBarButton;
     spGetReportNameTaxCorrective: TdsdStoredProc;
     actSPPrintTaxCorrectiveProcName: TdsdExecStoredProc;
     actPrint_TaxCorrective_Us: TdsdPrintAction;
     actPrint_TaxCorrective_Client: TdsdPrintAction;
     mactPrint_TaxCorrective_Client: TMultiAction;
     mactPrint_TaxCorrective_Us: TMultiAction;
-    ContractFromCode: TcxGridDBColumn;
-    ContractToCode: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     actInsertMaskMulti: TMultiAction;
     ExecuteDialog: TExecuteDialog;
@@ -74,6 +72,7 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction;
   private
     { Private declarations }
   public

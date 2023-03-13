@@ -125,35 +125,12 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object InvNumberMark: TcxGridDBColumn
-            Caption = #8470' '#1079'.'#1084'.'
-            DataBinding.FieldName = 'InvNumberMark'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
           object DocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'DocumentTaxKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 72
-          end
-          object PartnerFromCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'PartnerFromCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 40
-          end
-          object PartnerFromName: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'PartnerFromName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 78
           end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
@@ -171,7 +148,7 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
             Width = 40
           end
           object PartnerName: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1082#1086#1084#1091')'
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -200,132 +177,69 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object PaidKindFromName: TcxGridDBColumn
-            Caption = #1060#1054' ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'PaidKindFromName'
+          object PaidKindName: TcxGridDBColumn
+            Caption = #1060#1054
+            DataBinding.FieldName = 'PaidKindName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object PaidKindToName: TcxGridDBColumn
-            Caption = #1060#1054' ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'PaidKindToName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object ContractFromCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'ContractFromCode'
+          object ContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object ContractFromName: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075'. ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'ContractFromName'
+          object ContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object ContractTagFromName: TcxGridDBColumn
-            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'ContractTagFromName'
+          object ContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
           end
-          object ContractToCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'ContractToCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object ContractToName: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075'. ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'ContractToName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object ContractTagToName: TcxGridDBColumn
-            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'ContractTagToName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object InfoMoneyCode_from: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1059#1055' ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'InfoMoneyCode_from'
+          object InfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object InfoMoneyGroupName_from: TcxGridDBColumn
-            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'InfoMoneyGroupName_from'
+          object InfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object InfoMoneyDestinationName_from: TcxGridDBColumn
-            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'InfoMoneyDestinationName_from'
+          object InfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object InfoMoneyName_from: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'InfoMoneyName_from'
+          object InfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
-          end
-          object InfoMoneyCode_to: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1059#1055' ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'InfoMoneyCode_to'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 50
-          end
-          object InfoMoneyGroupName_to: TcxGridDBColumn
-            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'InfoMoneyGroupName_to'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object InfoMoneyDestinationName_to: TcxGridDBColumn
-            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'InfoMoneyDestinationName_to'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object InfoMoneyName_to: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'InfoMoneyName_to'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -335,7 +249,7 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 45
+            Width = 55
           end
           object TotalCountSh: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'.'
@@ -360,19 +274,19 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
             Width = 55
           end
           object ChangePercent: TcxGridDBColumn
-            Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
+            Caption = '% '#1089#1082'.'
             DataBinding.FieldName = 'ChangePercent'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 53
+            HeaderHint = '% '#1089#1082#1080#1076#1082#1080
+            Width = 60
           end
           object VATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 30
+            Width = 63
           end
           object PriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
@@ -390,7 +304,7 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 98
           end
           object TotalSummVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
@@ -430,7 +344,7 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
             DataBinding.FieldName = 'Checked'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 36
+            Width = 54
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -722,9 +636,9 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100'  '#1040#1050#1058' 2'
-      Hint = #1055#1077#1095#1072#1090#1100'  '#1040#1050#1058' 2'
-      ImageIndex = 21
+      Caption = #1055#1077#1095#1072#1090#1100'  '#1040#1050#1058
+      Hint = #1055#1077#1095#1072#1090#1100'  '#1040#1050#1058
+      ImageIndex = 3
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -956,6 +870,55 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintTaxCorrective_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Client
+        end>
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' ('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1082' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084')'
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103' ('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1082' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084')'
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_ReturnIn_By_TaxCorrective'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
+      ReportNameParam.Value = 'PrintMovement_ReturnIn_By_TaxCorrective'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actShowMessage: TShowMessageAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1116,11 +1079,15 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbPrint_by_Tax'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_ReturnIn_by_TaxCorrective'
         end
         item
           Visible = True
@@ -1146,7 +1113,7 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
     inherited bbInsertMask: TdxBarButton
       Action = actInsertMaskMulti
     end
-    object bbPrint: TdxBarButton
+    object bbPrint_by_Tax: TdxBarButton
       Action = actPrint_by_Tax
       Caption = #1055#1077#1095#1072#1090#1100'  '#1040#1082#1090#1072
       Category = 0
@@ -1171,8 +1138,8 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
       Action = actChecked
       Category = 0
     end
-    object bbPrint_Return_By_TaxCorrective: TdxBarButton
-      Action = actPrint_by_Tax
+    object bbPrint_ReturnIn_by_TaxCorrective: TdxBarButton
+      Action = actPrint_ReturnIn_by_TaxCorrective
       Category = 0
     end
   end
@@ -1281,7 +1248,7 @@ inherited ChangePercentJournalForm: TChangePercentJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 400
+    Left = 432
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc

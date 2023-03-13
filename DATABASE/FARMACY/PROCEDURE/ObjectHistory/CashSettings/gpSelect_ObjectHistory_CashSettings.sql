@@ -6,8 +6,9 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_CashSettings(
     IN inCashSettingsId    Integer   , -- Прайс
     IN inSession        TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, StartDate TDateTime, EndDate TDateTime, 
-               FixedPercent TFloat, PenMobApp TFloat, PrizeThreshold TFloat)
+RETURNS TABLE (Id Integer, StartDate TDateTime, EndDate TDateTime
+             , FixedPercent TFloat, FixedPercentB TFloat, FixedPercentC TFloat, FixedPercentD TFloat
+             , PenMobApp TFloat, PrizeThreshold TFloat, MarkPlanThreshol TFloat)
 AS
 $BODY$
 BEGIN
@@ -42,14 +43,27 @@ BEGIN
           , ObjectHistory_CashSettings.StartDate                            AS StartDate
           , ObjectHistory_CashSettings.EndDate                              AS EndDate
           , ObjectHistoryFloat_CashSettings_FixedPercent.ValueData          AS FixedPercent
+          , ObjectHistoryFloat_CashSettings_FixedPercentB.ValueData         AS FixedPercentB
+          , ObjectHistoryFloat_CashSettings_FixedPercentC.ValueData         AS FixedPercentC
+          , ObjectHistoryFloat_CashSettings_FixedPercentD.ValueData         AS FixedPercentD
           , ObjectHistoryFloat_CashSettings_PenMobApp.ValueData             AS PenMobApp
           , ObjectHistoryFloat_CashSettings_PrizeThreshold.ValueData        AS PrizeThreshold
+          , ObjectHistoryFloat_CashSettings_MarkPlanThreshol.ValueData      AS MarkPlanThreshol
         FROM 
             ObjectHistory_CashSettings
 
             LEFT JOIN tmpObjectHistoryFloat AS ObjectHistoryFloat_CashSettings_FixedPercent
                                             ON ObjectHistoryFloat_CashSettings_FixedPercent.ObjectHistoryId = ObjectHistory_CashSettings.Id
                                            AND ObjectHistoryFloat_CashSettings_FixedPercent.DescId = zc_ObjectHistoryFloat_CashSettings_FixedPercent()
+            LEFT JOIN tmpObjectHistoryFloat AS ObjectHistoryFloat_CashSettings_FixedPercentB
+                                            ON ObjectHistoryFloat_CashSettings_FixedPercentB.ObjectHistoryId = ObjectHistory_CashSettings.Id
+                                           AND ObjectHistoryFloat_CashSettings_FixedPercentB.DescId = zc_ObjectHistoryFloat_CashSettings_FixedPercentB()
+            LEFT JOIN tmpObjectHistoryFloat AS ObjectHistoryFloat_CashSettings_FixedPercentC
+                                            ON ObjectHistoryFloat_CashSettings_FixedPercentC.ObjectHistoryId = ObjectHistory_CashSettings.Id
+                                           AND ObjectHistoryFloat_CashSettings_FixedPercentC.DescId = zc_ObjectHistoryFloat_CashSettings_FixedPercentC()
+            LEFT JOIN tmpObjectHistoryFloat AS ObjectHistoryFloat_CashSettings_FixedPercentD
+                                            ON ObjectHistoryFloat_CashSettings_FixedPercentD.ObjectHistoryId = ObjectHistory_CashSettings.Id
+                                           AND ObjectHistoryFloat_CashSettings_FixedPercentD.DescId = zc_ObjectHistoryFloat_CashSettings_FixedPercentD()
 
             LEFT JOIN tmpObjectHistoryFloat AS ObjectHistoryFloat_CashSettings_PenMobApp
                                             ON ObjectHistoryFloat_CashSettings_PenMobApp.ObjectHistoryId = ObjectHistory_CashSettings.Id
@@ -59,6 +73,10 @@ BEGIN
                                             ON ObjectHistoryFloat_CashSettings_PrizeThreshold.ObjectHistoryId = ObjectHistory_CashSettings.Id
                                            AND ObjectHistoryFloat_CashSettings_PrizeThreshold.DescId = zc_ObjectHistoryFloat_CashSettings_PrizeThreshold()
                                            
+            LEFT JOIN tmpObjectHistoryFloat AS ObjectHistoryFloat_CashSettings_MarkPlanThreshol
+                                            ON ObjectHistoryFloat_CashSettings_MarkPlanThreshol.ObjectHistoryId = ObjectHistory_CashSettings.Id
+                                           AND ObjectHistoryFloat_CashSettings_MarkPlanThreshol.DescId = zc_ObjectHistoryFloat_CashSettings_MarkPlanThreshol()
+
         ORDER BY ObjectHistory_CashSettings.StartDate;
 
 

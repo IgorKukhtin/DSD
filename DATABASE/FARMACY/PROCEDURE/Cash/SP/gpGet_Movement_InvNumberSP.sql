@@ -32,7 +32,7 @@ BEGIN
               AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
               AND Movement.DescId = zc_Movement_Check()
               AND Movement.StatusId <> zc_Enum_Status_Erased()
-            LIMIT 1)
+            LIMIT 1) AND inSession <> zfCalc_UserAdmin()
   THEN
     outIsExists := True;  
   ELSE

@@ -100,7 +100,7 @@ BEGIN
                         WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
                           AND ObjectLink_Price_Unit.ChildObjectId IN (SELECT DISTINCT MI_Master.UnitId FROM MI_Master)
                         )
-               , tmpPromoBonus_GoodsWeek AS (SELECT * FROM gpSelect_PromoBonus_GoodsWeek(inSession := inSession))
+               /*, tmpPromoBonus_GoodsWeek AS (SELECT * FROM gpSelect_PromoBonus_GoodsWeek(inSession := inSession))
                , PromoBonus AS (SELECT MovementItem.Id                               AS Id
                                      , MovementItem.ObjectId                         AS GoodsId
                                      , MovementItem.Amount                           AS Amount
@@ -113,7 +113,7 @@ BEGIN
                                                                    AND Movement.StatusId = zc_Enum_Status_Complete())
                                   AND MovementItem.DescId = zc_MI_Master()
                                   AND MovementItem.isErased = False
-                                  AND MovementItem.Amount > 0)
+                                  AND MovementItem.Amount > 0)*/
                , tmpOrderInternal AS (SELECT Movement.id                          AS ID 
                                            , MovementLinkObject_Unit.ObjectId     AS UnitId 
                                       FROM Movement 
@@ -207,8 +207,10 @@ BEGIN
                     , Object_Goods_Main.isClose                         AS isClose
                     , Object_Goods_Main.isNot                           AS isNot
                     , COALESCE(tmpObject_Price.MCSIsClose, False)       AS MCSIsClose
-                    , COALESCE(PromoBonus.Amount, 0) > 0                AS isPromoBonus  
-                    , COALESCE(PromoBonus.isLearnWeek, FALSE)           AS isLearnWeek
+                    --, COALESCE(PromoBonus.Amount, 0) > 0                AS isPromoBonus  
+                    --, COALESCE(PromoBonus.isLearnWeek, FALSE)           AS isLearnWeek
+                    , False                                             AS isPromoBonus  
+                    , False                                             AS isLearnWeek  
                     , tmpObject_Price.MCSValue                          AS MCS 
                     , COALESCE(MI_Master.IsErased, False)               AS isErased
                FROM MI_Master
@@ -229,7 +231,7 @@ BEGIN
                    LEFT JOIN tmpObject_PriceSale ON tmpObject_PriceSale.GoodsId = MI_Master.GoodsId
 
                    -- Маркетинговый бонус
-                   LEFT JOIN PromoBonus ON PromoBonus.GoodsId = MI_Master.GoodsId
+                   --LEFT JOIN PromoBonus ON PromoBonus.GoodsId = MI_Master.GoodsId
                    
                    -- Внешний заказ
                    LEFT JOIN tmpOIList ON tmpOIList.GoodsId = MI_Master.GoodsId

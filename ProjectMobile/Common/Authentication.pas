@@ -143,21 +143,24 @@ begin
     else lLang := '?1?';
   except lLang:='???'; end;
 
-  obj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.TELEPHONY_SERVICE);
-  if obj <> nil then
-  begin
-    tm := TJTelephonyManager.Wrap( (obj as ILocalObject).GetObjectID );
-    if tm <> nil then begin
-      // IMEI телефона - работает
-      lIMEI      := JStringToString(tm.getDeviceId);
-      // Модель телефона
-      //lModel     := '???'; //
-      // Версия Android
-      //lVesion    := '???'; // JStringToString(tm.getDeviceSoftwareVersion);
-      // Версия SDK
-      //lVesionSDK := '???';
+  try
+    obj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.TELEPHONY_SERVICE);
+    if obj <> nil then
+    begin
+      tm := TJTelephonyManager.Wrap( (obj as ILocalObject).GetObjectID );
+      if tm <> nil then begin
+        // IMEI телефона - работает
+         lIMEI      := JStringToString(tm.getDeviceId);
+        // Модель телефона
+        //lModel     := '???'; //
+        // Версия Android
+        //lVesion    := '???'; // JStringToString(tm.getDeviceSoftwareVersion);
+        // Версия SDK
+        //lVesionSDK := '???';
+      end;
     end;
-  end;
+  except lIMEI:=''; end;
+
   if lIMEI = '' then begin
     // IMEI телефона - работает
     lIMEI      := JStringToString(TJSettings_Secure.JavaClass.getString(TAndroidHelper.Activity.getContentResolver,

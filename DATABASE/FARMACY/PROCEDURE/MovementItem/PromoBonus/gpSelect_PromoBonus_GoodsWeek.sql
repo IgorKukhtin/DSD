@@ -18,6 +18,8 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_PromoBonus());
     vbUserId:= lpGetUserBySession (inSession);
+    
+    Return;
 
     vbMovementId := (WITH  tmpMovPromoBonus AS 
 					      (SELECT Movement.id AS ID FROM Movement

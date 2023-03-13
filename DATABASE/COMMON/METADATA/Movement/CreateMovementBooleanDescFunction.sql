@@ -447,9 +447,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_AmountCheck() RETURNS integer AS $
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_AmountCheck', 'Акционный товар от суммы чека'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_AmountCheck');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_SalaryException() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_SalaryException'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_SalaryException', 'Исключение по ЗП сотруднику'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_SalaryException');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 07.03.23                                                                                   * zc_MovementBoolean_SalaryException
  25.11.22                                                                                   * zc_MovementBoolean_AmountCheck
  01.11.22         * zc_MovementBoolean_ChangePriceUser
  28.10.22                                                                                   * zc_MovementBoolean_AtEveryEntry

@@ -127,7 +127,7 @@ begin
 end;
 {-----------------------------------------------------------------------------------------------}
 
-function gfIntToStr(const inInt: Longint): string;
+function gfIntToStr(const inInt: Integer): string;
 begin
   result:=IntToStr(inInt);
 end;

@@ -85,8 +85,8 @@ BEGIN
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-           , MovementFloat_TotalSumm.ValueData * MovementFloat_ChangePercent.ValueData  / 100  AS TotalSumm_ChangePercent
-
+           , MovementFloat_TotalSummPVAT.ValueData * MovementFloat_ChangePercent.ValueData  / 100  AS TotalSumm_ChangePercent 
+           
            , Object_From.Id                    	     AS FromId
            , Object_From.ValueData                   AS FromName
            , View_JuridicalDetails_From.OKPO         AS OKPO_From
@@ -101,6 +101,7 @@ BEGIN
            , View_Contract_InvNumber.ContractCode    AS ContractCode
            , View_Contract_InvNumber.InvNumber       AS ContractName
            , View_Contract_InvNumber.ContractTagName AS ContractTagName
+           , ObjectDate_Signing.ValueData            AS SigningDate
 
            , Object_PaidKind.Id                      AS PaidKindName
            , Object_PaidKind.ValueData               AS PaidKindName
@@ -118,7 +119,7 @@ BEGIN
            , DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' AS EndDate
            
            --Додаткова угода № від
-           , CASE WHEN Object_To.Id = 8793437 THEN ' № 76 від 01.03.2023' ELSE '______________________' END AS Text_ugoda
+           , CASE WHEN Object_To.Id = 8793437 THEN ' № 75 від 01.03.2023' ELSE '______________________' END AS Text_ugoda
            --доверенность
            , CASE WHEN Object_To.Id = 8793437 THEN ' Довіренність № 2562-201-22' ELSE '______________________' END AS Text_dovir
            --ответственный
@@ -195,6 +196,10 @@ BEGIN
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
+            LEFT JOIN ObjectDate AS ObjectDate_Signing
+                                 ON ObjectDate_Signing.ObjectId = View_Contract_InvNumber.ContractId
+                                AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
@@ -204,6 +209,7 @@ BEGIN
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
+
        WHERE Movement.Id = inMovementId
       ;
     RETURN NEXT Cursor1;
@@ -231,8 +237,8 @@ BEGIN
          , MovementItem.isErased    AS isErased
          
          , vbChangePercent AS ChangePercent
-         , CAST (MovementItem.Amount * (MIFloat_Price.ValueData * vbChangePercent / 100) AS NUMERIC (16,2))  AS Sum_ChangePercent
-         , CAST (MovementItem.Amount * ((MIFloat_Price.ValueData * vbChangePercent / 100) * vbVATPercent/100)  AS NUMERIC (16,2))  AS Sum_VATPercent
+         , (MovementItem.Amount * (MIFloat_Price.ValueData * vbChangePercent / 100))  AS Sum_ChangePercent
+         , (MovementItem.Amount * ((MIFloat_Price.ValueData * vbChangePercent / 100) * vbVATPercent/100))  AS Sum_VATPercent
 
      FROM MovementItem
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId

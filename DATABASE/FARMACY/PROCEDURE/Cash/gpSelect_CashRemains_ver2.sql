@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                AlternativeGroupId Integer, NDS TFloat,
                isFirst boolean, isSecond boolean, Color_calc Integer,
                isPromo boolean, isPromoForSale boolean, RelatedProductId Integer,
-               isSP boolean,
+               isSP boolean, isElRecipe  boolean,
                IntenalSPName TVarChar,
                MinExpirationDate TDateTime,
                DiscountExternalID  Integer, DiscountExternalName  TVarChar,
@@ -54,7 +54,9 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                PriceSale1303 TFloat,
                BrandSPName TVarChar,
                
-               isSpecial boolean
+               isSpecial boolean,
+               
+               PromoBonus TFloat
 
                /*PartionDateKindId_check   Integer,
                Price_check               TFloat,
@@ -90,6 +92,7 @@ $BODY$
 
    DECLARE vbAreaId   Integer;
    DECLARE vbLanguage TVarChar;
+   DECLARE vbMovPromoBonus Integer;
 BEGIN
 -- if inSession = '3' then return; end if;
 
@@ -184,6 +187,14 @@ BEGIN
               
     WHERE Object_User.Id = vbUserId;    
     
+    vbMovPromoBonus := (WITH  tmpMovPromoBonus AS 
+                              (SELECT Movement.id AS ID FROM Movement
+                               WHERE Movement.OperDate <= CURRENT_DATE
+                                 AND Movement.DescId = zc_Movement_PromoBonus()
+                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                               )
+    							 
+                        SELECT MAX(tmpMovPromoBonus.ID) AS ID FROM tmpMovPromoBonus);
         
     -- Объявили новую сессию кассового места / обновили дату последнего обращения
     PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
@@ -825,8 +836,15 @@ BEGIN
                                             WHERE ObjectLink_GoodsDivisionLock_Unit.DescId        = zc_ObjectLink_GoodsDivisionLock_Unit()
                                               AND ObjectLink_GoodsDivisionLock_Unit.ChildObjectId = vbUnitId
                                             )
-                 
-
+                 , tmpMIPromoBonus AS (SELECT MovementItem.ObjectId               AS GoodsId
+                                            , MAX(MovementItem.Amount)::TFloat    AS PromoBonus
+                                       FROM MovementItem
+                                       WHERE MovementItem.MovementId = vbMovPromoBonus
+                                         AND MovementItem.DescId = zc_MI_Master()
+                                         AND MovementItem.Amount > 0
+                                         AND MovementItem.isErased = False
+                                       GROUP BY MovementItem.ObjectId)
+							 
         -- Результат
         SELECT
             CashSessionSnapShot.ObjectId,
@@ -1129,7 +1147,8 @@ BEGIN
             COALESCE(GoodsPromo.isPromoForSale, FALSE)                                AS isPromoForSale,
             COALESCE(GoodsPromo.RelatedProductId, ObjectFloat_RelatedProduct.ValueData)::Integer  AS RelatedProductId,
             CASE WHEN tmpGoodsSP.GoodsId IS NULL /*OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0*/ THEN FALSE ELSE TRUE END :: Boolean  AS isSP,
-            Object_IntenalSP.ValueData AS IntenalSPName,
+            tmpGoodsSP.GoodsId IS NOT NULL                     AS isElRecipe,
+            Object_IntenalSP.ValueData                         AS IntenalSPName,
             CashSessionSnapShot.MinExpirationDate,
             NULLIF (CashSessionSnapShot.DiscountExternalID, 0) AS DiscountExternalID,
             Object_DiscountExternal.ValueData                  AS DiscountExternalName,
@@ -1191,8 +1210,8 @@ BEGIN
             WHEN zc_Enum_PartionDateKind_Good() THEN vbDay_6 / 30.0 + 1.0
             WHEN zc_Enum_PartionDateKind_Cat_5() THEN vbDay_6 / 30.0 - 1.0
             ELSE Object_PartionDateKind.AmountMonth END::TFloat AS AmountMonth
-          , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
-                  AND ObjectFloat_Goods_Price.ValueData > 0
+          , CASE WHEN Object_Goods_Retail.IsTop = TRUE
+                  AND Object_Goods_Retail.Price > 0
                    OR COALESCE(tmpPriceChange.PartionDateKindId, 0) <> 0
                  THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
                              CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
@@ -1276,6 +1295,9 @@ BEGIN
             AND Object_Goods_Retail.DiscontSiteEnd IS NOT NULL  
             AND Object_Goods_Retail.DiscontSiteStart <= CURRENT_DATE
             AND Object_Goods_Retail.DiscontSiteEnd >= CURRENT_DATE    AS isSpecial
+          , CASE WHEN COALESCE(NULLIF (CashSessionSnapShot.PartionDateKindId, 0), zc_Enum_PartionDateKind_Good()) = zc_Enum_PartionDateKind_Good()
+                  AND Object_Goods_Retail.IsTop = False 
+                 THEN tmpMIPromoBonus.PromoBonus END :: TFloat        AS PromoBonus
 
           /*, CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , zfCalc_PriceCash(CashSessionSnapShot.Price, 
@@ -1363,14 +1385,6 @@ BEGIN
 
            LEFT JOIN tmpDeferredSendIn ON tmpDeferredSendIn.GoodsId = CashSessionSnapShot.ObjectId
 
-           -- Фикс цена для всей Сети
-           LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
-                                  ON ObjectFloat_Goods_Price.ObjectId =  CashSessionSnapShot.ObjectId
-                                 AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
-           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                   ON ObjectBoolean_Goods_TOP.ObjectId =  CashSessionSnapShot.ObjectId
-                                  AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
-
            LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsUKTZEDRRO
                                    ON ObjectBoolean_GoodsUKTZEDRRO.ObjectId = vbUnitId
                                   AND ObjectBoolean_GoodsUKTZEDRRO.DescId = zc_ObjectBoolean_Unit_GoodsUKTZEDRRO()
@@ -1378,6 +1392,8 @@ BEGIN
            LEFT JOIN tmpGoodsAutoVIPforSalesCash ON tmpGoodsAutoVIPforSalesCash.GoodsId = CashSessionSnapShot.ObjectId
            
            LEFT JOIN tmpGoodsSP_1303 ON tmpGoodsSP_1303.GoodsId = CashSessionSnapShot.ObjectId
+                      
+           LEFT JOIN tmpMIPromoBonus ON tmpMIPromoBonus.GoodsId = CashSessionSnapShot.ObjectId
                                    
            LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                             ON MI_IntenalSP.MovementItemId = tmpGoodsSP_1303.MovementItemId

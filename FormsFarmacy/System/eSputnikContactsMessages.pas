@@ -55,10 +55,10 @@ type
     bbGroup: TdxBarControlContainerItem;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    GoodsName: TcxGridDBColumn;
+    activityStatus: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DBViewAddOn: TdsdDBViewAddOn;
-    GoodsCode: TcxGridDBColumn;
+    sentDateTime: TcxGridDBColumn;
     bbUpdate: TdxBarButton;
     text: TcxGridDBColumn;
     edPhone: TcxMaskEdit;

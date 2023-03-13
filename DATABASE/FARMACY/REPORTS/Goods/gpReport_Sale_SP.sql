@@ -874,6 +874,9 @@ BEGIN
                   WHEN tmpMovDetails.JuridicalId = 393038   
                    AND Object_PartnerMedical.Id = 4474509  
                   THEN 'UA553223130000026001000030333' 
+                  WHEN tmpMovDetails.JuridicalId = 6608394   
+                   AND Object_PartnerMedical.Id = 3751525  
+                  THEN 'UA493223130000026006000037643' 
                   ELSE tmpMovDetails.BankAccount END ::TVarChar
            , tmpMovDetails.Phone
            , tmpMovDetails.MainName
@@ -897,6 +900,9 @@ BEGIN
                   WHEN tmpMovDetails.JuridicalId = 393038   
                    AND Object_PartnerMedical.Id = 4474509  
                   THEN 'AT "Укрексімбанк"' 
+                  WHEN tmpMovDetails.JuridicalId = 6608394   
+                   AND Object_PartnerMedical.Id = 3751525  
+                  THEN 'АТ "Укрексімбанк"' 
                   ELSE tmpMovDetails.BankName END ::TVarChar
            , CASE WHEN tmpMovDetails.JuridicalId = 2886776 
                   THEN '370770'  
@@ -913,6 +919,9 @@ BEGIN
                   THEN '307770' 
                   WHEN tmpMovDetails.JuridicalId = 393038   
                    AND Object_PartnerMedical.Id = 4474509  
+                  THEN '322313' 
+                  WHEN tmpMovDetails.JuridicalId = 6608394   
+                   AND Object_PartnerMedical.Id = 3751525  
                   THEN '322313' 
                   ELSE tmpMovDetails.MFO END      ::TVarChar
 
@@ -1113,3 +1122,6 @@ $BODY$
 
 select * from gpReport_Sale_SP(inStartDate := ('24.02.2023')::TDateTime , inEndDate := ('24.02.2023')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');
 
+
+
+select * from gpReport_Sale_SP(inStartDate := ('01.02.2023')::TDateTime , inEndDate := ('02.03.2023')::TDateTime , inJuridicalId := 6608394 , inUnitId := 0 , inHospitalId := 3751525 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 9 ,  inSession := '3');

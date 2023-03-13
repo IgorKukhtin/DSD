@@ -10,7 +10,8 @@ uses
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
   FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
   FireDAC.Comp.UI, Variants, FireDAC.FMXUI.Wait, dsdDB, Datasnap.DBClient,
-  FMX.Dialogs, FMX.DialogService, System.UITypes, System.Sensors, DateUtils
+  FMX.Dialogs, FMX.DialogService, System.UITypes, System.Sensors, DateUtils,
+  FireDAC.Phys.SQLiteWrapper.Stat
   {$IFDEF ANDROID}
   , Androidapi.JNI.GraphicsContentViewText, Androidapi.Helpers,
   Androidapi.JNI.Net, Androidapi.JNI.JavaTypes, Androidapi.JNI.App
@@ -2616,6 +2617,17 @@ begin
   {$ELSE}
   conMain.Params.Values['Database'] := DataBaseFileName;
   {$ENDIF}
+
+//  try
+//    conMain.Connected := True;
+//  except
+//    ON E: Exception DO
+//    begin
+//      if FileExists(conMain.Params.Values['Database']) and
+//        (Pos('file is not a database', E.Message) > 0) then DeleteFile(conMain.Params.Values['Database']);
+//    end;
+//  end;
+//  conMain.Connected := False;
 
   try
     conMain.Connected := True;

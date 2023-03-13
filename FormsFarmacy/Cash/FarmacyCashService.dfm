@@ -26140,4 +26140,11 @@ object MainCashForm2: TMainCashForm2
     Left = 24
     Top = 14
   end
+  object TimerTrayIconPUSH: TTimer
+    Enabled = False
+    Interval = 5000
+    OnTimer = TimerTrayIconPUSHTimer
+    Left = 89
+    Top = 64
+  end
 end

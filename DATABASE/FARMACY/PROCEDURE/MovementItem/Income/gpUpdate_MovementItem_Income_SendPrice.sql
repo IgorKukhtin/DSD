@@ -19,9 +19,9 @@ $BODY$
    DECLARE vbInvNumberPoint   TVarChar;
    DECLARE vbRetailId         Integer;
    DECLARE vbisTopNo_Unit     Boolean;
-   DECLARE vbUpperLimitPromoBonus TFloat;
-   DECLARE vbLowerLimitPromoBonus TFloat;
-   DECLARE vbMinPercentPromoBonus TFloat;
+   --DECLARE vbUpperLimitPromoBonus TFloat;
+   --DECLARE vbLowerLimitPromoBonus TFloat;
+   --DECLARE vbMinPercentPromoBonus TFloat;
    DECLARE vbOperDate         TDateTime;
 BEGIN
 
@@ -39,7 +39,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
 
-     SELECT ObjectFloat_CashSettings_UpperLimitPromoBonus.ValueData                  AS UpperLimitPromoBonus
+     /*SELECT ObjectFloat_CashSettings_UpperLimitPromoBonus.ValueData                  AS UpperLimitPromoBonus
           , ObjectFloat_CashSettings_LowerLimitPromoBonus.ValueData                  AS LowerLimitPromoBonus
           , ObjectFloat_CashSettings_MinPercentPromoBonus.ValueData                  AS MinPercentPromoBonus
      INTO vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus
@@ -54,7 +54,7 @@ BEGIN
                                 ON ObjectFloat_CashSettings_MinPercentPromoBonus.ObjectId = Object_CashSettings.Id
                                AND ObjectFloat_CashSettings_MinPercentPromoBonus.DescId = zc_ObjectFloat_CashSettings_MinPercentPromoBonus()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
-     LIMIT 1;
+     LIMIT 1;*/
 
      -- находим вид НДС.
      SELECT ObjectId INTO vbNDSKindId
@@ -189,10 +189,10 @@ BEGIN
                                   OR COALESCE(Price_Top.ValueData,False) = True
                                   OR COALESCE(Price_PercentMarkup.ValueData, 0) <> 0)
                            ),
-         PromoBonus AS (SELECT PromoBonus.Id                            AS Id
+         /*PromoBonus AS (SELECT PromoBonus.Id                            AS Id
                              , PromoBonus.GoodsId                   AS GoodsId
                              , PromoBonus.Amount                        AS Amount
-                        FROM gpSelect_PromoBonus_GoodsWeek (inSession) AS PromoBonus),
+                        FROM gpSelect_PromoBonus_GoodsWeek (inSession) AS PromoBonus),*/
          tmpGoodsDiscount AS (SELECT ObjectLink_BarCode_Goods.ChildObjectId                     AS GoodsId
                                     , MAX(COALESCE(ObjectFloat_MaxPrice.ValueData, 0))::TFloat   AS MaxPrice 
                                FROM Object AS Object_BarCode
@@ -213,10 +213,10 @@ BEGIN
      SELECT COUNT(lpInsertUpdate_MovementItemFloat
                         (zc_MIFloat_PriceSale(), MovementItem_Income_View.Id,
                          zfCalc_SalePrice(MovementItem_Income.PriceWithVAT                            -- Цена С НДС
-                         --               , MarginCondition.MarginPercent                               -- % наценки в КАТЕГОРИИ
+                                        , MarginCondition.MarginPercent                               -- % наценки в КАТЕГОРИИ
 
-                                        , zfCalc_MarginPercent_PromoBonus (MarginCondition.MarginPercent,                               -- % наценки в КАТЕГОРИИ
-                                                                           PromoBonus.Amount, vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus)
+                                        /*, zfCalc_MarginPercent_PromoBonus (MarginCondition.MarginPercent,                               -- % наценки в КАТЕГОРИИ
+                                                                           PromoBonus.Amount, vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus)*/
 
                                         , CASE WHEN COALESCE (tmpGoodsSP.PercentMarkupSP, 0) > 0 THEN TRUE
                                                WHEN vbisTopNo_Unit = TRUE THEN FALSE 
@@ -239,7 +239,7 @@ BEGIN
                          --            AND View_Price.UnitId  = vbToId
                          --            AND (View_Price.isTop  = TRUE OR View_Price.Fix = TRUE OR View_Price.PercentMarkup <> 0)
 
-              LEFT JOIN PromoBonus ON PromoBonus.GoodsId = MovementItem_Income.GoodsId
+              --LEFT JOIN PromoBonus ON PromoBonus.GoodsId = MovementItem_Income.GoodsId
 
               LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsId = MovementItem_Income.GoodsId
 
@@ -311,4 +311,4 @@ $BODY$
  13.05.15                        *
  26.01.15                        *
 */
--- select * from gpUpdate_MovementItem_Income_SendPrice (inMovementId := 25179754 ,  inSession := '3');
+-- select * from gpUpdate_MovementItem_Income_SendPrice (inMovementId := 31273408  ,  inSession := '3');

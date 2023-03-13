@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , SummaTotal TFloat
              , PasswordEHels TVarChar
              , DateCalculation TDateTime
+             , PlanEmployeeTotal TFloat, PenaltiMobApp TFloat, FormCaption TVarChar, FormCaptionLeft TVarChar
               )
 AS
 $BODY$
@@ -241,6 +242,7 @@ BEGIN
                                                                           date_trunc('month', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', 
                                                                           inSession) AS T1
                                          GROUP BY T1.UnitId)
+              , tmpImplementationPlanEmployee AS (select * from gpReport_ImplementationPlanEmployeeUser(inStartDate := inOperDate,  inSession := inSession))
 
             SELECT MovementItem.Id                    AS Id
                  , MovementItem.ObjectId              AS UserID
@@ -308,6 +310,22 @@ BEGIN
                  , tmpAdditionalExpenses.SummaTotal             AS SummaTotal
                  , ObjectString_PasswordEHels.ValueData         AS UserPassword
                  , MovementDate_Calculation.ValueData           AS DateCalculation
+                 , tmpImplementationPlanEmployee.Total          AS PlanEmployeeTotal
+                 , tmpImplementationPlanEmployee.PenaltiMobApp  AS PenaltiMobApp
+                 , 'Зарплата':: TVarChar                        AS FormCaption
+                 , (CASE WHEN COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE) = TRUE 
+                         OR COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
+                        THEN ' <' ELSE '' END||
+                   CASE WHEN COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE) = TRUE 
+                        THEN 'Маркет: '||zfConvert_FloatToString(COALESCE(Round(tmpImplementationPlanEmployee.Total, 2), 0))  ELSE '' END||
+                   CASE WHEN COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE) = TRUE 
+                         AND COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
+                        THEN '; ' ELSE '' END||
+                   CASE WHEN COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
+                        THEN 'Прил: '||zfConvert_FloatToString(COALESCE(Round(tmpImplementationPlanEmployee.PenaltiMobApp, 2), 0)) ELSE '' END||
+                   CASE WHEN COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE) = TRUE 
+                          OR COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
+                        THEN '>' ELSE '' END):: TVarChar AS FormCaptionLeft
             FROM  MovementItem
             
                   LEFT JOIN MovementDate AS MovementDate_Calculation
@@ -375,6 +393,8 @@ BEGIN
                   LEFT JOIN tmpResult ON 1 = 1
                   
                   LEFT JOIN tmpAdditionalExpenses ON 1 = 1
+                  
+                  LEFT JOIN tmpImplementationPlanEmployee ON 1 = 1
 
                   LEFT JOIN ObjectString AS ObjectString_PasswordEHels
                          ON ObjectString_PasswordEHels.DescId = zc_ObjectString_User_Helsi_PasswordEHels() 
@@ -382,6 +402,14 @@ BEGIN
 
                   LEFT JOIN tmpFoundPositionsSUN AS FoundPositionsSUN
                                                  ON FoundPositionsSUN.UnitID = vbUnitId
+                                                 
+                  LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowPlanEmployeeUser
+                                          ON ObjectBoolean_ShowPlanEmployeeUser.ObjectId = vbUnitId
+                                         AND ObjectBoolean_ShowPlanEmployeeUser.DescId = zc_ObjectBoolean_Unit_ShowPlanEmployeeUser()
+                  LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowPlanMobileAppUser
+                                          ON ObjectBoolean_ShowPlanMobileAppUser.ObjectId = vbUnitId
+                                         AND ObjectBoolean_ShowPlanMobileAppUser.DescId = zc_ObjectBoolean_Unit_ShowPlanMobileAppUser()
+                                                 
 
             WHERE MovementItem.MovementId = vbMovementId
               AND MovementItem.ObjectId = vbUserId
@@ -401,4 +429,4 @@ $BODY$
  28.08.19                                                        *
 */
 -- 
-select * from gpGet_MovementItem_WagesUser(inOperDate := ('01.04.2020')::TDateTime ,  inSession := '3');
+select * from gpGet_MovementItem_WagesUser(inOperDate := ('01.03.2023')::TDateTime ,  inSession := '3');

@@ -5,28 +5,28 @@ inherited WagesUserForm: TWagesUserForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = actDataDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 670
-  ExplicitHeight = 488
+  ExplicitWidth = 672
+  ExplicitHeight = 496
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 156
+    Top = 157
     Width = 654
-    Height = 293
+    Height = 292
     TabOrder = 0
-    ExplicitTop = 156
+    ExplicitTop = 157
     ExplicitWidth = 654
-    ExplicitHeight = 293
-    ClientRectBottom = 293
+    ExplicitHeight = 292
+    ClientRectBottom = 292
     ClientRectRight = 654
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 654
-      ExplicitHeight = 293
+      ExplicitHeight = 292
       inherited cxGrid: TcxGrid
         Width = 654
-        Height = 126
+        Height = 125
         ExplicitWidth = 654
-        ExplicitHeight = 126
+        ExplicitHeight = 125
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -79,7 +79,7 @@ inherited WagesUserForm: TWagesUserForm
       end
       object PanelBottom: TPanel
         Left = 0
-        Top = 126
+        Top = 125
         Width = 654
         Height = 167
         Align = alBottom
@@ -765,15 +765,16 @@ inherited WagesUserForm: TWagesUserForm
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 235
-    Top = 256
+    Left = 219
+    Top = 248
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 32
+    Left = 24
+    Top = 248
   end
   inherited ActionList: TActionList
     Left = 111
-    Top = 207
+    Top = 199
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -869,7 +870,7 @@ inherited WagesUserForm: TWagesUserForm
   end
   inherited MasterDS: TDataSource
     Left = 24
-    Top = 200
+    Top = 192
   end
   inherited MasterCDS: TClientDataSet
     Left = 296
@@ -896,7 +897,7 @@ inherited WagesUserForm: TWagesUserForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -963,12 +964,27 @@ inherited WagesUserForm: TWagesUserForm
     Left = 224
     Top = 200
   end
+  inherited PopupMenu: TPopupMenu
+    Top = 248
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'inOperDate'
         Value = Null
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormCaption'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormCaptionLeft'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 504
@@ -1204,6 +1220,22 @@ inherited WagesUserForm: TWagesUserForm
         Value = Null
         Component = ceSummaOrderConfirmation
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormCaption'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormCaption'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormCaptionLeft'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormCaptionLeft'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

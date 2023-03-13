@@ -272,13 +272,13 @@ begin
      end;
      if DataSets[0].DataSet.Active and (DataSets[0].DataSet.RecordCount > 0) then
         B := DataSets[0].DataSet.GetBookmark;
-     try
-        if DataSets[0].DataSet is TClientDataSet then begin
-           FStringStream := GetStringStream(String(TStorageFactory.GetStorage.ExecuteProc(GetXML)));
-           TClientDataSet(DataSets[0].DataSet).LoadFromStream(FStringStream);
+     if DataSets[0].DataSet is TClientDataSet then begin
+        FStringStream := GetStringStream(String(TStorageFactory.GetStorage.ExecuteProc(GetXML)));
+        try
+          TClientDataSet(DataSets[0].DataSet).LoadFromStream(FStringStream);
+        finally
+          FreeAndNil(FStringStream);
         end;
-     finally
-       FreeAndNil(FStringStream);
      end;
      if Assigned(B) then
      begin
@@ -1384,7 +1384,7 @@ begin
      if DataSets[0].DataSet is TClientDataSet then
      begin
        if (SQLList.Count > 0) and Assigned(SQLList.Items[0]) and (TSQLStrings(SQLList.Items[0]).SQL.Text <> '') then
-         LoadSQLiteSQL(TClientDataSet(DataSets[0].DataSet), TSQLStrings(SQLList.Items[0]).SQL.Text)
+         LoadSQLiteSQL(TClientDataSet(DataSets[0].DataSet), TSQLStrings(SQLList.Items[0]).SQL.Text, Params)
        else ShowMessage('Не определен SQL для выполнения запроса.');
      end;
      if Assigned(B) then
@@ -1443,7 +1443,7 @@ begin
   ClientDataSet := TClientDataSet.Create(Nil);
   try
 
-    LoadSQLiteSQL(ClientDataSet, TSQLStrings(SQLList.Items[0]).SQL.Text);
+    LoadSQLiteSQL(ClientDataSet, TSQLStrings(SQLList.Items[0]).SQL.Text, Params);
 
     for I := 0 to Params.Count - 1 do
       if (Params[i].ParamType in [ptOutput, ptInputOutput])
@@ -1482,7 +1482,7 @@ function TdsdStoredProcSQLite.Execute(ExecPack: boolean = false; AnyExecPack: bo
 begin
   result := '';
 
-  if gc_User.Local = true then
+  if (gc_User.Local = true) or (StoredProcName = '') then
   begin
 
     if ACursorHourGlass then

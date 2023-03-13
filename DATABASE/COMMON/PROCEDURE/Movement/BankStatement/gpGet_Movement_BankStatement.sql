@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ServiceDate TDateTime
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar
+             , PersonalServiceListId Integer, PersonalServiceListName TVarChar
               )
 AS
 $BODY$
@@ -34,7 +35,9 @@ BEGIN
            , Object_BankAccount_View.Name        AS BankAccountName
            , Object_BankAccount_View.BankId
            , Object_BankAccount_View.BankName
-
+           --
+           , 0            AS PersonalServiceListId
+           , ''::TVarChar AS PersonalServiceListName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

@@ -5,7 +5,7 @@ inherited BankStatementForm: TBankStatementForm
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1100
-  ExplicitHeight = 454
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -333,6 +333,7 @@ inherited BankStatementForm: TBankStatementForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
+    ExplicitLeft = -1
     object cxLabel1: TcxLabel
       Left = 8
       Top = 5
@@ -400,6 +401,23 @@ inherited BankStatementForm: TBankStatementForm
       Properties.ShowTime = False
       TabOrder = 9
       Width = 112
+    end
+    object cxLabel5: TcxLabel
+      Left = 668
+      Top = 2
+      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
+    end
+    object edPersonalServiceList: TcxButtonEdit
+      Left = 668
+      Top = 20
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 218
     end
   end
   object cxSplitter: TcxSplitter [2]
@@ -697,6 +715,18 @@ inherited BankStatementForm: TBankStatementForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
+    object actUpdate_LinkJuridical: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_LinkJuridical
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_LinkJuridical
+        end>
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1091#1102' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1074' '#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091' ('#1085#1072#1081#1076#1077#1085#1086')'
+      ImageIndex = 30
+    end
     object actSendToBankAccount: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -864,6 +894,35 @@ inherited BankStatementForm: TBankStatementForm
           Value = Null
         end>
     end
+    object macUpdate_LinkJuridical_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_LinkJuridical
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1091#1102' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1074' '#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091' ('#1085#1072#1081#1076#1077#1085#1086')'
+      ImageIndex = 30
+    end
+    object macUpdate_LinkJuridical: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_LinkJuridical_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1091#1102' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1074' '#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091' ('#1085#1072 +
+        #1081#1076#1077#1085#1086')?'
+      InfoAfterExecute = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1072
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1091#1102' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1074' '#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091' ('#1085#1072#1081#1076#1077#1085#1086')'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1091#1102' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1074' '#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091' ('#1085#1072#1081#1076#1077#1085#1086')'
+      ImageIndex = 30
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -926,6 +985,14 @@ inherited BankStatementForm: TBankStatementForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_LinkJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocolOpenForm'
         end
         item
@@ -972,6 +1039,10 @@ inherited BankStatementForm: TBankStatementForm
     end
     object bbMovementProtocolOpenForm: TdxBarButton
       Action = MovementProtocolOpenForm
+      Category = 0
+    end
+    object bbUpdate_LinkJuridical: TdxBarButton
+      Action = macUpdate_LinkJuridical
       Category = 0
     end
   end
@@ -1035,9 +1106,23 @@ inherited BankStatementForm: TBankStatementForm
       end
       item
         Name = 'ServiceDate'
-        Value = 'NULL'
+        Value = Null
         Component = edServiceDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalServiceListId'
+        Value = Null
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalServiceListName'
+        Value = Null
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1099,7 +1184,7 @@ inherited BankStatementForm: TBankStatementForm
       end
       item
         Name = 'inServiceDate'
-        Value = 'NULL'
+        Value = Null
         Component = edServiceDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1107,7 +1192,7 @@ inherited BankStatementForm: TBankStatementForm
       end
       item
         Name = 'outServiceDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'ServiceDate'
         DataType = ftDateTime
@@ -1142,5 +1227,84 @@ inherited BankStatementForm: TBankStatementForm
     FormParams = 'FormParams'
     Left = 427
     Top = 253
+  end
+  object GuidesPersonalServiceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalServiceList
+    isShowModal = True
+    FormNameParam.Value = 'TPersonalServiceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalServiceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 760
+    Top = 13
+  end
+  object spUpdate_LinkJuridical: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_BankStatementItem_LinkJuridical'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inid'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'injuridicalid'
+        Value = Null
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 136
   end
 end

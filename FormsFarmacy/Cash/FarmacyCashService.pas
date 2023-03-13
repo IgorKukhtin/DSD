@@ -187,6 +187,7 @@ type
     spLoadPickUpLogsAndDBF: TdsdStoredProc;
     spUpdate_PickUpLogsAndDBF: TdsdStoredProc;
     UnitConfigCDS: TClientDataSet;
+    TimerTrayIconPUSH: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -203,6 +204,7 @@ type
     procedure TimerNeedRemainsDiffTimer(Sender: TObject);
     procedure CashRemainsDiffExecute;
     procedure spCheck_RemainsErrorAfterExecute(Sender: TObject);
+    procedure TimerTrayIconPUSHTimer(Sender: TObject);
 
   private
     { Private declarations }
@@ -221,6 +223,7 @@ type
     FisShowPlanEmployeeUser: boolean;
 
     FSaveLocalVIP: Integer;
+    TrayIconPUSHList: TStringList;
 
     function SetFarmacyNameByUser : boolean;
 
@@ -243,8 +246,11 @@ type
     procedure SaveDistributionPromo;
     procedure SaveImplementationPlanEmployee;
     procedure SaveZReportLog;
-    procedure SaveImplementationPlanEmployeeUser;
+    //procedure SaveImplementationPlanEmployeeUser;
     procedure SaveSalePromoGoods;
+    procedure SaveAsinoPharmaSP;
+    procedure SaveGoodsAllSP;
+
 //    procedure SaveGoodsAnalog;
 
     procedure SendZReport;
@@ -392,11 +398,11 @@ end;
 
 procedure TMainCashForm2.ChangeStatus(AStatus: String);
 Begin
-  Add_LogStatus(AStatus);
-  tiServise.BalloonHint := AStatus;
-  tiServise.ShowBalloonHint;
-  Sleep(2000);
-  tiServise.BalloonHint:='';
+  if AStatus <> '' then
+  begin
+    TrayIconPUSHList.Add(AStatus);
+    if not TimerTrayIconPUSH.Enabled then TimerTrayIconPUSH.Enabled := True
+  end;
 End;
 
 function TMainCashForm2.ExistNotCompletedCheck: boolean;
@@ -483,7 +489,7 @@ begin
       //Получение выполнения плана продаж по сотруднику
       if not gc_User.Local then SaveImplementationPlanEmployee;
       //Получение выполнения плана продаж по сотруднику итоги
-      if not gc_User.Local then SaveImplementationPlanEmployeeUser;
+      //if not gc_User.Local then SaveImplementationPlanEmployeeUser;
       //Получение акционных товаров
       if not gc_User.Local then SaveSalePromoGoods;
       // Отправляем логи
@@ -583,9 +589,14 @@ begin   //yes
       //Получение выполнения плана продаж по сотруднику
       if not gc_User.Local then SaveImplementationPlanEmployee;
       //Получение выполнения плана продаж по сотруднику итоги
-      if not gc_User.Local then SaveImplementationPlanEmployeeUser;
+      //if not gc_User.Local then SaveImplementationPlanEmployeeUser;
       //Получение акционных товаров
       if not gc_User.Local then SaveSalePromoGoods;
+      //Получение товаров социальной программы Асино Фарма Старт
+      if not gc_User.Local then SaveAsinoPharmaSP;
+      //Получение товаров СП для электронных рецептов
+      if not gc_User.Local then SaveGoodsAllSP;
+
 
       if not bError then PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 3);
       // Вывод уведомления сервиса
@@ -626,6 +637,7 @@ var
 begin
   Add_Log('== Start');
   TimerSaveReal.Enabled := false;
+  TrayIconPUSHList := TStringList.Create;
 
   try
     spGet_User_IsAdmin.Execute;
@@ -1085,6 +1097,20 @@ begin
     TimerSaveReal.Enabled := True;
     MainCashForm2.tiServise.IconIndex := GetTrayIcon;
     Application.ProcessMessages;
+  end;
+end;
+
+procedure TMainCashForm2.TimerTrayIconPUSHTimer(Sender: TObject);
+begin
+  try
+    if TrayIconPUSHList.Count > 0 then
+    begin
+      tiServise.BalloonHint := TrayIconPUSHList.Strings[0];
+      TrayIconPUSHList.Delete(0);
+    end else tiServise.BalloonHint := '';
+    tiServise.ShowBalloonHint;
+  finally
+    TimerTrayIconPUSH.Enabled := tiServise.BalloonHint <> '';
   end;
 end;
 
@@ -1610,7 +1636,7 @@ begin
                   dsdSave.Params.Clear;
                   if Head.ID > 0 then dsdSave.Params.AddParam('ioId', ftInteger, ptInputOutput, Head.ID)
                   else dsdSave.Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
-                  dsdSave.Params.AddParam('inUID', ftString, ptInput, Head.UID);
+                  dsdSave.Params.AddParam('inUID', ftString, ptInput, Trim(Head.UID));
                   dsdSave.Params.AddParam('inDate', ftDateTime, ptInput, Head.DATE);
                   dsdSave.Params.AddParam('inCashRegister', ftString, ptInput, Head.CASH);
                   dsdSave.Params.AddParam('inPaidType', ftInteger, ptInput, Head.PAIDTYPE);
@@ -2595,50 +2621,50 @@ end;
 //  end;
 //end;
 
-procedure TMainCashForm2.SaveImplementationPlanEmployeeUser;
-var
-  sp : TdsdStoredProc;
-  ds : TClientDataSet;
-begin
-  if not FisShowPlanEmployeeUser then Exit;
-
-  tiServise.Hint := 'Получение Выполнения плана продаж';
-  sp := TdsdStoredProc.Create(nil);
-  try
-    try
-      ds := TClientDataSet.Create(nil);
-      try
-        sp.OutputType := otDataSet;
-        sp.DataSet := ds;
-
-        sp.StoredProcName := 'gpReport_ImplementationPlanEmployeeUser';
-        sp.Params.Clear;
-        sp.Params.AddParam('inStartDate',ftDateTime,ptInput,Date);
-        sp.Execute;
-        Add_Log('Start MutexImplementationPlanEmployeeUser');
-        WaitForSingleObject(MutexImplementationPlanEmployeeUser, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
-        try
-          SaveLocalData(ds,ImplementationPlanEmployeeUser_lcl);
-        finally
-          Add_Log('End MutexImplementationPlanEmployeeUser');
-          ReleaseMutex(MutexImplementationPlanEmployeeUser);
-        end;
-
-      finally
-        ds.free;
-      end;
-    except
-      on E: Exception do
-      begin
-        Add_Log('SaveImplementationPlanEmployeeUser Exception: ' + E.Message);
-        Exit;
-      end;
-    end;
-  finally
-    freeAndNil(sp);
-    tiServise.Hint := 'Ожидание задания.';
-  end;
-end;
+//procedure TMainCashForm2.SaveImplementationPlanEmployeeUser;
+//var
+//  sp : TdsdStoredProc;
+//  ds : TClientDataSet;
+//begin
+//  if not FisShowPlanEmployeeUser then Exit;
+//
+//  tiServise.Hint := 'Получение Выполнения плана продаж';
+//  sp := TdsdStoredProc.Create(nil);
+//  try
+//    try
+//      ds := TClientDataSet.Create(nil);
+//      try
+//        sp.OutputType := otDataSet;
+//        sp.DataSet := ds;
+//
+//        sp.StoredProcName := 'gpReport_ImplementationPlanEmployeeUser';
+//        sp.Params.Clear;
+//        sp.Params.AddParam('inStartDate',ftDateTime,ptInput,Date);
+//        sp.Execute;
+//        Add_Log('Start MutexImplementationPlanEmployeeUser');
+//        WaitForSingleObject(MutexImplementationPlanEmployeeUser, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+//        try
+//          SaveLocalData(ds,ImplementationPlanEmployeeUser_lcl);
+//        finally
+//          Add_Log('End MutexImplementationPlanEmployeeUser');
+//          ReleaseMutex(MutexImplementationPlanEmployeeUser);
+//        end;
+//
+//      finally
+//        ds.free;
+//      end;
+//    except
+//      on E: Exception do
+//      begin
+//        Add_Log('SaveImplementationPlanEmployeeUser Exception: ' + E.Message);
+//        Exit;
+//      end;
+//    end;
+//  finally
+//    freeAndNil(sp);
+//    tiServise.Hint := 'Ожидание задания.';
+//  end;
+//end;
 
 // Получение акционных товаров
 procedure TMainCashForm2.SaveSalePromoGoods;
@@ -2686,6 +2712,85 @@ begin
     tiServise.Hint := 'Ожидание задания.';
   end;
 end;
+
+procedure TMainCashForm2.SaveAsinoPharmaSP;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  tiServise.Hint := 'Получение товаров социальной программы Асино Фарма Старт';
+
+  // Ждем сервер
+  PauseUpdateRemains;
+
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_AsinoPharmaSP_Cash';
+        sp.Params.Clear;
+        sp.Execute;
+        SaveLocalData(ds, 'AsinoPharmaSP', False);
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveAsinoPharmaSP Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
+  end;
+end;
+
+procedure TMainCashForm2.SaveGoodsAllSP;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  tiServise.Hint := 'Получение товаров СП для электронных рецептов';
+
+  // Ждем сервер
+  PauseUpdateRemains;
+
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_GoodsAllSP_Cash';
+        sp.Params.Clear;
+        sp.Execute;
+        SaveLocalData(ds, 'GoodsAllSP', False);
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        Add_Log('SaveSalePromoGoods Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+    tiServise.Hint := 'Ожидание задания.';
+  end;
+end;
+
 
 procedure TMainCashForm2.SendZReport;
   var IdFTP : Tidftp;
@@ -3058,6 +3163,7 @@ end;
 
 procedure TMainCashForm2.FormDestroy(Sender: TObject);
 begin
+ TrayIconPUSHList.Free;
  Add_Log('== Close');
  CloseMutex;
 end;

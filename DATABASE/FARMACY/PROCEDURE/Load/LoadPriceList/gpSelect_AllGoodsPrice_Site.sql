@@ -90,9 +90,9 @@ AS
 $BODY$
   DECLARE vbUserId           Integer;
   DECLARE vbObjectId         Integer;
-  DECLARE vbUpperLimitPromoBonus TFloat;
-  DECLARE vbLowerLimitPromoBonus TFloat;
-  DECLARE vbMinPercentPromoBonus TFloat;
+  --DECLARE vbUpperLimitPromoBonus TFloat;
+  --DECLARE vbLowerLimitPromoBonus TFloat;
+  --DECLARE vbMinPercentPromoBonus TFloat;
   DECLARE vbMarginPercent TFloat;
   DECLARE vbMarginPercentPromo TFloat;
 BEGIN
@@ -175,11 +175,11 @@ BEGIN
                       WHERE Object_PriceSite.DescId = zc_Object_PriceSite()
                       )
 
-  , PromoBonus AS (SELECT PromoBonus.Id                            AS Id
+  /*, PromoBonus AS (SELECT PromoBonus.Id                            AS Id
                         , PromoBonus.GoodsMainId                   AS GoodsId
                         , PromoBonus.Amount                        AS Amount
                    FROM gpSelect_PromoBonus_GoodsWeek (inSession) AS PromoBonus
-                   WHERE vbObjectId = 4)
+                   WHERE vbObjectId = 4)*/
   , tmpGoodsDiscount AS (SELECT ObjectLink_BarCode_Goods.ChildObjectId                     AS GoodsId
                               , MAX(COALESCE(ObjectFloat_MaxPrice.ValueData, 0))::TFloat   AS MaxPrice 
                          FROM Object AS Object_BarCode
@@ -208,12 +208,12 @@ BEGIN
           , Object_Price.PercentMarkup        AS PricePercentMarkup
           , SelectMinPrice_AllGoods.Remains   AS RemainsCount
           , Object_Goods.NDS                  AS NDS
-          , CASE WHEN COALESCE(PromoBonus.Amount, 0) = 0 THEN vbMarginPercent ELSE vbMarginPercentPromo END::TFloat AS MinMarginPercent
+          , CASE WHEN True /*COALESCE(PromoBonus.Amount, 0) = 0*/ THEN vbMarginPercent ELSE vbMarginPercentPromo END::TFloat AS MinMarginPercent
           , COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), COALESCE (Object_Goods.PercentMarkup, 0))::TFloat AS MarginPercent
           , (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)::TFloat AS Juridical_Price
           , zfCalc_SalePriceSite(
                               (COALESCE(NULLIF(SelectMinPrice_AllGoods.Price, 0), SelectMinPrice_AllGoods.MidPriceIncome) * (100 + Object_Goods.NDS)/100)               -- Цена С НДС
-                            , CASE WHEN COALESCE(PromoBonus.Amount, 0) = 0 THEN vbMarginPercent ELSE vbMarginPercentPromo END
+                            , CASE WHEN TRUE /*COALESCE(PromoBonus.Amount, 0) = 0*/ THEN vbMarginPercent ELSE vbMarginPercentPromo END
                             , Object_Goods.isTop                                                            -- ТОП позиция
                             , Object_Goods.isSpecial                                                        -- позиция спец условия
                             , COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) -- % наценки у товара
@@ -224,7 +224,7 @@ BEGIN
                              ) ::TFloat AS NewPrice
           , zfCalc_SalePriceSiteUnit(
                               SelectMinPrice_AllGoods.PriceUnitBase            -- Цена С НДС
-                            , CASE WHEN COALESCE(PromoBonus.Amount, 0) = 0 THEN vbMarginPercent ELSE vbMarginPercentPromo END
+                            , CASE WHEN True /*COALESCE(PromoBonus.Amount, 0) = 0*/ THEN vbMarginPercent ELSE vbMarginPercentPromo END
                             , Object_Goods.isTop                                                            -- ТОП позиция
                             , Object_Goods.isSpecial                                                        -- позиция спец условия
                             , COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) -- % наценки у товара
@@ -257,7 +257,7 @@ BEGIN
             Coalesce(ObjectBoolean_Goods_IsPromo.ValueData, False) :: Boolean   AS IsPromo,
             Coalesce(ObjectBoolean_Goods_Resolution_224.ValueData, False) :: Boolean   AS isResolution_224,
             Object_Goods.Price    AS PriceFix_Goods,
-            CASE WHEN COALESCE(PromoBonus.Amount, 0) <> 0 
+            CASE WHEN FALSE /*COALESCE(PromoBonus.Amount, 0) <> 0 */
                  THEN TRUE
                  ELSE FALSE  END::Boolean   AS isPromoBonus,
 
@@ -284,7 +284,7 @@ BEGIN
             SelectMinPrice_AllGoods.PricePromo,
             zfCalc_SalePriceSite(
                               (SelectMinPrice_AllGoods.PricePromo * (100 + Object_Goods.NDS)/100)               -- Цена С НДС
-                            , CASE WHEN COALESCE(PromoBonus.Amount, 0) = 0 THEN vbMarginPercent ELSE vbMarginPercentPromo END
+                            , CASE WHEN TRUE /*COALESCE(PromoBonus.Amount, 0) = 0*/ THEN vbMarginPercent ELSE vbMarginPercentPromo END
                             , Object_Goods.isTop                                                            -- ТОП позиция
                             , Object_Goods.isSpecial                                                        -- позиция спец условия
                             , COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) -- % наценки у товара
@@ -347,7 +347,7 @@ BEGIN
                                     ON ObjectBoolean_Goods_Resolution_224.ObjectId = SelectMinPrice_AllGoods.GoodsId_Main
                                    AND ObjectBoolean_Goods_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224()
 
-            LEFT JOIN PromoBonus ON PromoBonus.GoodsId = SelectMinPrice_AllGoods.GoodsId_Main
+            --LEFT JOIN PromoBonus ON PromoBonus.GoodsId = SelectMinPrice_AllGoods.GoodsId_Main
 
             LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsId = SelectMinPrice_AllGoods.GoodsId
 

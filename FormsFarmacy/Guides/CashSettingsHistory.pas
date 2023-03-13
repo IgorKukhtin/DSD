@@ -21,17 +21,23 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxCurrencyEdit;
+  dxSkinXmas2008Blue, cxCurrencyEdit, cxGridBandedTableView,
+  cxGridDBBandedTableView;
 
 type
   TCashSettingsHistoryForm = class(TAncestorEnumForm)
     FormParams: TdsdFormParams;
-    StartDate: TcxGridDBColumn;
-    FixedPercent: TcxGridDBColumn;
+    StartDate: TcxGridDBBandedColumn;
+    FixedPercent: TcxGridDBBandedColumn;
     spInsertUpdate_ObjectHistory_CashSettings: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    PenMobApp: TcxGridDBColumn;
-    PrizeThreshold: TcxGridDBColumn;
+    PenMobApp: TcxGridDBBandedColumn;
+    PrizeThreshold: TcxGridDBBandedColumn;
+    MarkPlanThreshol: TcxGridDBBandedColumn;
+    cxGridDBBandedTableView1: TcxGridDBBandedTableView;
+    FixedPercentB: TcxGridDBBandedColumn;
+    FixedPercentC: TcxGridDBBandedColumn;
+    FixedPercentD: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

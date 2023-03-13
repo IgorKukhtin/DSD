@@ -1,27 +1,27 @@
 inherited Report_ImplementationPlanEmployeeUserForm: TReport_ImplementationPlanEmployeeUserForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1102' '#1087#1083#1072#1085#1072' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091' ('#1080#1090#1086#1075#1080')'
   ClientHeight = 370
-  ClientWidth = 1111
+  ClientWidth = 1087
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1127
-  ExplicitHeight = 409
+  ExplicitWidth = 1105
+  ExplicitHeight = 417
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1111
+    Width = 1087
     Height = 313
-    ExplicitWidth = 824
-    ExplicitHeight = 447
+    ExplicitWidth = 1111
+    ExplicitHeight = 313
     ClientRectBottom = 313
-    ClientRectRight = 1111
+    ClientRectRight = 1087
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 824
-      ExplicitHeight = 447
+      ExplicitWidth = 1111
+      ExplicitHeight = 313
       inherited cxGrid: TcxGrid
-        Width = 1111
+        Width = 1087
         Height = 313
-        ExplicitWidth = 824
-        ExplicitHeight = 447
+        ExplicitWidth = 1111
+        ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -72,7 +72,7 @@ inherited Report_ImplementationPlanEmployeeUserForm: TReport_ImplementationPlanE
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 188
+            Width = 148
           end
           object PositionName: TcxGridDBColumn
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
@@ -95,7 +95,7 @@ inherited Report_ImplementationPlanEmployeeUserForm: TReport_ImplementationPlanE
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 220
+            Width = 173
           end
           object UnitCategoryName: TcxGridDBColumn
             Caption = #1050#1072#1090#1077'- '#1075#1086#1088#1080#1103
@@ -160,13 +160,31 @@ inherited Report_ImplementationPlanEmployeeUserForm: TReport_ImplementationPlanE
             Options.Editing = False
             Width = 76
           end
+          object FixedPercent: TcxGridDBColumn
+            Caption = #1044#1086#1087'. '#1087#1088#1086#1094#1077#1085#1090
+            DataBinding.FieldName = 'FixedPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object AddBonusPercentTab: TcxGridDBColumn
+            Caption = #1044#1086#1087'. '#1073#1086#1085#1091#1089
+            DataBinding.FieldName = 'AddBonusPercentTab'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1111
-    ExplicitWidth = 824
+    Width = 1087
+    ExplicitWidth = 1111
     inherited deStart: TcxDateEdit
       EditValue = 43344d
       Properties.DisplayFormat = 'mmmm yyyy'

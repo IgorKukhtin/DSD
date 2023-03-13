@@ -3,8 +3,8 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
   ClientHeight = 480
   ClientWidth = 1170
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1186
-  ExplicitHeight = 519
+  ExplicitWidth = 1188
+  ExplicitHeight = 527
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -523,6 +523,14 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
             HeaderAlignmentVert = vaCenter
             Width = 62
           end
+          object isSalaryException: TcxGridDBColumn
+            Caption = #1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1047#1055' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091
+            DataBinding.FieldName = 'isSalaryException'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
+          end
         end
       end
     end
@@ -985,6 +993,21 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1077#1088#1074#1072#1103' '#1087#1086#1082#1091#1087#1082#1072'"'
       ImageIndex = 80
     end
+    object actUpdate_SalaryException_Revert: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SalaryException_Revert
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SalaryException_Revert
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1047#1055' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1047#1055' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091'"'
+      ImageIndex = 7
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077' '#1087#1086' '#1047#1055' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -1152,6 +1175,10 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton5'
         end>
     end
     object dxBarButton1: TdxBarButton
@@ -1205,6 +1232,10 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
     end
     object bbUpdate_MobileFirstOrder: TdxBarButton
       Action = actUpdate_MobileFirstOrder
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actUpdate_SalaryException_Revert
       Category = 0
     end
   end
@@ -1386,5 +1417,31 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
     PackSize = 1
     Left = 840
     Top = 328
+  end
+  object spUpdate_SalaryException_Revert: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_SalaryException_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSalaryException'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSalaryException'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 232
   end
 end

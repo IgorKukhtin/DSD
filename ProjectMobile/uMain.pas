@@ -24,7 +24,8 @@ uses
   FMX.Grid.Style, FMX.Media, FMX.Surfaces, FMX.VirtualKeyboard, FMX.SearchBox, IniFiles,
   FMX.Ani, FMX.DialogService, FMX.Utils, FMX.Styles, FMX.ComboEdit, DateUtils
   {$IFDEF ANDROID}
-  ,FMX.Helpers.Android, Androidapi.Helpers,
+  ,System.Permissions,Androidapi.JNI.Os,
+  FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge,
   Androidapi.JNI.GraphicsContentViewText,
   Androidapi.JNI.JavaTypes,
@@ -180,7 +181,6 @@ type
     Panel4: TPanel;
     lwPartner: TListView;
     bsPartner: TBindSourceDB;
-    LinkListControlToField2: TLinkListControlToField;
     ilPartners: TImageList;
     pOrderTotals: TPanel;
     lTotalPrice: TLabel;
@@ -202,7 +202,6 @@ type
     bClosePhoto: TButton;
     lwPartnerPhotoGroups: TListView;
     lwOrderExternalItems: TListView;
-    LinkListControlToFieldOrderExternalItems: TLinkListControlToField;
     Panel14: TPanel;
     lOrderPrice: TLabel;
     Label14: TLabel;
@@ -251,7 +250,6 @@ type
     Label24: TLabel;
     Label25: TLabel;
     Label27: TLabel;
-    LinkFillControlToField1: TLinkFillControlToField;
     bMinusAmount: TButton;
     VertScrollBox4: TVertScrollBox;
     Label19: TLabel;
@@ -259,7 +257,6 @@ type
     lPartnerAddress: TLabel;
     lPartnerName: TLabel;
     lwOrderExternalList: TListView;
-    LinkListControlToFieldOrderExternal: TLinkListControlToField;
     pNewOrderExternal: TPanel;
     bNewOrderExternal: TButton;
     tSavePath: TTimer;
@@ -282,9 +279,7 @@ type
     ePhotoGroupName: TEdit;
     Label29: TLabel;
     bsPhotoGroups: TBindSourceDB;
-    LinkListControlToField6: TLinkListControlToField;
     bsPhotos: TBindSourceDB;
-    LinkListControlToField7: TLinkListControlToField;
     bsOrderExternal: TBindSourceDB;
     tiPhotoEdit: TTabItem;
     Panel19: TPanel;
@@ -305,10 +300,8 @@ type
     Label33: TLabel;
     eStoreRealComment: TEdit;
     bsStoreReals: TBindSourceDB;
-    LinkListControlToFieldStoreReal: TLinkListControlToField;
     bAddStoreRealItem: TButton;
     Image14: TImage;
-    LinkListControlToFieldStoreRealItems: TLinkListControlToField;
     lPriceWithPercent: TLabel;
     pPhotoComment: TPanel;
     bSavePhoto: TButton;
@@ -336,9 +329,7 @@ type
     Panel26: TPanel;
     Label20: TLabel;
     eReturnComment: TEdit;
-    LinkListControlToFieldReturnInItems: TLinkListControlToField;
     bsReturnIn: TBindSourceDB;
-    LinkListControlToFieldReturnIn: TLinkListControlToField;
     bSyncData: TButton;
     pProgress: TPanel;
     Layout6: TLayout;
@@ -375,7 +366,6 @@ type
     tiPromoGoods: TTabItem;
     lwPriceList: TListView;
     bsPriceList: TBindSourceDB;
-    LinkListControlToField1: TLinkListControlToField;
     tiInformation: TTabItem;
     VertScrollBox6: TVertScrollBox;
     lUnitRet: TLayout;
@@ -407,7 +397,6 @@ type
     bsReturnInItems: TBindSourceDB;
     bsGoodsItems: TBindSourceDB;
     bsPriceListGoods: TBindSourceDB;
-    LinkListControlToField12: TLinkListControlToField;
     lwPromoGoods: TListView;
     Popup3: TPopup;
     Panel29: TPanel;
@@ -436,9 +425,7 @@ type
     Label42: TLabel;
     dePromoGoodsDate: TDateEdit;
     bsPromoPartners: TBindSourceDB;
-    LinkListControlToField4: TLinkListControlToField;
     bsPromoGoods: TBindSourceDB;
-    LinkListControlToField13: TLinkListControlToField;
     tiReports: TTabItem;
     bReportJuridicalCollation: TButton;
     tiReportJuridicalCollation: TTabItem;
@@ -460,7 +447,6 @@ type
     bPrintJuridicalCollation: TButton;
     tiPrintJuridicalCollation: TTabItem;
     lwJuridicalCollation: TListView;
-    LinkListControlToField14: TLinkListControlToField;
     Panel31: TPanel;
     Layout15: TLayout;
     Label47: TLabel;
@@ -495,7 +481,6 @@ type
     lwTasks: TListView;
     Panel33: TPanel;
     bsTasks: TBindSourceDB;
-    LinkListControlToFieldTasks: TLinkListControlToField;
     pTaskComment: TPanel;
     bSaveTask: TButton;
     bCancelTask: TButton;
@@ -509,7 +494,6 @@ type
     cbUseDateTask: TCheckBox;
     deDateTask: TDateEdit;
     lwPartnerTasks: TListView;
-    LinkListControlToField16: TLinkListControlToField;
     lServerVersion: TLayout;
     Label48: TLabel;
     eServerVersion: TEdit;
@@ -632,7 +616,6 @@ type
     tiPhotoDocs: TTabItem;
     lwPhotoDocs: TListView;
     bshotoGroupDocs: TBindSourceDB;
-    LinkListControlToField3: TLinkListControlToField;
     imCapture: TImage;
     imRevert: TImage;
     Panel7: TPanel;
@@ -681,7 +664,6 @@ type
     Panel40: TPanel;
     eCashComment: TEdit;
     bsCash: TBindSourceDB;
-    LinkListControlToFieldCash: TLinkListControlToField;
     tiCashDocs: TTabItem;
     lwCashDocs: TListView;
     Panel42: TPanel;
@@ -729,7 +711,6 @@ type
     Button56: TButton;
     Label90: TLabel;
     dsGoodsFullForPrice: TBindSourceDB;
-    LinkListControlToField5: TLinkListControlToField;
 
     pBackup_two: TPanel;
     GridPanelLayout15_two: TGridPanelLayout;
@@ -826,7 +807,6 @@ type
     Label101: TLabel;
     Label102: TLabel;
     bsJuridicalCollation: TBindSourceDB;
-    LinkListControlToField8: TLinkListControlToField;
     Layout46: TLayout;
     Label103: TLabel;
     lChangePercent: TLabel;
@@ -844,6 +824,27 @@ type
     lDocBranch: TLabel;
     lDocContract: TLabel;
     LocationSensor1: TLocationSensor;
+    LinkListControlToField2: TLinkListControlToField;
+    LinkListControlToField9: TLinkListControlToField;
+    LinkListControlToField5: TLinkListControlToField;
+    LinkListControlToField11: TLinkListControlToField;
+    LinkListControlToField10: TLinkListControlToField;
+    LinkListControlToField15: TLinkListControlToField;
+    LinkListControlToField8: TLinkListControlToField;
+    LinkListControlToField16: TLinkListControlToField;
+    LinkListControlToField17: TLinkListControlToField;
+    LinkFillControlToField: TLinkFillControlToField;
+    LinkListControlToField14: TLinkListControlToField;
+    LinkListControlToField12: TLinkListControlToField;
+    LinkListControlToField18: TLinkListControlToField;
+    LinkListControlToField19: TLinkListControlToField;
+    LinkListControlToField13: TLinkListControlToField;
+    LinkListControlToField20: TLinkListControlToField;
+    LinkListControlToField3: TLinkListControlToField;
+    LinkListControlToField4: TLinkListControlToField;
+    LinkListControlToField7: TLinkListControlToField;
+    LinkListControlToField6: TLinkListControlToField;
+    LinkListControlToField1: TLinkListControlToField;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -1137,6 +1138,8 @@ type
     FPaidKindChangedR: boolean;
     FPaidKindChangedC: boolean;
 
+    FPermissionState: boolean;
+
     procedure SetCashAmountValue(Value: Double);
 
     procedure OnCloseDialog(const AResult: TModalResult);
@@ -1360,7 +1363,7 @@ begin
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
   {$ELSE}
-  SettingsFile := TIniFile.Create('settings.ini');
+  SettingsFile := TIniFile.Create(TPath.Combine(ExtractFilePath(ParamStr(0)), 'settings.ini'));
   {$ENDIF}
   try
     LoginEdit.Text := SettingsFile.ReadString('LOGIN', 'USERNAME', '');
@@ -1384,7 +1387,7 @@ begin
   if TPlatformServices.Current.SupportsPlatformService(IFMXScreenService, IInterface(ScreenService)) then
   begin
     OrientSet := [TScreenOrientation.Portrait];
-    ScreenService.SetScreenOrientation(OrientSet);
+    ScreenService.SetSupportedScreenOrientations(OrientSet);
   end;
   {$ENDIF}
 
@@ -1414,7 +1417,28 @@ begin
 
   FEditCashAmount := false;
   FSensorCoordinates := TLocationCoord2D.Create(0, 0);
-end;
+  FPermissionState := True;
+
+  // установка разрешений
+  {$IFDEF ANDROID}
+  if not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.READ_PHONE_STATE)) or
+     not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.CAMERA)) or
+     not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.ACCESS_FINE_LOCATION)) or
+     not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.WRITE_EXTERNAL_STORAGE)) then
+  begin
+    FPermissionState := False;
+    PermissionsService.RequestPermissions([JStringToString(TJManifest_permission.JavaClass.READ_PHONE_STATE),
+                                           JStringToString(TJManifest_permission.JavaClass.CAMERA),
+                                           JStringToString(TJManifest_permission.JavaClass.ACCESS_FINE_LOCATION),
+                                           JStringToString(TJManifest_permission.JavaClass.WRITE_EXTERNAL_STORAGE)],
+      procedure(const APermissions: TClassicStringDynArray; const AGrantResults: TClassicPermissionStatusDynArray)
+      begin
+        if (Length(AGrantResults) > 1) and (AGrantResults[0] = TPermissionStatus.Granted) then
+          FPermissionState := True;
+      end);
+  end;
+  {$ENDIF}
+ end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
@@ -1714,10 +1738,15 @@ var
 begin
   NeedSync := not assigned(gc_User) or SyncCheckBox.IsChecked;
 
+  if not FPermissionState then
+  begin
+    ShowMessage('Необходимые разрешения не предоставлены');
+    exit;
+  end;
+
   // !!!Optimize!!!
   if SyncCheckBox.IsChecked = TRUE then
      fOptimizeDB;
-
 
   if gc_WebService = '' then
     gc_WebService := WebServerEdit.Text;
@@ -1733,25 +1762,27 @@ begin
       ShowMessage(ErrorMessage);
       exit;
     end;
-  except
-    Wait(False);
-
-    if assigned(gc_User) then  { Проверяем login и password в локальной БД }
+  except on E: Exception do
     begin
-      gc_User.Local := true;
+      Wait(False);
 
-      if (LoginEdit.Text <> gc_User.Login) or (PasswordEdit.Text <> gc_User.Password) then
+      if assigned(gc_User) then  { Проверяем login и password в локальной БД }
       begin
-        ShowMessage('Введен неправильный логин или пароль');
-        exit;
+        gc_User.Local := true;
+
+        if (LoginEdit.Text <> gc_User.Login) or (PasswordEdit.Text <> gc_User.Password) then
+        begin
+          ShowMessage('Введен неправильный логин или пароль');
+          exit;
+        end
+        else
+          ShowMessage('Нет связи с сервером. Программа переведена в режим автономной работы.');
       end
       else
-        ShowMessage('Нет связи с сервером. Программа переведена в режим автономной работы.');
-    end
-    else
-    begin
-      ShowMessage('Нет связи с сервером. Продолжение работы невозможно');
-      exit;
+      begin
+        ShowMessage('Нет связи с сервером. Продолжение работы невозможно'+#13#10 + E.Message);
+        exit;
+      end;
     end;
     //
   end;
@@ -1778,7 +1809,7 @@ begin
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
   {$ELSE}
-  SettingsFile := TIniFile.Create('settings.ini');
+  SettingsFile := TIniFile.Create(TPath.Combine(ExtractFilePath(ParamStr(0)), 'settings.ini'));
   {$ENDIF}
   try
     SettingsFile.WriteString('LOGIN', 'USERNAME', LoginEdit.Text);
@@ -3462,7 +3493,8 @@ begin
     FUseAdminRights := false;
     WebServerLayout.Height := 0;
     CurWebServerLayout.Height := 0;
-    gc_WebService := gc_WebServers[0];
+    if High(gc_WebServers) > 0 then gc_WebService := gc_WebServers[0]
+    else gc_WebService := '';
     //
     pBackup_two.Visible := false;
     pOptimizeDB_two.Visible := false;
@@ -3926,7 +3958,7 @@ begin
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
   {$ELSE}
-  SettingsFile := TIniFile.Create('settings.ini');
+  SettingsFile := TIniFile.Create(TPath.Combine(ExtractFilePath(ParamStr(0)), 'settings.ini'));
   {$ENDIF}
   try
     SettingsFile.WriteString('REPORT', 'StartRJC', FormatDateTime('DD.MM.YYYY', deStartRJC.Date));
@@ -6159,7 +6191,10 @@ begin
   if not SameText(gc_WebService, DM.tblObject_ConstWebService.AsString) then
   begin
     lCurWebService.Height := 60;
-    eCurWebService.Text := gc_WebService + ' ; ' + gc_WebServers[1] + ' ; ' + gc_WebServers_r[0] + ' ; ' + gc_WebServers_r[1];
+    eCurWebService.Text := gc_WebService;
+    if High(gc_WebServers) > 1 then eCurWebService.Text := eCurWebService.Text+ ' ; ' + gc_WebServers[1];
+    if High(gc_WebServers_r) > 0 then eCurWebService.Text := eCurWebService.Text+ ' ; ' + gc_WebServers_r[0];
+    if High(gc_WebServers_r) > 1 then eCurWebService.Text := eCurWebService.Text+ ' ; ' + gc_WebServers_r[1];
   end
   else
     lCurWebService.Height := 0;

@@ -108,16 +108,25 @@ BEGIN
                                  AND COALESCE (tmpMI.MovementItemId, 0) = 0);
 
      -- Добавляем новые
-     PERFORM lpInsertUpdate_MI_PromoBonus (ioId          := COALESCE(tmpMI.Id, 0)
-                                         , inMovementId  := inMovementId
-                                         , inGoodsId     := COALESCE (tmpMI.GoodsPromoId, tmpMI.GoodsId)
-                                         , inMIPromoId   := COALESCE (tmpMI.MovementItemId, tmpMI.GoodsId)
-                                         , inAmount      := COALESCE (tmpMI.Amount, 0)
-                                         , inUserId      := vbUserId)
+     PERFORM lpInsertUpdate_MI_PromoBonus (ioId             := COALESCE(tmpMI.Id, 0)
+                                         , inMovementId     := inMovementId
+                                         , inGoodsId        := COALESCE (tmpMI.GoodsPromoId, tmpMI.GoodsId)
+                                         , inMIPromoId      := COALESCE (tmpMI.MovementItemId, tmpMI.GoodsId)
+                                         , inAmount         := COALESCE (tmpMI.Amount, 0)
+                                         , inBonusInetOrder := COALESCE (MIFloat_BonusInetOrder.ValueData, 0)
+                                         , inUserId         := vbUserId)
      FROM tmpMI
+          LEFT JOIN MovementItemFloat AS MIFloat_BonusInetOrder
+                                      ON MIFloat_BonusInetOrder.MovementItemId = COALESCE(tmpMI.Id, 0)
+                                     AND MIFloat_BonusInetOrder.DescId = zc_MIFloat_BonusInetOrder()
      WHERE COALESCE (tmpMI.MovementItemId, 0) <> 0
        AND COALESCE (tmpMI.GoodsPromoId, 0) <> COALESCE (tmpMI.GoodsId, 0);
 
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+    /*IF inSession = zfCalc_UserAdmin()
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%>', inSession;
+    END IF;*/
 
 END;
 $BODY$
@@ -130,5 +139,4 @@ $BODY$
 */
 
 -- тест
--- 
-select * from gpInsert_MI_PromoBonus_byPromo(inMovementId := 22181875  ,  inSession := '3');
+-- select * from gpInsert_MI_PromoBonus_byPromo(inMovementId := 22181875  ,  inSession := '3');

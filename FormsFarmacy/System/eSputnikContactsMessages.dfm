@@ -52,171 +52,21 @@ object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 57
+    Top = 61
     Width = 812
-    Height = 383
+    Height = 379
     Align = alClient
     TabOrder = 5
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Summary.DefaultGroupSummaryItems = <
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00;-,0.00; ;'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00;-,0.00; ;'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00;-,0.00; ;'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00;-,0.00; ;'
-          Kind = skSum
-        end>
+      DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
-          Kind = skCount
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
-          Kind = skCount
-        end
-        item
-          Format = ',0.00;-,0.00; ;'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00;-,0.00; ;'
-          Kind = skSum
-        end
         item
           Format = #1057#1086#1086#1073#1097#1077#1085#1080#1081' 0'
           Kind = skCount
           Column = text
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -237,7 +87,7 @@ object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object GoodsCode: TcxGridDBColumn
+      object sentDateTime: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1076#1086#1089#1090#1072#1074#1082#1080
         DataBinding.FieldName = 'sentDateTime'
         HeaderAlignmentHorz = taCenter
@@ -245,7 +95,7 @@ object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
         Options.Editing = False
         Width = 164
       end
-      object GoodsName: TcxGridDBColumn
+      object activityStatus: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'activityStatus'
         HeaderAlignmentHorz = taCenter
@@ -295,7 +145,7 @@ object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -15
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -314,7 +164,7 @@ object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
     DockControlHeights = (
       0
       0
-      26
+      30
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'

@@ -62,9 +62,9 @@ $BODY$
   DECLARE vbIsGoodsPromo Boolean;
   DECLARE vbCostCredit TFloat;
   DECLARE vbMainJuridicalId Integer;
-  DECLARE vbUpperLimitPromoBonus TFloat;
-  DECLARE vbLowerLimitPromoBonus TFloat;
-  DECLARE vbMinPercentPromoBonus TFloat;
+  --DECLARE vbUpperLimitPromoBonus TFloat;
+  --DECLARE vbLowerLimitPromoBonus TFloat;
+  --DECLARE vbMinPercentPromoBonus TFloat;
 BEGIN
     -- !!!так "криво" определятся НАДО ЛИ учитывать маркет. контракт!!!
     vbIsGoodsPromo:= inObjectId >=0;
@@ -73,7 +73,7 @@ BEGIN
     
     vbMainJuridicalId := 1311462;
  
-    SELECT ObjectFloat_CashSettings_UpperLimitPromoBonus.ValueData                  AS UpperLimitPromoBonus
+    /*SELECT ObjectFloat_CashSettings_UpperLimitPromoBonus.ValueData                  AS UpperLimitPromoBonus
          , ObjectFloat_CashSettings_LowerLimitPromoBonus.ValueData                  AS LowerLimitPromoBonus
          , ObjectFloat_CashSettings_MinPercentPromoBonus.ValueData                  AS MinPercentPromoBonus
     INTO vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus
@@ -88,7 +88,7 @@ BEGIN
                                ON ObjectFloat_CashSettings_MinPercentPromoBonus.ObjectId = Object_CashSettings.Id
                               AND ObjectFloat_CashSettings_MinPercentPromoBonus.DescId = zc_ObjectFloat_CashSettings_MinPercentPromoBonus()
     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
-    LIMIT 1;
+    LIMIT 1;*/
 
     -- Перечень активных аптек 
     CREATE TEMP TABLE _tmpUnit ON COMMIT DROP AS
@@ -238,11 +238,11 @@ BEGIN
                       GROUP BY Container.ObjectId_retail
                              , Container.UnitId 
                       )
-       , PromoBonus AS (SELECT PromoBonus.Id                            AS Id
+       /*, PromoBonus AS (SELECT PromoBonus.Id                            AS Id
                              , PromoBonus.GoodsId                       AS GoodsId
                              , PromoBonus.Amount                        AS Amount
                         FROM gpSelect_PromoBonus_GoodsWeek (inUserId::TVArChar) AS PromoBonus
-                        )
+                        )*/
        , tmpPreceUnit AS 
                      (SELECT Container.GoodsId      AS GoodsId
                            , Container.UnitId 
@@ -255,8 +255,9 @@ BEGIN
                                               AND ObjectFloat_Goods_Price.ValueData > 0
                                              THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
                                              ELSE Price_Value.ValueData * (100 - CASE WHEN ObjectFloat_Goods_PercentMarkup.ValueData = 100 THEN 0
-                                                                                      ELSE zfCalc_MarginPercent_PromoBonus (COALESCE(NULLIF(ObjectFloat_Goods_PercentMarkup.ValueData, 0), MarginCategory.MarginPercent, 0),
-                                                                                           PromoBonus.Amount, vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus) END) / 100
+                                                                                      ELSE COALESCE(NULLIF(ObjectFloat_Goods_PercentMarkup.ValueData, 0), MarginCategory.MarginPercent, 0)
+                                                                                     /* zfCalc_MarginPercent_PromoBonus (COALESCE(NULLIF(ObjectFloat_Goods_PercentMarkup.ValueData, 0), MarginCategory.MarginPercent, 0),
+                                                                                           PromoBonus.Amount, vbUpperLimitPromoBonus, vbLowerLimitPromoBonus, vbMinPercentPromoBonus)*/ END) / 100
                              END                                          AS PriceBase
                            , ROW_NUMBER() OVER (Partition BY Container.GoodsId ORDER BY CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                                                                                               AND ObjectFloat_Goods_Price.ValueData > 0
@@ -294,7 +295,7 @@ BEGIN
                            LEFT JOIN MarginCategory  ON ROUND (Price_Value.ValueData, 2) >= MarginCategory.MinPrice     
                                                     AND ROUND (Price_Value.ValueData, 2) < MarginCategory.MaxPrice
                                                     AND MarginCategory.UnitId = Container.UnitId 
-                           LEFT JOIN PromoBonus ON PromoBonus.GoodsId = Container.GoodsId
+                           --LEFT JOIN PromoBonus ON PromoBonus.GoodsId = Container.GoodsId
                        )
        , tmpMidPreceUnit AS 
                      (SELECT Container.GoodsId      AS GoodsId

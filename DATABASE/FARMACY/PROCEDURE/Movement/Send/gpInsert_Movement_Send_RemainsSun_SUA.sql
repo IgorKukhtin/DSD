@@ -146,11 +146,11 @@ BEGIN
           ;
 
      -- 8. ”дал€ем документы, что б не мешали
-     PERFORM lpSetErased_Movement (inMovementId := tmp.MovementId
+     /*PERFORM lpSetErased_Movement (inMovementId := tmp.MovementId
                                  , inUserId     := vbUserId
                                   )
      FROM (SELECT DISTINCT _tmpResult_SUA.MovementId FROM _tmpResult_SUA WHERE _tmpResult_SUA.MovementId > 0
-          ) AS tmp;
+          ) AS tmp;*/
     
      -- 9. Cохранили количество <—формировано в перемещение>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SendSUN(), MovementItem.Id, COALESCE(SUM(_tmpResult_SUA.Amount), 0))
@@ -190,3 +190,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsert_Movement_Send_RemainsSun_SUA (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+

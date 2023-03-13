@@ -1,30 +1,33 @@
--- Function: gpSelect_Movement_Check()
+-- Function: gpUpdate_Movement_Check__SalaryException()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_ApplicationAward (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_SalaryException_Revert(Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_ApplicationAward(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
-    IN inSession       TVarChar    -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpUpdate_Movement_Check_SalaryException_Revert(
+    IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inisSalaryException   Boolean   , -- Исключение по ЗП сотруднику
+    IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
-             , TotalCount TFloat, TotalSumm TFloat, TotalSummChangePercent TFloat
-             , UnitName TVarChar
-             , InvNumberOrder TVarChar
-             , MobileDiscount TFloat
-             , UserReferalsName TVarChar, UserUnitReferalsName TVarChar, ApplicationAward TFloat
-             , ApplicationAwardSave TFloat
-              )
-AS
+RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
-     vbUserId:= lpGetUserBySession (inSession);
+  -- проверка прав пользователя на вызов процедуры
+  -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
+  vbUserId := inSession;
 
-     -- Результат
-     RETURN QUERY
+  IF NOT EXISTS(SELECT 1
+                FROM MovementBoolean
+                WHERE MovementBoolean.DescId = zc_MovementBoolean_SalaryException()
+                  AND MovementBoolean.MovementId = inMovementId
+                  AND MovementBoolean.ValueData = NOT inisSalaryException) 
+  THEN
+
+    -- Меняем признак Исключение по ЗП сотруднику
+    Perform lpInsertUpdate_MovementBoolean(zc_MovementBoolean_SalaryException(), inMovementId, NOT inisSalaryException);
+    
+    
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ApplicationAward(), inMovementId, T1.ApplicationAward)
+     FROM (
        WITH tmpMovement_Check AS (SELECT Movement.*
                                        , MovementLinkObject_Unit.ObjectId                            AS UnitId
                                        , COALESCE (MovementBoolean_SalaryException.ValueData, FALSE) AS isSalaryException
@@ -43,10 +46,7 @@ BEGIN
                                                                     ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()                                                                                    
 
-                                  WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate) 
-                                    AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
-                                    AND Movement.DescId = zc_Movement_Check()
-                                    AND Movement.StatusId = zc_Enum_Status_Complete()
+                                  WHERE Movement.ID = inMovementId
                                  )
           , tmpEmployeeSchedule AS (SELECT DISTINCT
                                            Movement.OperDate                        AS OperDate
@@ -62,7 +62,7 @@ BEGIN
                                                                                ON MILinkObject_Unit.MovementItemId = MovementItemMaster.Id
                                                                               AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
 
-                                        WHERE Movement.OperDate BETWEEN date_trunc('Month', inStartDate) AND date_trunc('Month', inEndDate)
+                                        WHERE Movement.OperDate = date_trunc('Month', (SELECT tmpMovement_Check.OperDate FROM tmpMovement_Check))
                                           AND Movement.DescId = zc_Movement_EmployeeSchedule()
                                           AND Movement.StatusId <> zc_Enum_Status_Erased()),
             tmpGoodsDiscount AS (SELECT Object_Goods_Retail.Id                                    AS GoodsId
@@ -98,8 +98,8 @@ BEGIN
                                            LEFT JOIN tmpGoodsDiscount ON tmpGoodsDiscount.GoodsMainId = Object_Goods_Main.Id
                                                                      AND tmpGoodsDiscount.ORD = 1
 
-                                      WHERE MovementItemContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate)
-                                        AND MovementItemContainer.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
+                                      WHERE MovementItemContainer.OperDate >= DATE_TRUNC ('DAY', (SELECT tmpMovement_Check.OperDate FROM tmpMovement_Check))
+                                        AND MovementItemContainer.OperDate < DATE_TRUNC ('DAY', (SELECT tmpMovement_Check.OperDate FROM tmpMovement_Check)) + INTERVAL '1 DAY'
                                         AND MovementItemContainer.MovementDescId = zc_Movement_Check()
                                         AND MovementItemContainer.DescId = zc_MIContainer_Count()
                                         AND (COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
@@ -167,7 +167,7 @@ BEGIN
                        Movement_Check.StatusId = zc_Enum_Status_Complete() THEN 
                        CASE WHEN MovementFloat_TotalSumm.ValueData - COALESCE(tmpMI.Summa, 0) - COALESCE(tmpCheckGoodsSpecial.Summa, 0) > 1000 
                             THEN ROUND((MovementFloat_TotalSumm.ValueData - COALESCE(tmpMI.Summa, 0) - COALESCE(tmpCheckGoodsSpecial.Summa, 0)) * 0.02, 2)
-                            ELSE 20 END END::TFloat  AS ApplicationAward
+                            ELSE 20 END ELSE 0 END::TFloat  AS ApplicationAward
                             
            , COALESCE(MovementFloat_ApplicationAward.ValueData, 0)::TFloat      AS ApplicationAwardSave
            
@@ -215,22 +215,33 @@ BEGIN
 
              LEFT JOIN tmpMI ON tmpMI.MovementId = Movement_Check.Id
              
-        WHERE COALESCE(MovementLinkObject_UserReferals.ObjectId, 0) <> 0
-      ;
+        WHERE CASE WHEN (MovementFloat_TotalSumm.ValueData + COALESCE (MovementFloat_TotalSummChangePercent.ValueData, 0) - 
+              COALESCE(tmpMI.SummaSale, 0) - COALESCE(tmpCheckGoodsSpecial.Summa, 0) >= 199.50 OR
+              Movement_Check.isSalaryException = TRUE) AND
+              COALESCE (MovementLinkObject_UserReferals.ObjectId, 0) <> 0 AND
+              COALESCE (MovementLinkObject_DiscountExternal.ObjectId, 0) = 0 AND
+              Movement_Check.StatusId = zc_Enum_Status_Complete() THEN 
+              CASE WHEN MovementFloat_TotalSumm.ValueData - COALESCE(tmpMI.Summa, 0) - COALESCE(tmpCheckGoodsSpecial.Summa, 0) > 1000 
+                   THEN ROUND((MovementFloat_TotalSumm.ValueData - COALESCE(tmpMI.Summa, 0) - COALESCE(tmpCheckGoodsSpecial.Summa, 0)) * 0.02, 2)
+                   ELSE 20 END ELSE 0 END <> COALESCE(MovementFloat_ApplicationAward.ValueData, 0)) AS T1
+  ;
+    
+    
+    -- сохранили протокол
+    PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);
+    
+  END IF;
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+LANGUAGE PLPGSQL VOLATILE;
+
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
- 27.10.22                                                      *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 07.03.23                                                                    *
 */
 
 -- тест
--- 
---select lpInsertUpdate_MovementFloat (zc_MovementFloat_ApplicationAward(), Id, ApplicationAward), * from gpSelect_Movement_ApplicationAward(inStartDate := ('01.07.2022')::TDateTime , inEndDate := ('01.11.2022')::TDateTime , inSession := '3') 
---where COALESCE(ApplicationAward, 0) > 0 AND COALESCE(ApplicationAward, 0) <> ApplicationAwardSave
-
-select * from gpSelect_Movement_ApplicationAward(inStartDate := ('01.03.2023')::TDateTime , inEndDate := ('10.03.2023')::TDateTime , inSession := '3') 
+-- select * from gpUpdate_Movement_Check_SalaryException_Revert(inMovementId := 31229298 , inisSalaryException := 'False' ,  inSession := '3');
