@@ -1,3 +1,30 @@
+/*
+-- vacuum full MovementItemProtocol_arc;
+-- vacuum ANALYZE MovementItemProtocol_arc;
+
+-- select min (Id) , max (Id), count(*) from movementprotocol where Id < 409608474
+-- select min (Id) , max (Id), count(*) from movementprotocol_arc where Id < 409608474
+-- 
+-- 
+
+-- select  max (Id) from movementprotocol
+-- select count(*) from movementprotocol where Id > 525891470
+
+-- select last_value from movementitemprotocol_id_seq
+-- select last_value from movementprotocol_id_seq
+         insert into movementprotocol_arc
+            select * from movementprotocol where Id >= 409608521
+-- truncate table movementitemprotocol;
+-- truncate table movementprotocol;
+
+
+         insert into movementprotocol_arc
+            select * from movementprotocol order by Id limit 1000000;
+         insert into movementprotocol_arc
+            select * from movementprotocol where Id > (select max(Id) from movementprotocol_arc ) and Id < 409608521 order by Id limit 2000000;
+
+
+*/
 -- 
 DO $$ 
     BEGIN
