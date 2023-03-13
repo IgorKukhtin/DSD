@@ -81,7 +81,6 @@ var
   {$IFDEF ANDROID}
   obj: JObject;
   tm: JTelephonyManager;
-  OSVersion: TOSVersion;
   LocaleService: IFMXLocaleService;
   {$ENDIF}
   lIMEI      : String;
@@ -126,10 +125,10 @@ begin
                         ;
   except lModel:= lModel + ' ???'; end;
   // Версия Android
-  try lVesion:= OSVersion.Name; except lVesion:='???'; end;
+  try lVesion:= TOSVersion.Name; except lVesion:='???'; end;
   // Версия Android
-  try lVesion_two:= Format('%d.%d', [OSVersion.Major,OSVersion.Minor]); except lVesion_two:='?.?'; end;
-  try lVesion_two:= lVesion_two + ' Platform :' + Format('%d', [Ord(OSVersion.Platform)]); except lVesion_two:= lVesion_two + ' Platform :???'; end;
+  try lVesion_two:= Format('%d.%d', [TOSVersion.Major,TOSVersion.Minor]); except lVesion_two:='?.?'; end;
+  try lVesion_two:= lVesion_two + ' Platform :' + Format('%d', [Ord(TOSVersion.Platform)]); except lVesion_two:= lVesion_two + ' Platform :???'; end;
   // Версия SDK
   try lVesionSDK:= JStringToString(TJBuild_VERSION.JavaClass.SDK); except lVesionSDK:= '???'; end;
   try lVesionSDK:= lVesionSDK + '(' + IntToStr(TJBuild_VERSION.JavaClass.SDK_INT)+')'; except lVesionSDK:= lVesionSDK + ' (?)'; end;

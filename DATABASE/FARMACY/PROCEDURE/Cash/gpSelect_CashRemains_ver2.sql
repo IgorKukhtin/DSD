@@ -56,7 +56,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                
                isSpecial boolean,
                
-               PromoBonus TFloat
+               PromoBonusPrice TFloat, IsAsinoMain boolean, IsAsinoPresent boolean
+
 
                /*PartionDateKindId_check   Integer,
                Price_check               TFloat,
@@ -92,7 +93,6 @@ $BODY$
 
    DECLARE vbAreaId   Integer;
    DECLARE vbLanguage TVarChar;
-   DECLARE vbMovPromoBonus Integer;
 BEGIN
 -- if inSession = '3' then return; end if;
 
@@ -186,16 +186,7 @@ BEGIN
                AND ObjectString_Language.DescId = zc_ObjectString_User_Language()
               
     WHERE Object_User.Id = vbUserId;    
-    
-    vbMovPromoBonus := (WITH  tmpMovPromoBonus AS 
-                              (SELECT Movement.id AS ID FROM Movement
-                               WHERE Movement.OperDate <= CURRENT_DATE
-                                 AND Movement.DescId = zc_Movement_PromoBonus()
-                                 AND Movement.StatusId = zc_Enum_Status_Complete()
-                               )
-    							 
-                        SELECT MAX(tmpMovPromoBonus.ID) AS ID FROM tmpMovPromoBonus);
-        
+            
     -- ќбъ€вили новую сессию кассового места / обновили дату последнего обращени€
     PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
                                       , inDateConnect   := CURRENT_TIMESTAMP :: TDateTime
@@ -836,14 +827,11 @@ BEGIN
                                             WHERE ObjectLink_GoodsDivisionLock_Unit.DescId        = zc_ObjectLink_GoodsDivisionLock_Unit()
                                               AND ObjectLink_GoodsDivisionLock_Unit.ChildObjectId = vbUnitId
                                             )
-                 , tmpMIPromoBonus AS (SELECT MovementItem.ObjectId               AS GoodsId
-                                            , MAX(MovementItem.Amount)::TFloat    AS PromoBonus
-                                       FROM MovementItem
-                                       WHERE MovementItem.MovementId = vbMovPromoBonus
-                                         AND MovementItem.DescId = zc_MI_Master()
-                                         AND MovementItem.Amount > 0
-                                         AND MovementItem.isErased = False
-                                       GROUP BY MovementItem.ObjectId)
+                 , tmpMIPromoBonus AS (SELECT MI.GoodsId               AS GoodsId
+                                            , MI.MarginPercent         AS MarginPercent
+                                            , MI.PromoBonus            AS PromoBonus
+                                       FROM gpSelect_PromoBonus_MarginPercent(vbUnitId, inSession) AS MI)
+                 , tmpAsinoPharmaSP AS (SELECT * FROM gpSelect_AsinoPharmaSPAllGoods_Cash(inSession := '3'))
 							 
         -- –езультат
         SELECT
@@ -1295,9 +1283,18 @@ BEGIN
             AND Object_Goods_Retail.DiscontSiteEnd IS NOT NULL  
             AND Object_Goods_Retail.DiscontSiteStart <= CURRENT_DATE
             AND Object_Goods_Retail.DiscontSiteEnd >= CURRENT_DATE    AS isSpecial
-          , CASE WHEN COALESCE(NULLIF (CashSessionSnapShot.PartionDateKindId, 0), zc_Enum_PartionDateKind_Good()) = zc_Enum_PartionDateKind_Good()
-                  AND Object_Goods_Retail.IsTop = False 
-                 THEN tmpMIPromoBonus.PromoBonus END :: TFloat        AS PromoBonus
+          , zfCalc_PriceCash(CASE WHEN COALESCE(NULLIF (CashSessionSnapShot.PartionDateKindId, 0), zc_Enum_PartionDateKind_Good()) = zc_Enum_PartionDateKind_Good()
+                                   AND Object_Goods_Retail.IsTop = False 
+                                   AND (COALESCE(tmpPriceChange.PriceChange, 0) = 0 AND
+                                        COALESCE(tmpPriceChange.FixPercent, 0) = 0 AND
+                                        COALESCE(tmpPriceChange.FixDiscount, 0) = 0 OR
+                                        COALESCE(tmpPriceChange.Multiplicity, 0) > 1)
+                                  THEN CashSessionSnapShot.Price * 100.0 / (100.0 + tmpMIPromoBonus.MarginPercent) * 
+                                       (100.0 - tmpMIPromoBonus.PromoBonus + tmpMIPromoBonus.MarginPercent) / 100 END , 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)  AS PromoBonusPrice
+          , COALESCE (tmpAsinoPharmaSP.IsAsinoMain , FALSE)                       AS IsAsinoMain
+          , COALESCE (tmpAsinoPharmaSP.IsAsinoPresent , FALSE)                    AS IsAsinoPresent
 
           /*, CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
           , zfCalc_PriceCash(CashSessionSnapShot.Price, 
@@ -1394,6 +1391,8 @@ BEGIN
            LEFT JOIN tmpGoodsSP_1303 ON tmpGoodsSP_1303.GoodsId = CashSessionSnapShot.ObjectId
                       
            LEFT JOIN tmpMIPromoBonus ON tmpMIPromoBonus.GoodsId = CashSessionSnapShot.ObjectId
+           
+           LEFT JOIN tmpAsinoPharmaSP ON tmpAsinoPharmaSP.GoodsId = CashSessionSnapShot.ObjectId
                                    
            LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                             ON MI_IntenalSP.MovementItemId = tmpGoodsSP_1303.MovementItemId

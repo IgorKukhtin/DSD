@@ -219,20 +219,20 @@ begin
      end;
      if DataSets[0].DataSet.Active and (DataSets[0].DataSet.RecordCount > 0) then
         B := DataSets[0].DataSet.GetBookmark;
-     try
-        if DataSets[0].DataSet is TClientDataSet then begin
-           try
+     if DataSets[0].DataSet is TClientDataSet then begin
+         try
            FStringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML), TEncoding.UTF8);
-           TClientDataSet(DataSets[0].DataSet).LoadFromStream(FStringStream);
-           except
-             on E : Exception do
-             begin
-               raise Exception.Create(E.Message);
-             end;
+           try
+             TClientDataSet(DataSets[0].DataSet).LoadFromStream(FStringStream);
+           finally
+             FreeAndNil(FStringStream);
            end;
-        end;
-     finally
-       FreeAndNil(FStringStream);
+         except
+           on E : Exception do
+           begin
+             raise Exception.Create(E.Message);
+           end;
+         end;
      end;
      if Assigned(B) then
      begin

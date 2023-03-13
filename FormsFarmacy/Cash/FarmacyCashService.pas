@@ -1107,10 +1107,11 @@ begin
     begin
       tiServise.BalloonHint := TrayIconPUSHList.Strings[0];
       TrayIconPUSHList.Delete(0);
-    end else tiServise.BalloonHint := '';
+    end;
     tiServise.ShowBalloonHint;
   finally
     TimerTrayIconPUSH.Enabled := tiServise.BalloonHint <> '';
+    tiServise.BalloonHint := '';
   end;
 end;
 
