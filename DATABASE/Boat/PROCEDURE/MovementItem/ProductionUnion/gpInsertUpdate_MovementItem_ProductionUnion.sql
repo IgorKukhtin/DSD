@@ -5,10 +5,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ProductionUnion(Integer, Int
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ProductionUnion(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId             Integer   , -- Ключ объекта <Документ> 
+    IN inMovementId             Integer   , -- Ключ объекта <Документ>
     IN inMovementId_OrderClient Integer   , -- Заказ Клиента
     IN inObjectId               Integer   , -- Лодка/ Комплектующие
-    IN inReceiptProdModelId     Integer   , -- 
+    IN inReceiptProdModelId     Integer   , --
     IN inAmount                 TFloat    , -- Количество
     IN inComment                TVarChar  , --
     IN inSession                TVarChar    -- сессия пользователя
@@ -29,7 +29,7 @@ BEGIN
 
      -- сохранили <Элемент документа>
      SELECT tmp.ioId
-            INTO ioId 
+            INTO ioId
      FROM lpInsertUpdate_MovementItem_ProductionUnion (ioId
                                                      , inMovementId
                                                      , inMovementId_OrderClient
@@ -38,7 +38,7 @@ BEGIN
                                                      , inAmount
                                                      , inComment
                                                      , vbUserId
-                                                     ) AS tmp;
+                                                      ) AS tmp;
 
 
      -- пересчитали Итоговые суммы

@@ -1079,8 +1079,7 @@ BEGIN
                                                                                                                AND DiscountExternalSupplier.JuridicalId = MovementLinkObject_From.ObjectId
                                                         
                                GROUP BY Container.ObjectId
-                                      , Container.WhereObjectId
-         )
+                                      , Container.WhereObjectId)
           , tmpGoodsSP AS (SELECT Object_Goods_Retail.Id      AS GoodsId
                                                                 -- № п/п - на всякий случай
                                 , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
@@ -1109,6 +1108,12 @@ BEGIN
                            WHERE Movement.DescId = zc_Movement_GoodsSP()
                              AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                           )
+          , tmpPromoBonus AS (SELECT PromoBonus.GoodsID
+                                   , PromoBonus.UnitID
+                                   , PromoBonus.MarginPercent
+                                   , PromoBonus.BonusInetOrder 
+                              FROM gpSelect_PromoBonus_MarginPercent(inUnitId := 0,  inSession := inSession) AS PromoBonus 
+                              WHERE PromoBonus.BonusInetOrder > 0)
                            
 
         SELECT Object_Goods.Id                                                     AS Id
@@ -1146,6 +1151,12 @@ BEGIN
                     THEN ROUND(CASE WHEN COALESCE(GoodsDiscount.MaxPrice, 0) = 0 OR Price_Unit.Price < GoodsDiscount.MaxPrice
                                     THEN Price_Unit.Price ELSE GoodsDiscount.MaxPrice END * (100 - GoodsDiscount.DiscountProcent) / 100, 1)
                     ELSE NULL END, 0),
+                    NULLIF(CASE WHEN COALESCE(Price_Unit.PriceChange, 0) = 0 AND Price_Unit.isTop = FALSE AND COALESCE (tmpPromoBonus.BonusInetOrder, 0) > 0
+                                THEN zfCalc_PriceCash(Price_Unit.Price * 100.0 / (100.0 + tmpPromoBonus.MarginPercent) * 
+                                                     (100.0 - tmpPromoBonus.BonusInetOrder + tmpPromoBonus.MarginPercent) / 100,
+                                                      CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                                      COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
+                                ELSE NULL END, 0),
                zfCalc_PriceCash(CASE WHEN COALESCE((tmpList2.Amount - COALESCE (tmpMI_Deferred.Amount, 0) -
                                                    COALESCE (PDGoodsRemains.Amount, 0) -
                                                    COALESCE (Reserve_TP.Amount, 0)), 0) <= 0 
@@ -1365,6 +1376,10 @@ BEGIN
              LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = tmpList.GoodsId
                                  AND tmpGoodsSP.Ord     = 1 -- № п/п - на всякий случай
                                  
+             -- Соц Проо бонус
+             LEFT JOIN tmpPromoBonus ON tmpPromoBonus.GoodsId = tmpList.GoodsId
+                                    AND tmpPromoBonus.UnitId = tmpList.UnitId 
+                                 
              LEFT JOIN _tmpContainerCountPD AS ContainerCountPD_1
                                             ON ContainerCountPD_1.PartionDateKindId = zc_Enum_PartionDateKind_1()
                                            AND ContainerCountPD_1.GoodsId = tmpList.GoodsId_retail
@@ -1405,8 +1420,6 @@ $BODY$
 
 -- тест
 
-SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '6119833', zfCalc_UserSite()) AS p
+SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '6299126', zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId
  
-SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '4357, 6607, 12345271', zfCalc_UserSite()) AS p
- LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId

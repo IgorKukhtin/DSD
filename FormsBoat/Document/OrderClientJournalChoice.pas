@@ -102,6 +102,8 @@ type
     miUpdate: TMenuItem;
     EngineNum: TcxGridDBColumn;
     EngineName: TcxGridDBColumn;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    StateColor: TcxGridDBColumn;
   private
   public
   end;

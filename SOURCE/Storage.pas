@@ -944,6 +944,7 @@ begin
                 end
                 else
                   Logger.AddToLog(' ... Sleep - 2...');
+                  Logger.AddToLog(' ... Message...' + E.Message);
                 Sleep(1000);
               End;
             End;

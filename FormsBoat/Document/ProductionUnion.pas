@@ -79,9 +79,9 @@ type
     spUnErasedMIMaster: TdsdStoredProc;
     StatusGuides: TdsdGuides;
     spChangeStatus: TdsdStoredProc;
-    UnCompleteMovement: TChangeGuidesStatus;
-    CompleteMovement: TChangeGuidesStatus;
-    DeleteMovement: TChangeGuidesStatus;
+    actUnCompleteMovement: TChangeGuidesStatus;
+    actCompleteMovement: TChangeGuidesStatus;
+    actDeleteMovement: TChangeGuidesStatus;
     ceStatus: TcxButtonEdit;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
@@ -91,8 +91,6 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actUnion_Goods_ReceiptServiceChoiceForm: TOpenChoiceForm;
-    spInsertMaskMIMaster: TdsdStoredProc;
-    actAddMask: TdsdExecStoredProc;
     actProductChoiceForm: TOpenChoiceForm;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;

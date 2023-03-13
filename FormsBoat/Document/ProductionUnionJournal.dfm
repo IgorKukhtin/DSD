@@ -27,7 +27,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 44197d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -37,7 +37,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 44197d
+      EditValue = 44927d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -209,14 +209,14 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         Width = 55
       end
       object InvNumber: TcxGridDBColumn
-        Caption = 'Interne Nr'
+        Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 56
       end
       object OperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -244,6 +244,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 92
@@ -254,17 +255,19 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 101
       end
       object InvNumber_parent: TcxGridDBColumn
-        Caption = #1047#1072#1082#1072#1079
+        Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
         DataBinding.FieldName = 'InvNumber_parent'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Options.Editing = False
-        Width = 109
+        Width = 200
       end
       object DescName_parent: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -280,14 +283,16 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         DataBinding.FieldName = 'FromName_parent'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Options.Editing = False
         Width = 109
       end
       object ProductName_parent: TcxGridDBColumn
-        Caption = 'Boat'
+        Caption = #1051#1086#1076#1082#1072
         DataBinding.FieldName = 'ProductName_parent'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Options.Editing = False
         Width = 109
       end

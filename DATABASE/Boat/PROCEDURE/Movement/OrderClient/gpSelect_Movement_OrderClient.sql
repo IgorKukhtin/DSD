@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderClient(
     IN inIsErased      Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar, InvNumber_Full2 TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumber_all TVarChar
              , InvNumberPartner TVarChar
              , BarCode TVarChar
              , OperDate TDateTime
@@ -106,7 +106,7 @@ BEGIN
                                                             AND MovementItem.isErased = FALSE
                                                             AND MovementItem.DescId   = zc_MI_Master()
                                            LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
-                                           
+
                                            JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                         AND Movement.StatusId = zc_Enum_Status_Complete()
                                                         AND Movement.DescId   IN (zc_Movement_ProductionUnion(), zc_Movement_OrderInternal())
@@ -124,7 +124,7 @@ BEGIN
                                     JOIN MovementItem ON MovementItem.Id = MIFloat_MovementId.MovementItemId
                                                      AND MovementItem.isErased = FALSE
                                                      AND MovementItem.DescId = zc_MI_Master()
-                                    
+
                                     JOIN Movement ON Movement.Id = MovementItem.MovementId
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
                                WHERE MIFloat_MovementId.MovementItemId = MovementItem.Id
@@ -143,8 +143,8 @@ BEGIN
         -- Результат
         SELECT Movement_OrderClient.Id
              , zfConvert_StringToNumber (Movement_OrderClient.InvNumber) AS InvNumber
-             , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId)  AS InvNumber_Full
-             , (zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) || ' / ' || Object_From.ValueData) :: TVarChar  AS InvNumber_Full2
+             , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId)  AS InvNumber_full
+             , (zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) || ' / ' || Object_From.ValueData) :: TVarChar  AS InvNumber_all
              , Movement_OrderClient.InvNumberPartner
              , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_OrderClient.Id) AS BarCode
              , Movement_OrderClient.OperDate
@@ -175,9 +175,9 @@ BEGIN
              , Object_PaidKind.ValueData                    AS PaidKindName
              , Object_Product.Id                            AS ProductId
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
-             , (zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) || ' / ' || zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased)) ::TVarChar AS ProductName_Full
+             , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName_Full
              , ObjectDate_DateBegin.ValueData               AS DateBegin
-             
+
              , Object_ReceiptProdModel.Id                   AS ReceiptProdModelId
              , Object_ReceiptProdModel.ObjectCode           AS ReceiptProdModelCode
              , Object_ReceiptProdModel.ValueData            AS ReceiptProdModelName
@@ -214,7 +214,7 @@ BEGIN
                                        , COALESCE (tmpOrderInternal_1.ObjectDescId, tmpOrderInternal_2.ObjectDescId)
                                        , COALESCE (tmpProductionUnion_1.ObjectDescId, tmpProductionUnion_2.ObjectDescId)
                                         ) ::Integer AS StateColor
-               
+
         FROM Movement_OrderClient
 
              LEFT JOIN Object AS Object_Status   ON Object_Status.Id   = Movement_OrderClient.StatusId
@@ -312,11 +312,11 @@ BEGIN
              LEFT JOIN ObjectDate AS ObjectDate_DateBegin
                                   ON ObjectDate_DateBegin.ObjectId = Object_Product.Id
                                  AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin()
-             
-          LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal_1   ON tmpOrderInternal_1.MovementId_OrderClient   = Movement_OrderClient.Id AND tmpOrderInternal_1.DescId   = zc_Movement_OrderInternal()   AND tmpOrderInternal_1.ObjectDescId   = zc_Object_Product()
-          LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal_2   ON tmpOrderInternal_2.MovementId_OrderClient   = Movement_OrderClient.Id AND tmpOrderInternal_2.DescId   = zc_Movement_OrderInternal()   AND tmpOrderInternal_2.ObjectDescId   = zc_Object_Goods()
-          LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion_1 ON tmpProductionUnion_1.MovementId_OrderClient = Movement_OrderClient.Id AND tmpProductionUnion_1.DescId = zc_Movement_ProductionUnion() AND tmpProductionUnion_1.ObjectDescId = zc_Object_Product()
-          LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion_2 ON tmpProductionUnion_2.MovementId_OrderClient = Movement_OrderClient.Id AND tmpProductionUnion_2.DescId = zc_Movement_ProductionUnion() AND tmpProductionUnion_2.ObjectDescId = zc_Object_Goods()
+
+             LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal_1   ON tmpOrderInternal_1.MovementId_OrderClient   = Movement_OrderClient.Id AND tmpOrderInternal_1.DescId   = zc_Movement_OrderInternal()   AND tmpOrderInternal_1.ObjectDescId   = zc_Object_Product()
+             LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal_2   ON tmpOrderInternal_2.MovementId_OrderClient   = Movement_OrderClient.Id AND tmpOrderInternal_2.DescId   = zc_Movement_OrderInternal()   AND tmpOrderInternal_2.ObjectDescId   = zc_Object_Goods()
+             LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion_1 ON tmpProductionUnion_1.MovementId_OrderClient = Movement_OrderClient.Id AND tmpProductionUnion_1.DescId = zc_Movement_ProductionUnion() AND tmpProductionUnion_1.ObjectDescId = zc_Object_Product()
+             LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion_2 ON tmpProductionUnion_2.MovementId_OrderClient = Movement_OrderClient.Id AND tmpProductionUnion_2.DescId = zc_Movement_ProductionUnion() AND tmpProductionUnion_2.ObjectDescId = zc_Object_Goods()
        ;
 
 END;

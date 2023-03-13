@@ -635,7 +635,7 @@ type
     lblMemberSP: TcxMemo;
     TrayIcon: TTrayIcon;
     TimerTrayIconPUSH: TTimer;
-    MainPromoBonus: TcxGridDBColumn;
+    MainPromoBonusPrice: TcxGridDBColumn;
     spAvailabilityCheckMedicalProgram: TdsdStoredProcSQLite;
     spGoodsSPId: TdsdStoredProcSQLite;
     GoodsSPIdCDS: TClientDataSet;
@@ -6835,16 +6835,13 @@ begin
         CheckCDS.Post;
 
       end // Если есть бонусная скидка
-      else if (RemainsCDS.FieldByName('PromoBonus').asCurrency > 0) and
+      else if (RemainsCDS.FieldByName('PromoBonusPrice').asCurrency > 0) and
               (CheckCDS.FieldByName('PriceLoad').asCurrency = 0) then
       begin
         CheckCDS.Edit;
         CheckCDS.FieldByName('Price').asCurrency :=
-          GetPrice(IfZero(CheckCDS.FieldByName('PricePartionDate').asCurrency,
-          CheckCDS.FieldByName('PriceSale').asCurrency),
-          RemainsCDS.FieldByName('PromoBonus').asCurrency);
-        CheckCDS.FieldByName('ChangePercent').asCurrency :=
-          RemainsCDS.FieldByName('PromoBonus').asCurrency;
+          GetPrice(RemainsCDS.FieldByName('PromoBonusPrice').asCurrency, 0);
+        CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
         CheckCDS.FieldByName('Summ').asCurrency :=
           GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
           CheckCDS.FieldByName('Price').asCurrency,
@@ -9894,17 +9891,16 @@ begin
               end;
           end;
         end
-        else if Assigned(SourceClientDataSet.FindField('PromoBonus')) and
-          (SourceClientDataSet.FieldByName('PromoBonus').asCurrency > 0) and
+        else if Assigned(SourceClientDataSet.FindField('PromoBonusPrice')) and
+          (SourceClientDataSet.FieldByName('PromoBonusPrice').asCurrency > 0) and
           (CheckCDS.FieldByName('PriceLoad').asCurrency = 0) then
         begin
           // цена БЕЗ скидки
           lPriceSale := SourceClientDataSet.FieldByName('Price').asCurrency;
           // цена СО скидкой
-          lPrice := GetPrice(SourceClientDataSet.FieldByName('Price').asCurrency,
-            SourceClientDataSet.FieldByName('PromoBonus').asCurrency);
+          lPrice := GetPrice(SourceClientDataSet.FieldByName('PromoBonusPrice').asCurrency, 0);
           // Процент скидки
-          lChangePercent := SourceClientDataSet.FieldByName('PromoBonus').asCurrency;
+          lChangePercent := 0;
         end
         else if SourceClientDataSet.FieldByName('PricePartionDate').asCurrency <> 0 then
         begin
@@ -12376,15 +12372,12 @@ begin
             GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
             CheckCDS.FieldByName('Price').asCurrency,
             FormParams.ParamByName('RoundingDown').Value);
-        end else if (RemainsCDS.FieldByName('PromoBonus').asCurrency > 0) and
+        end else if (RemainsCDS.FieldByName('PromoBonusPrice').asCurrency > 0) and
                     (CheckCDS.FieldByName('PriceLoad').asCurrency = 0) then
         begin
           CheckCDS.FieldByName('Price').asCurrency :=
-            GetPrice(IfZero(CheckCDS.FieldByName('PricePartionDate').asCurrency,
-            CheckCDS.FieldByName('PriceSale').asCurrency),
-            RemainsCDS.FieldByName('PromoBonus').asCurrency);
-          CheckCDS.FieldByName('ChangePercent').asCurrency :=
-            RemainsCDS.FieldByName('PromoBonus').asCurrency;
+            GetPrice(RemainsCDS.FieldByName('PromoBonusPrice').asCurrency, 0);
+          CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
           CheckCDS.FieldByName('Summ').asCurrency :=
             GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
             CheckCDS.FieldByName('Price').asCurrency,
@@ -14054,10 +14047,11 @@ begin
     begin
       TrayIcon.BalloonHint := TrayIconPUSHList.Strings[0];
       TrayIconPUSHList.Delete(0);
-    end else TrayIcon.BalloonHint := '';
+    end;
     TrayIcon.ShowBalloonHint;
   finally
     TimerTrayIconPUSH.Enabled := TrayIcon.BalloonHint <> '';
+    TrayIcon.BalloonHint := '';
   end;
 end;
 

@@ -101,10 +101,14 @@ BEGIN
             --AND MIBoolean_Calculated.MovementItemId IS NULL
            ;
 
-            -- поменяли признак
-            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), MovementItem.Id, TRUE)
-            FROM MovementItem
-            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Child()
+            -- сохранили протокол
+            PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
+            FROM (-- поменяли признак
+                  SELECT MovementItem.Id AS MovementItemId
+                       , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), MovementItem.Id, TRUE) 
+                  FROM MovementItem
+                  WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
+                 ) AS tmp
            ;
 
         ELSEIF inNumber = 3
@@ -119,10 +123,14 @@ BEGIN
             WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
             --AND MIBoolean_Calculated.MovementItemId IS NULL
            ;
-            -- поменяли признак
-            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), MovementItem.Id, TRUE)
-            FROM MovementItem
-            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Child()
+            -- сохранили протокол
+            PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
+            FROM (-- поменяли признак
+                  SELECT MovementItem.Id AS MovementItemId
+                       , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), MovementItem.Id, TRUE) 
+                  FROM MovementItem
+                  WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
+                 ) AS tmp
            ;
 
         ELSEIF inNumber = 4
@@ -137,10 +145,14 @@ BEGIN
             WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
             --AND MIBoolean_Calculated.MovementItemId IS NULL
            ;
-            -- поменяли признак
-            PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), MovementItem.Id, TRUE)
-            FROM MovementItem
-            WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Child()
+            -- сохранили протокол
+            PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
+            FROM (-- поменяли признак
+                  SELECT MovementItem.Id AS MovementItemId
+                       , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), MovementItem.Id, TRUE) 
+                  FROM MovementItem
+                  WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
+                 ) AS tmp
            ;
 
         ELSE

@@ -45,6 +45,20 @@ BEGIN
          inAmount:= 1;
      END IF;
 
+     -- если это лодка
+     IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId = zc_Object_Product())
+     THEN 
+         -- сохранили в шапке
+         UPDATE Movement SET ParentId = inMovementId_OrderClient WHERE Movement.Id = inMovementId;
+
+     ELSEIF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.ParentId > 0)
+     THEN
+         -- обнулили
+         UPDATE Movement SET ParentId = NULL WHERE Movement.Id = inMovementId;
+
+     END IF;
+
+
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inObjectId, NULL, inMovementId, inAmount, NULL,inUserId);
 

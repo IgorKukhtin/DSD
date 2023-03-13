@@ -34,7 +34,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <ƒокумент>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ProductionUnion(), inInvNumber, inOperDate, inParentId, inUserId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ProductionUnion(), inInvNumber, inOperDate, (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = ioId), inUserId);
 
      -- сохранили св€зь с <ќт кого >
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
@@ -72,7 +72,7 @@ BEGIN
 
      -----строки
      -- записываем лодку из заказа в мастер если  есть что записывать
-     vbProductId := (SELECT MovementLinkObject_Product.ObjectId       AS ProductId
+     /*vbProductId := (SELECT MovementLinkObject_Product.ObjectId       AS ProductId
                      FROM MovementLinkObject AS MovementLinkObject_Product
                      WHERE MovementLinkObject_Product.MovementId = inParentId
                        AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
@@ -118,7 +118,7 @@ BEGIN
      WHERE ObjectLink_ReceiptProdModel.ObjectId = vbProductId
        AND ObjectLink_ReceiptProdModel.DescId   = zc_ObjectLink_Product_ReceiptProdModel();
 
-     END IF;
+     END IF;*/
      
 END;
 $BODY$

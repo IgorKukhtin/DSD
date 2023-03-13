@@ -214,15 +214,15 @@ end if;
                                               , inUserId             := vbUserId
                                                )
     FROM tmpAll;
-/*
-if inSession = '5'
+
+if inSession = '5' AND 1=0
 then
     RAISE EXCEPTION 'Ошибка. end <%>  %   %', (select sum (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
-    , (select min (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
-    , (select max (tmpAll.ContainerId) from tmpAll where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
+    , (select sum (tmpAll.AmountRK_start) from tmpAll) -- where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
+    , (select (tmpAll.AmountRK_start) from tmpAll where tmpAll.MovementItemId =  253571013 )
     ;
 end if;
-*/
+
 
 END;
 $BODY$

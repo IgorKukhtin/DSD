@@ -51,6 +51,14 @@ $BODY$
    DECLARE vbAmount_Param_tmp TFloat;
    DECLARE vbAmount_ParamOrder_tmp TFloat;
 BEGIN
+     -- переопределили
+     IF COALESCE (inAmountRK_start, 0) = 0 AND inDescId_Param <> zc_MIFloat_AmountRemains() AND ioId > 0
+     THEN
+         -- нашли
+         inAmountRK_start:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_AmountRemainsRK()), 0);
+     END IF;
+
+
      -- определяется
      SELECT EXTRACT (MONTH FROM (Movement.OperDate + INTERVAL '1 DAY'))
           , Movement.OperDate

@@ -55,6 +55,7 @@ $BODY$
    DECLARE vbIsMovement Boolean;
    DECLARE vbIsAll Boolean;
    DECLARE vbIsUserRole_8813637 Boolean;
+   DECLARE vbIsInfoMoney Boolean;
 BEGIN
 
      -- Блокируем ему просмотр
@@ -72,11 +73,63 @@ BEGIN
      -- !!!
      vbIsAll:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId);
 
+     -- !!!
+     vbIsInfoMoney:= inInfoMoneyId        > 0
+                 AND COALESCE (inAccountGroupId, 0)     = 0
+                 AND COALESCE (inAccountDirectionId, 0) = 0
+                 AND COALESCE (inAccountId, 0)          = 0
+                ;
 
-    -- оптимизация
+IF inUserId = zfCalc_UserAdmin() :: Integer AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.<%>', vbIsInfoMoney;
+END IF;
+
+
+  -- оптимизация
   RETURN QUERY
-    WITH tmpContainer
-  --CREATE TEMP TABLE tmpContainer ON COMMIT DROP
+  --CREATE TEMP TABLE tmpContainer ON COMMIT DROP AS
+    WITH tmpMovement_IM AS (SELECT DISTINCT Movement.Id AS MovementId
+                            FROM Movement
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.isErased   = FALSE
+                                 INNER JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                                   ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_InfoMoney.DescId         = zc_MILinkObject_InfoMoney()
+                                                                  AND MILinkObject_InfoMoney.ObjectId       = inInfoMoneyId
+                            WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                              AND vbIsInfoMoney     = TRUE
+                           UNION
+                            SELECT DISTINCT Movement.Id AS MovementId
+                            FROM Movement
+                                 INNER JOIN MovementLinkObject AS MLO_InfoMoney
+                                                               ON MLO_InfoMoney.MovementId = Movement.Id
+                                                              AND MLO_InfoMoney.DescId     = zc_MovementLinkObject_InfoMoney()
+                                                              AND MLO_InfoMoney.ObjectId   = inInfoMoneyId
+                            WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                              AND vbIsInfoMoney     = TRUE
+                           )
+       , tmpInfoMoney_all AS (SELECT DISTINCT ContainerLO_InfoMoney.ContainerId
+                              FROM ContainerLinkObject AS ContainerLO_InfoMoney
+                              WHERE vbIsInfoMoney = TRUE
+                                AND ContainerLO_InfoMoney.ObjectId = inInfoMoneyId
+                             )
+           , tmpInfoMoney AS (SELECT DISTINCT MIContainer.ContainerId_Analyzer AS ContainerId
+                              FROM tmpInfoMoney_all
+                                   INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpInfoMoney_all.ContainerId
+                                                                                  AND MIContainer.OperDate    BETWEEN inStartDate AND inEndDate
+                             UNION
+                              SELECT DISTINCT MIContainer.ContainerId
+                              FROM tmpMovement_IM
+                                   INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId = tmpMovement_IM.MovementId
+                                                                                  AND MIContainer.OperDate   BETWEEN inStartDate AND inEndDate
+                             UNION
+                              SELECT tmpInfoMoney_all.ContainerId
+                              FROM tmpInfoMoney_all
+                             )
+    , tmpContainer
       AS (SELECT Container.Id                  AS ContainerId
                , Container.ObjectId            AS AccountId
                , Container.Amount              AS Amount
@@ -98,7 +151,10 @@ BEGIN
                                              ON ContainerLO_Business.ContainerId = Container.Id
                                             AND ContainerLO_Business.DescId      = zc_ContainerLinkObject_Business()
                                             AND ContainerLO_Business.ObjectId    > 0
-          WHERE ContainerLO_Business.ObjectId = inBusinessId OR COALESCE (inBusinessId, 0) = 0
+               LEFT JOIN tmpInfoMoney ON tmpInfoMoney.ContainerId = Container.Id
+          WHERE (ContainerLO_Business.ObjectId = inBusinessId OR COALESCE (inBusinessId, 0) = 0)
+            AND (tmpInfoMoney.ContainerId > 0 OR vbIsInfoMoney = FALSE
+                )
          )
     -- оптимизация
     --ANALYZE tmpContainer;
@@ -247,11 +303,12 @@ BEGIN
                  )
       , tmpMI AS (SELECT *
                   FROM MovementItem AS MI
-                  WHERE MI.Id IN (SELECT DISTINCT tmpMotion.MovementItemId
-                                  FROM tmpMotion
-                                  WHERE tmpMotion.MovementDescId = zc_Movement_Cash()
-                                    AND tmpMotion.AccountId      = zc_Enum_Account_100301() -- прибыль текущего периода
-                                 )
+                  WHERE MI.MovementId IN (--SELECT DISTINCT tmpMotion.MovementItemId
+                                          SELECT DISTINCT tmpMotion.MovementId
+                                          FROM tmpMotion
+                                          WHERE tmpMotion.MovementDescId = zc_Movement_Cash()
+                                            AND tmpMotion.AccountId      = zc_Enum_Account_100301() -- прибыль текущего периода
+                                         )
                     AND MI.DescId         = zc_MI_Master()
                  )
     , tmpData AS (SELECT tmp.BusinessId
@@ -720,4 +777,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpReport_AccountMotion (inStartDate := ('01.11.2022')::TDateTime , inEndDate := ('01.11.2022')::TDateTime , inAccountGroupId := 9015 , inAccountDirectionId := 9034 , inInfoMoneyId := 0 , inAccountId := 0 , inBusinessId := 0 , inProfitLossGroupId := 0 , inProfitLossDirectionId := 0 , inProfitLossId := 0 , inBranchId := 0 , inMovementDescId := 0 , inIsMovement := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inIsDetail := 'False', inUserId:= zfCalc_UserAdmin() :: Integer);
+-- SELECT * FROM lpReport_AccountMotion (inStartDate := ('01.11.2024')::TDateTime , inEndDate := ('01.11.2024')::TDateTime , inAccountGroupId := 9015 , inAccountDirectionId := 9034 , inInfoMoneyId := 0 , inAccountId := 0 , inBusinessId := 0 , inProfitLossGroupId := 0 , inProfitLossDirectionId := 0 , inProfitLossId := 0 , inBranchId := 0 , inMovementDescId := 0 , inIsMovement := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inIsDetail := 'False', inUserId:= zfCalc_UserAdmin() :: Integer);

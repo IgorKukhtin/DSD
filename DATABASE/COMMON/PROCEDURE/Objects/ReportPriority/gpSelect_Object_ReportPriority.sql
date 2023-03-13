@@ -81,6 +81,48 @@ BEGIN
              , 'gpReport_JuridicalCollation'      :: TVarChar AS Name
              , FALSE                              :: Boolean  AS isErased
 
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 12                                 :: Integer  AS Code
+             , 'gpUpdateMI_OrderInternal_AmountPartnerPromo' :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 13                                 :: Integer  AS Code
+             , 'gpReport_ReceiptAnalyze'          :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 14                                 :: Integer  AS Code
+             , 'gpReport_AccountMotion'           :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 15                                 :: Integer  AS Code
+             , 'gpReport_Account'                 :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 16                                 :: Integer  AS Code
+             , 'gpReport_GoodsMI_Internal'        :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 17                                 :: Integer  AS Code
+             , 'gpInsertUpdate_SheetWorkTime_FromTransport' :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 18                                 :: Integer  AS Code
+             , 'gpUpdate_MI_PersonalService_Compensation' :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+
         ORDER BY 2
        ;
 

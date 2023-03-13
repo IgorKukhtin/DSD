@@ -21,17 +21,22 @@ BEGIN
 
       RETURN QUERY
         WITH tmpProcess AS (SELECT * FROM pg_stat_activity WHERE state ILIKE 'active')
-            , tmpCount AS (SELECT COUNT (*) :: Integer AS Res FROM tmpProcess WHERE query ILIKE ('%' || inProcName || '(%'))
+         , tmpCount_all AS (SELECT COUNT (*) :: Integer AS Res FROM tmpProcess WHERE query ILIKE ('%' || inProcName || '(%') AND inProcName NOT ILIKE '%Inventory%'
+                          UNION ALL
+                           SELECT COUNT (*) :: Integer AS Res FROM tmpProcess WHERE query ILIKE ('%Inventory%') AND inProcName ILIKE '%Inventory%'
+                          )
+            , tmpCount AS (SELECT SUM (COALESCE (tmpCount_all.Res, 0)) :: Integer AS Res FROM tmpCount_all
+                          )
             , tmpSecond AS (SELECT CASE WHEN 25 < (SELECT COUNT(*) FROM tmpProcess)
                                              THEN 60
 
-                                        WHEN 2 < (SELECT tmpCount.Res FROM tmpCount)
+                                        WHEN 0 < (SELECT tmpCount.Res FROM tmpCount)
                                              AND (inProcName ILIKE 'gpReport_MotionGoods'
                                                OR inProcName ILIKE 'gpUpdate_Movement_ReturnIn_Auto'
                                                  )
                                              THEN 25
 
-                                        WHEN 1 < (SELECT tmpCount.Res FROM tmpCount)
+                                        WHEN 0 < (SELECT tmpCount.Res FROM tmpCount)
                                              AND (inProcName ILIKE 'gpReport_GoodsBalance'
                                                OR inProcName ILIKE 'gpReport_GoodsBalance_Server'
                                                  )
@@ -90,4 +95,5 @@ $BODY$
 
 -- тест
 -- WITH tmpProcess AS (SELECT * FROM pg_stat_activity WHERE state ILIKE 'active') SELECT COUNT(*) FROM tmpProcess WHERE query ILIKE ('%gpReport_MotionGoods%')
+-- SELECT * FROM gpCheck_Object_ReportPriority (inProcName:= 'Inventory', inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpCheck_Object_ReportPriority (inProcName:= 'gpReport_MotionGoods', inSession:= zfCalc_UserAdmin())

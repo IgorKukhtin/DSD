@@ -103,28 +103,22 @@ object OrderInternalForm: TOrderInternalForm
       Top = 63
       Properties.Buttons = <
         item
-          Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-          ImageIndex = 12
-          Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+          Action = actCompleteMovement
           Kind = bkGlyph
         end
         item
-          Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+          Action = actUnCompleteMovement
           Default = True
-          ImageIndex = 11
-          Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
           Kind = bkGlyph
         end
         item
-          Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-          ImageIndex = 13
-          Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+          Action = actDeleteMovement
           Kind = bkGlyph
         end>
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 155
+      Width = 151
     end
     object cxLabel16: TcxLabel
       Left = 273
@@ -342,6 +336,14 @@ object OrderInternalForm: TOrderInternalForm
             OptionsView.HeaderAutoHeight = True
             OptionsView.Indicator = True
             Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+            object Ord: TcxGridDBColumn
+              Caption = #8470' '#1087'/'#1087
+              DataBinding.FieldName = 'Ord'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 50
+            end
             object isEnabled: TcxGridDBColumn
               Caption = 'Yes/no'
               DataBinding.FieldName = 'isEnabled'
@@ -786,12 +788,22 @@ object OrderInternalForm: TOrderInternalForm
               Width = 100
             end
             object ProdColorPatternName_ch3: TcxGridDBColumn
-              Caption = 'Boat Structure'
+              Caption = #1069#1083#1077#1084#1077#1085#1090' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088#1072
               DataBinding.FieldName = 'ProdColorPatternName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderGlyphAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 58
+            end
+            object ColorPatternName_ch3: TcxGridDBColumn
+              Caption = #1064#1072#1073#1083#1086#1085
+              DataBinding.FieldName = 'ColorPatternName'
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderGlyphAlignmentHorz = taCenter
+              HeaderHint = #1064#1072#1073#1083#1086#1085' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088#1072
               Options.Editing = False
               Width = 58
             end
@@ -804,17 +816,6 @@ object OrderInternalForm: TOrderInternalForm
               HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
               Options.Editing = False
               Width = 100
-            end
-            object ColorPatternName_ch3: TcxGridDBColumn
-              Caption = #1064#1072#1073#1083#1086#1085
-              DataBinding.FieldName = 'ColorPatternName'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderGlyphAlignmentHorz = taCenter
-              HeaderHint = #1064#1072#1073#1083#1086#1085' Boat Structure'
-              Options.Editing = False
-              Width = 58
             end
             object UnitName_ch3: TcxGridDBColumn
               Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
@@ -1041,6 +1042,7 @@ object OrderInternalForm: TOrderInternalForm
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
@@ -1052,6 +1054,7 @@ object OrderInternalForm: TOrderInternalForm
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 80
@@ -2245,14 +2248,14 @@ object OrderInternalForm: TOrderInternalForm
         item
           StoredProc = spSelectMI_Child
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1079#1072#1082#1072#1079#1072
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1079#1072#1082#1072#1079#1072
       ImageIndex = 63
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1079#1072#1082#1072#1079#1072
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1079#1072#1082#1072#1079#1072
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
@@ -3238,6 +3241,60 @@ object OrderInternalForm: TOrderInternalForm
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
     end
+    object actCompleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChangeStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      Status = mtComplete
+      Guides = StatusGuides
+    end
+    object actUnCompleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChangeStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
+      Status = mtUncomplete
+      Guides = StatusGuides
+    end
+    object actDeleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChangeStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      ImageIndex = 13
+      Status = mtDelete
+      Guides = StatusGuides
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3476,6 +3533,14 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperDate'
         Value = Null
         Component = FormParams
@@ -3495,82 +3560,6 @@ object OrderInternalForm: TOrderInternalForm
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDatePartner'
-        Value = Null
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumberPartner'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FromId'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FromName'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToName'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PriceWithVAT'
-        Value = False
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'VATPercent'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'DiscountTax'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'DiscountNextTax'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -3596,17 +3585,6 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PaidKindId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'InsertName'
         Value = Null
         Component = edInsertName
@@ -3621,19 +3599,25 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MovementId_Invoice'
+        Name = 'MovementId_OrderClient'
         Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_Invoice'
+        Name = 'InvNumber_all'
         Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Comment_Invoice'
+        Name = 'ProductName'
         Value = Null
+        Component = GuidesProduct
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -4186,7 +4170,7 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_Full2'
+        Name = 'InvNumber_all'
         Value = ''
         Component = GuidesOrderClient
         ComponentItem = 'TextValue'
