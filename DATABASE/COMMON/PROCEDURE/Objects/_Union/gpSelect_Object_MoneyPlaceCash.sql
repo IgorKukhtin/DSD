@@ -35,11 +35,20 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- определяется уровень доступа (группа юр.лиц)
-     vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.JuridicalGroupId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId);
+     vbObjectId_Constraint:= (SELECT DISTINCT Object_RoleAccessKeyGuide_View.JuridicalGroupId
+                              FROM Object_RoleAccessKeyGuide_View
+                              WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.JuridicalGroupId <> 0
+                                AND vbUserId <> 14599 -- Коротченко Т.Н.
+                              GROUP BY Object_RoleAccessKeyGuide_View.JuridicalGroupId
+                             );
      vbIsConstraint:= COALESCE (vbObjectId_Constraint, 0) > 0;
 
      -- определяется уровень доступа (филиал)
-     vbObjectId_Constraint_Branch:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
+     vbObjectId_Constraint_Branch:= (SELECT DISTINCT  Object_RoleAccessKeyGuide_View.BranchId
+                                     FROM Object_RoleAccessKeyGuide_View
+                                     WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0
+                                       AND vbUserId <> 14599 -- Коротченко Т.Н.
+                                    );
      vbIsConstraint_Branch:= COALESCE (vbObjectId_Constraint_Branch, 0) > 0;
 
 
