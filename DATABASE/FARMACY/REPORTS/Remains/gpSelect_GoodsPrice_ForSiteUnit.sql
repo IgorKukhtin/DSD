@@ -486,8 +486,13 @@ BEGIN
                                WHERE COALESCE (ContainerPD.Id, 0) = 0
                                  AND COALESCE (DiscountExternalSupplier.DiscountExternalId, 0) <> 0
                                GROUP BY Container.ObjectId
-                                      , Container.WhereObjectId
-         )
+                                      , Container.WhereObjectId)
+          , tmpPromoBonus AS (SELECT PromoBonus.GoodsID
+                                   , PromoBonus.UnitID
+                                   , PromoBonus.MarginPercent
+                                   , PromoBonus.BonusInetOrder 
+                              FROM gpSelect_PromoBonus_MarginPercent(inUnitId := 0,  inSession := inSession) AS PromoBonus 
+                              WHERE PromoBonus.BonusInetOrder > 0)
                            
 
         SELECT Price_Site.GoodsId                                           AS Id
@@ -502,16 +507,20 @@ BEGIN
                                                      THEN tmpObject_Price.Price ELSE GoodsDiscount.MaxPrice END * (100 - GoodsDiscount.DiscountProcent) / 100, 1)
                                      ELSE NULL END, 0),
                zfCalc_PriceCash(CASE WHEN COALESCE (inUnitId, 0) <> 0 AND COALESCE(tmpContainerAll.Remains - COALESCE (tmpContainerPD.Remains, 0), 0) <= 0
-                                THEN Null
-                                WHEN COALESCE (inUnitId, 0) <> 0
-                                THEN CASE WHEN COALESCE (PriceChange.PriceChange, 0) > 0 
+                                     THEN Null
+                                     WHEN COALESCE (inUnitId, 0) <> 0
+                                     THEN CASE WHEN COALESCE (PriceChange.PriceChange, 0) > 0 
                                           THEN PriceChange.PriceChange
                                           WHEN COALESCE (PriceChange.FixPercent, 0) > 0 
                                           THEN tmpObject_Price.Price * (100.0 - PriceChange.FixPercent) / 100.0
                                           WHEN COALESCE (PriceChange.FixDiscount, 0) > 0 AND tmpObject_Price.Price > PriceChange.FixDiscount
                                           THEN tmpObject_Price.Price - PriceChange.FixDiscount
+                                          WHEN COALESCE (PriceChange.GoodsId, 0) = 0 
+                                            AND Price_Site.IsTop = FALSE AND COALESCE (tmpPromoBonus.BonusInetOrder, 0) > 0
+                                          THEN Round(tmpObject_Price.Price * 100.0 / (100.0 + tmpPromoBonus.MarginPercent) * 
+                                                     (100.0 - tmpPromoBonus.BonusInetOrder + tmpPromoBonus.MarginPercent) / 100, 2)
                                           ELSE tmpObject_Price.Price END
-                                ELSE Price_Site.Price END, 
+                                     ELSE Price_Site.Price END, 
                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                                 COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)) ::TFloat    AS Price
              , (tmpContainerAll.Remains - COALESCE (tmpContainerPD.Remains, 0))::TFloat          AS Remains
@@ -557,6 +566,9 @@ BEGIN
                                           ON RemainsDiscount.GoodsId = Price_Site.GoodsId  
                                          AND RemainsDiscount.UnitId = inUnitId
 
+             LEFT JOIN tmpPromoBonus ON tmpPromoBonus.GoodsId = Price_Site.GoodsId  
+                                    AND tmpPromoBonus.UnitId = inUnitId
+
         ORDER BY CASE WHEN COALESCE (tmpContainerAll.Remains, 0) = 0 THEN 1 ELSE 0 END 
                , CASE WHEN inSortType = 0 THEN Price_Site.Price END
                , CASE WHEN inSortType = 1 THEN Price_Site.Price END DESC
@@ -579,5 +591,4 @@ $BODY$
 -- тест
 --
  
-SELECT * FROM gpSelect_GoodsPrice_ForSite (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Гептрал', inUnitId := 16240371, inisDiscountExternal := True , inSession:= zfCalc_UserSite());
-
+SELECT * FROM gpSelect_GoodsPrice_ForSite (inCategoryId := 0 , inSortType := 0, inSortLang := 'uk', inStart := 0, inLimit := 100, inProductId := 0, inSearch := 'Амицитрон', inUnitId := 16240371, inisDiscountExternal := True , inSession:= zfCalc_UserSite());

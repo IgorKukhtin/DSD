@@ -21,13 +21,17 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Error. Нет данных для проведения.';
     END IF;
-
+    
 
     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
     PERFORM lpComplete_Movement (inMovementId := inMovementId
                                , inDescId     := zc_Movement_PromoBonus()
                                , inUserId     := inUserId
                                 );
+
+    -- 5.3. ФИНИШ - Пропишем % наценки по точке
+    PERFORM gpInsertUpdate_PromoBonus_MarginPercent(inMovementId := inMovementId ,  inSession := inUserId::TVarChar);
+
 
 END;
 $BODY$

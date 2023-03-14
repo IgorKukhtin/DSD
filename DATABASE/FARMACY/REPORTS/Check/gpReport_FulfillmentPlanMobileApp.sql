@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_FulfillmentPlanMobileApp(
 RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar
              , CountChech TFloat, CountSite TFloat, CountUser Integer, ProcPlan TFloat
              , UserId Integer, UserCode Integer, UserName TVarChar
-             , CountChechUser TFloat, CountMobileUser TFloat, QuantityMobile Integer, ProcFact TFloat
+             , CountChechUser TFloat, CountMobileUser TFloat, CountShortage TFloat, QuantityMobile Integer, ProcFact TFloat
              , PenaltiMobApp TFloat, isShowPlanMobileAppUser Boolean
               )
 AS
@@ -186,6 +186,14 @@ BEGIN
            , Object_User.ValueData                                 AS UserName
            , tmpMovFact.CountChech                                 AS CountChechUser
            , tmpMovFact.CountMobile                                AS CountMobileUser
+           
+           , CASE WHEN Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
+                       COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 1) > 
+                       Round(1.0 * tmpMovFact.CountMobile / 
+                       NullIf(tmpMovFact.CountChech, 0) * 100, 1)
+                  THEN Round(tmpMovFact.CountChech * Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
+                       COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 1) / 100 - tmpMovFact.CountMobile, 2) END::TFloat AS CountShortage
+              
            , tmpMovFact.QuantityMobile                             AS QuantityMobile
            , Round(1.0 * tmpMovFact.CountMobile / 
              NullIf(tmpMovFact.CountChech, 0) * 100, 1)::TFloat    AS ProcFact

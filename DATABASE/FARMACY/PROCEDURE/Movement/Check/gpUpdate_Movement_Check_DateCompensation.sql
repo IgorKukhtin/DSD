@@ -1,6 +1,6 @@
 -- Function: gpUpdate_Movement_Check_DateCompensation()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_DateCompensation(Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Check_DateCompensation(Integer, TDateTime, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Check_DateCompensation(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>

@@ -665,10 +665,15 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_MovementFloat_AmountCheck() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountCheck'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_AmountCheck', 'Акционный товар от суммы чека' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountCheck');  
-        
+    
+CREATE OR REPLACE FUNCTION zc_MovementFloat_AmountAct() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountAct'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_AmountAct', 'Сумма акта' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountAct');  
+    
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 14.03.23                                                                                     * zc_MovementFloat_AmountAct
  25.11.22                                                                                     * zc_MovementFloat_AmountCheck
  27.10.22                                                                                     * zc_MovementFloat_ApplicationAward
  21.07.22                                                                                     * zc_MovementFloat_MobileDiscount

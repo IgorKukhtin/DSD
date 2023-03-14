@@ -437,9 +437,9 @@ inherited MainCashForm2: TMainCashForm2
           Styles.OnGetContentStyle = MainFixPercentStylesGetContentStyle
           Width = 89
         end
-        object MainPromoBonus: TcxGridDBColumn
-          Caption = #1055#1088#1086#1084#1086'. '#1073#1086#1085#1091#1089
-          DataBinding.FieldName = 'PromoBonus'
+        object MainPromoBonusPrice: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072' ('#1087#1088#1086#1084#1086'. '#1073#1086#1085#1091#1089')'
+          DataBinding.FieldName = 'PromoBonusPrice'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = ',0.##;-,0.##; ;'
           HeaderAlignmentHorz = taCenter

@@ -3,8 +3,8 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
   ClientHeight = 430
   ClientWidth = 1072
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1088
-  ExplicitHeight = 469
+  ExplicitWidth = 1090
+  ExplicitHeight = 477
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -85,6 +85,11 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
               Format = ',0.##'
               Kind = skSum
               Column = Summa
+            end
+            item
+              Format = ',0.00 ;-,0.00; ;'
+              Kind = skSum
+              Column = AmountAct
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -273,6 +278,22 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object ActNumber: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1072#1082#1090#1072
+            DataBinding.FieldName = 'ActNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 76
+          end
+          object AmountAct: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1072#1082#1090#1072', '#1075#1088#1085'.'
+            DataBinding.FieldName = 'AmountAct'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00 ;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
           end
         end
       end
@@ -481,6 +502,9 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
       StoredProcList = <
         item
           StoredProc = spUpdateDateCompensation
+        end
+        item
+          StoredProc = spUpdateActNumberAndAmount
         end>
       Caption = 'actUpdateMainDS'
       DataSource = MasterDS
@@ -525,6 +549,59 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
           Component = FormParams
           ComponentItem = 'DateCompensation'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object mactUpdateActNumberAndAmountFilter: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteDialogactActNumberAndAmount
+      ActionList = <
+        item
+          Action = actUpdateActNumberAndAmountFilter
+        end>
+      View = cxGridDBTableView
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1085#1086#1084#1077#1088' '#1072#1082#1090#1072' '#1080' '#1089#1091#1084#1084#1091' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1085#1086#1084#1077#1088' '#1072#1082#1090#1072' '#1080' '#1089#1091#1084#1084#1091' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 75
+    end
+    object actUpdateActNumberAndAmountFilter: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateActNumberAndAmountFilter
+      StoredProcList = <
+        item
+          StoredProc = spUpdateActNumberAndAmountFilter
+        end>
+      Caption = 'actUpdateActNumberAndAmountFilter'
+    end
+    object actExecuteDialogactActNumberAndAmount: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDialogactActNumberAndAmount'
+      FormName = 'TActNumberAndAmountDialogForm'
+      FormNameParam.Value = 'TActNumberAndAmountDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ActNumber'
+          Value = '01.01.2021'
+          Component = FormParams
+          ComponentItem = 'ActNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountAct'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AmountAct'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -630,6 +707,10 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateActNumberAndAmount'
         end>
     end
     object bbOpenDocument: TdxBarButton
@@ -650,6 +731,10 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
       Hint = #1053#1077#1076#1086#1082#1086#1084#1077#1085#1089#1072#1094#1080#1080' '#1087#1086' '#1044#1055
       Visible = ivAlways
       ImageIndex = 29
+    end
+    object bbUpdateActNumberAndAmount: TdxBarButton
+      Action = mactUpdateActNumberAndAmountFilter
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -739,6 +824,18 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
         Name = 'DateCompensation'
         Value = '01.01.2021'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ActNumber'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountAct'
+        Value = 0.000000000000000000
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 232
@@ -868,7 +965,77 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 338
-    Top = 264
+    Left = 330
+    Top = 272
+  end
+  object spUpdateActNumberAndAmountFilter: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_ActNumberAndAmount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inActNumber'
+        Value = '01.01.2021'
+        Component = FormParams
+        ComponentItem = 'ActNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountAct'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AmountAct'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 738
+    Top = 272
+  end
+  object spUpdateActNumberAndAmount: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_ActNumberAndAmount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inActNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ActNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountAct'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountAct'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 738
+    Top = 208
   end
 end

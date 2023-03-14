@@ -4,8 +4,8 @@ inherited PretensionJournalForm: TPretensionJournalForm
   ClientWidth = 807
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 823
-  ExplicitHeight = 516
+  ExplicitWidth = 825
+  ExplicitHeight = 524
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -858,6 +858,13 @@ inherited PretensionJournalForm: TPretensionJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCurrentData'
+        Value = True
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

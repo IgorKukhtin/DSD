@@ -80,6 +80,14 @@ type
     mactUpdate_BonusInetOrder: TMultiAction;
     dxBarButton6: TdxBarButton;
     dxBarButton7: TdxBarButton;
+    IsTop: TcxGridDBColumn;
+    isSP: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    PercentMarkup: TcxGridDBColumn;
+    MarginPercent: TcxGridDBColumn;
+    PriceSale: TcxGridDBColumn;
+    PriceBonus: TcxGridDBColumn;
+    PriceBonusSite: TcxGridDBColumn;
   private
     { Private declarations }
   public

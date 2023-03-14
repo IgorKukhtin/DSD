@@ -28,6 +28,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Statu
              , InvNumberIncome TVarChar
              , OperDateIncome TDateTime
              , PriceWithVAT TFloat
+             , ActNumber TVarChar
+             , AmountAct TFloat
               )
 AS
 $BODY$
@@ -95,6 +97,8 @@ BEGIN
            , Movement_Income.InvNumber                  AS InvNumberIncome
            , Movement_Income.OperDate                   AS OperDateIncome
            , MIFloat_PriceWithVAT.ValueData             AS PriceWithVAT
+           , MovementString_ActNumber.ValueData         AS ActNumber
+           , MovementFloat_AmountAct.ValueData          AS AmountAct
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -150,6 +154,15 @@ BEGIN
              LEFT JOIN MovementDate AS MovementDate_Compensation
                                     ON MovementDate_Compensation.MovementId = Movement_Check.Id
                                    AND MovementDate_Compensation.DescId = zc_MovementDate_Compensation()
+                                   
+             LEFT JOIN MovementString AS MovementString_ActNumber
+                                      ON MovementString_ActNumber.MovementId = Movement_Check.Id
+                                     AND MovementString_ActNumber.DescId = zc_MovementString_ActNumber()
+
+             LEFT JOIN MovementFloat AS MovementFloat_AmountAct
+                                     ON MovementFloat_AmountAct.MovementId = Movement_Check.Id
+                                    AND MovementFloat_AmountAct.DescId = zc_MovementFloat_AmountAct()
+                                   
 
    	         LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
                                           ON MovementLinkObject_PaidType.MovementId = Movement_Check.Id

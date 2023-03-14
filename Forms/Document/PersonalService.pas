@@ -292,6 +292,8 @@ type
     bbSubPrint: TdxBarSubItem;
     bbInsertData: TdxBarSubItem;
     bbExportSub: TdxBarSubItem;
+    actOpenReportRecalcForm: TdsdOpenForm;
+    bbOpenReportRecalcForm: TdxBarButton;
   private
     { Private declarations }
   public

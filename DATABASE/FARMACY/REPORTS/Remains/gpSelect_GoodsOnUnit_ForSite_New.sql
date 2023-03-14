@@ -708,6 +708,12 @@ BEGIN
                                      AND COALESCE (PriceChange_FixEndDate_Unit.ValueData, CURRENT_DATE) >= CURRENT_DATE   
                                      AND COALESCE (ObjectLink_PriceChange_PartionDateKind_Unit.ChildObjectId, 0) = 0 
                                   )
+          , tmpPromoBonus AS (SELECT PromoBonus.GoodsID
+                                   , PromoBonus.UnitID
+                                   , PromoBonus.MarginPercent
+                                   , PromoBonus.BonusInetOrder 
+                              FROM gpSelect_PromoBonus_MarginPercent(inUnitId := 0,  inSession := inSession) AS PromoBonus 
+                              WHERE PromoBonus.BonusInetOrder > 0)
                                   
                 SELECT _tmpList.UnitId
                      , _tmpList.GoodsId
@@ -756,9 +762,12 @@ BEGIN
                                  END  > COALESCE (tmpPriceChangeUnit.FixDiscount, tmpPriceChange.FixDiscount, 0)
                             THEN CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                                        AND ObjectFloat_Goods_Price.ValueData > 0
-                                           THEN ObjectFloat_Goods_Price.ValueData
+                                      THEN ObjectFloat_Goods_Price.ValueData
                                       ELSE ObjectFloat_Price_Value.ValueData
                                  END  - COALESCE (tmpPriceChangeUnit.FixDiscount, tmpPriceChange.FixDiscount, 0)
+                            WHEN COALESCE (ObjectBoolean_Goods_TOP.ValueData, False) = FALSE AND COALESCE (tmpPromoBonus.BonusInetOrder, 0) > 0
+                            THEN Round(ObjectFloat_Price_Value.ValueData * 100.0 / (100.0 + tmpPromoBonus.MarginPercent) * 
+                                      (100.0 - tmpPromoBonus.BonusInetOrder + tmpPromoBonus.MarginPercent) / 100, 2)
                             ELSE Null END                                                         AS PriceChange
 
 				FROM _tmpList
@@ -805,6 +814,10 @@ BEGIN
                                                  AND tmpPriceChangeUnit.UnitId = _tmpList.UnitId
                      LEFT JOIN tmpPriceChange ON tmpPriceChange.GoodsId = _tmpList.GoodsId
                                              AND COALESCE (tmpPriceChangeUnit.GoodsId, 0) = 0
+
+                     -- Соц Проо бонус
+                     LEFT JOIN tmpPromoBonus ON tmpPromoBonus.GoodsId = ObjectLink_Price_Goods.ChildObjectId
+                                            AND tmpPromoBonus.UnitId = _tmpList.UnitId
                ;
 			   
     -- !!!Оптимизация!!!
@@ -1202,7 +1215,7 @@ BEGIN
                                      THEN Null
                                      WHEN tmpList.GoodsId_retail = tmpList.GoodsId
                                      THEN CASE WHEN COALESCE(tmpPrice_Site.Price, 0) > 0 AND tmpPrice_Site.Price > Price_Unit.PriceChange
-                                                         THEN tmpPrice_Site.Price ELSE Price_Unit.PriceChange END
+                                               THEN tmpPrice_Site.Price ELSE Price_Unit.PriceChange END
                                      ELSE Price_Unit.PriceChange END,
                                      CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                                      COALESCE(GoodsDiscount.GoodsId, 0) <> 0) :: TFloat AS Price_unit
@@ -1371,7 +1384,7 @@ $BODY$
 
 
 SELECT OBJECT_Unit.valuedata, OBJECT_Goods.valuedata, p.* FROM gpselect_goodsonunit_forsite ('16240371,8156016,377610,11769526,183292,4135547,14422124,14422095,377606,6128298,13338606,377595,377605,494882,10779386,183289,8393158,6309262,13311246,377613,377594,377574,15212291,13711869,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116,15171089', 
-                                                                                             '2326315,18308538', TRUE, zfCalc_UserSite()) AS p
+                                                                                             '18308538', TRUE, zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId
  LEFT JOIN OBJECT AS OBJECT_Goods ON OBJECT_Goods.ID = p.Id;
  

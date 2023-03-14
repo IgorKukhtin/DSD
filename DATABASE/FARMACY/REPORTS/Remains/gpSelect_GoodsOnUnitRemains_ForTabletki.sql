@@ -206,7 +206,8 @@ BEGIN
                                              THEN ObjectFloat_Goods_Price.ValueData
                                              ELSE Price_Value.ValueData
                                         END * CASE WHEN vbAddMarkupTabletki > 0 AND  COALESCE(ObjectFloat_Goods_PercentMarkup.ValueData, 0) > 0 
-                                                   THEN 100.0 + vbAddMarkupTabletki ELSE 100.0 END / 100.0, 2) :: TFloat                                                                                  AS Price
+                                                   THEN 100.0 + vbAddMarkupTabletki ELSE 100.0 END / 100.0, 2) :: TFloat        AS Price
+                               , COALESCE(ObjectBoolean_Goods_TOP.ValueData, FALSE)                                             AS isTop
                                , COALESCE(ObjectFloat_Goods_PercentMarkup.ValueData, 0)                                         AS PercentMarkup                                      
                           FROM tmpPrice
                                LEFT JOIN ObjectFloat AS Price_Value
@@ -455,7 +456,13 @@ BEGIN
                                  AND COALESCE (PriceChange_FixEndDate_Unit.ValueData, PriceChange_FixEndDate_Retail.ValueData, CURRENT_DATE) >= CURRENT_DATE   
                                  AND COALESCE (ObjectLink_PriceChange_PartionDateKind_Unit.ChildObjectId, ObjectLink_PriceChange_PartionDateKind_Retail.ChildObjectId, 0) = 0 
                               )
-                          
+          , tmpPromoBonus AS (SELECT PromoBonus.GoodsID
+                                   , PromoBonus.UnitID
+                                   , PromoBonus.MarginPercent
+                                   , PromoBonus.BonusInetOrder 
+                              FROM gpSelect_PromoBonus_MarginPercent(inUnitId := 0,  inSession := inSession) AS PromoBonus 
+                              WHERE PromoBonus.BonusInetOrder > 0)
+                           
        , tmpResult AS (
                       --Шапка
                       SELECT '<?xml version="1.0" encoding="utf-8"?>'::TVarChar AS RowData
@@ -476,8 +483,12 @@ BEGIN
                                                                                       THEN Object_Price.Price * (100.0 - PriceChange.FixPercent) / 100.0
                                                                                       WHEN COALESCE (PriceChange.FixDiscount, 0) > 0 AND Object_Price.Price > PriceChange.FixDiscount
                                                                                       THEN Object_Price.Price - PriceChange.FixDiscount
-                                                                                      ELSE Object_Price.Price END, CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                                                                                                        COALESCE(GoodsDiscount.GoodsMainId, 0) <> 0) END
+                                                                                      WHEN Object_Price.isTop = FALSE AND COALESCE (tmpPromoBonus.BonusInetOrder, 0) > 0
+                                                                                      THEN Object_Price.Price * 100.0 / (100.0 + tmpPromoBonus.MarginPercent) * 
+                                                                                           (100.0 - tmpPromoBonus.BonusInetOrder + tmpPromoBonus.MarginPercent) / 100
+                                                                                      ELSE Object_Price.Price END, 
+                                                                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                                                                 COALESCE(GoodsDiscount.GoodsMainId, 0) <> 0) END
                                                                                            ,'FM9999990.00')
                                ||'" Quantity="'||CAST((CASE WHEN COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 THEN RemainsDiscount.AmountDiscount ELSE Remains.Amount END - 
                                                        coalesce(Reserve_Goods.ReserveAmount, 0) - COALESCE (Reserve_TP.Amount, 0)) AS TVarChar)
@@ -490,8 +501,12 @@ BEGIN
                                                                                       THEN Object_Price.Price * (100.0 - PriceChange.FixPercent) / 100.0
                                                                                       WHEN COALESCE (PriceChange.FixDiscount, 0) > 0 AND Object_Price.Price > PriceChange.FixDiscount
                                                                                       THEN Object_Price.Price - PriceChange.FixDiscount
-                                                                                      ELSE Object_Price.Price END, CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                                                                                                        COALESCE(GoodsDiscount.GoodsMainId, 0) <> 0) END
+                                                                                      WHEN Object_Price.isTop = FALSE AND COALESCE (tmpPromoBonus.BonusInetOrder, 0) > 0
+                                                                                      THEN Object_Price.Price * 100.0 / (100.0 + tmpPromoBonus.MarginPercent) * 
+                                                                                           (100.0 - tmpPromoBonus.BonusInetOrder + tmpPromoBonus.MarginPercent) / 100
+                                                                                      ELSE Object_Price.Price END, 
+                                                                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                                                                 COALESCE(GoodsDiscount.GoodsMainId, 0) <> 0) END
                                                                                            ,'FM9999990.00')
                                ||'" Barcode="'||COALESCE (tmpGoodsBarCode.BarCode, '')
                                ||'" />'
@@ -513,6 +528,11 @@ BEGIN
                              LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = Object_Goods_Main.Id
                              LEFT JOIN tmpGoodsDiscount AS GoodsDiscount ON GoodsDiscount.GoodsMainId = Object_Goods_Main.Id
                              LEFT JOIN tmpRemainsDiscount AS RemainsDiscount ON RemainsDiscount.GoodsId = Object_Goods_Retail.Id
+                             
+                             -- Соц Проо бонус
+                             LEFT JOIN tmpPromoBonus ON tmpPromoBonus.GoodsId = Object_Goods_Retail.Id
+                                                    AND tmpPromoBonus.UnitId = inUnitId
+                             
 
                              -- штрих-код производителя
                              LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = Object_Goods_Main.Id
@@ -588,8 +608,6 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletki (Integer, TVarChar) OWNER
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsOnUnitRemains_ForTabletki (inUnitId := 183292, inSession:= '-3')
+-- 
 
---Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(10128935 ,'3');
---Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(8156016  ,'3');
-Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(16001195   ,'3') --  where RowData ILIKE '%Гептрал%';
+Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(375627   ,'3') --  where RowData ILIKE '%Гептрал%';

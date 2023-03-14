@@ -1370,7 +1370,7 @@ begin
       CurDictTable.Close;
       FreeAndNil(CurDictTable);
     end;
-    FreeAndNil(GetStoredProc);
+    if Assigned(GetStoredProc) then FreeAndNil(GetStoredProc);
   end;
 end;
 

@@ -54,6 +54,7 @@ type
     UserName: TcxGridDBColumn;
     PenaltiMobApp: TcxGridDBColumn;
     dxBarButton2: TdxBarButton;
+    CountShortage: TcxGridDBColumn;
   private
     { Private declarations }
   public
