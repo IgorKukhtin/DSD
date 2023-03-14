@@ -4,7 +4,6 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 888
-  ExplicitHeight = 710
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -193,9 +192,6 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1056#1072#1081#1092#1092#1072#1081#1079#1077#1085' '#1041#1072#1085#1082
       ImageIndex = 73
     end
-    inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TBankStatementForm'
-    end
     object BankMarfinLoad: TClientBankLoadAction [8]
       Category = 'Load'
       MoveParams = <>
@@ -222,6 +218,9 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1052#1072#1088#1092#1080#1085' '#1041#1072#1085#1082#1072
       Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1052#1072#1088#1092#1080#1085' '#1041#1072#1085#1082#1072
       ImageIndex = 71
+    end
+    inherited actInsert: TdsdInsertUpdateAction
+      FormName = 'TBankStatementForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TBankStatementForm'
@@ -514,6 +513,33 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1054#1058#1055' '#1073#1072#1085#1082#1072' XLS'
       ImageIndex = 69
     end
+    object BankOshad: TMultiAction
+      Category = 'Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = BankOshadLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1073#1072#1085#1082#1072' '#1054#1097#1072#1076
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1073#1072#1085#1082#1072' '#1054#1097#1072#1076
+      ImageIndex = 73
+    end
+    object BankOshadLoad: TClientBankLoadAction
+      Category = 'Load'
+      MoveParams = <>
+      ClientBankType = cbOshadBank
+      StartDateParam.Value = 43831d
+      StartDateParam.Component = deStart
+      StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
+      EndDateParam.Value = 43831d
+      EndDateParam.Component = deEnd
+      EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_BankStatement'
@@ -600,6 +626,18 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           ItemName = 'bbRaiffeisenBankLoad'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBankOshad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -632,9 +670,6 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
     end
     inherited bbInsert: TdxBarButton
       Enabled = False
@@ -690,6 +725,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     end
     object bbRaiffeisenBankLoad: TdxBarButton
       Action = mRaiffeisenBankLoad
+      Category = 0
+    end
+    object bbBankOshad: TdxBarButton
+      Action = BankOshad
       Category = 0
     end
   end

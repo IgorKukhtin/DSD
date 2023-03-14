@@ -91,6 +91,15 @@ object PersonalForm: TPersonalForm
         Options.Editing = False
         Width = 89
       end
+      object PositionCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1076#1086#1078#1085'.'
+        DataBinding.FieldName = 'PositionCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1076#1086#1078#1085#1086#1089#1090#1080
+        Options.Editing = False
+        Width = 70
+      end
       object PositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
@@ -105,6 +114,15 @@ object PersonalForm: TPersonalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 142
+      end
+      object PositionLevelCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1088#1072#1079#1088#1103#1076
+        DataBinding.FieldName = 'PositionLevelCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1088#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+        Options.Editing = False
+        Width = 70
       end
       object PositionLevelName: TcxGridDBColumn
         Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
@@ -406,7 +424,7 @@ object PersonalForm: TPersonalForm
     EditValue = 42948d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 7
+    TabOrder = 6
     Width = 79
   end
   object cxLabel8: TcxLabel

@@ -148,7 +148,6 @@ type
     Color_value_ch1: TcxGridDBColumn;
     Color_Level_ch1: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
-    Panel1: TPanel;
     cxLabel5: TcxLabel;
     ceParent: TcxButtonEdit;
     GuidesParent: TdsdGuides;
@@ -167,7 +166,6 @@ type
     InsertDate: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    cxSplitter1: TcxSplitter;
     actInsertRecordChild: TInsertRecord;
     bbInsertRecordChild: TdxBarButton;
     bbChildProtocol: TdxBarButton;
@@ -284,6 +282,11 @@ type
     macErasedMI_Master_list: TMultiAction;
     macErasedMI_Master: TMultiAction;
     bbErasedMI_Master: TdxBarButton;
+    cxSplitter3: TcxSplitter;
+    Ord: TcxGridDBColumn;
+    DescName: TcxGridDBColumn;
+    actOpenOrderClientForm: TdsdOpenForm;
+    bbOpenOrderClientForm: TdxBarButton;
   private
   public
   end;

@@ -125,6 +125,8 @@ type
     macUpdate_PersonalServiceList_list: TMultiAction;
     macUpdate_PersonalServiceList: TMultiAction;
     bbUpdate_PersonalServiceList: TdxBarButton;
+    PositionCode: TcxGridDBColumn;
+    PositionLevelCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

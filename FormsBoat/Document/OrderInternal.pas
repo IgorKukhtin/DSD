@@ -137,8 +137,8 @@ type
     SetErasedChild: TdsdUpdateErased;
     bbSetErasedChild: TdxBarButton;
     getMovementForm: TdsdStoredProc;
-    actOpenForm: TdsdOpenForm;
-    bbOpenDocument: TdxBarButton;
+    actOpenOrderClientForm: TdsdOpenForm;
+    bbOpenOrderClientForm: TdxBarButton;
     macErasedMI_Master_list: TMultiAction;
     macErasedMI_Master: TMultiAction;
     bbErasedMI_Master: TdxBarButton;
