@@ -80,6 +80,13 @@ type
     cxLabel14: TcxLabel;
     cePersonalHead: TcxButtonEdit;
     GuidesPersonalHead: TdsdGuides;
+    cxLabel15: TcxLabel;
+    edSummAvance: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    edSummAvanceMax: TcxCurrencyEdit;
+    edHourAvance: TcxCurrencyEdit;
+    cxLabel18: TcxLabel;
+    cbAvanceNot: TcxCheckBox;
   private
     { Private declarations }
   public

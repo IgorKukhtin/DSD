@@ -12,7 +12,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integ
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
 
 
 
@@ -32,11 +33,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
     IN inBankAccountId         Integer   ,     --
     IN inPSLExportKindId       Integer   ,     --
     IN inCompensation          TFloat    ,     -- месяц компенсации
+    IN inSummAvance            TFloat    ,     -- 
+    IN inSummAvanceMax         TFloat    ,     -- 
+    IN inHourAvance            TFloat    ,     -- 
     IN inKoeffSummCardSecond   TVarChar,      -- Коэфф для выгрузки ведомости Банк 2ф.   нужно * на 1000, т.к. много знаков после зпт, 
     IN inisSecond              Boolean   ,     -- 
     IN inisRecalc              Boolean   ,     -- 
     IN inisBankOut             Boolean   ,     -- 
-    IN inisDetail              Boolean   ,     -- 
+    IN inisDetail              Boolean   ,     --
+    IN inisAvanceNot           Boolean   ,     -- 
     IN inContentType           TVarChar   ,     --
     IN inOnFlowType            TVarChar   ,     --
    -- IN inMemberId            Integer   ,     -- Физ лица(пользователь)
@@ -107,12 +112,21 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PersonalServiceList_BankOut(), ioId, inisBankOut);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PersonalServiceList_Detail(), ioId, inisDetail);
-    
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PersonalServiceList_AvanceNot(), ioId, inisAvanceNot);
+       
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PersonalServiceList_Compensation(), ioId, inCompensation);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond(), ioId, (CAST (inKoeffSummCardSecond AS NUMERIC (16,10)) * 1000));
-           
+ 
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PersonalServiceList_SummAvance(), ioId, inSummAvance);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PersonalServiceList_SummAvanceMax(), ioId, inSummAvanceMax);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PersonalServiceList_HourAvance(), ioId, inHourAvance);          
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -123,6 +137,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.03.23         * 
  09.03.22         * inPersonalHeadId
  18.11.21         *
  28.04.21         * inisDetail

@@ -1147,6 +1147,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecon
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond', zc_Object_PersonalServiceList(), 'Коэфф для выгрузки ведомости Банк 2ф.' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PersonalServiceList_SummAvance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_SummAvance'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_PersonalServiceList_SummAvance', zc_Object_PersonalServiceList(), 'Сумма аванс(авто)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_SummAvance');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PersonalServiceList_SummAvanceMax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_SummAvanceMax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_PersonalServiceList_SummAvanceMax', zc_Object_PersonalServiceList(), 'Макс Сумма аванс(ввод)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_SummAvanceMax');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PersonalServiceList_HourAvance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_HourAvance'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_PersonalServiceList_HourAvance', zc_Object_PersonalServiceList(), 'Кол-во часов для аванс(авто)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_HourAvance');
+
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_MemberMinus_TotalSumm() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MemberMinus_TotalSumm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
@@ -2376,6 +2389,9 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 14.03.23         * zc_ObjectFloat_PersonalServiceList_SummAvance
+                    zc_ObjectFloat_PersonalServiceList_SummAvanceMax
+                    zc_ObjectFloat_PersonalServiceList_HourAvance
  02.02.23                                                                                      * zc_ObjectFloat_CashSettings_MobMessSum, zc_ObjectFloat_CashSettings_MobMessCount
  18.01.23                                                                                      * zc_ObjectFloat_PartionDateWages_Percent
  17.01.23                                                                                      * zc_ObjectFloat_CashSettings_FixedPercent
