@@ -22,6 +22,8 @@ inherited PromoBonusForm: TPromoBonusForm
       inherited cxGrid: TcxGrid
         Width = 954
         Height = 420
+        ExplicitLeft = 296
+        ExplicitTop = 3
         ExplicitWidth = 954
         ExplicitHeight = 420
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -196,6 +198,80 @@ inherited PromoBonusForm: TPromoBonusForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 84
+          end
+          object isSP: TcxGridDBColumn
+            Caption = #1057#1055
+            DataBinding.FieldName = 'isSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object IsTop: TcxGridDBColumn
+            Caption = #1058#1086#1087' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'IsTop'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'. '#1087#1086' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PercentMarkup: TcxGridDBColumn
+            Caption = '% '#1085#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'PercentMarkup'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object MarginPercent: TcxGridDBColumn
+            Caption = #1053#1072#1094#1077#1085#1082#1072' '#1087#1086' '#1090#1086#1095#1082#1077' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'MarginPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PriceSale: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083'. ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'PriceSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PriceBonus: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089' '#1073#1086#1085#1091#1089'. '#1082#1072#1089#1089#1072' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'PriceBonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PriceBonusSite: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089' '#1073#1086#1085#1091#1089'. '#1089#1072#1081#1090' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'PriceBonusSite'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end

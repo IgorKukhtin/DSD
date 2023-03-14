@@ -14,6 +14,23 @@ RETURNS Integer AS
 $BODY$
  DECLARE vbIsInsert Boolean;
 BEGIN
+
+     IF COALESCE (inId, 0) = 0 AND
+        EXISTS (SELECT *
+                FROM MovementItem AS MIChild
+                WHERE MIChild.MovementId = inMovementId
+                  AND MIChild.ParentId = inParentId
+                  AND MIChild.ObjectId = inUnitId 
+                  AND MIChild.DescId = zc_MI_Child())
+     THEN
+       SELECT MIChild.ID
+       INTO inId
+       FROM MovementItem AS MIChild
+       WHERE MIChild.MovementId = inMovementId
+         AND MIChild.ParentId = inParentId
+         AND MIChild.ObjectId = inUnitId 
+         AND MIChild.DescId = zc_MI_Child();     
+     END IF;
      
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (inId, 0) = 0;

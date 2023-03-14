@@ -276,6 +276,8 @@ BEGIN
                                      , CASE WHEN inSortType = 1 THEN Price_Site.Price END DESC
                                      , CASE WHEN inSortType = 2 THEN CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END END
                                      , CASE WHEN inSortType = 3 THEN CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END END DESC
+                                     , CASE WHEN Price_Site.Name ILIKE inSearch||'%' OR
+                                                 Price_Site.NameUkr ILIKE inSearch||'%' THEN 0 ELSE 1 END 
                                      , Price_Site.Name) AS Ord
                               
     FROM tmpPrice_Site AS tmpGoods 
@@ -291,6 +293,8 @@ BEGIN
            , CASE WHEN inSortType = 1 THEN Price_Site.Price END DESC
            , CASE WHEN inSortType = 2 THEN CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END END
            , CASE WHEN inSortType = 3 THEN CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END END DESC
+           , CASE WHEN Price_Site.Name ILIKE inSearch||'%' OR
+                       Price_Site.NameUkr ILIKE inSearch||'%' THEN 0 ELSE 1 END 
            , Price_Site.Name
     LIMIT inLimit OFFSET inStart;
                               
@@ -791,4 +795,4 @@ $BODY$
             from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Бустрикс вак', true, zfCalc_UserSite())*/
             
             
-select * from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Амицитрон', True, zfCalc_UserSite())
+select * from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'гепа', True, zfCalc_UserSite())

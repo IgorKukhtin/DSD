@@ -1671,6 +1671,8 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitabilityDialogForm');
     exit;
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TActNumberAndAmountDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TActNumberAndAmountDialogForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_DiscountExternalForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_DiscountExternalForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DiscountExternalDialogForm'));

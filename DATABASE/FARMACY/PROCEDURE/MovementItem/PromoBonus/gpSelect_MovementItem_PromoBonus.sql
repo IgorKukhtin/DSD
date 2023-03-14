@@ -14,6 +14,8 @@ RETURNS TABLE (Id Integer
              , Amount TFloat, MIPromoId Integer, MovementPromoId Integer
              , GoodsGroupPromoID Integer, GoodsGroupPromoName TVarChar
              , DateUpdate TDateTime, BonusInetOrder TFloat, isLearnWeek Boolean
+             , IsTop Boolean, Price TFloat, PercentMarkup TFloat, isSP Boolean
+             , MarginPercent TFloat, PriceSale TFloat, PriceBonus TFloat, PriceBonusSite TFloat
              , isErased Boolean)
  AS
 $BODY$
@@ -60,14 +62,40 @@ BEGIN
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND (MovementItem.isErased = False OR inIsErased = True)
                                  ),
-                   tmpPromoBonus_GoodsWeek AS (SELECT * FROM gpSelect_PromoBonus_GoodsWeek(inSession := inSession))
+                   tmpPromoBonus_GoodsWeek AS (SELECT * FROM gpSelect_PromoBonus_GoodsWeek(inSession := inSession)),
+           tmpGoodsSP AS (SELECT DISTINCT MovementItem.ObjectId         AS GoodsId
+                          FROM Movement
+                               INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                                       ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                                      AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+                                                      AND MovementDate_OperDateStart.ValueData  <= CURRENT_DATE
+
+                               INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                                       ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                                      AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+                                                      AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
+
+                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                      AND MovementItem.isErased   = FALSE
+                               
+                               -- Розмір відшкодування за упаковку (Соц. проект) - (15)
+                               INNER JOIN MovementItemFloat AS MIFloat_PriceSP
+                                                            ON MIFloat_PriceSP.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
+                                                           AND COALESCE (MIFloat_PriceSP.ValueData, 0) > 0
+
+                          WHERE Movement.DescId = zc_Movement_GoodsSP()
+                            AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                         ),
+           tmpcMarginPercent AS (select * from gpSelect_PromoBonus_CalcMarginPercent(inMovementId := inMovementId,  inSession := inSession))
 
 
 
                SELECT MI_Master.Id                                      AS Id
                     , MI_Master.GoodsId                                 AS GoodsId
                     , Object_Goods.ObjectCode                           AS GoodsCode
-                    , Object_Goods.ValueData                            AS GoodsName
+                    , Object_Goods.Name                                 AS GoodsName
                     , Object_Maker.Id                                   AS MakerId
                     , Object_Maker.ObjectCode                           AS MakerCode
                     , Object_Maker.ValueData                            AS MakerName
@@ -79,10 +107,23 @@ BEGIN
                     , date_trunc('day',MI_Master.DateUpdate)::TDateTime AS DateUpdate
                     , MI_Master.BonusInetOrder                          AS BonusInetOrder
                     , COALESCE (tmpPromoBonus_GoodsWeek.ID, 0) <> 0     AS isLearnWeek
+                    , Object_Goods_Retail.IsTop
+                    , Object_Goods_Retail.Price
+                    , Object_Goods_Retail.PercentMarkup
+                    , COALESCE (tmpGoodsSP.GoodsId, 0) > 0              AS isSP
+                    , tmpcMarginPercent.MarginPercent
+                    , tmpcMarginPercent.PriceSale
+                    , ROUND(tmpcMarginPercent.PriceSale * 100.0 / (100.0 + tmpcMarginPercent.MarginPercent) * 
+                           (100.0 - NULLIF(MI_Master.Amount, 0) + tmpcMarginPercent.MarginPercent) / 100, 2)::TFloat               AS PriceBonus
+                    , ROUND(tmpcMarginPercent.PriceSale * 100.0 / (100.0 + tmpcMarginPercent.MarginPercent) *
+                           (100.0 - NULLIF(MI_Master.BonusInetOrder, 0) + tmpcMarginPercent.MarginPercent) / 100, 2)::TFloat      AS PriceBonusSite
                     , COALESCE(MI_Master.IsErased, False)               AS isErased
                FROM MI_Master
 
-                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Master.GoodsId
+                   LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MI_Master.GoodsId
+                   LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+                   
+                   
                    LEFT JOIN Object AS Object_Maker ON Object_Maker.Id = MI_Master.MakerId
 
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupPromo 
@@ -91,6 +132,10 @@ BEGIN
                    LEFT JOIN Object AS Object_GoodsGroupPromo ON Object_GoodsGroupPromo.Id = ObjectLink_Goods_GoodsGroupPromo.ChildObjectId
                    
                    LEFT JOIN tmpPromoBonus_GoodsWeek ON tmpPromoBonus_GoodsWeek.ID = MI_Master.Id
+                   
+                   LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = Object_Goods_Retail.GoodsMainId
+                   
+                   LEFT JOIN tmpcMarginPercent ON tmpcMarginPercent.GoodsId = Object_Goods_Retail.Id
 
                    ;
 END;

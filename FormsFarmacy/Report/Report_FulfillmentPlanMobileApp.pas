@@ -69,6 +69,7 @@ type
     FormParams: TdsdFormParams;
     actExecuteDialogUserCount: TExecuteDialog;
     bbUpdate_ShowPlanMobileAppUser: TdxBarButton;
+    CountShortage: TcxGridDBColumn;
   private
     { Private declarations }
   public

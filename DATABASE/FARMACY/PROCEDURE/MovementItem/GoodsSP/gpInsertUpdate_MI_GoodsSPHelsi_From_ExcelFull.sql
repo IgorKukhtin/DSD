@@ -243,7 +243,7 @@ BEGIN
     IF inCountSPMin <> ''
     THEN
       BEGIN  
-        vbValue := inCountSPMin::TFloat;
+        vbValue := REPLACE(inCountSPMin, ',', '.')::TFloat;
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountSPMin(), vbId, vbValue);
       EXCEPTION WHEN others THEN vbValue := Null;
       END;
@@ -253,7 +253,7 @@ BEGIN
     IF inCountSP <> ''
     THEN
       BEGIN  
-        vbValue := inCountSP::TFloat;
+        vbValue := REPLACE(inCountSP, ',', '.')::TFloat;
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountSP(), vbId, vbValue);
       EXCEPTION WHEN others THEN vbValue := Null;
       END;
@@ -263,7 +263,7 @@ BEGIN
     IF inPriceOptSP <> ''
     THEN
       BEGIN  
-        vbValue := inPriceOptSP::TFloat;
+        vbValue := REPLACE(inPriceOptSP, ',', '.')::TFloat;
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceOptSP(), vbId, vbValue);
       EXCEPTION WHEN others THEN vbValue := Null;
       END;
@@ -273,7 +273,7 @@ BEGIN
     IF inPriceRetSP <> ''
     THEN
       BEGIN  
-        vbValue := inPriceRetSP::TFloat;
+        vbValue := REPLACE(inPriceRetSP, ',', '.')::TFloat;
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceRetSP(), vbId, vbValue);
       EXCEPTION WHEN others THEN vbValue := Null;
       END;
@@ -283,7 +283,7 @@ BEGIN
     IF inDailyCompensationSP <> ''
     THEN
       BEGIN  
-        vbValue := inDailyCompensationSP::TFloat;
+        vbValue := REPLACE(inDailyCompensationSP, ',', '.')::TFloat;
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DailyCompensationSP(), vbId, vbValue);
       EXCEPTION WHEN others THEN vbValue := Null;
       END;
@@ -293,7 +293,7 @@ BEGIN
     IF inPriceSP <> ''
     THEN
       BEGIN  
-        vbValue := inPriceSP::TFloat;
+        vbValue := REPLACE(inPriceSP, ',', '.')::TFloat;
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSP(), vbId, vbValue);
       EXCEPTION WHEN others THEN vbValue := Null;
       END;
@@ -303,7 +303,7 @@ BEGIN
     IF inPaymentSP <> ''
     THEN
       BEGIN  
-        vbValue := inPaymentSP::TFloat;
+        vbValue := REPLACE(inPaymentSP, ',', '.')::TFloat;
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PaymentSP(), vbId, vbValue);
       EXCEPTION WHEN others THEN vbValue := Null;
       END;
@@ -313,7 +313,7 @@ BEGIN
     IF inDenumeratorValue <> ''
     THEN
       BEGIN  
-        vbValue := inDenumeratorValue::TFloat;
+        vbValue := REPLACE(inDenumeratorValue, ',', '.')::TFloat;
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DenumeratorValueSP(), vbId, vbValue);
       EXCEPTION WHEN others THEN vbValue := Null;
       END;
@@ -351,7 +351,7 @@ BEGIN
     PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, vbIsInsert);    
    
     -- !!!ВРЕМЕННО для ТЕСТА!!!
-    /*IF inSession = zfCalc_UserAdmin()
+/*    IF inSession = zfCalc_UserAdmin()
     THEN
         RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%> <%> <%>', vbMovementId, vbIsInsert, vbId, vbGoodsId, inSession;
     END IF;*/
@@ -366,7 +366,7 @@ $BODY$
 */
 
 -- тест
- SELECT * FROM gpInsertUpdate_MI_GoodsSPHelsi_From_ExcelFull(
+/* SELECT * FROM gpInsertUpdate_MI_GoodsSPHelsi_From_ExcelFull(
      inOperDate            := '01.12.2022',
      inColSP               := 760,    -- № з/п 
 
@@ -403,4 +403,4 @@ $BODY$
      inEndDate             := '' , -- Дата окончания
 
 
-     inSession := '3');
+     inSession := '3');*/);

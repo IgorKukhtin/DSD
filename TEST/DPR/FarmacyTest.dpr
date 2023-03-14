@@ -1281,7 +1281,8 @@ uses
   Report_InfoMobileAppChech in '..\..\FormsFarmacy\Report\Report_InfoMobileAppChech.pas' {Report_InfoMobileAppChechForm: TParentForm},
   Report_FulfillmentPlanMobileAppUser in '..\..\FormsFarmacy\Report\Report_FulfillmentPlanMobileAppUser.pas' {Report_FulfillmentPlanMobileAppUserForm: TParentForm},
   AsinoPharmaSPJournal in '..\..\FormsFarmacy\Document\AsinoPharmaSPJournal.pas' {AsinoPharmaSPJournalForm: TParentForm},
-  AsinoPharmaSP in '..\..\FormsFarmacy\Document\AsinoPharmaSP.pas' {AsinoPharmaSPForm: TParentForm};
+  AsinoPharmaSP in '..\..\FormsFarmacy\Document\AsinoPharmaSP.pas' {AsinoPharmaSPForm: TParentForm},
+  ActNumberAndAmountDialog in '..\..\FormsFarmacy\Document\ActNumberAndAmountDialog.pas' {ActNumberAndAmountDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

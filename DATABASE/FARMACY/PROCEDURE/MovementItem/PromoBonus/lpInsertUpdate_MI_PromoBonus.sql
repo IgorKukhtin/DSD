@@ -17,6 +17,7 @@ AS
 $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbAmount Integer;
+   DECLARE vbBonusInetOrder Integer;
 BEGIN
      
      IF EXISTS(SELECT 1
@@ -39,6 +40,11 @@ BEGIN
      
      vbAmount := COALESCE((SELECT MovementItem.Amount
                            FROM MovementItem WHERE  MovementItem.ID = ioId), 0);
+                           
+     vbBonusInetOrder := COALESCE((SELECT MIFloat_BonusInetOrder.ValueData  
+                                   FROM MovementItemFloat AS MIFloat_BonusInetOrder
+                                   WHERE MIFloat_BonusInetOrder.MovementItemId = ioId
+                                     AND MIFloat_BonusInetOrder.DescId = zc_MIFloat_BonusInetOrder()), 0);
           
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
@@ -52,7 +58,7 @@ BEGIN
 
        -- Сохранили <Дату изменения>
      -- сохранили
-     IF COALESCE (inAmount, 0) <> vbAmount
+     IF COALESCE (inAmount, 0) <> vbAmount or COALESCE (inBonusInetOrder, 0) <> vbBonusInetOrder
      THEN
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), ioId, CURRENT_TIMESTAMP);
      END IF;

@@ -193,4 +193,4 @@ ALTER FUNCTION gpInsertUpdate_PromoBonus_MarginPercent (Integer, TVarChar) OWNER
 -- реяр
 --
 
-select * from gpInsertUpdate_PromoBonus_MarginPercent(inMovementId := 22188745 ,  inSession := '3');
+select * from gpInsertUpdate_PromoBonus_MarginPercent(inMovementId := 22188745  ,  inSession := '3');

@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION gpRun_Object_RepriceUnitSheduler(
 )
 RETURNS VOID AS
 $BODY$
+   DECLARE vbMovPromoBonus Integer;
+   DECLARE text_var1 Text;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ImportType());
@@ -72,7 +74,34 @@ BEGIN
     
     
     -- Переоценка для сайта
-  PERFORM * FROM gpRun_Object_RepriceSheduler_RepriceSite (inSession);
+  BEGIN
+    PERFORM * FROM gpRun_Object_RepriceSheduler_RepriceSite (inSession);
+  EXCEPTION
+     WHEN others THEN
+       GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+     PERFORM lpLog_Run_Schedule_Function('gpRun_Object_RepriceSheduler_RepriceSite', True, text_var1::TVarChar, vbUserId);
+  END;
+
+    -- Переоценка для сайта
+  BEGIN
+    vbMovPromoBonus := (WITH tmpMovPromoBonus AS 
+                             (SELECT Movement.id AS ID FROM Movement
+                              WHERE Movement.OperDate <= CURRENT_DATE
+                                AND Movement.DescId = zc_Movement_PromoBonus()
+                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                              )
+       							 
+                       SELECT MAX(tmpMovPromoBonus.ID) AS ID FROM tmpMovPromoBonus);
+                       
+    IF COALESCE (vbMovPromoBonus, 0) <> 0
+    THEN
+      PERFORM * FROM gpInsertUpdate_PromoBonus_MarginPercent(inMovementId := vbMovPromoBonus,  inSession := '3');
+    END IF;
+  EXCEPTION
+     WHEN others THEN
+       GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+     PERFORM lpLog_Run_Schedule_Function('gpInsertUpdate_PromoBonus_MarginPercent', True, text_var1::TVarChar, vbUserId);
+  END;
 
 END;
 $BODY$

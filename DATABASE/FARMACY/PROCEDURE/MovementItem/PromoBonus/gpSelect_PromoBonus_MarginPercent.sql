@@ -48,7 +48,8 @@ BEGIN
                       AND MovementItem.isErased = False
                     GROUP BY MovementItem.ObjectId)
 
-     SELECT MIMaster.ObjectId             AS GoodsID
+     SELECT DISTINCT
+            MIMaster.ObjectId             AS GoodsID
           , Object_Goods_Main.ObjectCode  AS GoodsCode
           , Object_Goods_Main.Name        AS GoodsName
           , MIChild.ObjectId              AS UnitID

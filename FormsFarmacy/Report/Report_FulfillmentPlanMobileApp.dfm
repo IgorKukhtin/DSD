@@ -309,6 +309,7 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Styles.Content = dmMain.cxRemainsContentStyle
             Width = 80
           end
           object UserName: TcxGridDBColumn
@@ -348,6 +349,17 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 59
+          end
+          object CountShortage: TcxGridDBColumn
+            Caption = #1053#1077#1086#1073#1093'. '#1089#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1080#1083'. '#1076#1083#1103' '#1076#1086#1089#1090#1080#1078#1077#1085#1080#1103' '#1087#1083#1072#1085#1072'.'
+            DataBinding.FieldName = 'CountShortage'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1086#1073#1093#1086#1076#1080#1084#1072#1103' '#1089#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102' '#1076#1083#1103' '#1076#1086#1089#1090#1080#1078#1077#1085#1080#1103' '#1087#1083#1072#1085#1072
+            Options.Editing = False
+            Width = 94
           end
           object ProcFact: TcxGridDBColumn
             Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1086' '#1089#1086#1090#1088#1091#1076#1085'. ,%'
