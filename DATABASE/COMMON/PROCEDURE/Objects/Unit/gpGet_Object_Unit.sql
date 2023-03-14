@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isPartionDate boolean, isPartionGoodsKind boolean,
                isCountCount Boolean,
                isPartionGP Boolean,
+               isAvance Boolean,
                Address TVarChar,
                Comment TVarChar
 ) AS
@@ -88,6 +89,7 @@ BEGIN
            , CAST (FALSE AS Boolean) AS isPartionGoodsKind 
            , CAST (FALSE AS Boolean) AS isCountCount
            , CAST (FALSE AS Boolean) AS isPartionGP
+           , CAST (FALSE AS Boolean) AS isAvance
            , CAST ('' as TVarChar)  AS Address
            , CAST ('' as TVarChar)  AS Comment
 ;
@@ -145,6 +147,7 @@ BEGIN
            , COALESCE (ObjectBoolean_PartionGoodsKind.ValueData, FALSE) :: Boolean AS isPartionGoodsKind
            , COALESCE (ObjectBoolean_CountCount.ValueData, FALSE)       :: Boolean AS isCountCount
            , COALESCE (ObjectBoolean_PartionGP.ValueData, FALSE)        :: Boolean AS isPartionGP
+           , COALESCE (ObjectBoolean_Avance.ValueData, FALSE)           :: Boolean AS isAvance
            , ObjectString_Unit_Address.ValueData      AS Address
            , ObjectString_Unit_Comment.ValueData      AS Comment
 
@@ -207,6 +210,10 @@ BEGIN
                                     ON ObjectBoolean_PartionGP.ObjectId = Object_Unit_View.Id
                                    AND ObjectBoolean_PartionGP.DescId = zc_ObjectBoolean_Unit_PartionGP()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Avance
+                                    ON ObjectBoolean_Avance.ObjectId = Object_Unit_View.Id
+                                   AND ObjectBoolean_Avance.DescId = zc_ObjectBoolean_Unit_Avance()
+
             LEFT JOIN ObjectLink AS ObjectLink_Unit_SheetWorkTime
                                  ON ObjectLink_Unit_SheetWorkTime.ObjectId = Object_Unit_View.Id
                                 AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
@@ -222,6 +229,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.03.23         * Avance
  27.07.22         * isCountCount
  15.12.21         * PersonalHead
                     dell PersonalSheetWorkTime

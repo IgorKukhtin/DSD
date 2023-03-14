@@ -27,7 +27,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isLeaf Boolean, isPartionDate Boolean, isPartionGoodsKind boolean, 
                isCountCount Boolean,
                isPartionGP Boolean,
-               isIrna Boolean,                
+               isIrna Boolean,
+               isAvance Boolean,                
                isErased Boolean,
                Address TVarChar,
                Comment TVarChar,
@@ -156,7 +157,8 @@ BEGIN
            , COALESCE (ObjectBoolean_CountCount.ValueData, FALSE)       :: Boolean AS isCountCount
            , COALESCE (ObjectBoolean_PartionGP.ValueData, FALSE)        :: Boolean AS isPartionGP
 
-           , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
+           , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)       :: Boolean AS isIrna
+           , COALESCE (ObjectBoolean_Avance.ValueData, FALSE)           :: Boolean AS isAvance
            , Object_Unit_View.isErased
 
            , ObjectString_Unit_Address.ValueData   AS Address
@@ -231,6 +233,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_PersonalService
                                     ON ObjectBoolean_PersonalService.ObjectId = Object_Unit_View.Id
                                    AND ObjectBoolean_PersonalService.DescId = zc_ObjectBoolean_Unit_PersonalService()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Avance
+                                    ON ObjectBoolean_Avance.ObjectId = Object_Unit_View.Id
+                                   AND ObjectBoolean_Avance.DescId = zc_ObjectBoolean_Unit_Avance()
 
             LEFT JOIN ObjectDate AS ObjectDate_PersonalService
                                  ON ObjectDate_PersonalService.ObjectId = Object_Unit_View.Id
@@ -325,6 +331,7 @@ BEGIN
            , FALSE AS isCountCount
            , FALSE AS isPartionGP
            , FALSE AS isIrna
+           , CAST (FALSE AS Boolean) AS isAvance
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address
            , CAST ('' as TVarChar)  AS Comment  
@@ -407,6 +414,7 @@ BEGIN
            , FALSE AS isCountCount
            , FALSE AS isPartionGP
            , FALSE AS isIrna
+           , CAST (FALSE AS Boolean) AS isAvance
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address 
            , CAST ('' as TVarChar)  AS Comment 
@@ -423,6 +431,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.03.23         *
  03.10.22         * isPartionGP
  05.09.22         * PersonalService
  27.07.22         * isCountCount
