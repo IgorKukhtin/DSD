@@ -43,7 +43,7 @@ BEGIN
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankStatementItemLoad());
  
 
-    IF vbUserId = '5' THEN inOperDate:= inOperDate + INTERVAL '1 DAY'; END IF;
+    IF vbUserId = '5' AND 1=0 THEN inOperDate:= inOperDate + INTERVAL '1 DAY'; END IF;
 
     --
   --IF inBankMFOMain = '380805' THEN inAmount:= -1 * inAmount; END IF;
@@ -140,6 +140,9 @@ BEGIN
       AND MovementString_BankAccount.ValueData = inBankAccount
       AND MovementString_Comment.ValueData     = inComment;*/
     --
+
+--    RAISE EXCEPTION 'ok1 %   %',  vbMovementItemId, vbMovementId;
+
     IF COALESCE(vbMovementItemId, 0) = 0 THEN
        -- ≈сли такого документа нет - создать его
        vbMovementItemId := lpInsertUpdate_Movement (0, zc_Movement_BankStatementItem(), inDocNumber, inOperDate, vbMovementId);
