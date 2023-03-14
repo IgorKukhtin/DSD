@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_SummService_Load (Inte
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_SummService_Load(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inPersonalCode        Integer   , --Integer  
+    IN inPersonalCode        Integer   , --Integer
     IN inFIO                 TVarChar  , -- ФИО
     IN inPositionName        TVarChar  , --
     IN inFineSubjectName     TVarChar  , -- Вид нарушений
@@ -21,7 +21,7 @@ $BODY$
    DECLARE vbPersonalId Integer;
    DECLARE vbPositionId Integer;
    DECLARE vbFineSubjectId Integer;
-   DECLARE vbUnitFineSubjectId Integer; 
+   DECLARE vbUnitFineSubjectId Integer;
    DECLARE vbCodePersonal Integer;
    DECLARE vbMemberId Integer;
 BEGIN
@@ -58,111 +58,102 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.У <%> не заполненное поле <Должность> в файле Excel для суммы <%> <%>.', inFIO, inSummService, inFineSubjectName;
      END IF;
-     
 
-     -- проверка должности
-     IF 1 < (SELECT COUNT(*)
-             FROM Object
-             WHERE Object.DescId = zc_Object_Position() AND TRIM (Object.ValueData) LIKE TRIM (inPositionName) AND Object.isErased = FALSE
-            )
-            AND 1=1
+
+     -- если можно сразу
+     IF EXISTS (SELECT 1
+                FROM Object
+                     INNER JOIN ObjectLink AS ObjectLink_Personal_Position
+                                           ON ObjectLink_Personal_Position.ObjectId = Object.Id
+                                          AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                     INNER JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
+                                                         AND TRIM (Object_Position.ValueData) ILIKE TRIM (inPositionName)
+                WHERE Object.DescId     = zc_Object_Personal()
+                  AND Object.ObjectCode = inPersonalCode
+                  AND Object.isErased   = FALSE
+               )
      THEN
-         RAISE EXCEPTION 'Ошибка.Должность <%> не уникальна в справочнике должностей.', inPositionName;
+         -- поиск сотрудника по коду и должности
+         vbPersonalId := (SELECT MAX (Object.Id)
+                          FROM Object
+                               INNER JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                     ON ObjectLink_Personal_Position.ObjectId = Object.Id
+                                                    AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                               INNER JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
+                                                                   AND TRIM (Object_Position.ValueData) ILIKE TRIM (inPositionName)
+                          WHERE Object.DescId     = zc_Object_Personal()
+                            AND Object.ObjectCode = inPersonalCode
+                            AND Object.isErased   = FALSE
+                         );
+     ELSE
+         -- проверка должности
+         IF 1 < (SELECT COUNT(*)
+                 FROM Object
+                 WHERE Object.DescId = zc_Object_Position() AND TRIM (Object.ValueData) LIKE TRIM (inPositionName) AND Object.isErased = FALSE
+                )
+                AND 1=1
+         THEN
+             RAISE EXCEPTION 'Ошибка.У <%> должность <%> не уникальна в справочнике должностей.', inFIO, inPositionName;
+         END IF;
+
+         -- поиск должности
+         vbPositionId := (SELECT MAX (Object.Id) FROM Object
+                          WHERE Object.DescId = zc_Object_Position()
+                            AND Object.isErased = FALSE
+                            AND REPLACE(REPLACE(TRIM (Object.ValueData),'''',''),'`','') LIKE REPLACE(REPLACE(TRIM (inPositionName),'''',''),'`',''));
+
+         -- проверка если не нашли должность
+         IF COALESCE (vbPositionId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.У <%> не найдена <Должность> = <%> в справочнике.', inFIO, inPositionName;
+         END IF;
+
+
+         -- проверка сотрудника
+         IF 1 < (SELECT COUNT(*)
+                 FROM Object
+                      INNER JOIN ObjectLink AS ObjectLink_Personal_Position
+                                            ON ObjectLink_Personal_Position.ObjectId      = Object.Id
+                                           AND ObjectLink_Personal_Position.DescId        = zc_ObjectLink_Personal_Position()
+                                           AND ObjectLink_Personal_Position.ChildObjectId = vbPositionId
+                 WHERE Object.DescId = zc_Object_Personal() AND Object.ObjectCode = inPersonalCode AND Object.isErased = FALSE
+                )
+                AND 1=0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Код сотрудника <%> и должность <%> не уникальны в справочнике сотрудников.', inPersonalCode, lfGet_Object_ValueData_sh (vbPositionId);
+         END IF;
+
+         -- поиск сотрудника по коду и должности
+         vbPersonalId := (SELECT MAX (Object.Id)
+                          FROM Object
+                               INNER JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                     ON ObjectLink_Personal_Position.ObjectId = Object.Id
+                                                    AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                                                    AND ObjectLink_Personal_Position.ChildObjectId = vbPositionId
+                          WHERE Object.DescId     = zc_Object_Personal()
+                            AND Object.ObjectCode = inPersonalCode
+                            AND Object.isErased   = FALSE
+                         );
+         -- если не нашли по должности и коду, найти физ лицо, а по нему сотрудника с основным местом работы
+         IF COALESCE (vbPersonalId,0) = 0
+         THEN
+             vbMemberId := (SELECT Object.Id
+                            FROM Object
+                            WHERE Object.DescId = zc_Object_Member()
+                              AND Object.isErased = FALSE
+                              AND REPLACE(TRIM (Object.ValueData),'''','') ILIKE REPLACE (TRIM (inFIO),'''','')
+                            );
+             --
+             vbPersonalId := (SELECT lfSelect.PersonalId
+                              FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                              WHERE lfSelect.Ord = 1
+                                AND lfSelect.MemberId = vbMemberId
+                              );
+         END IF;
+
      END IF;
 
-     -- поиск должности
-     vbPositionId := (SELECT MAX (Object.Id) FROM Object 
-                      WHERE Object.DescId = zc_Object_Position() 
-                        AND Object.isErased = FALSE
-                        AND REPLACE(REPLACE(TRIM (Object.ValueData),'''',''),'`','') LIKE REPLACE(REPLACE(TRIM (inPositionName),'''',''),'`',''));
 
-     -- проверка если не нашли должность
-     IF COALESCE (vbPositionId, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.У <%> не найдена <Должность> = <%> в справочнике.', inFIO, inPositionName;
-     END IF;
-
-
-     -- проверка сотрудника
-     IF 1 < (SELECT COUNT(*)
-             FROM Object
-                  INNER JOIN ObjectLink AS ObjectLink_Personal_Position
-                                        ON ObjectLink_Personal_Position.ObjectId      = Object.Id
-                                       AND ObjectLink_Personal_Position.DescId        = zc_ObjectLink_Personal_Position()
-                                       AND ObjectLink_Personal_Position.ChildObjectId = vbPositionId
-             WHERE Object.DescId = zc_Object_Personal() AND Object.ObjectCode = inPersonalCode AND Object.isErased = FALSE
-            )
-            AND 1=0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Код сотрудника <%> и должность <%> не уникальны в справочнике сотрудников.', inPersonalCode, lfGet_Object_ValueData_sh (vbPositionId);
-     END IF;
-
-     -- поиск сотрудника по коду и должности
-     vbPersonalId := (SELECT MAX (Object.Id)
-                      FROM Object
-                           INNER JOIN ObjectLink AS ObjectLink_Personal_Position
-                                                 ON ObjectLink_Personal_Position.ObjectId = Object.Id
-                                                AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-                                                AND ObjectLink_Personal_Position.ChildObjectId = vbPositionId
-                      WHERE Object.DescId     = zc_Object_Personal()
-                        AND Object.ObjectCode = inPersonalCode
-                        AND Object.isErased   = FALSE
-                     );
-     --если не нашли по должности и коду,   найти физ лицо, а по нему сотрудника с основным местом работы
-     IF COALESCE (vbPersonalId,0) = 0
-     THEN
-         vbMemberId := (SELECT Object.Id
-                        FROM Object 
-                        WHERE Object.DescId = zc_Object_Member() 
-                          AND Object.isErased = FALSE
-                          AND REPLACE(TRIM (Object.ValueData),'''','') ILIKE REPLACE (TRIM (inFIO),'''','')
-                        );   
-         --
-         vbPersonalId := (SELECT lfSelect.PersonalId
-                          FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
-                          WHERE lfSelect.Ord = 1
-                            AND lfSelect.MemberId = vbMemberId
-                          );
-     END IF;
-
-     /*vbPersonalId:= (WITH tmpPersonal AS (SELECT ObjectLink_Personal_Member.ObjectId AS PersonalId
-                                               , ROW_NUMBER() OVER (PARTITION BY ObjectString_INN.ValueData
-                                                                    -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
-                                                                    ORDER BY CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN 0 ELSE 1 END
-                                                                           , CASE WHEN ObjectLink_Personal_PersonalServiceList.ChildObjectId > 0 THEN 0 ELSE 1 END
-                                                                           , CASE WHEN ObjectBoolean_Official.ValueData = TRUE THEN 0 ELSE 1 END
-                                                                           , CASE WHEN ObjectBoolean_Main.ValueData = TRUE THEN 0 ELSE 1 END
-                                                                           , ObjectLink_Personal_Member.ObjectId
-                                                                   ) AS Ord
-                                          FROM ObjectString AS ObjectString_INN
-                                               INNER JOIN ObjectLink AS ObjectLink_Personal_Member
-                                                                     ON ObjectLink_Personal_Member.ChildObjectId = ObjectString_INN.ObjectId
-                                                                    AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
-                                               INNER JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Member.ObjectId
-                                                                                   AND Object_Personal.isErased = FALSE
-                                               LEFT JOIN ObjectDate AS ObjectDate_DateOut
-                                                                    ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
-                                                                   AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()          
-                                               LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
-                                                                    ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_Member.ObjectId
-                                                                   AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
-                                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
-                                                                       ON ObjectBoolean_Official.ObjectId = ObjectLink_Personal_Member.ObjectId
-                                                                      AND ObjectBoolean_Official.DescId   = zc_ObjectBoolean_Member_Official()
-                                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
-                                                                       ON ObjectBoolean_Main.ObjectId = ObjectLink_Personal_Member.ObjectId
-                                                                      AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main()
-                                          WHERE TRIM (ObjectString_INN.ValueData) = inINN
-                                            AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
-                                         )
-                     -- Проверка
-                     SELECT tmpPersonal.PersonalId FROM tmpPersonal WHERE tmpPersonal.Ord = 1
-                    );
-     */
-     
-    
-    
-     
      -- проверка
      IF COALESCE (vbPersonalId, 0) = 0
      THEN
@@ -170,14 +161,14 @@ BEGIN
      END IF;
 
      --находим Вид начисления
-     vbFineSubjectId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_FineSubject() AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inFineSubjectName)) );
+     vbFineSubjectId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_FineSubject() AND TRIM (Object.ValueData) ILIKE TRIM (inFineSubjectName));
      IF COALESCE (vbFineSubjectId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Вид нарушений <%> не найден для Сотрудника <%> с кодом <%> и суммой <%> .', inFineSubjectName, inFIO, inPersonalCode, inSummService;
      END IF;
 
-     --находим 
-     vbUnitFineSubjectId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit() AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inUnitFineSubjectName)) );
+     --находим
+     vbUnitFineSubjectId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit() AND TRIM (Object.ValueData) ILIKE TRIM (inUnitFineSubjectName));
      IF COALESCE (vbUnitFineSubjectId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Подразделение- Кем налагается взыскание <%> не найдено для Сотрудника <%> с кодом <%> и суммой <%> .', inUnitFineSubjectName, inFIO, inPersonalCode, inSummService;
@@ -217,7 +208,7 @@ BEGIN
                                                         , inUnitId             := tmpPersonal.UnitId
                                                         , inPositionId         := tmpPersonal.PositionId
                                                         , inMemberId               := gpSelect.MemberId                                     -- Физ лицо (кому начисляют алименты)
-                                                        , inPersonalServiceListId  := gpSelect.PersonalServiceListId 
+                                                        , inPersonalServiceListId  := gpSelect.PersonalServiceListId
                                                         , inFineSubjectId          := vbFineSubjectId     ::Integer
                                                         , inUnitFineSubjectId      := vbUnitFineSubjectId ::Integer
                                                         , inUserId             := vbUserId
@@ -241,7 +232,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  13.01.23         *
  30.12.22         *
 */

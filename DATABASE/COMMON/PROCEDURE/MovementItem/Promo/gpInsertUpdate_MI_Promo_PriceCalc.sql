@@ -423,7 +423,8 @@ BEGIN
                                         , lpSelect.ReceiptChildId, lpSelect.GoodsId_out, lpSelect.GoodsKindId_out, lpSelect.Amount_out, lpSelect.isStart, lpSelect.isCost
                                         , COALESCE(PriceList3.Price, 0) AS Price3
                                    FROM lpSelect_Object_ReceiptChildDetail () AS lpSelect
-                                        LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3 ON PriceList3.PriceListId = 18885             --ПРАЙС - ФАКТ калькуляции без бонусов
+                                        -- ПРАЙС - ФАКТ калькуляции без бонусов
+                                        LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3 ON PriceList3.PriceListId = 18885
                                                                                                 AND PriceList3.GoodsId = lpSelect.GoodsId_out
                                                                                                 AND vbEndDate >= PriceList3.StartDate AND vbEndDate < PriceList3.EndDate
                                   )
@@ -611,6 +612,16 @@ BEGIN
           AND MovementItem.DescId = zc_MI_Master()
           AND MovementItem.isErased = FALSE
        ;
+
+
+       -- сохранили протокол
+       PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)
+       FROM MovementItem
+       WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.DescId = zc_MI_Master()
+         AND MovementItem.isErased = FALSE
+        ;
+
 
     IF vbUserId = 5
     THEN

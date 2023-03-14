@@ -722,7 +722,7 @@ object OrderInternalForm: TOrderInternalForm
               Width = 100
             end
             object GoodsName_ch3: TcxGridDBColumn
-              Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+              Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1079#1083#1099
               DataBinding.FieldName = 'GoodsName'
               PropertiesClassName = 'TcxButtonEditProperties'
               Properties.Buttons = <
@@ -761,6 +761,7 @@ object OrderInternalForm: TOrderInternalForm
               DataBinding.FieldName = 'AmountReserv'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DisplayFormat = ',0.########;-,0.########; ;'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1050#1086#1083'-'#1074#1086' '#1088#1077#1079#1077#1088#1074
@@ -772,6 +773,7 @@ object OrderInternalForm: TOrderInternalForm
               DataBinding.FieldName = 'AmountSend'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DisplayFormat = ',0.########;-,0.########; ;'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076' /'#1087#1077#1088#1077#1084#1077#1097'.'
@@ -785,7 +787,7 @@ object OrderInternalForm: TOrderInternalForm
               HeaderAlignmentVert = vaCenter
               HeaderGlyphAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 100
+              Width = 120
             end
             object ProdColorPatternName_ch3: TcxGridDBColumn
               Caption = #1069#1083#1077#1084#1077#1085#1090' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088#1072
@@ -794,7 +796,17 @@ object OrderInternalForm: TOrderInternalForm
               HeaderAlignmentVert = vaCenter
               HeaderGlyphAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 58
+              Width = 120
+            end
+            object Comment_goods_ch3: TcxGridDBColumn
+              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
+              DataBinding.FieldName = 'Comment_goods'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+              Options.Editing = False
+              Width = 100
             end
             object ColorPatternName_ch3: TcxGridDBColumn
               Caption = #1064#1072#1073#1083#1086#1085
@@ -806,16 +818,6 @@ object OrderInternalForm: TOrderInternalForm
               HeaderHint = #1064#1072#1073#1083#1086#1085' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088#1072
               Options.Editing = False
               Width = 58
-            end
-            object Comment_goods_ch3: TcxGridDBColumn
-              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
-              DataBinding.FieldName = 'Comment_goods'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-              Options.Editing = False
-              Width = 100
             end
             object UnitName_ch3: TcxGridDBColumn
               Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
@@ -1716,7 +1718,7 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenDocument'
+          ItemName = 'bbOpenOrderClientForm'
         end
         item
           Visible = True
@@ -1817,8 +1819,8 @@ object OrderInternalForm: TOrderInternalForm
       Action = actMIChildProtocolOpenForm
       Category = 0
     end
-    object bbOpenDocument: TdxBarButton
-      Action = actOpenForm
+    object bbOpenOrderClientForm: TdxBarButton
+      Action = actOpenOrderClientForm
       Category = 0
     end
     object bbErasedMI_Master: TdxBarButton
@@ -2729,7 +2731,7 @@ object OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = True
     end
-    object actOpenForm: TdsdOpenForm
+    object actOpenOrderClientForm: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>

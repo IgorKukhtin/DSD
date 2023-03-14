@@ -10,9 +10,13 @@ BEGIN
   --
   vbUserId := lpGetUserBySession (inSession);
 
-  -- Протокол пользователя - ошибки raise error и т.п.
-  INSERT INTO UserProtocol (UserId, OperDate, ProtocolData)
-       SELECT vbUserId, current_timestamp, inProtocolData;
+  IF (SELECT COUNT(*) FROM pg_stat_activity WHERE state ILIKE 'active') < 15
+--IF 1=1
+  THEN
+    -- Протокол пользователя - ошибки raise error и т.п.
+    INSERT INTO UserProtocol (UserId, OperDate, ProtocolData)
+         SELECT vbUserId, current_timestamp, inProtocolData;
+  END IF;
   
 END;           
 $BODY$

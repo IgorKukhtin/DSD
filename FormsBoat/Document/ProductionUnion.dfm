@@ -36,7 +36,7 @@ object ProductionUnionForm: TProductionUnionForm
     object cxLabel1: TcxLabel
       Left = 9
       Top = 5
-      Caption = 'Interne Nr'
+      Caption = #8470' '#1076#1086#1082'.'
     end
     object edOperDate: TcxDateEdit
       Left = 85
@@ -62,10 +62,10 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 191
+      Width = 250
     end
     object edTo: TcxButtonEdit
-      Left = 385
+      Left = 442
       Top = 23
       Properties.Buttons = <
         item
@@ -74,7 +74,7 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       Properties.ReadOnly = True
       TabOrder = 2
-      Width = 249
+      Width = 250
     end
     object cxLabel3: TcxLabel
       Left = 186
@@ -85,7 +85,7 @@ object ProductionUnionForm: TProductionUnionForm
       ShowHint = True
     end
     object cxLabel4: TcxLabel
-      Left = 385
+      Left = 442
       Top = 5
       Caption = #1050#1086#1084#1091
     end
@@ -117,23 +117,23 @@ object ProductionUnionForm: TProductionUnionForm
       Width = 170
     end
     object cxLabel16: TcxLabel
-      Left = 385
+      Left = 442
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 385
+      Left = 442
       Top = 63
       TabOrder = 11
-      Width = 249
+      Width = 250
     end
     object cxLabel12: TcxLabel
-      Left = 640
+      Left = 700
       Top = 5
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
-      Left = 640
+      Left = 700
       Top = 23
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -144,12 +144,12 @@ object ProductionUnionForm: TProductionUnionForm
       Width = 146
     end
     object cxLabel13: TcxLabel
-      Left = 640
+      Left = 700
       Top = 45
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 640
+      Left = 700
       Top = 63
       Properties.Buttons = <
         item
@@ -176,7 +176,7 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       Properties.ReadOnly = True
       TabOrder = 17
-      Width = 191
+      Width = 250
     end
   end
   object cxPageControl: TcxPageControl
@@ -199,15 +199,15 @@ object ProductionUnionForm: TProductionUnionForm
         Top = 145
         Width = 1084
         Height = 271
-        Align = alBottom
+        Align = alClient
         Caption = 'Panel2'
         TabOrder = 0
         object cxGridChild: TcxGrid
           Left = 1
-          Top = 19
+          Top = 155
           Width = 1082
           Height = 115
-          Align = alClient
+          Align = alBottom
           TabOrder = 0
           LookAndFeel.Kind = lfStandard
           LookAndFeel.NativeStyle = False
@@ -351,10 +351,10 @@ object ProductionUnionForm: TProductionUnionForm
               Properties.ReadOnly = True
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              Width = 55
+              Width = 70
             end
             object ObjectName_ch1: TcxGridDBColumn
-              Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
+              Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1079#1083#1099
               DataBinding.FieldName = 'ObjectName'
               PropertiesClassName = 'TcxButtonEditProperties'
               Properties.Buttons = <
@@ -376,6 +376,15 @@ object ProductionUnionForm: TProductionUnionForm
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
               Width = 70
+            end
+            object Comment_goods_ch1: TcxGridDBColumn
+              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
+              DataBinding.FieldName = 'Comment_goods'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+              Options.Editing = False
+              Width = 120
             end
             object ProdColorName_ch1: TcxGridDBColumn
               Caption = 'Farbe'
@@ -466,31 +475,31 @@ object ProductionUnionForm: TProductionUnionForm
             object ProdOptionsName_ch1: TcxGridDBColumn
               Caption = #1054#1087#1094#1080#1103
               DataBinding.FieldName = 'ProdOptionsName'
-              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderGlyphAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 58
+              Width = 80
             end
             object ProdColorPatternName_ch1: TcxGridDBColumn
-              Caption = 'Boat Structure'
+              Caption = #1069#1083#1077#1084#1077#1085#1090' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088#1072
               DataBinding.FieldName = 'ProdColorPatternName'
-              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderGlyphAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 58
+              Width = 80
             end
-            object Comment_goods_ch1: TcxGridDBColumn
-              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
-              DataBinding.FieldName = 'Comment_goods'
+            object ColorPatternName_ch1: TcxGridDBColumn
+              Caption = #1064#1072#1073#1083#1086#1085
+              DataBinding.FieldName = 'ColorPatternName'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+              HeaderGlyphAlignmentHorz = taCenter
+              HeaderHint = #1064#1072#1073#1083#1086#1085' '#1082#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088#1072
               Options.Editing = False
-              Width = 100
+              Width = 58
             end
             object Comment_ch1: TcxGridDBColumn
               Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -500,18 +509,7 @@ object ProductionUnionForm: TProductionUnionForm
               HeaderAlignmentVert = vaCenter
               HeaderGlyphAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 167
-            end
-            object ColorPatternName_ch1: TcxGridDBColumn
-              Caption = #1064#1072#1073#1083#1086#1085
-              DataBinding.FieldName = 'ColorPatternName'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderGlyphAlignmentHorz = taCenter
-              HeaderHint = #1064#1072#1073#1083#1086#1085' Boat Structure'
-              Options.Editing = False
-              Width = 58
+              Width = 100
             end
             object IsErased_ch1: TcxGridDBColumn
               Caption = #1059#1076#1072#1083#1077#1085
@@ -538,24 +536,13 @@ object ProductionUnionForm: TProductionUnionForm
             GridView = cxGridDBTableViewChild
           end
         end
-        object Panel1: TPanel
+        object cxGrid_Detail: TcxGrid
           Left = 1
           Top = 1
           Width = 1082
-          Height = 18
-          Align = alTop
-          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
-          Color = clAqua
-          ParentBackground = False
+          Height = 146
+          Align = alClient
           TabOrder = 1
-        end
-        object cxGrid_Detail: TcxGrid
-          Left = 1
-          Top = 142
-          Width = 1082
-          Height = 128
-          Align = alBottom
-          TabOrder = 2
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -755,7 +742,7 @@ object ProductionUnionForm: TProductionUnionForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 70
+              Width = 80
             end
             object OperPrice_ch4: TcxGridDBColumn
               Caption = #1062#1077#1085#1072' '#1079#1072' '#1095'.'
@@ -819,12 +806,12 @@ object ProductionUnionForm: TProductionUnionForm
         end
         object cxSplitter2: TcxSplitter
           Left = 1
-          Top = 134
+          Top = 147
           Width = 1082
           Height = 8
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salBottom
-          Control = cxGrid_Detail
+          Control = cxGridChild
         end
       end
       object Panel3: TPanel
@@ -832,7 +819,7 @@ object ProductionUnionForm: TProductionUnionForm
         Top = 0
         Width = 1084
         Height = 137
-        Align = alClient
+        Align = alTop
         Caption = 'Panel3'
         TabOrder = 1
         object cxGrid: TcxGrid
@@ -958,6 +945,22 @@ object ProductionUnionForm: TProductionUnionForm
             OptionsView.HeaderAutoHeight = True
             OptionsView.Indicator = True
             Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+            object Ord: TcxGridDBColumn
+              Caption = #8470' '#1087'/'#1087
+              DataBinding.FieldName = 'Ord'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 55
+            end
+            object DescName: TcxGridDBColumn
+              Caption = #1069#1083#1077#1084#1077#1085#1090
+              DataBinding.FieldName = 'DescName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 70
+            end
             object ObjectCode: TcxGridDBColumn
               Caption = 'Interne Nr'
               DataBinding.FieldName = 'ObjectCode'
@@ -967,14 +970,6 @@ object ProductionUnionForm: TProductionUnionForm
               Options.Editing = False
               Width = 90
             end
-            object CIN: TcxGridDBColumn
-              Caption = 'CIN Nr.'
-              DataBinding.FieldName = 'CIN'
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Options.Editing = False
-              Width = 100
-            end
             object Article: TcxGridDBColumn
               Caption = 'Artikel Nr'
               DataBinding.FieldName = 'Article'
@@ -982,6 +977,44 @@ object ProductionUnionForm: TProductionUnionForm
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
               Width = 80
+            end
+            object GoodsName: TcxGridDBColumn
+              Caption = #1059#1079#1077#1083'/'#1051#1086#1076#1082#1072
+              DataBinding.FieldName = 'ObjectName'
+              PropertiesClassName = 'TcxButtonEditProperties'
+              Properties.Buttons = <
+                item
+                  Action = actReceiptGoodsChoiceForm
+                  Default = True
+                  Kind = bkEllipsis
+                end>
+              Properties.ReadOnly = True
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 155
+            end
+            object CIN: TcxGridDBColumn
+              Caption = 'CIN Nr.'
+              DataBinding.FieldName = 'CIN'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 100
+            end
+            object ProdColorName: TcxGridDBColumn
+              Caption = 'Farbe'
+              DataBinding.FieldName = 'ProdColorName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 100
+            end
+            object Comment_goods: TcxGridDBColumn
+              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1059#1079#1077#1083')'
+              DataBinding.FieldName = 'Comment_goods'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 150
             end
             object EngineNum: TcxGridDBColumn
               Caption = 'Engine Nr.'
@@ -1007,34 +1040,14 @@ object ProductionUnionForm: TProductionUnionForm
               Options.Editing = False
               Width = 80
             end
-            object GoodsName: TcxGridDBColumn
-              Caption = #1051#1086#1076#1082#1072' / '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-              DataBinding.FieldName = 'ObjectName'
-              PropertiesClassName = 'TcxButtonEditProperties'
-              Properties.Buttons = <
-                item
-                  Action = actReceiptGoodsChoiceForm
-                  Default = True
-                  Kind = bkEllipsis
-                end>
-              Properties.ReadOnly = True
+            object MeasureName: TcxGridDBColumn
+              Caption = #1045#1076'. '#1080#1079#1084'.'
+              DataBinding.FieldName = 'MeasureName'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              Width = 233
-            end
-            object ProdColorName: TcxGridDBColumn
-              Caption = 'Farbe'
-              DataBinding.FieldName = 'ProdColorName'
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Width = 100
-            end
-            object Comment_goods: TcxGridDBColumn
-              Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1059#1079#1077#1083')'
-              DataBinding.FieldName = 'Comment_goods'
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Width = 150
+              Options.Editing = False
+              Width = 45
             end
             object Amount: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
@@ -1068,21 +1081,21 @@ object ProductionUnionForm: TProductionUnionForm
               Options.Editing = False
               Width = 70
             end
-            object MeasureName: TcxGridDBColumn
-              Caption = #1045#1076'. '#1080#1079#1084'.'
-              DataBinding.FieldName = 'MeasureName'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Options.Editing = False
-              Width = 45
-            end
             object ReceiptProdModelName: TcxGridDBColumn
               Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1052#1086#1076#1077#1083#1080'/'#1059#1079#1077#1083
               DataBinding.FieldName = 'ReceiptProdModelName'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 148
+            end
+            object FromName_OrderClient: TcxGridDBColumn
+              Caption = 'Kunden'
+              DataBinding.FieldName = 'FromName_OrderClient'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+              Options.Editing = False
+              Width = 120
             end
             object InvNumberFull_OrderClient: TcxGridDBColumn
               Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
@@ -1097,35 +1110,28 @@ object ProductionUnionForm: TProductionUnionForm
               Properties.ReadOnly = True
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
-              Width = 70
-            end
-            object CIN_OrderClient: TcxGridDBColumn
-              Caption = 'CIN Nr. (order)'
-              DataBinding.FieldName = 'CIN_OrderClient'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Options.Editing = False
-              Width = 100
+              HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+              Width = 150
             end
             object ProductName_OrderClient: TcxGridDBColumn
-              Caption = 'Boat (order)'
+              Caption = 'Boat'
               DataBinding.FieldName = 'ProductName_OrderClient'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderGlyphAlignmentHorz = taCenter
+              HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
               Options.Editing = False
               Width = 100
             end
-            object FromName_OrderClient: TcxGridDBColumn
-              Caption = 'Kunden (order)'
-              DataBinding.FieldName = 'FromName_OrderClient'
+            object CIN_OrderClient: TcxGridDBColumn
+              Caption = 'CIN Nr.'
+              DataBinding.FieldName = 'CIN_OrderClient'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              HeaderHint = #1054#1090' '#1082#1086#1075#1086
+              HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
               Options.Editing = False
-              Width = 120
+              Width = 100
             end
             object Comment: TcxGridDBColumn
               Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -1169,15 +1175,14 @@ object ProductionUnionForm: TProductionUnionForm
           end
         end
       end
-      object cxSplitter1: TcxSplitter
+      object cxSplitter3: TcxSplitter
         Left = 0
         Top = 137
         Width = 1084
         Height = 8
-        HotZoneClassName = 'TcxSimpleStyle'
-        HotZone.Visible = False
-        AlignSplitter = salBottom
-        Control = Panel2
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salTop
+        Control = Panel3
       end
     end
     object cxTabSheetDetail: TcxTabSheet
@@ -1672,19 +1677,11 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbInsertRecordOrderClientItem'
         end
         item
           Visible = True
           ItemName = 'BarSubItemGoods'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -1704,19 +1701,11 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbInsertRecordChild'
         end
         item
           Visible = True
           ItemName = 'BarSubItemGoodsChild'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -1739,10 +1728,6 @@ object ProductionUnionForm: TProductionUnionForm
           ItemName = 'bbStatic'
         end
         item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbErasedMI_Master'
@@ -1758,6 +1743,14 @@ object ProductionUnionForm: TProductionUnionForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenOrderClientForm'
         end
         item
           Visible = True
@@ -1918,7 +1911,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object bbChildProtocol: TdxBarButton
       Action = MovementItemChildProtocolOpenForm
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083
       Category = 0
     end
     object bbUpdate_MI_Child: TdxBarButton
@@ -1956,7 +1948,6 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object bbInsertRecordDetailAll: TdxBarButton
       Action = InsertRecordDetailAll
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       Category = 0
     end
     object bbSetErasedDetail_All: TdxBarButton
@@ -1970,12 +1961,10 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object bbMIDetailAllProtocolOpenForm: TdxBarButton
       Action = MIDetailAllProtocolOpenForm
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083
       Category = 0
     end
     object bbMIDetailProtocolOpenForm: TdxBarButton
       Action = MIDetailProtocolOpenForm
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083
       Category = 0
     end
     object BarSubItemGoods: TdxBarSubItem
@@ -2137,6 +2126,10 @@ object ProductionUnionForm: TProductionUnionForm
       Action = macErasedMI_Master
       Category = 0
     end
+    object bbOpenOrderClientForm: TdxBarButton
+      Action = actOpenOrderClientForm
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2182,7 +2175,7 @@ object ProductionUnionForm: TProductionUnionForm
       TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 1
       FormName = 'TUnion_Goods_ReceiptServiceForm'
@@ -2444,8 +2437,8 @@ object ProductionUnionForm: TProductionUnionForm
         item
           StoredProc = spErasedMIchild
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -2477,7 +2470,7 @@ object ProductionUnionForm: TProductionUnionForm
           StoredProc = spErasedMIMaster
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1079#1077#1083'/'#1051#1086#1076#1082#1072'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -2493,7 +2486,7 @@ object ProductionUnionForm: TProductionUnionForm
           StoredProc = spUnErasedMIchild
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -2527,7 +2520,7 @@ object ProductionUnionForm: TProductionUnionForm
           StoredProc = spUnErasedMIMaster
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1059#1079#1077#1083'/'#1051#1086#1076#1082#1072'>'
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -2613,8 +2606,8 @@ object ProductionUnionForm: TProductionUnionForm
       Category = 'Protocol'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080'>'
-      Hint = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083
+      Hint = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 34
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
@@ -2645,7 +2638,7 @@ object ProductionUnionForm: TProductionUnionForm
       TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1055#1088#1086#1090#1086#1082#1086#1083
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1059#1079#1077#1083'/'#1051#1086#1076#1082#1072'>'
       ImageIndex = 34
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
@@ -2770,8 +2763,8 @@ object ProductionUnionForm: TProductionUnionForm
       View = cxGridDBTableViewChild
       Action = actUnion_Goods_ReceiptServiceChoiceForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
       ImageIndex = 0
     end
     object InsertRecordProduct: TInsertRecord
@@ -2901,7 +2894,7 @@ object ProductionUnionForm: TProductionUnionForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
       ImageIndex = 1
       FormName = 'TOrderClientJournalChoiceForm'
       FormNameParam.Value = 'TOrderClientJournalChoiceForm'
@@ -3009,8 +3002,8 @@ object ProductionUnionForm: TProductionUnionForm
       View = cxGridDBTableViewMaster
       Action = actOrderClientInsertBoatForm
       Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1091'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
       ImageIndex = 0
     end
     object actChoiceFormReceiptService: TOpenChoiceForm
@@ -3110,7 +3103,7 @@ object ProductionUnionForm: TProductionUnionForm
           StoredProc = spUnErasedMIDetail
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -3277,7 +3270,7 @@ object ProductionUnionForm: TProductionUnionForm
           StoredProc = spUnErasedMIDetail_All
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -3345,7 +3338,8 @@ object ProductionUnionForm: TProductionUnionForm
       View = cxGridDBTableView_DetAll
       Action = actMasterChoiceForm
       Params = <>
-      Caption = 'InsertRecordNew'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 0
     end
     object actReceiptServiceChoiceForm_DetAll: TOpenChoiceForm
@@ -3526,8 +3520,8 @@ object ProductionUnionForm: TProductionUnionForm
       TabSheet = cxTabSheetDetail
       MoveParams = <>
       Enabled = False
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 34
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
@@ -3557,8 +3551,8 @@ object ProductionUnionForm: TProductionUnionForm
       Category = 'Protocol'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1088#1072#1073#1086#1090'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1056#1072#1073#1086#1090#1099'>'
       ImageIndex = 34
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
@@ -3610,6 +3604,36 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 52
+    end
+    object actOpenOrderClientForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
+      ImageIndex = 28
+      FormName = 'TOrderClientForm'
+      FormNameParam.Value = 'TOrderClientForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_OrderClient'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42160d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object MasterDS: TDataSource
@@ -4395,6 +4419,7 @@ object ProductionUnionForm: TProductionUnionForm
   object GuidesParent: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceParent
+    DisableGuidesOpen = True
     Key = '0'
     FormNameParam.Value = 'TOrderClientJournalChoiceForm'
     FormNameParam.DataType = ftString

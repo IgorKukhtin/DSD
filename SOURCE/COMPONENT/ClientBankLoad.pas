@@ -9,7 +9,7 @@ uses dsdAction, DB, dsdDb, Classes, ExternalLoad {$IFDEF DELPHI103RIO}, Actions 
 type
 
   TClientBankType = (cbPrivatBank, cbForum, cbVostok, cbFidoBank, cbOTPBank, cbOTPBankXLS,
-    cbPireusBank, cbPireusBankDBF, cbMarfinBank, cbUrkExim, cbProkreditBank, cbRaiffeisenBank);
+    cbPireusBank, cbPireusBankDBF, cbMarfinBank, cbUrkExim, cbProkreditBank, cbRaiffeisenBank, cbOshadBank);
 
   TClientBankLoad = class(TFileExternalLoad)
   private
@@ -264,6 +264,25 @@ type
     function GetCurrencyName: string; override;
   end;
 
+  TOshadBankLoad = class(TClientBankLoad)
+    function IsDebet: boolean; override;
+    function GetOperSumm: real; override;
+    function GetDocNumber: string; override;
+    function GetOperDate: TDateTime; override;
+
+    function GetBankAccountMain: string; override;
+    function GetOKPO: string; override;
+    function GetBankAccount: string; override;
+    function GetBankMFOMain: string; override;
+    function GetBankMFO: string; override;
+    function GetJuridicalName: string; override;
+    function GetBankName: string; override;
+    function GetComment: string; override;
+    function GetCurrencyCode: string; override;
+    function GetCurrencyName: string; override;
+  end;
+
+
 constructor TClientBankLoadAction.Create(Owner: TComponent);
 begin
   inherited;
@@ -309,6 +328,9 @@ begin
       result := TProkeditBankLoad.Create(StartDate, EndDate);
     cbRaiffeisenBank:
       result := TRaiffeisenBankLoad.Create(StartDate, EndDate);
+    cbOshadBank:
+      result := TOshadBankLoad.Create(StartDate, EndDate);
+
 
   end;
 end;
@@ -1300,6 +1322,100 @@ begin
   result := FDataSet.FieldByName('DK').AsInteger = 2
 end;
 
+{ TOshadBankLoad }
+
+function TOshadBankLoad.GetBankAccount: string;
+begin
+  if IsDebet then
+    result := FDataSet.FieldByName('acccor').AsString
+  else
+    result := FDataSet.FieldByName('acccor').AsString
+end;
+
+function TOshadBankLoad.GetBankAccountMain: string;
+begin
+  if not IsDebet then
+    result := FDataSet.FieldByName('acccli').AsString
+  else
+    result := FDataSet.FieldByName('acccli').AsString
+end;
+
+function TOshadBankLoad.GetBankMFO: string;
+begin
+  if IsDebet then
+    result := FDataSet.FieldByName('mfocor').AsString
+  else
+    result := FDataSet.FieldByName('mfocor').AsString
+end;
+
+function TOshadBankLoad.GetBankMFOMain: string;
+begin
+  if IsDebet then
+    result := FDataSet.FieldByName('mfocli').AsString
+  else
+    result := FDataSet.FieldByName('mfocli').AsString
+end;
+
+function TOshadBankLoad.GetBankName: string;
+begin
+  if IsDebet then
+    result := FDataSet.FieldByName('bankcli').AsString
+  else
+    result := FDataSet.FieldByName('bankcli').AsString;
+end;
+
+function TOshadBankLoad.GetComment: string;
+begin
+  result := FDataSet.FieldByName('nazn').AsString
+end;
+
+function TOshadBankLoad.GetCurrencyCode: string;
+begin
+  result := FDataSet.FieldByName('val').AsString
+end;
+
+function TOshadBankLoad.GetCurrencyName: string;
+begin
+  result := ''
+end;
+
+function TOshadBankLoad.GetDocNumber: string;
+begin
+  result := FDataSet.FieldByName('ndoc').AsString
+end;
+
+function TOshadBankLoad.GetJuridicalName: string;
+begin
+  if IsDebet then
+    result := FDataSet.FieldByName('namecor').AsString
+  else
+    result := FDataSet.FieldByName('namecor').AsString;
+end;
+
+function TOshadBankLoad.GetOKPO: string;
+begin
+  if IsDebet then
+    result := trim(FDataSet.FieldByName('okpocor').AsString)
+  else
+    result := trim(FDataSet.FieldByName('okpocor').AsString);
+end;
+
+function TOshadBankLoad.GetOperDate: TDateTime;
+begin
+  result := FDataSet.FieldByName('dt').AsDateTime;
+end;
+
+function TOshadBankLoad.GetOperSumm: real;
+begin
+  result := FDataSet.FieldByName('summa').AsFloat;
+  if not IsDebet then
+     result := - result;
+end;
+
+function TOshadBankLoad.IsDebet: boolean;
+begin
+  result := FDataSet.FieldByName('DK').AsInteger = 1
+end;
 
 initialization
   RegisterClass(TClientBankLoadAction)
