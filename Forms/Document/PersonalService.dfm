@@ -2423,6 +2423,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Width = 1034
     Height = 89
     TabOrder = 3
+    ExplicitTop = 7
     ExplicitWidth = 1034
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
@@ -2485,8 +2486,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '
     end
     object edPersonalServiceList: TcxButtonEdit
-      Left = 296
-      Top = 16
+      Left = 292
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
@@ -2497,8 +2498,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Width = 218
     end
     object cxLabel3: TcxLabel
-      Left = 296
-      Top = -2
+      Left = 292
+      Top = 5
       Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
     end
     object cxLabel4: TcxLabel

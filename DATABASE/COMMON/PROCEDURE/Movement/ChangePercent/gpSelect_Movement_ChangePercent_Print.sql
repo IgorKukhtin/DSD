@@ -237,7 +237,7 @@ BEGIN
          , MovementItem.isErased    AS isErased
          
          , vbChangePercent AS ChangePercent
-         , (MovementItem.Amount * (MIFloat_Price.ValueData * vbChangePercent / 100))  AS Sum_ChangePercent
+         , CAST ( ( CAST(MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))  * vbChangePercent / 100) AS NUMERIC (16, 2))  AS Sum_ChangePercent
          , (MovementItem.Amount * ((MIFloat_Price.ValueData * vbChangePercent / 100) * vbVATPercent/100))  AS Sum_VATPercent
 
      FROM MovementItem

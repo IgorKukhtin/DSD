@@ -85,7 +85,10 @@ BEGIN
 
           , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
           , MovementFloat_VATPercent.ValueData AS VATPercent
-          , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE MovementLinkObject_From.ObjectId END AS FromId
+          , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN ObjectLink_Partner_Juridical.ChildObjectId
+                 WHEN Movement.DescId = zc_Movement_ChangePercent() THEN MovementLinkObject_To.ObjectId
+                 ELSE MovementLinkObject_From.ObjectId
+            END AS FromId
           , ObjectLink_Contract_JuridicalBasis.ChildObjectId AS ToId -- От кого - всегда главное юр.лицо из договора
           , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MovementLinkObject_From.ObjectId ELSE MovementLinkObject_Partner.ObjectId END AS PartnerId
           , COALESCE (MovementLinkObject_ContractFrom.ObjectId, MovementLinkObject_Contract.ObjectId) AS ContractId
@@ -387,7 +390,7 @@ BEGIN
 
 
 
-     IF (zc_isReturnIn_bySale() = TRUE AND vbMovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_ChangePercent() ))
+     IF (zc_isReturnIn_bySale() = TRUE AND vbMovementDescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_ChangePercent() ))    --  
         OR (vbMovementDescId = zc_Movement_PriceCorrective()
         AND EXISTS (SELECT 1
                     FROM MovementItem
@@ -397,7 +400,207 @@ BEGIN
                       AND MovementItem.isErased   = FALSE
                       AND MovementItem.Amount     <> 0)
            )
-     THEN
+     THEN  
+          IF vbMovementDescId = zc_Movement_ChangePercent()
+          THEN
+          INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice, OperPrice_original, CountForPrice)
+           WITH
+           tmpTax AS (SELECT Movement.*
+                      FROM Movement
+                           INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                        ON MovementLinkObject_To.MovementId = Movement.Id
+                                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                       AND MovementLinkObject_To.ObjectId = vbFromId
+
+                           INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                                       AND MovementLinkObject_Contract.ObjectId = vbContractId
+
+                      WHERE Movement.DescId = zc_Movement_Tax()
+                        AND Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', vbOperDate) AND DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                        AND Movement.StatusId = zc_Enum_Status_Erased()
+                        --AND (MovementLinkObject_Partner.ObjectId = vbPartnerId OR vbPartnerId = 0) 
+                      )
+         , tmpMI AS (SELECT tmpTax.Id                       AS MovementId_Tax
+                          , MovementItem.ObjectId           AS GoodsId
+                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                          , SUM (MovementItem.Amount) AS Amount
+                               -- OperPrice
+                             , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
+                                         -- в "налоговом документе" всегда будут без НДС
+                                         THEN CAST (CASE WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0)
+                                                              THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                                         inOperDate     := COALESCE (tmpTax.OperDate, vbOperDate)
+                                                                                       , inChangePercent:= vbExtraChargesPercent - vbDiscountPercent
+                                                                                       , inPrice        := MIFloat_Price.ValueData
+                                                                                                         * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
+                                                                                                                     THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                                                                ELSE 1
+                                                                                                           END
+                                                                                       , inIsWithVAT    := vbPriceWithVAT
+                                                                                        )
+                                                         ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                                            * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
+                                                                        THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                   ELSE 1
+                                                              END
+                                                    END
+                                                  / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
+                                    ELSE CASE WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0)
+                                                   THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                              inOperDate     := COALESCE (tmpTax.OperDate, vbOperDate)
+                                                                            , inChangePercent:= vbExtraChargesPercent - vbDiscountPercent
+                                                                            , inPrice        := MIFloat_Price.ValueData
+                                                                                              * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
+                                                                                                          THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                                                     ELSE 1
+                                                                                                END
+                                                                            , inIsWithVAT    := vbPriceWithVAT
+                                                                             )
+                                              ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                                 * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
+                                                             THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                        ELSE 1
+                                                   END
+                                         END
+                               END AS OperPrice
+                               -- OperPrice_original
+                             , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
+                                         -- в "налоговом документе" всегда будут без НДС
+                                         THEN CAST (CASE WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0)
+                                                              THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                                         inOperDate     := COALESCE (tmpTax.OperDate, vbOperDate)
+                                                                                       , inChangePercent:= 0--vbExtraChargesPercent - vbDiscountPercent
+                                                                                       , inPrice        := MIFloat_Price.ValueData
+                                                                                       , inIsWithVAT    := vbPriceWithVAT
+                                                                                        )
+                                                         ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                                    END
+                                                  / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
+                                    ELSE CASE WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0)
+                                                   THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                              inOperDate     := COALESCE (tmpTax.OperDate, vbOperDate)
+                                                                            , inChangePercent:= 0--vbExtraChargesPercent - vbDiscountPercent
+                                                                            , inPrice        := MIFloat_Price.ValueData
+                                                                            , inIsWithVAT    := vbPriceWithVAT
+                                                                             )
+                                              ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                         END
+                               END AS OperPrice_original
+                               -- CountForPrice
+                             , MIFloat_CountForPrice.ValueData AS CountForPrice
+                     FROM tmpTax
+                          INNER JOIN MovementItem ON MovementItem.MovementId = tmpTax.Id
+                                                 AND MovementItem.DescId = zc_MI_Master()
+                                                 AND MovementItem.isErased = FALSE
+
+                          LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                          LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                      ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                     GROUP BY tmpTax.Id
+                          , MovementItem.ObjectId
+                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                          , MIFloat_CountForPrice.ValueData
+                            -- OperPrice
+                             , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
+                                         -- в "налоговом документе" всегда будут без НДС
+                                         THEN CAST (CASE WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0)
+                                                              THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                                         inOperDate     := COALESCE (tmpTax.OperDate, vbOperDate)
+                                                                                       , inChangePercent:= vbExtraChargesPercent - vbDiscountPercent
+                                                                                       , inPrice        := MIFloat_Price.ValueData
+                                                                                                         * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
+                                                                                                                     THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                                                                ELSE 1
+                                                                                                           END
+                                                                                       , inIsWithVAT    := vbPriceWithVAT
+                                                                                        )
+                                                         ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                                            * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
+                                                                        THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                   ELSE 1
+                                                              END
+                                                    END
+                                                  / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
+                                    ELSE CASE WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0)
+                                                   THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                              inOperDate     := COALESCE (tmpTax.OperDate, vbOperDate)
+                                                                            , inChangePercent:= vbExtraChargesPercent - vbDiscountPercent
+                                                                            , inPrice        := MIFloat_Price.ValueData
+                                                                                              * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
+                                                                                                          THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                                                                     ELSE 1
+                                                                                                END
+                                                                            , inIsWithVAT    := vbPriceWithVAT
+                                                                             )
+                                              ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                                 * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
+                                                             THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
+                                                        ELSE 1
+                                                   END
+                                         END
+                               END 
+                               -- OperPrice_original
+                             , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
+                                         -- в "налоговом документе" всегда будут без НДС
+                                         THEN CAST (CASE WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0)
+                                                              THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                                         inOperDate     := COALESCE (tmpTax.OperDate, vbOperDate)
+                                                                                       , inChangePercent:= 0--vbExtraChargesPercent - vbDiscountPercent
+                                                                                       , inPrice        := MIFloat_Price.ValueData
+                                                                                       , inIsWithVAT    := vbPriceWithVAT
+                                                                                        )
+                                                         ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                                    END
+                                                  / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
+                                    ELSE CASE WHEN (vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0)
+                                                   THEN zfCalc_PriceTruncate (-- !!!дата налоговой!!!
+                                                                              inOperDate     := COALESCE (tmpTax.OperDate, vbOperDate)
+                                                                            , inChangePercent:= 0--vbExtraChargesPercent - vbDiscountPercent
+                                                                            , inPrice        := MIFloat_Price.ValueData
+                                                                            , inIsWithVAT    := vbPriceWithVAT
+                                                                             )
+                                              ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                         END
+                               END
+                     )
+        
+                , tmpMovement_Corrective AS (SELECT MIN (MovementLinkMovement_Corrective.MovementId) AS MovementId
+                                                  , MovementLinkMovement_Tax.MovementChildId AS MovementId_Tax
+                                             FROM MovementLinkMovement AS MovementLinkMovement_Corrective
+                                                  INNER JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+                                                                                  ON MovementLinkMovement_Tax.MovementId     = MovementLinkMovement_Corrective.MovementId
+                                                                                 AND MovementLinkMovement_Tax.DescId         = zc_MovementLinkMovement_Child()
+                                                                                 AND MovementLinkMovement_Tax.MovementChildId > 0
+                                             WHERE MovementLinkMovement_Corrective.MovementChildId = inMovementId
+                                               AND MovementLinkMovement_Corrective.DescId          = zc_MovementLinkMovement_Master()
+                                             GROUP BY MovementLinkMovement_Tax.MovementChildId
+                                            )
+ 
+             -- РЕЗУЛЬТАТ
+             SELECT COALESCE (tmpMovement_Corrective.MovementId, 0) AS MovementId_Corrective
+                  , COALESCE (tmpMI.MovementId_Tax, 0) AS MovementId_Tax
+                  , tmpMI.GoodsId
+                  , tmpMI.GoodsKindId
+                  , tmpMI.Amount
+                  , tmpMI.OperPrice
+                  , tmpMI.OperPrice_original
+                  , tmpMI.CountForPrice
+             FROM tmpMI
+                  LEFT JOIN tmpMovement_Corrective ON tmpMovement_Corrective.MovementId_Tax = tmpMI.MovementId_Tax
+             -- WHERE tmpMI.MovementId_Tax > 0
+             ;
+          
+          ELSE          
           -- в этом случае привязка - zc_MI_Child
           INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice, OperPrice_original, CountForPrice)
              WITH tmpMovement AS (-- выбрали ВСЕ <Корректировка цены>
@@ -672,6 +875,8 @@ BEGIN
                   LEFT JOIN tmpMovement_Corrective ON tmpMovement_Corrective.MovementId_Tax = tmpMI.MovementId_Tax
              -- WHERE tmpMI.MovementId_Tax > 0
             ;
+          END IF;
+          
           -- Проверка
           IF EXISTS (SELECT 1 FROM _tmpResult WHERE COALESCE (_tmpResult.MovementId_Tax, 0) = 0)
           THEN
@@ -1135,3 +1340,4 @@ $BODY$
 -- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId:= 3449385, inDocumentTaxKindId:= 0, inDocumentTaxKindId_inf:= 0, inIsTaxLink:= TRUE, inSession := '5');
 -- select * from gpInsertUpdate_Movement_TaxCorrective_From_Kind(inMovementId := 16691011 , inDocumentTaxKindId := 566452 , inDocumentTaxKindId_inf := 566452 , inStartDateTax := NULL , inIsTaxLink := 'True' ,  inSession := '5');
 -- select * from gpInsertUpdate_Movement_TaxCorrective_From_Kind(inMovementId := 22528897 , inDocumentTaxKindId := 0 , inDocumentTaxKindId_inf := 0 , inStartDateTax := ('01.12.2021')::TDateTime , inIsTaxLink := 'True' ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
+--select * from gpInsertUpdate_Movement_TaxCorrective_From_Kind(inMovementId := 24743082 , inDocumentTaxKindId := 9178892 , inDocumentTaxKindId_inf := 9178892 , inStartDateTax := ('01.01.1900')::TDateTime , inIsTaxLink := 'True' ,  inSession := '9457');
