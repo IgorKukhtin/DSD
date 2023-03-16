@@ -291,7 +291,7 @@ BEGIN
                      END AS tmpOperSumm_Partner
 
                      -- Статьи назначения
-                   , COALESCE (ObjectLink_Goods_InfoMoney.ObjectId, 0) AS InfoMoneyId
+                   , COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, 0) AS InfoMoneyId
               FROM 
              (SELECT (MovementItem.Id)                             AS MovementItemId
                    , MovementItem.ObjectId                         AS GoodsId
