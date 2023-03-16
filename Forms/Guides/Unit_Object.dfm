@@ -132,6 +132,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 60
           end
+          object isAvance: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1072#1074#1072#1085#1089#1072' '#1072#1074#1090#1086#1084#1072#1090'.'
+            DataBinding.FieldName = 'isAvance'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1072#1074#1072#1085#1089#1072' '#1072#1074#1090#1086#1084#1072#1090'.'
+            Options.Editing = False
+            Width = 60
+          end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'

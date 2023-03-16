@@ -335,18 +335,25 @@
     Width = 449
   end
   object cbCountCount: TcxCheckBox
-    Left = 280
+    Left = 265
     Top = 437
     Caption = #1059#1095#1077#1090' '#1073#1072#1090#1086#1085#1086#1074
     TabOrder = 41
-    Width = 96
+    Width = 93
   end
   object cbPartionGP: TcxCheckBox
-    Left = 279
+    Left = 265
     Top = 464
     Caption = #1055#1072#1088#1090#1080#1080' '#1076#1083#1103' '#1043#1055' '#1080' '#1058#1091#1096#1077#1085#1082#1080
     TabOrder = 42
     Width = 162
+  end
+  object cbAvance: TcxCheckBox
+    Left = 366
+    Top = 437
+    Caption = #1053#1072#1095'. '#1072#1074#1072#1085#1089#1072' '#1072#1074#1090#1086#1084#1072#1090'.'
+    TabOrder = 43
+    Width = 133
   end
   object ActionList: TActionList
     Left = 16
@@ -441,6 +448,14 @@
         Name = 'inisPartionGP'
         Value = Null
         Component = cbPartionGP
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAvance'
+        Value = Null
+        Component = cbAvance
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -832,6 +847,13 @@
         Name = 'isPartionGP'
         Value = Null
         Component = cbPartionGP
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAvance'
+        Value = Null
+        Component = cbAvance
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

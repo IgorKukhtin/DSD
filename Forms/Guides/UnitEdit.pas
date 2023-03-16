@@ -89,6 +89,7 @@ type
     edComment: TcxTextEdit;
     cbCountCount: TcxCheckBox;
     cbPartionGP: TcxCheckBox;
+    cbAvance: TcxCheckBox;
   private
     { Private declarations }
   public

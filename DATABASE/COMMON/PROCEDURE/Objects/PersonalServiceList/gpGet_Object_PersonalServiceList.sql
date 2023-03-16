@@ -21,11 +21,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ContentType TVarChar
              , OnFlowType TVarChar
              , Compensation TFloat
+             , SummAvance TFloat, SummAvanceMax TFloat, HourAvance TFloat
              , KoeffSummCardSecond NUMERIC (16,10)
              , isSecond Boolean
              , isRecalc Boolean
              , isBankOut Boolean
              , isDetail Boolean
+             , isAvanceNot Boolean
              , isErased Boolean) AS
 $BODY$
 BEGIN
@@ -70,12 +72,19 @@ BEGIN
            , CAST ('' as TVarChar)  AS OnFlowType
                       
            , CAST (0 AS TFloat)     AS Compensation
+
+           , CAST (0 AS TFloat)     AS SummAvance
+           , CAST (0 AS TFloat)     AS SummAvanceMax
+           , CAST (0 AS TFloat)     AS HourAvance          
+           
            , CAST (0 AS NUMERIC (16,10)) AS KoeffSummCardSecond
 
            , CAST(FALSE AS Boolean) AS isSecond
            , CAST(FALSE AS Boolean) AS isRecalc
            , CAST(FALSE AS Boolean) AS isBankOut
            , CAST(FALSE AS Boolean) AS isDetail
+           , CAST(FALSE AS Boolean) AS isAvanceNot
+           
 
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
@@ -117,12 +126,18 @@ BEGIN
 
            
            , COALESCE (ObjectFloat_Compensation.ValueData, 0)        :: TFloat AS Compensation
+
+           , COALESCE (ObjectFloat_SummAvance.ValueData, 0)          :: TFloat AS SummAvance
+           , COALESCE (ObjectFloat_SummAvanceMax.ValueData, 0)       :: TFloat AS SummAvanceMax
+           , COALESCE (ObjectFloat_HourAvance.ValueData, 0)          :: TFloat AS HourAvance
+
            , CAST ((COALESCE (ObjectFloat_KoeffSummCardSecond.ValueData, 0) / 1000) AS NUMERIC (16,10)) AS KoeffSummCardSecond
 
-           , COALESCE (ObjectBoolean_Second.ValueData,FALSE)  ::Boolean AS isSecond
-           , COALESCE (ObjectBoolean_Recalc.ValueData,FALSE)  ::Boolean AS isRecalc
-           , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE)::Boolean AS isBankOut
-           , COALESCE (ObjectBoolean_Detail.ValueData, FALSE) ::Boolean AS isDetail
+           , COALESCE (ObjectBoolean_Second.ValueData,FALSE)     ::Boolean AS isSecond
+           , COALESCE (ObjectBoolean_Recalc.ValueData,FALSE)     ::Boolean AS isRecalc
+           , COALESCE (ObjectBoolean_BankOut.ValueData, FALSE)   ::Boolean AS isBankOut
+           , COALESCE (ObjectBoolean_Detail.ValueData, FALSE)    ::Boolean AS isDetail
+           , COALESCE (ObjectBoolean_AvanceNot.ValueData, FALSE) ::Boolean AS isAvanceNot
 
            , Object_PersonalServiceList.isErased   AS isErased
 
@@ -143,12 +158,28 @@ BEGIN
                                    ON ObjectBoolean_Detail.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_Detail.DescId = zc_ObjectBoolean_PersonalServiceList_Detail()
 
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_AvanceNot
+                                   ON ObjectBoolean_AvanceNot.ObjectId = Object_PersonalServiceList.Id 
+                                  AND ObjectBoolean_AvanceNot.DescId = zc_ObjectBoolean_PersonalServiceList_AvanceNot()
+
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
                                 AND ObjectFloat_Compensation.DescId = zc_ObjectFloat_PersonalServiceList_Compensation()
            LEFT JOIN ObjectFloat AS ObjectFloat_KoeffSummCardSecond
                                  ON ObjectFloat_KoeffSummCardSecond.ObjectId = Object_PersonalServiceList.Id 
                                 AND ObjectFloat_KoeffSummCardSecond.DescId = zc_ObjectFloat_PersonalServiceList_KoeffSummCardSecond()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_SummAvance
+                                 ON ObjectFloat_SummAvance.ObjectId = Object_PersonalServiceList.Id 
+                                AND ObjectFloat_SummAvance.DescId = zc_ObjectFloat_PersonalServiceList_SummAvance()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_SummAvanceMax
+                                 ON ObjectFloat_SummAvanceMax.ObjectId = Object_PersonalServiceList.Id 
+                                AND ObjectFloat_SummAvanceMax.DescId = zc_ObjectFloat_PersonalServiceList_SummAvanceMax()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_HourAvance
+                                 ON ObjectFloat_HourAvance.ObjectId = Object_PersonalServiceList.Id 
+                                AND ObjectFloat_HourAvance.DescId = zc_ObjectFloat_PersonalServiceList_HourAvance()
 
            LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Juridical
                                 ON ObjectLink_PersonalServiceList_Juridical.ObjectId = Object_PersonalServiceList.Id 

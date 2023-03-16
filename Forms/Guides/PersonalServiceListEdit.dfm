@@ -2,8 +2,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
-  ClientHeight = 582
-  ClientWidth = 297
+  ClientHeight = 397
+  ClientWidth = 647
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 32
-    Top = 548
+    Left = 337
+    Top = 360
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 176
-    Top = 548
+    Left = 480
+    Top = 360
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -77,13 +77,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 273
   end
   object cxLabel4: TcxLabel
-    Left = 193
-    Top = 187
+    Left = 497
+    Top = 99
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
   end
   object cePaidKind: TcxButtonEdit
-    Left = 193
-    Top = 206
+    Left = 497
+    Top = 118
     Properties.Buttons = <
       item
         Default = True
@@ -93,13 +93,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 90
   end
   object cxLabel5: TcxLabel
-    Left = 10
-    Top = 146
+    Left = 314
+    Top = 58
     Caption = #1060#1080#1083#1080#1072#1083
   end
   object ceBranch: TcxButtonEdit
-    Left = 10
-    Top = 164
+    Left = 314
+    Top = 76
     Properties.Buttons = <
       item
         Default = True
@@ -109,13 +109,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 177
   end
   object cxLabel16: TcxLabel
-    Left = 10
-    Top = 187
+    Left = 314
+    Top = 99
     Caption = #1041#1072#1085#1082
   end
   object edBankId: TcxButtonEdit
-    Left = 10
-    Top = 206
+    Left = 314
+    Top = 118
     Properties.Buttons = <
       item
         Default = True
@@ -127,19 +127,19 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object ceisSecond: TcxCheckBox
     Left = 85
-    Top = 8
+    Top = 30
     Caption = #1042#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
     TabOrder = 14
     Width = 95
   end
   object cxLabel6: TcxLabel
     Left = 10
-    Top = 230
+    Top = 148
     Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1080#1089#1087'. '#1076#1080#1088#1077#1082#1090#1086#1088')'
   end
   object edMemberHeadManager: TcxButtonEdit
     Left = 10
-    Top = 248
+    Top = 166
     Properties.Buttons = <
       item
         Default = True
@@ -150,12 +150,12 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object cxLabel7: TcxLabel
     Left = 10
-    Top = 275
+    Top = 193
     Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1076#1080#1088#1077#1082#1090#1086#1088')'
   end
   object edMemberManager: TcxButtonEdit
     Left = 10
-    Top = 293
+    Top = 211
     Properties.Buttons = <
       item
         Default = True
@@ -165,13 +165,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 273
   end
   object cxLabel8: TcxLabel
-    Left = 10
-    Top = 320
+    Left = 314
+    Top = 148
     Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')'
   end
   object edMemberBookkeeper: TcxButtonEdit
-    Left = 10
-    Top = 338
+    Left = 314
+    Top = 166
     Properties.Buttons = <
       item
         Default = True
@@ -182,13 +182,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object cxLabel33: TcxLabel
     Left = 10
-    Top = 407
+    Top = 242
     Hint = #1050#1086#1101#1092#1092'. '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080' '#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1077#1084#1103' '#1080#1079' '#1087#1091#1090'. '#1083#1080#1089#1090#1072
     Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095'-'#1080#1103' '#1082#1086#1084#1087#1077#1085#1089'.'
   end
   object edCompensation: TcxCurrencyEdit
     Left = 10
-    Top = 424
+    Top = 259
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -198,7 +198,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object cbRecalc: TcxCheckBox
     Left = 154
-    Top = 424
+    Top = 262
     Hint = #1044#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1074' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1092#1072#1082#1090
     Caption = #1056#1072#1089#1087#1088#1077#1076'. '#1074' '#1074#1077#1076'. '#1092#1072#1082#1090
     ParentShowHint = False
@@ -207,20 +207,20 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 134
   end
   object edisBankOut: TcxCheckBox
-    Left = 85
-    Top = 35
+    Left = 310
+    Top = 30
     Caption = #1076#1083#1103' '#1059#1074#1086#1083#1077#1085#1085#1099#1093' ('#1073#1072#1085#1082')'
     TabOrder = 24
     Width = 138
   end
   object cxLabel12: TcxLabel
     Left = 10
-    Top = 448
+    Top = 286
     Caption = #1056'/'#1057#1095#1077#1090
   end
   object edBankAccount: TcxButtonEdit
     Left = 10
-    Top = 465
+    Top = 303
     Properties.Buttons = <
       item
         Default = True
@@ -232,13 +232,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object cxLabel9: TcxLabel
     Left = 193
-    Top = 446
+    Top = 284
     Hint = #1058#1080#1087' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1074' '#1073#1072#1085#1082
     Caption = #1058#1080#1087' '#1074#1099#1075#1088'. '#1074' '#1073#1072#1085#1082
   end
   object edPSLExportKind: TcxButtonEdit
     Left = 193
-    Top = 465
+    Top = 303
     Hint = #1058#1080#1087' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1074' '#1073#1072#1085#1082
     ParentShowHint = False
     Properties.Buttons = <
@@ -252,29 +252,29 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object edContentType: TcxTextEdit
     Left = 10
-    Top = 515
+    Top = 353
     TabOrder = 29
     Width = 133
   end
   object cxLabel10: TcxLabel
     Left = 10
-    Top = 496
+    Top = 334
     Caption = 'Content-Type'
   end
   object edOnFlowType: TcxTextEdit
     Left = 150
-    Top = 515
+    Top = 353
     TabOrder = 31
     Width = 133
   end
   object cxLabel11: TcxLabel
     Left = 150
-    Top = 496
+    Top = 334
     Caption = #1042#1080#1076' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1074' '#1073#1072#1085#1082#1077
   end
   object cbDetail: TcxCheckBox
-    Left = 197
-    Top = 8
+    Left = 194
+    Top = 30
     Hint = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103' '#1076#1072#1085#1085#1099#1093
     Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103
     ParentShowHint = False
@@ -283,8 +283,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 94
   end
   object edKoeffSummCardSecond: TcxCurrencyEdit
-    Left = 193
-    Top = 164
+    Left = 497
+    Top = 76
     Hint = #1050#1086#1101#1092#1092' '#1076#1083#1103' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1041#1072#1085#1082' 2'#1092'.'
     EditValue = 0.000000000000000000
     ParentShowHint = False
@@ -297,21 +297,21 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 90
   end
   object cxLabel13: TcxLabel
-    Left = 193
-    Top = 146
+    Left = 497
+    Top = 58
     Hint = #1050#1086#1101#1092#1092' '#1076#1083#1103' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1041#1072#1085#1082' 2'#1092'.'
     Caption = #1050#1086#1101#1092#1092'. '#1074#1099#1075#1088'. 2'#1092'.'
     ParentShowHint = False
     ShowHint = True
   end
   object cxLabel14: TcxLabel
-    Left = 10
-    Top = 366
+    Left = 314
+    Top = 194
     Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1076#1088'.)'
   end
   object cePersonalHead: TcxButtonEdit
-    Left = 10
-    Top = 383
+    Left = 314
+    Top = 211
     Properties.Buttons = <
       item
         Default = True
@@ -320,6 +320,58 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Properties.ReadOnly = True
     TabOrder = 37
     Width = 273
+  end
+  object cxLabel15: TcxLabel
+    Left = 314
+    Top = 242
+    Caption = #1057#1091#1084#1084#1072' '#1072#1074#1072#1085#1089' ('#1072#1074#1090#1086')'
+  end
+  object edSummAvance: TcxCurrencyEdit
+    Left = 314
+    Top = 259
+    EditValue = '0'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 39
+    Width = 132
+  end
+  object cxLabel17: TcxLabel
+    Left = 314
+    Top = 286
+    Caption = #1050#1086#1083'. '#1095#1072#1089#1086#1074' '#1076#1083#1103' '#1072#1074#1072#1085#1089#1072
+  end
+  object edSummAvanceMax: TcxCurrencyEdit
+    Left = 457
+    Top = 259
+    EditValue = '0'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 41
+    Width = 130
+  end
+  object edHourAvance: TcxCurrencyEdit
+    Left = 314
+    Top = 303
+    EditValue = '0'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 42
+    Width = 132
+  end
+  object cxLabel18: TcxLabel
+    Left = 457
+    Top = 242
+    Caption = #1052#1072#1082#1089' '#1057#1091#1084#1084#1072' '#1072#1074#1072#1085#1089' ('#1074#1074#1086#1076')'
+  end
+  object cbAvanceNot: TcxCheckBox
+    Left = 452
+    Top = 303
+    Hint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1089#1087#1080#1089#1082#1072' '#1085#1072' '#1072#1074#1072#1085#1089
+    Caption = #1048#1089#1082#1083'. '#1080#1079' '#1089#1087'. '#1085#1072' '#1072#1074#1072#1085#1089
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 44
+    Width = 134
   end
   object ActionList: TActionList
     Left = 88
@@ -470,6 +522,30 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSummAvance'
+        Value = Null
+        Component = edSummAvance
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummAvanceMax'
+        Value = Null
+        Component = edSummAvanceMax
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inHourAvance'
+        Value = Null
+        Component = edHourAvance
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inKoeffSummCardSecond'
         Value = 0
         Component = edKoeffSummCardSecond
@@ -505,6 +581,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Name = 'inisDetail'
         Value = Null
         Component = cbDetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAvanceNot'
+        Value = Null
+        Component = cbAvanceNot
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -771,6 +855,34 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HourAvance'
+        Value = Null
+        Component = edHourAvance
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummAvance'
+        Value = Null
+        Component = edSummAvance
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummAvanceMax'
+        Value = Null
+        Component = edSummAvanceMax
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAvanceNot'
+        Value = Null
+        Component = cbAvanceNot
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -849,8 +961,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 213
-    Top = 187
+    Left = 517
+    Top = 99
   end
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
@@ -876,8 +988,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 120
-    Top = 189
+    Left = 424
+    Top = 101
   end
   object BankGuides: TdsdGuides
     KeyField = 'Id'
@@ -906,8 +1018,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 69
-    Top = 184
+    Left = 373
+    Top = 96
   end
   object GuidesMemberHeadManager: TdsdGuides
     KeyField = 'Id'
@@ -937,7 +1049,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end>
     Left = 181
-    Top = 240
+    Top = 158
   end
   object GuidesMemberManager: TdsdGuides
     KeyField = 'Id'
@@ -967,7 +1079,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end>
     Left = 204
-    Top = 285
+    Top = 203
   end
   object GuidesMemberBookkeeper: TdsdGuides
     KeyField = 'Id'
@@ -996,8 +1108,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 93
-    Top = 328
+    Left = 397
+    Top = 156
   end
   object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'
@@ -1025,8 +1137,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 82
-    Top = 461
+    Left = 66
+    Top = 307
   end
   object GuidesPSLExportKind: TdsdGuides
     KeyField = 'Id'
@@ -1053,7 +1165,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end>
     Left = 219
-    Top = 454
+    Top = 292
   end
   object GuidesPersonalHead: TdsdGuides
     KeyField = 'Id'
@@ -1082,7 +1194,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 183
-    Top = 367
+    Left = 487
+    Top = 195
   end
 end

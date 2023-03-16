@@ -533,6 +533,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_PersonalServiceList_Detail() RETURNS
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_PersonalServiceList(), 'zc_ObjectBoolean_PersonalServiceList_Detail', 'Детализация данных' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PersonalServiceList_Detail');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_PersonalServiceList_AvanceNot() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PersonalServiceList_AvanceNot'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PersonalServiceList(), 'zc_ObjectBoolean_PersonalServiceList_AvanceNot', 'Исключить из списка на аванс' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_PersonalServiceList_AvanceNot');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_GoodsListIncome_Last() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsListIncome_Last'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
@@ -625,6 +629,10 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_PartionGP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_PartionGP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_PartionGP', 'Партии для ГП и Тушенки' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_PartionGP');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_Avance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_Avance'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_Avance', 'Начисление аванс автомат.' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_Avance');
 
 
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Maker_Report1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Maker_Report1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1392,6 +1400,8 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 14.03.23         * zc_ObjectBoolean_PersonalServiceList_AvanceNot
+                    zc_ObjectBoolean_Unit_Avance
  03.03.23                                                                                                          * zc_ObjectBoolean_Unit_ColdOutSUN
  21.02.23                                                                                                          * zc_ObjectBoolean_Unit_ShowPlanMobileAppUser
  19.02.23                                                                                                          * zc_ObjectBoolean_Unit_SendErrorTelegramBot

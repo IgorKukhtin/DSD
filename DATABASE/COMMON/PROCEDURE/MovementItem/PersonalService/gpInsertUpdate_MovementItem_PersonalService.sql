@@ -104,6 +104,7 @@ $BODY$
    DECLARE vbisBankOut Boolean;
    DECLARE vbisDetail Boolean;
    DECLARE vbPersonalServiceListId Integer;
+   DECLARE vbSummAvanceMax TFloat;
    -- !!! ошибка
    DECLARE inNumber TVarChar; --  № исполнительного
 BEGIN
@@ -135,7 +136,20 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Для текущей ведомости Нет детализации данных.Дублирование запрещено.';
      END IF;
      
-     
+     --находим значение макс суммы аванса для ведомости
+     vbSummAvanceMax := (SELECT COALESCE (ObjectFloat_SummAvanceMax.ValueData, 0) :: TFloat AS SummAvanceMax    
+                         FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                              INNER JOIN ObjectFloat AS ObjectFloat_SummAvanceMax
+                                                     ON ObjectFloat_SummAvanceMax.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId 
+                                                    AND ObjectFloat_SummAvanceMax.DescId = zc_ObjectFloat_PersonalServiceList_SummAvanceMax()  
+                         WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
+                           AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                         );
+     --проверка 
+     IF COALESCE (inSummAvanceRecalc,0) > COALESCE (vbSummAvanceMax,0) AND COALESCE (vbSummAvanceMax,0) <> 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Сумма <%> превышает максимально допустимую <%> для данной ведомости.', inSummAvanceRecalc, vbSummAvanceMax;
+     END IF;    
      
      -- сохранили
      SELECT tmp.ioId, tmp.outAmount, tmp.outAmountToPay, tmp.outAmountCash

@@ -229,6 +229,15 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Options.Editing = False
         Width = 50
       end
+      object isAvanceNot: TcxGridDBColumn
+        Caption = #1048#1089#1082#1083'. '#1080#1079' '#1072#1074#1072#1085#1089#1072
+        DataBinding.FieldName = 'isAvanceNot'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1089#1087#1080#1089#1082#1072' '#1085#1072' '#1072#1074#1072#1085#1089
+        Options.Editing = False
+        Width = 50
+      end
       object KoeffSummCardSecond: TcxGridDBColumn
         Caption = #1050#1086#1101#1092#1092'. '#1074#1099#1075#1088'. 2'#1092'.'
         DataBinding.FieldName = 'KoeffSummCardSecond'
@@ -259,6 +268,39 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 85
+      end
+      object SummAvance: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1072#1074#1072#1085#1089'('#1072#1074#1090#1086')'
+        DataBinding.FieldName = 'SummAvance'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1091#1084#1084#1072' '#1072#1074#1072#1085#1089'('#1072#1074#1090#1086')'
+        Options.Editing = False
+        Width = 88
+      end
+      object SummAvanceMax: TcxGridDBColumn
+        Caption = #1052#1072#1082#1089' '#1057#1091#1084#1084#1072' '#1072#1074#1072#1085#1089'('#1074#1074#1086#1076')'
+        DataBinding.FieldName = 'SummAvanceMax'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1052#1072#1082#1089' '#1057#1091#1084#1084#1072' '#1072#1074#1072#1085#1089'('#1074#1074#1086#1076')'
+        Options.Editing = False
+        Width = 88
+      end
+      object HourAvance: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074' '#1076#1083#1103' '#1072#1074#1072#1085#1089' ('#1072#1074#1090#1086')'
+        DataBinding.FieldName = 'HourAvance'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074' '#1076#1083#1103' '#1072#1074#1072#1085#1089'('#1072#1074#1090#1086')'
+        Options.Editing = False
+        Width = 88
       end
       object BankAccountName: TcxGridDBColumn
         Caption = #1056'/'#1089#1095#1077#1090
