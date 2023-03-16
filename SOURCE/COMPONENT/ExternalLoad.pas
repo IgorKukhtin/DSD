@@ -665,7 +665,7 @@ begin
         for I := 1 to Cols do TClientDataSet(FDataSet).FieldDefs.Add('F' + IntToStr(I), ftWideString, 255);
         TClientDataSet(FDataSet).CreateDataSet;
 
-        with TGaugeFactory.GetGauge('Получение данныч из файла экселя', 1, Rows - FStartRecord) do begin
+        with TGaugeFactory.GetGauge('Получение данных из файла экселя', 1, Rows - FStartRecord) do begin
           Start;
           try
             for I := FStartRecord to Rows do
