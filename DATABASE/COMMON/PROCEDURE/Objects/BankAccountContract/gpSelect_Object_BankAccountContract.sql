@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccountContract(
     IN inSession     TVarChar       -- 
 )
 RETURNS TABLE (Id Integer
-             , BankAccountId Integer, BankAccountName TVarChar
+             , BankAccountId Integer, BankAccountName TVarChar, Name TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , UnitId Integer, UnitName TVarChar
              , isErased boolean
@@ -22,7 +22,8 @@ BEGIN
            Object_BankAccountContract.Id AS Id
     
          , Object_BankAccount.Id         AS BankAccountId
-         , Object_BankAccount.ValueData  AS BankAccountName
+         , (Object_BankAccount_View.BankName || ' ' || Object_BankAccount.ValueData) :: TVarChar AS BankAccountName
+         , (Object_BankAccount_View.BankName || ' ' || Object_BankAccount.ValueData) :: TVarChar AS Name
 
          , Object_InfoMoney_View.InfoMoneyId        AS InfoMoneyId
          , Object_InfoMoney_View.InfoMoneyName_all  AS InfoMoneyName
@@ -47,6 +48,8 @@ BEGIN
                                ON ObjectLink_BankAccountContract_Unit.ObjectId = Object_BankAccountContract.Id
                               AND ObjectLink_BankAccountContract_Unit.DescId = zc_ObjectLink_BankAccountContract_Unit()
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_BankAccountContract_Unit.ChildObjectId
+
+          LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = Object_BankAccount.Id
 
      WHERE Object_BankAccountContract.DescId = zc_Object_BankAccountContract();
   

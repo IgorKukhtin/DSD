@@ -172,6 +172,7 @@ END IF;
  --AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind() AND MLO.ObjectId = zc_Enum_PaidKind_FirstForm())
     AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.OperDate > '12.12.2022')
  --AND inUserId = zfCalc_UserAdmin() :: Integer
+ --AND inMovementId <> 24732446 -- 
      THEN
          -- если есть хоть 1 товар у которого кол > на vbPersent_check% чем в заявка выдаем сообщение
          SELECT tmp.GoodsId

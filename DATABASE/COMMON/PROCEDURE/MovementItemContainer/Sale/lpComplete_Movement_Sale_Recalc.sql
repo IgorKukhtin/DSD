@@ -17,6 +17,7 @@ BEGIN
      -- нашли дату
      vbOperDate:= (SELECT OperDate FROM Movement WHERE Id = inMovementId);
 
+     -- if inUserId = 5 then return; end if;
 
     vbIsNotRealGoods:= EXISTS (SELECT 1
                                FROM MovementLinkObject AS MLO
