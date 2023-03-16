@@ -49,7 +49,7 @@ BEGIN
 
     -- очень важная проверка
     -- IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
-    IF COALESCE (vbStatusId, 0) = zc_Enum_Status_Erased()  --zc_Enum_Status_UnComplete()
+    IF COALESCE (vbStatusId, 0) = zc_Enum_Status_UnComplete() AND vbUserId <> 5
     THEN
         IF vbStatusId = zc_Enum_Status_Erased()
         THEN
