@@ -94,7 +94,7 @@ BEGIN
                                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()*/
                       WHERE Movement.DescId = zc_Movement_Tax()
                         AND Movement.OperDate BETWEEN vbStartDate AND vbEndDate
-                        AND Movement.StatusId = zc_Enum_Status_Erased()
+                        AND Movement.StatusId <> zc_Enum_Status_Erased()
                         --AND (MovementLinkObject_Partner.ObjectId = vbPartnerId OR vbPartnerId = 0) 
                       )
          , tmpMI_Tax AS (SELECT MovementItem.ObjectId           AS GoodsId
