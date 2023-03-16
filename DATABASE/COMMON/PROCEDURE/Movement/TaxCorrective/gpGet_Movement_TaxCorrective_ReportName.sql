@@ -47,9 +47,13 @@ BEGIN
                                           ON MovementBoolean_isAuto.MovementId = Movement.Id
                                          AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
+                LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                             ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                            AND MovementLinkObject_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
+
                 INNER JOIN Movement AS Movement_find ON Movement_find.Id  = COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id)
-                                                   -- AND Movement_find.StatusId = zc_Enum_Status_Complete()   -- док. предоплаты можно печатать и не проведенные
-                                                    AND (Movement_find.StatusId = zc_Enum_Status_Complete() OR COALESCE (MovementBoolean_isAuto.ValueData, FALSE) = TRUE)
+                                                    --AND Movement_find.StatusId = zc_Enum_Status_UnComplete()   -- док. предоплаты можно печатать и не проведенные
+                                                    AND (Movement_find.StatusId = zc_Enum_Status_Complete() OR COALESCE (MovementBoolean_isAuto.ValueData, FALSE) = TRUE OR MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_ChangePercent())
                 LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                        ON MovementDate_DateRegistered.MovementId = Movement.Id
                                       AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()

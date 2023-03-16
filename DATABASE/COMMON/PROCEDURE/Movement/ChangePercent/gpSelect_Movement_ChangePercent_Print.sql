@@ -49,7 +49,7 @@ BEGIN
 
     -- очень важная проверка
     -- IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
-    IF COALESCE (vbStatusId, 0) = zc_Enum_Status_UnComplete()
+    IF COALESCE (vbStatusId, 0) = zc_Enum_Status_Erased()  --zc_Enum_Status_UnComplete()
     THEN
         IF vbStatusId = zc_Enum_Status_Erased()
         THEN
@@ -262,6 +262,7 @@ BEGIN
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId     = zc_MI_Master()
        AND MovementItem.isErased   = FALSE
+     ORDER BY  Object_Goods.ValueData, Object_GoodsKind.ValueData
 ;
     RETURN NEXT Cursor2;
 

@@ -887,7 +887,9 @@ BEGIN
            , CASE WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change())
                        THEN Object_DocumentTaxKind.ValueData
 
-                  WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical(), zc_Enum_DocumentTaxKind_ChangePercent() )
+                  WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                          , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                          , zc_Enum_DocumentTaxKind_ChangePercent() )
                        THEN 'Зміна ціни'
 
                   WHEN MovementBoolean_isCopy.ValueData = TRUE
@@ -1138,7 +1140,9 @@ BEGIN
 
              -- кол-во
            , CASE -- обычная корр или корр цены для сводной или акт предоставления скидки
-                  WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical(), zc_Enum_DocumentTaxKind_ChangePercent() )
+                  WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                              , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                              , zc_Enum_DocumentTaxKind_ChangePercent() )
                     OR vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
                                                  , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
                                                  , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
@@ -1149,10 +1153,14 @@ BEGIN
 
              -- цена
            , CASE -- обычная корр
-                  WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical(), zc_Enum_DocumentTaxKind_ChangePercent())
+                  WHEN tmpMovement_Data.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                              , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                              , zc_Enum_DocumentTaxKind_ChangePercent())
                   THEN tmpMI.Price / CASE WHEN tmpMI.CountForPrice > 0 THEN tmpMI.CountForPrice ELSE 1 END
                   -- корр цены для сводной
-                  WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical(), zc_Enum_DocumentTaxKind_ChangePercent())
+                  WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                          , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                          , zc_Enum_DocumentTaxKind_ChangePercent())
                    AND vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
                                                  , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
                                                  , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
@@ -1163,7 +1171,9 @@ BEGIN
 
              -- кол-во для корр цены - КРОМЕ сводной
            , CASE -- корр цены НЕ для сводной
-                  WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical(), zc_Enum_DocumentTaxKind_ChangePercent())
+                  WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                          , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                          , zc_Enum_DocumentTaxKind_ChangePercent())
                    AND vbDocumentTaxKindId_tax NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
                                                      , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
                                                      , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
@@ -1176,7 +1186,9 @@ BEGIN
 
              -- цена для корр цены - КРОМЕ сводной
            , CASE -- корр цены НЕ для сводной
-                  WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical(), zc_Enum_DocumentTaxKind_ChangePercent())
+                  WHEN tmpMovement_Data.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                          , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                          , zc_Enum_DocumentTaxKind_ChangePercent())
                    AND vbDocumentTaxKindId_tax NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
                                                      , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
                                                      , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
@@ -1346,7 +1358,8 @@ BEGIN
                                AND tmpData_all.AmountTax_calc <> tmpData_all.Amount
                                    THEN '102'  -- 2 --'Зміна кількості'
 
-                              WHEN tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                              WHEN tmpData_all.DocumentTaxKind NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                     , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                      , zc_Enum_DocumentTaxKind_Goods(), zc_Enum_DocumentTaxKind_Change()
                                                                      , zc_Enum_DocumentTaxKind_ChangePercent()
                                                                       )
@@ -1354,7 +1367,8 @@ BEGIN
                                    THEN '103'  --4 --'Повернення товару або авансових платежів'
 
                               WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
-                                                                 , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                                                 , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                 , zc_Enum_DocumentTaxKind_ChangePercent())
                                AND tmpData_all.AmountTax_calc = tmpData_all.Amount
                                    THEN (tmpData_all.KindCode :: Integer + case when vbUserId = 5 then 10 else 0 end) :: TVarChar
 
