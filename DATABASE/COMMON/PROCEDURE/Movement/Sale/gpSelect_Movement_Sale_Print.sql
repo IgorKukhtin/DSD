@@ -544,6 +544,8 @@ BEGIN
                                     , COALESCE (ObjectLink_BankAccountContract_InfoMoney.ChildObjectId, 0) AS InfoMoneyId
                                     , COALESCE (ObjectLink_BankAccountContract_Unit.ChildObjectId, 0)      AS UnitId
                                FROM ObjectLink AS ObjectLink_BankAccountContract_BankAccount
+                                    INNER JOIN Object AS Object_BankAccountContract ON Object_BankAccountContract.Id       = ObjectLink_BankAccountContract_BankAccount.ObjectId
+                                                                                   AND Object_BankAccountContract.isErased = FALSE
                                     LEFT JOIN ObjectLink AS ObjectLink_BankAccountContract_InfoMoney
                                                          ON ObjectLink_BankAccountContract_InfoMoney.ObjectId = ObjectLink_BankAccountContract_BankAccount.ObjectId
                                                         AND ObjectLink_BankAccountContract_InfoMoney.DescId = zc_ObjectLink_BankAccountContract_InfoMoney()

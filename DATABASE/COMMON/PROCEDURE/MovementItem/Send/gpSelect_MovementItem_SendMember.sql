@@ -245,6 +245,7 @@ BEGIN
                                  , MIDate_PartionGoods.ValueData                 AS PartionGoodsDate
                                  , MIFloat_CountPack.ValueData                   AS Count
                                  , MIFloat_HeadCount.ValueData                   AS HeadCount
+                                 , MIString_PartionGoods.ValueData               AS PartionGoods_mi
                                  , CASE WHEN ObjectLink_Goods.ChildObjectId <> 0 AND ObjectLink_Unit.ChildObjectId <> 0 AND Object_PartionGoods.ObjectCode > 0
                                              THEN zfCalc_PartionGoodsName_Asset (inMovementId      := Object_PartionGoods.ObjectCode          --
                                                                                , inInvNumber       := Object_PartionGoods.ValueData           -- Инвентарный номер
@@ -347,7 +348,9 @@ BEGIN
            , tmpMI_Goods.Count                  AS Count
            , tmpMI_Goods.HeadCount              AS HeadCount
            , COALESCE (tmpMIContainer.PartionGoodsId, Object_PartionGoods.Id ) AS PartionGoodsId
-           , COALESCE (tmpMIContainer.PartionGoods, tmpMI_Goods.PartionGoods)    :: TVarChar  AS PartionGoods
+           , CASE WHEN COALESCE (tmpMI_Goods.PartionGoodsId, 0) = 0 AND tmpMI_Goods.PartionGoods_mi <> '' THEN tmpMI_Goods.PartionGoods_mi
+                  ELSE COALESCE (tmpMIContainer.PartionGoods, Object_PartionGoods.ValueData)
+             END :: TVarChar  AS PartionGoods
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_GoodsKindComplete.Id        AS GoodsKindId_Complete

@@ -224,6 +224,7 @@ BEGIN
                                                                                                    ON gpSelect.PersonalId = tmpPersonal.PersonalId
                                                                                                   AND gpSelect.FineSubjectId = vbFineSubjectId
                                                                                                   AND gpSelect.UnitFineSubjectId = vbUnitFineSubjectId
+                                                                                                  AND COALESCE (gpSelect.Comment, '') = COALESCE (inComment, '')
       LIMIT 1;
 
 END;
