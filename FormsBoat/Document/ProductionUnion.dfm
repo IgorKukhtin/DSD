@@ -733,26 +733,13 @@ object ProductionUnionForm: TProductionUnionForm
               HeaderAlignmentVert = vaCenter
               Width = 149
             end
-            object Amount_ch4: TcxGridDBColumn
-              Caption = #1057#1091#1084#1084#1072' ('#1088#1072#1089#1095#1077#1090')'
-              DataBinding.FieldName = 'Amount'
-              PropertiesClassName = 'TcxCurrencyEditProperties'
-              Properties.DecimalPlaces = 4
-              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            object Hours_plan_ch4: TcxGridDBColumn
+              Caption = #1055#1083#1072#1085' '#1095#1072#1089#1086#1074
+              DataBinding.FieldName = 'Hours_plan'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 80
-            end
-            object OperPrice_ch4: TcxGridDBColumn
-              Caption = #1062#1077#1085#1072' '#1079#1072' '#1095'.'
-              DataBinding.FieldName = 'OperPrice'
-              PropertiesClassName = 'TcxCurrencyEditProperties'
-              Properties.DecimalPlaces = 4
-              Properties.DisplayFormat = ',0.####;-,0.####; ;'
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Width = 80
+              Width = 70
             end
             object Hours_ch4: TcxGridDBColumn
               Caption = #1060#1072#1082#1090' '#1095#1072#1089#1086#1074
@@ -764,13 +751,15 @@ object ProductionUnionForm: TProductionUnionForm
               HeaderAlignmentVert = vaCenter
               Width = 95
             end
-            object Hours_plan_ch4: TcxGridDBColumn
-              Caption = #1055#1083#1072#1085' '#1095#1072#1089#1086#1074
-              DataBinding.FieldName = 'Hours_plan'
+            object OperPrice_ch4: TcxGridDBColumn
+              Caption = #1062#1077#1085#1072' '#1079#1072' '#1095'.'
+              DataBinding.FieldName = 'OperPrice'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              Options.Editing = False
-              Width = 70
+              Width = 80
             end
             object Summ_ch4: TcxGridDBColumn
               Caption = #1057#1091#1084#1084#1072' '#1060#1072#1082#1090
@@ -782,10 +771,20 @@ object ProductionUnionForm: TProductionUnionForm
               HeaderAlignmentVert = vaCenter
               Width = 88
             end
+            object Amount_ch4: TcxGridDBColumn
+              Caption = #1057#1091#1084#1084#1072' ('#1088#1072#1089#1095#1077#1090')'
+              DataBinding.FieldName = 'Amount'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 80
+            end
             object Comment_ch4: TcxGridDBColumn
               Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
               DataBinding.FieldName = 'Comment'
-              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Width = 80
@@ -2486,7 +2485,7 @@ object ProductionUnionForm: TProductionUnionForm
           StoredProc = spUnErasedMIchild
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -2520,7 +2519,7 @@ object ProductionUnionForm: TProductionUnionForm
           StoredProc = spUnErasedMIMaster
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1059#1079#1077#1083'/'#1051#1086#1076#1082#1072'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -3103,7 +3102,7 @@ object ProductionUnionForm: TProductionUnionForm
           StoredProc = spUnErasedMIDetail
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -3270,7 +3269,7 @@ object ProductionUnionForm: TProductionUnionForm
           StoredProc = spUnErasedMIDetail_All
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -4005,8 +4004,8 @@ object ProductionUnionForm: TProductionUnionForm
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 478
-    Top = 274
+    Left = 494
+    Top = 250
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
