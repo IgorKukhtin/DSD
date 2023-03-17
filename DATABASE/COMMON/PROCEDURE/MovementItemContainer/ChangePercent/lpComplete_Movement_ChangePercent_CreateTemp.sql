@@ -12,10 +12,10 @@ BEGIN
 
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , AccountId_From Integer, AccountId_To Integer, ContainerId_From Integer, ContainerId_To Integer
+                               , ContainerId_ProfitLoss_10300 Integer, AccountId_To Integer, ContainerId_To Integer
                                , GoodsId Integer, GoodsKindId Integer
                                , OperCount TFloat, Price_original TFloat, OperSumm_Partner_noDiscount TFloat, OperSumm_Partner_Discount TFloat, OperSumm_Partner TFloat
-                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                 ) ON COMMIT DROP;
 
 END;$BODY$

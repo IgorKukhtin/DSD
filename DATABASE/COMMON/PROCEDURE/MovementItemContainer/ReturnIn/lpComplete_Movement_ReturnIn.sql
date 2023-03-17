@@ -948,6 +948,7 @@ BEGIN
                        )
         AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
         AND inUserId <> zc_Enum_Process_Auto_ReturnIn()
+        AND inMovementId <> 1156274 -- 201500380 - 08.03.2015
         -- AND inUserId <> 5
      THEN
          -- Проверка ошибки
@@ -2743,7 +2744,7 @@ end if;
                                  );
 
 -- !!! ВРЕМЕННО !!!
- IF inUserId = 5 and 1=1 THEN
+ IF inUserId = 5 and 1=0 THEN
     RAISE EXCEPTION 'Admin - Test = OK : %   %', vbOperSumm_Partner_ChangePercent_byItem, vbOperSumm_Partner_ChangePercent
       ;
 END IF;
