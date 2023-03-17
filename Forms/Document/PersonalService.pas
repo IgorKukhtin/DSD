@@ -294,6 +294,11 @@ type
     bbExportSub: TdxBarSubItem;
     actOpenReportRecalcForm: TdsdOpenForm;
     bbOpenReportRecalcForm: TdxBarButton;
+    spInsertUpdate_Avance: TdsdStoredProc;
+    ExecuteDialogPeriod: TExecuteDialog;
+    actInsertUpdate_Avance: TdsdExecStoredProc;
+    macInsertUpdate_AvanceAuto: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

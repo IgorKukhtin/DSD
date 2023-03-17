@@ -1,12 +1,11 @@
 -- Function: gpInsertUpdate_MI_PersonalService_Avance()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Avance (Integer, TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Avance (Integer, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_Avance(
     IN inMovementId       Integer   , -- Ключ объекта <Документ>
     IN inStartDate        TDateTime , --
     IN inEndDate          TDateTime , -- 
-    IN inShowAll          Boolean   , 
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -62,7 +61,14 @@ BEGIN
      CREATE TEMP TABLE tmpData ON COMMIT DROP AS 
 
          WITH
-         tmpMIAll AS (SELECT CASE WHEN MIObject_WorkTimeKind.ObjectId IN (zc_Enum_WorkTimeKind_WorkD()
+         --подразделения для которых нужно заполнять авнс
+         tmpUnit AS (SELECT ObjectBoolean.ObjectId AS UnitId
+                     FROM ObjectBoolean
+                     WHERE ObjectBoolean.DescId = zc_ObjectBoolean_Unit_Avance()
+                       AND ObjectBoolean.ValueData = TRUE
+                     )
+
+       , tmpMIAll AS (SELECT CASE WHEN MIObject_WorkTimeKind.ObjectId IN (zc_Enum_WorkTimeKind_WorkD()
                                                                         , zc_Enum_WorkTimeKind_WorkN()
                                                                         , zc_Enum_WorkTimeKind_Work()
                                                                         , zc_Enum_WorkTimeKind_Inventory())
@@ -70,7 +76,6 @@ BEGIN
 
                            , COALESCE(MI_SheetWorkTime.ObjectId, 0)        AS MemberId
                            , COALESCE(MIObject_Position.ObjectId, 0)       AS PositionId
-                           , COALESCE(MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
                            , MIObject_WorkTimeKind.ObjectId                AS WorkTimeKindId
                            , MovementLinkObject_Unit.ObjectId              AS UnitId
                       FROM tmpOperDate
@@ -80,7 +85,10 @@ BEGIN
                            JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                    ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                   AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                  AND MovementLinkObject_Unit.ObjectId IN (SELECT DISTINCT tmpUnit.UnitId FROM tmpUnit)
+
                            JOIN MovementItem AS MI_SheetWorkTime ON MI_SheetWorkTime.MovementId = Movement.Id
+                                                                AND MI_SheetWorkTime.DescId = zc_MI_Master()
                                                                 AND MI_SheetWorkTime.isErased = FALSE
                            LEFT JOIN MovementItemLinkObject AS MIObject_Position
                                                             ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id
@@ -109,8 +117,9 @@ BEGIN
                               , lfSelect.UnitId
                               , lfSelect.PositionId
                               , lfSelect.DateIn
-                              , lfSelect.DateIn
+                              , lfSelect.DateOut
                               , lfSelect.isMain
+                              , PersonalServiceListId
                          FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                          WHERE lfSelect.Ord = 1
                         )
@@ -133,7 +142,7 @@ BEGIN
                                                     AND MovementItem.DescId = zc_MI_Master()
                                                     AND MovementItem.isErased = FALSE
                              INNER JOIN MovementItemFloat AS MIFloat_SummAvanceRecalc
-                                                          ON MIFloat_SummAvanceRecalc.MovementItemId = tmpMI.MovementItemId
+                                                          ON MIFloat_SummAvanceRecalc.MovementItemId = MovementItem.Id
                                                          AND MIFloat_SummAvanceRecalc.DescId = zc_MIFloat_SummAvanceRecalc()
                                                          AND COALESCE (MIFloat_SummAvanceRecalc.ValueData,0) <> 0
                              LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
@@ -145,7 +154,6 @@ BEGIN
        SELECT tmpMIAll.MemberId
             , tmpPersonal.PersonalId
             , tmpMIAll.PositionId
-            , tmpMIAll.PositionLevelId
             , tmpMIAll.UnitId
             , tmpPersonal.PersonalServiceListId
             , tmpPersonal.isMain
@@ -166,10 +174,9 @@ BEGIN
        WHERE tmpSkip.MemberId IS NULL                                                    -- если в этом периоде в табеле есть хоть один прогул  
          AND tmpMI_Avance.MemberId IS NULL                                               -- исключить сотрудников, у которых найдены ведомости с заполненным св-вом zc_MIFloat_SummCardRecalc
          AND COALESCE (ObjectBoolean_AvanceNot.ValueData,FALSE) = FALSE                  -- исключить сотрудников, у которых основная ведомость начисления - zc_ObjectBoolean_PersonalServiceList_AvanceNot
-         AND (tmpPersonal.DateOut >= inStartDate AND tmpPersonal.DateOut <= inEndDate)   -- если в этом периоде сотрудн уволен, т.е. проверка zc_ObjectDate_Personal_Out
+         AND ( tmpPersonal.DateOut >=(DATE_TRUNC ('MONTH', inEndDate ::TDatetime) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'))    --исключить если в этом периоде сотрудн уволен , т.е. проверка zc_ObjectDate_Personal_Out   , те.е дата увольнения вне периода  
        GROUP BY tmpMIAll.MemberId
               , tmpMIAll.PositionId
-              , tmpMIAll.PositionLevelId
               , tmpPersonal.PersonalId
               , tmpMIAll.UnitId
               , tmpPersonal.PersonalServiceListId 
@@ -209,7 +216,7 @@ BEGIN
                                                         , inSummAvanceRecalc      := vbSummAvance                                           ::TFloat
                                                         , inNumber                := COALESCE (tmpMI.Number,'')                             ::TVarChar
                                                         , inComment               := COALESCE (tmpMI.Comment, '')                           ::TVarChar
-                                                        , inInfoMoneyId           := COALESCE (tmpMI.InfoMoney, zc_Enum_InfoMoney_60101())  ::Integer
+                                                        , inInfoMoneyId           := COALESCE (tmpMI.InfoMoneyId, zc_Enum_InfoMoney_60101())  ::Integer
                                                         , inUnitId                := COALESCE (tmpData.UnitId, tmpMI.UnitId)         ::Integer
                                                         , inPositionId            := COALESCE (tmpData.PositionId, tmpMI.PositionId) ::Integer
                                                         , inMemberId              := 0                                                      ::Integer    --COALESCE (tmpMemberMinus.MemberId, tmpMI.MemberId) 
@@ -222,12 +229,17 @@ BEGIN
           LEFT JOIN tmpMI ON tmpMI.PersonalId = tmpData.PersonalId
                          AND tmpMI.MemberId = tmpData.MemberId
                          AND tmpMI.PositionId = tmpData.PositionId
-                         AND tmpMI.PositionLevelId = tmpData.PositionLevelId
                          AND tmpMI.UnitId = tmpData.UnitId
      WHERE tmpData.SumAmount >= vbHourAvance
        AND COALESCE (tmpMI.SummAvanceRecalc,0) = 0     
      ;
      
+     if (vbUserId = 5 OR vbUserId = 9457) AND 1=1
+then
+    RAISE EXCEPTION 'Admin - Errr _end - <%>', (SELECT COUNT(*) FROM tmpData WHERE tmpData.SumAmount >= vbHourAvance);
+    -- 'Повторите действие через 3 мин.'
+end if;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
