@@ -42,6 +42,11 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sum_ChangePercent
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -68,6 +73,11 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = colName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sum_ChangePercent
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -139,7 +149,17 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colPrice: TcxGridDBColumn [6]
+          object colAmountSumm: TcxGridDBColumn [6]
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'AmountSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colPrice: TcxGridDBColumn [7]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -149,7 +169,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colCountForPrice: TcxGridDBColumn [7]
+          object colCountForPrice: TcxGridDBColumn [8]
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
@@ -157,10 +177,22 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colAmountSumm: TcxGridDBColumn [8]
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'AmountSumm'
+          object Price_ChangePercent: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            DataBinding.FieldName = 'Price_ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_ChangePercent: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            DataBinding.FieldName = 'Sum_ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

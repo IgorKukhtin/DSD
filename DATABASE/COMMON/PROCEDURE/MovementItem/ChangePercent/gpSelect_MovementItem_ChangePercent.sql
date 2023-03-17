@@ -18,10 +18,21 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
+  DECLARE vbUserId Integer; 
+  DECLARE vbChangePercent TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+
+-- параметры из документа
+     SELECT MovementFloat_ChangePercent.ValueData      AS ChangePercent 
+   INTO vbChangePercent
+     FROM Movement 
+         LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                 ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+     WHERE Movement.Id = inMovementId;
 
      RETURN QUERY
 
@@ -44,12 +55,13 @@ BEGIN
                         ELSE CAST  (MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)		AS AmountSumm
            
-           , CAST ( (MIFloat_Price.ValueData * vbChangePercent / 100) AS NUMERIC (16, 2)) ::TFloat AS Price_ChangePercent
+           , CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2)) ::TFloat AS Price_ChangePercent
            , CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                  THEN CAST (MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                               ELSE CAST ( MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                                  THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,3))
+                               ELSE MovementItem.Amount
                           END AS TFloat)
-                    * vbChangePercent / 100  AS NUMERIC (16, 2))                          ::TFloat AS Sum_ChangePercent
+                    * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
+                  AS NUMERIC (16, 2))                          ::TFloat AS Sum_ChangePercent
            
            , MovementItem.isErased              AS isErased
 
