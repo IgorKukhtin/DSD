@@ -11,7 +11,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ChangePercent(
 RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, Price TFloat, CountForPrice TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
-             , AmountSumm TFloat
+             , AmountSumm TFloat 
+             , Price_ChangePercent TFloat
+             , Sum_ChangePercent TFloat
              , isErased Boolean
              )
 AS
@@ -38,10 +40,17 @@ BEGIN
            , Object_Measure.ValueData           AS MeasureName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                           THEN CAST ( MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                        ELSE CAST ( MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                           THEN CAST (MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                        ELSE CAST  (MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)		AS AmountSumm
-
+           
+           , CAST ( (MIFloat_Price.ValueData * vbChangePercent / 100) AS NUMERIC (16, 2)) ::TFloat AS Price_ChangePercent
+           , CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                                  THEN CAST (MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                               ELSE CAST ( MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                          END AS TFloat)
+                    * vbChangePercent / 100  AS NUMERIC (16, 2))                          ::TFloat AS Sum_ChangePercent
+           
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
