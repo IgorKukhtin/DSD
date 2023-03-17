@@ -429,13 +429,13 @@ BEGIN
                             -- OperPrice
                           , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                       -- в "налоговом документе" всегда будут без НДС
-                                      THEN CAST (COALESCE (MIFloat_Price.ValueData, 0) * (1-vbDiscountPercent / 100)
+                                      THEN CAST (COALESCE (MIFloat_Price.ValueData, 0) * (vbDiscountPercent / 100)
                                                  * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
                                                              THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
                                                         ELSE 1
                                                    END
                                                / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
-                                 ELSE COALESCE (MIFloat_Price.ValueData, 0) * (1-vbDiscountPercent / 100)
+                                 ELSE COALESCE (MIFloat_Price.ValueData, 0) * (vbDiscountPercent / 100)
                                        * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
                                                    THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
                                               ELSE 1
@@ -471,13 +471,13 @@ BEGIN
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                           , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                       -- в "налоговом документе" всегда будут без НДС
-                                      THEN CAST (COALESCE (MIFloat_Price.ValueData, 0) * (1-vbDiscountPercent / 100)
+                                      THEN CAST (COALESCE (MIFloat_Price.ValueData, 0) * (vbDiscountPercent / 100)
                                                  * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
                                                              THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
                                                         ELSE 1
                                                    END
                                                / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
-                                 ELSE COALESCE (MIFloat_Price.ValueData, 0) * (1-vbDiscountPercent / 100)
+                                 ELSE COALESCE (MIFloat_Price.ValueData, 0) * (vbDiscountPercent / 100)
                                        * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
                                                    THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
                                               ELSE 1
@@ -512,12 +512,12 @@ BEGIN
                   , tmpMI.GoodsId
                   , tmpMI.GoodsKindId
                   , tmpMI.Amount
-                  , tmpMI.OperPrice
+                  , CAST (tmpMI.OperPrice AS NUMERIC (16,2)) AS OperPrice
                   , tmpMI.OperPrice_original
                   , tmpMI.CountForPrice
              FROM tmpMI
                   LEFT JOIN tmpMovement_Corrective ON tmpMovement_Corrective.MovementId_Tax = tmpMI.MovementId_Tax
-             -- WHERE tmpMI.MovementId_Tax > 0
+             WHERE tmpMI.MovementId_Tax > 0
              ;
           
           ELSE          
@@ -1223,7 +1223,7 @@ BEGIN
      FROM Object AS Object_TaxKind
      WHERE Object_TaxKind.Id = inDocumentTaxKindId;
 
-if (vbUserId = 5 OR vbUserId = 9457) AND 1=1
+if (vbUserId = 5 /*OR vbUserId = 9457*/) AND 1=1
 then
     RAISE EXCEPTION 'Admin - Errr _end - <%>  <%>'
                   , (SELECT COUNT(*) FROM _tmpResult)
