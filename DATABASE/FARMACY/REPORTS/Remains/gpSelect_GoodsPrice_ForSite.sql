@@ -214,8 +214,8 @@ BEGIN
                               AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
                               AND ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE
 
-         INNER JOIN Object_Goods_Retail AS RetailAll ON RetailAll.Id  = Container.ObjectId  
-         INNER JOIN Object_Goods_Main AS RetailMain ON RetailMain.Id  = RetailAll.GoodsMainId
+         LEFT JOIN Object_Goods_Retail AS RetailAll ON RetailAll.Id  = Container.ObjectId  
+         LEFT JOIN Object_Goods_Main AS RetailMain ON RetailMain.Id  = RetailAll.GoodsMainId
                                            
     WHERE Container.DescId = zc_Container_CountPartionDate()
       AND Container.Amount <> 0
@@ -226,7 +226,7 @@ BEGIN
                               
     ANALYSE tmpContainerRemainsPD;
 
---raise notice 'Value 5: %', CLOCK_TIMESTAMP();
+--raise notice 'Value 5: % %', CLOCK_TIMESTAMP(), vbDate_6;
                                      
     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpContainerRemains'))
     THEN
@@ -552,7 +552,7 @@ BEGIN
                                     INNER JOIN ObjectDate AS ObjectDate_ExpirationDate
                                                           ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId  
                                                          AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
-                                                         AND ObjectDate_ExpirationDate.ValueData < vbDate_6
+                                                         AND ObjectDate_ExpirationDate.ValueData <= vbDate_6
 
                                     LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
                                                             ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = ContainerLinkObject.ObjectId  
@@ -795,4 +795,4 @@ $BODY$
             from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Бустрикс вак', true, zfCalc_UserSite())*/
             
             
-select * from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'гепа', True, zfCalc_UserSite())
+select * from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Фемибион', True, zfCalc_UserSite())

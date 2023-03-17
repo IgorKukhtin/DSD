@@ -279,6 +279,14 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
             Options.Editing = False
             Width = 80
           end
+          object isClosed: TcxGridDBColumn
+            Caption = #1047#1072#1082#1088#1099#1090#1086
+            DataBinding.FieldName = 'isClosed'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 59
+          end
           object ActNumber: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088' '#1072#1082#1090#1072
             DataBinding.FieldName = 'ActNumber'
@@ -607,6 +615,31 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
       isShowModal = True
       OpenBeforeShow = True
     end
+    object mactUpdate_Closed: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_Closed
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1047#1072#1082#1088#1099#1090#1086'" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084'?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1047#1072#1082#1088#1099#1090#1086'" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1047#1072#1082#1088#1099#1090#1086'" '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 79
+    end
+    object actUpdate_Closed: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Closed
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Closed
+        end>
+      Caption = 'actUpdate_Closed'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -711,6 +744,18 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
         item
           Visible = True
           ItemName = 'bbUpdateActNumberAndAmount'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Closed'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbOpenDocument: TdxBarButton
@@ -734,6 +779,10 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
     end
     object bbUpdateActNumberAndAmount: TdxBarButton
       Action = mactUpdateActNumberAndAmountFilter
+      Category = 0
+    end
+    object bbUpdate_Closed: TdxBarButton
+      Action = mactUpdate_Closed
       Category = 0
     end
   end
@@ -1036,6 +1085,32 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
       end>
     PackSize = 1
     Left = 738
+    Top = 208
+  end
+  object spUpdate_Closed: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_Closed'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisClosed'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isClosed'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 914
     Top = 208
   end
 end

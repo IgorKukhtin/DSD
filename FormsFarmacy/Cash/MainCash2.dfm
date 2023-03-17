@@ -7768,6 +7768,12 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end
       item
+        Name = 'HelsiDenUnit'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'HelsiQty'
         Value = Null
         DataType = ftFloat
@@ -20748,7 +20754,6 @@ inherited MainCashForm2: TMainCashForm2
     SQLList = <
       item
         SQL.Strings = (
-          ''
           'WITH tmpCashSessionSnapShot(Id, Price) AS '
           '   (SELECT DISTINCT Remains.Id'
           '         , Remains.Price'
@@ -20901,7 +20906,12 @@ inherited MainCashForm2: TMainCashForm2
             ' CashSessionSnapShot.Id = gas.GoodsId '
           'WHERE (:inIdSPList = '#39#39' OR :inIdSPList LIKE '#39'%'#39'||gas.IdSP||'#39'%'#39')'
           '  AND gas.MedicalProgramSPID = :inProgramSPID'
-          ' AND (gas.CountSPMin <= :inQty OR :inQty = 0)')
+          '  AND gas.CountSPMin <= :inQty'
+          '  AND (gas.CountSPMin < gas.CountSP'
+          
+            '   OR (:inQty % gas.CountSP = 0) AND gas.CountSPMin = gas.CountS' +
+            'P'
+          '   OR COALESCE (gas.PriceRetSP, 0) = 0)')
       end>
     Left = 608
     Top = 236

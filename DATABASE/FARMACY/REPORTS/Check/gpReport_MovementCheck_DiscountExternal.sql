@@ -30,6 +30,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Statu
              , PriceWithVAT TFloat
              , ActNumber TVarChar
              , AmountAct TFloat
+             , isClosed boolean
               )
 AS
 $BODY$
@@ -99,6 +100,7 @@ BEGIN
            , MIFloat_PriceWithVAT.ValueData             AS PriceWithVAT
            , MovementString_ActNumber.ValueData         AS ActNumber
            , MovementFloat_AmountAct.ValueData          AS AmountAct
+           , COALESCE (MovementBoolean_Closed.ValueData, False) AS isClosed
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -162,7 +164,10 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_AmountAct
                                      ON MovementFloat_AmountAct.MovementId = Movement_Check.Id
                                     AND MovementFloat_AmountAct.DescId = zc_MovementFloat_AmountAct()
-                                   
+
+             LEFT JOIN MovementBoolean AS MovementBoolean_Closed
+                                       ON MovementBoolean_Closed.MovementId = Movement_Check.Id
+                                      AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()                                   
 
    	         LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
                                           ON MovementLinkObject_PaidType.MovementId = Movement_Check.Id
@@ -215,4 +220,3 @@ $BODY$
 */
 
 select * from gpReport_MovementCheck_DiscountExternal(inStartDate := ('25.06.2021')::TDateTime , inEndDate := ('19.07.2021')::TDateTime , inUnitId := 0 , inDiscountExternalId := 0 ,  inSession := '3');
-

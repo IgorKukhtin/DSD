@@ -257,6 +257,11 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
               Format = '0; ;'
               Kind = skSum
               Column = QuantityMobile
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = CountShortage
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False

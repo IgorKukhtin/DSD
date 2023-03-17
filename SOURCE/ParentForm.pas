@@ -825,6 +825,7 @@ initialization
   RegisterClass (TdsdLoadFile_https);
   RegisterClass (TdsdeSputnikContactsMessages);
   RegisterClass (TdsdeSputnikSendSMS);
+  RegisterClass (TdsdVchasnoEDIAction);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

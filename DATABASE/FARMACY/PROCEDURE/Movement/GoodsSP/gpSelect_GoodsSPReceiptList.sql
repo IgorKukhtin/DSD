@@ -108,7 +108,8 @@ BEGIN
                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                          )
 
-    SELECT _tmpMedication_ID.MedicationID
+    SELECT DISTINCT
+           _tmpMedication_ID.MedicationID
          , Object_Goods.Id
          , Object_Goods.ObjectCode
          , Object_Goods.ValueData
@@ -131,4 +132,5 @@ $BODY$
 
 -- тест
 
-select * from gpSelect_GoodsSPReceiptList(inMedicalProgramSPId := 18078175 , inMedication_ID_List := 'ef86ee48-df22-4fa2-9476-416441978aeb,fc10d4d2-4de8-4b9f-a05a-01c84ebe7f1d', inSession := '3');
+
+select * from gpSelect_GoodsSPReceiptList(inMedicalProgramSPId := 18078194 , inMedication_ID_List := '6aff2491-9052-40e2-9412-c1b57156efcc,6aff2491-9052-40e2-9412-c1b57156efcc' ,  inSession := '3');
