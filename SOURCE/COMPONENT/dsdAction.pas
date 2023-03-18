@@ -9,7 +9,7 @@ uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj, Clipb
   cxGridDBTableView, frxClass, frxExportPDF, frxExportXLS, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon,
   System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI, IdAuthentication, {IdMultipartFormData,}
-  Winapi.ActiveX, ZConnection, ZDataset, dxBar, DateUtils, IdSSLOpenSSLHeaders, IdGlobalProtocols
+  Winapi.ActiveX, ZConnection, ZDataset, dxBar, DateUtils
   {$IFDEF DELPHI103RIO}, System.JSON, Actions {$ELSE} , Data.DBXJSON {$ENDIF}, Vcl.Graphics;
 
 type
@@ -1814,81 +1814,20 @@ type
     property InfoAfterExecute;
   end;
 
-  TVchasnoEDIType = (vediJsonToResult, vediJsonToDataSet, vediAttachToResult, vediAttachToFile);
-
-  TdsdVchasnoEDIAction = class(TdsdCustomAction)
-  private
-
-    FHostParam: TdsdParam;
-    FTokenParam: TdsdParam;
-    FDocTypeParam: TdsdParam;
-    FOrderParam: TdsdParam;
-    FDateFromParam: TdsdParam;
-    FDateToParam: TdsdParam;
-    FDefaultFilePathParam: TdsdParam;
-    FDefaultFileNameParam: TdsdParam;
-
-    FResultParam: TdsdParam;
-    FFileNameParam: TdsdParam;
-
-    FPairParams: TOwnedCollection;
-    FDataSet: TClientDataSet;
-
-    FVchasnoEDIType: TVchasnoEDIType;
-
-  protected
-    function LocalExecute: Boolean; override;
-  public
-    constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
-  published
-    property Caption;
-    property Hint;
-    property ShortCut;
-    property ImageIndex;
-    property SecondaryShortCuts;
-    property QuestionBeforeExecute;
-    property InfoAfterExecute;
-    property Host: TdsdParam read FHostParam write FHostParam;
-    property Token: TdsdParam read FTokenParam write FTokenParam;
-    property DocType: TdsdParam read FDocTypeParam write FDocTypeParam;
-    property Order: TdsdParam read FOrderParam write FOrderParam;
-    property DateFrom: TdsdParam read FDateFromParam write FDateFromParam;
-    property DateTo: TdsdParam read FDateToParam write FDateToParam;
-    property DefaultFilePath: TdsdParam read FDefaultFilePathParam write FDefaultFilePathParam;
-    property DefaultFileName: TdsdParam read FDefaultFileNameParam write FDefaultFileNameParam;
-
-    property Result: TdsdParam read FResultParam write FResultParam;
-    property FileName: TdsdParam read FFileNameParam write FFileNameParam;
-    // Содержимое массива Json для формирования DataSet
-    property PairParams: TOwnedCollection read FPairParams write FPairParams;
-    property DataSet: TClientDataSet read FDataSet write FDataSet;
-    property VchasnoEDIType: TVchasnoEDIType read FVchasnoEDIType write FVchasnoEDIType default vediJsonToResult;
-  end;
-
 procedure Register;
 
 implementation
 
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
-  Menus, cxGridExportLink, ShellApi, IdCTypes, System.RegularExpressions,
+  Menus, cxGridExportLink, ShellApi,
   frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
   cxExportPivotGridLink, cxCustomPivotGrid, StrUtils, Variants,
-  frxDBSet, Printers, cxDBData, ZLib,
+  frxDBSet, Printers, cxDBData,
   cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave,
   dxmdaset, dxCore, cxCustomData, cxGridLevel, cxImage, UnilWin, dsdAddOn,
   dsdExportToXLSAction, dsdExportToXMLAction, PUSHMessage, Xml.XMLDoc, XMLIntf;
 
 var XML: IXMLDocument;
-
-type
-  TCustomIdHTTP = class(TIdHTTP)
-  public
-    constructor Create(AOwner: TComponent);
-    destructor Destroy; override;
-  private
-    procedure OnStatusInfoEx(ASender: TObject; const AsslSocket: PSSL; const AWhere, Aret: TIdC_INT; const AType, AMsg: String);
-  end;
 
 procedure Register;
 begin
@@ -1950,7 +1889,6 @@ begin
   RegisterActions('DSDLib', [TdsdLoadFile_https], TdsdLoadFile_https);
   RegisterActions('DSDLib', [TdsdeSputnikContactsMessages], TdsdeSputnikContactsMessages);
   RegisterActions('DSDLib', [TdsdeSputnikSendSMS], TdsdeSputnikSendSMS);
-  RegisterActions('DSDLib', [TdsdVchasnoEDIAction], TdsdVchasnoEDIAction);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -2002,31 +1940,6 @@ begin
     end;
     Inc(i, 3);
   end;
-end;
-
-{ TCustomIdHTTP }
-
-constructor TCustomIdHTTP.Create(AOwner: TComponent);
-begin
-  inherited Create(AOwner);
-  IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
-  with IOHandler as TIdSSLIOHandlerSocketOpenSSL do begin
-    OnStatusInfoEx := Self.OnStatusInfoEx;
-    SSLOptions.Method := sslvSSLv23;
-    SSLOptions.SSLVersions := [sslvSSLv2, sslvSSLv23, sslvSSLv3, sslvTLSv1];
-  end;
-end;
-
-destructor TCustomIdHTTP.Destroy;
-begin
-  IOHandler.Free;
-  inherited Destroy;
-end;
-
-procedure TCustomIdHTTP.OnStatusInfoEx(ASender: TObject; const AsslSocket: PSSL; const AWhere, Aret: TIdC_INT;
-  const AType, AMsg: String);
-begin
-  SSL_set_tlsext_host_name(AsslSocket, Request.Host);
 end;
 
 { TdsdCustomDataSetAction }
@@ -8780,281 +8693,6 @@ begin
     if not Result then ShowMessage('Ошибка отправки СМС сообщений для контакта: ' + jsonItem.ToString);
   end else ShowMessage('Ошибка отправки СМС сообщений для контакта: ' + FIdHTTP.ResponseText);
 
-end;
-
-  {TdsdVchasnoEDIAction}
-
-constructor TdsdVchasnoEDIAction.Create(AOwner: TComponent);
-begin
-  inherited;
-
-  FPairParams := TOwnedCollection.Create(Self, TdsdPairParamsItem);
-
-  FHostParam := TdsdParam.Create;
-  FHostParam.DataType := ftString;
-  FHostParam.Value := '';
-
-  FTokenParam := TdsdParam.Create(nil);
-  FTokenParam.DataType := ftString;
-  FTokenParam.Value := '';
-
-  FDocTypeParam := TdsdParam.Create(nil);
-  FDocTypeParam.DataType := ftString;
-  FDocTypeParam.Value := '';
-
-  FOrderParam := TdsdParam.Create(nil);
-  FOrderParam.DataType := ftString;
-  FOrderParam.Value := '';
-
-  FDateFromParam := TdsdParam.Create(nil);
-  FDateFromParam.DataType := ftDateTime;
-  FDateFromParam.Value := Null;
-
-  FDateToParam := TdsdParam.Create(nil);
-  FDateToParam.DataType := ftDateTime;
-  FDateToParam.Value := Null;;
-
-  FDefaultFilePathParam := TdsdParam.Create(nil);
-  FDefaultFilePathParam.DataType := ftString;
-  FDefaultFilePathParam.Value := '';
-
-  FDefaultFileNameParam := TdsdParam.Create(nil);
-  FDefaultFileNameParam.DataType := ftString;
-  FDefaultFileNameParam.Value := '';
-
-
-  FResultParam := TdsdParam.Create(nil);
-  FResultParam.DataType := ftWideString;
-  FResultParam.Value := '';
-
-  FFileNameParam := TdsdParam.Create(nil);
-  FFileNameParam.DataType := ftString;
-  FFileNameParam.Value := '';
-
-  VchasnoEDIType := vediJsonToResult;
-end;
-
-destructor TdsdVchasnoEDIAction.Destroy;
-begin
-  FreeAndNil(FDefaultFilePathParam);
-  FreeAndNil(FDefaultFileNameParam);
-  FreeAndNil(FFileNameParam);
-  FreeAndNil(FHostParam);
-  FreeAndNil(FTokenParam);
-  FreeAndNil(FOrderParam);
-  FreeAndNil(FDateFromParam);
-  FreeAndNil(FDateToParam);
-  FreeAndNil(FDocTypeParam);
-  FreeAndNil(FResultParam);
-  FreeAndNil(FPairParams);
-  inherited;
-end;
-
-function TdsdVchasnoEDIAction.LocalExecute: Boolean;
-  var IdHTTP: TCustomIdHTTP;
-      i,j : Integer;
-      Params: String;
-      Stream: TMemoryStream; StringStream: TStringStream;
-      ZDC : TZDecompressionStream;
-      cFilePath, cFileName : String;
-      strTempFile : array[0..MAX_PATH-1] of char;
-      Res: TArray<string>;
-      JsonArray: TJSONArray;
-      jsonItem : TJSONObject;
-begin
-  inherited;
-  Result := False;
-
-  if (FTokenParam.Value = '') or
-     (FHostParam.Value = '') then
-  begin
-    ShowMessage('Не заполнены Host или Токен.');
-    Exit;
-  end;
-
-  if (VchasnoEDIType = vediJsonToDataSet) then
-  begin
-    if not Assigned(FDataSet) then
-    begin
-      ShowMessage('Не указан DataSet.');
-      Exit;
-    end;
-
-    if FPairParams.Count = 0 then
-    begin
-      ShowMessage('Не определены данные в PairParams для формирования DataSet.');
-      Exit;
-    end;
-  end;
-
-  // Непосредственно отправка
-
-  IdHTTP := TCustomIdHTTP.Create(Nil);
-  try
-    IdHTTP.Request.Clear;
-    IdHTTP.Request.ContentType := 'application/json';
-    IdHTTP.Request.ContentEncoding := 'UTF-8';
-    IdHTTP.Request.Accept := '*/*';
-    IdHTTP.Request.AcceptEncoding := 'gzip, deflate';
-    IdHTTP.Request.Connection := 'keep-alive';
-    IdHTTP.Request.CustomHeaders.FoldLines := False;
-    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
-    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
-
-    Params := '';
-    if VchasnoEDIType in [vediAttachToResult, vediAttachToFile] then
-    begin
-      Params := '/' + FOrderParam.Value + '/original';
-    end else
-    begin
-      Params := 'type=' + FDocTypeParam.Value;
-
-      if (FDateFromParam.Value <> Null) and (FDateFromParam.Value <> Null) then
-        Params := Params + '&date_from=' + FormatDateTime('YYYY-MM-DD', StrToDateTime(FDateFromParam.Value));
-
-      if (FDateToParam.Value <> Null) and (FDateToParam.Value <> Null) then
-        Params := Params + '&date_to=' + FormatDateTime('YYYY-MM-DD', StrToDateTime(FDateToParam.Value));
-
-
-      if Params <> '' then Params := '?' + Params;
-    end;
-
-    Stream := TMemoryStream.Create;
-    StringStream:= TStringStream.Create('', TEncoding.UTF8);
-    try
-      try
-        IdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + Params), Stream);
-      except on E:EIdHTTPProtocolException  do ShowMessage(e.ErrorMessage);
-      end;
-
-      if IdHTTP.ResponseCode = 200 then
-      begin
-
-        // разархевируем полученный результат если надо
-        if IdHTTP.Response.ContentEncoding = 'gzip' then
-        begin
-          Stream.Position := 0;
-          ZDC := TZDecompressionStream.Create(Stream, 15 + 16);
-          try
-            StringStream.CopyFrom(ZDC, 0);
-          finally
-            ZDC.Free;
-          end;
-        end else
-        begin
-          Stream.Position := 0;
-          StringStream.CopyFrom(Stream, 0);
-        end;
-
-        if VchasnoEDIType = vediAttachToFile then
-        begin
-
-           cFilePath := '';
-           cFileName := '';
-
-           // если задано сразу имя файла
-           if FFileNameParam.Value <> '' then
-           begin
-             if ExpandFileName(ExtractFilePath(FFileNameParam.Value)) <> '' then
-             begin
-               if not DirectoryExists(ExpandFileName(ExtractFilePath(FFileNameParam.Value))) then
-                 ForceDirectories(ExpandFileName(ExtractFilePath(FFileNameParam.Value)));
-               if DirectoryExists(ExpandFileName(ExtractFilePath(FFileNameParam.Value))) then
-                 cFilePath := ExpandFileName(ExtractFilePath(FFileNameParam.Value))
-             end;
-
-             if TPath.GetFileName(FFileNameParam.Value) <> '' then
-               cFileName := TPath.GetFileName(FFileNameParam.Value);
-           end;
-
-           // проверяем путь файла
-           if cFilePath = '' then
-           begin
-             if ExpandFileName(FDefaultFilePathParam.Value) <> '' then
-             begin
-               if not DirectoryExists(ExpandFileName(FDefaultFilePathParam.Value)) then
-                 ForceDirectories(ExpandFileName(FDefaultFilePathParam.Value));
-               if DirectoryExists(ExpandFileName(FDefaultFilePathParam.Value)) then
-                 cFilePath := ExpandFileName(FDefaultFilePathParam.Value)
-               else cFilePath := ExtractFilePath(ParamStr(0));
-             end else cFilePath := ExtractFilePath(ParamStr(0));
-           end;
-
-           // проверяем имя файла
-           if cFileName = '' then
-           begin
-             if TPath.GetFileName(FDefaultFileNameParam.Value) = '' then
-             begin
-               if Pos('filename', IdHTTP.Response.ContentDisposition) > 0 then
-               begin
-                 Res := TRegEx.Split(IdHTTP.Response.ContentDisposition, '"');
-                 if (High(Res) > 1) and (TPath.GetFileName(Res[1]) <> '') then
-                   cFileName := TPath.GetFileName(Res[1])
-               end;
-
-               if cFileName = '' then
-               begin
-                 GetTempFileName(PChar(cFilePath), '', 0, strTempFile);
-                 cFileName := String(strTempFile) + '_original.xml';
-               end;
-             end else cFileName := FDefaultFileNameParam.Value;
-           end;
-           FFileNameParam.Value := TPath.Combine(cFilePath, cFileName);
-
-           // сохраним файл
-           StringStream.SaveToFile(FFileNameParam.Value);
-           Result := True;
-        end else if VchasnoEDIType = vediJsonToDataSet then
-        begin
-          FDataSet.Close;
-          FDataSet.FieldDefs.Clear;
-
-          for i := 0 to FPairParams.Count - 1 do
-          begin
-            case TdsdPairParamsItem(FPairParams.Items[i]).DataType of
-              ftBoolean : FDataSet.FieldDefs.Add(TdsdPairParamsItem(FPairParams.Items[i]).FieldName, ftBoolean);
-              ftInteger : FDataSet.FieldDefs.Add(TdsdPairParamsItem(FPairParams.Items[i]).FieldName, ftInteger);
-              ftFloat : FDataSet.FieldDefs.Add(TdsdPairParamsItem(FPairParams.Items[i]).FieldName, ftFloat);
-              ftWideString : FDataSet.FieldDefs.Add(TdsdPairParamsItem(FPairParams.Items[i]).FieldName, ftWideString);
-              ftDateTime : FDataSet.FieldDefs.Add(TdsdPairParamsItem(FPairParams.Items[i]).FieldName, ftDateTime);
-            else FDataSet.FieldDefs.Add(TdsdPairParamsItem(FPairParams.Items[i]).FieldName, ftString, 255);
-            end;
-          end;
-
-          FDataSet.CreateDataSet;
-
-          jsonArray := TJSONObject.ParseJSONValue(StringStream.DataString) as TJSONArray;
-
-          for J := 0 to jsonArray.Size - 1 do
-          begin
-            jsonItem := TJSONObject(jsonArray.Get(J));
-            FDataSet.Append;
-            for i := 0 to FPairParams.Count - 1 do
-              if jsonItem.Get(LowerCase(TdsdPairParamsItem(FPairParams.Items[i]).PairName)) <> Nil then
-            begin
-              case TdsdPairParamsItem(FPairParams.Items[i]).DataType of
-                ftDateTime : FDataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[i]).FieldName).Value :=
-                               gfXSStrToDate(jsonItem.Get(TdsdPairParamsItem(FPairParams.Items[i]).FieldName).JsonValue.Value);
-              else FDataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[i]).FieldName).Value :=
-                     jsonItem.Get(LowerCase(TdsdPairParamsItem(FPairParams.Items[i]).PairName)).JsonValue.Value;
-              end;
-            end;
-            FDataSet.Post;
-          end;
-
-        end else
-        begin
-          FResultParam.Value := StringStream.DataString;
-          Result := True;
-        end;
-      end;
-    finally
-      Stream.Free;
-      StringStream.Free
-    end;
-  finally
-    IdHTTP.Free;
-  end;
 end;
 
 initialization

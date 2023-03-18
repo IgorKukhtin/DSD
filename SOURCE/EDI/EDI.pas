@@ -5,7 +5,7 @@ unit EDI;
 interface
 
 uses DBClient, Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML, UtilConst
-     {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
+     {$IFDEF DELPHI103RIO}, System.JSON, Actions {$ELSE} , Data.DBXJSON {$ENDIF};
 
 type
 
@@ -100,6 +100,8 @@ type
     procedure ReturnSave(MovementDataSet: TDataSet;
       spFileInfo, spFileBlob: TdsdStoredProc; Directory: string; DebugMode: boolean);
     procedure ErrorLoad(Directory: string);
+    // заказ
+    procedure OrderLoadString(AOrder, AFileName : string; spHeader, spList: TdsdStoredProc);
   published
     property ConnectionParams: TConnectionParams read FConnectionParams
       write FConnectionParams;
@@ -136,6 +138,72 @@ type
     property Directory: string read FDirectory write FDirectory;
   end;
 
+  TVchasnoEDIType = (vediLoadDoc);
+
+  TdsdVchasnoEDIAction = class(TdsdCustomAction)
+  private
+
+    FHostParam: TdsdParam;
+    FTokenParam: TdsdParam;
+    FDocTypeParam: TdsdParam;
+    FDocStatusParam: TdsdParam;
+    FOrderParam: TdsdParam;
+    FDateFromParam: TdsdParam;
+    FDateToParam: TdsdParam;
+    FDefaultFilePathParam: TdsdParam;
+    FDefaultFileNameParam: TdsdParam;
+
+    FResultParam: TdsdParam;
+    FFileNameParam: TdsdParam;
+
+    FPairParams: TOwnedCollection;
+//    FDataSet: TClientDataSet;
+
+    FEDIDocType: TEDIDocType;
+    FEDI: TEDI;
+    FVchasnoEDIType: TVchasnoEDIType;
+
+    FspHeader: TdsdStoredProc;
+    FspList: TdsdStoredProc;
+
+
+  protected
+    function LocalExecute: Boolean; override;
+    function ExchangeVchasnoEDI(ATypeExchange : Integer; ADataSet: TClientDataSet = Nil): Boolean;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
+    property Host: TdsdParam read FHostParam write FHostParam;
+    property Token: TdsdParam read FTokenParam write FTokenParam;
+//    property DocType: TdsdParam read FDocTypeParam write FDocTypeParam;
+//    property DocStatusParam: TdsdParam read FDocStatusParam write FDocStatusParam;
+//    property Order: TdsdParam read FOrderParam write FOrderParam;
+    property DateFrom: TdsdParam read FDateFromParam write FDateFromParam;
+    property DateTo: TdsdParam read FDateToParam write FDateToParam;
+//    property DefaultFilePath: TdsdParam read FDefaultFilePathParam write FDefaultFilePathParam;
+//    property DefaultFileName: TdsdParam read FDefaultFileNameParam write FDefaultFileNameParam;
+
+    property EDI: TEDI read FEDI write FEDI;
+    property EDIDocType: TEDIDocType read FEDIDocType write FEDIDocType default ediOrder;
+
+//    property Result: TdsdParam read FResultParam write FResultParam;
+//    property FileName: TdsdParam read FFileNameParam write FFileNameParam;
+    // Содержимое массива Json для формирования DataSet
+//    property PairParams: TOwnedCollection read FPairParams write FPairParams;
+//    property DataSet: TClientDataSet read FDataSet write FDataSet;
+    property spHeader: TdsdStoredProc read FspHeader write FspHeader;
+    property spList: TdsdStoredProc read FspList write FspList;
+
+    property VchasnoEDIType: TVchasnoEDIType read FVchasnoEDIType write FVchasnoEDIType default vediLoadDoc;
+  end;
 
 procedure Register;
 function lpStrToDateTime(DateTimeString: string): TDateTime;
@@ -154,13 +222,15 @@ uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML, RecadvXML
   , DesadvFozzXML, OrderSpFozzXML, IftminFozzXML
   , DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML
-  , Vcl.Forms
+  , Vcl.Forms, System.IOUtils, System.RegularExpressions, ZLib, Math
+  , IdHTTP, IdSSLOpenSSL, IdURI, IdCTypes, IdSSLOpenSSLHeaders
   ;
 
 procedure Register;
 begin
   RegisterComponents('DSDComponent', [TEDI]);
   RegisterActions('EDI', [TEDIAction], TEDIAction);
+  RegisterActions('DSDLib', [TdsdVchasnoEDIAction], TdsdVchasnoEDIAction);
 end;
 
 { TEDI }
@@ -4344,6 +4414,20 @@ if VarIsNull(ComSigner) then
     end;
 end;
 
+procedure TEDI.OrderLoadString(AOrder, AFileName: String; spHeader, spList: TdsdStoredProc);
+var
+  ORDER: OrderXML.IXMLORDERType;
+begin
+  try
+    ORDER := OrderXML.LoadORDER(AOrder);
+    // загружаем в базенку
+    InsertUpdateOrder(ORDER, spHeader, spList, AFileName);
+  except
+    on E: Exception do begin raise Exception.Create(E.Message);
+    end;
+  end;
+end;
+
 { TEDIActionEDI }
 
 constructor TEDIAction.Create(AOwner: TComponent);
@@ -4414,9 +4498,414 @@ begin
   inherited;
 end;
 
+type
+  TCustomIdHTTP = class(TIdHTTP)
+  public
+    constructor Create(AOwner: TComponent);
+    destructor Destroy; override;
+  private
+    procedure OnStatusInfoEx(ASender: TObject; const AsslSocket: PSSL; const AWhere, Aret: TIdC_INT; const AType, AMsg: String);
+  end;
+
+{ TCustomIdHTTP }
+
+constructor TCustomIdHTTP.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+  with IOHandler as TIdSSLIOHandlerSocketOpenSSL do begin
+    OnStatusInfoEx := Self.OnStatusInfoEx;
+    SSLOptions.Method := sslvSSLv23;
+    SSLOptions.SSLVersions := [sslvSSLv2, sslvSSLv23, sslvSSLv3, sslvTLSv1];
+  end;
+end;
+
+destructor TCustomIdHTTP.Destroy;
+begin
+  IOHandler.Free;
+  inherited Destroy;
+end;
+
+procedure TCustomIdHTTP.OnStatusInfoEx(ASender: TObject; const AsslSocket: PSSL; const AWhere, Aret: TIdC_INT;
+  const AType, AMsg: String);
+begin
+  SSL_set_tlsext_host_name(AsslSocket, Request.Host);
+end;
+
+  {TdsdVchasnoEDIAction}
+
+constructor TdsdVchasnoEDIAction.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FPairParams := TOwnedCollection.Create(Self, TdsdPairParamsItem);
+  with TdsdPairParamsItem(FPairParams.Add) do
+  begin
+    DataType := ftString;
+    FieldName := 'Id';
+    PairName := 'Id';
+  end;
+
+  FHostParam := TdsdParam.Create;
+  FHostParam.DataType := ftString;
+  FHostParam.Value := '';
+
+  FTokenParam := TdsdParam.Create(nil);
+  FTokenParam.DataType := ftString;
+  FTokenParam.Value := '';
+
+  FDocTypeParam := TdsdParam.Create(nil);
+  FDocTypeParam.DataType := ftString;
+  FDocTypeParam.Value := '';
+
+  FDocStatusParam := TdsdParam.Create(nil);
+  FDocStatusParam.DataType := ftString;
+  FDocStatusParam.Value := '';
+
+
+  FOrderParam := TdsdParam.Create(nil);
+  FOrderParam.DataType := ftString;
+  FOrderParam.Value := '';
+
+  FDateFromParam := TdsdParam.Create(nil);
+  FDateFromParam.DataType := ftDateTime;
+  FDateFromParam.Value := Null;
+
+  FDateToParam := TdsdParam.Create(nil);
+  FDateToParam.DataType := ftDateTime;
+  FDateToParam.Value := Null;;
+
+  FDefaultFilePathParam := TdsdParam.Create(nil);
+  FDefaultFilePathParam.DataType := ftString;
+  FDefaultFilePathParam.Value := '';
+
+  FDefaultFileNameParam := TdsdParam.Create(nil);
+  FDefaultFileNameParam.DataType := ftString;
+  FDefaultFileNameParam.Value := '';
+
+
+  FResultParam := TdsdParam.Create(nil);
+  FResultParam.DataType := ftWideString;
+  FResultParam.Value := '';
+
+  FFileNameParam := TdsdParam.Create(nil);
+  FFileNameParam.DataType := ftString;
+  FFileNameParam.Value := '';
+
+  FVchasnoEDIType := vediLoadDoc;
+  FEDIDocType:= ediOrder;
+end;
+
+destructor TdsdVchasnoEDIAction.Destroy;
+begin
+  FreeAndNil(FDefaultFilePathParam);
+  FreeAndNil(FDefaultFileNameParam);
+  FreeAndNil(FFileNameParam);
+  FreeAndNil(FHostParam);
+  FreeAndNil(FTokenParam);
+  FreeAndNil(FOrderParam);
+  FreeAndNil(FDateFromParam);
+  FreeAndNil(FDateToParam);
+  FreeAndNil(FDocStatusParam);
+  FreeAndNil(FDocTypeParam);
+  FreeAndNil(FResultParam);
+  FreeAndNil(FPairParams);
+  inherited;
+end;
+
+// ATypeExchange
+// 0 - Загрузить списак документов в Json
+// 1 - Загрузить списак документов в DataSet
+// 2 - Звгрузить пракрепленный файл в Result
+// 3 - Звгрузить пракрепленный файл и сохранить его на диск
+function TdsdVchasnoEDIAction.ExchangeVchasnoEDI(ATypeExchange : Integer; ADataSet: TClientDataSet = Nil): Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      i,j : Integer;
+      Params: String;
+      Stream: TMemoryStream; StringStream: TStringStream;
+      ZDC : TZDecompressionStream;
+      cFilePath, cFileName : String;
+      strTempFile : array[0..MAX_PATH-1] of char;
+      Res: TArray<string>;
+      JsonArray: TJSONArray;
+      jsonItem : TJSONObject;
+begin
+  inherited;
+  Result := False;
+
+  if (FTokenParam.Value = '') or
+     (FHostParam.Value = '') then
+  begin
+    ShowMessage('Не заполнены Host или Токен.');
+    Exit;
+  end;
+
+  if (ATypeExchange = 1) then
+  begin
+    if not Assigned(ADataSet) then
+    begin
+      ShowMessage('Не указан DataSet.');
+      Exit;
+    end;
+
+    if FPairParams.Count = 0 then
+    begin
+      ShowMessage('Не определены данные в PairParams для формирования DataSet.');
+      Exit;
+    end;
+  end;
+
+  // Непосредственно отправка
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  try
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.ContentType := 'application/json';
+    IdHTTP.Request.ContentEncoding := 'UTF-8';
+    IdHTTP.Request.Accept := '*/*';
+    IdHTTP.Request.AcceptEncoding := 'gzip, deflate';
+    IdHTTP.Request.Connection := 'keep-alive';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    Params := '';
+    if ATypeExchange in [2, 3] then
+    begin
+      Params := '/' + FOrderParam.Value + '/original';
+    end else
+    begin
+      Params := 'type=' + FDocTypeParam.Value;
+
+      if (FDateFromParam.Value <> Null) and (FDateFromParam.Value <> Null) then
+        Params := Params + '&date_from=' + FormatDateTime('YYYY-MM-DD', StrToDateTime(FDateFromParam.Value));
+
+      if (FDateToParam.Value <> Null) and (FDateToParam.Value <> Null) then
+        Params := Params + '&date_to=' + FormatDateTime('YYYY-MM-DD', StrToDateTime(FDateToParam.Value));
+
+      if FDocStatusParam.Value <> '' then
+        Params := Params + '&deal_status=' + FDocStatusParam.Value;
+
+      if Params <> '' then Params := '?' + Params;
+    end;
+
+    Stream := TMemoryStream.Create;
+    StringStream:= TStringStream.Create('', TEncoding.UTF8);
+    try
+      try
+        IdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + Params), Stream);
+      except on E:EIdHTTPProtocolException  do ShowMessage(e.ErrorMessage);
+      end;
+
+      if IdHTTP.ResponseCode = 200 then
+      begin
+
+        // разархевируем полученный результат если надо
+        if IdHTTP.Response.ContentEncoding = 'gzip' then
+        begin
+          Stream.Position := 0;
+          ZDC := TZDecompressionStream.Create(Stream, 15 + 16);
+          try
+            StringStream.CopyFrom(ZDC, 0);
+          finally
+            ZDC.Free;
+          end;
+        end else
+        begin
+          Stream.Position := 0;
+          StringStream.CopyFrom(Stream, 0);
+        end;
+
+        if ATypeExchange = 3 then
+        begin
+
+           cFilePath := '';
+           cFileName := '';
+
+           // если задано сразу имя файла
+           if FFileNameParam.Value <> '' then
+           begin
+             if ExpandFileName(ExtractFilePath(FFileNameParam.Value)) <> '' then
+             begin
+               if not DirectoryExists(ExpandFileName(ExtractFilePath(FFileNameParam.Value))) then
+                 ForceDirectories(ExpandFileName(ExtractFilePath(FFileNameParam.Value)));
+               if DirectoryExists(ExpandFileName(ExtractFilePath(FFileNameParam.Value))) then
+                 cFilePath := ExpandFileName(ExtractFilePath(FFileNameParam.Value))
+             end;
+
+             if TPath.GetFileName(FFileNameParam.Value) <> '' then
+               cFileName := TPath.GetFileName(FFileNameParam.Value);
+           end;
+
+           // проверяем путь файла
+           if cFilePath = '' then
+           begin
+             if ExpandFileName(FDefaultFilePathParam.Value) <> '' then
+             begin
+               if not DirectoryExists(ExpandFileName(FDefaultFilePathParam.Value)) then
+                 ForceDirectories(ExpandFileName(FDefaultFilePathParam.Value));
+               if DirectoryExists(ExpandFileName(FDefaultFilePathParam.Value)) then
+                 cFilePath := ExpandFileName(FDefaultFilePathParam.Value)
+               else cFilePath := ExtractFilePath(ParamStr(0));
+             end else cFilePath := ExtractFilePath(ParamStr(0));
+           end;
+
+           // проверяем имя файла
+           if cFileName = '' then
+           begin
+             if TPath.GetFileName(FDefaultFileNameParam.Value) = '' then
+             begin
+               if Pos('filename', IdHTTP.Response.ContentDisposition) > 0 then
+               begin
+                 Res := TRegEx.Split(IdHTTP.Response.ContentDisposition, '"');
+                 if (High(Res) > 1) and (TPath.GetFileName(Res[1]) <> '') then
+                   cFileName := TPath.GetFileName(Res[1])
+               end;
+
+               if cFileName = '' then
+               begin
+                 GetTempFileName(PChar(cFilePath), '', 0, strTempFile);
+                 cFileName := String(strTempFile) + '_original.xml';
+               end;
+             end else cFileName := FDefaultFileNameParam.Value;
+           end;
+           FFileNameParam.Value := TPath.Combine(cFilePath, cFileName);
+
+           // сохраним файл
+           StringStream.SaveToFile(FFileNameParam.Value);
+           Result := True;
+        end else if ATypeExchange = 1 then
+        begin
+
+          ADataSet.Close;
+          ADataSet.FieldDefs.Clear;
+
+          for i := 0 to FPairParams.Count - 1 do
+          begin
+            case TdsdPairParamsItem(FPairParams.Items[i]).DataType of
+              ftBoolean : ADataSet.FieldDefs.Add(TdsdPairParamsItem(FPairParams.Items[i]).FieldName, ftBoolean);
+              ftInteger : ADataSet.FieldDefs.Add(TdsdPairParamsItem(FPairParams.Items[i]).FieldName, ftInteger);
+              ftFloat : ADataSet.FieldDefs.Add(TdsdPairParamsItem(FPairParams.Items[i]).FieldName, ftFloat);
+              ftWideString : ADataSet.FieldDefs.Add(TdsdPairParamsItem(FPairParams.Items[i]).FieldName, ftWideString);
+              ftDateTime : ADataSet.FieldDefs.Add(TdsdPairParamsItem(FPairParams.Items[i]).FieldName, ftDateTime);
+            else ADataSet.FieldDefs.Add(TdsdPairParamsItem(FPairParams.Items[i]).FieldName, ftString, 255);
+            end;
+          end;
+
+          ADataSet.CreateDataSet;
+
+          jsonArray := TJSONObject.ParseJSONValue(StringStream.DataString) as TJSONArray;
+
+          for J := 0 to jsonArray.Size - 1 do
+          begin
+            jsonItem := TJSONObject(jsonArray.Get(J));
+            ADataSet.Append;
+            for i := 0 to FPairParams.Count - 1 do
+              if jsonItem.Get(LowerCase(TdsdPairParamsItem(FPairParams.Items[i]).PairName)) <> Nil then
+            begin
+              case TdsdPairParamsItem(FPairParams.Items[i]).DataType of
+                ftDateTime : ADataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[i]).FieldName).Value :=
+                               gfXSStrToDate(jsonItem.Get(TdsdPairParamsItem(FPairParams.Items[i]).FieldName).JsonValue.Value);
+              else ADataSet.FieldByName(TdsdPairParamsItem(FPairParams.Items[i]).FieldName).Value :=
+                     jsonItem.Get(LowerCase(TdsdPairParamsItem(FPairParams.Items[i]).PairName)).JsonValue.Value;
+              end;
+            end;
+            ADataSet.Post;
+          end;
+          Result := True;
+        end else
+        begin
+
+           if ATypeExchange = 2 then
+           begin
+             FFileNameParam.Value := '';
+             if Pos('filename', IdHTTP.Response.ContentDisposition) > 0 then
+             begin
+               Res := TRegEx.Split(IdHTTP.Response.ContentDisposition, '"');
+               if (High(Res) > 1) and (TPath.GetFileName(Res[1]) <> '') then
+                 FFileNameParam.Value := TPath.GetFileName(Res[1])
+             end;
+           end;
+
+          FResultParam.Value := StringStream.DataString;
+          Result := True;
+        end;
+      end;
+    finally
+      Stream.Free;
+      StringStream.Free
+    end;
+  finally
+    IdHTTP.Free;
+  end;
+end;
+
+function TdsdVchasnoEDIAction.LocalExecute: Boolean;
+  var DataSetCDS: TClientDataSet;
+begin
+  Result := False;
+
+  if FVchasnoEDIType = vediLoadDoc then
+  begin
+
+    case FEDIDocType of
+      ediOrder : FDocTypeParam.Value := '1';
+    else Exception.Create('Не описано метод загрузки типа документов.');
+    end;
+
+    FDocStatusParam.Value := 'new';
+
+    // Загрузим список заявок с Вчасно EDI
+    DataSetCDS := TClientDataSet.Create(Nil);
+    try
+
+      if not ExchangeVchasnoEDI(1, DataSetCDS) then
+        raise Exception.Create('Ошибка загрузки списка документов.');
+
+      if DataSetCDS.RecordCount = 0 then
+      begin
+        ShowMessage('Нет накладных для загрузки.');
+        Exit;
+      end;
+
+      with TGaugeFactory.GetGauge(Caption, 0, DataSetCDS.RecordCount) do
+      begin
+        Start;
+        try
+          DataSetCDS.First;
+          while not DataSetCDS.Eof do
+          begin
+            FOrderParam.Value := DataSetCDS.FieldByName('Id').AsString;
+            if ExchangeVchasnoEDI(2) then
+            begin
+              // создание документ
+              case EDIDocType of
+                ediOrder: EDI.OrderLoadString(Copy(FResultParam.Value, Max(POS('<', FResultParam.Value), 1), Length(FResultParam.Value)),
+                                              FFileNameParam.Value, FspHeader, FspList);
+              end;
+              Result := true;
+
+            end;
+            IncProgress(1);
+            DataSetCDS.Next;
+          end;
+        finally
+          Finish;
+        end;
+      end;
+
+    finally
+      DataSetCDS.Free;
+    end;
+
+  end else raise Exception.Create('Не описан механизм обработки.');
+end;
+
+
 initialization
   Classes.RegisterClass(TEDI);
   Classes.RegisterClass(TEDIAction);
+  Classes.RegisterClass(TdsdVchasnoEDIAction);
 
 end.
 

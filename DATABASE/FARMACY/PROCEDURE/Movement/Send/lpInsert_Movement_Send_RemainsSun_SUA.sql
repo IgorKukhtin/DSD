@@ -49,6 +49,7 @@ $BODY$
    DECLARE vbDaySendSUNAll_max Integer;
    DECLARE vbisEliminateColdSUN Boolean;
    DECLARE vbisOnlyColdSUN Boolean;
+   DECLARE vbisCancelBansSUN Boolean;
 BEGIN
      --
      vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', inUserId);
@@ -60,7 +61,8 @@ BEGIN
 
      SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUA.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUA.ValueData, FALSE) 
-     INTO vbisEliminateColdSUN, vbisOnlyColdSUN
+          , COALESCE(ObjectBoolean_CashSettings_CancelBansSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbisOnlyColdSUN, vbisCancelBansSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUA
                                   ON ObjectBoolean_CashSettings_EliminateColdSUA.ObjectId = Object_CashSettings.Id 
@@ -68,6 +70,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUA
                                   ON ObjectBoolean_CashSettings_OnlyColdSUA.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_OnlyColdSUA.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUA()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_CancelBansSUN
+                                  ON ObjectBoolean_CashSettings_CancelBansSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_CancelBansSUN.DescId = zc_ObjectBoolean_CashSettings_CancelBansSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 

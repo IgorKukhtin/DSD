@@ -102,6 +102,7 @@ $BODY$
    DECLARE vbisEliminateColdSUN Boolean;
    DECLARE vbisOnlyColdSUN Boolean;
    DECLARE vbisShoresSUN Boolean;
+   DECLARE vbisCancelBansSUN Boolean;
    
    DECLARE vbIndex Integer;
    DECLARE vbRowCount Integer;
@@ -131,7 +132,8 @@ BEGIN
      SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN.ValueData, FALSE) 
-     INTO vbisEliminateColdSUN, vbisShoresSUN, vbisOnlyColdSUN
+          , COALESCE(ObjectBoolean_CashSettings_CancelBansSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbisShoresSUN, vbisOnlyColdSUN, vbisCancelBansSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
@@ -142,6 +144,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUN
                                   ON ObjectBoolean_CashSettings_OnlyColdSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_OnlyColdSUN.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUN2()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_CancelBansSUN
+                                  ON ObjectBoolean_CashSettings_CancelBansSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_CancelBansSUN.DescId = zc_ObjectBoolean_CashSettings_CancelBansSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -553,10 +558,34 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
             OR Object_Goods_Main.isColdSUN = TRUE);
      
      ANALYSE tmpConditionsKeep;
-     
-        
+
 --raise notice 'Value 8: %', CLOCK_TIMESTAMP();
 
+       -- продажи для исключения
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpSalesGoods'))
+     THEN
+       DROP TABLE tmpSalesGoods;
+     END IF;
+
+     CREATE TEMP TABLE tmpSalesGoods ON COMMIT DROP AS
+        SELECT MIContainer.whereobjectid_analyzer   AS UnitId
+             , MIContainer.objectid_analyzer        AS GoodsId
+        FROM MovementItemContainer AS MIContainer
+             LEFT JOIN MovementBoolean AS MB_CorrectMarketing
+                                       ON MB_CorrectMarketing.MovementId = MIContainer.MovementId
+                                      AND MB_CorrectMarketing.DescId     = zc_MovementBoolean_CorrectMarketing()
+                                      AND MB_CorrectMarketing.ValueData  = TRUE
+        WHERE MIContainer.OperDate >= CURRENT_DATE - INTERVAL '40 DAY'
+          AND MIContainer.DescId         = zc_MIContainer_Count()
+          AND MIContainer.MovementDescId = zc_Movement_Check()
+          AND vbisCancelBansSUN = True
+        GROUP BY MIContainer.whereobjectid_analyzer
+               , MIContainer.objectid_analyzer;
+               
+     ANALYSE tmpSalesGoods;      
+                           
+--raise notice 'Value 11_1: % %', CLOCK_TIMESTAMP(), (SELECT count(*) FROM  tmpSalesGoods);
+     
      -- 2.1. вся статистика продаж
      -- CREATE TEMP TABLE _tmpSale_over (UnitId Integer, GoodsId Integer, Amount_t1 TFloat, Summ_t1 TFloat, Amount_t2 TFloat, Summ_t2 TFloat) ON COMMIT DROP;
      INSERT INTO _tmpSale_over (UnitId, GoodsId, Amount_t1, Summ_t1, Amount_t2, Summ_t2)
@@ -941,9 +970,12 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
                             LEFT JOIN ObjectFloat AS Price_MCSValueMin
                                                   ON Price_MCSValueMin.ObjectId = OL_Price_Unit.ObjectId
                                                  AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
+                            -- Были продажи за период
+                            LEFT JOIN tmpSalesGoods ON tmpSalesGoods.UnitId  = OL_Price_Unit.ChildObjectId  
+                                                   AND tmpSalesGoods.GoodsId = OL_Price_Goods.ChildObjectId
                        WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
                          -- товары "убит код" - 25.05.20 -- временно отключил - 21.05.20
-                         AND (MCS_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_ClosePL = FALSE)
+                         AND (MCS_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_ClosePL = FALSE OR COALESCE (tmpSalesGoods.GoodsId, 0) > 0)
                       )
           -- данные из ассорт. матрицы
         , tmpGoodsCategory AS (SELECT ObjectLink_GoodsCategory_Unit.ChildObjectId AS UnitId
@@ -1110,6 +1142,10 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
              LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
                        ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = tmpObject_Price.GoodsId
 
+             -- Были продажи за период
+             LEFT JOIN tmpSalesGoods ON tmpSalesGoods.UnitId  = tmpObject_Price.UnitId 
+                                    AND tmpSalesGoods.GoodsId = tmpObject_Price.GoodsId 
+
              -- НЕ отбросили !!холод!!
              /*LEFT JOIN ObjectLink AS OL_Goods_ConditionsKeep
                                     ON OL_Goods_ConditionsKeep.ObjectId = tmpObject_Price.GoodsId
@@ -1118,7 +1154,8 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
              */
         WHERE OB_Unit_SUN_out.ObjectId IS NULL
           -- товары "закрыт код"
-          AND (ObjectBoolean_Goods_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_CloseGd = FALSE OR _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0)
+          AND (ObjectBoolean_Goods_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_CloseGd = FALSE OR 
+               _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 OR COALESCE (tmpSalesGoods.GoodsId, 0) > 0)
        ;
        
      ANALYSE _tmpRemains_all;
@@ -1774,10 +1811,10 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
          WITH tmpOutAll AS (SELECT _tmpRemains_Partion.GoodsId
                                  , _tmpRemains_Partion.UnitId 
                                  , _tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - 
-                                   COALESCE(_tmpGoods_PromoUnit.Amount, 0) - COALESCE(_tmpRemains_Partion.AmountCorrec, 0) AS AmountPot
+                                   COALESCE(ceil(_tmpGoods_PromoUnit.Amount), 0) - COALESCE(_tmpRemains_Partion.AmountCorrec, 0) AS AmountPot
                                  , ROW_NUMBER() OVER (PARTITION BY _tmpRemains_Partion.GoodsId  
                                                       ORDER BY _tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - 
-                                                               COALESCE(_tmpGoods_PromoUnit.Amount, 0) - 
+                                                               COALESCE(ceil(_tmpGoods_PromoUnit.Amount), 0) - 
                                                                COALESCE(_tmpRemains_Partion.AmountCorrec, 0) DESC) AS Ord
                             FROM _tmpRemains_Partion
                                  -- товары - для Кратность
@@ -1806,7 +1843,7 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
                                   _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
 
                               AND (_tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - 
-                                   COALESCE(_tmpGoods_PromoUnit.Amount, 0) - COALESCE(_tmpRemains_Partion.AmountCorrec, 0)) > 0
+                                   COALESCE(ceil(_tmpGoods_PromoUnit.Amount), 0) - COALESCE(_tmpRemains_Partion.AmountCorrec, 0)) > 0
 
                               AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0)     
             , tmpOut AS (SELECT tmpOutAll.GoodsId
@@ -1870,7 +1907,7 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
         SELECT _tmpRemains_Partion.UnitId AS UnitId_from
              , _tmpRemains_Partion.GoodsId
              , _tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - 
-               COALESCE(_tmpGoods_PromoUnit.Amount, 0) - COALESCE(_tmpRemains_Partion.AmountCorrec, 0) AS Amount
+               COALESCE(ceil(_tmpGoods_PromoUnit.Amount), 0) - COALESCE(_tmpRemains_Partion.AmountCorrec, 0) AS Amount
                -- для получения дробной части, нужен весь ост.
              , _tmpRemains_Partion.Amount_save AS Amount_save
                --
@@ -1913,7 +1950,7 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
               _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
 
           AND (_tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - 
-               COALESCE(_tmpGoods_PromoUnit.Amount, 0) - COALESCE(_tmpRemains_Partion.AmountCorrec, 0)) > 0
+               COALESCE(ceil(_tmpGoods_PromoUnit.Amount), 0) - COALESCE(_tmpRemains_Partion.AmountCorrec, 0)) > 0
 
           AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
 
@@ -1922,7 +1959,7 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
               tmpConditionsKeep.ObjectId IS NOT NULL AND vbisOnlyColdSUN = TRUE OR
               _tmpUnit_SUN.isColdOutSUN = TRUE)
                     
-        ORDER BY _tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(_tmpGoods_PromoUnit.Amount, 0) DESC, 
+        ORDER BY _tmpRemains_Partion.Amount - COALESCE(_tmpGoods_Layout.Layout, 0) - COALESCE(ceil(_tmpGoods_PromoUnit.Amount), 0) DESC, 
                  tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1

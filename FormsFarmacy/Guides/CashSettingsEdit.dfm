@@ -22,7 +22,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
     Width = 898
     Height = 507
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 507
@@ -519,7 +519,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Width = 179
       end
       object cbOnlyColdSUN: TcxCheckBox
-        Left = 720
+        Left = 715
         Top = 71
         Hint = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053
         Caption = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053' 1'
@@ -539,7 +539,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Width = 179
       end
       object cbOnlyColdSUN2: TcxCheckBox
-        Left = 720
+        Left = 715
         Top = 88
         Hint = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053
         Caption = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053' 2'
@@ -559,7 +559,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Width = 179
       end
       object cbOnlyColdSUN3: TcxCheckBox
-        Left = 720
+        Left = 715
         Top = 107
         Hint = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053
         Caption = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053' '#1069
@@ -579,7 +579,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Width = 179
       end
       object cbOnlyColdSUN4: TcxCheckBox
-        Left = 720
+        Left = 715
         Top = 126
         Hint = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053
         Caption = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053' '#1055#1048
@@ -734,7 +734,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Width = 90
       end
       object cbOnlyColdSUA: TcxCheckBox
-        Left = 720
+        Left = 715
         Top = 145
         Hint = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1053
         Caption = #1058#1086#1083#1100#1082#1086' '#1087#1086' '#1061#1086#1083#1086#1076#1091' '#1057#1059#1040
@@ -751,6 +751,16 @@ object CashSettingsEditForm: TCashSettingsEditForm
         ParentShowHint = False
         ShowHint = True
         TabOrder = 30
+        Width = 179
+      end
+      object cbCancelBansSUN: TcxCheckBox
+        Left = 715
+        Top = 52
+        Hint = #1054#1090#1084#1077#1085#1072' '#1079#1072#1087#1088#1077#1090#1086#1074' '#1087#1086' '#1074#1089#1077#1084' '#1057#1059#1053
+        Caption = #1054#1090#1084#1077#1085#1072' '#1079#1072#1087#1088#1077#1090#1086#1074' '#1087#1086' '#1074#1089#1077#1084' '#1057#1059#1053
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 31
         Width = 179
       end
     end
@@ -1308,6 +1318,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCancelBansSUN'
+        Value = Null
+        Component = cbCancelBansSUN
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 696
@@ -1719,6 +1737,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Value = Null
         Component = edSendCashErrorTelId
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCancelBansSUN'
+        Value = Null
+        Component = cbCancelBansSUN
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
