@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, B
                                                            Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TFloat, Integer, 
                                                            Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, Integer, TFloat, TFloat, Boolean, 
                                                            TFloat, TFloat, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, 
-                                                           Boolean, TVarChar, TVarChar);
+                                                           Boolean, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -66,6 +66,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inisOnlyColdSUN4             Boolean   ,     -- Только по Холоду СУН ПИ
     IN inisOnlyColdSUA              Boolean   ,     -- Только по Холоду СУA
     IN inSendCashErrorTelId         TVarChar  ,     -- ID в телеграм для отправки ошибок на кассах
+    IN inisCancelBansSUN            Boolean   ,     -- Отмена запретов по всем СУН
 
     IN inSession                    TVarChar        -- сессия пользователя
 )
@@ -232,6 +233,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_OnlyColdSUN4(), vbID, inisOnlyColdSUN4);
    -- Только по Холоду СУA
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_OnlyColdSUA(), vbID, inisOnlyColdSUA);
+   -- Отмена запретов по всем СУН
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_CancelBansSUN(), vbID, inisCancelBansSUN);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);

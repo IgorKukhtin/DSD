@@ -63,6 +63,7 @@ $BODY$
    DECLARE vbDeySupplOut TFloat;
    DECLARE vbDeySupplIn TFloat;
    DECLARE vbisShoresSUN Boolean;
+   DECLARE vbisCancelBansSUN Boolean;
 BEGIN
      --
      --
@@ -78,11 +79,13 @@ BEGIN
           , COALESCE(ObjectFloat_CashSettings_DeySupplInSUN2.ValueData, 30)::Integer 
           , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN.ValueData, FALSE) 
+          , COALESCE(ObjectBoolean_CashSettings_CancelBansSUN.ValueData, FALSE) 
      INTO vbisEliminateColdSUN
         , vbDeySupplOut
         , vbDeySupplIn
         , vbisShoresSUN
         , vbisOnlyColdSUN
+        , vbisCancelBansSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
@@ -99,6 +102,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUN
                                   ON ObjectBoolean_CashSettings_OnlyColdSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_OnlyColdSUN.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUN2()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_CancelBansSUN
+                                  ON ObjectBoolean_CashSettings_CancelBansSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_CancelBansSUN.DescId = zc_ObjectBoolean_CashSettings_CancelBansSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 

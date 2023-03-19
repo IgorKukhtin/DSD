@@ -271,7 +271,7 @@ BEGIN
          , tmpGoods.QtyPackage
          , tmpGoods.Multiplicity
                              
-         , ROW_NUMBER() OVER (ORDER BY CASE WHEN COALESCE (tmpContainerRemains.Remains, 0) = 0 THEN 1 ELSE 0 END 
+         , ROW_NUMBER() OVER (ORDER BY CASE WHEN (COALESCE (tmpContainerRemains.Remains, 0) - COALESCE (tmpContainerRemainsPD.Remains, 0)) <= 0 THEN 1 ELSE 0 END 
                                      , CASE WHEN inSortType = 0 THEN Price_Site.Price END
                                      , CASE WHEN inSortType = 1 THEN Price_Site.Price END DESC
                                      , CASE WHEN inSortType = 2 THEN CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END END
@@ -288,7 +288,7 @@ BEGIN
 
          LEFT JOIN tmpContainerRemainsPD ON tmpContainerRemainsPD.GoodsId = Price_Site.GoodsId
                                             
-    ORDER BY CASE WHEN COALESCE (tmpContainerRemains.Remains, 0) = 0 THEN 1 ELSE 0 END 
+    ORDER BY CASE WHEN (COALESCE (tmpContainerRemains.Remains, 0) - COALESCE (tmpContainerRemainsPD.Remains, 0)) <= 0 THEN 1 ELSE 0 END 
            , CASE WHEN inSortType = 0 THEN Price_Site.Price END
            , CASE WHEN inSortType = 1 THEN Price_Site.Price END DESC
            , CASE WHEN inSortType = 2 THEN CASE WHEN lower(inSortLang) = 'uk' THEN Price_Site.NameUkr ELSE Price_Site.Name END END
@@ -795,4 +795,4 @@ $BODY$
             from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Бустрикс вак', true, zfCalc_UserSite())*/
             
             
-select * from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 8, 0, 'Фемибион', True, zfCalc_UserSite())
+select * from gpSelect_GoodsPrice_ForSite(0,  -1, 'uk', 0, 100, 0, 'гепа', True, zfCalc_UserSite())

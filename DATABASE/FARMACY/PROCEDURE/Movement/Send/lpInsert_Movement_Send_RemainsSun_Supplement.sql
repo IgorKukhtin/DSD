@@ -69,6 +69,7 @@ $BODY$
    DECLARE vbisEliminateColdSUN Boolean;
    DECLARE vbisOnlyColdSUN Boolean;
    DECLARE vbisShoresSUN Boolean;
+   DECLARE vbisCancelBansSUN Boolean;
    DECLARE vbDays TFloat;
 BEGIN
      --
@@ -83,7 +84,8 @@ BEGIN
      SELECT COALESCE(ObjectBoolean_CashSettings_EliminateColdSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_ShoresSUN.ValueData, FALSE) 
           , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN.ValueData, FALSE) 
-     INTO vbisEliminateColdSUN, vbisShoresSUN, vbisOnlyColdSUN
+          , COALESCE(ObjectBoolean_CashSettings_CancelBansSUN.ValueData, FALSE) 
+     INTO vbisEliminateColdSUN, vbisShoresSUN, vbisOnlyColdSUN, vbisCancelBansSUN
      FROM Object AS Object_CashSettings
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_EliminateColdSUN
                                   ON ObjectBoolean_CashSettings_EliminateColdSUN.ObjectId = Object_CashSettings.Id 
@@ -94,6 +96,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUN
                                   ON ObjectBoolean_CashSettings_OnlyColdSUN.ObjectId = Object_CashSettings.Id 
                                  AND ObjectBoolean_CashSettings_OnlyColdSUN.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUN()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_CancelBansSUN
+                                  ON ObjectBoolean_CashSettings_CancelBansSUN.ObjectId = Object_CashSettings.Id 
+                                 AND ObjectBoolean_CashSettings_CancelBansSUN.DescId = zc_ObjectBoolean_CashSettings_CancelBansSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
 
@@ -422,6 +427,29 @@ BEGIN
      
      ANALYSE tmpConditionsKeep;
 
+       -- продажи для исключения
+/*     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpSalesGoods'))
+     THEN
+       DROP TABLE tmpSalesGoods;
+     END IF;
+
+     CREATE TEMP TABLE tmpSalesGoods ON COMMIT DROP AS
+        SELECT MIContainer.whereobjectid_analyzer   AS UnitId
+             , MIContainer.objectid_analyzer        AS GoodsId
+        FROM MovementItemContainer AS MIContainer
+             LEFT JOIN MovementBoolean AS MB_CorrectMarketing
+                                       ON MB_CorrectMarketing.MovementId = MIContainer.MovementId
+                                      AND MB_CorrectMarketing.DescId     = zc_MovementBoolean_CorrectMarketing()
+                                      AND MB_CorrectMarketing.ValueData  = TRUE
+        WHERE MIContainer.OperDate >= CURRENT_DATE - INTERVAL '40 DAY'
+          AND MIContainer.DescId         = zc_MIContainer_Count()
+          AND MIContainer.MovementDescId = zc_Movement_Check()
+          AND vbisCancelBansSUN = True
+        GROUP BY MIContainer.whereobjectid_analyzer
+               , MIContainer.objectid_analyzer;
+               
+     ANALYSE tmpSalesGoods;  */    
+                           
      -- Что приходило по СУН и не отдаем
      WITH
      tmpUnit AS (SELECT Object_Unit.Id AS UnitId

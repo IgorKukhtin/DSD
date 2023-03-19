@@ -57,6 +57,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MobMessCount Integer
              , isEliminateColdSUN2 Boolean, isEliminateColdSUN3 Boolean, isEliminateColdSUN4 Boolean, isEliminateColdSUA Boolean
              , isOnlyColdSUN Boolean, isOnlyColdSUN2 Boolean, isOnlyColdSUN3 Boolean, isOnlyColdSUN4 Boolean, isOnlyColdSUA Boolean
+             , isCancelBansSUN Boolean
              ) AS
 $BODY$
 BEGIN
@@ -126,6 +127,7 @@ BEGIN
         , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN3.ValueData, FALSE)       AS isOnlyColdSUN3
         , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN4.ValueData, FALSE)       AS isOnlyColdSUN4
         , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUA.ValueData, FALSE)        AS isOnlyColdSUA
+        , COALESCE(ObjectBoolean_CashSettings_CancelBansSUN.ValueData, FALSE)      AS isCancelBansSUN
 
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
@@ -239,6 +241,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_OnlyColdSUA
                                 ON ObjectBoolean_CashSettings_OnlyColdSUA.ObjectId = Object_CashSettings.Id 
                                AND ObjectBoolean_CashSettings_OnlyColdSUA.DescId = zc_ObjectBoolean_CashSettings_OnlyColdSUA()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_CancelBansSUN
+                                ON ObjectBoolean_CashSettings_CancelBansSUN.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_CancelBansSUN.DescId = zc_ObjectBoolean_CashSettings_CancelBansSUN()
 
         LEFT JOIN ObjectLink AS ObjectLink_CashSettings_MethodsAssortment
                ON ObjectLink_CashSettings_MethodsAssortment.ObjectId = Object_CashSettings.Id
