@@ -150,7 +150,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colAmountSumm: TcxGridDBColumn [6]
+          object colAmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -160,7 +160,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
             Options.Editing = False
             Width = 80
           end
-          object colPrice: TcxGridDBColumn [7]
+          object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -170,7 +170,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colCountForPrice: TcxGridDBColumn [8]
+          object colCountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
@@ -969,6 +969,16 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object colAmountSumm_tax: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1085#1072#1083#1086#1075#1086#1074#1072#1103')'
+            DataBinding.FieldName = 'AmountSumm_tax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object Amount_ch2: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
@@ -1018,6 +1028,53 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_ChangePercent_tax: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081'  ('#1085#1072#1083#1086#1075#1086#1074#1072#1103')'
+            DataBinding.FieldName = 'Sum_ChangePercent_tax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_Diff1: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'Sum_Diff1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' ('#1088#1072#1079#1085#1080#1094#1072' '#1089#1091#1084#1084')'
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_Diff2: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' ('#1088#1072#1079#1085#1080#1094#1072' '#1089#1091#1084#1084' '#1085#1072#1083#1086#1075#1086#1074#1072#1103')'
+            DataBinding.FieldName = 'Sum_Diff2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' ('#1088#1072#1079#1085#1080#1094#1072' '#1089#1091#1084#1084' '#1085#1072#1083#1086#1075#1086#1074#1072#1103')'
+            Options.Editing = False
+            Width = 80
+          end
+          object Sum_Diff3: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. ('#1084#1077#1078#1076#1091' '#1089#1082'.)'
+            DataBinding.FieldName = 'Sum_Diff3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1084#1077#1078#1076#1091' '#1089#1082#1080#1076#1082#1086#1081' '#1074' '#1040#1082#1090#1077' '#1080' '#1053#1072#1083#1086#1075#1086#1074#1086#1081
             Options.Editing = False
             Width = 80
           end

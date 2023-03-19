@@ -30,6 +30,8 @@ $BODY$
   DECLARE vbToId       Integer;
   DECLARE vbContractId Integer;
   DECLARE vbOperDate   TDateTime;
+  DECLARE vbStartDate  TDateTime;
+  DECLARE vbEndDate    TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -133,7 +135,7 @@ BEGIN
                         , tmp.Price
                         , tmp.Price_ChangePercent
                         , tmp.CountForPrice 
-                 ) AS tmp;
+                 )
          
 
        SELECT
@@ -166,7 +168,7 @@ BEGIN
                   AS NUMERIC (16, 2))                          ::TFloat AS Sum_ChangePercent
            
            -- сумма скидки 1) разница суммы без скидки и суммы со скидкой
-           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+           , (CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST (MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                         ELSE CAST  (MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)
@@ -175,26 +177,27 @@ BEGIN
                                ELSE MovementItem.Amount
                           END AS TFloat)
                     * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
-                  AS NUMERIC (16, 2)) AS Sum_Diff1
+                  AS NUMERIC (16, 2)))  ::TFloat AS Sum_Diff1
            -- сумма без скидки из налоговой  
-           , tmpCalc.AmountSumm AS AmountSumm_tax
+           , tmpCalc.AmountSumm ::TFloat AS AmountSumm_tax
            -- сумма со скидкой из налоговой  
-           , tmpCalc.Sum_ChangePercent AS Sum_ChangePercent_tax 
+           , tmpCalc.Sum_ChangePercent ::TFloat AS Sum_ChangePercent_tax 
            -- разница налоговая
-           , tmpCalc.AmountSumm - tmpCalc.Sum_ChangePercent AS Sum_Diff2
+           , (tmpCalc.AmountSumm - tmpCalc.Sum_ChangePercent) ::TFloat AS Sum_Diff2
            
            --отклонение 
-           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                           THEN CAST (MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                        ELSE CAST  (MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                   END AS TFloat)
-           - CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                  THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,3))
-                               ELSE MovementItem.Amount
-                          END AS TFloat)
-                    * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
-                  AS NUMERIC (16, 2))
-           -  (tmpCalc.AmountSumm - tmpCalc.Sum_ChangePercent) AS Sum_Diff3
+           , (COALESCE (CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                                      THEN CAST (MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                                   ELSE CAST  (MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                              END AS TFloat)
+                      - CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                                             THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,3))
+                                          ELSE MovementItem.Amount
+                                     END AS TFloat)
+                               * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
+                             AS NUMERIC (16, 2))
+              , 0)
+           -  COALESCE ((tmpCalc.AmountSumm - tmpCalc.Sum_ChangePercent),0) ) ::TFloat AS Sum_Diff3
 
            , MovementItem.isErased              AS isErased
 
