@@ -30,6 +30,7 @@ $BODY$
 
    DECLARE vbNumber   TFloat;
    DECLARE vbdaycount_GoodsKind_8333 Integer;
+   DECLARE vbdaycount_GoodsKind_8333_3 Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_OrderInternal_toPACK());
@@ -106,7 +107,8 @@ else*/
 
 
     -- на сколько дней делаем вид НАРЕЗКА
-    vbdaycount_GoodsKind_8333:= 5;
+    vbdaycount_GoodsKind_8333  := 5;
+    vbdaycount_GoodsKind_8333_3:= 3;
 
     -- !!!на сколько дней!!!
     inNumber:= 400;
@@ -715,13 +717,16 @@ else*/
                                                 )*/
 
                                             -- !!!отбросили НАРЕЗКУ!!!
-                                            AND ((vbNumber <= vbdaycount_GoodsKind_8333
+                                            AND ((vbNumber <= vbdaycount_GoodsKind_8333_3
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005) -- нар. 200
+                                                 )
+                                             AND (vbNumber <= vbdaycount_GoodsKind_8333
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- НАР
                                                OR _tmpGoods_delik.GoodsId IS NULL
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
-                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005 -- нар. 200
-                                                                                               , 9027592 -- т/ф газ нар 0,1
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (--6899005 -- нар. 200
+                                                                                                 9027592 -- т/ф газ нар 0,1
                                                                                                , 8988926 -- т/ф газ нар 0,2
                                                                                                , 8988924 -- изопак скин нар 0,08
                                                                                                , 8988925 -- изопак скин нар 0,1
@@ -885,13 +890,16 @@ else*/
                                                 )*/
 
                                             -- !!!отбросили НАРЕЗКУ!!!
-                                            AND ((vbNumber <= vbdaycount_GoodsKind_8333
+                                            AND ((vbNumber <= vbdaycount_GoodsKind_8333_3
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005) -- нар. 200
+                                                 )
+                                             AND (vbNumber <= vbdaycount_GoodsKind_8333
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- НАР
                                                OR _tmpGoods_delik.GoodsId IS NULL
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
-                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005 -- нар. 200
-                                                                                               , 9027592 -- т/ф газ нар 0,1
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (-- 6899005 -- нар. 200
+                                                                                                 9027592 -- т/ф газ нар 0,1
                                                                                                , 8988926 -- т/ф газ нар 0,2
                                                                                                , 8988924 -- изопак скин нар 0,08
                                                                                                , 8988925 -- изопак скин нар 0,1
@@ -1053,13 +1061,16 @@ else*/
                                                                                                )
                                                 )*/
                                             -- !!!отбросили НАРЕЗКУ!!!
-                                            AND ((vbNumber <= vbdaycount_GoodsKind_8333
+                                            AND ((vbNumber <= vbdaycount_GoodsKind_8333_3
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005) -- нар. 200
+                                                 )
+                                             AND (vbNumber <= vbdaycount_GoodsKind_8333
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- НАР
                                                OR _tmpGoods_delik.GoodsId IS NULL
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
-                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005 -- нар. 200
-                                                                                               , 9027592 -- т/ф газ нар 0,1
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (--6899005 -- нар. 200
+                                                                                                 9027592 -- т/ф газ нар 0,1
                                                                                                , 8988926 -- т/ф газ нар 0,2
                                                                                                , 8988924 -- изопак скин нар 0,08
                                                                                                , 8988925 -- изопак скин нар 0,1
@@ -1243,13 +1254,16 @@ else*/
                                                                                                )
                                                 )*/
                                             -- !!!отбросили НАРЕЗКУ!!!
-                                            AND ((vbNumber <= vbdaycount_GoodsKind_8333
+                                            AND ((vbNumber <= vbdaycount_GoodsKind_8333_3
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005) -- нар. 200
+                                                 )
+                                             AND (vbNumber <= vbdaycount_GoodsKind_8333
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- НАР
                                                OR _tmpGoods_delik.GoodsId IS NULL
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
-                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005 -- нар. 200
-                                                                                               , 9027592 -- т/ф газ нар 0,1
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (-- 6899005 -- нар. 200
+                                                                                                 9027592 -- т/ф газ нар 0,1
                                                                                                , 8988926 -- т/ф газ нар 0,2
                                                                                                , 8988924 -- изопак скин нар 0,08
                                                                                                , 8988925 -- изопак скин нар 0,1
@@ -1354,8 +1368,8 @@ else*/
 
     END IF;
 
-IF vbUserId = 5 --AND inIsByDay = TRUE
- AND 1=0
+IF vbUserId = 5 AND inIsByDay = TRUE
+   AND 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.test ok <%>  <%>  <%> <%>    <%>   <%>'
              , (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 253294614   AND MIB.DescId = zc_MIBoolean_Calculated())

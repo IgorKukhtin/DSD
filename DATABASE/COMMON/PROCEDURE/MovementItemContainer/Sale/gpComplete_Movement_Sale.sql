@@ -20,6 +20,7 @@ BEGIN
 
      -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
      PERFORM lpComplete_Movement_Sale_CreateTemp();
+--
 if vbUserId IN (9459, 5) AND 1=0 THEN
      -- ѕроводим ƒокумент
      PERFORM lpComplete_Movement_Sale22 (inMovementId     := inMovementId

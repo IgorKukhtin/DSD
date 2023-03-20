@@ -468,12 +468,12 @@ BEGIN
 
  
 
-    RAISE EXCEPTION 'Ошибка.<%>  %   %   %'
+  /*RAISE EXCEPTION 'Ошибка.<%>  %   %   %'
  , (select sum (OperSumm_Partner_noDiscount) from _tmpItem)
  , (select sum (OperSumm_Partner_Discount) from _tmpItem)
  , (select sum (OperSumm_Partner) from _tmpItem)
  , vbOperSumm_Partner
-  ;
+  ;*/
 
 
 END;

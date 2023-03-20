@@ -19,28 +19,56 @@ BEGIN
 
      -- if inUserId = 5 then return; end if;
 
+     -- Временно захардкодил - !!!только для этого склада!!!
+     IF inUnitId = 8459 -- Склад Реализации
+         OR inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
+         OR inUnitId IN (8444 -- Склад ОХЛАЖДЕНКА
+                        , 8445 -- Склад МИНУСОВКА
+                        , 133049 -- Склад реализации мясо
+                         )
+     THEN
+
     vbIsNotRealGoods:= EXISTS (SELECT 1
                                FROM MovementLinkObject AS MLO
                                    INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                          ON ObjectLink_Partner_Juridical.ObjectId = MLO.ObjectId
                                                         AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
                                    INNER JOIN ObjectBoolean AS ObjectBoolean_isNotRealGoods
-                                                            ON ObjectBoolean_isNotRealGoods.ObjectId  = ObjectLink_Partner_Juridical.ChildObjectId 
+                                                            ON ObjectBoolean_isNotRealGoods.ObjectId  = ObjectLink_Partner_Juridical.ChildObjectId
                                                            AND ObjectBoolean_isNotRealGoods.DescId    = zc_ObjectBoolean_Juridical_isNotRealGoods()
                                                            AND ObjectBoolean_isNotRealGoods.ValueData = TRUE
                                WHERE MLO.MovementId = inMovementId
                                  AND MLO.DescId     = zc_MovementLinkObject_To()
                               );
 
+     -- !!!для филиала - убрать пересорты
+     IF inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
+        AND '01.03.2023' <= vbOperDate
+     THEN
+         -- Поиск "Пересортица" или "Обычный"
+         vbMovementId_Peresort:= (SELECT MLM.MovementId
+                                  FROM MovementLinkMovement AS MLM
+                                       JOIN Movement ON Movement.Id       = MLM.MovementId
+                                                    AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                  WHERE MLM.MovementChildId = inMovementId
+                                    AND MLM.DescId          = zc_MovementLinkMovement_Production()
+                                 );
+         --
+         IF vbMovementId_Peresort > 0
+         THEN
+             -- !!!удвление!!!
+             PERFORM lpSetErased_Movement (inMovementId:= vbMovementId_Peresort, inUserId:= inUserId);
+         END IF;
+
      -- Временно захардкодил - !!!только для этого склада!!!
-     IF inUnitId = 8459 -- Склад Реализации
-     OR inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
-     OR (inUnitId IN (8444 -- Склад ОХЛАЖДЕНКА
-                    , 8445 -- Склад МИНУСОВКА
-                    , 133049 -- Склад реализации мясо
-                     )
-         AND '01.11.2016' <= vbOperDate -- Дата когда стартанула схема для этих 3-х складов
-        )
+     ELSEIF inUnitId = 8459 -- Склад Реализации
+         OR inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
+         OR (inUnitId IN (8444 -- Склад ОХЛАЖДЕНКА
+                        , 8445 -- Склад МИНУСОВКА
+                        , 133049 -- Склад реализации мясо
+                         )
+             AND '01.11.2016' <= vbOperDate -- Дата когда стартанула схема для этих 3-х складов
+            )
         -- AND inUserId = 5
      THEN
 
@@ -67,7 +95,7 @@ BEGIN
                                 --!!!Розподільчий комплекс!!!
                                 --AND inUnitId = 8459
                                 --AND vbOperDate < '01.02.2023'
-                                  
+
                                 GROUP BY MIContainer.ObjectId_Analyzer
                                        , MIContainer.ObjectIntId_Analyzer
                                )
@@ -137,7 +165,7 @@ BEGIN
                                    LEFT JOIN tmpRemains ON tmpRemains.GoodsId     = tmpContainer.GoodsId
                                                        AND tmpRemains.GoodsKindId = tmpContainer.GoodsKindId
                              )
-        -- 
+        --
         SELECT tmpContainer.GoodsId
              , tmpContainer.GoodsKindId
              , tmpContainer.Amount - COALESCE (tmpMIContainer.Amount, 0) AS Amount
@@ -156,12 +184,18 @@ THEN
 END IF;
 
 
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('_tmpItemPeresort_new'))
+     THEN
+         DROP TABLE _tmpItemPeresort_new;
+     END IF;
+
      -- таблица - элементы
      CREATE TEMP TABLE _tmpItemPeresort_new (MovementItemId_to Integer, MovementItemId_from Integer
                                            , GoodsId_to Integer, GoodsKindId_to Integer
                                            , GoodsId_from Integer, GoodsKindId_from Integer
                                            , ReceipId_to Integer, ReceipId_gp_to Integer
                                            , Amount_to TFloat, Amount_Remains TFloat) ON COMMIT DROP;
+
      -- элементы
      INSERT INTO _tmpItemPeresort_new (MovementItemId_to, MovementItemId_from, GoodsId_to, GoodsKindId_to, GoodsId_from, GoodsKindId_from, ReceipId_to, ReceipId_gp_to, Amount_to, Amount_Remains)
         SELECT 0                                                      AS MovementItemId_to
@@ -195,6 +229,15 @@ END IF;
                                  AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
                                  -- AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0
 
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSubSend
+                                  ON ObjectLink_GoodsByGoodsKind_GoodsSubSend.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                 AND ObjectLink_GoodsByGoodsKind_GoodsSubSend.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsSubSend()
+                               --AND ObjectLink_GoodsByGoodsKind_GoodsSubSend.ChildObjectId > 0
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSubSend
+                                  ON ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                 AND ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSubSend()
+                               --AND ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.ChildObjectId > 0
+
              LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsReal
                                   ON ObjectLink_GoodsByGoodsKind_GoodsReal.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                  AND ObjectLink_GoodsByGoodsKind_GoodsReal.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsReal()
@@ -223,6 +266,10 @@ END IF;
               ))
           AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsReal.ChildObjectId, 0) = 0
           AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKindReal.ChildObjectId, 0) = 0
+          -- безе пересортицы в lpComplete_Movement_Send_Recalc_sub
+          AND ObjectLink_GoodsByGoodsKind_GoodsSubSend.ChildObjectId     IS NULL
+          AND ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.ChildObjectId IS NULL
+
         GROUP BY _tmpItem.GoodsId
                , _tmpItem.GoodsKindId
                , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
@@ -412,7 +459,7 @@ END IF;
                                                                   THEN _tmpItemPeresort_new.Amount_to * ObjectFloat_Weight.ValueData
                                                              -- если это НЕ составляющие и надо перевести в Шт
                                                              WHEN ObjectFloat_Weight.ValueData <> 0 AND ObjectLink_Goods_Measure_from.ChildObjectId = zc_Measure_Sh()
-                                                                  THEN _tmpItemPeresort_new.Amount_to / ObjectFloat_Weight.ValueData
+                                                                  THEN CAST (_tmpItemPeresort_new.Amount_to / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0))
                                                              -- иначе ... ?
                                                              ELSE _tmpItemPeresort_new.Amount_to
                                                         END
@@ -531,7 +578,7 @@ END IF;
                                                                                          THEN _tmpItemPeresort_new.Amount_to * ObjectFloat_Weight.ValueData
                                                                                     -- если это НЕ составляющие и надо перевести в Шт
                                                                                     WHEN ObjectFloat_Weight.ValueData <> 0 AND ObjectLink_Goods_Measure_from.ChildObjectId = zc_Measure_Sh()
-                                                                                         THEN _tmpItemPeresort_new.Amount_to / ObjectFloat_Weight.ValueData
+                                                                                         THEN CAST (_tmpItemPeresort_new.Amount_to / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0))
                                                                                     -- иначе ... ?
                                                                                     ELSE _tmpItemPeresort_new.Amount_to
                                                                                END
@@ -593,6 +640,7 @@ END IF;
 
      END IF;
      END IF; -- if ... Временно захардкодил - !!!только для этого склада!!!
+     END IF;
 
      -- Админу только отладка
      -- if inUserId = 5 AND 1=0 then RAISE EXCEPTION 'Нет Прав и нет Проверки - что б ничего не делать'; end if;

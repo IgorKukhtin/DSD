@@ -29,7 +29,13 @@ BEGIN
      THEN
 
      -- Поиск "Пересортица" или "Обычный"
-     vbMovementId_Peresort:= (SELECT MLM.MovementId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Production());
+     vbMovementId_Peresort:= (SELECT MLM.MovementId
+                              FROM MovementLinkMovement AS MLM
+                                   JOIN Movement ON Movement.Id = MLM.MovementId
+                                                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                              WHERE MLM.MovementChildId = inMovementId
+                                AND MLM.DescId          = zc_MovementLinkMovement_Production()
+                             );
 
 
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItemPeresort_new'))
@@ -317,6 +323,7 @@ BEGIN
 
      ELSE
          IF vbMovementId_Peresort <> 0 AND zc_Enum_Status_Erased() <> (SELECT StatusId FROM Movement WHERE Id = vbMovementId_Peresort)
+            AND (SELECT ObjectId FROM MovementLinkObject AS MLO WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From()) <> 8459 -- Склад Реализации
          THEN
              PERFORM lpSetErased_Movement (inMovementId := vbMovementId_Peresort
                                          , inUserId     := inUserId

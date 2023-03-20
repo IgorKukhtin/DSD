@@ -1094,6 +1094,17 @@ end if;
      vbIsPartionGoodsKind_Unit_To  := COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbWhereObjectId_Analyzer_To   AND OB.DescId = zc_ObjectBoolean_Unit_PartionGoodsKind()), FALSE);
 
 
+
+     IF 1=1 -- inUserId <> zfCalc_UserAdmin() :: Integer
+     THEN
+         -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Реализация" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
+         PERFORM lpComplete_Movement_Sale_Recalc (inMovementId := inMovementId
+                                                , inUnitId     := vbWhereObjectId_Analyzer_From
+                                                , inUserId     := inUserId
+                                                 );
+     END IF;
+
+
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      -- !!! Ну а теперь - ПРОВОДКИ !!!
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
