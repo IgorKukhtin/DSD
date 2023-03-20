@@ -56,6 +56,7 @@ type
     FMedication_ID_List : String;       // ID что выписано
     FMedication_Name : string;          // Название
     FMedication_Qty : currency;         // Количество выписано
+    FDenumerator_Unit : string;         // Еденица измерения
 
     FMedication_request_id : String;    // ID рецепта
     FMedical_program_id : String;       // ID соц. программы программы
@@ -112,7 +113,7 @@ type
     function ShowError(AText : string) : string;
   end;
 
-function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
+function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName, ADenUnit : string;
   var AQty : currency; var ADate : TDateTime; var AProgramId, AProgramName : String;
   var APartialPrescription, ASkipDispenseSign : Boolean) : boolean;
 
@@ -509,6 +510,8 @@ begin
           FMedication_ID := j.FindValue('medication_id').Value;
           FMedication_Name := j.FindValue('medication_name').Value;
           FMedication_Qty := TJSONNumber(j.FindValue('medication_qty')).AsDouble;
+          if (j.FindValue('dosage') <> Nil) and (j.FindValue('dosage').FindValue('denumerator_unit') <> Nil) then
+            FDenumerator_Unit := j.FindValue('dosage').FindValue('denumerator_unit').Value;
           if j.FindValue('medication_remaining_qty') <> Nil then
             FMedication_Qty := TJSONNumber(j.FindValue('medication_remaining_qty')).AsDouble;
 
@@ -549,7 +552,8 @@ begin
       end;
     except
     end
-  end else if ((FRESTResponse.StatusCode = 200) or (FRESTResponse.StatusCode = 302)) and (FRESTResponse.ContentType = 'text/html') then
+  end else if ((FRESTResponse.StatusCode = 200) or
+    (FRESTResponse.StatusCode = 302)) and (FRESTResponse.ContentType = 'text/html') then
   begin
     if GetHTTPLocation then Result := True;
   end;
@@ -1229,7 +1233,7 @@ begin
 end;
 
 
-function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName : string;
+function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName, ADenUnit : string;
   var AQty : currency; var ADate : TDateTime; var AProgramId, AProgramName : String;
   var APartialPrescription, ASkipDispenseSign : Boolean) : boolean;
   var I : integer;
@@ -1300,6 +1304,7 @@ begin
     AIDList := HelsiApi.FMedication_ID_List;
     AName := HelsiApi.FMedication_Name;
     AQty := HelsiApi.FMedication_Qty;
+    ADenUnit := HelsiApi.FDenumerator_Unit;
     ADate := HelsiApi.FCreated_at;
     AprogramId := HelsiApi.FMedical_program_id;
     AprogramName := HelsiApi.FMedical_program_Name;

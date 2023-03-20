@@ -429,17 +429,15 @@ BEGIN
                             -- OperPrice
                           , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                       -- в "налоговом документе" всегда будут без НДС
-                                      THEN CAST (COALESCE (MIFloat_Price.ValueData, 0) * (vbDiscountPercent / 100)
-                                                 * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
-                                                             THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
-                                                        ELSE 1
-                                                   END
-                                               / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
-                                 ELSE COALESCE (MIFloat_Price.ValueData, 0) * (vbDiscountPercent / 100)
-                                       * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
-                                                   THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
-                                              ELSE 1
-                                         END
+                                      THEN CAST (( COALESCE (MIFloat_Price.ValueData, 0)                                                       -- цена
+                                                 - CAST ( (MIFloat_Price.ValueData * (1 - vbDiscountPercent / 100)) AS NUMERIC (16, 2))           -- цена со скидкой
+                                                 )
+                                                   / (1 + vbVATPercent / 100) 
+                                               AS NUMERIC (16, 2))
+                                 ELSE ( COALESCE (MIFloat_Price.ValueData, 0)                                                       -- цена
+                                       - CAST ( (MIFloat_Price.ValueData * (1 - vbDiscountPercent / 100)) AS NUMERIC (16, 2))           -- цена со скидкой
+                                       )
+ 
                             END AS OperPrice
                             -- OperPrice_original
                           , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
@@ -471,25 +469,23 @@ BEGIN
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                           , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                       -- в "налоговом документе" всегда будут без НДС
-                                      THEN CAST (COALESCE (MIFloat_Price.ValueData, 0) * (vbDiscountPercent / 100)
-                                                 * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
-                                                             THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
-                                                        ELSE 1
-                                                   END
-                                               / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
-                                 ELSE COALESCE (MIFloat_Price.ValueData, 0) * (vbDiscountPercent / 100)
-                                       * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND MovementItem.MovementId = inMovementId
-                                                   THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
-                                              ELSE 1
-                                         END
-                            END 
+                                      THEN CAST (( COALESCE (MIFloat_Price.ValueData, 0)                                                       -- цена
+                                                 - CAST ( (MIFloat_Price.ValueData * (1 - vbDiscountPercent / 100)) AS NUMERIC (16, 2))           -- цена со скидкой
+                                                 )
+                                                   / (1 + vbVATPercent / 100) 
+                                               AS NUMERIC (16, 2))
+                                 ELSE ( COALESCE (MIFloat_Price.ValueData, 0)                                                       -- цена
+                                       - CAST ( (MIFloat_Price.ValueData * (1 - vbDiscountPercent / 100)) AS NUMERIC (16, 2))           -- цена со скидкой
+                                       )
+ 
+                            END
                             -- OperPrice_original
                           , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                       -- в "налоговом документе" всегда будут без НДС
                                       THEN CAST (COALESCE (MIFloat_Price.ValueData, 0)
                                                / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
                                  ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                            END 
+                            END
                             -- CountForPrice
                           , MIFloat_CountForPrice.ValueData
                      )
@@ -1261,3 +1257,5 @@ $BODY$
 -- select * from gpInsertUpdate_Movement_TaxCorrective_From_Kind(inMovementId := 16691011 , inDocumentTaxKindId := 566452 , inDocumentTaxKindId_inf := 566452 , inStartDateTax := NULL , inIsTaxLink := 'True' ,  inSession := '5');
 -- select * from gpInsertUpdate_Movement_TaxCorrective_From_Kind(inMovementId := 22528897 , inDocumentTaxKindId := 0 , inDocumentTaxKindId_inf := 0 , inStartDateTax := ('01.12.2021')::TDateTime , inIsTaxLink := 'True' ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
 --select * from gpInsertUpdate_Movement_TaxCorrective_From_Kind(inMovementId := 24743082 , inDocumentTaxKindId := 9178892 , inDocumentTaxKindId_inf := 9178892 , inStartDateTax := ('01.01.1900')::TDateTime , inIsTaxLink := 'True' ,  inSession := '9457');
+
+а подскажи наш метод DEX_Calc можно запускать без заявок только для старта расчета?

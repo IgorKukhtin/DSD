@@ -237,7 +237,7 @@ BEGIN
             or
             inCodeSearch <> ''
         )
-        AND COALESCE(JuridicalSettings.isPriceCloseOrder, FALSE) <> TRUE
+        AND (COALESCE(JuridicalSettings.isPriceCloseOrder, FALSE) <> TRUE or EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = 12084491))
         AND (LoadPriceList.AreaId = 0 OR COALESCE (LoadPriceList.AreaId, 0) = inAreaId OR COALESCE(inAreaId, 0) = 0 OR COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis() );
 
 END;
@@ -264,4 +264,6 @@ $BODY$
 --select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'детралекс%1000' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');
 
 
-select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := '' , inProducerSearch := '' , inCodeSearch := '5544' ,  inSession := '3');
+--select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := '' , inProducerSearch := '' , inCodeSearch := '5544' ,  inSession := '3');
+
+select * from gpSelect_GoodsSearch(inAreaId := 0 , inGoodsSearch := 'сондокс' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3');

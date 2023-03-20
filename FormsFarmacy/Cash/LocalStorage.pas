@@ -354,6 +354,8 @@ begin
       //***10.09.22
       AddIntField(LocalDataBaseBody,  'GOODSPR');     //Акционный товар
       AddBoolField(LocalDataBaseBody, 'ISGOODSPR');   //Акционная строчка
+      //***20.03.23
+      AddStrField(LocalDataBaseBody,   'IDSP', 50);   //ID лікар. засобу для СП
 
       LocalDataBaseBody.CreateTable;
     end
@@ -388,6 +390,8 @@ begin
         //***10.09.22
         if FindField('GOODSPR') = nil then AddIntField(LFieldDefs,  'GOODSPR');
         if FindField('ISGOODSPR') = nil then AddBoolField(LFieldDefs, 'ISGOODSPR');
+        //***20.03.23
+        if FindField('IDSP') = nil then AddStrField(LFieldDefs, 'IDSP', 50);
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -429,7 +433,8 @@ begin
         (FindField('JURIDID') = nil) or
         //***10.09.22
         (FindField('GOODSPR') = nil) or
-        (FindField('ISGOODSPR') = nil));
+        (FindField('ISGOODSPR') = nil) or
+        (FindField('IDSP') = nil));
 
       Close;
 

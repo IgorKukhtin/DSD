@@ -150,6 +150,7 @@ type
     cbEliminateColdSUA: TcxCheckBox;
     edSendCashErrorTelId: TcxTextEdit;
     cxLabel40: TcxLabel;
+    cbCancelBansSUN: TcxCheckBox;
   private
     { Private declarations }
   public

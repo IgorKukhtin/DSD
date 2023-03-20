@@ -72,6 +72,11 @@ type
     actUpdateActNumberAndAmountFilter: TdsdExecStoredProc;
     actExecuteDialogactActNumberAndAmount: TExecuteDialog;
     bbUpdateActNumberAndAmount: TdxBarButton;
+    isClosed: TcxGridDBColumn;
+    spUpdate_Closed: TdsdStoredProc;
+    mactUpdate_Closed: TMultiAction;
+    actUpdate_Closed: TdsdExecStoredProc;
+    bbUpdate_Closed: TdxBarButton;
   private
     { Private declarations }
   public

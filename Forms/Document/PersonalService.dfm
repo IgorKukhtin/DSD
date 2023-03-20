@@ -2423,7 +2423,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Width = 1034
     Height = 89
     TabOrder = 3
-    ExplicitTop = 7
     ExplicitWidth = 1034
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
@@ -4152,6 +4151,65 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = False
     end
+    object ExecuteDialogPeriod: TExecuteDialog
+      Category = 'InsertAvance'
+      MoveParams = <>
+      Caption = 'actDatePeriodDialog'
+      FormName = 'TDatePeriodDialogForm'
+      FormNameParam.Value = 'TDatePeriodDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inStartDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = #1050#1086#1083'-'#1074#1086' '#1079#1085#1072#1082#1086#1074' '#1076#1083#1103' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1103
+          Component = FormParams
+          ComponentItem = 'inEndDate'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actInsertUpdate_Avance: TdsdExecStoredProc
+      Category = 'InsertAvance'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_Avance
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_Avance
+        end>
+      Caption = 'actInsertUpdate_Avance'
+    end
+    object macInsertUpdate_AvanceAuto: TMultiAction
+      Category = 'InsertAvance'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogPeriod
+        end
+        item
+          Action = actInsertUpdate_Avance
+        end
+        item
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1088#1086#1089#1090#1072#1074#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1072#1074#1072#1085#1089#1072' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080'?'
+      InfoAfterExecute = #1057#1091#1084#1084#1072' '#1072#1074#1072#1085#1089#1072' '#1079#1072#1087#1086#1083#1085#1077#1085#1072' '
+      Caption = #1055#1088#1086#1089#1090#1072#1074#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1072#1074#1072#1085#1089#1072' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+      Hint = #1055#1088#1086#1089#1090#1072#1074#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1072#1074#1072#1085#1089#1072' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+      ImageIndex = 45
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -4530,6 +4588,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           Visible = True
           ItemName = 'bbUpdate_Compensation'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
         end>
     end
     object bbExportSub: TdxBarSubItem
@@ -4564,6 +4626,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object bbOpenReportRecalcForm: TdxBarButton
       Action = actOpenReportRecalcForm
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macInsertUpdate_AvanceAuto
       Category = 0
     end
   end
@@ -7015,5 +7081,40 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 402
     Top = 666
+  end
+  object spInsertUpdate_Avance: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_PersonalService_Avance'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inStartDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inEndDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 401
   end
 end

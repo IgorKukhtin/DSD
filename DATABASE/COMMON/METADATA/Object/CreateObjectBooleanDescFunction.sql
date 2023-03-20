@@ -1396,10 +1396,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Unit_ColdOutSUN() RETURNS Integer AS
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectBoolean_Unit_ColdOutSUN', 'Отдавать холод по СУН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Unit_ColdOutSUN');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_CancelBansSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_CancelBansSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_CancelBansSUN', 'Отмена запретов по всем СУН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_CancelBansSUN');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 18.03.23                                                                                                          * zc_ObjectBoolean_CashSettings_CancelBansSUN
  14.03.23         * zc_ObjectBoolean_PersonalServiceList_AvanceNot
                     zc_ObjectBoolean_Unit_Avance
  03.03.23                                                                                                          * zc_ObjectBoolean_Unit_ColdOutSUN
