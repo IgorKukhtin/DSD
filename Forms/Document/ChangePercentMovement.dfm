@@ -865,6 +865,26 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = Sum_ChangePercent_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sum_ChangePercent_tax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sum_Diff1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sum_Diff2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sum_Diff3
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -896,6 +916,26 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = Sum_ChangePercent_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sum_ChangePercent_tax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sum_Diff1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sum_Diff2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sum_Diff3
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
