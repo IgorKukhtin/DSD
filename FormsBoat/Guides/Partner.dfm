@@ -1,7 +1,7 @@
 object PartnerForm: TPartnerForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Lieferanten>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Lieferanten('#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080')>'
   ClientHeight = 376
   ClientWidth = 723
   Color = clBtnFace

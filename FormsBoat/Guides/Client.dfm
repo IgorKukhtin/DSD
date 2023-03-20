@@ -1,7 +1,7 @@
 object ClientForm: TClientForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Kunden>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Kunden('#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080')>'
   ClientHeight = 376
   ClientWidth = 541
   Color = clBtnFace
