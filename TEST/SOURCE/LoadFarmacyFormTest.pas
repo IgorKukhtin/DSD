@@ -3768,10 +3768,10 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserNickForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserNickForm');
-
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserCashForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserCashForm');
-
+ {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditLanguageForm'));
     TdsdFormStorageFactory.GetStorage.Load('TUserEditLanguageForm');
 

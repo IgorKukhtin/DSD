@@ -100,8 +100,8 @@ type
     procedure ReturnSave(MovementDataSet: TDataSet;
       spFileInfo, spFileBlob: TdsdStoredProc; Directory: string; DebugMode: boolean);
     procedure ErrorLoad(Directory: string);
-    // заказ
-    procedure OrderLoadString(AOrder, AFileName : string; spHeader, spList: TdsdStoredProc);
+    // заказ VchasnoEDIA
+    procedure OrderLoadVchasnoEDIA(AOrder, AFileName : string; spHeader, spList: TdsdStoredProc);
   published
     property ConnectionParams: TConnectionParams read FConnectionParams
       write FConnectionParams;
@@ -4414,7 +4414,7 @@ if VarIsNull(ComSigner) then
     end;
 end;
 
-procedure TEDI.OrderLoadString(AOrder, AFileName: String; spHeader, spList: TdsdStoredProc);
+procedure TEDI.OrderLoadVchasnoEDIA(AOrder, AFileName: String; spHeader, spList: TdsdStoredProc);
 var
   ORDER: OrderXML.IXMLORDERType;
 begin
@@ -4880,8 +4880,8 @@ begin
             begin
               // создание документ
               case EDIDocType of
-                ediOrder: EDI.OrderLoadString(Copy(FResultParam.Value, Max(POS('<', FResultParam.Value), 1), Length(FResultParam.Value)),
-                                              FFileNameParam.Value, FspHeader, FspList);
+                ediOrder: EDI.OrderLoadVchasnoEDIA(Copy(FResultParam.Value, Max(POS('<', FResultParam.Value), 1), Length(FResultParam.Value)),
+                                                   FFileNameParam.Value, FspHeader, FspList);
               end;
               Result := true;
 

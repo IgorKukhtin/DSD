@@ -18,15 +18,14 @@ object UserCashForm: TUserCashForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 27
     Width = 1083
-    Height = 445
+    Height = 444
     Align = alClient
     PopupMenu = pmGrid
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 978
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -165,7 +164,7 @@ object UserCashForm: TUserCashForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -15
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -184,7 +183,7 @@ object UserCashForm: TUserCashForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -245,11 +244,15 @@ object UserCashForm: TUserCashForm
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
+          ItemName = 'dxBarButton5'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbToExcel'
         end>
       OneOnRow = True
       Row = 0
@@ -325,6 +328,10 @@ object UserCashForm: TUserCashForm
     end
     object dxBarButton4: TdxBarButton
       Action = mactUpdate_InternshipCompleted_No
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actOpenUserHelsiEditForm
       Category = 0
     end
   end
@@ -512,6 +519,27 @@ object UserCashForm: TUserCashForm
           StoredProc = spUpdate_InternshipCompleted_No
         end>
       Caption = 'actUpdate_InternshipCompleted_No'
+    end
+    object actOpenUserHelsiEditForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1059#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1076#1086#1089#1090#1091#1087#1072' '#1082' '#1089#1072#1081#1090#1072#1084' '#1076#1083#1103' '#1087#1086#1075#1072#1096#1077#1085#1080#1103' '#1088#1077#1094#1077#1087#1090#1086#1074
+      Hint = #1059#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1076#1086#1089#1090#1091#1087#1072' '#1082' '#1089#1072#1081#1090#1072#1084' '#1076#1083#1103' '#1087#1086#1075#1072#1096#1077#1085#1080#1103' '#1088#1077#1094#1077#1087#1090#1086#1074
+      ImageIndex = 55
+      FormName = 'TUserHelsiEditForm'
+      FormNameParam.Value = 'TUserHelsiEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ID'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ID'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object spSelect: TdsdStoredProc

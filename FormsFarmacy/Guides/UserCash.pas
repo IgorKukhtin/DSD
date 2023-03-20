@@ -81,6 +81,8 @@ type
     dxBarButton3: TdxBarButton;
     dxBarButton4: TdxBarButton;
     DateInternshipCompleted: TcxGridDBColumn;
+    actOpenUserHelsiEditForm: TdsdOpenForm;
+    dxBarButton5: TdxBarButton;
   private
     { Private declarations }
   public

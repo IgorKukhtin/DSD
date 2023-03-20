@@ -139,6 +139,8 @@ type
     GOODSPR: Integer;       // Акционный товар
     ISGOODSPR: Boolean;     // Акционная строчка
     //***10.08.16
+    IDSP: String[50];       // ID лікар. засобу для СП
+    //***10.08.16
     LIST_UID: String[50]    // UID строки продажи
   end;
   TBodyArr = Array of TBodyRecord;
@@ -1563,6 +1565,8 @@ begin
                     // ***10.09.22
                     GOODSPR := FieldByName('GOODSPR').AsInteger;
                     ISGOODSPR := FieldByName('ISGOODSPR').AsBoolean;
+                    // ***23.03.23
+                    IDSP := trim(FieldByName('IDSP').AsString);
                     // ***10.08.16
                     LIST_UID := trim(FieldByName('LIST_UID').AsString);
                   End;
@@ -1776,6 +1780,8 @@ begin
                   // ***10.09.22
                   dsdSave.Params.AddParam('inGoodsPresentId', ftInteger, ptInput, Null);
                   dsdSave.Params.AddParam('inisGoodsPresent', ftBoolean, ptInput, Null);
+                  // ***20.03.23
+                  dsdSave.Params.AddParam('inIdSP', ftString, ptInput, Null);
                   // ***10.08.16
                   dsdSave.Params.AddParam('inList_UID', ftString, ptInput, Null);
                   //
@@ -1816,6 +1822,8 @@ begin
                     // ***20.09.21
                     dsdSave.ParamByName('inGoodsPresentId').Value := Body[I].GOODSPR;
                     dsdSave.ParamByName('inisGoodsPresent').Value := Body[I].ISGOODSPR;
+                    // ***20.03.23
+                    dsdSave.ParamByName('inIdSP').Value := Body[I].IDSP;
                     // ***10.08.16
                     dsdSave.ParamByName('inList_UID').Value := Body[I].LIST_UID;
                     //

@@ -10,7 +10,8 @@
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, Integer, Boolean, TVarChar, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, Integer, Boolean, Integer, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, Integer, Boolean, Integer, Integer, Boolean, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, Integer, Boolean, Integer, Integer, Boolean, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, Integer, Boolean, Integer, Integer, Boolean, TVarChar, TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
@@ -31,8 +32,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
     IN inJuridicalId         Integer   , -- Списывать товар поставщика
     IN inGoodsPresentId      Integer   , -- Акционный товар
     IN inisGoodsPresent      Boolean   , -- Акционная строчка
+    IN inIdSP                TVarChar  , -- ID лікар. засобу для СП
     IN inList_UID            TVarChar  , -- UID строки
-    -- IN inDiscountCardNumber  TVarChar DEFAULT '', -- № Дисконтной карты
     in inUserSession	     TVarChar  , -- сессия пользователя (подменяем реальную)
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -239,9 +240,6 @@ BEGIN
     -- сохранили свойство <UID строки продажи>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_UID(), ioId, inList_UID);
 
-    -- сохранили связь с <Дисконтная карта> + здесь же и сформировали <Дисконтная карта>
-    -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_DiscountCard(), ioId, lpInsertFind_Object_DiscountCard (inObjectId:= inDiscountExternalId, inValue:= inDiscountCardNumber, inUserId:= vbUserId));
-
     -- сохранили связь с <Дисконтная карта>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_DiscountExternal(), ioId, COALESCE (inDiscountExternalId, 0));
 
@@ -267,18 +265,24 @@ BEGIN
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
+    -- сохранили свойство <ID лікар. засобу для СП>
+    IF Trim(inIdSP) <> ''
+    THEN
+      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_IdSP(), ioId, Trim(inIdSP));
+    END IF;
+
 
     -- !!!ВРЕМЕННО для ТЕСТА!!!
     IF inSession = zfCalc_UserAdmin()
     THEN
-        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inUserSession, inSession, inList_UID;
+        RAISE EXCEPTION 'Тест прошел успешно для <%> <%> <%>', inUserSession, inSession, inIdSP;
     END IF;
 
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, Integer, Integer, Boolean, Integer, Integer, Boolean, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -290,58 +294,4 @@ ALTER FUNCTION gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer
  03.11.2015                                                                      *
  07.08.2015                                                                      *
  26.05.15                        *
-*/
-
-/*
--- Ошибка с ЧЕКАМИ - СКИДКА
--- update MovementItemFloat set ValueData = tmp.new2  from (
--- select lpInsertUpdate_MovementFloat_TotalSummCheck (tmp.Id) from (select distinct Movement.Id
-
-select MIFloat_SummChangePercent.*,  MovementItem.Amount * (COALESCE (MIFloat_PriceSale.ValueData, 0) - COALESCE (MIFloat_Price.ValueData, 0)) as new
-                                  , ROUND (MovementItem.Amount * (COALESCE (MIFloat_PriceSale.ValueData, 0) - COALESCE (MIFloat_Price.ValueData, 0)), 4) as new2
--- , Movement.*, Object_Unit.*
-from Movement
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
-
-     inner join MovementItem on MovementItem.MovementId = Movement.Id
-                               and MovementItem.isErased = false
-           inner JOIN MovementItemFloat AS MIFloat_SummChangePercent
-                                        ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
-                                       AND MIFloat_SummChangePercent.DescId = zc_MIFloat_SummChangePercent()
-                                       AND MIFloat_SummChangePercent.ValueData <> 0
-
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-            LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                        ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
-                                       AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-
-where Movement.OperDate between '01.04.2017'  and '01.06.2017'
-  and Movement.DescId = zc_Movement_Check()
--- and MIFloat_SummChangePercent.ValueData <>  MovementItem.Amount * (COALESCE (MIFloat_PriceSale.ValueData, 0) - COALESCE (MIFloat_Price.ValueData, 0))
-and MIFloat_SummChangePercent.ValueData <>  ROUND (MovementItem.Amount * (COALESCE (MIFloat_PriceSale.ValueData, 0) - COALESCE (MIFloat_Price.ValueData, 0)) , 4)
--- and MovementItem .Amount = 0
-
- -- ) as tmp
- -- where MovementItemFloat .MovementItemId = tmp.MovementItemId  and MovementItemFloat .DescId = tmp.DescId
-
-
-select lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), MovementItem.Id, MIFloat_Price.ValueData)
-, *
-from Movement
-     inner join MovementItem on MovementId = Movement.Id and MovementItem.DescId = zc_MI_Master()
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-            LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                        ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
-                                       AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-where Movement.descId = zc_Movement_Check()
-and Movement.OperDate >= '01.08.2016'
-and MIFloat_PriceSale.MovementItemId is null
 */

@@ -13402,7 +13402,9 @@ begin
             ADS.FieldByName('JuridicalId').AsInteger, // Товар поставщика
             // ***02.10.20
             ADS.FieldByName('GoodsPresentId').AsInteger, // Акционный товар
-            ADS.FieldByName('isGoodsPresent').AsBoolean // Акционная строчка
+            ADS.FieldByName('isGoodsPresent').AsBoolean, // Акционная строчка
+            // ***20.03.23
+            ADS.FieldByName('IDSP').AsString  // ID лікар. засобу для СП
             ]));
           // сохранили отгруженные препараты для корректировки полных остатков
           if FSaveCheckToMemData then
