@@ -13,7 +13,7 @@
     object actReport_PriceList: TdsdOpenForm [0]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
-      Caption = #1086#1090#1095#1077#1090' '#1087#1086' '#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072#1084' - '#1094#1077#1085#1072' '#1085#1072' '#1076#1072#1090#1091
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072#1084' ('#1085#1072' '#1076#1072#1090#1091')'
       FormName = 'TReport_PriceListForm'
       FormNameParam.Value = 'TReport_PriceListForm'
       FormNameParam.DataType = ftString
@@ -91,7 +91,7 @@
     object actReport_Movement_PriceList: TdsdOpenForm [7]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
-      Caption = #1086#1090#1095#1077#1090' '#1087#1086' '#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072#1084
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1072#1084
       FormName = 'TReport_Movement_PriceListForm'
       FormNameParam.Value = 'TReport_Movement_PriceListForm'
       FormNameParam.DataType = ftString
@@ -405,7 +405,7 @@
     object actPLZ: TdsdOpenForm [34]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1055#1086#1095#1090#1086#1074#1099#1077' '#1072#1076#1088#1077#1089#1072
+      Caption = #1055#1086#1095#1090#1086#1074#1099#1077' '#1080#1085#1076#1077#1082#1089#1099
       FormName = 'TPLZForm'
       FormNameParam.Value = 'TPLZForm'
       FormNameParam.DataType = ftString
@@ -504,7 +504,7 @@
     object actReport_MotionByClient: TdsdOpenForm [42]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
-      Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1082#1083#1080#1077#1085#1090#1072#1084
       FormName = 'TReport_MotionByClientForm'
       FormNameParam.Value = 'TReport_MotionByClientForm'
       FormNameParam.DataType = ftString
@@ -726,7 +726,7 @@
     object actGoodsSize: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = 'Gr'#246#223'e'
+      Caption = 'Gr'#246#223'e('#1056#1072#1079#1084#1077#1088#1099')'
       FormName = 'TGoodsSizeForm'
       FormNameParam.Value = 'TGoodsSizeForm'
       FormNameParam.DataType = ftString
@@ -737,7 +737,7 @@
     object actGoodsGroup: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074
+      Caption = #1043#1088#1091#1087#1087#1099' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1093
       FormName = 'TGoodsGroupForm'
       FormNameParam.Value = 'TGoodsGroupForm'
       FormNameParam.DataType = ftString
@@ -770,7 +770,7 @@
     object actPartner: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = 'Lieferanten'
+      Caption = 'Lieferanten('#1055#1086#1089#1090#1072#1074#1097#1080#1082#1080')'
       FormName = 'TPartnerForm'
       FormNameParam.Value = 'TPartnerForm'
       FormNameParam.DataType = ftString
@@ -781,7 +781,7 @@
     object actClient: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = 'Kunden'
+      Caption = 'Kunden('#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080')'
       FormName = 'TClientForm'
       FormNameParam.Value = 'TClientForm'
       FormNameParam.DataType = ftString
@@ -803,7 +803,7 @@
     object actUnit: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      Caption = #1057#1082#1083#1072#1076#1099'/'#1059#1095#1072#1089#1090#1082#1080' '#1089#1073#1086#1088#1082#1080
       FormName = 'TUnitForm'
       FormNameParam.Value = 'TUnitForm'
       FormNameParam.DataType = ftString
@@ -1502,7 +1502,6 @@
     inherited miGuide: TMenuItem
       object miGoodsGroup: TMenuItem
         Action = actGoodsGroup
-        Caption = #1043#1088#1091#1087#1087#1099
       end
       object miGoods: TMenuItem
         Action = actGoods
@@ -1534,7 +1533,6 @@
       end
       object miUnit: TMenuItem
         Action = actUnit
-        Caption = #1057#1082#1083#1072#1076#1099
       end
       object miPriceList: TMenuItem
         Action = actPriceList
@@ -1553,7 +1551,6 @@
       end
       object miPLZ: TMenuItem
         Action = actPLZ
-        Caption = #1055#1086#1095#1090#1086#1074#1099#1077' '#1080#1085#1076#1077#1082#1089#1099
       end
       object N5: TMenuItem
         Caption = '-'
