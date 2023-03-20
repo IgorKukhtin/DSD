@@ -45,7 +45,9 @@ END IF;
                 -- или
              OR EXTRACT (DAY FROM CURRENT_DATE) <= 15
            --OR 1=1
+             OR inGroupId = 4
                 ;
+
      -- !!!НУЖНЫ ли ВОЗВРАТЫ!!!
      vbIsReturnIn:= -- если последние 2 дня месяца
                     DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '2 DAY')  > (DATE_TRUNC ('MONTH', CURRENT_DATE))
