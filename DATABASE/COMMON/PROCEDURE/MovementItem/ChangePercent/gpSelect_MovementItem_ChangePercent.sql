@@ -19,7 +19,9 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , AmountSumm_tax TFloat
              , Sum_ChangePercent_tax TFloat
              , Sum_Diff2 TFloat
-             , Sum_Diff3 TFloat
+             , Sum_Diff3 TFloat 
+             , Amount_tax TFloat
+             , Amount_diff TFloat
              
              , isErased Boolean
              )
@@ -127,7 +129,8 @@ BEGIN
                       , tmp.CountForPrice
                       , tmp.Price
                       , tmp.Price_ChangePercent
-                      , SUM (tmp.AmountSumm) AS AmountSumm
+                      , SUM (tmp.Amount)            AS Amount
+                      , SUM (tmp.AmountSumm)        AS AmountSumm
                       , SUM (tmp.Sum_ChangePercent) AS Sum_ChangePercent
                  FROM tmpMI_Tax AS tmp 
                  GROUP BY tmp.GoodsId
@@ -198,7 +201,11 @@ BEGIN
                              AS NUMERIC (16, 2))
               , 0)
            -  COALESCE ((tmpCalc.AmountSumm - tmpCalc.Sum_ChangePercent),0) ) ::TFloat AS Sum_Diff3
-
+           -- кол-во из налоговых
+           , tmpCalc.Amount     ::TFloat AS Amount_tax
+           , (COALESCE (MovementItem.Amount,0) - COALESCE (tmpCalc.Amount,0)) ::TFloat AS Amount_diff
+           
+           
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
