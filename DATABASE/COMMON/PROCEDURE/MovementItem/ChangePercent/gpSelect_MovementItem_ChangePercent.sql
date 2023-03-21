@@ -102,7 +102,7 @@ BEGIN
                         , CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2)) ::TFloat AS Price_ChangePercent
                         --Сумма со скидкой без НДС
                         , CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                               THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,3))
+                                               THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,4))
                                             ELSE MovementItem.Amount
                                        END AS TFloat)
                                  * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
@@ -164,7 +164,7 @@ BEGIN
            , CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2)) ::TFloat AS Price_ChangePercent
            --Сумма со скидкой без НДС
            , CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                  THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,3))
+                                  THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,4))
                                ELSE MovementItem.Amount
                           END AS TFloat)
                     * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
@@ -176,7 +176,7 @@ BEGIN
                         ELSE CAST  (MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)
            - CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                  THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,3))
+                                  THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,4))
                                ELSE MovementItem.Amount
                           END AS TFloat)
                     * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
@@ -194,7 +194,7 @@ BEGIN
                                    ELSE CAST  (MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                               END AS TFloat)
                       - CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                             THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,3))
+                                             THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,4))
                                           ELSE MovementItem.Amount
                                      END AS TFloat)
                                * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
