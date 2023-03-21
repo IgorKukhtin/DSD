@@ -63,6 +63,7 @@ type
     dxBarButton5: TdxBarButton;
     actGridToExcel: TdsdGridToExcel;
     spGet_MedicalProgram: TdsdStoredProc;
+    spUpdate_IDSP: TdsdStoredProc;
     procedure ParentFormCreate(Sender: TObject);
     procedure ParentFormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure actLoadStateExecute(Sender: TObject);
@@ -77,19 +78,19 @@ implementation
 
 {$R *.dfm}
 
-uses Helsi, MainCash2, Math, SimpleGauge;
+uses Helsi, MainCash2, Math, SimpleGauge, CommonData;
 
 
 
 procedure TCheckHelsiSignAllUnitForm.actLoadStateCurrExecute(Sender: TObject);
-  var cState, cMedicalProgramId, cProgramIdSP : string; nColor : Integer;
+  var cState, cMedicalProgramId, cProgramIdSP : string; nColor : Integer; nQty : Currency;
 begin
   if ClientDataSet.IsEmpty then Exit;
 
   if not FIniError then
   begin
-    if GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, cMedicalProgramId, FIniError) then
-    else if not FIniError and GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, cMedicalProgramId, FIniError) then
+    if GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, cMedicalProgramId, nQty, FIniError) then
+    else if not FIniError and GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, cMedicalProgramId, nQty, FIniError) then
     else cState := 'Ош. получения';
   end else cState := 'Ош. получения';
   nColor := clYellow;
@@ -130,6 +131,12 @@ begin
   ClientDataSet.FieldByName('State').AsString := cState;
   ClientDataSet.FieldByName('Color_calc').AsInteger := nColor;
   ClientDataSet.Post;
+
+  if (gc_User.Session = '3') and (cState = 'Погашен') and (nQty > 0) then
+  begin
+    spUpdate_IDSP.ParamByName('inQty').Value := nQty;
+    spUpdate_IDSP.Execute;
+  end;
 end;
 
 procedure TCheckHelsiSignAllUnitForm.actLoadStateExecute(Sender: TObject);

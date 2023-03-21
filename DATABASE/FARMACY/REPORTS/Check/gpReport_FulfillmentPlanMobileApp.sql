@@ -221,7 +221,15 @@ BEGIN
                                      ON ObjectBoolean_ShowPlanMobileAppUser.ObjectId = MovPlan.UnitId
                                     AND ObjectBoolean_ShowPlanMobileAppUser.DescId = zc_ObjectBoolean_Unit_ShowPlanMobileAppUser()
 
-        WHERE (tmpMovFact.UserId  = inUserId OR COALESCE (inUserId, 0) = 0)             
+        WHERE (tmpMovFact.UserId  = inUserId OR COALESCE (inUserId, 0) = 0)    
+          AND tmpMovFact.UserId IN (SELECT ObjectLink_User_Member.ObjectId AS UserID
+                                    FROM ObjectLink AS ObjectLink_User_Member
+
+                                         INNER JOIN  ObjectLink AS ObjectLink_Member_Position
+                                                                ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                                               AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+                                                               AND ObjectLink_Member_Position.ChildObjectId = 1672498
+                                    WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member())         
         ORDER BY Object_Unit.ValueData , Object_User.ValueData
         ;
 
@@ -238,4 +246,5 @@ ALTER FUNCTION gpReport_Check_TabletkiRecreate (TDateTime, TDateTime, Integer, T
 */            
 
 -- 
-select * from gpReport_FulfillmentPlanMobileApp (('01.02.2023')::TDateTime, 0, 0, '3');
+select * from gpReport_FulfillmentPlanMobileApp (('01.03.2023')::TDateTime, 0, 0, '3');
+

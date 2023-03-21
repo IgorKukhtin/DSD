@@ -117,7 +117,7 @@ function GetHelsiReceipt(const AReceipt : String; var AID, AIDList, AName, ADenU
   var AQty : currency; var ADate : TDateTime; var AProgramId, AProgramName : String;
   var APartialPrescription, ASkipDispenseSign : Boolean) : boolean;
 
-function GetHelsiReceiptState(const AReceipt : String; var AState, AProgramMedicationId  : string; var AIniError : boolean) : boolean;
+function GetHelsiReceiptState(const AReceipt : String; var AState, AProgramMedicationId  : string; var AQty: Currency; var AIniError : boolean) : boolean;
 
 function CreateNewDispense(AIDSP, AProgramIdSP : string; AQty, APrice, ASell_amount, ADiscount_amount, ASum : currency;
   ACode : string) : boolean;  overload;
@@ -510,13 +510,15 @@ begin
           FMedication_ID := j.FindValue('medication_id').Value;
           FMedication_Name := j.FindValue('medication_name').Value;
           FMedication_Qty := TJSONNumber(j.FindValue('medication_qty')).AsDouble;
-          if (j.FindValue('dosage') <> Nil) and (j.FindValue('dosage').FindValue('denumerator_unit') <> Nil) then
-            FDenumerator_Unit := j.FindValue('dosage').FindValue('denumerator_unit').Value;
-          if j.FindValue('medication_remaining_qty') <> Nil then
-            FMedication_Qty := TJSONNumber(j.FindValue('medication_remaining_qty')).AsDouble;
 
           FMedication_request_id := jValue.FindValue('id').Value;
           FStatus := jValue.FindValue('status').Value;
+
+          if (j.FindValue('dosage') <> Nil) and (j.FindValue('dosage').FindValue('denumerator_unit') <> Nil) then
+            FDenumerator_Unit := j.FindValue('dosage').FindValue('denumerator_unit').Value;
+          if (j.FindValue('medication_remaining_qty') <> Nil) and (FStatus <> 'COMPLETED') then
+            FMedication_Qty := TJSONNumber(j.FindValue('medication_remaining_qty')).AsDouble;
+
           if not StrToDateSite(jValue.FindValue('created_at').Value, FCreated_at) then Exit;
           if not StrToDateSite(jValue.FindValue('dispense_valid_from').Value, FDispense_valid_from) then Exit;
           if not StrToDateSite(jValue.FindValue('dispense_valid_to').Value, FDispense_valid_to) then Exit;
@@ -1326,7 +1328,7 @@ begin
   end;
 end;
 
-function GetHelsiReceiptState(const AReceipt : String; var AState, AProgramMedicationId : string; var AIniError : boolean) : boolean;
+function GetHelsiReceiptState(const AReceipt : String; var AState, AProgramMedicationId : string; var AQty: Currency; var AIniError : boolean) : boolean;
   var I : integer; bIniError : boolean;
 begin
   Result := False;
@@ -1371,6 +1373,7 @@ begin
 
   AState := HelsiApi.FStatus;
   AProgramMedicationId := HelsiApi.FMedical_program_id;
+  AQty := HelsiApi.FMedication_Qty;
   Result := True;
 end;
 

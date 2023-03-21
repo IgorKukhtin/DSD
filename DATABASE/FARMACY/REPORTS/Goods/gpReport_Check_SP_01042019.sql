@@ -473,6 +473,7 @@ BEGIN
                                      ELSE 0
                                 END)                                                 AS Price_calc
                          , Max(tmpMI_CheckPriceWithVAT.PriceWithVAT)                 AS PriceWithVAT  
+                         , MIString_IdSP.ValueData                                   AS IdSP
 
                     FROM tmpMov AS Movement_Check
                          INNER JOIN tmpMI_Check AS MI_Check ON MI_Check.MovementId = Movement_Check.Id
@@ -486,10 +487,12 @@ BEGIN
                          LEFT JOIN tmpMIFloat AS MIFloat_PriceSale
                                                      ON MIFloat_PriceSale.MovementItemId = MI_Check.Id
                                                     AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-
                          LEFT JOIN tmpMIFloat AS MIFloat_Price
                                                      ON MIFloat_Price.MovementItemId = MI_Check.Id
                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                         LEFT JOIN MovementItemString AS MIString_IdSP
+                                                      ON MIString_IdSP.MovementItemId = MovementItem.Id
+                                                     AND MIString_IdSP.DescId = zc_MIString_IdSP()
                                                     
                          LEFT JOIN tmpMI_CheckPriceWithVAT ON tmpMI_CheckPriceWithVAT.Id = MI_Check.Id
                          
@@ -512,6 +515,7 @@ BEGIN
                            , Movement_Check.TotalSumm_Check
                            , Movement_Check.InsertName_Check
                            , Movement_Check.InsertDate_Check
+                           , MIString_IdSP.ValueData
                     HAVING  SUM (MI_Check.Amount) <> 0
                     )
 
@@ -809,7 +813,9 @@ BEGIN
                                   ON tmpGoodsSP.GoodsMainId = tmpData.GoodsMainId
                                  AND DATE_TRUNC('DAY', tmpData.OperDate ::TDateTime) >= tmpGoodsSP.OperDateStart
                                  AND DATE_TRUNC('DAY', tmpData.OperDate ::TDateTime) <= tmpGoodsSP.OperDateEnd
-                                  AND tmpGoodsSP.MedicalProgramSPId = tmpData.MedicalProgramSPId
+                                 AND tmpGoodsSP.MedicalProgramSPId = tmpData.MedicalProgramSPId
+                                 AND (tmpGoodsSP.IdSP = tmpData.IdSP OR COALESCE(tmpData.IdSP, '') = '')
+                                 
 
              LEFT JOIN tmp_err ON tmp_err.Id = tmpData.MovementId_err
 
@@ -845,3 +851,7 @@ $BODY$
 */
 
 -- тест  select * from gpReport_Check_SP_01042019(inStartDate := ('01.03.2021')::TDateTime , inEndDate := ('15.03.2021')::TDateTime , inJuridicalId := 2886776 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 10959824 ,  inSession := '3');
+
+
+select * from gpReport_Check_SP(inStartDate := ('16.03.2023')::TDateTime , inEndDate := ('20.03.2023')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 0 , inMedicalProgramSPId := 18078175 , inGroupMedicalProgramSPId := 0 ,  inSession := '3');
+
