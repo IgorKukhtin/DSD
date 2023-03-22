@@ -114,7 +114,7 @@ BEGIN
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
           -- , MovementFloat_TotalSummPVAT.ValueData * MovementFloat_ChangePercent.ValueData  / 100  AS TotalSumm_ChangePercent 
-          , (tmpMI * (1 + vbVATPercent / 100))  AS TotalSumm_ChangePercent 
+          , (tmpMI.Sum_Diff1 * (1 + vbVATPercent / 100))  AS TotalSumm_ChangePercent 
            
            , Object_From.Id                    	     AS FromId
            , Object_From.ValueData                   AS FromName
