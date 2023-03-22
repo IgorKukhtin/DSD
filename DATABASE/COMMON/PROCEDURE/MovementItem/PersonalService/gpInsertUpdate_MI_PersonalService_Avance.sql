@@ -133,6 +133,7 @@ BEGIN
                                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
                               WHERE MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', vbServiceDate) AND (DATE_TRUNC ('MONTH', vbServiceDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
                                 AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+                               -- and MovementDate_ServiceDate.MovementId  <> 24813367
                               )
      --  сотрудники у который в др. ведомост€х выдан аванс
      , tmpMI_Avance AS (SELECT DISTINCT ObjectLink_Personal_Member.ChildObjectId AS MemberId
@@ -226,7 +227,7 @@ BEGIN
                                                       ) 
      FROM tmpData
           LEFT JOIN tmpMI ON tmpMI.PersonalId = tmpData.PersonalId
-                         AND tmpMI.MemberId = tmpData.MemberId
+                         AND tmpMI.MemberId_Personal = tmpData.MemberId
                          AND tmpMI.PositionId = tmpData.PositionId
                          AND tmpMI.UnitId = tmpData.UnitId
      WHERE tmpData.SumAmount >= vbHourAvance
