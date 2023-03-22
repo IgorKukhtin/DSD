@@ -4,22 +4,22 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
   ClientWidth = 1362
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1378
-  ExplicitHeight = 488
+  ExplicitWidth = 1380
+  ExplicitHeight = 500
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 57
+    Top = 61
     Width = 1362
-    Height = 396
-    ExplicitTop = 57
+    Height = 392
+    ExplicitTop = 61
     ExplicitWidth = 1362
-    ExplicitHeight = 396
-    ClientRectBottom = 396
+    ExplicitHeight = 392
+    ClientRectBottom = 392
     ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1362
-      ExplicitHeight = 396
+      ExplicitHeight = 392
       inherited cxGrid: TcxGrid
         Width = 1362
         Height = 209
@@ -474,7 +474,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         Left = 0
         Top = 214
         Width = 1362
-        Height = 182
+        Height = 178
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
@@ -482,7 +482,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
           Left = 0
           Top = 0
           Width = 953
-          Height = 182
+          Height = 178
           Align = alLeft
           PopupMenu = PopupMenu
           TabOrder = 0
@@ -762,7 +762,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
           Left = 957
           Top = 0
           Width = 405
-          Height = 182
+          Height = 178
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
@@ -824,7 +824,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
           Left = 953
           Top = 0
           Width = 4
-          Height = 182
+          Height = 178
           Control = cxChildGrid
         end
       end
@@ -1289,14 +1289,14 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'inChangePercentAmount'
-          Value = '1'
+          Value = 1.000000000000000000
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>
@@ -1685,7 +1685,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         end
         item
           Name = 'inOperDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -1755,6 +1755,45 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' EXITE'
       ImageIndex = 27
     end
+    object mactVchasnoEDIOrdersLoad: TMultiAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actVchasnoEDIOrdeLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' p'#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1086' '#1079#1072#1103#1074#1082#1072#1084' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      ImageIndex = 84
+    end
+    object actVchasnoEDIOrdeLoad: TdsdVchasnoEDIAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = '21.01.2021'
+      DateFrom.Component = deStart
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = '21.01.2021'
+      DateTo.Component = deEnd
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      spHeader = spHeaderOrder
+      spList = spListOrder
+    end
   end
   inherited MasterDS: TDataSource
     Top = 56
@@ -1789,7 +1828,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     DockControlHeights = (
       0
       0
-      26
+      30
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1840,9 +1879,14 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbVchasnoEDIOrdersLoad'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbEDIError'
         end
@@ -2033,6 +2077,10 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       Action = actGridProtocolToExcel
       Category = 0
     end
+    object bbVchasnoEDIOrdersLoad: TdxBarButton
+      Action = mactVchasnoEDIOrdersLoad
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 448
@@ -2088,7 +2136,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'inOrderOperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2128,6 +2176,12 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'isMetro'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isLoad'
         Value = Null
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2271,7 +2325,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'inOrderOperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2285,7 +2339,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'inPartnerOperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2299,7 +2353,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'inOperDateTax'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2313,7 +2367,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'inOperDateSaleLink'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2348,7 +2402,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'inComDocDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2430,10 +2484,13 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 168
     Top = 344
   end
@@ -2480,10 +2537,13 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 808
     Top = 328
   end
@@ -2587,7 +2647,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'OperDatePartner_Sale'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDatePartner_Sale'
         DataType = ftDateTime
@@ -2595,7 +2655,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'OperDate_Tax'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate_Tax'
         DataType = ftDateTime
@@ -2603,7 +2663,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'OperDate_TaxCorrective'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate_TaxCorrective'
         DataType = ftDateTime
@@ -2656,7 +2716,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'OperDate_Order'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate_Order'
         DataType = ftDateTime
@@ -2797,7 +2857,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'OperDatePartner_Sale'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDatePartner_Sale'
         DataType = ftDateTime
@@ -2820,7 +2880,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'OperDate_Order'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'OperDate_Order'
         DataType = ftDateTime
@@ -3010,7 +3070,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'inOperMonth'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3031,7 +3091,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'inDateRegistered'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3226,7 +3286,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','

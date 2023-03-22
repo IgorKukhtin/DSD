@@ -304,7 +304,7 @@ BEGIN
                                 AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
                                -- AND MovementLinkObject_PartnerMedical.ObjectId <> 0
                                 AND COALESCE (MovementLinkObject_SPKind.ObjectId, 0) = zc_Enum_SPKind_SP()
-                                AND (COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882) = inMedicalProgramSPId OR COALESCE(inMedicalProgramSPId, 0) = 0)
+                                AND (COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882) = inMedicalProgramSPId OR COALESCE(inMedicalProgramSPId, 0) = 0 AND COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882) <> 20079831)
                                 AND (COALESCE (ObjectLink_GroupMedicalProgramSP.ChildObjectId, 0) = inGroupMedicalProgramSPId OR COALESCE(inGroupMedicalProgramSPId, 0) = 0)
                                 AND COALESCE (MovementBoolean_PaperRecipeSP.ValueData,  False) = False
                               )
@@ -475,6 +475,7 @@ BEGIN
                                      ELSE 0
                                 END)                                                 AS Price_calc
                          , Max(tmpMI_CheckPriceWithVAT.PriceWithVAT)                 AS PriceWithVAT  
+                         , MIString_IdSP.ValueData                                   AS IdSP
                          
                     FROM tmpMov AS Movement_Check
                          INNER JOIN tmpMI_Check AS MI_Check ON MI_Check.MovementId = Movement_Check.Id
@@ -492,6 +493,10 @@ BEGIN
                          LEFT JOIN tmpMIFloat AS MIFloat_Price
                                                      ON MIFloat_Price.MovementItemId = MI_Check.Id
                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+                         LEFT JOIN MovementItemString AS MIString_IdSP
+                                                      ON MIString_IdSP.MovementItemId = MI_Check.Id
+                                                     AND MIString_IdSP.DescId = zc_MIString_IdSP()
 
                          LEFT JOIN tmpMI_CheckPriceWithVAT ON tmpMI_CheckPriceWithVAT.Id = MI_Check.Id
                     GROUP BY Movement_Check.Id 
@@ -512,6 +517,7 @@ BEGIN
                            , Movement_Check.TotalSumm_Check
                            , Movement_Check.InsertName_Check
                            , Movement_Check.InsertDate_Check
+                           , MIString_IdSP.ValueData 
                     HAVING  SUM (MI_Check.Amount) <> 0
                     )
 
@@ -902,6 +908,9 @@ BEGIN
                                  AND DATE_TRUNC('DAY', tmpData.OperDate ::TDateTime) >= tmpGoodsSP.OperDateStart
                                  AND DATE_TRUNC('DAY', tmpData.OperDate ::TDateTime) <= tmpGoodsSP.OperDateEnd
                                  AND tmpGoodsSP.MedicalProgramSPId = tmpData.MedicalProgramSPId
+                                 AND (tmpGoodsSP.IdSP = tmpData.IdSP OR COALESCE(tmpData.IdSP, '') = '')
+
+
              
              LEFT JOIN tmp_err ON tmp_err.Id = tmpData.MovementId_err
 /*
@@ -949,7 +958,7 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Check_SP (inStartDate:= '01.04.2017',inEndDate:= '15.04.2017', inJuridicalId:= 0, inUnitId:= 0, inHospitalId:= 0, inSession := '3');
--- select * from gpReport_Check_SP(inStartDate := ('01.01.2017')::TDateTime , inEndDate := ('31.12.2017')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 ,  inSession := '3');
--- select * from gpReport_Check_SP(inStartDate := ('01.03.2018')::TDateTime , inEndDate := ('15.03.2018')::TDateTime , inJuridicalId := 393052 , inUnitId := 0 , inHospitalId := 4474509 ,  inSession := '3');
--- select * from gpReport_Check_SP22(inStartDate := ('01.09.2018')::TDateTime , inEndDate := ('09.09.2018')::TDateTime, inJuridicalId := 393054 , inUnitId := 0 , inHospitalId := 3751525 ,  inSession := '3');
+
+
+select * from gpReport_Check_SP(inStartDate := ('22.03.2023')::TDateTime , inEndDate := ('22.03.2023')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 0 , inMedicalProgramSPId := 18078197 , inGroupMedicalProgramSPId := 0 ,  inSession := '3');
+

@@ -1673,9 +1673,9 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TActNumberAndAmountDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TActNumberAndAmountDialogForm');
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_DiscountExternalForm'));
+}    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_DiscountExternalForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_DiscountExternalForm');
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DiscountExternalDialogForm'));
+{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DiscountExternalDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_DiscountExternalDialogForm');
     exit;
 
