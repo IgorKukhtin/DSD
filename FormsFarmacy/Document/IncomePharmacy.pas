@@ -139,6 +139,7 @@ type
     actPretensionJournalIncome: TdsdOpenForm;
     dxBarButton6: TdxBarButton;
     actClearReasonDifferences: TdsdSetDefaultParams;
+    PriceWithVAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

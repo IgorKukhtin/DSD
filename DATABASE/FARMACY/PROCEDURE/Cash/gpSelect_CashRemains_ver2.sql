@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_CashRemains_ver2(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsName TVarChar, GoodsCode Integer, MakerName TVarChar, 
-               Remains TFloat, Price TFloat, PriceSP TFloat, PriceSaleSP TFloat, DiffSP1 TFloat, DiffSP2 TFloat, Reserved TFloat, MCSValue TFloat,
+               Remains TFloat, Price TFloat, PriceSP TFloat, PriceSaleSP TFloat, Reserved TFloat, MCSValue TFloat,
                AlternativeGroupId Integer, NDS TFloat,
                isFirst boolean, isSecond boolean, Color_calc Integer,
                isPromo boolean, isPromoForSale boolean, RelatedProductId Integer,
@@ -29,7 +29,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                DoesNotShare boolean, GoodsAnalogId Integer, GoodsAnalogName TVarChar,
                GoodsAnalog TVarChar, GoodsAnalogATC TVarChar, GoodsActiveSubstance TVarChar,
                MedicalProgramSPID Integer, PercentPayment TFloat, CountSP TFloat, CountSPMin TFloat, 
-               IdSP TVarChar, ProgramIdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat,
+               PriceRetSP TFloat, PaymentSP TFloat,
                AmountMonth TFloat, PricePartionDate TFloat,
                PartionDateDiscount TFloat,
                NotSold boolean, NotSold60 boolean,
@@ -56,13 +56,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                
                isSpecial boolean,
                
-               PromoBonusPrice TFloat, IsAsinoMain boolean, IsAsinoPresent boolean
-
-
-               /*PartionDateKindId_check   Integer,
-               Price_check               TFloat,
-               PriceWithVAT_check        TFloat,
-               PartionDateDiscount_check TFloat*/
+               PromoBonusPrice TFloat, IsAsinoMain boolean, IsAsinoPresent boolean,
+               PriceView TFloat
               )
 AS
 $BODY$
@@ -72,7 +67,7 @@ $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbRetailId Integer;
 
-   DECLARE vbOperDate_StartBegin TDateTime;
+--   DECLARE vbOperDate_StartBegin TDateTime;
    DECLARE vb1 TVarChar;
    DECLARE vb2 TVarChar;
 
@@ -97,7 +92,7 @@ BEGIN
 -- if inSession = '3' then return; end if;
 
     -- !!!Протокол - отладка Скорости!!!
-    vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
+--    vbOperDate_StartBegin:= CLOCK_TIMESTAMP();
 
 
     -- проверка прав пользователя на вызов процедуры
@@ -197,7 +192,7 @@ BEGIN
     DELETE FROM CashSessionSnapShot
     WHERE CashSessionId = inCashSessionId;
 
-   -- raise notice 'Value 1: %', CURRENT_TIMESTAMP;
+    --raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
     CREATE TEMP TABLE tmpCashSessionSnapShot ON COMMIT DROP AS
     SELECT  CashRemains.GoodsId             AS ObjectId
@@ -217,7 +212,7 @@ BEGIN
           , CashRemains.PriceWithVAT
     FROM gpSelect_CashRemains_CashSession(inSession) AS CashRemains;
 	
-    --raise notice 'Value 2: %', CURRENT_TIMESTAMP;
+    --raise notice 'Value 2: %', CLOCK_TIMESTAMP();
 	
 	ANALYZE tmpCashSessionSnapShot;
 	
@@ -242,21 +237,21 @@ BEGIN
           , CashRemains.PriceWithVAT
     FROM tmpCashSessionSnapShot AS CashRemains;
 	
-	--raise notice 'Value 3: %', CURRENT_TIMESTAMP;
+	--raise notice 'Value 3: %', CLOCK_TIMESTAMP();
 	
     CREATE TEMP TABLE tmpGoodsAutoVIPforSalesCash ON COMMIT DROP AS 
 	  (SELECT  T1.GoodsId FROM gpSelect_Goods_AutoVIPforSalesCash (inUnitId := vbUnitId , inSession:= inSession) AS T1);
 	
 	ANALYZE tmpGoodsAutoVIPforSalesCash;
 
-	--raise notice 'Value 4: %', CURRENT_TIMESTAMP;
+	--raise notice 'Value 4: %', CLOCK_TIMESTAMP();
 	
 	CREATE TEMP TABLE tmpGoodsSP_1303 ON COMMIT DROP AS 
 	(SELECT * FROM gpSelect_GoodsSPRegistry_1303_Unit (inUnitId := vbUnitId, inGoodsId := 0, inisCalc := COALESCE (vbPartnerMedicalId, 0) > 0, inSession := inSession));
                                        
 	ANALYZE tmpGoodsSP_1303;
 
-	--raise notice 'Value 5: %', CURRENT_TIMESTAMP;
+	--raise notice 'Value 5: %', CLOCK_TIMESTAMP();
 	
                 -- товар в пути - непроведенные приходы сегодня
     CREATE TEMP TABLE tmpIncome ON COMMIT DROP AS 
@@ -286,11 +281,11 @@ BEGIN
 
     ANALYZE tmpIncome;
 
-	--raise notice 'Value 6: %', CURRENT_TIMESTAMP;
-	
+	--raise notice 'Value 6: %', CLOCK_TIMESTAMP();
 
-    RETURN QUERY
-      WITH -- Товары соц-проект
+
+    CREATE TEMP TABLE tmpGoodsSP ON COMMIT DROP AS 
+      WITH  -- Товары соц-проект
            tmpMedicalProgramSPUnit AS (SELECT  ObjectLink_MedicalProgramSP.ChildObjectId         AS MedicalProgramSPId
                                        FROM Object AS Object_MedicalProgramSPLink
                                             INNER JOIN ObjectLink AS ObjectLink_MedicalProgramSP
@@ -302,7 +297,7 @@ BEGIN
                                                                  AND ObjectLink_Unit.ChildObjectId = vbUnitId 
                                         WHERE Object_MedicalProgramSPLink.DescId = zc_Object_MedicalProgramSPLink()
                                           AND Object_MedicalProgramSPLink.isErased = False)
-         , tmpGoodsSP AS (SELECT MovementItem.ObjectId         AS GoodsId
+                          SELECT MovementItem.ObjectId         AS GoodsId
                                , MLO_MedicalProgramSP.ObjectId AS MedicalProgramSPID
                                , COALESCE(MovementFloat_PercentPayment.ValueData, 0)::TFloat  AS PercentPayment
                                , MI_IntenalSP.ObjectId         AS IntenalSPId
@@ -312,9 +307,6 @@ BEGIN
                                , MIFloat_PaymentSP.ValueData   AS PaymentSP
                                , MIFloat_CountSP.ValueData     AS CountSP
                                , MIFloat_CountSPMin.ValueData  AS CountSPMin
-                               , MIString_IdSP.ValueData       AS IdSP
-                               , COALESCE (MIString_ProgramIdSP.ValueData, '')::TVarChar AS ProgramIdSP
-                               , MIString_DosageIdSP.ValueData AS DosageIdSP
                                                                 -- № п/п - на всякий случай
                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId 
                                                     ORDER BY Movement.OperDate DESC, MIFloat_CountSPMin.ValueData DESC) AS Ord
@@ -369,241 +361,221 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_CountSPMin
                                                            ON MIFloat_CountSPMin.MovementItemId = MovementItem.Id
                                                           AND MIFloat_CountSPMin.DescId = zc_MIFloat_CountSPMin()
-                               -- ID лікарського засобу
-                               LEFT JOIN MovementItemString AS MIString_IdSP
-                                                            ON MIString_IdSP.MovementItemId = MovementItem.Id
-                                                           AND MIString_IdSP.DescId = zc_MIString_IdSP()
-                               LEFT JOIN MovementItemString AS MIString_ProgramIdSP
-                                                            ON MIString_ProgramIdSP.MovementItemId = MovementItem.Id
-                                                           AND MIString_ProgramIdSP.DescId = zc_MIString_ProgramIdSP()
-                               -- DosageID лікарського засобу
-                               LEFT JOIN MovementItemString AS MIString_DosageIdSP
-                                                            ON MIString_DosageIdSP.MovementItemId = MovementItem.Id
-                                                           AND MIString_DosageIdSP.DescId = zc_MIString_DosageIdSP()
-
                           WHERE Movement.DescId = zc_Movement_GoodsSP()
                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
-                            AND (COALESCE (tmpMedicalProgramSPUnit.MedicalProgramSPId, 0) <> 0 OR vbUserId = 3)
-                         )
-         , GoodsPromo AS (SELECT Object_Goods_Retail.GoodsMainId                                                    AS GoodsId        -- здесь товар "главный товар"
-                               , SUM(CASE WHEN vbPromoForSale ILIKE ','||tmp.InvNumber||',' THEN 1 ELSE 0 END) > 0  AS isPromoForSale
-                               , max(tmp.RelatedProductId)                                                          AS RelatedProductId
-                          FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
-                               LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = tmp.GoodsId
-                          GROUP BY Object_Goods_Retail.GoodsMainId
-                          )
-           -- Коды Мориона
-         , tmpGoodsMorion AS (SELECT ObjectLink_Main_Morion.ChildObjectId  AS GoodsMainId
-                                   , MAX (Object_Goods_Morion.ObjectCode)  AS MorionCode
-                              FROM ObjectLink AS ObjectLink_Main_Morion
-                                   JOIN ObjectLink AS ObjectLink_Child_Morion
-                                                   ON ObjectLink_Child_Morion.ObjectId = ObjectLink_Main_Morion.ObjectId
-                                                  AND ObjectLink_Child_Morion.DescId = zc_ObjectLink_LinkGoods_Goods()
-                                   JOIN ObjectLink AS ObjectLink_Goods_Object_Morion
-                                                   ON ObjectLink_Goods_Object_Morion.ObjectId = ObjectLink_Child_Morion.ChildObjectId
-                                                  AND ObjectLink_Goods_Object_Morion.DescId = zc_ObjectLink_Goods_Object()
-                                                  AND ObjectLink_Goods_Object_Morion.ChildObjectId = zc_Enum_GlobalConst_Marion()
-                                   LEFT JOIN Object AS Object_Goods_Morion ON Object_Goods_Morion.Id = ObjectLink_Goods_Object_Morion.ObjectId
-                              WHERE ObjectLink_Main_Morion.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                                AND ObjectLink_Main_Morion.ChildObjectId > 0
-                              GROUP BY ObjectLink_Main_Morion.ChildObjectId
+                            AND (COALESCE (tmpMedicalProgramSPUnit.MedicalProgramSPId, 0) <> 0 OR vbUserId = 3);
+
+    ANALYZE tmpGoodsSP;
+
+	--raise notice 'Value 7: %', CLOCK_TIMESTAMP();
+
+    CREATE TEMP TABLE tmpMIPromoBonus ON COMMIT DROP AS 
+     SELECT MI.GoodsId               AS GoodsId
+          , MI.MarginPercent         AS MarginPercent
+          , MI.PromoBonus            AS PromoBonus
+     FROM gpSelect_PromoBonus_MarginPercent(vbUnitId, inSession) AS MI;
+
+    ANALYZE tmpMIPromoBonus;
+
+	--raise notice 'Value 8: %', CLOCK_TIMESTAMP();
+                         	
+    CREATE TEMP TABLE GoodsPromo ON COMMIT DROP AS 
+    SELECT Object_Goods_Retail.GoodsMainId                                                    AS GoodsId        -- здесь товар "главный товар"
+         , SUM(CASE WHEN vbPromoForSale ILIKE ','||tmp.InvNumber||',' THEN 1 ELSE 0 END) > 0  AS isPromoForSale
+         , max(tmp.RelatedProductId)                                                          AS RelatedProductId
+    FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
+         LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = tmp.GoodsId
+    GROUP BY Object_Goods_Retail.GoodsMainId;
+
+    ANALYZE tmpMIPromoBonus;
+
+	--raise notice 'Value 9: %', CLOCK_TIMESTAMP();
+
+    -- данные из прайса
+    CREATE TEMP TABLE tmpObject_PriceInfo ON COMMIT DROP AS 
+    SELECT ObjectLink_Price_Unit.ObjectId                                AS Id
+         , Price_Goods.ChildObjectId                                     AS GoodsId
+         , COALESCE(Price_MCSValueOld.ValueData,0)          ::TFloat     AS MCSValueOld
+         , MCS_StartDateMCSAuto.ValueData                                AS StartDateMCSAuto
+         , MCS_EndDateMCSAuto.ValueData                                  AS EndDateMCSAuto
+         , COALESCE(Price_MCSAuto.ValueData,False)          :: Boolean   AS isMCSAuto
+         , COALESCE(Price_MCSNotRecalcOld.ValueData,False)  :: Boolean   AS isMCSNotRecalcOld
+    FROM ObjectLink AS ObjectLink_Price_Unit
+         INNER JOIN ObjectLink AS Price_Goods
+                               ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                              AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+         LEFT JOIN ObjectFloat AS Price_MCSValueOld
+                               ON Price_MCSValueOld.ObjectId = ObjectLink_Price_Unit.ObjectId
+                              AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
+         LEFT JOIN ObjectDate AS MCS_StartDateMCSAuto
+                              ON MCS_StartDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                             AND MCS_StartDateMCSAuto.DescId = zc_ObjectDate_Price_StartDateMCSAuto()
+         LEFT JOIN ObjectDate AS MCS_EndDateMCSAuto
+                              ON MCS_EndDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                             AND MCS_EndDateMCSAuto.DescId = zc_ObjectDate_Price_EndDateMCSAuto()
+         LEFT JOIN ObjectBoolean AS Price_MCSAuto
+                                 ON Price_MCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                AND Price_MCSAuto.DescId = zc_ObjectBoolean_Price_MCSAuto()
+         LEFT JOIN ObjectBoolean AS Price_MCSNotRecalcOld
+                                 ON Price_MCSNotRecalcOld.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
+    WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+      AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId;
+
+    ANALYZE tmpObject_PriceInfo;
+
+	--raise notice 'Value 10: %', CLOCK_TIMESTAMP();
+    
+    -- Цена со скидкой
+    CREATE TEMP TABLE tmpPriceChange ON COMMIT DROP AS 
+    SELECT DISTINCT ObjectLink_PriceChange_Goods.ChildObjectId                                                    AS GoodsId
+                  , COALESCE (PriceChange_Value_Unit.ValueData, PriceChange_Value_Retail.ValueData)                        AS PriceChange
+                  , COALESCE (PriceChange_FixPercent_Unit.ValueData, PriceChange_FixPercent_Retail.ValueData)::TFloat      AS FixPercent
+                  , COALESCE (PriceChange_FixDiscount_Unit.ValueData, PriceChange_FixDiscount_Retail.ValueData)::TFloat    AS FixDiscount
+                  , COALESCE (PriceChange_Multiplicity_Unit.ValueData, PriceChange_Multiplicity_Retail.ValueData) ::TFloat AS Multiplicity
+                  , COALESCE (PriceChange_FixEndDate_Unit.ValueData, PriceChange_FixEndDate_Retail.ValueData)              AS FixEndDate
+                  , COALESCE (ObjectLink_PriceChange_PartionDateKind_Unit.ChildObjectId, ObjectLink_PriceChange_PartionDateKind_Retail.ChildObjectId) AS PartionDateKindId
+             FROM Object AS Object_PriceChange
+                  -- скидка по подразд
+                  LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Unit
+                                       ON ObjectLink_PriceChange_Unit.ObjectId = Object_PriceChange.Id
+                                      AND ObjectLink_PriceChange_Unit.DescId = zc_ObjectLink_PriceChange_Unit()
+                                      AND ObjectLink_PriceChange_Unit.ChildObjectId = vbUnitId
+                  -- цена со скидкой по подразд.
+                  LEFT JOIN ObjectFloat AS PriceChange_Value_Unit
+                                        ON PriceChange_Value_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                       AND PriceChange_Value_Unit.DescId = zc_ObjectFloat_PriceChange_Value()
+                                       AND COALESCE (PriceChange_Value_Unit.ValueData, 0) <> 0
+                  -- процент скидки по подразд.
+                  LEFT JOIN ObjectFloat AS PriceChange_FixPercent_Unit
+                                        ON PriceChange_FixPercent_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                       AND PriceChange_FixPercent_Unit.DescId = zc_ObjectFloat_PriceChange_FixPercent()
+                                       AND COALESCE (PriceChange_FixPercent_Unit.ValueData, 0) <> 0
+                  -- сумма скидки по подразд.
+                  LEFT JOIN ObjectFloat AS PriceChange_FixDiscount_Unit
+                                        ON PriceChange_FixDiscount_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                       AND PriceChange_FixDiscount_Unit.DescId = zc_ObjectFloat_PriceChange_FixDiscount()
+                                       AND COALESCE (PriceChange_FixDiscount_Unit.ValueData, 0) <> 0
+                  -- Кратность отпуска
+                  LEFT JOIN ObjectFloat AS PriceChange_Multiplicity_Unit
+                                        ON PriceChange_Multiplicity_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                       AND PriceChange_Multiplicity_Unit.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
+                                       AND COALESCE (PriceChange_Multiplicity_Unit.ValueData, 0) <> 0
+                  -- Дата окончания действия скидки
+                  LEFT JOIN ObjectDate AS PriceChange_FixEndDate_Unit
+                                       ON PriceChange_FixEndDate_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                      AND PriceChange_FixEndDate_Unit.DescId = zc_ObjectDate_PriceChange_FixEndDate()
+                                                            
+                  LEFT JOIN ObjectLink AS ObjectLink_PriceChange_PartionDateKind_Unit
+                                        ON ObjectLink_PriceChange_PartionDateKind_Unit.ObjectId  = ObjectLink_PriceChange_Unit.ObjectId
+                                       AND ObjectLink_PriceChange_PartionDateKind_Unit.DescId    = zc_ObjectLink_PriceChange_PartionDateKind()
+                                                            
+
+                  -- скидка по сети
+                  LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Retail
+                                       ON ObjectLink_PriceChange_Retail.ObjectId = Object_PriceChange.Id
+                                      AND ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
+                                      AND ObjectLink_PriceChange_Retail.ChildObjectId = vbRetailId
+                  -- цена со скидкой по сети
+                  LEFT JOIN ObjectFloat AS PriceChange_Value_Retail
+                                        ON PriceChange_Value_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                       AND PriceChange_Value_Retail.DescId = zc_ObjectFloat_PriceChange_Value()
+                                       AND COALESCE (PriceChange_Value_Retail.ValueData, 0) <> 0
+                  -- процент скидки по сети.
+                  LEFT JOIN ObjectFloat AS PriceChange_FixPercent_Retail
+                                        ON PriceChange_FixPercent_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                       AND PriceChange_FixPercent_Retail.DescId = zc_ObjectFloat_PriceChange_FixPercent()
+                                       AND COALESCE (PriceChange_FixPercent_Retail.ValueData, 0) <> 0
+                  -- сумма скидки по сети.
+                  LEFT JOIN ObjectFloat AS PriceChange_FixDiscount_Retail
+                                        ON PriceChange_FixDiscount_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                       AND PriceChange_FixDiscount_Retail.DescId = zc_ObjectFloat_PriceChange_FixDiscount()
+                                       AND COALESCE (PriceChange_FixDiscount_Retail.ValueData, 0) <> 0
+                  -- Кратность отпуска по сети.
+                  LEFT JOIN ObjectFloat AS PriceChange_Multiplicity_Retail
+                                        ON PriceChange_Multiplicity_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                       AND PriceChange_Multiplicity_Retail.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
+                                       AND COALESCE (PriceChange_Multiplicity_Retail.ValueData, 0) <> 0
+                  -- Дата окончания действия скидки по сети.
+                  LEFT JOIN ObjectDate AS PriceChange_FixEndDate_Retail
+                                       ON PriceChange_FixEndDate_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                      AND PriceChange_FixEndDate_Retail.DescId = zc_ObjectDate_PriceChange_FixEndDate()
+
+                  LEFT JOIN ObjectLink AS ObjectLink_PriceChange_PartionDateKind_Retail
+                                        ON ObjectLink_PriceChange_PartionDateKind_Retail.ObjectId  = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                       AND ObjectLink_PriceChange_PartionDateKind_Retail.DescId    = zc_ObjectLink_PriceChange_PartionDateKind()
+
+                  LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Goods
+                                       ON ObjectLink_PriceChange_Goods.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
+                                      AND ObjectLink_PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
+
+             WHERE Object_PriceChange.DescId = zc_Object_PriceChange()
+               AND Object_PriceChange.isErased = FALSE
+               AND (COALESCE (PriceChange_Value_Retail.ValueData, 0) <> 0 OR COALESCE (PriceChange_Value_Unit.ValueData, 0) <> 0 OR
+                   COALESCE (PriceChange_FixPercent_Unit.ValueData, PriceChange_FixPercent_Retail.ValueData, 0) <> 0 OR
+                   COALESCE (PriceChange_FixDiscount_Unit.ValueData, PriceChange_FixDiscount_Retail.ValueData, 0) <> 0) -- выбираем только цены <> 0
+             ;
+
+    ANALYZE tmpPriceChange;
+
+	--raise notice 'Value 11: %', CLOCK_TIMESTAMP();
+                      
+    CREATE TEMP TABLE tmpNotSold ON COMMIT DROP AS 
+    WITH
+         tmpContainerAll AS (SELECT Container.ID
+                                  , Container.ObjectId       AS GoodsID
+                                  , Container.Amount
+                             FROM Container
+                             WHERE Container.DescId = zc_Container_Count()
+                               AND Container.WhereObjectId = vbUnitId
+                               AND Container.Amount > 0
                              )
-           -- Штрих-коды производителя
-         , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
-                                    , string_agg(Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc)           AS BarCode
-                               FROM ObjectLink AS ObjectLink_Main_BarCode
-                                    JOIN ObjectLink AS ObjectLink_Child_BarCode
-                                                    ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
-                                                   AND ObjectLink_Child_BarCode.DescId = zc_ObjectLink_LinkGoods_Goods()
-                                    JOIN ObjectLink AS ObjectLink_Goods_Object_BarCode
-                                                    ON ObjectLink_Goods_Object_BarCode.ObjectId = ObjectLink_Child_BarCode.ChildObjectId
-                                                   AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
-                                                   AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
-                                    LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
-                               WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                 AND ObjectLink_Main_BarCode.ChildObjectId > 0
-                                 AND TRIM (Object_Goods_BarCode.ValueData) <> ''
-                               GROUP BY ObjectLink_Main_BarCode.ChildObjectId
-                              )
-              -- данные из прайса
-              , tmpObject_Price AS (SELECT ObjectLink_Price_Unit.ObjectId                                AS Id
-                                         , Price_Goods.ChildObjectId                                     AS GoodsId
-                                         , COALESCE(Price_MCSValueOld.ValueData,0)          ::TFloat     AS MCSValueOld
-                                         , MCS_StartDateMCSAuto.ValueData                                AS StartDateMCSAuto
-                                         , MCS_EndDateMCSAuto.ValueData                                  AS EndDateMCSAuto
-                                         , COALESCE(Price_MCSAuto.ValueData,False)          :: Boolean   AS isMCSAuto
-                                         , COALESCE(Price_MCSNotRecalcOld.ValueData,False)  :: Boolean   AS isMCSNotRecalcOld
-                                    FROM ObjectLink AS ObjectLink_Price_Unit
-                                         INNER JOIN ObjectLink AS Price_Goods
-                                                               ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                              AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                                         LEFT JOIN ObjectFloat AS Price_MCSValueOld
-                                                               ON Price_MCSValueOld.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                              AND Price_MCSValueOld.DescId = zc_ObjectFloat_Price_MCSValueOld()
-                                         LEFT JOIN ObjectDate AS MCS_StartDateMCSAuto
-                                                              ON MCS_StartDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                             AND MCS_StartDateMCSAuto.DescId = zc_ObjectDate_Price_StartDateMCSAuto()
-                                         LEFT JOIN ObjectDate AS MCS_EndDateMCSAuto
-                                                              ON MCS_EndDateMCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                             AND MCS_EndDateMCSAuto.DescId = zc_ObjectDate_Price_EndDateMCSAuto()
-                                         LEFT JOIN ObjectBoolean AS Price_MCSAuto
-                                                                 ON Price_MCSAuto.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                                AND Price_MCSAuto.DescId = zc_ObjectBoolean_Price_MCSAuto()
-                                         LEFT JOIN ObjectBoolean AS Price_MCSNotRecalcOld
-                                                                 ON Price_MCSNotRecalcOld.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                                AND Price_MCSNotRecalcOld.DescId = zc_ObjectBoolean_Price_MCSNotRecalcOld()
-                                    WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
-                                      AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
-                                    )
-                -- MCS - Auto
-              , tmpMCSAuto AS (SELECT DISTINCT
-                                      CashSessionSnapShot.ObjectId
-                                    , tmpObject_Price.MCSValueOld
-                                    , tmpObject_Price.StartDateMCSAuto
-                                    , tmpObject_Price.EndDateMCSAuto
-                                    , tmpObject_Price.isMCSAuto
-                                    , tmpObject_Price.isMCSNotRecalcOld
-                               FROM tmpCashSessionSnapShot AS CashSessionSnapShot
-                                    INNER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = CashSessionSnapShot.ObjectId
-                              )
-                -- Цена со скидкой
-              , tmpPriceChange AS (SELECT DISTINCT ObjectLink_PriceChange_Goods.ChildObjectId                                                    AS GoodsId
-                                        , COALESCE (PriceChange_Value_Unit.ValueData, PriceChange_Value_Retail.ValueData)                        AS PriceChange
-                                        , COALESCE (PriceChange_FixPercent_Unit.ValueData, PriceChange_FixPercent_Retail.ValueData)::TFloat      AS FixPercent
-                                        , COALESCE (PriceChange_FixDiscount_Unit.ValueData, PriceChange_FixDiscount_Retail.ValueData)::TFloat    AS FixDiscount
-                                        , COALESCE (PriceChange_Multiplicity_Unit.ValueData, PriceChange_Multiplicity_Retail.ValueData) ::TFloat AS Multiplicity
-                                        , COALESCE (PriceChange_FixEndDate_Unit.ValueData, PriceChange_FixEndDate_Retail.ValueData)              AS FixEndDate
-                                        , COALESCE (ObjectLink_PriceChange_PartionDateKind_Unit.ChildObjectId, ObjectLink_PriceChange_PartionDateKind_Retail.ChildObjectId) AS PartionDateKindId
-                                   FROM Object AS Object_PriceChange
-                                        -- скидка по подразд
-                                        LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Unit
-                                                             ON ObjectLink_PriceChange_Unit.ObjectId = Object_PriceChange.Id
-                                                            AND ObjectLink_PriceChange_Unit.DescId = zc_ObjectLink_PriceChange_Unit()
-                                                            AND ObjectLink_PriceChange_Unit.ChildObjectId = vbUnitId
-                                        -- цена со скидкой по подразд.
-                                        LEFT JOIN ObjectFloat AS PriceChange_Value_Unit
-                                                              ON PriceChange_Value_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
-                                                             AND PriceChange_Value_Unit.DescId = zc_ObjectFloat_PriceChange_Value()
-                                                             AND COALESCE (PriceChange_Value_Unit.ValueData, 0) <> 0
-                                        -- процент скидки по подразд.
-                                        LEFT JOIN ObjectFloat AS PriceChange_FixPercent_Unit
-                                                              ON PriceChange_FixPercent_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
-                                                             AND PriceChange_FixPercent_Unit.DescId = zc_ObjectFloat_PriceChange_FixPercent()
-                                                             AND COALESCE (PriceChange_FixPercent_Unit.ValueData, 0) <> 0
-                                        -- сумма скидки по подразд.
-                                        LEFT JOIN ObjectFloat AS PriceChange_FixDiscount_Unit
-                                                              ON PriceChange_FixDiscount_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
-                                                             AND PriceChange_FixDiscount_Unit.DescId = zc_ObjectFloat_PriceChange_FixDiscount()
-                                                             AND COALESCE (PriceChange_FixDiscount_Unit.ValueData, 0) <> 0
-                                        -- Кратность отпуска
-                                        LEFT JOIN ObjectFloat AS PriceChange_Multiplicity_Unit
-                                                              ON PriceChange_Multiplicity_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
-                                                             AND PriceChange_Multiplicity_Unit.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
-                                                             AND COALESCE (PriceChange_Multiplicity_Unit.ValueData, 0) <> 0
-                                        -- Дата окончания действия скидки
-                                        LEFT JOIN ObjectDate AS PriceChange_FixEndDate_Unit
-                                                             ON PriceChange_FixEndDate_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
-                                                            AND PriceChange_FixEndDate_Unit.DescId = zc_ObjectDate_PriceChange_FixEndDate()
-                                                            
-                                        LEFT JOIN ObjectLink AS ObjectLink_PriceChange_PartionDateKind_Unit
-                                                              ON ObjectLink_PriceChange_PartionDateKind_Unit.ObjectId  = ObjectLink_PriceChange_Unit.ObjectId
-                                                             AND ObjectLink_PriceChange_PartionDateKind_Unit.DescId    = zc_ObjectLink_PriceChange_PartionDateKind()
-                                                            
+       , tmpContainerIn AS (SELECT Container.ID
+                                 , Container.GoodsID
+                                 , Container.Amount
+                                 , Container.Amount - COALESCE(SUM(MovementItemContainer.Amount), 0) AS AmountIn
+                                 , SUM(CASE WHEN MovementItemContainer.MovementDescId = zc_Movement_Check() THEN 1 ELSE 0 END) AS Check
+                            FROM tmpContainerAll as Container
+                                 LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerID = Container.ID
+                                                                 AND MovementItemContainer.OperDate >= CURRENT_DATE - ('100 DAY')::INTERVAL
+                            GROUP BY Container.ID, Container.GoodsID, Container.Amount
+                            )
+       , tmpContainer AS (SELECT Container.GoodsID        AS GoodsID
+                               , SUM(Container.Amount)    AS Amount
+                               , SUM(Container.AmountIn)  AS AmountIn
+                               , SUM(Container.Check)     AS Check
+                          FROM tmpContainerIn as Container
+                          GROUP BY Container.GoodsID
+                         )
+       , tmpMovementItemCheck AS (SELECT MovementItemContainer.ObjectId_Analyzer          AS GoodsID
+                                       , COUNT(1)                                         AS Check
+                                  FROM MovementItemContainer
+                                  WHERE MovementItemContainer.MovementDescId = zc_Movement_Check()
+                                    AND MovementItemContainer.WhereObjectId_Analyzer = vbUnitId
+                                    AND MovementItemContainer.OperDate >= CURRENT_DATE - ('100 DAY')::INTERVAL
+                                  GROUP BY MovementItemContainer.ObjectId_Analyzer)
+      SELECT Container.GoodsID
+      FROM tmpContainer AS Container
+           LEFT OUTER JOIN tmpMovementItemCheck ON tmpMovementItemCheck.GoodsID = Container.GoodsID
+      WHERE Container.Amount > 0 AND Container.AmountIn > 0
+        AND (Container.Check + COALESCE(tmpMovementItemCheck.Check, 0)) = 0;
 
-                                        -- скидка по сети
-                                        LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Retail
-                                                             ON ObjectLink_PriceChange_Retail.ObjectId = Object_PriceChange.Id
-                                                            AND ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
-                                                            AND ObjectLink_PriceChange_Retail.ChildObjectId = vbRetailId
-                                        -- цена со скидкой по сети
-                                        LEFT JOIN ObjectFloat AS PriceChange_Value_Retail
-                                                              ON PriceChange_Value_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
-                                                             AND PriceChange_Value_Retail.DescId = zc_ObjectFloat_PriceChange_Value()
-                                                             AND COALESCE (PriceChange_Value_Retail.ValueData, 0) <> 0
-                                        -- процент скидки по сети.
-                                        LEFT JOIN ObjectFloat AS PriceChange_FixPercent_Retail
-                                                              ON PriceChange_FixPercent_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
-                                                             AND PriceChange_FixPercent_Retail.DescId = zc_ObjectFloat_PriceChange_FixPercent()
-                                                             AND COALESCE (PriceChange_FixPercent_Retail.ValueData, 0) <> 0
-                                        -- сумма скидки по сети.
-                                        LEFT JOIN ObjectFloat AS PriceChange_FixDiscount_Retail
-                                                              ON PriceChange_FixDiscount_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
-                                                             AND PriceChange_FixDiscount_Retail.DescId = zc_ObjectFloat_PriceChange_FixDiscount()
-                                                             AND COALESCE (PriceChange_FixDiscount_Retail.ValueData, 0) <> 0
-                                        -- Кратность отпуска по сети.
-                                        LEFT JOIN ObjectFloat AS PriceChange_Multiplicity_Retail
-                                                              ON PriceChange_Multiplicity_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
-                                                             AND PriceChange_Multiplicity_Retail.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
-                                                             AND COALESCE (PriceChange_Multiplicity_Retail.ValueData, 0) <> 0
-                                        -- Дата окончания действия скидки по сети.
-                                        LEFT JOIN ObjectDate AS PriceChange_FixEndDate_Retail
-                                                             ON PriceChange_FixEndDate_Retail.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
-                                                            AND PriceChange_FixEndDate_Retail.DescId = zc_ObjectDate_PriceChange_FixEndDate()
+    ANALYZE tmpNotSold;
 
-                                        LEFT JOIN ObjectLink AS ObjectLink_PriceChange_PartionDateKind_Retail
-                                                              ON ObjectLink_PriceChange_PartionDateKind_Retail.ObjectId  = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
-                                                             AND ObjectLink_PriceChange_PartionDateKind_Retail.DescId    = zc_ObjectLink_PriceChange_PartionDateKind()
+	--raise notice 'Value 12: %', CLOCK_TIMESTAMP();
+                  
+     -- Без Продажи за последнии 60 дней
+    CREATE TEMP TABLE tmpIlliquidUnit ON COMMIT DROP AS 
+    SELECT * FROM lpReport_IlliquidReductionPlanUser(inUserID := vbUserId);
 
-                                        LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Goods
-                                                             ON ObjectLink_PriceChange_Goods.ObjectId = COALESCE (ObjectLink_PriceChange_Unit.ObjectId, ObjectLink_PriceChange_Retail.ObjectId)
-                                                            AND ObjectLink_PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
+    ANALYZE tmpIlliquidUnit;
 
-                                   WHERE Object_PriceChange.DescId = zc_Object_PriceChange()
-                                     AND Object_PriceChange.isErased = FALSE
-                                     AND (COALESCE (PriceChange_Value_Retail.ValueData, 0) <> 0 OR COALESCE (PriceChange_Value_Unit.ValueData, 0) <> 0 OR
-                                         COALESCE (PriceChange_FixPercent_Unit.ValueData, PriceChange_FixPercent_Retail.ValueData, 0) <> 0 OR
-                                         COALESCE (PriceChange_FixDiscount_Unit.ValueData, PriceChange_FixDiscount_Retail.ValueData, 0) <> 0) -- выбираем только цены <> 0
-                                  )
-              , tmpPartionDateKind AS (SELECT Object_PartionDateKind.Id           AS Id
-                                            , Object_PartionDateKind.ObjectCode   AS Code
-                                            , Object_PartionDateKind.ValueData    AS Name
-                                            , COALESCE (ObjectFloatDay.ValueData / 30, 0) :: TFLoat AS AmountMonth
-                                       FROM Object AS Object_PartionDateKind
-                                            LEFT JOIN ObjectFloat AS ObjectFloatDay
-                                                                  ON ObjectFloatDay.ObjectId = Object_PartionDateKind.Id
-                                                                 AND ObjectFloatDay.DescId = zc_ObjectFloat_PartionDateKind_Day()
-                                       WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
-                                      )
-               , tmpContainerAll AS (SELECT Container.ID
-                                          , Container.ObjectId       AS GoodsID
-                                          , Container.Amount
-                                     FROM Container
-                                     WHERE Container.DescId = zc_Container_Count()
-                                       AND Container.WhereObjectId = vbUnitId
-                                       AND Container.Amount > 0
-                                     )
-               , tmpContainerIn AS (SELECT Container.ID
-                                         , Container.GoodsID
-                                         , Container.Amount
-                                         , Container.Amount - COALESCE(SUM(MovementItemContainer.Amount), 0) AS AmountIn
-                                         , SUM(CASE WHEN MovementItemContainer.MovementDescId = zc_Movement_Check() THEN 1 ELSE 0 END) AS Check
-                                    FROM tmpContainerAll as Container
-                                         LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerID = Container.ID
-                                                                         AND MovementItemContainer.OperDate >= CURRENT_DATE - ('100 DAY')::INTERVAL
-                                    GROUP BY Container.ID, Container.GoodsID, Container.Amount
-                                    )
-               , tmpContainer AS (SELECT Container.GoodsID        AS GoodsID
-                                       , SUM(Container.Amount)    AS Amount
-                                       , SUM(Container.AmountIn)  AS AmountIn
-                                       , SUM(Container.Check)     AS Check
-                                  FROM tmpContainerIn as Container
-                                  GROUP BY Container.GoodsID
-                                 )
-               , tmpMovementItemCheck AS (SELECT MovementItemContainer.ObjectId_Analyzer          AS GoodsID
-                                               , COUNT(1)                                         AS Check
-                                          FROM MovementItemContainer
-                                          WHERE MovementItemContainer.MovementDescId = zc_Movement_Check()
-                                            AND MovementItemContainer.WhereObjectId_Analyzer = vbUnitId
-                                            AND MovementItemContainer.OperDate >= CURRENT_DATE - ('100 DAY')::INTERVAL
-                                          GROUP BY MovementItemContainer.ObjectId_Analyzer)
-               , tmpNotSold AS (SELECT Container.GoodsID
-                                FROM tmpContainer AS Container
-                                     LEFT OUTER JOIN tmpMovementItemCheck ON tmpMovementItemCheck.GoodsID = Container.GoodsID
-                                WHERE Container.Amount > 0 AND Container.AmountIn > 0
-                                  AND (Container.Check + COALESCE(tmpMovementItemCheck.Check, 0)) = 0
-                                )
+	--raise notice 'Value 13: %', CLOCK_TIMESTAMP();
+    
                  -- Все перемещения по СУН
-                ,tmpSendAll AS (SELECT DISTINCT Movement.Id AS MovementId
+    CREATE TEMP TABLE tmpRenainsSUN ON COMMIT DROP AS 
+    WITH
+                  tmpSendAll AS (SELECT DISTINCT Movement.Id AS MovementId
                                 FROM Movement
 
                                      INNER JOIN MovementBoolean AS MovementBoolean_SUN
@@ -666,15 +638,75 @@ BEGIN
 
                                       )
                    -- Перемещения по СУН остатки
-                 , tmpRenainsSUN AS (SELECT Container.GoodsID                                   AS GoodsID
-                                          , COALESCE(Container.PartionDateKindId, 0)            AS PartionDateKindId
-                                          , SUM(COALESCE(Container.AmountPD, Container.Amount)) AS Amount
-                                     FROM tmpRenainsSUNAll AS Container
+    SELECT Container.GoodsID                                   AS GoodsID
+         , COALESCE(Container.PartionDateKindId, 0)            AS PartionDateKindId
+         , SUM(COALESCE(Container.AmountPD, Container.Amount)) AS Amount
+    FROM tmpRenainsSUNAll AS Container
 
-                                     GROUP BY Container.GoodsID, COALESCE(Container.PartionDateKindId, 0)
-                                      )
+    GROUP BY Container.GoodsID, COALESCE(Container.PartionDateKindId, 0);
+
+    ANALYZE tmpRenainsSUN;
+
+	--raise notice 'Value 14: %', CLOCK_TIMESTAMP();
+    
+    CREATE TEMP TABLE tmpAsinoPharmaSP ON COMMIT DROP AS 
+    SELECT * FROM gpSelect_AsinoPharmaSPAllGoods_Cash(inSession := '3');
+
+    ANALYZE tmpAsinoPharmaSP;
+
+	--raise notice 'Value 15: %', CLOCK_TIMESTAMP();
+    
+    CREATE TEMP TABLE tmpDistributionPromo ON COMMIT DROP AS 
+    SELECT MI_DistributionPromoMaster.ObjectId    AS GoodsGroupId
+         , MAX(Movement.Id)::Integer              AS DistributionPromoID
+    FROM Movement
+
+         INNER JOIN MovementLinkObject AS MovementLinkObject_Retail
+                                       ON MovementLinkObject_Retail.MovementId = Movement.Id
+                                      AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
+                                      AND MovementLinkObject_Retail.ObjectId = vbObjectId
+
+         LEFT JOIN MovementDate AS MovementDate_StartPromo
+                                ON MovementDate_StartPromo.MovementId = Movement.Id
+                               AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+         LEFT JOIN MovementDate AS MovementDate_EndPromo
+                                ON MovementDate_EndPromo.MovementId = Movement.Id
+                               AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+
+         LEFT JOIN MovementItem AS MI_DistributionPromo
+                                ON MI_DistributionPromo.MovementId = Movement.Id
+                               AND MI_DistributionPromo.DescId = zc_MI_Child()
+                               AND MI_DistributionPromo.isErased = FALSE
+                               AND MI_DistributionPromo.Amount = 1
+                               AND MI_DistributionPromo.ObjectId = vbUnitId
+                                                                                                          
+         LEFT JOIN MovementItem AS MI_DistributionPromoMaster
+                                ON MI_DistributionPromoMaster.MovementId = Movement.Id
+                               AND MI_DistributionPromoMaster.DescId = zc_MI_Master()
+                               AND MI_DistributionPromoMaster.isErased = FALSE
+                               AND MI_DistributionPromoMaster.Amount = 1
+
+    WHERE Movement.DescId = zc_Movement_DistributionPromo()
+      AND Movement.StatusId = zc_Enum_Status_Complete()
+      AND MovementDate_StartPromo.ValueData <= CURRENT_DATE + INTERVAL '1 DAY'
+      AND MovementDate_EndPromo.ValueData >= CURRENT_DATE - INTERVAL '1 DAY'
+      AND (COALESCE(MI_DistributionPromo.ObjectId, 0) = vbUnitId OR 
+           NOT EXISTS(SELECT 1 FROM MovementItem
+                      WHERE MovementItem.MovementId = Movement.Id
+                        AND MovementItem.DescId = zc_MI_Child()
+                        AND MovementItem.Amount = 1
+                        AND MovementItem.isErased = FALSE))
+                                                   
+    GROUP BY MI_DistributionPromoMaster.ObjectId;
+
+    ANALYZE tmpDistributionPromo;
+
+	--raise notice 'Value 16: %', CLOCK_TIMESTAMP();
+    
                       -- Отложенные перемещения
-                 , tmpMovementID AS (SELECT Movement.Id
+    CREATE TEMP TABLE tmpDeferredSendIn ON COMMIT DROP AS 
+    WITH
+                   tmpMovementID AS (SELECT Movement.Id
                                      FROM Movement
                                      WHERE Movement.DescId = zc_Movement_Send()
                                       AND Movement.StatusId = zc_Enum_Status_UnComplete()
@@ -692,21 +724,77 @@ BEGIN
                                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                                          AND MovementLinkObject_To.ObjectId = vbUnitId
                                        )
-                 , tmpDeferredSendIn AS (SELECT Container.ObjectId                  AS GoodsId
-                                              , SUM(- MovementItemContainer.Amount) AS Amount
-                                         FROM tmpMovementSend AS Movement
+    SELECT Container.ObjectId                  AS GoodsId
+         , SUM(- MovementItemContainer.Amount) AS Amount
+    FROM tmpMovementSend AS Movement
 
-                                              INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
-                                                                              AND MovementItemContainer.DescId = zc_Container_Count()
+         INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
+                                         AND MovementItemContainer.DescId = zc_Container_Count()
 
-                                              INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
+         INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
 
-                                         GROUP BY Container.ObjectId
-                                       )
+    GROUP BY Container.ObjectId;
 
-                   -- Без Продажи за последнии 60 дней
-                 , tmpIlliquidUnit AS (SELECT * FROM lpReport_IlliquidReductionPlanUser(inUserID := vbUserId))
+    ANALYZE tmpDeferredSendIn;
 
+	--raise notice 'Value 17: %', CLOCK_TIMESTAMP();
+        
+    RETURN QUERY
+    WITH
+           -- Коды Мориона
+           tmpGoodsMorion AS (SELECT ObjectLink_Main_Morion.ChildObjectId  AS GoodsMainId
+                                   , MAX (Object_Goods_Morion.ObjectCode)  AS MorionCode
+                              FROM ObjectLink AS ObjectLink_Main_Morion
+                                   JOIN ObjectLink AS ObjectLink_Child_Morion
+                                                   ON ObjectLink_Child_Morion.ObjectId = ObjectLink_Main_Morion.ObjectId
+                                                  AND ObjectLink_Child_Morion.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                   JOIN ObjectLink AS ObjectLink_Goods_Object_Morion
+                                                   ON ObjectLink_Goods_Object_Morion.ObjectId = ObjectLink_Child_Morion.ChildObjectId
+                                                  AND ObjectLink_Goods_Object_Morion.DescId = zc_ObjectLink_Goods_Object()
+                                                  AND ObjectLink_Goods_Object_Morion.ChildObjectId = zc_Enum_GlobalConst_Marion()
+                                   LEFT JOIN Object AS Object_Goods_Morion ON Object_Goods_Morion.Id = ObjectLink_Goods_Object_Morion.ObjectId
+                              WHERE ObjectLink_Main_Morion.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                AND ObjectLink_Main_Morion.ChildObjectId > 0
+                              GROUP BY ObjectLink_Main_Morion.ChildObjectId
+                             )
+           -- Штрих-коды производителя
+         , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
+                                    , string_agg(Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc)           AS BarCode
+                               FROM ObjectLink AS ObjectLink_Main_BarCode
+                                    JOIN ObjectLink AS ObjectLink_Child_BarCode
+                                                    ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
+                                                   AND ObjectLink_Child_BarCode.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                    JOIN ObjectLink AS ObjectLink_Goods_Object_BarCode
+                                                    ON ObjectLink_Goods_Object_BarCode.ObjectId = ObjectLink_Child_BarCode.ChildObjectId
+                                                   AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
+                                                   AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+                                    LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
+                               WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                 AND ObjectLink_Main_BarCode.ChildObjectId > 0
+                                 AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                               GROUP BY ObjectLink_Main_BarCode.ChildObjectId
+                              )
+                -- MCS - Auto
+              , tmpMCSAuto AS (SELECT DISTINCT
+                                      CashSessionSnapShot.ObjectId
+                                    , tmpObject_Price.MCSValueOld
+                                    , tmpObject_Price.StartDateMCSAuto
+                                    , tmpObject_Price.EndDateMCSAuto
+                                    , tmpObject_Price.isMCSAuto
+                                    , tmpObject_Price.isMCSNotRecalcOld
+                               FROM tmpCashSessionSnapShot AS CashSessionSnapShot
+                                    INNER JOIN tmpObject_PriceInfo AS tmpObject_Price ON tmpObject_Price.GoodsId = CashSessionSnapShot.ObjectId
+                              )
+              , tmpPartionDateKind AS (SELECT Object_PartionDateKind.Id           AS Id
+                                            , Object_PartionDateKind.ObjectCode   AS Code
+                                            , Object_PartionDateKind.ValueData    AS Name
+                                            , COALESCE (ObjectFloatDay.ValueData / 30, 0) :: TFLoat AS AmountMonth
+                                       FROM Object AS Object_PartionDateKind
+                                            LEFT JOIN ObjectFloat AS ObjectFloatDay
+                                                                  ON ObjectFloatDay.ObjectId = Object_PartionDateKind.Id
+                                                                 AND ObjectFloatDay.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                                       WHERE Object_PartionDateKind.DescId = zc_Object_PartionDateKind()
+                                      )
                  , tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
                                        , ObjectFloat_NDSKind_NDS.ValueData
                                  FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
@@ -773,47 +861,7 @@ BEGIN
                                        FROM Object_Goods_Retail
                                        WHERE COALESCE (Object_Goods_Retail.GoodsPairSunId, 0) <> 0
                                          AND Object_Goods_Retail.RetailId = 4)
-                 , tmpDistributionPromo AS (SELECT MI_DistributionPromoMaster.ObjectId    AS GoodsGroupId
-                                                 , MAX(Movement.Id)::Integer              AS DistributionPromoID
-                                            FROM Movement
 
-                                                 INNER JOIN MovementLinkObject AS MovementLinkObject_Retail
-                                                                               ON MovementLinkObject_Retail.MovementId = Movement.Id
-                                                                              AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
-                                                                              AND MovementLinkObject_Retail.ObjectId = vbObjectId
-
-                                                 LEFT JOIN MovementDate AS MovementDate_StartPromo
-                                                                        ON MovementDate_StartPromo.MovementId = Movement.Id
-                                                                       AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
-                                                 LEFT JOIN MovementDate AS MovementDate_EndPromo
-                                                                        ON MovementDate_EndPromo.MovementId = Movement.Id
-                                                                       AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
-
-                                                 LEFT JOIN MovementItem AS MI_DistributionPromo
-                                                                        ON MI_DistributionPromo.MovementId = Movement.Id
-                                                                       AND MI_DistributionPromo.DescId = zc_MI_Child()
-                                                                       AND MI_DistributionPromo.isErased = FALSE
-                                                                       AND MI_DistributionPromo.Amount = 1
-                                                                       AND MI_DistributionPromo.ObjectId = vbUnitId
-                                                                                                          
-                                                 LEFT JOIN MovementItem AS MI_DistributionPromoMaster
-                                                                        ON MI_DistributionPromoMaster.MovementId = Movement.Id
-                                                                       AND MI_DistributionPromoMaster.DescId = zc_MI_Master()
-                                                                       AND MI_DistributionPromoMaster.isErased = FALSE
-                                                                       AND MI_DistributionPromoMaster.Amount = 1
-
-                                            WHERE Movement.DescId = zc_Movement_DistributionPromo()
-                                              AND Movement.StatusId = zc_Enum_Status_Complete()
-                                              AND MovementDate_StartPromo.ValueData <= CURRENT_DATE + INTERVAL '1 DAY'
-                                              AND MovementDate_EndPromo.ValueData >= CURRENT_DATE - INTERVAL '1 DAY'
-                                              AND (COALESCE(MI_DistributionPromo.ObjectId, 0) = vbUnitId OR 
-                                                   NOT EXISTS(SELECT 1 FROM MovementItem
-                                                              WHERE MovementItem.MovementId = Movement.Id
-                                                                AND MovementItem.DescId = zc_MI_Child()
-                                                                AND MovementItem.Amount = 1
-                                                                AND MovementItem.isErased = FALSE))
-                                                   
-                                            GROUP BY MI_DistributionPromoMaster.ObjectId)
                  , tmpGoodsDivisionLock AS (SELECT ObjectLink_GoodsDivisionLock_Goods.ChildObjectId  AS GoodsId
                                                  , ObjectBoolean_GoodsDivisionLock_Lock.ValueData    AS isLock
                                             FROM ObjectLink AS ObjectLink_GoodsDivisionLock_Unit
@@ -827,11 +875,7 @@ BEGIN
                                             WHERE ObjectLink_GoodsDivisionLock_Unit.DescId        = zc_ObjectLink_GoodsDivisionLock_Unit()
                                               AND ObjectLink_GoodsDivisionLock_Unit.ChildObjectId = vbUnitId
                                             )
-                 , tmpMIPromoBonus AS (SELECT MI.GoodsId               AS GoodsId
-                                            , MI.MarginPercent         AS MarginPercent
-                                            , MI.PromoBonus            AS PromoBonus
-                                       FROM gpSelect_PromoBonus_MarginPercent(vbUnitId, inSession) AS MI)
-                 , tmpAsinoPharmaSP AS (SELECT * FROM gpSelect_AsinoPharmaSPAllGoods_Cash(inSession := '3'))
+                 
 							 
         -- Результат
         SELECT
@@ -847,7 +891,7 @@ BEGIN
                  ELSE Object_Goods_Main.MakerName END AS MakerName,
             CashSessionSnapShot.Remains,
             zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) AS Price,
 
             --
@@ -855,10 +899,10 @@ BEGIN
             --
             CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
                  THEN ROUND (CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                                            CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                            CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceRetSP, 0)
                                   THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                                            CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                            CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                                   ELSE COALESCE (tmpGoodsSP.PriceRetSP, 0) END * tmpGoodsSP.PercentPayment / 100, 2) -- Фиксированный % доплаты
                                        
@@ -866,7 +910,7 @@ BEGIN
                       THEN 0 -- по 0, т.к. цена доплаты = 0
 
                  WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                       THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
 
@@ -874,23 +918,23 @@ BEGIN
                  --      THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена доплаты
 
                  WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                    AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
                          - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
                          - zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                            ) -- разница с ценой возмещения и "округлили в большую"
                       THEN 0
 
                  WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                       THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
                          - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
                          - zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                            ) -- разница с ценой возмещения и "округлили в большую"
 
@@ -904,18 +948,18 @@ BEGIN
             --
             CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
                  THEN CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                                     CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                     CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                                      COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceRetSP, 0)
                            THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                                     CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                     CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                                      COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                            ELSE COALESCE (tmpGoodsSP.PriceRetSP, 0) END -- Фиксированный % доплаты
             ELSE
               CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                               CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                                COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                         THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                               CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                                COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) -- по нашей цене, т.к. она меньше чем цена возмещения
                    ELSE
 
@@ -923,28 +967,28 @@ BEGIN
                         THEN 0 -- по 0, т.к. цена доплаты = 0
 
                    WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                               CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                                COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                         THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
 
                    WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                               CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                                COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                      AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
                            - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
                            - zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                               CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                                COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                              ) -- разница с ценой возмещения и "округлили в большую"
                         THEN 0
 
                    WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                               CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                                COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                         THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
                            - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
                            - zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                               CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                                COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                              ) -- разница с ценой возмещения и "округлили в большую"
 
@@ -954,176 +998,6 @@ BEGIN
             + COALESCE (tmpGoodsSP.PriceSP, 0)
 
             END END :: TFloat AS PriceSaleSP,
-
-            -- временно для проверки1
-           (CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN 0 ELSE
-            COALESCE (zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0), 0)
-          - CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
-                      THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) -- по нашей цене, т.к. она меньше чем цена возмещения
-
-                 ELSE
-            CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
-                 THEN ROUND (CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                                            CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                            COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceRetSP, 0)
-                                  THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                                            CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                            COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
-                                  ELSE COALESCE (tmpGoodsSP.PriceRetSP, 0) END * tmpGoodsSP.PercentPayment / 100, 2) -- Фиксированный % доплаты
-                                       
-                 WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
-                      THEN 0 -- по 0, т.к. цена доплаты = 0
-
-                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
-                      THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
-
-                 -- WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PaymentSP, 0)
-                 --      THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена доплаты
-
-                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
-                   AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
-                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
-                           ) -- разница с ценой возмещения и "округлили в большую"
-                      THEN 0
-
-                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
-                      THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
-                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
-                           ) -- разница с ценой возмещения и "округлили в большую"
-
-                 ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
-
-            END
-          + COALESCE (tmpGoodsSP.PriceSP, 0)
-
-
-            END
-            END
-            -- COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) - CashSessionSnapShot.Price
-            ) :: TFloat AS DiffSP1,
-
-            -- временно для проверки2
-           (CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
-                      THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) -- по нашей цене, т.к. она меньше чем цена возмещения
-
-                 ELSE
-
-            CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
-                 THEN ROUND (CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                                            CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                            COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceRetSP, 0)
-                                  THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                                            CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                            COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
-                                  ELSE COALESCE (tmpGoodsSP.PriceRetSP, 0) END * tmpGoodsSP.PercentPayment / 100, 2) -- Фиксированный % доплаты
-                                       
-                 WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
-                      THEN 0 -- по 0, т.к. цена доплаты = 0
-
-                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
-                      THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
-
-                 -- WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PaymentSP, 0)
-                 --      THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена доплаты
-
-                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
-                   AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
-                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
-                           ) -- разница с ценой возмещения и "округлили в большую"
-                      THEN 0
-
-                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
-                      THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
-                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
-                           ) -- разница с ценой возмещения и "округлили в большую"
-
-                 ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
-
-            END
-          + COALESCE (tmpGoodsSP.PriceSP, 0)
-
-            END
-
-          - CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
-                 THEN ROUND (CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                                            CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                            COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceRetSP, 0)
-                                  THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                                            CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                                            COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
-                                  ELSE COALESCE (tmpGoodsSP.PriceRetSP, 0) END * tmpGoodsSP.PercentPayment / 100, 2) -- Фиксированный % доплаты
-                                       
-                 WHEN COALESCE (tmpGoodsSP.PaymentSP, 0) = 0
-                      THEN 0 -- по 0, т.к. цена доплаты = 0
-
-                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
-                      THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
-
-                 -- WHEN CashSessionSnapShot.Price < COALESCE (tmpGoodsSP.PaymentSP, 0)
-                 --      THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена доплаты
-
-                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
-                   AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
-                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
-                           ) -- разница с ценой возмещения и "округлили в большую"
-                      THEN 0
-
-                 WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
-                      THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
-                         - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
-                         - zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
-                           ) -- разница с ценой возмещения и "округлили в большую"
-
-                 ELSE COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- иначе всегда цена доплаты "округлили в меньшую"
-
-            END
-           ) :: TFloat AS DiffSP2,
-
             NULLIF (CashSessionSnapShot.Reserved, 0) :: TFloat AS Reserved,
             CashSessionSnapShot.MCSValue,
             Link_Goods_AlternativeGroup.ChildObjectId as AlternativeGroupId,
@@ -1134,7 +1008,7 @@ BEGIN
             CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END    AS isPromo,
             COALESCE(GoodsPromo.isPromoForSale, FALSE)                                AS isPromoForSale,
             COALESCE(GoodsPromo.RelatedProductId, ObjectFloat_RelatedProduct.ValueData)::Integer  AS RelatedProductId,
-            CASE WHEN tmpGoodsSP.GoodsId IS NULL /*OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0*/ THEN FALSE ELSE TRUE END :: Boolean  AS isSP,
+            CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END :: Boolean  AS isSP,
             tmpGoodsSP.GoodsId IS NOT NULL                     AS isElRecipe,
             Object_IntenalSP.ValueData                         AS IntenalSPName,
             CashSessionSnapShot.MinExpirationDate,
@@ -1189,9 +1063,6 @@ BEGIN
           , tmpGoodsSP.PercentPayment                              AS PercentPayment
           , tmpGoodsSP.CountSP::TFloat                             AS CountSP
           , tmpGoodsSP.CountSPMin::TFloat                          AS CountSPMin
-          , tmpGoodsSP.IdSP::TVarChar                              AS IdSP
-          , tmpGoodsSP.ProgramIdSP::TVarChar                       AS ProgramIdSP
-          , tmpGoodsSP.DosageIdSP::TVarChar                        AS DosageIdSP
           , tmpGoodsSP.PriceRetSP::TFloat                          AS PriceRetSP
           , tmpGoodsSP.PaymentSP::TFloat                           AS PaymentSP
           , CASE CashSessionSnapShot.PartionDateKindId
@@ -1202,12 +1073,12 @@ BEGIN
                   AND Object_Goods_Retail.Price > 0
                    OR COALESCE(tmpPriceChange.PartionDateKindId, 0) <> 0
                  THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
             ELSE
             CASE WHEN COALESCE(CashSessionSnapShot.PartionDateKindId, 0) <> 0 AND COALESCE(CashSessionSnapShot.PartionDateDiscount, 0) <> 0 THEN
                  CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                         CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) > CashSessionSnapShot.PriceWithVAT
                          AND CashSessionSnapShot.PriceWithVAT <= vbPriceSamples 
                          AND vbPriceSamples > 0
@@ -1218,19 +1089,19 @@ BEGIN
                                       WHEN CashSessionSnapShot.PartionDateKindId = zc_Enum_PartionDateKind_3() THEN 100.0 - vbSamples22
                                       WHEN CashSessionSnapShot.PartionDateKindId = zc_Enum_PartionDateKind_1() THEN 100.0 - vbSamples3
                                       ELSE 100 END  / 100, 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END), 2)
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END), 2)
                       WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                         CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) > CashSessionSnapShot.PriceWithVAT
                          AND CashSessionSnapShot.PriceWithVAT > 0
                       THEN ROUND(zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                         CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) - (zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                         CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) - CashSessionSnapShot.PriceWithVAT) *
                                  CashSessionSnapShot.PartionDateDiscount / 100, 2)
                       ELSE zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                         CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                  END
                  ELSE NULL
@@ -1289,19 +1160,24 @@ BEGIN
                                         COALESCE(tmpPriceChange.FixPercent, 0) = 0 AND
                                         COALESCE(tmpPriceChange.FixDiscount, 0) = 0 OR
                                         COALESCE(tmpPriceChange.Multiplicity, 0) > 1)
-                                  THEN CashSessionSnapShot.Price * 100.0 / (100.0 + tmpMIPromoBonus.MarginPercent) * 
-                                       (100.0 - tmpMIPromoBonus.PromoBonus + tmpMIPromoBonus.MarginPercent) / 100 END , 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                  THEN Round(CashSessionSnapShot.Price * 100.0 / (100.0 + tmpMIPromoBonus.MarginPercent) * 
+                                       (100.0 - tmpMIPromoBonus.PromoBonus + tmpMIPromoBonus.MarginPercent) / 100, 2) END , 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)  AS PromoBonusPrice
           , COALESCE (tmpAsinoPharmaSP.IsAsinoMain , FALSE)                       AS IsAsinoMain
           , COALESCE (tmpAsinoPharmaSP.IsAsinoPresent , FALSE)                    AS IsAsinoPresent
-
-          /*, CashSessionSnapShot.PartionDateKindId   AS PartionDateKindId_check
-          , zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)               AS Price_check
-          , CashSessionSnapShot.PriceWithVAT        AS PriceWithVAT_check
-          , CashSessionSnapShot.PartionDateDiscount AS PartionDateDiscount_check*/
+          , zfCalc_PriceCash(COALESCE(
+                             CASE WHEN COALESCE(NULLIF (CashSessionSnapShot.PartionDateKindId, 0), zc_Enum_PartionDateKind_Good()) = zc_Enum_PartionDateKind_Good()
+                                   AND Object_Goods_Retail.IsTop = False 
+                                   AND (COALESCE(tmpPriceChange.PriceChange, 0) = 0 AND
+                                        COALESCE(tmpPriceChange.FixPercent, 0) = 0 AND
+                                        COALESCE(tmpPriceChange.FixDiscount, 0) = 0 OR
+                                        COALESCE(tmpPriceChange.Multiplicity, 0) > 1)
+                                  THEN Round(CashSessionSnapShot.Price * 100.0 / (100.0 + tmpMIPromoBonus.MarginPercent) * 
+                                       (100.0 - tmpMIPromoBonus.PromoBonus + tmpMIPromoBonus.MarginPercent) / 100, 2) END,
+                             CashSessionSnapShot.Price) , 
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)  AS PriceView
           
          FROM
             tmpCashSessionSnapShot AS CashSessionSnapShot
@@ -1406,6 +1282,10 @@ BEGIN
            
         ORDER BY
             CashSessionSnapShot.ObjectId;
+            
+            
+        --raise notice 'Value 20: %', CLOCK_TIMESTAMP();
+            
 
 /*    vb1:= (SELECT COUNT (*) FROM CashSessionSnapShot WHERE CashSessionSnapShot.CashSessionId = inCashSessionId) :: TVarChar;
     vb2:= ((CLOCK_TIMESTAMP() - vbOperDate_StartBegin) :: INTERVAL) :: TVarChar;

@@ -41,6 +41,7 @@ type
     FUpdateEDIErrorState: TdsdStoredProc;
     FUpdateDeclarFileName: TdsdStoredProc;
     FGetSaveFilePath: TdsdStoredProc;
+    FUpdateEDIisLoad: TdsdStoredProc;
     ComSigner: OleVariant;
     FSendToFTP: boolean;
     FDirectory: string;
@@ -60,6 +61,8 @@ type
       Directory: string);
     procedure SetDirectory(const Value: string);
     function ConvertEDIDate(ADateTime: string): TDateTime;
+    procedure InsertUpdateOrderVchasno(ORDER: OrderXML.IXMLORDERType;
+      spHeader, spList: TdsdStoredProc; lFileName : String);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -422,6 +425,13 @@ begin
   FUpdateEDIErrorState.Params.AddParam('IsFind', ftBoolean, ptOutput, false);
   FUpdateEDIErrorState.StoredProcName := 'gpUpdate_Movement_EDIErrorState';
   FUpdateEDIErrorState.OutputType := otResult;
+
+  FUpdateEDIisLoad := TdsdStoredProc.Create(nil);
+  FUpdateEDIisLoad.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+  FUpdateEDIisLoad.Params.AddParam('inisLoad', ftBoolean, ptInput, False);
+  FUpdateEDIisLoad.StoredProcName := 'gpUpdate_Movement_EDI_isLoad';
+  FUpdateEDIisLoad.OutputType := otResult;
+
 
   FGetSaveFilePath := TdsdStoredProc.Create(nil);
   FGetSaveFilePath.OutputType := otResult;
@@ -3083,6 +3093,7 @@ begin
   FreeAndNil(FUpdateDeclarAmount);
   FreeAndNil(FInsertEDIFile);
   FreeAndNil(FUpdateDeclarFileName);
+  FreeAndNil(FUpdateEDIisLoad);
   inherited;
 end;
 
@@ -4414,6 +4425,53 @@ if VarIsNull(ComSigner) then
     end;
 end;
 
+procedure TEDI.InsertUpdateOrderVchasno(ORDER: OrderXML.IXMLORDERType;
+  spHeader, spList: TdsdStoredProc; lFileName : String);
+var
+  MovementId, GoodsPropertyId: integer;
+  i: integer;
+  s : String;
+begin
+  with spHeader, ORDER do
+  begin
+    ParamByName('inOrderInvNumber').Value := NUMBER;
+    ParamByName('inOrderOperDate').Value := VarToDateTime(Date);
+
+    ParamByName('inGLNPlace').Value := HEAD.DELIVERYPLACE;
+    ParamByName('inGLN').Value := HEAD.BUYER;
+
+    Execute;
+    if ParamByName('isLoad').Value then Exit;
+    MovementId := ParamByName('MovementId').Value;
+    GoodsPropertyId := StrToInt(ParamByName('GoodsPropertyId').asString);
+  end;
+  for i := 0 to ORDER.HEAD.POSITION.Count - 1 do
+    with spList, ORDER.HEAD.POSITION[i] do
+    begin
+      ParamByName('inMovementId').Value := MovementId;
+      ParamByName('inGoodsPropertyId').Value := GoodsPropertyId;
+      //
+      s:= CHARACTERISTIC.DESCRIPTION;
+      if Pos(char(189), s) > 0
+      then begin System.Insert('1/2', s, Pos(char(189), s) + 1);System.Delete(s, Pos(char(189), s), 1);end;
+      ParamByName('inGoodsName').Value := s;
+      //
+      ParamByName('inGLNCode').Value := PRODUCTIDBUYER;
+      try ParamByName('inAmountOrder').Value := gfStrToFloat(ORDEREDQUANTITY); except ParamByName('inAmountOrder').Value := 0; end;
+      try ParamByName('inPriceOrder').Value := gfStrToFloat(ORDERPRICE); except ParamByName('inPriceOrder').Value := 0; end;
+      Execute;
+    end;
+    //
+    FInsertEDIEvents.ParamByName('inMovementId').Value := MovementId;
+    FInsertEDIEvents.ParamByName('inEDIEvent').Value :='{'+IntToStr(i)+'}«агрузка ORDER из EDI завершена _'+lFileName+'_';
+    FInsertEDIEvents.Execute;
+    //
+    FUpdateEDIisLoad.ParamByName('inMovementId').Value := MovementId;
+    FUpdateEDIisLoad.ParamByName('inisLoad').Value := True;
+    FUpdateEDIisLoad.Execute;
+end;
+
+
 procedure TEDI.OrderLoadVchasnoEDIA(AOrder, AFileName: String; spHeader, spList: TdsdStoredProc);
 var
   ORDER: OrderXML.IXMLORDERType;
@@ -4421,7 +4479,7 @@ begin
   try
     ORDER := OrderXML.LoadORDER(AOrder);
     // загружаем в базенку
-    InsertUpdateOrder(ORDER, spHeader, spList, AFileName);
+    InsertUpdateOrderVchasno(ORDER, spHeader, spList, AFileName);
   except
     on E: Exception do begin raise Exception.Create(E.Message);
     end;

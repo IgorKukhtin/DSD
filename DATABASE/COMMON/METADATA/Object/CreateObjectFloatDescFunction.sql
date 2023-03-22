@@ -2384,11 +2384,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_MobMessCount() RETURNS In
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_MobMessCount', 'Сообщение по созданию заказа по приложению после чека' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_MobMessCount');
 
-
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_AccountSalesDE_Amount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_AccountSalesDE_Amount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_AccountSalesDE(), 'zc_ObjectFloat_AccountSalesDE_Amount', 'Сумма акта' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_AccountSalesDE_Amount');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 21.03.23                                                                                      * zc_ObjectFloat_AccountSalesDE_Amount
  14.03.23         * zc_ObjectFloat_PersonalServiceList_SummAvance
                     zc_ObjectFloat_PersonalServiceList_SummAvanceMax
                     zc_ObjectFloat_PersonalServiceList_HourAvance

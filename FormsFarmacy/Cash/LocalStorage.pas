@@ -495,6 +495,8 @@ begin
       AddFloatField(LocalDataBaseDiff, 'GOODSDIPR'); //Процент скидки для сайта по дисконтной программе
       AddFloatField(LocalDataBaseDiff, 'DEFERENDT'); //В отложенных технических переучетах
       AddIntField(LocalDataBaseDiff,   'MORIONCODE'); //Код мориона
+      AddFloatField(LocalDataBaseDiff, 'PBPPRICE'); //Цена по промобонусу
+      AddFloatField(LocalDataBaseDiff, 'PRICEVIEW'); //Цена для отображения
 
       LocalDataBaseDiff.CreateTable;
     end;
@@ -537,7 +539,9 @@ begin
         (FindField('GOODSPSAM') = nil) or
         (FindField('GOODSDIPR') = nil) or
         (FindField('DEFERENDT') = nil) or
-        (FindField('MORIONCODE') = nil));
+        (FindField('MORIONCODE') = nil) or
+        (FindField('PBPPRICE') = nil) or
+        (FindField('PRICEVIEW') = nil));
 
       Close;
 

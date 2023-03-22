@@ -1018,15 +1018,15 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
     Top = 272
   end
   object spUpdateActNumberAndAmountFilter: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Check_ActNumberAndAmount'
+    StoredProcName = 'gpInsertUpdate_Object_AccountSalesDE'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'inMovementItemContainerId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MovementId'
+        ComponentItem = 'MovementItemContainerId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1053,15 +1053,15 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
     Top = 272
   end
   object spUpdateActNumberAndAmount: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Check_ActNumberAndAmount'
+    StoredProcName = 'gpInsertUpdate_Object_AccountSalesDE'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
+        Name = 'inMovementItemContainerId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MovementId'
+        ComponentItem = 'MovementItemContainerId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -23,7 +23,8 @@ RETURNS TABLE (Ord Integer
              , Summ TFloat
              , PriceSale TFloat
              , SummSale TFloat
-             , MedicalProgramId TVarChar, CountSP TFloat, IdSP TVarChar, ProgramIdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat
+             , MedicalProgramSPId Integer, MedicalProgramId TVarChar
+             , CountSP TFloat, IdSP TVarChar, ProgramIdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat
              , State TVarChar
              , Color_calc Integer
               )              
@@ -65,7 +66,8 @@ BEGIN
                                , ObjectString_ProgramId.ValueData                        AS MedicalProgramId
                                , COALESCE(MovementFloat_PercentPayment.ValueData, 0)::TFloat  AS PercentPayment
                                                                 -- № п/п - на всякий случай
-                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MLO_MedicalProgramSP.ObjectId  ORDER BY Movement.OperDate DESC) AS Ord
+                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MLO_MedicalProgramSP.ObjectId, MIString_IdSP.ValueData  ORDER BY Movement.OperDate DESC) AS OrdId
+                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MLO_MedicalProgramSP.ObjectId  ORDER BY Movement.OperDate DESC, MIFloat_CountSP.ValueData DESC) AS Ord
                           FROM Movement
                                INNER JOIN MovementDate AS MovementDate_OperDateStart
                                                        ON MovementDate_OperDateStart.MovementId = Movement.Id
@@ -190,9 +192,10 @@ BEGIN
            , MIFloat_PriceSale.ValueData                                   AS PriceSale
            , (MIFloat_PriceSale.ValueData * MovementItem.Amount) :: TFloat AS SummSale
 
+           , MovementLinkObject_MedicalProgramSP.ObjectId           AS MedicalProgramSPId
            , tmpGoodsSP.MedicalProgramId                            AS MedicalProgramId
            , tmpGoodsSP.CountSP                                     AS CountSP
-           , tmpGoodsSP.IdSP                                        AS IdSP
+           , COALESCE (MIString_IdSP.ValueData, tmpGoodsSP.IdSP)::TVarChar   AS IdSP
            , tmpGoodsSP.ProgramIdSP                                 AS ProgramIdSP
            , tmpGoodsSP.DosageIdSP                                  AS DosageIdSP
            , CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
@@ -261,6 +264,10 @@ BEGIN
            LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
                                        ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
                                       AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+           LEFT JOIN MovementItemString AS MIString_IdSP
+                                        ON MIString_IdSP.MovementItemId = MovementItem.Id
+                                       AND MIString_IdSP.DescId = zc_MIString_IdSP()
+
            LEFT JOIN tmpMovementBoolean AS MB_RoundingTo10
                                      ON MB_RoundingTo10.MovementId = MovementItem.MovementId
                                     AND MB_RoundingTo10.DescId = zc_MovementBoolean_RoundingTo10()
@@ -282,7 +289,9 @@ BEGIN
            -- Соц Проект
            LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
                                AND tmpGoodsSP.MedicalProgramSPId = MovementLinkObject_MedicalProgramSP.ObjectId
-                               AND tmpGoodsSP.Ord     = 1 -- № п/п - на всякий случай
+                               AND (tmpGoodsSP.IdSP = COALESCE (MIString_IdSP.ValueData, '') AND tmpGoodsSP.OrdId = 1 OR
+                                    COALESCE (MIString_IdSP.ValueData, '') = '' AND tmpGoodsSP.Ord     = 1 )
+
            LEFT JOIN  Object AS Object_IntenalSP ON Object_IntenalSP.Id = tmpGoodsSP.IntenalSPId                        
 
       WHERE MovementItem.Amount > 0
@@ -303,4 +312,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_CheckHelsiAllUnit (inStartDate:= '19.07.2021', inSession:= '3')
 
-select * from gpSelect_Movement_CheckHelsiAllUnit(inStartDate := ('11.08.2022')::TDateTime, inEndDate := ('12.08.2022')::TDateTime,  inSession := '183242');
+select * from gpSelect_Movement_CheckHelsiAllUnit(inStartDate := ('20.03.2023')::TDateTime, inEndDate := ('20.03.2023')::TDateTime,  inSession := '183242');
