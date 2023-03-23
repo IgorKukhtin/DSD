@@ -182,6 +182,8 @@ type
     cxGridLevel3: TcxGridLevel;
     DetailDS: TDataSource;
     DetailCDS: TClientDataSet;
+    actGridToExcelDetail: TdsdGridToExcel;
+    bbGridToExcelDetail: TdxBarButton;
   private
     { Private declarations }
   public

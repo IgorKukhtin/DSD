@@ -17,6 +17,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
     ClientRectBottom = 355
     ClientRectRight = 1000
     inherited tsMain: TcxTabSheet
+      ExplicitTop = 0
       ExplicitWidth = 1000
       ExplicitHeight = 331
       inherited cxGrid: TcxGrid
@@ -830,6 +831,9 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -885,6 +889,16 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = Sum_Diff3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_tax_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_diff_ch2
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -936,6 +950,16 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = Sum_Diff3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_tax_ch2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_diff_ch2
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1027,6 +1051,27 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object Amount_tax_ch2: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086'  ('#1085#1072#1083#1086#1075#1086#1074#1072#1103')'
+            DataBinding.FieldName = 'Amount_tax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object Amount_diff_ch2: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1086#1090' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
             Width = 80
           end
           object Price_ch2: TcxGridDBColumn
@@ -1168,8 +1213,19 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         end>
       RefreshOnTabSetChanges = True
     end
-    inherited actGridToExcel: TdsdGridToExcel
+    object actGridToExcelDetail: TdsdGridToExcel [1]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet2
+      MoveParams = <>
       Enabled = False
+      Grid = cxGridDetail
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      TabSheet = cxTabSheet1
     end
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
@@ -1179,7 +1235,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
       TabSheet = tsMain
       Enabled = False
     end
-    object MedocAction: TMedocAction [4]
+    object MedocAction: TMedocAction [5]
       Category = 'TaxLib'
       MoveParams = <>
       Caption = 'MedocAction'
@@ -1194,7 +1250,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         item
         end>
     end
-    object actOpenTax: TdsdOpenForm [7]
+    object actOpenTax: TdsdOpenForm [8]
       Category = 'DSDLib'
       MoveParams = <>
       Enabled = False
@@ -1238,7 +1294,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         end>
       isShowModal = False
     end
-    object actTaxJournalChoice: TOpenChoiceForm [8]
+    object actTaxJournalChoice: TOpenChoiceForm [9]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1307,7 +1363,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         end>
       isShowModal = True
     end
-    object actOpenReportCheckAmountForm: TdsdOpenForm [9]
+    object actOpenReportCheckAmountForm: TdsdOpenForm [10]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1391,7 +1447,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         end>
       isShowModal = False
     end
-    object actOpenReportCheckForm: TdsdOpenForm [10]
+    object actOpenReportCheckForm: TdsdOpenForm [11]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1475,7 +1531,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         end>
       isShowModal = False
     end
-    object actOpenReportForm: TdsdOpenForm [11]
+    object actOpenReportForm: TdsdOpenForm [12]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1650,7 +1706,7 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [17]
+    object actGoodsKindChoice: TOpenChoiceForm [18]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2263,6 +2319,10 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbGridToExcelDetail'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
@@ -2335,6 +2395,10 @@ inherited ChangePercentMovementForm: TChangePercentMovementForm
     end
     object bbPrintMovement_ReturnIn_By_TaxCorrective: TdxBarButton
       Action = PrintMovement_ReturnIn_By_TaxCorrective
+      Category = 0
+    end
+    object bbGridToExcelDetail: TdxBarButton
+      Action = actGridToExcelDetail
       Category = 0
     end
   end

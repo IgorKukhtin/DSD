@@ -69,7 +69,8 @@ BEGIN
                                , ObjectString_ProgramId.ValueData                        AS MedicalProgramId
                                , COALESCE(MovementFloat_PercentPayment.ValueData, 0)::TFloat  AS PercentPayment
                                                                 -- № п/п - на всякий случай
-                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MLO_MedicalProgramSP.ObjectId  ORDER BY Movement.OperDate DESC) AS Ord
+                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MLO_MedicalProgramSP.ObjectId, MIString_IdSP.ValueData  ORDER BY Movement.OperDate DESC) AS OrdId
+                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MLO_MedicalProgramSP.ObjectId  ORDER BY Movement.OperDate DESC, MIFloat_CountSP.ValueData DESC) AS Ord
                           FROM Movement
                                INNER JOIN MovementDate AS MovementDate_OperDateStart
                                                        ON MovementDate_OperDateStart.MovementId = Movement.Id
@@ -236,6 +237,10 @@ BEGIN
            LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
                                        ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
                                       AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+           LEFT JOIN MovementItemString AS MIString_IdSP
+                                        ON MIString_IdSP.MovementItemId = MovementItem.Id
+                                       AND MIString_IdSP.DescId = zc_MIString_IdSP()
+
            LEFT JOIN MovementBoolean AS MB_RoundingTo10
                                      ON MB_RoundingTo10.MovementId = MovementItem.MovementId
                                     AND MB_RoundingTo10.DescId = zc_MovementBoolean_RoundingTo10()
@@ -257,7 +262,9 @@ BEGIN
             -- Соц Проект
             LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
                                 AND tmpGoodsSP.MedicalProgramSPId = MovementLinkObject_MedicalProgramSP.ObjectId
-                                AND tmpGoodsSP.Ord     = 1 -- № п/п - на всякий случай
+                               AND (tmpGoodsSP.IdSP = COALESCE (MIString_IdSP.ValueData, '') AND tmpGoodsSP.OrdId = 1 OR
+                                    COALESCE (MIString_IdSP.ValueData, '') = '' AND tmpGoodsSP.Ord     = 1 )
+
             LEFT JOIN  Object AS Object_IntenalSP ON Object_IntenalSP.Id = tmpGoodsSP.IntenalSPId
 
       WHERE Movement.OperDate >= DATE_TRUNC ('DAY', CURRENT_DATE) - INTERVAL '3 DAY'

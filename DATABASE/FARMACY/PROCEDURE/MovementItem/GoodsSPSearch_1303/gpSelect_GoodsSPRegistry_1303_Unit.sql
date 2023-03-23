@@ -40,14 +40,26 @@ BEGIN
     THEN
       DROP TABLE __tmpGoodsSPRegistry_1303;
     END IF;
+
+    --raise notice 'Value 1: %', CLOCK_TIMESTAMP();
     
-    CREATE TEMP TABLE __tmpGoodsSPRegistry_1303 ON COMMIT DROP AS 
-                                   (WITH
-                                    tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
-                                                        , ObjectFloat_NDSKind_NDS.ValueData
-                                                   FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                                   WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS())
-                                                   
+    CREATE TEMP TABLE tmpData_1303 ON COMMIT DROP AS 
+    WITH
+         tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                             , ObjectFloat_NDSKind_NDS.ValueData
+                        FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                       WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS())
+       , tmpContainer AS (SELECT Container.ObjectId
+                               , SUM(Container.Amount)                  AS Amount
+                          FROM Container
+                          WHERE Container.DescId = zc_Container_Count()
+                            AND Container.Amount <> 0
+                            AND Container.WhereObjectId = inUnitId
+                            AND (Container.ObjectId = inGoodsId OR COALESCE (inGoodsId, 0) = 0)
+                          GROUP BY Container.ObjectId
+                         )
+
+       , tmpGoodsSPRegistry_1303 AS (               
                                     SELECT MovementItem.Id               AS MovementItemId
                                          , MovementItem.ObjectId         AS GoodsId
                                          , COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0)::TFloat       AS NDS
@@ -90,27 +102,9 @@ BEGIN
                                     WHERE Movement.DescId = zc_Movement_GoodsSPSearch_1303()
                                       AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                                       AND COALESCE (MovementItem.ObjectId, 0) <> 0
-                                   );
+                                   )
                                    
-    ANALYSE __tmpGoodsSPRegistry_1303;
-    
-
-    RETURN QUERY
-    WITH
-         tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
-                             , ObjectFloat_NDSKind_NDS.ValueData
-                        FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
-                        WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS())
-       , tmpContainer AS (SELECT Container.ObjectId
-                               , SUM(Container.Amount)                  AS Amount
-                          FROM Container
-                          WHERE Container.DescId = zc_Container_Count()
-                            AND Container.Amount <> 0
-                            AND Container.WhereObjectId = inUnitId
-                            AND (Container.ObjectId = inGoodsId OR COALESCE (inGoodsId, 0) = 0)
-                          GROUP BY Container.ObjectId
-                         )
-       , tmpData_1303 AS (SELECT Object_Goods_Retail.Id    AS GoodsId
+                          SELECT Object_Goods_Retail.Id    AS GoodsId
                                , Object_Goods.Id           AS GoodsMainId  
 
                                , tmpGoodsSPRegistry_1303.NDS                          AS NDS
@@ -121,7 +115,7 @@ BEGIN
 
                                , tmpGoodsSPRegistry_1303.MovementItemId
 
-                          FROM __tmpGoodsSPRegistry_1303 AS tmpGoodsSPRegistry_1303
+                          FROM tmpGoodsSPRegistry_1303 AS tmpGoodsSPRegistry_1303
                           
                                LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = tmpGoodsSPRegistry_1303.GoodsId
                                LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = Object_Goods.Id
@@ -130,38 +124,69 @@ BEGIN
                                LEFT JOIN tmpContainer ON tmpContainer.ObjectId = Object_Goods_Retail.Id 
                                                     
                           WHERE COALESCE (Object_Goods_Retail.Id, 0) <> 0
-                            AND tmpGoodsSPRegistry_1303.Ord = 1
-                          )
-       , tmpIncome_All AS (SELECT Container.ObjectId                                          AS GoodsId
-                                , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)   AS MovementId
-                                , MovementLinkObject_To.ObjectId                              AS UnitId
-                            FROM Container 
-                                 INNER JOIN ContainerLinkObject AS CLI_MI 
-                                                                ON CLI_MI.ContainerId = Container.Id
-                                                               AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                                 INNER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                            AND tmpGoodsSPRegistry_1303.Ord = 1;
+                                   
+    ANALYSE tmpData_1303;
+    
+    --raise notice 'Value 2: %', CLOCK_TIMESTAMP();
 
-                                 INNER JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode :: Integer
-                                 -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-                                 LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                                             ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
-                                                            AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                                 -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                                 LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+    CREATE TEMP TABLE tmpContainer_1303 ON COMMIT DROP AS 
+      SELECT Container.Id                                                AS Id
+           , Container.ObjectId                                          AS GoodsId
+           , Object_PartionMovementItem.ObjectCode :: Integer            AS PartionMovementItemId
+      FROM Container 
+           INNER JOIN ContainerLinkObject AS CLI_MI 
+                                          ON CLI_MI.ContainerId = Container.Id
+                                         AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+           INNER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
 
-                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                              ON MovementLinkObject_To.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
-                                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()   
+       WHERE Container.ObjectId IN (SELECT tmpData_1303.GoodsId FROM tmpData_1303)
+         AND Container.DescId = zc_Container_Count()
+         AND Container.WhereObjectId = inUnitId
+         AND Container.ID > 10000000;
+                                   
+    ANALYSE tmpContainer_1303;
+    
+    --raise notice 'Value 3: %', CLOCK_TIMESTAMP();
+    
+    CREATE TEMP TABLE tmpIncome_1303 ON COMMIT DROP AS 
+     SELECT Container.GoodsId                                           AS GoodsId
+          , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)   AS MovementId
+          , MovementLinkObject_To.ObjectId                              AS UnitId
+      FROM tmpContainer_1303 AS Container 
+/*           INNER JOIN ContainerLinkObject AS CLI_MI 
+                                          ON CLI_MI.ContainerId = Container.Id
+                                         AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+           INNER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+*/
+           INNER JOIN MovementItem AS MI_Income ON MI_Income.Id = Container.PartionMovementItemId
+           -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+           LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                       ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                      AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+           -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+           LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
 
-                              WHERE Container.ObjectId IN (SELECT tmpData_1303.GoodsId FROM tmpData_1303)
-                                AND Container.DescId = zc_Container_Count()
-                                AND Container.WhereObjectId = inUnitId
-                                AND Container.ID > 10000000
-                              )
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                        ON MovementLinkObject_To.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
+                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()   
+           ;
+                                   
+    ANALYSE tmpIncome_1303;
+    
+    --raise notice 'Value 4: %', CLOCK_TIMESTAMP();
+
+    RETURN QUERY
+    WITH
+         tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                             , ObjectFloat_NDSKind_NDS.ValueData
+                        FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                        WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS())
+
        , tmpIncome_Last AS (SELECT tmpIncome_All.GoodsId
                                  , tmpIncome_All.MovementId
                                  , ROW_NUMBER() OVER (PARTITION BY tmpIncome_All.GoodsId ORDER BY tmpIncome_All.UnitId <> inUnitId, tmpIncome_All.MovementId DESC) AS ord   -- Люба сказала смотреть по последней партии
-                             FROM tmpIncome_All                                
+                             FROM tmpIncome_1303 AS tmpIncome_All                                
                              )
        , tmpIncome_1303 AS (SELECT tmpIncome_Last.GoodsId
                                 , Max(COALESCE(MIFloat_PriceSample.ValueData, 
@@ -204,7 +229,10 @@ BEGIN
     FROM tmpData_1303  
     
          LEFT JOIN tmpIncome_1303 ON tmpIncome_1303.GoodsId = tmpData_1303.GoodsId
-    ;                        
+    ;         
+    
+    --raise notice 'Value 20: %', CLOCK_TIMESTAMP();
+                   
       
 
 END;

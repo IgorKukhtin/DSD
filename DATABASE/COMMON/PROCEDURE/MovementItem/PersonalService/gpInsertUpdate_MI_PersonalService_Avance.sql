@@ -99,8 +99,7 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
                                                             ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
                                                            AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
-                      WHERE MI_SheetWorkTime.Amount <> 0
-                        AND ( (COALESCE(MIObject_Position.ObjectId, 0) <> 12940 AND COALESCE(MIObject_PositionLevel.ObjectId, 0) <> 1673854)           --5) расчет часов по табелю исключить -А) Вантажник (добовий) + доплата за погр.убоя погрузчик:
+                      WHERE ( (COALESCE(MIObject_Position.ObjectId, 0) <> 12940 AND COALESCE(MIObject_PositionLevel.ObjectId, 0) <> 1673854)           --5) расчет часов по табелю исключить -А) Вантажник (добовий) + доплата за погр.убоя погрузчик:
                            OR (COALESCE(MIObject_Position.ObjectId, 0) <> 924983 AND COALESCE(MIObject_PositionLevel.ObjectId, 0) <> 3515083)          --5) расчет часов по табелю исключить -Б) Вантажник (-) + С доплатой за вождение кары
                            OR (COALESCE(MIObject_Position.ObjectId, 0) <> 714226)                                                                      --5) расчет часов по табелю исключить -В) Готувач фаршу с/к ковбас
                             )
@@ -134,6 +133,7 @@ BEGIN
                                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
                               WHERE MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', vbServiceDate) AND (DATE_TRUNC ('MONTH', vbServiceDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
                                 AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+                               -- and MovementDate_ServiceDate.MovementId  <> 24813367
                               )
      --  сотрудники у который в др. ведомостях выдан аванс
      , tmpMI_Avance AS (SELECT DISTINCT ObjectLink_Personal_Member.ChildObjectId AS MemberId
@@ -141,10 +141,10 @@ BEGIN
                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.DescId = zc_MI_Master()
                                                     AND MovementItem.isErased = FALSE
-                             INNER JOIN MovementItemFloat AS MIFloat_SummAvanceRecalc
-                                                          ON MIFloat_SummAvanceRecalc.MovementItemId = MovementItem.Id
-                                                         AND MIFloat_SummAvanceRecalc.DescId = zc_MIFloat_SummAvanceRecalc()
-                                                         AND COALESCE (MIFloat_SummAvanceRecalc.ValueData,0) <> 0
+                             INNER JOIN MovementItemFloat AS MIFloat_SummCardRecalc
+                                                          ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc() --zc_MIFloat_SummAvanceRecalc()
+                                                         AND COALESCE (MIFloat_SummCardRecalc.ValueData,0) <> 0
                              LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                                   ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
                                                  AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
@@ -227,7 +227,7 @@ BEGIN
                                                       ) 
      FROM tmpData
           LEFT JOIN tmpMI ON tmpMI.PersonalId = tmpData.PersonalId
-                         AND tmpMI.MemberId = tmpData.MemberId
+                         AND tmpMI.MemberId_Personal = tmpData.MemberId
                          AND tmpMI.PositionId = tmpData.PositionId
                          AND tmpMI.UnitId = tmpData.UnitId
      WHERE tmpData.SumAmount >= vbHourAvance

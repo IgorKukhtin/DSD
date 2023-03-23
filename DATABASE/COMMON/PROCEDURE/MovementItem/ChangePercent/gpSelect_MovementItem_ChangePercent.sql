@@ -19,7 +19,9 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , AmountSumm_tax TFloat
              , Sum_ChangePercent_tax TFloat
              , Sum_Diff2 TFloat
-             , Sum_Diff3 TFloat
+             , Sum_Diff3 TFloat 
+             , Amount_tax TFloat
+             , Amount_diff TFloat
              
              , isErased Boolean
              )
@@ -100,7 +102,7 @@ BEGIN
                         , CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2)) ::TFloat AS Price_ChangePercent
                         --Сумма со скидкой без НДС
                         , CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                               THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,3))
+                                               THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,4))
                                             ELSE MovementItem.Amount
                                        END AS TFloat)
                                  * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
@@ -127,7 +129,8 @@ BEGIN
                       , tmp.CountForPrice
                       , tmp.Price
                       , tmp.Price_ChangePercent
-                      , SUM (tmp.AmountSumm) AS AmountSumm
+                      , SUM (tmp.Amount)            AS Amount
+                      , SUM (tmp.AmountSumm)        AS AmountSumm
                       , SUM (tmp.Sum_ChangePercent) AS Sum_ChangePercent
                  FROM tmpMI_Tax AS tmp 
                  GROUP BY tmp.GoodsId
@@ -161,7 +164,7 @@ BEGIN
            , CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2)) ::TFloat AS Price_ChangePercent
            --Сумма со скидкой без НДС
            , CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                  THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,3))
+                                  THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,4))
                                ELSE MovementItem.Amount
                           END AS TFloat)
                     * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
@@ -173,7 +176,7 @@ BEGIN
                         ELSE CAST  (MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)
            - CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                  THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,3))
+                                  THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,4))
                                ELSE MovementItem.Amount
                           END AS TFloat)
                     * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
@@ -191,14 +194,18 @@ BEGIN
                                    ELSE CAST  (MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                               END AS TFloat)
                       - CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                             THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,3))
+                                             THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,4))
                                           ELSE MovementItem.Amount
                                      END AS TFloat)
                                * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
                              AS NUMERIC (16, 2))
               , 0)
            -  COALESCE ((tmpCalc.AmountSumm - tmpCalc.Sum_ChangePercent),0) ) ::TFloat AS Sum_Diff3
-
+           -- кол-во из налоговых
+           , tmpCalc.Amount     ::TFloat AS Amount_tax
+           , (COALESCE (MovementItem.Amount,0) - COALESCE (tmpCalc.Amount,0)) ::TFloat AS Amount_diff
+           
+           
            , MovementItem.isErased              AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased

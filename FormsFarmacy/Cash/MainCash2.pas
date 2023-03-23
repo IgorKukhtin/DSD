@@ -635,13 +635,14 @@ type
     lblMemberSP: TcxMemo;
     TrayIcon: TTrayIcon;
     TimerTrayIconPUSH: TTimer;
-    MainPromoBonusPrice: TcxGridDBColumn;
     spAvailabilityCheckMedicalProgram: TdsdStoredProcSQLite;
     spGoodsSPId: TdsdStoredProcSQLite;
     GoodsSPIdCDS: TClientDataSet;
     spGetMedicalProgramSP: TdsdStoredProcSQLite;
     MedicalProgramSPCDS: TClientDataSet;
     MainisElRecipe: TcxGridDBColumn;
+    MemDataPBPPRICE: TFloatField;
+    MemDataPRICEVIEW: TFloatField;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1491,6 +1492,10 @@ begin
         FLocalDataBaseDiff.FieldByName('GOODSDIPR').AsVariant;
       MemData.FieldByName('MORIONCODE').AsVariant :=
         FLocalDataBaseDiff.FieldByName('MORIONCODE').AsVariant;
+      MemData.FieldByName('PBPPRICE').AsVariant := FLocalDataBaseDiff.FieldByName
+        ('PBPPRICE').AsVariant;
+      MemData.FieldByName('PRICEVIEW').AsFloat := FLocalDataBaseDiff.FieldByName
+        ('PRICEVIEW').AsFloat;
       FLocalDataBaseDiff.Edit;
       FLocalDataBaseDiff.DeleteRecord;
       FLocalDataBaseDiff.Post;
@@ -5157,9 +5162,12 @@ begin
         // Ë ”—“¿ÕŒ¬»Ã ÒÍË‰ÍÛ
         CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
         CheckCDS.FieldByName('SummChangePercent').asCurrency :=
-          CheckCDS.FieldByName('Amount').asCurrency *
-          (GoodsSPIdCDS.FieldByName('PriceSaleSP').asCurrency -
-          GoodsSPIdCDS.FieldByName('PriceSP').asCurrency);
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value) -
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
       end
       else if (DiscountServiceForm.gCode <> 0) and edPrice.Visible and (abs(edPrice.Value) > 0.0001) then
       begin
@@ -5170,8 +5178,12 @@ begin
         // Ë ”—“¿ÕŒ¬»Ã ÒÍË‰ÍÛ
         CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
         CheckCDS.FieldByName('SummChangePercent').asCurrency :=
-          CheckCDS.FieldByName('Amount').asCurrency *
-          (RemainsCDS.FieldByName('Price').asCurrency - edPrice.Value);
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value) -
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
       end
       else if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and
         (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
@@ -6036,6 +6048,10 @@ begin
           MemData.FieldByName('GOODSDIPR').AsVariant;
         RemainsCDS.FieldByName('MorionCode').AsVariant :=
           MemData.FieldByName('MORIONCODE').AsVariant;
+        RemainsCDS.FieldByName('PromoBonusPrice').AsVariant :=
+          MemData.FieldByName('PBPPRICE').AsVariant;
+        RemainsCDS.FieldByName('PriceView').AsVariant :=
+          MemData.FieldByName('PRICEVIEW').AsVariant;
         RemainsCDS.Post;
       End
       else
@@ -6114,6 +6130,10 @@ begin
             MemData.FieldByName('GOODSDIPR').AsVariant;
           RemainsCDS.FieldByName('MorionCode').AsVariant :=
             MemData.FieldByName('MORIONCODE').AsVariant;
+          RemainsCDS.FieldByName('PromoBonusPrice').AsVariant :=
+            MemData.FieldByName('PBPPRICE').AsVariant;
+          RemainsCDS.FieldByName('PriceView').AsVariant :=
+            MemData.FieldByName('PRICEVIEW').AsVariant;
           RemainsCDS.Post;
         End;
       End;
@@ -12244,9 +12264,12 @@ begin
           // Ë ”—“¿ÕŒ¬»Ã ÒÍË‰ÍÛ
           CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
           CheckCDS.FieldByName('SummChangePercent').asCurrency :=
-            CheckCDS.FieldByName('Amount').asCurrency *
-            (GoodsSPIdCDS.FieldByName('PriceSaleSP').asCurrency -
-            GoodsSPIdCDS.FieldByName('PriceSP').asCurrency);
+            GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+            CheckCDS.FieldByName('PriceSale').asCurrency,
+            FormParams.ParamByName('RoundingDown').Value) -
+            GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+            CheckCDS.FieldByName('Price').asCurrency,
+            FormParams.ParamByName('RoundingDown').Value);
         end
         else if (DiscountServiceForm.gCode <> 0) and edPrice.Visible and (abs(edPrice.Value) > 0.0001) then
         begin
@@ -12257,8 +12280,12 @@ begin
           // Ë ”—“¿ÕŒ¬»Ã ÒÍË‰ÍÛ
           CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
           CheckCDS.FieldByName('SummChangePercent').asCurrency :=
-            CheckCDS.FieldByName('Amount').asCurrency *
-            (RemainsCDS.FieldByName('Price').asCurrency - edPrice.Value);
+            GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+            CheckCDS.FieldByName('PriceSale').asCurrency,
+            FormParams.ParamByName('RoundingDown').Value) -
+            GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+            CheckCDS.FieldByName('Price').asCurrency,
+            FormParams.ParamByName('RoundingDown').Value);
         end
         else if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and
           (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and

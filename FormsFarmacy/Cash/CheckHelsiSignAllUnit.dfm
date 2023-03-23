@@ -584,4 +584,61 @@ inherited CheckHelsiSignAllUnitForm: TCheckHelsiSignAllUnitForm
     Left = 432
     Top = 208
   end
+  object spUpdate_IDSP: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Check_IDSP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = 43221d
+        Component = ClientDataSet
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = 43221d
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMedicalProgramSPId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MedicalProgramSPId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inQty'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 208
+  end
 end

@@ -462,6 +462,7 @@ BEGIN
                                    , PromoBonus.BonusInetOrder 
                               FROM gpSelect_PromoBonus_MarginPercent(inUnitId := 0,  inSession := inSession) AS PromoBonus 
                               WHERE PromoBonus.BonusInetOrder > 0)
+          , tmpAsinoPharmaSP AS (SELECT * FROM gpSelect_AsinoPharmaSP_PresentGoods(inUnitId, inSession))
                            
        , tmpResult AS (
                       --Шапка
@@ -533,13 +534,16 @@ BEGIN
                              LEFT JOIN tmpPromoBonus ON tmpPromoBonus.GoodsId = Object_Goods_Retail.Id
                                                     AND tmpPromoBonus.UnitId = inUnitId
                              
+                             -- Асино подарки
+                             LEFT JOIN tmpAsinoPharmaSP ON tmpAsinoPharmaSP.GoodsId = Object_Goods_Retail.Id
 
                              -- штрих-код производителя
                              LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = Object_Goods_Main.Id
                         WHERE (CASE WHEN COALESCE (GoodsDiscount.DiscountProcent, 0) > 0 THEN RemainsDiscount.AmountDiscount ELSE Remains.Amount END - 
                                          COALESCE (Reserve_Goods.ReserveAmount, 0) - COALESCE (Reserve_TP.Amount, 0)) > 0
                           AND Object_Goods_Main.Name NOT ILIKE '%Спеццена%'
-                          AND Object_Goods_Main.ObjectCode NOT IN (3274, 17789)                          
+                          AND Object_Goods_Main.ObjectCode NOT IN (3274, 17789)  
+                          AND COALESCE (tmpAsinoPharmaSP.GoodsId, 0) = 0
                       UNION ALL
                       -- подва
                       SELECT '</Offers>')

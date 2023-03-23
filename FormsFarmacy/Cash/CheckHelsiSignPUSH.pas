@@ -77,14 +77,14 @@ uses Helsi, MainCash2, Math;
 
 
 procedure TCheckHelsiSignPUSHForm.actLoadStateCurrExecute(Sender: TObject);
-  var cState, cMedicalProgramId, cProgramIdSP : string; nColor : Integer;
+  var cState, cMedicalProgramId, cProgramIdSP : string; nColor : Integer; nQty : Currency;
 begin
   if ClientDataSet.IsEmpty then Exit;
 
   if not FIniError then
   begin
-    if GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, cMedicalProgramId, FIniError) then
-    else if not FIniError and GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, cMedicalProgramId, FIniError) then
+    if GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, cMedicalProgramId, nQty, FIniError) then
+    else if not FIniError and GetHelsiReceiptState(ClientDataSet.FieldByName('InvNumberSP').AsString, cState, cMedicalProgramId, nQty, FIniError) then
     else cState := 'Ош. получения';
   end else cState := 'Ош. получения';
   nColor := clWindow;

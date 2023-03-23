@@ -106,12 +106,18 @@ BEGIN
      SELECT Movement.DescId
           , CASE WHEN Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice())
                       THEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)
-                 ELSE Movement.OperDate
+                 ELSE Movement.OperDate        
             END AS OperDatePartner
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)
           , COALESCE(ObjectFloat_NDSKind_NDS.ValueData, COALESCE (MovementFloat_VATPercent.ValueData, 0))
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN      MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 AND Movement.DescId <> zc_Movement_ChangePercent() THEN -1 * MovementFloat_ChangePercent.ValueData 
+                 WHEN Movement.DescId = zc_Movement_ChangePercent() THEN 0--MovementFloat_ChangePercent.ValueData 
+                 ELSE 0
+            END AS DiscountPercent
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 AND Movement.DescId <> zc_Movement_ChangePercent() THEN MovementFloat_ChangePercent.ValueData
+                 WHEN Movement.DescId = zc_Movement_ChangePercent() THEN 0
+                 ELSE 0
+            END AS ExtraChargesPercent
           , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE)  AS isDiscountPrice_juridical
           , COALESCE (MovementFloat_ChangePrice.ValueData, 0)          AS ChangePrice
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)         AS PaidKindId
@@ -775,6 +781,8 @@ BEGIN
                                  , MIFloat_ChangePercent.ValueData
 						  , COALESCE (MIFloat_PriceTare.ValueData, 0)
                          )
+
+-------------------
            SELECT
                   -- Количество по факту (главные элементы)
                   OperCount_Master
