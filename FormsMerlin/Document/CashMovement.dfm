@@ -10,12 +10,14 @@
   inherited bbOk: TcxButton
     Left = 55
     Top = 390
+    TabOrder = 1
     ExplicitLeft = 55
     ExplicitTop = 390
   end
   inherited bbCancel: TcxButton
     Left = 199
     Top = 390
+    TabOrder = 2
     ExplicitLeft = 199
     ExplicitTop = 390
   end
@@ -35,7 +37,7 @@
     EditValue = 44575d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 3
+    TabOrder = 4
     Width = 84
   end
   object ceAmount: TcxCurrencyEdit [5]
@@ -44,7 +46,7 @@
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
     Properties.EditFormat = ',0.00##;-,0.00##; ;'
-    TabOrder = 4
+    TabOrder = 0
     Width = 97
   end
   object cxLabel7: TcxLabel [6]

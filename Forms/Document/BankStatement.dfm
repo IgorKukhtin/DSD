@@ -333,7 +333,6 @@ inherited BankStatementForm: TBankStatementForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitLeft = -1
     object cxLabel1: TcxLabel
       Left = 8
       Top = 5
@@ -1126,8 +1125,8 @@ inherited BankStatementForm: TBankStatementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 248
-    Top = 40
+    Left = 224
+    Top = 112
   end
   object spUpdate: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_BankStatementItem'
@@ -1296,10 +1295,18 @@ inherited BankStatementForm: TBankStatementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'injuridicalid'
+        Name = 'inJuridicalId'
         Value = Null
         Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inServiceDate'
+        Value = Null
+        Component = edServiceDate
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
