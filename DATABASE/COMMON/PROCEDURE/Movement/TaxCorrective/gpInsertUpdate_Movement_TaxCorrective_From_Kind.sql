@@ -181,7 +181,7 @@ BEGIN
      END IF;
 
      -- проверка - проведенные/удаленные документы Изменять нельзя
-     IF vbStatusId <> zc_Enum_Status_UnComplete() AND (inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical() OR inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_ChangePercent()) AND vbUserId <> 5
+     IF vbStatusId <> zc_Enum_Status_UnComplete() AND (inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical() AND inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_ChangePercent()) AND vbUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.Формирование <Корректировки к налоговой> на основании документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
