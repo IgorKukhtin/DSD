@@ -1137,6 +1137,17 @@
 				<Form>FormsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\GoogleOTP.pas"/>
+			<DCCReference Include="..\..\SOURCE\GoogleOTPDialogPsw.pas">
+				<Form>GoogleOTPDialogPswForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\GoogleOTPRegistration.pas">
+				<Form>GoogleOTPRegistrationForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\StorageSQLite.pas"/>
+			<DCCReference Include="..\..\SOURCE\PriorityPause.pas">
+				<Form>PriorityPauseForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

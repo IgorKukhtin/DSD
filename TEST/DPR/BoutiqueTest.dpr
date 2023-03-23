@@ -333,7 +333,12 @@ uses
   Medoc_J1201111 in '..\..\SOURCE\MeDOC\Medoc_J1201111.pas',
   DOCUMENTINVOICE_PRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
   DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
-  FormsUnit in '..\..\FormsBoutique\System\FormsUnit.pas' {FormsForm: TParentForm};
+  FormsUnit in '..\..\FormsBoutique\System\FormsUnit.pas' {FormsForm: TParentForm},
+  GoogleOTP in '..\..\SOURCE\GoogleOTP.pas',
+  GoogleOTPDialogPsw in '..\..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
+  GoogleOTPRegistration in '..\..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
+  StorageSQLite in '..\..\SOURCE\StorageSQLite.pas',
+  PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
