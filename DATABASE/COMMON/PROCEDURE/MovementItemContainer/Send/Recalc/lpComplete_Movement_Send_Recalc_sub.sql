@@ -4,9 +4,9 @@ DROP FUNCTION IF EXISTS lpComplete_Movement_Send_Recalc_sub (Integer, Integer, I
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_Send_Recalc_sub(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inUnitId            Integer  , -- 
+    IN inUnitId            Integer  , --
     IN inUserId            Integer    -- Пользователь
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
@@ -83,7 +83,7 @@ BEGIN
                , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
                , ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
                 ;
-                
+
 
      -- если есть данные
      IF EXISTS (SELECT 1 FROM _tmpItemPeresort_new) AND '01.04.2020' <= vbOperDate -- Дата когда стартанула схема вообще
@@ -322,8 +322,27 @@ BEGIN
 
 
      ELSE
-         IF vbMovementId_Peresort <> 0 AND zc_Enum_Status_Erased() <> (SELECT StatusId FROM Movement WHERE Id = vbMovementId_Peresort)
-            AND (SELECT ObjectId FROM MovementLinkObject AS MLO WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From()) <> 8459 -- Склад Реализации
+         IF vbMovementId_Peresort <> 0 AND zc_Enum_Status_Erased() <> (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = vbMovementId_Peresort)
+            --AND (SELECT ObjectId FROM MovementLinkObject AS MLO WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From()) <> 8459 -- Склад Реализации
+            AND NOT EXISTS (SELECT 1
+                            FROM _tmpItem
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                       ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = _tmpItem.GoodsId
+                                                      AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                       ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                      AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                      AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) = _tmpItem.GoodsKindId
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub
+                                                       ON ObjectLink_GoodsByGoodsKind_GoodsSub.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                      AND ObjectLink_GoodsByGoodsKind_GoodsSub.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
+                                                      AND ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId > 0
+                               --INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub
+                               --                      ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                               --                     AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
+                            WHERE ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId > 0
+                            --AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0
+                           )
          THEN
              PERFORM lpSetErased_Movement (inMovementId := vbMovementId_Peresort
                                          , inUserId     := inUserId

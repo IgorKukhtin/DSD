@@ -162,14 +162,14 @@ BEGIN
              , tmpMI.OperCount
              , tmpMI.Price_original
 
-              -- промежуточная сумма БЕЗ НДС - с округлением до 2-х знаков
-            , tmpMI.OperSumm_Partner AS OperSumm_Partner_noDiscount
+              -- сумма БЕЗ СКИДКИ и БЕЗ НДС - с округлением до 2-х знаков
+            , tmpMI.OperSumm_Partner_noDiscount
             
-              -- промежуточная сумма СКИДКИ для суммы БЕЗ НДС - с округлением до 2-х знаков
-            , tmpMI.OperSumm_Partner_Discount AS OperSumm_Partner_Discount
+              -- сумма СКИДКИ для суммы БЕЗ НДС - с округлением до 2-х знаков
+            , tmpMI.OperSumm_Partner_noDiscount - tmpMI.OperSumm_Partner_Discount AS OperSumm_Partner_Discount
 
               -- конечная сумма СКИДКИ c НДС
-            , CAST ((1 + vbVATPercent / 100) * tmpMI.OperSumm_Partner_Discount AS NUMERIC (16, 2)) AS OperSumm_Partner
+            , CAST ((1 + vbVATPercent / 100) * (tmpMI.OperSumm_Partner_noDiscount - tmpMI.OperSumm_Partner_Discount) AS NUMERIC (16, 2)) AS OperSumm_Partner
               
               -- Бизнес из Товара
             , tmpMI.BusinessId
@@ -184,12 +184,14 @@ BEGIN
                    , tmpMI.GoodsKindId
                    , tmpMI.OperCount
                    , tmpMI.Price_original
+                     -- цена БЕЗ СКИДКИ и БЕЗ НДС - с округлением до 2-х знаков
+                   , tmpMI.OperPrice
 
-                     -- промежуточная сумма БЕЗ НДС - с округлением до 2-х знаков
-                   , tmpMI.OperSumm_Partner
+                     -- сумма БЕЗ СКИДКИ и БЕЗ НДС - с округлением до 2-х знаков
+                   , CAST (tmpMI.OperCount * tmpMI.OperPrice AS NUMERIC (16, 2)) AS OperSumm_Partner_noDiscount
 
-                     -- промежуточная - сумма СКИДКИ для суммы БЕЗ НДС - с округлением до 2-х знаков
-                   , CAST (tmpMI.OperSumm_Partner * vbDiscountPercent / 100 AS NUMERIC (16, 2)) AS OperSumm_Partner_Discount
+                     -- сумма со СКИДКОЙ БЕЗ НДС - с округлением до 2-х знаков
+                   , CAST (tmpMI.OperCount * CAST (tmpMI.OperPrice * (1 - vbDiscountPercent / 100) AS NUMERIC (16, 2)) AS NUMERIC (16, 2)) AS OperSumm_Partner_Discount
 
                     -- Бизнес из Товара
                    , COALESCE (ObjectLink_Goods_Business.ChildObjectId, 8370) AS BusinessId -- АЛАН
@@ -206,25 +208,25 @@ BEGIN
                          , COALESCE (MIFloat_Price.ValueData, 0)         AS Price_original
                          , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
 
-                           -- промежуточная сумма БЕЗ НДС - с округлением до 2-х знаков
+                           -- цена БЕЗ СКИДКИ и БЕЗ НДС - с округлением до 2-х знаков
                          , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent > 0
                                    -- если цены с НДС, тогда находим БЕЗ НДС
                                    THEN CAST (-- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
                                               CAST (CASE WHEN MIFloat_CountForPrice.ValueData <> 0
-                                                         THEN MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
-                                                         ELSE MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0)
+                                                         THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
+                                                         ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                               END AS NUMERIC (16, 2))
                                             / (1 + vbVATPercent/100)
                                               AS NUMERIC (16, 2))
              
                                 ELSE -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
                                      CAST (CASE WHEN MIFloat_CountForPrice.ValueData <> 0
-                                                THEN MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
-                                                ELSE MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0)
+                                                THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
+                                                ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                            END  AS NUMERIC (16, 2)
                                           )
              
-                           END AS OperSumm_Partner
+                           END AS OperPrice
 
       
                     FROM Movement
@@ -468,7 +470,7 @@ BEGIN
 
  
 
-  /*RAISE EXCEPTION 'Ошибка.<%>  %   %   %'
+/*RAISE EXCEPTION 'Ошибка.<%>  %   %   %'
  , (select sum (OperSumm_Partner_noDiscount) from _tmpItem)
  , (select sum (OperSumm_Partner_Discount) from _tmpItem)
  , (select sum (OperSumm_Partner) from _tmpItem)

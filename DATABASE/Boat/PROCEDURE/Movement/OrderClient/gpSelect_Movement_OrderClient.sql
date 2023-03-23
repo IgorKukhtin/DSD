@@ -16,11 +16,21 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , BarCode TVarChar
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , PriceWithVAT Boolean
-             , VATPercent TFloat, DiscountTax TFloat, DiscountNextTax TFloat
+               --
+             , PriceWithVAT Boolean, VATPercent TFloat
+               --
+             , DiscountTax TFloat, DiscountNextTax TFloat
+               --
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , SummDiscount_total TFloat
+               -- Цена продажи с сайта - без НДС, Basis+options
+             , OperPrice_load TFloat
+               -- Базовая цена продажи модели с сайта
+             , BasisPrice_load TFloat
+               -- load Сумма транспорт с сайта
+             , TransportSumm_load TFloat
+               --
              , NPP TFloat, NPP_2 TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
@@ -33,7 +43,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , StateText TVarChar, StateColor Integer
-             )
+              )
 
 AS
 $BODY$
@@ -159,9 +169,16 @@ BEGIN
              , MovementFloat_TotalSummMVAT.ValueData        AS TotalSummMVAT
              , MovementFloat_TotalSummPVAT.ValueData        AS TotalSummPVAT
              , MovementFloat_TotalSumm.ValueData            AS TotalSumm
-
+               --
              , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSumm.ValueData,0)) :: TFloat AS TotalSummVAT
              , (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0) - COALESCE (MovementFloat_TotalSumm.ValueData,0)) :: TFloat AS SummDiscount_total
+               -- Цена продажи с сайта - без НДС, Basis+options
+             , MovementFloat_OperPrice_load.ValueData      AS OperPrice_load
+               -- Базовая цена продажи модели с сайта
+             , MIFloat_BasisPrice_load.ValueData           AS BasisPrice_load
+               -- load Сумма транспорт с сайта
+             , MovementFloat_TransportSumm_load.ValueData  AS TransportSumm_load
+               --
              , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP
              , ROW_NUMBER() OVER (ORDER BY ObjectDate_DateBegin.ValueData, MovementFloat_NPP.ValueData, Movement_OrderClient.OperDate) ::TFloat AS NPP_2
 
@@ -254,7 +271,25 @@ BEGIN
 
              LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                      ON MovementFloat_TotalSummMVAT.MovementId = Movement_OrderClient.Id
-                                    AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+                                    AND MovementFloat_TotalSummMVAT.DescId     = zc_MovementFloat_TotalSummMVAT()
+
+             -- Цена продажи с сайта - без НДС, Basis+options
+             LEFT JOIN MovementFloat AS MovementFloat_OperPrice_load
+                                     ON MovementFloat_OperPrice_load.MovementId = Movement_OrderClient.Id
+                                    AND MovementFloat_OperPrice_load.DescId     = zc_MovementFloat_OperPrice_load()
+             -- load Сумма транспорт с сайта
+             LEFT JOIN MovementFloat AS MovementFloat_TransportSumm_load
+                                     ON MovementFloat_TransportSumm_load.MovementId = Movement_OrderClient.Id
+                                    AND MovementFloat_TransportSumm_load.DescId     = zc_MovementFloat_TransportSumm_load()
+
+             -- Заказ клиента - Лодка
+             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement_OrderClient.Id
+                                   AND MovementItem.DescId     = zc_MI_Master()
+                                   AND MovementItem.isErased   = FALSE
+             -- Базовая цена продажи модели с сайта
+             LEFT JOIN MovementItemFloat AS MIFloat_BasisPrice_load
+                                         ON MIFloat_BasisPrice_load.MovementItemId = MovementItem.Id
+                                        AND MIFloat_BasisPrice_load.DescId         = zc_MIFloat_BasisPrice_load()
 
              LEFT JOIN MovementFloat AS MovementFloat_NPP
                                      ON MovementFloat_NPP.MovementId = Movement_OrderClient.Id

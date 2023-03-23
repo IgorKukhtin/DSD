@@ -401,8 +401,8 @@ BEGIN
               , tmpMI AS (SELECT Movement.DescId AS MovementDescId
                                , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN MovementItem.Id ELSE 0 END AS MovementItemId
                                , MovementItem.DescId
-                               , MovementItem.ObjectId AS GoodsId
-                               , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                               , COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId) AS GoodsId
+                               , COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId) AS GoodsKindId
 
                                , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
                                            THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpMI_child_ReturnIn.OperDate_tax, vbOperDatePartner)
@@ -516,6 +516,14 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
+                                                                ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_GoodsReal.DescId         = zc_MILinkObject_GoodsReal()
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
+                                                                ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
+   
 
                                LEFT JOIN tmpMI_child_ReturnIn ON tmpMI_child_ReturnIn.ParentId = MovementItem.Id
 
@@ -740,8 +748,8 @@ BEGIN
                           GROUP BY Movement.DescId
                                  , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN MovementItem.Id ELSE 0 END
                                  , MovementItem.DescId
-                                 , MovementItem.ObjectId
-                                 , MILinkObject_GoodsKind.ObjectId
+                                 , COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId)
+                                 , COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId)
                                  , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
                                              THEN zfCalc_PriceTruncate (inOperDate     := COALESCE (tmpMI_child_ReturnIn.OperDate_tax, vbOperDatePartner)
                                                                       , inChangePercent:= MIFloat_ChangePercent.ValueData

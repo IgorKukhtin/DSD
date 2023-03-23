@@ -700,7 +700,7 @@ BEGIN
        SELECT Container.*
        FROM tmpContainerLinkObject_From
             JOIN Container ON Container.Id = tmpContainerLinkObject_From.ContainerId
-                          AND Container.DescId = zc_Container_Count();
+           ;
     -- !!!Оптимизация!!!
     ANALYZE tmpContainer_all_0;
     --RAISE EXCEPTION 'ok - tmpContainer_all_0 - % ', (SELECT COUNT(*) FROM tmpContainer_all_0);
@@ -835,7 +835,11 @@ BEGIN
      INSERT INTO _tmpRemainsSumm (ContainerId_Goods, ContainerId, AccountId, GoodsId, InfoMoneyGroupId, InfoMoneyDestinationId, OperSumm, InfoMoneyId, InfoMoneyId_Detail)
         WITH tmpAccount AS (SELECT View_Account.AccountId FROM Object_Account_View AS View_Account WHERE View_Account.AccountGroupId NOT IN (zc_Enum_AccountGroup_10000(), zc_Enum_AccountGroup_110000()) -- !!!т.е. без счета Необоротные активы + Транзит!!!
                            )
-           , tmpContainer_summ_all_0 AS (SELECT tmpContainer_all_0.* FROM tmpContainer_all_0 WHERE tmpContainer_all_0.DescId = zc_Container_Summ() AND tmpContainer_all_0.ParentId IS NOT NULL)
+           , tmpContainer_summ_all_0 AS (SELECT tmpContainer_all_0.*
+                                         FROM tmpContainer_all_0
+                                         WHERE tmpContainer_all_0.DescId   = zc_Container_Summ()
+                                           AND tmpContainer_all_0.ParentId IS NOT NULL
+                                        )
            , tmpContainerList AS (SELECT Container.*
                                   FROM tmpContainer_summ_all_0 AS Container
                                        JOIN tmpAccount ON tmpAccount.AccountId = Container.ObjectId
@@ -2069,6 +2073,20 @@ end if;
                                 , inDescId     := zc_Movement_Inventory()
                                 , inUserId     := vbUserId
                                  );
+
+if inMovementId IN (24458833, 24680627, 24406489) and 1=0 then 
+    RAISE EXCEPTION 'Ошибка.<%>  %   '
+ , (select Amount from  MovementItemContainer where MovementId =24458833  and ContainerId in (4593851))
+ , (select Amount from  MovementItemContainer where MovementId =24458833  and ContainerId in (4598782))
+-- , (select Amount from  MovementItemContainer where  MovementId =24458833  and MovementItemId in (253533303))
+-- , (select Amount from  MovementItem where  Id in (253533303))
+-- , (select Amount from  MovementItemContainer where MovementId =24680627  and ContainerId in (4593851))
+-- , (select Amount from  MovementItemContainer where MovementId =24680627  and ContainerId in (4598782))
+;
+
+end if;
+
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -2155,3 +2173,5 @@ where amount1 <> amount2
 -- SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 1902144, inIsLastComplete:= FALSE, inSession:= zc_Enum_Process_Auto_PrimeCost() :: TVarChar)
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 29207, inSession:= '2')
 -- SELECT * FROM gpReComplete_Movement_Inventory (inMovementId:= 14590084, inSession:= '5')
+-- select gpComplete_All_Sybase (24458833, false, '')
+-- select gpComplete_All_Sybase (24680627, false, '')               
