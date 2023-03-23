@@ -181,7 +181,7 @@ BEGIN
      END IF;
 
      -- проверка - проведенные/удаленные документы Изменять нельзя
-     IF vbStatusId <> zc_Enum_Status_UnComplete() AND inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical() AND vbUserId <> 5
+     IF vbStatusId <> zc_Enum_Status_UnComplete() AND (inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical() OR inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_ChangePercent()) AND vbUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.Формирование <Корректировки к налоговой> на основании документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
@@ -1219,7 +1219,7 @@ BEGIN
      FROM Object AS Object_TaxKind
      WHERE Object_TaxKind.Id = inDocumentTaxKindId;
 
-if (vbUserId = 5 /*OR vbUserId = 9457*/) AND 1=1
+if (vbUserId = 5 OR vbUserId = 9457) AND 1=1
 then
     RAISE EXCEPTION 'Admin - Errr _end - <%>  <%>'
                   , (SELECT COUNT(*) FROM _tmpResult)
@@ -1258,4 +1258,3 @@ $BODY$
 -- select * from gpInsertUpdate_Movement_TaxCorrective_From_Kind(inMovementId := 22528897 , inDocumentTaxKindId := 0 , inDocumentTaxKindId_inf := 0 , inStartDateTax := ('01.12.2021')::TDateTime , inIsTaxLink := 'True' ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
 --select * from gpInsertUpdate_Movement_TaxCorrective_From_Kind(inMovementId := 24743082 , inDocumentTaxKindId := 9178892 , inDocumentTaxKindId_inf := 9178892 , inStartDateTax := ('01.01.1900')::TDateTime , inIsTaxLink := 'True' ,  inSession := '9457');
 
-а подскажи наш метод DEX_Calc можно запускать без заявок только для старта расчета?
