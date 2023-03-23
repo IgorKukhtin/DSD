@@ -87,7 +87,13 @@ BEGIN
          , Object_GoodsKind.ValueData                 AS GoodsKindName
          , Object_Measure.ValueData                   AS MeasureName
          , Object_TradeMark.ValueData                 AS TradeMarkName
-         , Object_PartionGoods.ValueData              AS PartionGoods
+         , CASE WHEN Object_PartionGoods.ValueData <> ''
+                     THEN Object_PartionGoods.ValueData
+                WHEN tmpOperationGroup.PartionGoods_mi <> ''
+                     THEN tmpOperationGroup.PartionGoods_mi
+                WHEN tmpOperationGroup.PartionGoodsDate_mi > zc_DateStart()
+                     THEN zfConvert_DateToString (tmpOperationGroup.PartionGoodsDate_mi)
+           END :: TVarChar AS PartionGoods
 
          , Object_Location.ObjectCode AS LocationId
          , Object_Location.ObjectCode AS LocationCode
@@ -127,6 +133,8 @@ BEGIN
                 , SUM (tmpContainer.Count)  AS Count
                 , tmpContainer.isCalculated
                 , STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') :: TVarChar AS SubjectDocName
+                , tmpContainer.PartionGoodsDate_mi
+                , tmpContainer.PartionGoods_mi
 
            FROM (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
                       , MIContainer.WhereObjectId_analyzer AS UnitId
@@ -140,6 +148,9 @@ BEGIN
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN COALESCE (MIFloat_Count.ValueData,0) ELSE 0 END)                                          AS Count
                       , COALESCE (MIBoolean_Calculated.ValueData, FALSE) ::Boolean AS isCalculated
                       , Object_SubjectDoc.ValueData          AS SubjectDocName
+                      , MIDate_PartionGoods.ValueData        AS PartionGoodsDate_mi
+                      , MIString_PartionGoods.ValueData      AS PartionGoods_mi
+
                  FROM _tmpUnit
                       INNER JOIN MovementItemContainer AS MIContainer
                                                        ON MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
@@ -158,6 +169,15 @@ BEGIN
                                                   AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
                       LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
+                      LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                 ON MIDate_PartionGoods.MovementItemId = MIContainer.MovementItemId
+                                                AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                              --AND vbUserId = 5
+                      LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                   ON MIString_PartionGoods.MovementItemId = MIContainer.MovementItemId
+                                                  AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                                --AND vbUserId = 5
+
                       -- LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
                  -- WHERE _tmpGoods.GoodsId > 0 OR inGoodsGroupId = 0
                  GROUP BY CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END
@@ -169,6 +189,8 @@ BEGIN
                         , COALESCE (MIContainer.AccountId, 0)
                         , COALESCE (MIBoolean_Calculated.ValueData, FALSE)
                         , Object_SubjectDoc.ValueData
+                        , MIDate_PartionGoods.ValueData
+                        , MIString_PartionGoods.ValueData
                ) AS tmpContainer
                INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpContainer.GoodsId
                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
@@ -182,6 +204,8 @@ BEGIN
                   , tmpContainer.OperDate
                   , CLO_PartionGoods.ObjectId
                   , tmpContainer.isCalculated
+                  , tmpContainer.PartionGoodsDate_mi
+                  , tmpContainer.PartionGoods_mi
 
           ) AS tmpOperationGroup
 
