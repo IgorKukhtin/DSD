@@ -547,11 +547,20 @@ AS
              zc_Movement_Sale()
            , CAST ('Tax' AS TVarChar)
            , CAST ('17.02.2022' AS TDateTime)
-           , CAST ('01.01.2214' AS TDateTime)
+           , CAST ('31.03.2023' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax170222' AS TVarChar)           
-
+      UNION
+--налоговая c 01.04.2023
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Tax' AS TVarChar)
+           , CAST ('01.04.2023' AS TDateTime)
+           , CAST ('01.01.2214' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_Tax010423' AS TVarChar)   
       UNION
 --коррект
       SELECT
