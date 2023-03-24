@@ -71,7 +71,9 @@ BEGIN
        , tmpMIAll AS (SELECT CASE WHEN MIObject_WorkTimeKind.ObjectId IN (zc_Enum_WorkTimeKind_WorkD()
                                                                         , zc_Enum_WorkTimeKind_WorkN()
                                                                         , zc_Enum_WorkTimeKind_Work()
-                                                                        , zc_Enum_WorkTimeKind_Inventory())
+                                                                        , zc_Enum_WorkTimeKind_Inventory()
+                                                                        , zc_Enum_WorkTimeKind_RemoteAccess()
+                                                                        )
                                   THEN COALESCE (MI_SheetWorkTime.Amount,0) ELSE 0 END AS Amount
 
                            , COALESCE(MI_SheetWorkTime.ObjectId, 0)        AS MemberId
@@ -150,35 +152,37 @@ BEGIN
                                                  AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                        )
 
+     , tmpMemberGroup AS (SELECT tmpMIAll.MemberId
+                               , SUM (COALESCE (tmpMIAll.Amount,0)) AS Amount 
+                          FROM tmpMIAll
+                              LEFT JOIN tmpSkip ON tmpSkip.MemberId = tmpMIAll.MemberId
+                              LEFT JOIN tmpMI_Avance ON tmpMI_Avance.MemberId = tmpMIAll.MemberId
+
+                          WHERE tmpSkip.MemberId IS NULL                                                    -- если в этом периоде в табеле есть хоть один прогул  
+                            AND tmpMI_Avance.MemberId IS NULL                                               -- исключить сотрудников, у которых найдены ведомости с заполненным св-вом zc_MIFloat_SummCardRecalc
+                          GROUP BY tmpMIAll.MemberId
+                          )
   
-       SELECT tmpMIAll.MemberId
+       SELECT tmpMemberGroup.MemberId
             , tmpPersonal.PersonalId
-            , tmpMIAll.PositionId
-            , tmpMIAll.UnitId
+            , tmpPersonal.PositionId
+            , tmpPersonal.UnitId
             , tmpPersonal.PersonalServiceListId
             , tmpPersonal.isMain
-            , SUM (tmpMIAll.Amount) AS Amount 
-            , SUM (SUM (tmpMIAll.Amount)) OVER (PARTITION BY tmpMIAll.MemberId) AS SumAmount
-       FROM tmpMIAll
-           LEFT JOIN tmpSkip ON tmpSkip.MemberId = tmpMIAll.MemberId
-           LEFT JOIN tmpMI_Avance ON tmpMI_Avance.MemberId = tmpMIAll.MemberId
-
-           JOIN tmpPersonal ON tmpPersonal.MemberId = tmpMIAll.MemberId
-                           AND tmpPersonal.PositionId = tmpMIAll.PositionId
-                           AND tmpPersonal.UnitId = tmpMIAll.UnitId   
+            , tmpMemberGroup.Amount AS SumAmount 
+       FROM tmpMemberGroup
+           JOIN tmpPersonal ON tmpPersonal.MemberId = tmpMemberGroup.MemberId
           
            LEFT JOIN ObjectBoolean AS ObjectBoolean_AvanceNot
                                    ON ObjectBoolean_AvanceNot.ObjectId = tmpPersonal.PersonalServiceListId
                                   AND ObjectBoolean_AvanceNot.DescId = zc_ObjectBoolean_PersonalServiceList_AvanceNot() 
                                                                    
-       WHERE tmpSkip.MemberId IS NULL                                                    -- если в этом периоде в табеле есть хоть один прогул  
-         AND tmpMI_Avance.MemberId IS NULL                                               -- исключить сотрудников, у которых найдены ведомости с заполненным св-вом zc_MIFloat_SummCardRecalc
-         AND COALESCE (ObjectBoolean_AvanceNot.ValueData,FALSE) = FALSE                  -- исключить сотрудников, у которых основная ведомость начисления - zc_ObjectBoolean_PersonalServiceList_AvanceNot
+       WHERE COALESCE (ObjectBoolean_AvanceNot.ValueData,FALSE) = FALSE                  -- исключить сотрудников, у которых основная ведомость начисления - zc_ObjectBoolean_PersonalServiceList_AvanceNot
          AND ( tmpPersonal.DateOut >=(DATE_TRUNC ('MONTH', inEndDate ::TDatetime) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'))    --исключить если в этом периоде сотрудн уволен , т.е. проверка zc_ObjectDate_Personal_Out   , те.е дата увольнения вне периода  
-       GROUP BY tmpMIAll.MemberId
-              , tmpMIAll.PositionId
+       GROUP BY tmpMemberGroup.MemberId
+              , tmpPersonal.PositionId
               , tmpPersonal.PersonalId
-              , tmpMIAll.UnitId
+              , tmpPersonal.UnitId
               , tmpPersonal.PersonalServiceListId 
               , tmpPersonal.isMain
        ;
