@@ -252,9 +252,14 @@ BEGIN
                                                        ON MovementDate_OperDateEnd.MovementId = Movement.Id
                                                       AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
                                                       AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
-                               LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                     AND MovementItem.DescId     = zc_MI_Master()
-                                                     AND MovementItem.isErased   = FALSE
+                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                      AND MovementItem.isErased   = FALSE
+
+                               INNER JOIN MovementItemFloat AS MIFloat_PriceSP
+                                                            ON MIFloat_PriceSP.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
+                                                           AND MIFloat_PriceSP.ValueData > 0
 
                                LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                                                 ON MI_IntenalSP.MovementItemId = MovementItem.Id

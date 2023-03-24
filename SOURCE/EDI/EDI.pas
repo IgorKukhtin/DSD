@@ -41,7 +41,7 @@ type
     FUpdateEDIErrorState: TdsdStoredProc;
     FUpdateDeclarFileName: TdsdStoredProc;
     FGetSaveFilePath: TdsdStoredProc;
-    FUpdateEDIisLoad: TdsdStoredProc;
+    FUpdateEDIVchasnoEDI: TdsdStoredProc;
     ComSigner: OleVariant;
     FSendToFTP: boolean;
     FDirectory: string;
@@ -61,8 +61,11 @@ type
       Directory: string);
     procedure SetDirectory(const Value: string);
     function ConvertEDIDate(ADateTime: string): TDateTime;
-    procedure InsertUpdateOrderVchasno(ORDER: OrderXML.IXMLORDERType;
-      spHeader, spList: TdsdStoredProc; lFileName : String);
+    // VchasnoEDI
+    procedure InsertUpdateOrderVchasnoEDI(ORDER: OrderXML.IXMLORDERType;
+      spHeader, spList: TdsdStoredProc; lFileName, ADealId : String);
+    procedure UpdateOrderDESADVSaveVchasnoEDI(AEDIId: Integer);
+
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -103,8 +106,10 @@ type
     procedure ReturnSave(MovementDataSet: TDataSet;
       spFileInfo, spFileBlob: TdsdStoredProc; Directory: string; DebugMode: boolean);
     procedure ErrorLoad(Directory: string);
-    // заказ VchasnoEDIA
-    procedure OrderLoadVchasnoEDIA(AOrder, AFileName : string; spHeader, spList: TdsdStoredProc);
+    // заказ VchasnoEDI
+    procedure OrderLoadVchasnoEDI(AOrder, AFileName, ADealId : string; spHeader, spList: TdsdStoredProc);
+    // отправка повідомлення про відвантаження
+    procedure DESADVSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
   published
     property ConnectionParams: TConnectionParams read FConnectionParams
       write FConnectionParams;
@@ -141,8 +146,6 @@ type
     property Directory: string read FDirectory write FDirectory;
   end;
 
-  TVchasnoEDIType = (vediLoadDoc);
-
   TdsdVchasnoEDIAction = class(TdsdCustomAction)
   private
 
@@ -160,11 +163,11 @@ type
     FFileNameParam: TdsdParam;
 
     FPairParams: TOwnedCollection;
-//    FDataSet: TClientDataSet;
+    FHeaderDataSet: TDataSet;
+    FListDataSet: TDataSet;
 
     FEDIDocType: TEDIDocType;
     FEDI: TEDI;
-    FVchasnoEDIType: TVchasnoEDIType;
 
     FspHeader: TdsdStoredProc;
     FspList: TdsdStoredProc;
@@ -172,7 +175,10 @@ type
 
   protected
     function LocalExecute: Boolean; override;
-    function ExchangeVchasnoEDI(ATypeExchange : Integer; ADataSet: TClientDataSet = Nil): Boolean;
+    function GetVchasnoEDI(ATypeExchange : Integer; ADataSet: TClientDataSet = Nil): Boolean;
+    function POSTVchasnoEDI(ATypeExchange : Integer; AStream: TMemoryStream): Boolean;
+    function OrderLoad : Boolean;
+    function DESADVSave : Boolean;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -201,11 +207,11 @@ type
 //    property FileName: TdsdParam read FFileNameParam write FFileNameParam;
     // Содержимое массива Json для формирования DataSet
 //    property PairParams: TOwnedCollection read FPairParams write FPairParams;
-//    property DataSet: TClientDataSet read FDataSet write FDataSet;
+    property HeaderDataSet: TDataSet read FHeaderDataSet write FHeaderDataSet;
+    property ListDataSet: TDataSet read FListDataSet write FListDataSet;
     property spHeader: TdsdStoredProc read FspHeader write FspHeader;
     property spList: TdsdStoredProc read FspList write FspList;
 
-    property VchasnoEDIType: TVchasnoEDIType read FVchasnoEDIType write FVchasnoEDIType default vediLoadDoc;
   end;
 
 procedure Register;
@@ -227,7 +233,7 @@ uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   , DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML
   , Vcl.Forms, System.IOUtils, System.RegularExpressions, ZLib, Math
   , IdHTTP, IdSSLOpenSSL, IdURI, IdCTypes, IdSSLOpenSSLHeaders
-  ;
+  , IdMultipartFormData;
 
 procedure Register;
 begin
@@ -426,11 +432,11 @@ begin
   FUpdateEDIErrorState.StoredProcName := 'gpUpdate_Movement_EDIErrorState';
   FUpdateEDIErrorState.OutputType := otResult;
 
-  FUpdateEDIisLoad := TdsdStoredProc.Create(nil);
-  FUpdateEDIisLoad.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
-  FUpdateEDIisLoad.Params.AddParam('inisLoad', ftBoolean, ptInput, False);
-  FUpdateEDIisLoad.StoredProcName := 'gpUpdate_Movement_EDI_isLoad';
-  FUpdateEDIisLoad.OutputType := otResult;
+  FUpdateEDIVchasnoEDI := TdsdStoredProc.Create(nil);
+  FUpdateEDIVchasnoEDI.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+  FUpdateEDIVchasnoEDI.Params.AddParam('inDealId', ftString, ptInput, '');
+  FUpdateEDIVchasnoEDI.StoredProcName := 'gpUpdate_Movement_EDI_VchasnoEDI';
+  FUpdateEDIVchasnoEDI.OutputType := otResult;
 
 
   FGetSaveFilePath := TdsdStoredProc.Create(nil);
@@ -3093,7 +3099,7 @@ begin
   FreeAndNil(FUpdateDeclarAmount);
   FreeAndNil(FInsertEDIFile);
   FreeAndNil(FUpdateDeclarFileName);
-  FreeAndNil(FUpdateEDIisLoad);
+  FreeAndNil(FUpdateEDIVchasnoEDI);
   inherited;
 end;
 
@@ -4425,8 +4431,8 @@ if VarIsNull(ComSigner) then
     end;
 end;
 
-procedure TEDI.InsertUpdateOrderVchasno(ORDER: OrderXML.IXMLORDERType;
-  spHeader, spList: TdsdStoredProc; lFileName : String);
+procedure TEDI.InsertUpdateOrderVchasnoEDI(ORDER: OrderXML.IXMLORDERType;
+  spHeader, spList: TdsdStoredProc; lFileName, ADealId : String);
 var
   MovementId, GoodsPropertyId: integer;
   i: integer;
@@ -4463,28 +4469,120 @@ begin
     end;
     //
     FInsertEDIEvents.ParamByName('inMovementId').Value := MovementId;
-    FInsertEDIEvents.ParamByName('inEDIEvent').Value :='{'+IntToStr(i)+'}Загрузка ORDER из EDI завершена _'+lFileName+'_';
+    FInsertEDIEvents.ParamByName('inEDIEvent').Value :='{'+IntToStr(i)+'}Загрузка ORDER из Вчасно EDI завершена _'+lFileName+'_';
     FInsertEDIEvents.Execute;
     //
-    FUpdateEDIisLoad.ParamByName('inMovementId').Value := MovementId;
-    FUpdateEDIisLoad.ParamByName('inisLoad').Value := True;
-    FUpdateEDIisLoad.Execute;
+    FUpdateEDIVchasnoEDI.ParamByName('inMovementId').Value := MovementId;
+    FUpdateEDIVchasnoEDI.ParamByName('inDealId').Value := ADealId;
+    FUpdateEDIVchasnoEDI.Execute;
 end;
 
+procedure TEDI.UpdateOrderDESADVSaveVchasnoEDI(AEDIId: Integer);
+begin
+  if AEDIId <> 0 then
+  begin
+    FUpdateEDIErrorState.ParamByName('inMovementId').Value := AEDIId;
+    FUpdateEDIErrorState.ParamByName('inIsError').Value := false;
+    FUpdateEDIErrorState.Execute;
 
-procedure TEDI.OrderLoadVchasnoEDIA(AOrder, AFileName: String; spHeader, spList: TdsdStoredProc);
+    FInsertEDIEvents.ParamByName('inMovementId').Value := AEDIId;
+    FInsertEDIEvents.ParamByName('inEDIEvent').Value := 'Отправка повідомлення про відвантаження';
+    FInsertEDIEvents.Execute;
+  end;
+end;
+
+procedure TEDI.OrderLoadVchasnoEDI(AOrder, AFileName, ADealId: String; spHeader, spList: TdsdStoredProc);
 var
   ORDER: OrderXML.IXMLORDERType;
 begin
   try
     ORDER := OrderXML.LoadORDER(AOrder);
     // загружаем в базенку
-    InsertUpdateOrderVchasno(ORDER, spHeader, spList, AFileName);
+    InsertUpdateOrderVchasnoEDI(ORDER, spHeader, spList, AFileName, ADealId);
   except
     on E: Exception do begin raise Exception.Create(E.Message);
     end;
   end;
 end;
+
+procedure TEDI.DESADVSaveVchasnoEDI(HeaderDataSet, ItemsDataSet: TDataSet; Stream: TMemoryStream);
+var
+  DESADV: DesadvXML.IXMLDESADVType;
+  i: integer;
+begin
+  // Создать XML
+  DESADV := DesadvXML.NewDESADV;
+  //
+  DESADV.NUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+  DESADV.Date := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  DESADV.DELIVERYDATE := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDate').asDateTime);
+  DESADV.ORDERNUMBER := HeaderDataSet.FieldByName('InvNumberOrder').asString;
+  DESADV.ORDERDATE := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDateOrder').asDateTime);
+  DESADV.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+  DESADV.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
+  //
+  if HeaderDataSet.FieldByName('INFO_RoomNumber').asString <> ''
+  then DESADV.INFO := HeaderDataSet.FieldByName('INFO_RoomNumber').asString;
+
+  if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
+  then
+      DESADV.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
+  DESADV.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
+  DESADV.HEAD.DELIVERYPLACE := HeaderDataSet.FieldByName
+    ('DELIVERYPLACEGLNCode').asString;
+  DESADV.HEAD.SENDER := HeaderDataSet.FieldByName
+    ('SenderGLNCode').asString;
+  DESADV.HEAD.RECIPIENT := HeaderDataSet.FieldByName
+    ('RecipientGLNCode').asString;
+  DESADV.HEAD.PACKINGSEQUENCE.HIERARCHICALID := '1';
+
+  with ItemsDataSet do
+  begin
+    First;
+    i := 1;
+    while not Eof do
+    begin
+      with DESADV.HEAD.PACKINGSEQUENCE.POSITION.Add do
+      begin
+        POSITIONNUMBER := i;
+        PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString;
+        PRODUCTIDSUPPLIER := ItemsDataSet.FieldByName('Id').asString;
+        PRODUCTIDBUYER := ItemsDataSet.FieldByName('ArticleGLN_Juridical').asString;
+        DESCRIPTION := ItemsDataSet.FieldByName('GoodsName').asString;
+        DELIVEREDQUANTITY :=
+          StringReplace(FormatFloat('0.000',
+          ItemsDataSet.FieldByName('AmountPartner').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+        DELIVEREDUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').asString;
+        ORDEREDQUANTITY :=
+          StringReplace(FormatFloat('0.000',
+          ItemsDataSet.FieldByName('AmountOrder').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+        COUNTRYORIGIN := 'UA';
+        PRICE := StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('Price').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+        // Цена з ПДВ
+        PRICEWITHVAT := StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('PriceWVAT').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+        // ПДВ
+        TAXRATE:= StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('VATPercent').AsFloat),
+          FormatSettings.DecimalSeparator, cMainDecimalSeparator, []);
+
+      end;
+      inc(i);
+      Next;
+    end;
+  end;
+
+  DESADV.OwnerDocument.SaveToStream(Stream);
+end;
+
 
 { TEDIActionEDI }
 
@@ -4603,6 +4701,12 @@ begin
     FieldName := 'Id';
     PairName := 'Id';
   end;
+  with TdsdPairParamsItem(FPairParams.Add) do
+  begin
+    DataType := ftString;
+    FieldName := 'deal_id';
+    PairName := 'deal_id';
+  end;
 
   FHostParam := TdsdParam.Create;
   FHostParam.DataType := ftString;
@@ -4650,7 +4754,6 @@ begin
   FFileNameParam.DataType := ftString;
   FFileNameParam.Value := '';
 
-  FVchasnoEDIType := vediLoadDoc;
   FEDIDocType:= ediOrder;
 end;
 
@@ -4676,7 +4779,7 @@ end;
 // 1 - Загрузить списак документов в DataSet
 // 2 - Звгрузить пракрепленный файл в Result
 // 3 - Звгрузить пракрепленный файл и сохранить его на диск
-function TdsdVchasnoEDIAction.ExchangeVchasnoEDI(ATypeExchange : Integer; ADataSet: TClientDataSet = Nil): Boolean;
+function TdsdVchasnoEDIAction.GetVchasnoEDI(ATypeExchange : Integer; ADataSet: TClientDataSet = Nil): Boolean;
   var IdHTTP: TCustomIdHTTP;
       i,j : Integer;
       Params: String;
@@ -4733,7 +4836,7 @@ begin
       Params := '/' + FOrderParam.Value + '/original';
     end else
     begin
-      Params := 'type=' + FDocTypeParam.Value;
+      Params := 'type=' + FDocTypeParam.AsString;
 
       if (FDateFromParam.Value <> Null) and (FDateFromParam.Value <> Null) then
         Params := Params + '&date_from=' + FormatDateTime('YYYY-MM-DD', StrToDateTime(FDateFromParam.Value));
@@ -4898,65 +5001,146 @@ begin
   end;
 end;
 
+// ATypeExchange
+// 0 - Отправить данных с потока
+function TdsdVchasnoEDIAction.POSTVchasnoEDI(ATypeExchange : Integer; AStream: TMemoryStream): Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      Params, S: String;
+      Stream: TIdMultiPartFormDataStream;
+begin
+  inherited;
+  Result := False;
+
+  if (FTokenParam.Value = '') or
+     (FHostParam.Value = '') then
+  begin
+    ShowMessage('Не заполнены Host или Токен.');
+    Exit;
+  end;
+
+  // Непосредственно отправка
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  Stream := TIdMultiPartFormDataStream.Create;
+  try
+
+    Stream.AddFormField('file', '', '',  AStream, 'file');
+
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.ContentType := 'multipart/form-data; boundary=' + Stream.Boundary;
+    IdHTTP.Request.ContentLength := Stream.Size;
+    IdHTTP.Request.ContentEncoding := 'UTF-8';
+    IdHTTP.Request.Accept := '*/*';
+    IdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+    IdHTTP.Request.Connection := 'keep-alive';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    Params := '';
+    Params := 'deal_id=' + FOrderParam.Value;
+    if Params <> '' then Params := '?' + Params;
+
+    AStream.Position := 0;
+
+    try
+      S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + Params), Stream);
+    except on E:EIdHTTPProtocolException  do ShowMessage(e.ErrorMessage);
+    end;
+
+    if IdHTTP.ResponseCode = 200 then
+    begin
+        Result := True;
+    end;
+  finally
+    Stream.Free;
+    IdHTTP.Free;
+  end;
+end;
+
+function TdsdVchasnoEDIAction.OrderLoad : Boolean;
+  var DataSetCDS: TClientDataSet;
+begin
+  Result := False;
+
+  FDocTypeParam.Value := 1;
+  FDocStatusParam.Value := 'new';
+
+  // Загрузим список заявок с Вчасно EDI
+  DataSetCDS := TClientDataSet.Create(Nil);
+  try
+
+    if not GetVchasnoEDI(1, DataSetCDS) then
+      raise Exception.Create('Ошибка загрузки списка документов.');
+
+    if DataSetCDS.RecordCount = 0 then
+    begin
+      ShowMessage('Нет накладных для загрузки.');
+      Exit;
+    end;
+
+    with TGaugeFactory.GetGauge(Caption, 0, DataSetCDS.RecordCount) do
+    begin
+      Start;
+      try
+        DataSetCDS.First;
+        while not DataSetCDS.Eof do
+        begin
+          FOrderParam.Value := DataSetCDS.FieldByName('Id').AsString;
+          if GetVchasnoEDI(2) then
+          begin
+            // создание документ
+            case EDIDocType of
+              ediOrder: EDI.OrderLoadVchasnoEDI(Copy(FResultParam.Value, Max(POS('<', FResultParam.Value), 1), Length(FResultParam.Value)),
+                                                FFileNameParam.Value, DataSetCDS.FieldByName('deal_id').AsString, FspHeader, FspList);
+            end;
+          end;
+          IncProgress(1);
+          DataSetCDS.Next;
+        end;
+        Result := true;
+      finally
+        Finish;
+      end;
+    end;
+
+  finally
+    DataSetCDS.Free;
+  end;
+
+end;
+
+function TdsdVchasnoEDIAction.DESADVSave : Boolean;
+  var Stream: TMemoryStream;
+begin
+  if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
+  begin
+
+     Stream := TMemoryStream.Create;
+     try
+       EDI.DESADVSaveVchasnoEDI(HeaderDataSet, ListDataSet, Stream);
+       FOrderParam.Value := HeaderDataSet.FieldByName('DealId').AsString;
+       //FOrderParam.Value := '0ea7709c-4e6a-d776-4e98-429dc59e4d69';
+       Result := POSTVchasnoEDI(0, Stream);
+     finally
+       Stream.Free;
+     end;
+     EDI.UpdateOrderDESADVSaveVchasnoEDI(HeaderDataSet.FieldByName('EDIId').asInteger);
+  end;
+
+end;
+
 function TdsdVchasnoEDIAction.LocalExecute: Boolean;
   var DataSetCDS: TClientDataSet;
 begin
   Result := False;
 
-  if FVchasnoEDIType = vediLoadDoc then
-  begin
+  case FEDIDocType of
+    ediOrder : Result := OrderLoad;
+    ediDesadv : Result := DESADVSave;
+  else raise Exception.Create('Не описано метод обработки типа документов.');
+  end;
 
-    case FEDIDocType of
-      ediOrder : FDocTypeParam.Value := '1';
-    else Exception.Create('Не описано метод загрузки типа документов.');
-    end;
-
-    FDocStatusParam.Value := 'new';
-
-    // Загрузим список заявок с Вчасно EDI
-    DataSetCDS := TClientDataSet.Create(Nil);
-    try
-
-      if not ExchangeVchasnoEDI(1, DataSetCDS) then
-        raise Exception.Create('Ошибка загрузки списка документов.');
-
-      if DataSetCDS.RecordCount = 0 then
-      begin
-        ShowMessage('Нет накладных для загрузки.');
-        Exit;
-      end;
-
-      with TGaugeFactory.GetGauge(Caption, 0, DataSetCDS.RecordCount) do
-      begin
-        Start;
-        try
-          DataSetCDS.First;
-          while not DataSetCDS.Eof do
-          begin
-            FOrderParam.Value := DataSetCDS.FieldByName('Id').AsString;
-            if ExchangeVchasnoEDI(2) then
-            begin
-              // создание документ
-              case EDIDocType of
-                ediOrder: EDI.OrderLoadVchasnoEDIA(Copy(FResultParam.Value, Max(POS('<', FResultParam.Value), 1), Length(FResultParam.Value)),
-                                                   FFileNameParam.Value, FspHeader, FspList);
-              end;
-              Result := true;
-
-            end;
-            IncProgress(1);
-            DataSetCDS.Next;
-          end;
-        finally
-          Finish;
-        end;
-      end;
-
-    finally
-      DataSetCDS.Free;
-    end;
-
-  end else raise Exception.Create('Не описан механизм обработки.');
 end;
 
 

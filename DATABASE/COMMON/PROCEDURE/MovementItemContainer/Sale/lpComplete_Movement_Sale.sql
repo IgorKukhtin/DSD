@@ -602,36 +602,56 @@ END IF;*/
                     , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsReal(), MovementItem.Id, ObjectLink_GoodsByGoodsKind_GoodsReal.ChildObjectId)
                       -- сохранили связь с <Виды товаров (факт отгрузка)>
                     , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindReal(), MovementItem.Id, ObjectLink_GoodsByGoodsKind_GoodsKindReal.ChildObjectId) 
-                      FROM MovementItem
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
-                                                            ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_GoodsReal.DescId         = zc_MILinkObject_GoodsReal()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
-                                                            ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
-                           INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
-                                                 ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = MovementItem.ObjectId
-                                                AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                           INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
-                                                 ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
-                                                AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                                                AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = MILinkObject_GoodsKind.ObjectId
-                           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsReal
-                                                ON ObjectLink_GoodsByGoodsKind_GoodsReal.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
-                                               AND ObjectLink_GoodsByGoodsKind_GoodsReal.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsReal()
-                           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindReal
-                                                ON ObjectLink_GoodsByGoodsKind_GoodsKindReal.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
-                                               AND ObjectLink_GoodsByGoodsKind_GoodsKindReal.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKindReal()
-                      WHERE MovementItem.MovementId = inMovementId
-                        AND MovementItem.DescId = zc_MI_Master()
-                        AND (COALESCE (MILinkObject_GoodsReal.ObjectId, 0)     <> COALESCE (ObjectLink_GoodsByGoodsKind_GoodsReal.ChildObjectId, 0)
-                          OR COALESCE (MILinkObject_GoodsKindReal.ObjectId, 0) <> COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKindReal.ChildObjectId, 0)
-                            )
-               ) AS tmp;
-
+               FROM MovementItem
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
+                                                     ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_GoodsReal.DescId         = zc_MILinkObject_GoodsReal()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
+                                                     ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
+                    INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                          ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = MovementItem.ObjectId
+                                         AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                    INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                          ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                         AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                         AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = MILinkObject_GoodsKind.ObjectId
+                    LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsReal
+                                         ON ObjectLink_GoodsByGoodsKind_GoodsReal.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                        AND ObjectLink_GoodsByGoodsKind_GoodsReal.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsReal()
+                    LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindReal
+                                         ON ObjectLink_GoodsByGoodsKind_GoodsKindReal.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                        AND ObjectLink_GoodsByGoodsKind_GoodsKindReal.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKindReal()
+               WHERE MovementItem.MovementId = inMovementId
+                 AND MovementItem.DescId = zc_MI_Master()
+                 AND (COALESCE (MILinkObject_GoodsReal.ObjectId, 0)     <> COALESCE (ObjectLink_GoodsByGoodsKind_GoodsReal.ChildObjectId, 0)
+                   OR COALESCE (MILinkObject_GoodsKindReal.ObjectId, 0) <> COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKindReal.ChildObjectId, 0)
+                     )
+              ) AS tmp;
+     ELSE
+         -- сохранили протокол
+         PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, inUserId, FALSE)
+         FROM (SELECT MovementItem.Id AS MovementItemId
+                      -- сохранили связь с <Товар ((факт отгрузка))>
+                    , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsReal(), MovementItem.Id, NULL)
+                      -- сохранили связь с <Виды товаров (факт отгрузка)>
+                    , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindReal(), MovementItem.Id, NULL) 
+               FROM MovementItem
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
+                                                     ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_GoodsReal.DescId         = zc_MILinkObject_GoodsReal()
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
+                                                     ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
+                                                    AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
+               WHERE MovementItem.MovementId = inMovementId
+                 AND MovementItem.DescId = zc_MI_Master()
+                 AND (MILinkObject_GoodsReal.ObjectId     > 0
+                   OR MILinkObject_GoodsKindReal.ObjectId > 0
+                     )
+              ) AS tmp;
 
      END IF;
 

@@ -1141,7 +1141,7 @@
           Action = actHelp
         end>
       Caption = #1055#1086#1084#1086#1097#1100
-      ShortCut = 112
+      ShortCut = 16496
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

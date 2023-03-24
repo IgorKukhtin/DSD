@@ -579,6 +579,10 @@
 			<DCCReference Include="..\..\SOURCE\GoogleOTPRegistration.pas">
 				<Form>GoogleOTPRegistrationForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\StorageSQLite.pas"/>
+			<DCCReference Include="..\..\SOURCE\PriorityPause.pas">
+				<Form>PriorityPauseForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

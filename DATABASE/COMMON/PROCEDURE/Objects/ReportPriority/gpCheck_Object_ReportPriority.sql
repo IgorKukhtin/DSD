@@ -30,6 +30,11 @@ BEGIN
             , tmpSecond AS (SELECT CASE WHEN 25 < (SELECT COUNT(*) FROM tmpProcess)
                                              THEN 60
 
+                                        WHEN 1 < (SELECT tmpCount.Res FROM tmpCount)
+                                             AND (inProcName ILIKE 'gpReport_JuridicalCollation'
+                                                 )
+                                             THEN 25
+
                                         WHEN 0 < (SELECT tmpCount.Res FROM tmpCount)
                                              AND (inProcName ILIKE 'gpReport_MotionGoods'
                                                OR inProcName ILIKE 'gpUpdate_Movement_ReturnIn_Auto'
@@ -43,10 +48,13 @@ BEGIN
                                              THEN 25
 
                                         WHEN inProcName ILIKE 'gpReport_MotionGoods'
+                                          OR inProcName ILIKE 'gpUpdate_Movement_ReturnIn_Auto'
+                                          --
                                           OR inProcName ILIKE 'gpReport_GoodsBalance'
                                           OR inProcName ILIKE 'gpReport_GoodsBalance_Server'
                                           --
-                                          OR inProcName ILIKE 'gpUpdate_Movement_ReturnIn_Auto'
+                                          OR inProcName ILIKE 'gpReport_JuridicalCollation'
+                                          
                                              THEN 0
 
                                         WHEN 0 < (SELECT tmpCount.Res FROM tmpCount)

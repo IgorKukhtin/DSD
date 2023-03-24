@@ -878,10 +878,10 @@ BEGIN
                                   AND MovementItem.DescId     = zc_MI_Master()
                                   AND MovementItem.isErased   = FALSE
                                   
-            INNER JOIN MovementItemFloat AS MIFloat_PriceOptSP
-                                         ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id
-                                        AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
-                                        AND MIFloat_PriceOptSP.ValueData > 0
+            INNER JOIN MovementItemFloat AS MIFloat_PriceSP
+                                         ON MIFloat_PriceSP.MovementItemId = MovementItem.Id
+                                        AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
+                                        AND MIFloat_PriceSP.ValueData > 0
 
             INNER JOIN Object_Goods_Retail AS Object_Goods_Retail 
                                            ON Object_Goods_Retail.GoodsMainId = MovementItem.ObjectId

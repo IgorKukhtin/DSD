@@ -12,6 +12,7 @@ var
   MovementStatus: Array[TdsdMovementStatus] of string = ('Не проведен', 'Проведен', 'Удален');
 
   ConnectionPath: string = '..\INIT\Merlin_init.php';
+  SQLiteFile: string = '';
 
   EnumPath: string = '..\DATABASE\Merlin\METADATA\Enum\';
   ProcedurePath: string = '..\DATABASE\Merlin\PROCEDURE\';
@@ -442,3 +443,4 @@ initialization
   gc_DateEnd:=StrToDate('01.01.2500', LocalFormatSettings);
   gc_isShowTimeMode := false;
 end.
+

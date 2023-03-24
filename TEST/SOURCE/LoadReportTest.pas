@@ -140,10 +140,10 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+  {
   LoadReportFromFile('PrintMovement_ChangePercent', ReportPath + '\Товарный Учет\PrintMovement_ChangePercent.fr3');
   exit;
-  {
+
   LoadReportFromFile('Отчет - заявки (Резерв минус)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (Резерв минус).fr3');
   LoadReportFromFile('Отчет - заявки (Резерв минус) торг сеть', ReportPath + '\Отчеты (товарные)\Отчет - заявки (Резерв минус) торг сеть.fr3');
 
@@ -590,7 +590,10 @@ begin
   LoadReportFromFile('PrintMovement_Tax160321', ReportPath + '\Товарный Учет\PrintMovement_Tax160321.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrective160321', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective160321.fr3');
   exit;
-
+  }
+  LoadReportFromFile('PrintMovement_Tax010423', ReportPath + '\Товарный Учет\PrintMovement_Tax010423.fr3');
+  exit;
+  {
   LoadReportFromFile('PrintMovement_Tax170222', ReportPath + '\Товарный Учет\PrintMovement_Tax170222.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrective170222', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective170222.fr3');
   exit;

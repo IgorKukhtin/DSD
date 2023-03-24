@@ -42,10 +42,35 @@ BEGIN
          UPDATE Movement SET OperDate = inValueData
          WHERE Movement.Id = (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Master())
            AND Movement.DescId = zc_Movement_Tax();
+
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol ((SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Master())
+                                          , vbUserId
+                                          , FALSE
+                                           );
+
      END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+     
+     -- сохранили свойство <>
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Sale())
+     THEN
+         -- создаются временные таблицы - для формирование данных для проводок
+         PERFORM lpComplete_Movement_Sale_CreateTemp();
+
+         -- Распроводим Документ
+         PERFORM lpUnComplete_Movement (inMovementId := inMovementId
+                                      , inUserId     := vbUserId
+                                       );
+         -- Проводим Документ
+         PERFORM lpComplete_Movement_Sale (inMovementId     := inMovementId
+                                         , inUserId         := vbUserId
+                                         , inIsLastComplete := TRUE
+                                          );
+     END IF;
+
 
 
 END;

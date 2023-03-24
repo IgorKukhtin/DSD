@@ -133,6 +133,9 @@ type
     bbUpdate_NPP_Minus: TdxBarButton;
     StateText: TcxGridDBColumn;
     StateColor: TcxGridDBColumn;
+    OperPrice_load: TcxGridDBColumn;
+    BasisPrice_load: TcxGridDBColumn;
+    TransportSumm_load: TcxGridDBColumn;
   private
   public
   end;

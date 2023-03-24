@@ -334,6 +334,7 @@ BEGIN
                                   WHERE MovementString.MovementId = inMovementId
                                     AND MovementString.DescId IN (zc_MovementString_InvNumberOrder()
                                                                 , zc_MovementString_InvNumberPartner()
+                                                                , zc_MovementString_DealId()
                                                                 )
                                  )
                     
@@ -371,6 +372,7 @@ BEGIN
              END AS InvNumber
 
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+           , MovementString_DealId.ValueData            AS DealId
 
            , CASE WHEN MovementString_InvNumberPartner_order.ValueData <> ''
                        THEN MovementString_InvNumberPartner_order.ValueData
@@ -557,6 +559,9 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_order
                                      ON MovementString_InvNumberPartner_order.MovementId = Movement_order.Id
                                     AND MovementString_InvNumberPartner_order.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementString AS MovementString_DealId
+                                     ON MovementString_DealId.MovementId = Movement_order.Id
+                                    AND MovementString_DealId.DescId = zc_MovementString_DealId()
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order_edi
                                            ON MovementLinkMovement_Order_edi.MovementId = Movement_order.Id
                                           AND MovementLinkMovement_Order_edi.DescId = zc_MovementLinkMovement_Order()
@@ -1110,3 +1115,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId:= 16505428, inSession:= '1329039'); -- FETCH ALL "<unnamed portal 1>";
+
+select * from gpSelect_Movement_Sale_EDI(inMovementId := 22315922 ,  inSession := '14610');

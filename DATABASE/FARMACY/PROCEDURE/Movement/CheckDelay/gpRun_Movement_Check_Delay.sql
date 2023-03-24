@@ -84,7 +84,9 @@ BEGIN
                WHEN MovementLinkObject_CheckSourceKind.ObjectId = zc_Enum_CheckSourceKind_Tabletki() 
                     THEN Movement.OperDate + INTERVAL '1 DAY'
                ELSE Movement.OperDate + INTERVAL '7 DAY' END < DATE_TRUNC ('DAY', CURRENT_DATE)
-      AND COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False) = False) AS Movement;
+      AND COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False) = False
+      AND (tmpMov.UnitId <> 16701386 OR COALESCE (MovementLinkObject_CheckSourceKind.ObjectId , 0) <> 0 OR 
+           COALESCE (MovementString_InvNumberOrder.ValueData, '') <> '')) AS Movement;
                
 END;
 $BODY$

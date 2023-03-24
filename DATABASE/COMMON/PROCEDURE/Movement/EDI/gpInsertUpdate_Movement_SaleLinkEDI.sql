@@ -155,7 +155,7 @@ BEGIN
 
 
      -- Проверка - отклонение НЕ больше 1.5%
-     IF EXISTS (SELECT 1 FROM _tmMI_newEDI WHERE CASE WHEN AmountPartner_mi > 0 THEN 100 * ABS (AmountPartner_mi - AmountPartner) / AmountPartner_mi WHEN AmountPartner > 0 THEN 100 ELSE 0 END > 1.5)
+     IF EXISTS (SELECT 1 FROM _tmMI_newEDI WHERE AmountPartner_mi > 0 AND AmountPartner > 0 AND CASE WHEN AmountPartner_mi > 0 THEN 100 * ABS (AmountPartner_mi - AmountPartner) / AmountPartner_mi WHEN AmountPartner > 0 THEN 100 ELSE 0 END > 1.5)
      THEN
          RAISE EXCEPTION 'Ошибка.Нельзя перенести данные при отклонение > 1.5 процента.%Для товара <%(%)> с ценой <%>.%Кол-во в документе = <%>.%Кол-во по данным EDI = <%>.'
                         , CHR (13)

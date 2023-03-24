@@ -359,6 +359,7 @@ BEGIN
                               -- AND Object_GoodsKindComplete_To.isErased = FALSE
 
     WHERE Object_StaffList.DescId = zc_Object_StaffList()
+        AND Object_StaffList.isErased = FALSE
         AND (ObjectLink_StaffList_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
         AND (ObjectLink_StaffList_Position.ChildObjectId = inPositionId OR inPositionId = 0)
         AND (ObjectLink_StaffListCost_ModelService.ChildObjectId = inModelServiceId OR inModelServiceId = 0)
