@@ -343,7 +343,6 @@ BEGIN
                                , MIFloat_CountSP.ValueData     AS CountSP
                                , MIString_IdSP.ValueData       AS IdSP
                                , COALESCE (MIString_ProgramIdSP.ValueData, '')::TVarChar AS ProgramIdSP
-                               , MIString_DosageIdSP.ValueData AS DosageIdSP
                                                                 -- № п/п - на всякий случай
                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
                           FROM Movement
@@ -392,13 +391,10 @@ BEGIN
                                LEFT JOIN MovementItemString AS MIString_ProgramIdSP
                                                             ON MIString_ProgramIdSP.MovementItemId = MovementItem.Id
                                                            AND MIString_ProgramIdSP.DescId = zc_MIString_ProgramIdSP()
-                               -- DosageID лікарського засобу
-                               LEFT JOIN MovementItemString AS MIString_DosageIdSP
-                                                            ON MIString_DosageIdSP.MovementItemId = MovementItem.Id
-                                                           AND MIString_DosageIdSP.DescId = zc_MIString_DosageIdSP()
 
                           WHERE Movement.DescId = zc_Movement_GoodsSP()
                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                            AND COALESCE (MIFloat_PriceSP.ValueData, 0) <> 0
                             AND (COALESCE (tmpMedicalProgramSPUnit.MedicalProgramSPId, 0) <> 0 OR vbUserId = 3)
                          )
 

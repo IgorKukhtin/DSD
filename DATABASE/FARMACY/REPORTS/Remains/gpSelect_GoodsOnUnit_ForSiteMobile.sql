@@ -1097,11 +1097,16 @@ BEGIN
                                                               ON MLO_MedicalProgramSP.MovementId = Movement.Id
                                                              AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
  
-                                LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                      AND MovementItem.DescId     = zc_MI_Master()
-                                                      AND MovementItem.isErased   = FALSE
+                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                       AND MovementItem.DescId     = zc_MI_Master()
+                                                       AND MovementItem.isErased   = FALSE
  
-                                LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail 
+                                INNER JOIN MovementItemFloat AS MIFloat_PriceSP
+                                                             ON MIFloat_PriceSP.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
+                                                            AND MIFloat_PriceSP.ValueData > 0
+
+                               LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail 
                                                               ON Object_Goods_Retail.GoodsMainId = MovementItem.ObjectId
                                                              AND Object_Goods_Retail.RetailId = 4
 

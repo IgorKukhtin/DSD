@@ -367,10 +367,14 @@ BEGIN
                                                               ON MLO_MedicalProgramSP.MovementId = Movement.Id
                                                              AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
  
-                                LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                      AND MovementItem.DescId     = zc_MI_Master()
-                                                      AND MovementItem.isErased   = FALSE
- 
+                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                       AND MovementItem.DescId     = zc_MI_Master()
+                                                       AND MovementItem.isErased   = FALSE
+
+                                INNER JOIN MovementItemFloat AS MIFloat_PriceSP
+                                                             ON MIFloat_PriceSP.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_PriceSP.DescId = zc_MIFloat_PriceSP()
+                                                            AND MIFloat_PriceSP.ValueData > 0
  
                            WHERE Movement.DescId = zc_Movement_GoodsSP()
                              AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())

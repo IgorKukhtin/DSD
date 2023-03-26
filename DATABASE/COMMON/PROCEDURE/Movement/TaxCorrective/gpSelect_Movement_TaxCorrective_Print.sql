@@ -1370,7 +1370,7 @@ BEGIN
                                                                  , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                  , zc_Enum_DocumentTaxKind_ChangePercent())
                                AND tmpData_all.AmountTax_calc = tmpData_all.Amount
-                                   THEN (tmpData_all.KindCode :: Integer + case when vbUserId = 5 then 10 else 0 end) :: TVarChar
+                                   THEN (tmpData_all.KindCode :: Integer + case when vbUserId = 5 then 0 else 0 end) :: TVarChar
 
                               WHEN tmpData_all.DocumentTaxKind IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                  , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()

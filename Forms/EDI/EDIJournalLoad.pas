@@ -210,6 +210,11 @@ type
     mactVchasnoEDIOrdersLoad: TMultiAction;
     bbVchasnoEDIOrdersLoad: TdxBarButton;
     actVchasnoEDIOrdeLoad: TdsdVchasnoEDIAction;
+    actVchasnoEDIDesadv: TdsdVchasnoEDIAction;
+    mactVchasnoEDIDesadv: TMultiAction;
+    dsVchasnoEDI: TdxBarSubItem;
+    dxBarSeparator1: TdxBarSeparator;
+    bbVchasnoEDIDesadv: TdxBarButton;
   private
     { Private declarations }
   public

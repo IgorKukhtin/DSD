@@ -1069,20 +1069,24 @@ inherited GoodsSP_MovementForm: TGoodsSP_MovementForm
     object bbInsertMI: TdxBarButton
       Action = macInsertMI
       Category = 0
+      Visible = ivNever
       ImageIndex = 27
     end
     object bbStartLoad: TdxBarButton
       Action = macStartLoad
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091' '#1080#1079' '#1092#1072#1081#1083#1072
       Category = 0
+      Visible = ivNever
     end
     object bbStartLoadDop: TdxBarButton
       Action = macStartLoadDop
       Category = 0
+      Visible = ivNever
     end
     object bbStartLoadHelsi: TdxBarButton
       Action = macStartLoadHelsi
       Category = 0
+      Visible = ivNever
     end
     object dxBarButton1: TdxBarButton
       Action = actSetGoods
