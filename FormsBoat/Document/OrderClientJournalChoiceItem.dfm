@@ -220,6 +220,13 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object DateBegin: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1083#1072#1085
+        DataBinding.FieldName = 'DateBegin'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object FromName: TcxGridDBColumn
         Caption = 'Kunden'
         DataBinding.FieldName = 'FromName'

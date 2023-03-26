@@ -13,7 +13,6 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefreshStart
-  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -25,7 +24,6 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 971
     object deStart: TcxDateEdit
       Left = 738
       Top = 5
@@ -120,7 +118,6 @@ object IncomeCostJournalByInvoiceForm: TIncomeCostJournalByInvoiceForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 971
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
