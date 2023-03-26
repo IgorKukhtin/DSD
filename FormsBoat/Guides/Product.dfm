@@ -320,7 +320,7 @@
           DataBinding.FieldName = 'DateBegin'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1072#1103' '#1076#1072#1090#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1089#1073#1086#1088#1082#1080
+          HeaderHint = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1090#1089#1103' '#1079#1072#1074#1077#1088#1096#1080#1090#1100' '#1089#1073#1086#1088#1082#1091' '#1083#1086#1076#1082#1080
           Options.Editing = False
           Width = 66
         end
@@ -414,47 +414,6 @@
           Options.Editing = False
           Width = 100
         end
-        object OperPrice_load: TcxGridDBColumn
-          Caption = 'Ladenpreis site'
-          DataBinding.FieldName = 'OperPrice_load'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = 
-            #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1083#1086#1076#1082#1080', '#1048#1058#1054#1043#1054' '#1041#1077#1079' '#1089#1082#1080#1076#1082#1080' Basis+options+transport, '#1073#1077 +
-            #1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
-          Options.Editing = False
-          Width = 70
-        end
-        object BasisPrice_load: TcxGridDBColumn
-          Caption = '***Ladenpreis site (Basis)'
-          DataBinding.FieldName = 'BasisPrice_load'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = 
-            #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072 +
-            #1081#1090#1072')'
-          Options.Editing = False
-          Width = 70
-        end
-        object TransportSumm_load: TcxGridDBColumn
-          Caption = 'Transport site'
-          DataBinding.FieldName = 'TransportSumm_load'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
-          Options.Editing = False
-          Width = 70
-        end
         object EKPrice_summ: TcxGridDBColumn
           Caption = 'Total EK'
           DataBinding.FieldName = 'EKPrice_summ'
@@ -494,6 +453,47 @@
           Options.Editing = False
           Width = 70
         end
+        object TransportSumm_load: TcxGridDBColumn
+          Caption = 'Transport site'
+          DataBinding.FieldName = 'TransportSumm_load'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+          Options.Editing = False
+          Width = 70
+        end
+        object OperPrice_load: TcxGridDBColumn
+          Caption = 'Ladenpreis site'
+          DataBinding.FieldName = 'OperPrice_load'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = 
+            #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1083#1086#1076#1082#1080', '#1048#1058#1054#1043#1054' '#1041#1077#1079' '#1089#1082#1080#1076#1082#1080' Basis+options+transport, '#1073#1077 +
+            #1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+          Options.Editing = False
+          Width = 70
+        end
+        object BasisPrice_load: TcxGridDBColumn
+          Caption = '***Ladenpreis site (Basis)'
+          DataBinding.FieldName = 'BasisPrice_load'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = 
+            #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072 +
+            #1081#1090#1072')'
+          Options.Editing = False
+          Width = 70
+        end
         object Basis_summ: TcxGridDBColumn
           Caption = 'Total LP'
           DataBinding.FieldName = 'Basis_summ'
@@ -502,9 +502,7 @@
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = 
-            #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1086#1089#1085#1086#1074#1085#1086#1081' '#1080' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1094#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072 +
-            #1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
+          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
           Options.Editing = False
           Width = 70
         end
@@ -516,7 +514,7 @@
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
           Options.Editing = False
           Width = 70
         end
@@ -544,7 +542,7 @@
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1086#1082' '#1087#1086' '#1086#1087#1094#1080#1103#1084', '#1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1086#1087#1094#1080#1081', '#1073#1077#1079' '#1053#1044#1057
+          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' '#1074' '#1086#1087#1094#1080#1103#1093', '#1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1086#1087#1094#1080#1081', '#1073#1077#1079' '#1053#1044#1057
           Options.Editing = False
           Width = 70
         end
@@ -1871,7 +1869,6 @@
     end
     object bbPrint: TdxBarButton
       Action = actPrintOffer
-      Caption = #1055#1077#1095#1072#1090#1100' '#1055#1088#1077#1076#1083#1086#1078#1077#1085#1080#1077
       Category = 0
     end
     object bbPrintStructure: TdxBarButton
@@ -1880,7 +1877,6 @@
     end
     object bbPrintTender: TdxBarButton
       Action = actPrintOrderConfirmation
-      Caption = #1055#1077#1095#1072#1090#1100' '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1072
       Category = 0
     end
     object bbUpdate_OrderClient: TdxBarButton
@@ -2900,8 +2896,8 @@
         item
           StoredProc = spSelectPrintStructure
         end>
-      Caption = 'Print Structure'
-      Hint = 'Print Structure'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
       ImageIndex = 15
       DataSets = <
         item
@@ -2950,8 +2946,8 @@
         item
           StoredProc = spSelectPrintOrderConfirmation
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' OrderConfirmation'
-      Hint = 'Print Order Confirmation'
+      Caption = #1055#1077#1095#1072#1090#1100' Confirmation'
+      Hint = #1055#1077#1095#1072#1090#1100' Confirmation'
       ImageIndex = 18
       DataSets = <
         item
@@ -3147,7 +3143,7 @@
           StoredProc = spSelectPrintOffer
         end>
       Caption = #1055#1077#1095#1072#1090#1100' Offer'
-      Hint = 'Print Offer'
+      Hint = #1055#1077#1095#1072#1090#1100' Offer'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
