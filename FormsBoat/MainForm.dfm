@@ -526,7 +526,7 @@
     object actBrand: TdsdOpenForm [44]
       Category = #1051#1086#1076#1082#1080
       MoveParams = <>
-      Caption = #1041#1088#1077#1085#1076#1099
+      Caption = #1052#1072#1088#1082#1080' '#1084#1086#1076#1077#1083#1080
       FormName = 'TBrandForm'
       FormNameParam.Value = 'TBrandForm'
       FormNameParam.DataType = ftString

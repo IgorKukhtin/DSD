@@ -403,6 +403,11 @@ type
     actUpdateMovement_NPP: TdsdExecStoredProc;
     spUpdateMovement_NPP: TdsdStoredProc;
     bbChangeNPP: TdxBarButton;
+    TransportSumm_load: TcxGridDBColumn;
+    cxLabel35: TcxLabel;
+    edNPP: TcxCurrencyEdit;
+    cxLabel19: TcxLabel;
+    edDateBegin: TcxDateEdit;
   private
   public
   end;

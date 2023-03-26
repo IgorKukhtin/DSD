@@ -2,11 +2,11 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1095#1077#1090#1072'>'
   ClientHeight = 356
   ClientWidth = 1028
-  AddOnFormData.RefreshAction = nil
+  AddOnFormData.isSingle = True
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1044
-  ExplicitHeight = 391
+  ExplicitHeight = 395
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -315,10 +315,10 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
     Width = 1028
     ExplicitWidth = 1028
     inherited deStart: TcxDateEdit
-      EditValue = 44197d
+      EditValue = 44927d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 44197d
+      EditValue = 44927d
     end
     object cxLabel6: TcxLabel
       Left = 430
@@ -895,18 +895,6 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
         item
           Visible = True
           ItemName = 'bbb'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

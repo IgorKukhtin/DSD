@@ -104,6 +104,7 @@ type
     EngineName: TcxGridDBColumn;
     cxGridDBTableViewColumn1: TcxGridDBColumn;
     StateColor: TcxGridDBColumn;
+    DateBegin: TcxGridDBColumn;
   private
   public
   end;
