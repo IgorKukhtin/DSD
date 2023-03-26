@@ -73,6 +73,7 @@ BEGIN
                                                                         , zc_Enum_WorkTimeKind_Work()
                                                                         , zc_Enum_WorkTimeKind_Inventory()
                                                                         , zc_Enum_WorkTimeKind_RemoteAccess()
+                                                                        ,7386821,7386812,7386818,7386819,12917,8302788,8302790     --стажеры
                                                                         )
                                   THEN COALESCE (MI_SheetWorkTime.Amount,0) ELSE 0 END AS Amount
 
@@ -179,12 +180,6 @@ BEGIN
                                                                    
        WHERE COALESCE (ObjectBoolean_AvanceNot.ValueData,FALSE) = FALSE                  -- исключить сотрудников, у которых основная ведомость начисления - zc_ObjectBoolean_PersonalServiceList_AvanceNot
          AND ( tmpPersonal.DateOut >=(DATE_TRUNC ('MONTH', inEndDate ::TDatetime) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'))    --исключить если в этом периоде сотрудн уволен , т.е. проверка zc_ObjectDate_Personal_Out   , те.е дата увольнения вне периода  
-       GROUP BY tmpMemberGroup.MemberId
-              , tmpPersonal.PositionId
-              , tmpPersonal.PersonalId
-              , tmpPersonal.UnitId
-              , tmpPersonal.PersonalServiceListId 
-              , tmpPersonal.isMain
        ;
 
     ----исключить сотрудников, у которых найдены ведомости с заполненным св-вом zc_MIFloat_SummCardRecalc
