@@ -45,7 +45,9 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummCompensation TFloat, SummCompensationRecalc TFloat
              , DayCompensation TFloat, PriceCompensation TFloat
              , DayVacation TFloat, DayHoliday TFloat, DayWork TFloat
-             , DayAudit TFloat
+             , DayAudit TFloat 
+             , SummMedicdayAdd TFloat, DayMedicday TFloat
+             , SummSkip TFloat, DaySkip TFloat             
              , Number TVarChar
              , Comment TVarChar
              , isErased Boolean
@@ -535,7 +537,10 @@ BEGIN
             , MIFloat_DayWork.ValueData                 ::TFloat AS DayWork
             , MIFloat_DayAudit.ValueData                ::TFloat AS DayAudit
 
-
+            , MIFloat_SummMedicdayAdd.ValueData         ::TFloat AS SummMedicdayAdd
+            , MIFloat_DayMedicday.ValueData             ::TFloat AS DayMedicday
+            , MIFloat_SummSkip.ValueData                ::TFloat AS SummSkip
+            , MIFloat_DaySkip.ValueData                 ::TFloat AS DaySkip
 
             , MIString_Number.ValueData   ::TVarChar AS Number
             , MIString_Comment.ValueData             AS Comment
@@ -721,6 +726,23 @@ BEGIN
                                         ON MIFloat_DayAudit.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_DayAudit.DescId = zc_MIFloat_DayAudit()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_SummMedicdayAdd
+                                        ON MIFloat_SummMedicdayAdd.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummMedicdayAdd.DescId = zc_MIFloat_SummMedicdayAdd()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_DayMedicday
+                                        ON MIFloat_DayMedicday.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_DayMedicday.DescId = zc_MIFloat_DayMedicday()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_SummSkip
+                                        ON MIFloat_SummSkip.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummSkip.DescId = zc_MIFloat_SummSkip()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_DaySkip
+                                        ON MIFloat_DaySkip.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_DaySkip.DescId = zc_MIFloat_DaySkip()
+
+
             LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = tmpAll.MovementItemId
                                          AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
@@ -807,6 +829,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 27.03.23         *
  17.01.23         *
  09.06.22         *
  13.03.22         *

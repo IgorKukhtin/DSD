@@ -68,6 +68,11 @@ $BODY$
   DECLARE vbTotalSummAvance            TFloat;
   DECLARE vbTotalSummAvanceRecalc      TFloat;
   
+  DECLARE vbTotalSummMedicdayAdd    TFloat;
+  DECLARE vbTotalDayMedicday        TFloat;
+  DECLARE vbTotalSummSkip           TFloat;
+  DECLARE vbTotalDaySkip            TFloat;
+  
   DECLARE vbTotalSummTransport        TFloat;
   DECLARE vbTotalSummTransportAdd     TFloat;
   DECLARE vbTotalSummTransportAddLong TFloat;
@@ -368,7 +373,12 @@ BEGIN
           , OperSumm_Compensation
           , OperSumm_CompensationRecalc
           , OperHeadCount_Master
-          , OperHeadCount_Child
+          , OperHeadCount_Child  
+          
+          , OperSumm_MedicdayAdd
+          , OperDayMedicday
+          , OperSumm_Skip
+          , OperDaySkip
 
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg, vbOperCount_ShFrom, vbOperCount_KgFrom
                , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_PVAT_original, vbOperSumm_VAT_2018
@@ -384,6 +394,7 @@ BEGIN
                , vbTotalSummFine, vbTotalSummHosp, vbTotalSummFineOth, vbTotalSummHospOth, vbTotalSummFineOthRecalc, vbTotalSummHospOthRecalc
                , vbTotalSummCompensation, vbTotalSummCompensationRecalc
                , vbTotalHeadCount_Master, vbTotalHeadCount_Child
+               , vbTotalSummMedicdayAdd, vbTotalDayMedicday, vbTotalSummSkip, vbTotalDaySkip 
 
      FROM  -- Расчет Итоговых суммы
           (WITH tmpMI_child_ReturnIn AS (SELECT MovementItem.ParentId       AS ParentId
@@ -516,6 +527,10 @@ BEGIN
                                , SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END) AS OperHeadCount_Master
                                , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child()  THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END) AS OperHeadCount_Child
 
+                               , SUM (COALESCE (MIFloat_SummMedicdayAdd.ValueData, 0))            AS OperSumm_MedicdayAdd
+                               , SUM (COALESCE (MIFloat_DayMedicday.ValueData, 0))            AS OperDayMedicday
+                               , SUM (COALESCE (MIFloat_SummSkip.ValueData, 0))               AS OperSumm_Skip
+                               , SUM (COALESCE (MIFloat_DaySkip.ValueData, 0))                AS OperDaySkip
                           FROM Movement
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                       AND MovementItem.isErased = FALSE
@@ -725,6 +740,23 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_SummCompensationRecalc
                                                            ON MIFloat_SummCompensationRecalc.MovementItemId = MovementItem.Id
                                                           AND MIFloat_SummCompensationRecalc.DescId = zc_MIFloat_SummCompensationRecalc()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_DayMedicday
+                                                           ON MIFloat_DayMedicday.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_DayMedicday.DescId = zc_MIFloat_DayMedicday()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_DaySkip
+                                                           ON MIFloat_DaySkip.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_DaySkip.DescId = zc_MIFloat_DaySkip()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummMedicdayAdd
+                                                           ON MIFloat_SummMedicdayAdd.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummMedicdayAdd.DescId = zc_MIFloat_SummMedicdayAdd()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummSkip
+                                                           ON MIFloat_SummSkip.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummSkip.DescId = zc_MIFloat_SummSkip()
                                                           AND Movement.DescId = zc_Movement_PersonalService()
 
                                LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
@@ -998,7 +1030,11 @@ BEGIN
                 , OperSumm_Compensation
                 , OperSumm_CompensationRecalc
                 , OperHeadCount_Master
-                , OperHeadCount_Child
+                , OperHeadCount_Child 
+                , OperSumm_MedicdayAdd
+                , OperDayMedicday
+                , OperSumm_Skip
+                , OperDaySkip
            FROM
                  -- получили 1 запись + !!! перевели в валюту если надо!!!
                 (SELECT SUM (CASE WHEN tmpMI.myLevel IN (2, 3) AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
@@ -1161,6 +1197,11 @@ BEGIN
                       , SUM (tmpMI.OperSumm_CompensationRecalc) AS OperSumm_CompensationRecalc
                       , SUM (tmpMI.OperHeadCount_Master)      AS OperHeadCount_Master
                       , SUM (tmpMI.OperHeadCount_Child)       AS OperHeadCount_Child
+                      
+                      , SUM (tmpMI.OperSumm_MedicdayAdd)    AS OperSumm_MedicdayAdd
+                      , SUM (tmpMI.OperDayMedicday)         AS OperDayMedicday
+                      , SUM (tmpMI.OperSumm_Skip)           AS OperSumm_Skip
+                      , SUM (tmpMI.OperDaySkip)             AS OperDaySkip
                   FROM (SELECT tmpMI.GoodsId
                              , tmpMI.GoodsKindId
                              , tmpMI.myLevel
@@ -1301,6 +1342,10 @@ BEGIN
                             , tmpMI.OperHeadCount_Master
                             , tmpMI.OperHeadCount_Child
 
+                            , tmpMI.OperSumm_MedicdayAdd
+                            , tmpMI.OperDayMedicday
+                            , tmpMI.OperSumm_Skip
+                            , tmpMI.OperDaySkip
                         FROM (SELECT tmpMI.MovementDescId
                                    , tmpMI.MovementItemId
                                    , tmpMI.DescId
@@ -1407,6 +1452,11 @@ BEGIN
 
                                    , tmpMI.OperHeadCount_Master
                                    , tmpMI.OperHeadCount_Child
+                                   
+                                   , tmpMI.OperSumm_MedicdayAdd
+                                   , tmpMI.OperDayMedicday
+                                   , tmpMI.OperSumm_Skip
+                                   , tmpMI.OperDaySkip
                               FROM tmpMI
                              UNION ALL
                               SELECT tmpMI.MovementDescId
@@ -1556,6 +1606,11 @@ BEGIN
 
                                    , tmpMI.OperHeadCount_Master
                                    , tmpMI.OperHeadCount_Child
+
+                                   , tmpMI.OperSumm_MedicdayAdd
+                                   , tmpMI.OperDayMedicday
+                                   , tmpMI.OperSumm_Skip
+                                   , tmpMI.OperDaySkip
                               FROM tmpMI
                               WHERE vbIsNPP_calc = TRUE
 
@@ -1645,6 +1700,11 @@ BEGIN
 
                                    , tmpMI.OperHeadCount_Master
                                    , tmpMI.OperHeadCount_Child
+
+                                   , tmpMI.OperSumm_MedicdayAdd
+                                   , tmpMI.OperDayMedicday
+                                   , tmpMI.OperSumm_Skip
+                                   , tmpMI.OperDaySkip
                               FROM tmpMI
                               WHERE vbIsNPP_calc = TRUE
                                 AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
@@ -1792,6 +1852,15 @@ BEGIN
          -- Сохранили свойство <Итого Сумма компенсации за жилье)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummHouseAdd(), inMovementId, vbTotalSummHouseAdd);
 
+         -- Сохранили свойство  <Сумма доплата за санобработка>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMedicdayAdd(), inMovementId, vbTotalSummMedicdayAdd);
+         -- Сохранили свойство  <Дней доплата за санобработка>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalDayMedicday(), inMovementId, vbTotalDayMedicday);
+         -- Сохранили свойство <Сумма удержаний за прогул>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSkip(), inMovementId, vbTotalSummSkip);
+         -- Сохранили свойство <Дней удержаний за прогул>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalDaySkip(), inMovementId, vbTotalDaySkip);
+
      ELSE
          -- Сохранили свойство <Итого количество("главные элементы")>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbOperCount_Master + vbOperCount_Packer);
@@ -1866,6 +1935,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.03.23         *
  17.01.22         * zc_MIFloat_SummAvance, zc_MIFloat_SummAvanceRecalc
  25.04.22         * zc_MovementFloat_TotalSummTare
  18.11.21         *
