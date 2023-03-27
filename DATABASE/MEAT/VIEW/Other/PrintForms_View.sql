@@ -648,10 +648,21 @@ AS
              zc_movement_TaxCorrective()
            , CAST ('TaxCorrective' AS TVarChar)
            , CAST ('17.02.2022' AS TDateTime)
-           , CAST ('01.01.2214' AS TDateTime)
+           , CAST ('31.03.2023' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective170222' AS TVarChar)
+      UNION
+--коррект  c 01.04.2023
+      SELECT
+             zc_movement_TaxCorrective()
+           , CAST ('TaxCorrective' AS TVarChar)
+           , CAST ('01.04.2023' AS TDateTime)
+           , CAST ('01.01.2214' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_TaxCorrective010423' AS TVarChar)
+
 /*
 -- Новая форма налоговой
       UNION
