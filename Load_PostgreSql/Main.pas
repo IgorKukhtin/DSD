@@ -1617,6 +1617,24 @@ begin
      zc_rvNo:=1;
      //
      try
+         if ParamStr(1)='alan_dp_ua_22' then
+         with toZConnection do begin
+            Connected:=false;
+            HostName:='192.168.0.194';
+            //HostName:='localhost';
+            User:='admin';
+            Password:='vas6ok';
+            Database:='project_24012023';
+            Port:=5432;
+            Connected:=true;
+            //
+            isGlobalLoad:=zc_rvYes;
+            if Connected
+            then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
+            else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
+            Connected:=false;
+         end
+         else
          if ParamStr(1)='alan_dp_ua_2' then
          with toZConnection do begin
             Connected:=false;
