@@ -590,6 +590,7 @@ object OrderClientForm: TOrderClientForm
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1048#1058#1054#1043#1054' '#1041#1045#1047' '#1091#1095#1077#1090#1072' '#1089#1082#1080#1076#1082#1080', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+              Options.Editing = False
               Width = 80
             end
             object OperPrice: TcxGridDBColumn
@@ -614,6 +615,7 @@ object OrderClientForm: TOrderClientForm
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Options.Editing = False
               Width = 55
             end
             object BasisPrice: TcxGridDBColumn
@@ -629,6 +631,18 @@ object OrderClientForm: TOrderClientForm
               Options.Editing = False
               Width = 104
             end
+            object TransportSumm_load: TcxGridDBColumn
+              Caption = 'Transport site'
+              DataBinding.FieldName = 'TransportSumm_load'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+              Options.Editing = False
+              Width = 80
+            end
             object OperPrice_load: TcxGridDBColumn
               Caption = 'Ladenpreis site'
               DataBinding.FieldName = 'OperPrice_load'
@@ -640,18 +654,6 @@ object OrderClientForm: TOrderClientForm
               HeaderHint = 
                 #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1083#1086#1076#1082#1080', '#1048#1058#1054#1043#1054' '#1041#1077#1079' '#1089#1082#1080#1076#1082#1080' Basis+options+transport, '#1073#1077 +
                 #1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
-              Options.Editing = False
-              Width = 80
-            end
-            object TransportSumm_load: TcxGridDBColumn
-              Caption = 'Transport site'
-              DataBinding.FieldName = 'TransportSumm_load'
-              PropertiesClassName = 'TcxCurrencyEditProperties'
-              Properties.DecimalPlaces = 4
-              Properties.DisplayFormat = ',0.####;-,0.####; ;'
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              HeaderHint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
               Options.Editing = False
               Width = 80
             end
@@ -715,21 +717,20 @@ object OrderClientForm: TOrderClientForm
               DataBinding.FieldName = 'Comment'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              Options.Editing = False
               Width = 145
             end
-            object InsertName: TcxGridDBColumn
-              Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1083
-              DataBinding.FieldName = 'InsertName'
+            object InsertDate: TcxGridDBColumn
+              Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
+              DataBinding.FieldName = 'InsertDate'
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
               Width = 70
             end
-            object InsertDate: TcxGridDBColumn
-              Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
-              DataBinding.FieldName = 'InsertDate'
+            object InsertName: TcxGridDBColumn
+              Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076#1072#1083
+              DataBinding.FieldName = 'InsertName'
               Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
@@ -771,7 +772,7 @@ object OrderClientForm: TOrderClientForm
         object PanelProdColorItems: TPanel
           Left = 1
           Top = 1
-          Width = 536
+          Width = 520
           Height = 175
           Align = alLeft
           BevelEdges = [beLeft]
@@ -780,12 +781,13 @@ object OrderClientForm: TOrderClientForm
           object cxGridProdColorItems: TcxGrid
             Left = 0
             Top = 17
-            Width = 536
+            Width = 520
             Height = 158
             Align = alClient
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
+            ExplicitWidth = 536
             object cxGridDBTableViewProdColorItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdColorItemsDS
@@ -842,7 +844,7 @@ object OrderClientForm: TOrderClientForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 40
+                Width = 50
               end
               object Code_ch1: TcxGridDBColumn
                 Caption = #1050#1086#1076
@@ -865,6 +867,7 @@ object OrderClientForm: TOrderClientForm
                     Kind = bkEllipsis
                   end>
                 Properties.ReadOnly = False
+                Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
@@ -883,7 +886,7 @@ object OrderClientForm: TOrderClientForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 58
+                Width = 150
               end
               object isDiff_ch1: TcxGridDBColumn
                 Caption = 'Diff'
@@ -892,7 +895,7 @@ object OrderClientForm: TOrderClientForm
                 HeaderAlignmentVert = vaCenter
                 HeaderHint = #1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1086#1090' '#1041#1072#1079#1086#1074#1086#1081' '#1050#1086#1084#1087#1083#1077#1082#1090#1072#1094#1080#1080' Yes/no'
                 Options.Editing = False
-                Width = 50
+                Width = 40
               end
               object ProdColorName_ch1: TcxGridDBColumn
                 Caption = 'Farbe'
@@ -963,7 +966,6 @@ object OrderClientForm: TOrderClientForm
                     Kind = bkEllipsis
                   end>
                 Properties.ReadOnly = True
-                Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 HeaderHint = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
@@ -984,6 +986,7 @@ object OrderClientForm: TOrderClientForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DecimalPlaces = 4
                 Properties.DisplayFormat = ',0.####;-,0.####; ;'
+                Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
@@ -996,6 +999,7 @@ object OrderClientForm: TOrderClientForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DecimalPlaces = 4
                 Properties.DisplayFormat = ',0.####;-,0.####; ;'
+                Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
@@ -1054,33 +1058,37 @@ object OrderClientForm: TOrderClientForm
           object Panel2: TPanel
             Left = 0
             Top = 0
-            Width = 536
+            Width = 520
             Height = 17
             Align = alTop
             Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
             Color = clLime
             ParentBackground = False
             TabOrder = 1
+            ExplicitWidth = 536
           end
         end
         object PanelProdOptItems: TPanel
-          Left = 545
+          Left = 529
           Top = 1
-          Width = 803
+          Width = 819
           Height = 175
           Align = alClient
           BevelEdges = [beLeft]
           BevelOuter = bvNone
           TabOrder = 1
+          ExplicitLeft = 545
+          ExplicitWidth = 803
           object cxGridProdOptItems: TcxGrid
             Left = 0
             Top = 17
-            Width = 803
+            Width = 819
             Height = 158
             Align = alClient
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
+            ExplicitWidth = 803
             object cxGridDBTableViewProdOptItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdOptItemsDS
@@ -1139,6 +1147,7 @@ object OrderClientForm: TOrderClientForm
               object isEnabled_ch2: TcxGridDBColumn
                 Caption = 'Yes /no'
                 DataBinding.FieldName = 'isEnabled'
+                Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
@@ -1150,7 +1159,7 @@ object OrderClientForm: TOrderClientForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 40
+                Width = 50
               end
               object DiscountTax_ch2: TcxGridDBColumn
                 Caption = '% '#1089#1082#1080#1076#1082#1080
@@ -1224,6 +1233,14 @@ object OrderClientForm: TOrderClientForm
                 HeaderAlignmentVert = vaCenter
                 Width = 80
               end
+              object Color_ProdColor_ch2: TcxGridDBColumn
+                Caption = '***'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                HeaderHint = #1062#1074#1077#1090
+                Options.Editing = False
+                Width = 55
+              end
               object ProdColorName_ch2: TcxGridDBColumn
                 Caption = 'Farbe'
                 DataBinding.FieldName = 'ProdColorName'
@@ -1241,6 +1258,7 @@ object OrderClientForm: TOrderClientForm
               object Comment_ch2: TcxGridDBColumn
                 Caption = '***Material/farbe'
                 DataBinding.FieldName = 'Comment'
+                Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
@@ -1424,7 +1442,7 @@ object OrderClientForm: TOrderClientForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
-                Width = 78
+                Width = 70
               end
               object Color_fon_ch2: TcxGridDBColumn
                 DataBinding.FieldName = 'Color_fon'
@@ -1432,6 +1450,12 @@ object OrderClientForm: TOrderClientForm
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
                 Options.Editing = False
+                VisibleForCustomization = False
+                Width = 55
+              end
+              object Color_ProdColorValue_Ch2: TcxGridDBColumn
+                DataBinding.FieldName = 'Color_ProdColorValue'
+                Visible = False
                 VisibleForCustomization = False
                 Width = 55
               end
@@ -1443,21 +1467,23 @@ object OrderClientForm: TOrderClientForm
           object Panel3: TPanel
             Left = 0
             Top = 0
-            Width = 803
+            Width = 819
             Height = 17
             Align = alTop
             Caption = #1054#1087#1094#1080#1080
             Color = clAqua
             ParentBackground = False
             TabOrder = 1
+            ExplicitWidth = 803
           end
         end
         object cxSplitter1: TcxSplitter
-          Left = 537
+          Left = 521
           Top = 1
           Width = 8
           Height = 175
           Control = PanelProdColorItems
+          ExplicitLeft = 537
         end
       end
     end
@@ -1575,6 +1601,14 @@ object OrderClientForm: TOrderClientForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object NPP_ch3: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'NPP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
           object UnitName_ch3: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -1666,6 +1700,7 @@ object OrderClientForm: TOrderClientForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
@@ -1686,7 +1721,7 @@ object OrderClientForm: TOrderClientForm
             Width = 70
           end
           object ObjectName_ch3: TcxGridDBColumn
-            Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080
+            Caption = #1059#1079#1083#1099'/'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
             DataBinding.FieldName = 'ObjectName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -2174,7 +2209,7 @@ object OrderClientForm: TOrderClientForm
             Width = 70
           end
           object ObjectName_ch4: TcxGridDBColumn
-            Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080
+            Caption = #1059#1079#1083#1099'/'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'/'#1059#1089#1083#1091#1075#1080
             DataBinding.FieldName = 'ObjectName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -4712,30 +4747,16 @@ object OrderClientForm: TOrderClientForm
         Control = edOperDate
       end
       item
-      end
-      item
         Control = edFrom
       end
       item
         Control = edTo
       end
       item
-        Control = edPriceWithVAT
-      end
-      item
-        Control = edVATPercent
-      end
-      item
         Control = edDiscountTax
       end
       item
-        Control = edPaidKind
-      end
-      item
-        Control = ceComment
-      end
-      item
-        Control = ceInvoice
+        Control = edDiscountNextTax
       end
       item
         Control = edProduct
@@ -4744,10 +4765,16 @@ object OrderClientForm: TOrderClientForm
         Control = ceInvoice
       end
       item
+        Control = ceComment
       end
       item
+        Control = edPriceWithVAT
       end
       item
+        Control = edVATPercent
+      end
+      item
+        Control = edPaidKind
       end>
     GetStoredProc = spGet
     Left = 824
@@ -5686,6 +5713,8 @@ object OrderClientForm: TOrderClientForm
     ChartList = <>
     ColorRuleList = <
       item
+        ColorColumn = Color_ProdColor_ch2
+        BackGroundValueColumn = Color_ProdColorValue_Ch2
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
@@ -6281,8 +6310,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 560
-    Top = 343
+    Left = 568
+    Top = 383
   end
   object dsdDBViewAddOnInvoice: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

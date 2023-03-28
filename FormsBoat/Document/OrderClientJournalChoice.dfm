@@ -207,6 +207,9 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       object NPP: TcxGridDBColumn
         Caption = #8470' '#1087'/'#1087' '#1060#1072#1082#1090
         DataBinding.FieldName = 'NPP'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #8470' '#1074' '#1086#1095#1077#1088#1077#1076#1080' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1089#1073#1086#1088#1082#1080' ('#1060#1072#1082#1090')'
@@ -216,6 +219,9 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
       object NPP_2: TcxGridDBColumn
         Caption = #8470' '#1087'/'#1087' '#1055#1083#1072#1085
         DataBinding.FieldName = 'NPP_2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #8470' '#1074' '#1086#1095#1077#1088#1077#1076#1080' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1089#1073#1086#1088#1082#1080' ('#1055#1083#1072#1085')'

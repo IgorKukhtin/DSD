@@ -408,6 +408,9 @@ type
     edNPP: TcxCurrencyEdit;
     cxLabel19: TcxLabel;
     edDateBegin: TcxDateEdit;
+    Color_ProdColorValue_Ch2: TcxGridDBColumn;
+    Color_ProdColor_ch2: TcxGridDBColumn;
+    NPP_ch3: TcxGridDBColumn;
   private
   public
   end;

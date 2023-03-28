@@ -232,6 +232,9 @@
         object NPP_OrderClient: TcxGridDBColumn
           Caption = #8470' '#1087'/'#1087' '#1060#1072#1082#1090
           DataBinding.FieldName = 'NPP_OrderClient'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #8470' '#1074' '#1086#1095#1077#1088#1077#1076#1080' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1089#1073#1086#1088#1082#1080' ('#1060#1072#1082#1090')'
@@ -241,6 +244,9 @@
         object NPP_2: TcxGridDBColumn
           Caption = #8470' '#1087'/'#1087' '#1055#1083#1072#1085
           DataBinding.FieldName = 'NPP_2'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #8470' '#1074' '#1086#1095#1077#1088#1077#1076#1080' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1089#1073#1086#1088#1082#1080' ('#1055#1083#1072#1085')'
@@ -739,24 +745,27 @@
     end
   end
   object PanelProdOptItems: TPanel
-    Left = 561
+    Left = 529
     Top = 240
-    Width = 627
+    Width = 659
     Height = 195
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitLeft = 561
+    ExplicitWidth = 627
     object cxGridProdOptItems: TcxGrid
       Left = 0
       Top = 17
-      Width = 627
+      Width = 659
       Height = 178
       Align = alClient
       PopupMenu = PopupMenuOption
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitWidth = 627
       object cxGridDBTableViewProdOptItems: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdOptItemsDS
@@ -844,7 +853,7 @@
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 60
+          Width = 55
         end
         object MaterialOptionsName_ch2: TcxGridDBColumn
           Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1054#1087#1094#1080#1081
@@ -859,7 +868,7 @@
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 80
+          Width = 100
         end
         object ProdOptPatternName_ch2: TcxGridDBColumn
           Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -938,6 +947,7 @@
               Default = True
               Kind = bkEllipsis
             end>
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderGlyphAlignmentHorz = taCenter
@@ -1163,6 +1173,7 @@
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           VisibleForCustomization = False
+          Width = 55
         end
       end
       object cxGridLevel1: TcxGridLevel
@@ -1172,19 +1183,20 @@
     object Panel1: TPanel
       Left = 0
       Top = 0
-      Width = 627
+      Width = 659
       Height = 17
       Align = alTop
       Caption = #1054#1087#1094#1080#1080
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
+      ExplicitWidth = 627
     end
   end
   object PanelProdColorItems: TPanel
     Left = 0
     Top = 240
-    Width = 553
+    Width = 521
     Height = 195
     Align = alLeft
     BevelEdges = [beLeft]
@@ -1193,13 +1205,14 @@
     object cxGridProdColorItems: TcxGrid
       Left = 0
       Top = 17
-      Width = 553
+      Width = 521
       Height = 178
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitWidth = 553
       object cxGridDBTableViewProdColorItems: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdColorItemsDS
@@ -1425,6 +1438,7 @@
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
@@ -1486,13 +1500,14 @@
     object Panel2: TPanel
       Left = 0
       Top = 0
-      Width = 553
+      Width = 521
       Height = 17
       Align = alTop
       Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
       Color = clLime
       ParentBackground = False
       TabOrder = 1
+      ExplicitWidth = 553
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -1504,11 +1519,12 @@
     Control = PanelMaster
   end
   object cxRightSplitter: TcxSplitter
-    Left = 553
+    Left = 521
     Top = 240
     Width = 8
     Height = 195
     Control = PanelProdColorItems
+    ExplicitLeft = 553
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
