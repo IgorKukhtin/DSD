@@ -18,6 +18,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummNalog TFloat, TotalSummMinus TFloat
              , TotalSummAdd TFloat
              , TotalSummAuditAdd TFloat, TotalDayAudit TFloat
+             , TotalSummMedicdayAdd TFloat, TotalDayMedicday TFloat
+             , TotalSummSkip TFloat, TotalDaySkip TFloat
+             
              , TotalSummHoliday TFloat
              , TotalSummCardRecalc TFloat, TotalSummCardSecondRecalc TFloat, TotalSummNalogRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat
              , TotalSummChild TFloat, TotalSummChildRecalc TFloat
@@ -209,6 +212,11 @@ BEGIN
            , MovementFloat_TotalSummAdd.ValueData        AS TotalSummAdd
            , MovementFloat_TotalSummAuditAdd.ValueData   AS TotalSummAuditAdd
            , MovementFloat_TotalDayAudit.ValueData       AS TotalDayAudit
+           
+           , MovementFloat_TotalSummMedicdayAdd.ValueData   AS TotalSummMedicdayAdd
+           , MovementFloat_TotalDayMedicday.ValueData       AS TotalDayMedicday
+           , MovementFloat_TotalSummSkip.ValueData          AS TotalSummSkip
+           , MovementFloat_TotalDaySkip.ValueData           AS TotalDaySkip
 
            , MovementFloat_TotalSummHoliday.ValueData     AS TotalSummHoliday
            , MovementFloat_TotalSummCardRecalc.ValueData  AS TotalSummCardRecalc
@@ -309,6 +317,20 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalDayAudit
                                     ON MovementFloat_TotalDayAudit.MovementId = Movement.Id
                                    AND MovementFloat_TotalDayAudit.DescId = zc_MovementFloat_TotalDayAudit()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMedicdayAdd
+                                    ON MovementFloat_TotalSummMedicdayAdd.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummMedicdayAdd.DescId = zc_MovementFloat_TotalSummMedicdayAdd()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalDayMedicday
+                                    ON MovementFloat_TotalDayMedicday.MovementId = Movement.Id
+                                   AND MovementFloat_TotalDayMedicday.DescId = zc_MovementFloat_TotalDayMedicday()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummSkip
+                                    ON MovementFloat_TotalSummSkip.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummSkip.DescId = zc_MovementFloat_TotalSummSkip()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalDaySkip
+                                    ON MovementFloat_TotalDaySkip.MovementId = Movement.Id
+                                   AND MovementFloat_TotalDaySkip.DescId = zc_MovementFloat_TotalDaySkip()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummHoliday
                                     ON MovementFloat_TotalSummHoliday.MovementId = Movement.Id
@@ -451,6 +473,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 27.03.23         *
  17.11.23         *
  18.11.21         * TotalSummHouseAdd
  16.11.21         * isMail

@@ -592,6 +592,7 @@ begin
   exit;
   }
   LoadReportFromFile('PrintMovement_Tax010423', ReportPath + '\Товарный Учет\PrintMovement_Tax010423.fr3');
+  LoadReportFromFile('PrintMovement_TaxCorrective010423', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrective010423.fr3');
   exit;
   {
   LoadReportFromFile('PrintMovement_Tax170222', ReportPath + '\Товарный Учет\PrintMovement_Tax170222.fr3');

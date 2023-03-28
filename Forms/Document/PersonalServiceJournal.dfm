@@ -1,27 +1,28 @@
 inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-  ClientHeight = 705
+  ClientHeight = 681
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -87
   ExplicitWidth = 1237
-  ExplicitHeight = 744
+  ExplicitHeight = 720
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1221
-    Height = 648
+    Height = 624
     TabOrder = 3
     ExplicitWidth = 1221
     ExplicitHeight = 648
-    ClientRectBottom = 648
+    ClientRectBottom = 624
     ClientRectRight = 1221
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1221
       ExplicitHeight = 648
       inherited cxGrid: TcxGrid
         Width = 1221
-        Height = 563
+        Height = 539
         ExplicitWidth = 1221
         ExplicitHeight = 563
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -239,6 +240,26 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummAvanceRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummMedicdayAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummSkip
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalDayMedicday
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalDaySkip
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -450,6 +471,26 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummAvanceRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummMedicdayAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummSkip
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalDayMedicday
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalDaySkip
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -920,6 +961,30 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
             Width = 80
           end
+          object TotalSummMedicdayAdd: TcxGridDBColumn
+            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091
+            DataBinding.FieldName = 'TotalSummMedicdayAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091
+            Width = 80
+          end
+          object TotalSummSkip: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078'. '#1079#1072' '#1087#1088#1086#1075#1091#1083
+            DataBinding.FieldName = 'TotalSummSkip'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1076#1077#1088#1078#1072#1085#1080#1077' '#1079#1072' '#1087#1088#1086#1075#1091#1083
+            Width = 80
+          end
           object TotalSummHouseAdd: TcxGridDBColumn
             Caption = #1044#1086#1087#1083'. '#1079#1072' '#1078#1080#1083#1100#1077
             DataBinding.FieldName = 'TotalSummHouseAdd'
@@ -943,6 +1008,32 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1085#1077#1081' '#1076#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalDayMedicday: TcxGridDBColumn
+            Caption = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091', '#1076#1085#1077#1081
+            DataBinding.FieldName = 'TotalDayMedicday'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1085#1077#1081' '#1076#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalDaySkip: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078'. '#1079#1072' '#1087#1088#1086#1075#1091#1083', '#1076#1085#1077#1081
+            DataBinding.FieldName = 'TotalDaySkip'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1085#1077#1081' '#1091#1076#1077#1088#1078#1072#1085#1080#1077' '#1079#1072' '#1087#1088#1086#1075#1091#1083
             Options.Editing = False
             Width = 80
           end
@@ -982,12 +1073,13 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       end
       object ExportXmlGrid: TcxGrid
         Left = 0
-        Top = 563
+        Top = 539
         Width = 1221
         Height = 85
         Align = alBottom
         TabOrder = 1
         Visible = False
+        ExplicitTop = 563
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS

@@ -983,6 +983,22 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_ChangePrice', 'Скидка в цене' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ChangePrice');
 
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummMedicdayAdd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummMedicdayAdd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummMedicdayAdd', 'Сумма доплата за санобработка' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummMedicdayAdd');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummSkip() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummSkip'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummSkip', 'Сумма удержаний за прогул' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummSkip');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_DaySkip() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DaySkip'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_DaySkip', 'Дней удержаний за прогул' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DaySkip');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_DayMedicday() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DayMedicday'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_DayMedicday', 'Дней доплата за санобработка' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DayMedicday');
+
 
 ----!!!!!!Farmacy
 
@@ -1609,8 +1625,12 @@ INSERT INTO MovementItemFloatDesc(Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
- 06,03,23                                                                                                     * zc_MIFloat_BonusInetOrder
- 17,01,23         * zc_MIFloat_SummAvance
+ 27.03.23         * zc_MIFloat_SummMedicdayAdd
+                    zc_MIFloat_SummSkip
+                    zc_MIFloat_DayMedicday
+                    zc_MIFloat_DaySkip
+ 06.03.23                                                                                                     * zc_MIFloat_BonusInetOrder
+ 17.01.23         * zc_MIFloat_SummAvance
                     zc_MIFloat_SummAvanceRecalc
  10.01.23                                                                                                     * zc_MIFloat_AddBonusPercent
  17.09.22                                                                                                     * zc_MIFloat_PriceLoad

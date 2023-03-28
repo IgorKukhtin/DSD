@@ -27,9 +27,16 @@ BEGIN
    
    
    -- сохранили свойства
-   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAuditAdd(), tmp.MovementItemId, tmp.SummAuditAdd)  -- —умма доплата за ревизию
-         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_DayAudit(), tmp.MovementItemId, tmp.DayAudit)          -- ƒней доплата за ревизию
-         , lpInsert_MovementItemProtocol (tmp.MovementItemId, inUserId, False)                                 -- сохранили протокол
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAuditAdd(), tmp.MovementItemId, tmp.SummAuditAdd)        -- —умма доплата за ревизию
+         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_DayAudit(), tmp.MovementItemId, tmp.DayAudit)                -- ƒней доплата за ревизию
+                                                                                                          
+         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummSkip(), tmp.MovementItemId, tmp.SummSkip)                -- —умма доплата за прогул
+         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_DaySkip(), tmp.MovementItemId, tmp.DaySkip)                  -- ƒней доплата за прогул
+         
+         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMedicdayAdd(), tmp.MovementItemId, tmp.SummMedicdayAdd)  -- —умма доплата за санобработка
+         , lpInsertUpdate_MovementItemFloat (zc_MIFloat_DayMedicday(), tmp.MovementItemId, tmp.DayMedicday)          -- ƒней доплата за санобработка
+         
+         , lpInsert_MovementItemProtocol (tmp.MovementItemId, inUserId, False)                                       -- сохранили протокол
    FROM (WITH
          --  строки документа
          tmpMI AS (SELECT MovementItem.Id                          AS MovementItemId
@@ -51,12 +58,19 @@ BEGIN
                      AND MovementItem.DescId = zc_MI_Master()
                      AND MovementItem.isErased = FALSE
                    )
+
          -- данные из табел€ раб времени
          SELECT tmpMI.MovementItemId 
               , MI_SheetWorkTime.ObjectId               AS MemberId
               , COALESCE(MIObject_Position.ObjectId, 0) AS PositionId
-              , COUNT( DISTINCT Movement.OperDate)      AS DayAudit                                            -- дней ревизии
-              , COUNT( DISTINCT Movement.OperDate) * COALESCE (ObjectFloat_Summ.ValueData, 0) AS SummAuditAdd  -- сумма
+              , SUM (CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Audit() THEN 1 ELSE 0 END)                                            AS DayAudit             -- дней ревизии
+              , SUM (CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Audit() THEN 1 ELSE 0 END) * COALESCE (ObjectFloat_Summ.ValueData, 0) AS SummAuditAdd         -- сумма ревизии
+
+              , SUM (CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Skip() THEN 1 ELSE 0 END)                                             AS DaySkip              -- дней прогул
+              , SUM (CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Skip() THEN 1 ELSE 0 END) * COALESCE (ObjectFloat_Summ.ValueData, 0)  AS SummSkip             -- сумма прогул
+
+              , SUM (CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Medicday() THEN 1 ELSE 0 END)                                            AS DayMedicday       -- дней санобработка
+              , SUM (CASE WHEN MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Medicday() THEN 1 ELSE 0 END) * COALESCE (ObjectFloat_Summ.ValueData, 0) AS SummMedicdayAdd   -- сумма санобработка
          FROM Movement
               LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -67,8 +81,10 @@ BEGIN
               INNER JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
                                                 ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
                                                AND MIObject_WorkTimeKind.DescId   = zc_MILinkObject_WorkTimeKind()
-                                               AND MIObject_WorkTimeKind.ObjectId = zc_Enum_WorkTimeKind_Audit() -- ревизи€
-
+                                               AND MIObject_WorkTimeKind.ObjectId IN (zc_Enum_WorkTimeKind_Audit()     -- ревизи€
+                                                                                    , zc_Enum_WorkTimeKind_Skip()      -- прогул
+                                                                                    , zc_Enum_WorkTimeKind_Medicday()  -- санобработка
+                                                                                    )
               LEFT JOIN MovementItemLinkObject AS MIObject_Position
                                                ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
                                               AND MIObject_Position.DescId = zc_MILinkObject_Position() 
