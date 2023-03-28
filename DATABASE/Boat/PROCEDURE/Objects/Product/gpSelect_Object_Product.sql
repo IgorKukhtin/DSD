@@ -27,8 +27,9 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , InfoMoneyId_Client   Integer
              , InfoMoneyName_Client TVarChar
              , TaxKind_Value_Client TFloat
-             , NPP_OrderClient TFloat
-             , NPP_2 TFloat
+               --
+             , NPP_OrderClient Integer
+             , NPP_2 Integer
 
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -115,7 +116,8 @@ BEGIN
                                         ELSE zfCalc_Summ_NoVAT (lfSelect.ValuePrice, vbTaxKindValue_basis)
                                    END ::TFloat  AS ValuePrice
                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
-                                                                     , inOperDate   := CURRENT_DATE) AS lfSelect
+                                                                     , inOperDate   := CURRENT_DATE
+                                                                      ) AS lfSelect
                            )
       -- документы Заказ Клиента
     , tmpOrderClient AS (SELECT Movement.Id                AS MovementId
@@ -136,7 +138,9 @@ BEGIN
                               , Object_InfoMoney_View.InfoMoneyName_all
                                 -- % НДС Заказ клиента
                               , MovementFloat_VATPercent.ValueData       AS VATPercent
-                              , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP
+                                --
+                              , COALESCE (MovementFloat_NPP.ValueData,0) :: Integer AS NPP
+
                          FROM MovementLinkObject AS MovementLinkObject_Product
                               INNER JOIN Movement ON Movement.Id = MovementLinkObject_Product.MovementId
                                                  AND Movement.DescId = zc_Movement_OrderClient()
@@ -153,10 +157,10 @@ BEGIN
                                                      AND MovementFloat_VATPercent.DescId     = zc_MovementFloat_VATPercent()
                               LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
                                                       ON MovementFloat_DiscountTax.MovementId = Movement.Id
-                                                     AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
+                                                     AND MovementFloat_DiscountTax.DescId     = zc_MovementFloat_DiscountTax()
                               LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
                                                       ON MovementFloat_DiscountNextTax.MovementId = Movement.Id
-                                                     AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
+                                                     AND MovementFloat_DiscountNextTax.DescId     = zc_MovementFloat_DiscountNextTax()
 
                               LEFT JOIN MovementFloat AS MovementFloat_OperPrice_load
                                                       ON MovementFloat_OperPrice_load.MovementId = Movement.Id
@@ -256,6 +260,10 @@ BEGIN
                          , COALESCE (tmpOrderClient.TransportSumm_load, 0)     AS TransportSumm_load
                            -- Базовая цена продажи модели с сайта
                          , COALESCE (MIFloat_BasisPrice_load.ValueData, 0)     AS BasisPrice_load
+
+                         , tmpOrderClient.NPP
+                         , tmpOrderClient.OperDate
+                         , COALESCE (tmpOrderClient.StatusId, zc_Enum_Status_Erased()) AS StatusId
 
                     FROM Object AS Object_Product
                          LEFT JOIN ObjectDate AS ObjectDate_DateSale
@@ -523,6 +531,13 @@ BEGIN
 
                        , ObjectDate_DateStart.ValueData   AS DateStart
                        , ObjectDate_DateBegin.ValueData   AS DateBegin
+                       , ROW_NUMBER() OVER (ORDER BY CASE WHEN Object_Product.NPP > 0 AND Object_Product.StatusId <> zc_Enum_Status_Erased() THEN 0 ELSE 1 END
+                                                   , ObjectDate_DateBegin.ValueData
+                                                   , Object_Product.NPP
+                                                   , Object_Product.OperDate
+                                           ) :: Integer AS NPP_2
+                       , Object_Product.StatusId
+                       
                      --, ObjectDate_DateSale.ValueData    AS DateSale
                        , Object_Product.DateSale          AS DateSale
                        , ObjectString_CIN.ValueData       AS CIN
@@ -691,8 +706,10 @@ BEGIN
          , tmpOrderClient.InfoMoneyId       AS InfoMoneyId_Client
          , tmpOrderClient.InfoMoneyName_all AS InfoMoneyName_Client
          , tmpOrderClient.VATPercent        AS TaxKind_Value_Client
-         , tmpOrderClient.NPP      ::TFloat AS NPP_OrderClient
-         , ROW_NUMBER() OVER (ORDER BY tmpResAll.DateBegin, tmpOrderClient.NPP, tmpOrderClient.OperDate) ::TFloat AS NPP_2
+           --
+         , tmpOrderClient.NPP    :: Integer AS NPP_OrderClient
+           --
+         , CASE WHEN tmpOrderClient.NPP > 0 AND tmpResAll.StatusId <> zc_Enum_Status_Erased() THEN tmpResAll.NPP_2 ELSE 0 END :: Integer AS NPP_2
 
          , tmpResAll.InsertName
          , tmpResAll.InsertDate

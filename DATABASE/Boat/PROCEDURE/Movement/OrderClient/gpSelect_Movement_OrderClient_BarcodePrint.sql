@@ -35,7 +35,7 @@ BEGIN
           LEFT JOIN Movement AS Movement_ProductionUnion
                              ON Movement_ProductionUnion.ParentId = Movement_OrderClient.Id
                             AND Movement_ProductionUnion.DescId   = zc_Movement_ProductionUnion()
-                            AND Movement_ProductionUnion.StatusId <> zc_Enum_Status_Erased()
+                            AND Movement_ProductionUnion.StatusId = zc_Enum_Status_Complete()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement_OrderClient.Id
@@ -43,7 +43,7 @@ BEGIN
           LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
      WHERE Movement_OrderClient.DescId = zc_Movement_OrderClient()
-      -- AND Movement_OrderClient.StatusId <> zc_Enum_Status_Erased()
+       AND Movement_OrderClient.StatusId <> zc_Enum_Status_Erased()
        AND Movement_ProductionUnion.Id IS NULL
        ;
 

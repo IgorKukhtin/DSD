@@ -1659,6 +1659,8 @@ BEGIN
          FROM _tmpItem_Reserv
          WHERE _tmpItem_Reserv.ContainerId_Goods = 0
            AND _tmpItem_Reserv.OperCountPartner  > 0
+           -- !!!временно отключил
+           AND 1=0
         ;
 
 
@@ -1676,12 +1678,17 @@ BEGIN
                                                       )
          FROM _tmpItem_Reserv
               LEFT JOIN ContainerLinkObject AS CLO_Unit ON CLO_Unit.ContainerId = _tmpItem_Reserv.ContainerId_Goods AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-         WHERE _tmpItem_Reserv.ContainerId_Goods > 0;
+         WHERE _tmpItem_Reserv.ContainerId_Goods > 0
+           -- !!!временно отключил
+           AND 1=0
+        ;
 
 
 
          -- !!! временно для отладки
          IF NOT EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.ValueData = '1' AND MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_Comment())
+         -- !!!временно отключил
+        AND 1=0
          THEN
              -- находим партию с Engine Nr
              SELECT MIN (_tmpItem_Reserv.PartionId), MAX (_tmpItem_Reserv.PartionId)

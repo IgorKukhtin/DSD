@@ -47,7 +47,7 @@ BEGIN
                0                         AS Id
              , CAST (NEXTVAL ('movement_OrderClient_seq') AS TVarChar) AS InvNumber
              , CAST ('' AS TVarChar)     AS InvNumberPartner
-             , inOperDate   ::TDateTime   AS OperDate     --CURRENT_DATE
+             , inOperDate   :: TDateTime AS OperDate
              , Object_Status.Code        AS StatusCode
              , Object_Status.Name        AS StatusName
              , CAST (False as Boolean)   AS PriceWithVAT
@@ -66,7 +66,7 @@ BEGIN
              , 0                         AS BrandId
              , CAST ('' AS TVarChar)     AS BrandName
              , CAST ('' AS TVarChar)     AS CIN
-             , NULL :: TDateTime         AS DateBegin
+             , (inOperDate + INTERVAL '1 MONTH') :: TDateTime AS DateBegin
              , CAST ('' AS TVarChar)     AS Comment
              , FALSE :: Boolean          AS isChild_Recalc
              , 0                         AS MovementId_Invoice

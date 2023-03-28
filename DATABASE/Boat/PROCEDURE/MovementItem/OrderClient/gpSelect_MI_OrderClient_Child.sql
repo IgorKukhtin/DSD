@@ -76,7 +76,8 @@ BEGIN
              , MILinkObject_ProdColorPattern.ObjectId                              AS ProdColorPatternId
                                                                                    
              , MovementItem.Amount                                                 AS Amount
-             , MIFloat_AmountPartner.ValueData                                     AS AmountPartner
+             , 0                                                                   AS AmountPartner
+           --, MIFloat_AmountPartner.ValueData                                     AS AmountPartner
              , MIFloat_ForCount.ValueData                                          AS ForCount
              , MIFloat_OperPrice.ValueData                                         AS OperPrice
              , MIFloat_OperPricePartner.ValueData                                  AS OperPricePartner
@@ -264,8 +265,11 @@ BEGIN
            , Object_Object.ObjectCode                 AS ObjectCode
            , ObjectString_Article_Object.ValueData    AS Article_Object
            , Object_Object.ValueData                  AS ObjectName
-           , ObjectDesc_Object.ItemName               AS DescName
-
+           , CASE WHEN _tmpItem_child.GoodsId > 0 THEN 'Узел'
+                  WHEN ObjectDesc_Object.Id = zc_Object_ProdOptions() THEN 'Опция'
+                  ELSE ObjectDesc_Object.ItemName
+             END AS DescName
+           
            , Object_Object_basis.Id                   AS GoodsId_basis
            , Object_Object_basis.ObjectCode           AS GoodsCode_basis
            , Object_Object_basis.ValueData            AS GoodsName_basis
@@ -283,7 +287,7 @@ BEGIN
              -- Количество шаблон сборки
            , zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount) AS Amount_basis
              -- Количество резерв
-           , CASE WHEN ObjectDesc_Object.Id = zc_Object_Goods()          THEN zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount)  ELSE 0 END :: NUMERIC (16, 8) AS Amount_unit
+           , CASE WHEN 1=1 THEN 0 WHEN ObjectDesc_Object.Id = zc_Object_Goods()          THEN zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount)  ELSE 0 END :: NUMERIC (16, 8) AS Amount_unit
              -- работы/услуги
            , CASE WHEN ObjectDesc_Object.Id = zc_Object_ReceiptService() THEN zfCalc_Value_ForCount (_tmpItem.Amount, _tmpItem.ForCount)  ELSE 0 END :: NUMERIC (16, 8) AS Value_service
              -- Количество заказ поставщику
@@ -332,8 +336,16 @@ BEGIN
            , tmpSumm.PartNumber :: TVarChar AS PartNumber
            , _tmpReceiptLevel.ReceiptLevelName :: TVarChar AS ReceiptLevelName
 
+           , ROW_NUMBER() OVER (ORDER BY CASE WHEN _tmpReceiptLevel.ReceiptLevelName <> '' THEN 0 ELSE 1 END
+                                       , _tmpReceiptLevel.ReceiptLevelName
+                                       , Object_Object.ValueData
+                                       , CASE WHEN Object_ProdOptions.ValueData <> '' THEN 1 ELSE 0 END
+                                       , Object_ProdOptions.ValueData
+                               ) :: Integer AS NPP
+
        FROM _tmpItem
             LEFT JOIN tmpSumm      ON tmpSumm.ParentId     = _tmpItem.MovementItemId
+            LEFT JOIN (SELECT DISTINCT _tmpItem.GoodsId FROM _tmpItem WHERE _tmpItem.GoodsId <> _tmpItem.ObjectId) AS _tmpItem_child ON _tmpItem_child.GoodsId = _tmpItem.ObjectId
 
             LEFT JOIN Object AS Object_Object ON Object_Object.Id = _tmpItem.ObjectId
             LEFT JOIN ObjectString AS ObjectString_Article_object

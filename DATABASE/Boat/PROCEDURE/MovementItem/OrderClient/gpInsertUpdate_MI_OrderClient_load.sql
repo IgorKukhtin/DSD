@@ -357,6 +357,10 @@ BEGIN
 
          -- создание
          ioMovementId_OrderClient:= lpInsertUpdate_Movement (ioMovementId_OrderClient, zc_Movement_OrderClient(), inInvNumber, CURRENT_DATE, NULL, vbUserId);
+         -- сохранили свойство <ƒата создани€>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioMovementId_OrderClient, CURRENT_TIMESTAMP);
+         -- сохранили свойство <ѕользователь (создание)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioMovementId_OrderClient, vbUserId);
 
      ELSE
          -- ѕроверка - такой номер не должен быть загружен

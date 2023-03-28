@@ -31,7 +31,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
                -- load Сумма транспорт с сайта
              , TransportSumm_load TFloat
                --
-             , NPP TFloat, NPP_2 TFloat
+             , NPP Integer, NPP_2 Integer
+               --
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -63,6 +64,31 @@ BEGIN
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
 
+    , Movement_OrderClient_all AS (-- за период
+                                   SELECT Movement_OrderClient.*
+                                        , COALESCE (MovementFloat_NPP.ValueData, 0) :: Integer AS NPP
+                                   FROM tmpStatus
+                                        INNER JOIN Movement AS Movement_OrderClient
+                                                            ON Movement_OrderClient.StatusId = tmpStatus.StatusId
+                                                           AND Movement_OrderClient.OperDate BETWEEN inStartDate AND inEndDate
+                                                           AND Movement_OrderClient.DescId   = zc_Movement_OrderClient()
+                                        LEFT JOIN MovementFloat AS MovementFloat_NPP
+                                                                ON MovementFloat_NPP.MovementId = Movement_OrderClient.Id
+                                                               AND MovementFloat_NPP.DescId     = zc_MovementFloat_NPP()
+                                  UNION
+                                   -- любые с № п/п
+                                   SELECT Movement_OrderClient.*
+                                        , MovementFloat_NPP.ValueData :: Integer AS NPP
+                                   FROM MovementFloat AS MovementFloat_NPP
+                                        INNER JOIN Movement AS Movement_OrderClient
+                                                            ON Movement_OrderClient.Id       = MovementFloat_NPP.MovementId
+                                                           AND Movement_OrderClient.DescId   = zc_Movement_OrderClient()
+                                                           AND Movement_OrderClient.StatusId <> zc_Enum_Status_Erased()
+                                      --INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement_OrderClient.StatusId
+                                   WHERE MovementFloat_NPP.ValueData > 0
+                                     AND MovementFloat_NPP.DescId    = zc_MovementFloat_NPP()
+                                  )
+
         , Movement_OrderClient AS (SELECT Movement_OrderClient.Id
                                         , Movement_OrderClient.InvNumber
                                         , MovementString_InvNumberPartner.ValueData    AS InvNumberPartner
@@ -73,11 +99,16 @@ BEGIN
                                         , MovementLinkObject_PaidKind.ObjectId         AS PaidKindId
                                         , MovementLinkObject_Product.ObjectId          AS ProductId
                                         , MovementLinkMovement_Invoice.MovementChildId AS MovementId_Invoice
-                                   FROM tmpStatus
-                                        INNER JOIN Movement AS Movement_OrderClient
-                                                            ON Movement_OrderClient.StatusId = tmpStatus.StatusId
-                                                           AND Movement_OrderClient.OperDate BETWEEN inStartDate AND inEndDate
-                                                           AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
+
+                                        , Movement_OrderClient.NPP
+                                        , ROW_NUMBER() OVER (ORDER BY CASE WHEN Movement_OrderClient.NPP > 0 AND Movement_OrderClient.StatusId <> zc_Enum_Status_Erased() THEN 0 ELSE 1 END 
+                                                                    , ObjectDate_DateBegin.ValueData
+                                                                    , Movement_OrderClient.NPP
+                                                                    , Movement_OrderClient.OperDate
+                                                            ) :: Integer AS NPP_2
+                                        , ObjectDate_DateBegin.ValueData               AS DateBegin
+
+                                   FROM Movement_OrderClient_all AS Movement_OrderClient
 
                                         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                      ON MovementLinkObject_To.MovementId = Movement_OrderClient.Id
@@ -103,8 +134,12 @@ BEGIN
                                                                        ON MovementLinkMovement_Invoice.MovementId = Movement_OrderClient.Id
                                                                       AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
 
+                                        LEFT JOIN ObjectDate AS ObjectDate_DateBegin
+                                                             ON ObjectDate_DateBegin.ObjectId = MovementLinkObject_Product.ObjectId
+                                                            AND ObjectDate_DateBegin.DescId   = zc_ObjectDate_Product_DateBegin()
+
                                    WHERE MovementLinkObject_From.ObjectId = inClientId
-                                     OR inClientId = 0
+                                     OR COALESCE (inClientId, 0) = 0
                                   )
             -- Проведенные Заказ производство и Производство-сборка
           , tmpMIFloat_MovementId AS (SELECT MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
@@ -179,8 +214,8 @@ BEGIN
                -- load Сумма транспорт с сайта
              , MovementFloat_TransportSumm_load.ValueData  AS TransportSumm_load
                --
-             , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP
-             , ROW_NUMBER() OVER (ORDER BY ObjectDate_DateBegin.ValueData, MovementFloat_NPP.ValueData, Movement_OrderClient.OperDate) ::TFloat AS NPP_2
+             , Movement_OrderClient.NPP
+             , CASE WHEN Movement_OrderClient.NPP > 0 AND Movement_OrderClient.StatusId <> zc_Enum_Status_Erased() THEN Movement_OrderClient.NPP_2 ELSE 0 END  :: Integer AS NPP_2
 
              , Object_From.Id                               AS FromId
              , Object_From.ObjectCode                       AS FromCode
@@ -193,7 +228,7 @@ BEGIN
              , Object_Product.Id                            AS ProductId
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName_Full
-             , ObjectDate_DateBegin.ValueData               AS DateBegin
+             , Movement_OrderClient.DateBegin               AS DateBegin
 
              , Object_ReceiptProdModel.Id                   AS ReceiptProdModelId
              , Object_ReceiptProdModel.ObjectCode           AS ReceiptProdModelCode
@@ -217,7 +252,7 @@ BEGIN
 
                -- Состояние
              , zfCalc_Order_State (CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END
-                                 , MovementFloat_NPP.ValueData :: Integer
+                                 , Movement_OrderClient.NPP
                                  , COALESCE (tmpOrderInternal_1.MovementId, tmpOrderInternal_2.MovementId)
                                  , COALESCE (tmpProductionUnion_1.MovementId, tmpProductionUnion_2.MovementId)
                                  , COALESCE (tmpOrderInternal_1.ObjectDescId, tmpOrderInternal_2.ObjectDescId)
@@ -225,7 +260,7 @@ BEGIN
                                   ) AS StateText
                -- все состояния подсветить
              , zfCalc_Order_State_color (CASE WHEN COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() THEN FALSE ELSE TRUE END
-                                       , MovementFloat_NPP.ValueData :: Integer
+                                       , Movement_OrderClient.NPP
                                        , COALESCE (tmpOrderInternal_1.MovementId, tmpOrderInternal_2.MovementId)
                                        , COALESCE (tmpProductionUnion_1.MovementId, tmpProductionUnion_2.MovementId)
                                        , COALESCE (tmpOrderInternal_1.ObjectDescId, tmpOrderInternal_2.ObjectDescId)
@@ -291,10 +326,6 @@ BEGIN
                                          ON MIFloat_BasisPrice_load.MovementItemId = MovementItem.Id
                                         AND MIFloat_BasisPrice_load.DescId         = zc_MIFloat_BasisPrice_load()
 
-             LEFT JOIN MovementFloat AS MovementFloat_NPP
-                                     ON MovementFloat_NPP.MovementId = Movement_OrderClient.Id
-                                    AND MovementFloat_NPP.DescId = zc_MovementFloat_NPP()
-
              LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                        ON MovementBoolean_PriceWithVAT.MovementId = Movement_OrderClient.Id
                                       AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -343,10 +374,6 @@ BEGIN
                                   ON ObjectLink_Product_ReceiptProdModel.ObjectId = Object_Product.Id
                                  AND ObjectLink_Product_ReceiptProdModel.DescId   = zc_ObjectLink_Product_ReceiptProdModel()
              LEFT JOIN Object AS Object_ReceiptProdModel ON Object_ReceiptProdModel.Id = ObjectLink_Product_ReceiptProdModel.ChildObjectId
-
-             LEFT JOIN ObjectDate AS ObjectDate_DateBegin
-                                  ON ObjectDate_DateBegin.ObjectId = Object_Product.Id
-                                 AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin()
 
              LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal_1   ON tmpOrderInternal_1.MovementId_OrderClient   = Movement_OrderClient.Id AND tmpOrderInternal_1.DescId   = zc_Movement_OrderInternal()   AND tmpOrderInternal_1.ObjectDescId   = zc_Object_Product()
              LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal_2   ON tmpOrderInternal_2.MovementId_OrderClient   = Movement_OrderClient.Id AND tmpOrderInternal_2.DescId   = zc_Movement_OrderInternal()   AND tmpOrderInternal_2.ObjectDescId   = zc_Object_Goods()
