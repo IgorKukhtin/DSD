@@ -149,7 +149,7 @@ BEGIN
                                  AND ObjectBoolean_CashSettings_CancelBansSUN.DescId = zc_ObjectBoolean_CashSettings_CancelBansSUN()
      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
      LIMIT 1;
-
+     
      -- все Подразделения для схемы SUN-v2
      DELETE FROM _tmpUnit_SUN;
      DELETE FROM _tmpGoods_Layout;
@@ -753,6 +753,67 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
        ;
        
      ANALYSE _tmpSUN_oth;
+     
+     
+          -- цены
+     CREATE TEMP TABLE tmpPrice ON COMMIT DROP AS
+     WITH
+          -- MCS_isClose
+          tmpPrice_MCS_isClose AS (SELECT MCS_isClose.*
+                                   FROM ObjectLink AS OL_Price_Unit
+                                        -- !!!только для таких Аптек!!!
+                                        INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_Price_Unit.ChildObjectId
+                                        --
+                                        INNER JOIN ObjectBoolean AS MCS_isClose
+                                                                 ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
+                                                                AND MCS_isClose.DescId    = zc_ObjectBoolean_Price_MCSIsClose()
+                                                                AND MCS_isClose.ValueData = TRUE
+                                   WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                  )
+        , SalesGoods AS (SELECT DISTINCT tmpSalesGoods.GoodsId FROM tmpSalesGoods)
+ 
+
+     SELECT OL_Price_Unit.ChildObjectId       AS UnitId
+          , OL_Price_Goods.ChildObjectId      AS GoodsId
+          , ROUND (Price_Value.ValueData, 2)  AS Price
+          , MCS_Value.ValueData               AS MCSValue
+          , CASE WHEN Price_MCSValueMin.ValueData IS NOT NULL
+                 THEN CASE WHEN COALESCE (Price_MCSValueMin.ValueData, 0) < COALESCE (MCS_Value.ValueData, 0) THEN COALESCE (Price_MCSValueMin.ValueData, 0) ELSE MCS_Value.ValueData END
+                 ELSE 0
+            END AS MCSValue_min
+          , COALESCE (MCS_isClose.ValueData, FALSE)                 AS isCloseMCS 
+          , COALESCE (ObjectBoolean_Goods_isClose.ValueData, FALSE) AS isClose
+     FROM ObjectLink AS OL_Price_Unit
+          -- !!!только для таких Аптек!!!
+          INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_Price_Unit.ChildObjectId
+          -- 25.05.20 -- временно отключил - 21.05.20
+          LEFT JOIN tmpPrice_MCS_isClose AS MCS_isClose
+                                         ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
+          LEFT JOIN ObjectLink AS OL_Price_Goods
+                               ON OL_Price_Goods.ObjectId = OL_Price_Unit.ObjectId
+                              AND OL_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
+          INNER JOIN Object AS Object_Goods
+                            ON Object_Goods.Id       = OL_Price_Goods.ChildObjectId
+                           AND Object_Goods.isErased = FALSE
+          LEFT JOIN ObjectFloat AS Price_Value
+                                ON Price_Value.ObjectId = OL_Price_Unit.ObjectId
+                               AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+          LEFT JOIN ObjectFloat AS MCS_Value
+                                ON MCS_Value.ObjectId = OL_Price_Unit.ObjectId
+                               AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+          LEFT JOIN ObjectFloat AS Price_MCSValueMin
+                                ON Price_MCSValueMin.ObjectId = OL_Price_Unit.ObjectId
+                               AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_isClose
+                                  ON ObjectBoolean_Goods_isClose.ObjectId  =  OL_Price_Goods.ChildObjectId
+                                 AND ObjectBoolean_Goods_isClose.DescId    = zc_ObjectBoolean_Goods_Close()
+          LEFT JOIN SalesGoods ON SalesGoods.GoodsId = OL_Price_Goods.ChildObjectId
+     WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+       -- товары "убит код" - 25.05.20 -- временно отключил - 21.05.20
+       AND (MCS_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_ClosePL = FALSE OR COALESCE (SalesGoods.GoodsId, 0) > 0);
+                         
+     ANALYSE tmpPrice;
+                           
 
 --raise notice 'Value 11: %', CLOCK_TIMESTAMP();
 
@@ -927,56 +988,7 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
                          GROUP BY Container.WhereObjectId
                                 , Container.ObjectId
                         )
-          -- MCS_isClose
-        , tmpPrice_MCS_isClose AS (SELECT MCS_isClose.*
-                                   FROM ObjectLink AS OL_Price_Unit
-                                        -- !!!только для таких Аптек!!!
-                                        INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_Price_Unit.ChildObjectId
-                                        --
-                                        INNER JOIN ObjectBoolean AS MCS_isClose
-                                                                 ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
-                                                                AND MCS_isClose.DescId    = zc_ObjectBoolean_Price_MCSIsClose()
-                                                                AND MCS_isClose.ValueData = TRUE
-                                   WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                                  )
-          -- цены
-        , tmpPrice AS (SELECT OL_Price_Unit.ChildObjectId       AS UnitId
-                            , OL_Price_Goods.ChildObjectId      AS GoodsId
-                            , ROUND (Price_Value.ValueData, 2)  AS Price
-                            , MCS_Value.ValueData               AS MCSValue
-                            , CASE WHEN Price_MCSValueMin.ValueData IS NOT NULL
-                                   THEN CASE WHEN COALESCE (Price_MCSValueMin.ValueData, 0) < COALESCE (MCS_Value.ValueData, 0) THEN COALESCE (Price_MCSValueMin.ValueData, 0) ELSE MCS_Value.ValueData END
-                                   ELSE 0
-                              END AS MCSValue_min
-                             , COALESCE (MCS_isClose.ValueData, FALSE) AS isCloseMCS 
-                       FROM ObjectLink AS OL_Price_Unit
-                            -- !!!только для таких Аптек!!!
-                            INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_Price_Unit.ChildObjectId
-                            -- 25.05.20 -- временно отключил - 21.05.20
-                            LEFT JOIN tmpPrice_MCS_isClose AS MCS_isClose
-                                                           ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
-                            LEFT JOIN ObjectLink AS OL_Price_Goods
-                                                 ON OL_Price_Goods.ObjectId = OL_Price_Unit.ObjectId
-                                                AND OL_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
-                            INNER JOIN Object AS Object_Goods
-                                              ON Object_Goods.Id       = OL_Price_Goods.ChildObjectId
-                                             AND Object_Goods.isErased = FALSE
-                            LEFT JOIN ObjectFloat AS Price_Value
-                                                  ON Price_Value.ObjectId = OL_Price_Unit.ObjectId
-                                                 AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
-                            LEFT JOIN ObjectFloat AS MCS_Value
-                                                  ON MCS_Value.ObjectId = OL_Price_Unit.ObjectId
-                                                 AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
-                            LEFT JOIN ObjectFloat AS Price_MCSValueMin
-                                                  ON Price_MCSValueMin.ObjectId = OL_Price_Unit.ObjectId
-                                                 AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
-                            -- Были продажи за период
-                            LEFT JOIN tmpSalesGoods ON tmpSalesGoods.UnitId  = OL_Price_Unit.ChildObjectId  
-                                                   AND tmpSalesGoods.GoodsId = OL_Price_Goods.ChildObjectId
-                       WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                         -- товары "убит код" - 25.05.20 -- временно отключил - 21.05.20
-                         AND (MCS_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_ClosePL = FALSE OR COALESCE (tmpSalesGoods.GoodsId, 0) > 0)
-                      )
+
           -- данные из ассорт. матрицы
         , tmpGoodsCategory AS (SELECT ObjectLink_GoodsCategory_Unit.ChildObjectId AS UnitId
                                     , ObjectLink_Child_retail.ChildObjectId       AS GoodsId
@@ -1029,6 +1041,7 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
                              )
      -- 2.5. Результат: все остатки, продажи => расчет кол-во ПОТРЕБНОСТЬ у получателя: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      INSERT INTO  _tmpRemains_all (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve, isCloseMCS)
+     WITH SalesGoods AS (SELECT DISTINCT tmpSalesGoods.GoodsId FROM tmpSalesGoods)
         --
         SELECT tmpObject_Price.UnitId
              , tmpObject_Price.GoodsId
@@ -1141,10 +1154,7 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
              -- если товар среди парных
              LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
                        ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = tmpObject_Price.GoodsId
-
-             -- Были продажи за период
-             LEFT JOIN tmpSalesGoods ON tmpSalesGoods.UnitId  = tmpObject_Price.UnitId 
-                                    AND tmpSalesGoods.GoodsId = tmpObject_Price.GoodsId 
+             LEFT JOIN SalesGoods ON SalesGoods.GoodsId = tmpObject_Price.GoodsId
 
              -- НЕ отбросили !!холод!!
              /*LEFT JOIN ObjectLink AS OL_Goods_ConditionsKeep
@@ -1155,7 +1165,7 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
         WHERE OB_Unit_SUN_out.ObjectId IS NULL
           -- товары "закрыт код"
           AND (ObjectBoolean_Goods_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_CloseGd = FALSE OR 
-               _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 OR COALESCE (tmpSalesGoods.GoodsId, 0) > 0)
+               _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 OR COALESCE (SalesGoods.GoodsId, 0) > 0)
        ;
        
      ANALYSE _tmpRemains_all;
@@ -1548,7 +1558,7 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
          
 --raise notice 'Value 14_1: %', CLOCK_TIMESTAMP();
 
-     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpPrice'))
+/*     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpPrice'))
      THEN
        DROP TABLE tmpPrice;
      END IF;
@@ -1568,13 +1578,13 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
                                   );
                           
      ANALYSE tmpPrice;
-                  
+*/                  
 --raise notice 'Value 14_2: %', CLOCK_TIMESTAMP();
 
                          
      -- 3.2. остатки, OVER (Сверх запас) - для распределения
      WITH -- MCS + Price
-               tmpMCS AS (SELECT tmpPrice.UnitId
+/*               tmpMCS AS (SELECT tmpPrice.UnitId
                                , tmpPrice.GoodsId
                                , Price_Value.ValueData                          AS Price
                                , MCS_Value.ValueData                            AS MCSValue
@@ -1597,8 +1607,8 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
                             -- товары "убит код" - 25.05.20 -- временно отключил - 21.05.20
                                 (COALESCE (MCS_isClose.ValueData, FALSE) = False OR _tmpUnit_SUN.isLock_ClosePL = FALSE)
                          )
-             -- отбросили !!НОТ!!
-           , tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId
+*/             -- отбросили !!НОТ!!
+             tmpGoods_NOT AS (SELECT OB_Goods_NOT.ObjectId
                               FROM ObjectBoolean AS OB_Goods_NOT
                               WHERE OB_Goods_NOT.DescId   = zc_ObjectBoolean_Goods_NOT_Sun_v2()
                                 AND OB_Goods_NOT.ValueData = TRUE
@@ -1640,8 +1650,9 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
                LEFT JOIN _tmpRemains_all ON _tmpRemains_all.UnitId  = tmp.UnitId
                                         AND _tmpRemains_all.GoodsId = tmp.GoodsId
                -- НТЗ
-               LEFT JOIN tmpMCS ON tmpMCS.UnitId  = tmp.UnitId
-                               AND tmpMCS.GoodsId = tmp.GoodsId
+               LEFT JOIN tmpPrice AS tmpMCS 
+                                  ON tmpMCS.UnitId  = tmp.UnitId
+                                 AND tmpMCS.GoodsId = tmp.GoodsId
                -- продажи
                LEFT JOIN _tmpSale_over AS _tmpSale ON _tmpSale.UnitId  = tmp.UnitId
                                                   AND _tmpSale.GoodsId = tmp.GoodsId
@@ -1945,7 +1956,7 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
              LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_Partion.GoodsId
 
              LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId  = _tmpRemains_Partion.UnitId
-             
+                                                   
         WHERE -- !!!Отключили парные!!!
               _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
 
@@ -2011,6 +2022,16 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
                  LEFT JOIN _tmpGoods_Sun_exception AS _tmpGoods_Sun_exception
                                                    ON _tmpGoods_Sun_exception.UnitId  = _tmpRemains_calc.UnitId
                                                   AND _tmpGoods_Sun_exception.GoodsId = _tmpRemains_calc.GoodsId
+                     
+                 LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId  = _tmpRemains_calc.UnitId
+
+                 -- отбросили !!закрытые!!
+                 LEFT JOIN tmpPrice ON tmpPrice.UnitId  = _tmpRemains_calc.UnitId
+                                   AND tmpPrice.GoodsId = _tmpRemains_calc.GoodsId
+
+                 -- Были продажи за период
+                 LEFT JOIN tmpSalesGoods ON tmpSalesGoods.UnitId  = _tmpRemains_calc.UnitId 
+                                        AND tmpSalesGoods.GoodsId = _tmpRemains_calc.GoodsId 
 
 /*                 -- отбросили !!исключения!!
                  LEFT JOIN _tmpUnit_SunExclusion ON _tmpUnit_SunExclusion.UnitId_from = vbUnitId_from
@@ -2021,6 +2042,9 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
               AND _tmpUnit_SunExclusion_MCS.UnitId_to IS NULL
               AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
               AND COALESCE(_tmpGoods_Sun_exception.Amount, 0) = 0
+              AND ((COALESCE(tmpPrice.isCloseMCS, FALSE) = FALSE OR _tmpUnit_SUN.isLock_ClosePL = FALSE) AND
+                   (COALESCE(tmpPrice.isClose, FALSE) = FALSE OR _tmpUnit_SUN.isLock_CloseGd = FALSE) OR
+                    COALESCE (tmpSalesGoods.GoodsId, 0) <> 0)
             --  AND _tmpUnit_SunExclusion.UnitId_to IS NULL
 
             ORDER BY --начинаем с аптек, где ПОТРЕБНОСТЬ - максимальным
@@ -2527,4 +2551,4 @@ WHERE Movement.OperDate  >= '01.01.2019'
  SELECT * FROM lpInsert_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ*/
  
  
- SELECT * FROM gpReport_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inSession:= '3'); -- FETCH ALL "<unnamed portal 1>";
+ SELECT * FROM gpReport_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inSession:= '3'); -- FETCH ALL "<unnamed portal 1>";
