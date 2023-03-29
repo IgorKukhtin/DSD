@@ -1421,7 +1421,8 @@ uses
   MobileMemberDialog in '..\..\Forms\Document\MobileMemberDialog.pas' {MobileMemberDialogForm: TParentForm},
   ChangePercentJournal in '..\..\Forms\Document\ChangePercentJournal.pas' {ChangePercentJournalForm: TParentForm},
   ChangePercentMovement in '..\..\Forms\Document\ChangePercentMovement.pas' {ChangePercentMovementForm: TParentForm},
-  Report_PersonalService_Recalc in '..\..\Forms\Report\Report_PersonalService_Recalc.pas' {Report_PersonalService_RecalcForm: TParentForm};
+  Report_PersonalService_Recalc in '..\..\Forms\Report\Report_PersonalService_Recalc.pas' {Report_PersonalService_RecalcForm: TParentForm},
+  GoodsGroup_UKTZED in '..\..\Forms\Guides\GoodsGroup_UKTZED.pas' {GoodsGroup_UKTZEDForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

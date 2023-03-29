@@ -263,7 +263,12 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_JuridicalDefermentPayment(), 'zc_ObjectDate_JuridicalDefermentPayment_OperDateIn', 'Дата последнего прихода' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_JuridicalDefermentPayment_OperDateIn');
 
 
-
+CREATE OR REPLACE FUNCTION zc_ObjectDate_GoodsGroup_UKTZED_new() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsGroup_UKTZED_new'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsGroup(), 'zc_ObjectDate_GoodsGroup_UKTZED_new', 'дата с которой действует новый Код УКТ ЗЕД' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsGroup_UKTZED_new');
+ 
+ 
+ 
 
 --!!!FARMACY
 
@@ -670,6 +675,7 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 29.03.23         * zc_ObjectDate_GoodsGroup_UKTZED_new
  18.01.23                                                                                     * zc_ObjectDate_PartionDateWages_DateStart
  26.09.22                                                                                     * zc_ObjectDate_User_InternshipConfirmation, zc_ObjectDate_User_InternshipCompleted
  06.09.22         * zc_ObjectDate_Unit_PersonalService

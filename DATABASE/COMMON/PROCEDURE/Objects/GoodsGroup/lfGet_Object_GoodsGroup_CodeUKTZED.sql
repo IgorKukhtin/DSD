@@ -22,8 +22,8 @@ BEGIN
                                              ON ObjectString_GoodsGroup_UKTZED.ObjectId = Object.Id 
                                             AND ObjectString_GoodsGroup_UKTZED.DescId = zc_ObjectString_GoodsGroup_UKTZED()
                       LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
-                                         ON ObjectLink_GoodsGroup.ObjectId = Object.Id
-                                        AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_GoodsGroup_Parent()
+                                           ON ObjectLink_GoodsGroup.ObjectId = Object.Id
+                                          AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_GoodsGroup_Parent()
                    WHERE Object.Id = inObjectId);
 
 

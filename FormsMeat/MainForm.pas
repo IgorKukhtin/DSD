@@ -1424,6 +1424,8 @@ type
     miCurrencyListMovement: TMenuItem;
     actChangePercentMovement: TdsdOpenForm;
     miactChangePercentMovement: TMenuItem;
+    actGoodsGroup_UKTZED: TdsdOpenForm;
+    miGoodsGroup_UKTZED: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
