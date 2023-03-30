@@ -66,6 +66,26 @@ object GoodsGroupForm: TGoodsGroupForm
       Caption.Text = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044
       DataBinding.FieldName = 'CodeUKTZED'
       Width = 68
+      Position.ColIndex = 13
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
+    end
+    object CodeUKTZED_new: TcxDBTreeListColumn
+      Caption.Text = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044' ('#1085#1086#1074#1099#1081')'
+      DataBinding.FieldName = 'CodeUKTZED_new'
+      Width = 68
+      Position.ColIndex = 12
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
+    end
+    object DateUKTZED_new: TcxDBTreeListColumn
+      Caption.Text = #1044#1072#1090#1072' '#1076#1083#1103' '#1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044' ('#1085#1086#1074#1099#1081')'
+      DataBinding.FieldName = 'DateUKTZED_new'
+      Width = 68
       Position.ColIndex = 2
       Position.RowIndex = 0
       Position.BandIndex = 0

@@ -5,7 +5,9 @@ DROP FUNCTION IF EXISTS gpSelect_Object_GoodsGroup(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsGroup(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, CodeUKTZED TVarChar, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, CodeUKTZED TVarChar
+             , CodeUKTZED_new TVarChar, DateUKTZED_new TDateTime
+             , Name TVarChar
              , TaxImport TVarChar, DKPP TVarChar, TaxAction TVarChar
              , isErased boolean
              , ParentId Integer, ParentName TVarChar
@@ -27,7 +29,11 @@ BEGIN
            Object_GoodsGroup.Id                AS Id 
          , Object_GoodsGroup.ObjectCode        AS Code
          , lfGet_Object_GoodsGroup_CodeUKTZED (Object_GoodsGroup.Id) AS CodeUKTZED
-         -- , COALESCE (ObjectString_GoodsGroup_UKTZED.ValueData,'') :: TVarChar AS CodeUKTZED
+         -- , COALESCE (ObjectString_GoodsGroup_UKTZED.ValueData,'') :: TVarChar AS CodeUKTZED 
+
+         , Get_CodeUKTZED_new.CodeUKTZED_new ::TVarChar
+         , Get_CodeUKTZED_new.DateUKTZED_new ::TDateTime
+         
          , Object_GoodsGroup.ValueData         AS Name
          , lfGet_Object_GoodsGroup_TaxImport (Object_GoodsGroup.Id) AS TaxImport
          , lfGet_Object_GoodsGroup_DKPP (Object_GoodsGroup.Id)      AS DKPP
@@ -56,7 +62,7 @@ BEGIN
          , Object_InfoMoney_View.InfoMoneyGroupName
          , Object_InfoMoney_View.InfoMoneyDestinationName
          , Object_InfoMoney_View.InfoMoneyName
-         , Object_InfoMoney_View.InfoMoneyId    
+         , Object_InfoMoney_View.InfoMoneyId
          
      FROM Object AS Object_GoodsGroup
            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
@@ -96,7 +102,10 @@ BEGIN
 
            /*LEFT JOIN ObjectString AS ObjectString_GoodsGroup_UKTZED
                                   ON ObjectString_GoodsGroup_UKTZED.ObjectId = Object_GoodsGroup.Id 
-                                 AND ObjectString_GoodsGroup_UKTZED.DescId = zc_ObjectString_GoodsGroup_UKTZED()*/
+                                 AND ObjectString_GoodsGroup_UKTZED.DescId = zc_ObjectString_GoodsGroup_UKTZED()*/  
+           
+
+           LEFT JOIN lfGet_Object_GoodsGroup_CodeUKTZED_new (Object_GoodsGroup.Id) AS Get_CodeUKTZED_new ON 1 = 1
 
     WHERE Object_GoodsGroup.DescId = zc_Object_GoodsGroup()
      ;
