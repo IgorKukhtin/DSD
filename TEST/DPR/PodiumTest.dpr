@@ -341,7 +341,12 @@ uses
   PriceListGoodsItemPodiumEdit in '..\..\FormsBoutique\Guides\PriceListGoodsItemPodiumEdit.pas' {PriceListGoodsItemPodiumEditForm: TParentForm},
   FormsUnit in '..\..\FormsBoutique\System\FormsUnit.pas' {FormsForm: TParentForm},
   DOCUMENTINVOICE_PRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
-  DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas';
+  DOCUMENTINVOICE_TN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
+  StorageSQLite in '..\..\SOURCE\StorageSQLite.pas',
+  GoogleOTP in '..\..\SOURCE\GoogleOTP.pas',
+  GoogleOTPDialogPsw in '..\..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
+  GoogleOTPRegistration in '..\..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
+  PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
