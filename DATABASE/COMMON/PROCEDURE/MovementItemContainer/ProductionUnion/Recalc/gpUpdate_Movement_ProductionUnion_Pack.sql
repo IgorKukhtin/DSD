@@ -19,7 +19,7 @@ BEGIN
 -- if EXTRACT (DAY FROM inStartDate) IN (13, 18) then return; end if;
 
    IF (DATE_TRUNC ('MONTH', inStartDate) < DATE_TRUNC ('MONTH', CURRENT_DATE)
-       OR EXTRACT (DAY FROM inStartDate) > 15
+       OR EXTRACT (DAY FROM CURRENT_DATE) >= 20
       )
       AND inStartDate <>  CURRENT_DATE - INTERVAL '1 DAY'
       AND (EXTRACT (DAY FROM inStartDate)  / 2 - FLOOR (EXTRACT (DAY FROM inStartDate)  / 2)
