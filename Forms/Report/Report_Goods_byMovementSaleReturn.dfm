@@ -1,25 +1,24 @@
-inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1090#1075#1088#1091#1079#1082#1072#1084' '#1087#1086' '#1076#1072#1090#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
-  ClientHeight = 542
-  ClientWidth = 894
+inherited Report_Goods_byMovementSaleReturnForm: TReport_Goods_byMovementSaleReturnForm
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1090#1075#1088#1091#1079#1082#1072#1084' '#1087#1086' '#1076#1072#1090#1077' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'> ('#1086#1090#1095#1077#1090')'
+  ClientHeight = 522
+  ClientWidth = 782
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 910
-  ExplicitHeight = 581
+  ExplicitWidth = 798
+  ExplicitHeight = 561
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 894
-    Height = 248
+    Width = 782
+    Height = 228
     TabOrder = 3
-    Properties.ActivePage = tsPivot
-    ExplicitTop = 80
+    ExplicitTop = 82
     ExplicitWidth = 894
     ExplicitHeight = 248
-    ClientRectBottom = 248
-    ClientRectRight = 894
+    ClientRectBottom = 228
+    ClientRectRight = 782
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
       Caption = #1043#1086#1090#1086#1074#1072#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1103
@@ -28,8 +27,8 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
       ExplicitWidth = 894
       ExplicitHeight = 224
       inherited cxGrid: TcxGrid
-        Width = 894
-        Height = 224
+        Width = 782
+        Height = 204
         ExplicitWidth = 894
         ExplicitHeight = 224
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -61,6 +60,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -72,6 +72,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -83,6 +84,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -94,7 +96,6 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -106,7 +107,6 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -118,7 +118,6 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -147,14 +146,18 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
     object tsPivot: TcxTabSheet
       Caption = #1058#1091#1096#1077#1085#1082#1072
       ImageIndex = 1
+      ExplicitWidth = 894
+      ExplicitHeight = 224
       object cxGridPivot: TcxGrid
         Left = 0
         Top = 0
-        Width = 894
-        Height = 224
+        Width = 782
+        Height = 204
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitWidth = 894
+        ExplicitHeight = 224
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -331,25 +334,23 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object chReturnAmountPartner: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1080#1085#1092'.)'
-            DataBinding.FieldName = 'ReturnAmountPartner'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
           object chSaleAmountPartner: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1080#1085#1092'.)'
             DataBinding.FieldName = 'SaleAmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object chReturnAmountPartner: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'ReturnAmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -361,7 +362,6 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -373,6 +373,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -384,6 +385,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -395,22 +397,11 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object chReturnAmountPartnerSh: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1077#1076'. ('#1080#1085#1092'.)'
-            DataBinding.FieldName = 'ReturnAmountPartnerSh'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
             Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 100
           end
           object chSaleAmountPartnerSh: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076'. ('#1080#1085#1092'.)'
@@ -418,7 +409,17 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object chReturnAmountPartnerSh: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1077#1076'. ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'ReturnAmountPartnerSh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -430,7 +431,6 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -463,14 +463,18 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
     object tsDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitWidth = 894
+      ExplicitHeight = 224
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
-        Width = 894
-        Height = 224
+        Width = 782
+        Height = 204
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitWidth = 894
+        ExplicitHeight = 224
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DSDetail
@@ -576,42 +580,34 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = OrderAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = MoreAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = UnderAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = DiffAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = OrderAmount_21
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = MoreAmount_21
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = UnderAmount_21
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = DiffAmount_21
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -817,42 +813,34 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = OrderAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = MoreAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = UnderAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = DiffAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = OrderAmount_21
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = MoreAmount_21
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = UnderAmount_21
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = DiffAmount_21
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1016,50 +1004,6 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
           object ReturnAmount_11: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
             DataBinding.FieldName = 'ReturnAmount_11'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object OrderAmount_11: TcxGridDBColumn
-            Caption = #1047#1072#1103#1074#1082#1072' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
-            DataBinding.FieldName = 'OrderAmount_11'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object MoreAmount_11: TcxGridDBColumn
-            Caption = #1041#1086#1083#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
-            DataBinding.FieldName = 'MoreAmount_11'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object UnderAmount_11: TcxGridDBColumn
-            Caption = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
-            DataBinding.FieldName = 'UnderAmount_11'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object DiffAmount_11: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
-            DataBinding.FieldName = 'DiffAmount_11'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
@@ -1462,50 +1406,6 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object OrderAmount_21: TcxGridDBColumn
-            Caption = #1047#1072#1103#1074#1072' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
-            DataBinding.FieldName = 'OrderAmount_21'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object MoreAmount_21: TcxGridDBColumn
-            Caption = #1041#1086#1083#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
-            DataBinding.FieldName = 'MoreAmount_21'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object UnderAmount_21: TcxGridDBColumn
-            Caption = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
-            DataBinding.FieldName = 'UnderAmount_21'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object DiffAmount_21: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
-            DataBinding.FieldName = 'DiffAmount_21'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
           object SaleAmount_2_Alan: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072', '#1090#1084' '#1040#1083#1072#1085')'
             DataBinding.FieldName = 'SaleAmount_2_Alan'
@@ -1562,7 +1462,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
     end
   end
   inherited Panel: TPanel
-    Width = 894
+    Width = 782
     Height = 54
     ExplicitWidth = 894
     ExplicitHeight = 54
@@ -1595,12 +1495,12 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
       ExplicitWidth = 52
     end
     object cxLabel4: TcxLabel
-      Left = 472
+      Left = 164
       Top = 31
       Caption = #1043#1088'. '#1090#1086#1074'. '#1058#1091#1096#1077#1085#1082#1072':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 574
+      Left = 266
       Top = 30
       Properties.Buttons = <
         item
@@ -1612,13 +1512,14 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
       Width = 196
     end
     object cxLabel3: TcxLabel
-      Left = 148
-      Top = 6
+      Left = 584
+      Top = 9
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+      Visible = False
     end
     object edUnit: TcxButtonEdit
-      Left = 238
-      Top = 5
+      Left = 678
+      Top = 6
       Properties.Buttons = <
         item
           Default = True
@@ -1626,16 +1527,18 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
+      Visible = False
       Width = 226
     end
     object cxLabel5: TcxLabel
-      Left = 148
-      Top = 31
+      Left = 588
+      Top = 32
       Caption = #1043#1088'. '#1087#1086#1076#1088#1072#1079#1076'. '#1042#1086#1079#1074#1088#1072#1090':'
+      Visible = False
     end
     object edUnitGroup: TcxButtonEdit
-      Left = 264
-      Top = 30
+      Left = 704
+      Top = 31
       Properties.Buttons = <
         item
           Default = True
@@ -1643,15 +1546,16 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
+      Visible = False
       Width = 200
     end
     object cxLabel8: TcxLabel
-      Left = 469
+      Left = 155
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074' '#1043#1055':'
     end
     object edGoodsGroupGP: TcxButtonEdit
-      Left = 574
+      Left = 266
       Top = 5
       Properties.Buttons = <
         item
@@ -1663,14 +1567,14 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
       Width = 196
     end
     object chWeek: TcxCheckBox
-      Left = 784
+      Left = 476
       Top = 5
       Caption = #1087#1086' '#1085#1077#1076#1077#1083#1103#1084
       TabOrder = 12
       Width = 97
     end
     object chMonth: TcxCheckBox
-      Left = 784
+      Left = 476
       Top = 30
       Caption = #1087#1086' '#1084#1077#1089#1103#1094#1072#1084
       TabOrder = 13
@@ -1679,11 +1583,13 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
   end
   object grChart: TcxGrid [2]
     Left = 0
-    Top = 336
-    Width = 894
+    Top = 316
+    Width = 782
     Height = 206
     Align = alBottom
     TabOrder = 6
+    ExplicitTop = 336
+    ExplicitWidth = 894
     object grChartDBChartView1: TcxGridDBChartView
       DataController.DataSource = DSDetail
       DiagramArea.Values.LineWidth = 2
@@ -1703,18 +1609,6 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
         DataBinding.FieldName = 'ReturnAmount_11'
         DisplayText = #1042#1086#1079#1074#1088#1072#1090' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
         Visible = False
-      end
-      object serOrderAmount_11: TcxGridDBChartSeries
-        DataBinding.FieldName = 'OrderAmount_11'
-        DisplayText = #1047#1072#1103#1074#1082#1072' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
-      end
-      object serMoreAmount_11: TcxGridDBChartSeries
-        DataBinding.FieldName = 'MoreAmount_11'
-        DisplayText = #1041#1086#1083#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
-      end
-      object serUnderAmount_11: TcxGridDBChartSeries
-        DataBinding.FieldName = 'UnderAmount_11'
-        DisplayText = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
       end
       object serSaleAmount_12: TcxGridDBChartSeries
         DataBinding.FieldName = 'SaleAmount_12'
@@ -1886,18 +1780,6 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
         DisplayText = #1042#1086#1079#1074#1088#1072#1090' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
         Visible = False
       end
-      object serOrderAmount_21: TcxGridDBChartSeries
-        DataBinding.FieldName = 'OrderAmount_21'
-        DisplayText = #1047#1072#1103#1074#1082#1072' '#1048#1058#1054#1043#1054',  '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
-      end
-      object serMoreAmount_21: TcxGridDBChartSeries
-        DataBinding.FieldName = 'MoreAmount_21'
-        DisplayText = #1041#1086#1083#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054',  '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
-      end
-      object serUnderAmount_1: TcxGridDBChartSeries
-        DataBinding.FieldName = 'UnderAmount_21'
-        DisplayText = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054',  '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
-      end
       object serSaleAmount_2_Alan: TcxGridDBChartSeries
         DataBinding.FieldName = 'SaleAmount_2_Alan'
         DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072', '#1090#1084' '#1040#1083#1072#1085')'
@@ -1925,12 +1807,14 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
   end
   object cxSplitter1: TcxSplitter [3]
     Left = 0
-    Top = 328
-    Width = 894
+    Top = 308
+    Width = 782
     Height = 8
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = grChart
+    ExplicitTop = 328
+    ExplicitWidth = 894
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -1962,7 +1846,6 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
   inherited ActionList: TActionList
     inherited actGridToExcel: TdsdGridToExcel
       TabSheet = tsMain
-      Enabled = False
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1970,8 +1853,8 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_Goods_byMovementRealDialogForm'
-      FormNameParam.Value = 'TReport_Goods_byMovementRealDialogForm'
+      FormName = 'TReport_Goods_byMovementSaleReturnDialogForm'
+      FormNameParam.Value = 'TReport_Goods_byMovementSaleReturnDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1996,7 +1879,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
           Value = ''
           Component = UnitGuides
           ComponentItem = 'Key'
-          ParamType = ptInput
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end
         item
@@ -2005,7 +1888,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
           Component = UnitGuides
           ComponentItem = 'TextValue'
           DataType = ftString
-          ParamType = ptInput
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end
         item
@@ -2013,7 +1896,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
           Value = ''
           Component = UnitGroupGuides
           ComponentItem = 'Key'
-          ParamType = ptInput
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end
         item
@@ -2022,7 +1905,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
           Component = UnitGroupGuides
           ComponentItem = 'TextValue'
           DataType = ftString
-          ParamType = ptInput
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end
         item
@@ -2146,6 +2029,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
       Category = 'DSDLib'
       TabSheet = tsPivot
       MoveParams = <>
+      Enabled = False
       Grid = cxGridPivot
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -2173,7 +2057,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Goods_byMovementReal'
+    StoredProcName = 'gpReport_Goods_byMovementSaleReturn'
     DataSets = <
       item
         DataSet = MasterCDS
@@ -2207,7 +2091,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2215,7 +2099,7 @@ inherited Report_Goods_byMovementRealForm: TReport_Goods_byMovementRealForm
         Value = ''
         Component = UnitGroupGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item

@@ -1422,7 +1422,9 @@ uses
   ChangePercentJournal in '..\..\Forms\Document\ChangePercentJournal.pas' {ChangePercentJournalForm: TParentForm},
   ChangePercentMovement in '..\..\Forms\Document\ChangePercentMovement.pas' {ChangePercentMovementForm: TParentForm},
   Report_PersonalService_Recalc in '..\..\Forms\Report\Report_PersonalService_Recalc.pas' {Report_PersonalService_RecalcForm: TParentForm},
-  GoodsGroup_UKTZED in '..\..\Forms\Guides\GoodsGroup_UKTZED.pas' {GoodsGroup_UKTZEDForm: TParentForm};
+  GoodsGroup_UKTZED in '..\..\Forms\Guides\GoodsGroup_UKTZED.pas' {GoodsGroup_UKTZEDForm: TParentForm},
+  Report_Goods_byMovementSaleReturn in '..\..\Forms\Report\Report_Goods_byMovementSaleReturn.pas' {Report_Goods_byMovementSaleReturnForm: TParentForm},
+  Report_Goods_byMovementSaleReturnDialog in '..\..\Forms\Report\Report_Goods_byMovementSaleReturnDialog.pas' {Report_Goods_byMovementSaleReturnDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
