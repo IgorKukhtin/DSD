@@ -21,6 +21,8 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
 
+--raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+
      vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
      IF vbUnitKey = '' THEN
         vbUnitKey := '0';
@@ -91,6 +93,8 @@ BEGIN
         
      ANALYSE tmpMov;
 
+    --raise notice 'Value 2: %', CLOCK_TIMESTAMP();
+
      CREATE TEMP TABLE tmpErr ON COMMIT DROP AS (
      WITH
           tmpMI_All AS (SELECT MovementItem.MovementId AS MovementId, MovementItem.ObjectId AS GoodsId, MovementItem.Amount
@@ -139,6 +143,8 @@ BEGIN
                                AND tmpRemains.GoodsId = tmpMI.GoodsId);
                                
     ANALYSE tmpErr;
+
+    --raise notice 'Value 3: %', CLOCK_TIMESTAMP();
     
     CREATE TEMP TABLE tmpMovement ON COMMIT DROP AS (
                             SELECT Movement.Id
@@ -162,6 +168,8 @@ BEGIN
                             );
 
     ANALYSE tmpMovement;
+
+    --raise notice 'Value 4: %', CLOCK_TIMESTAMP();
                                
     OPEN Cursor1 FOR (
         WITH
@@ -473,6 +481,8 @@ BEGIN
        );
 
     RETURN NEXT Cursor1;
+
+    --raise notice 'Value 5: %', CLOCK_TIMESTAMP();
     
     CREATE TEMP TABLE tmpMI_all ON COMMIT DROP AS (
         WITH
@@ -498,21 +508,34 @@ BEGIN
                                , COALESCE(Object_Goods_PairSun_Main.MainID, 0) <> 0     AS isGoodsPairSun
                                , Object_Goods_PairSun.GoodsPairSunID                    AS GoodsPairSunMainId
                                , Object_Goods_PairSun.GoodsPairSunAmount                AS GoodsPairSunAmount
-                               , COALESCE (MIBoolean_Present.ValueData, False)          AS isPresent                               
                           FROM MovementItem
                                LEFT JOIN tmpGoodsPairSun AS Object_Goods_PairSun
                                                          ON Object_Goods_PairSun.Id = MovementItem.ObjectId
                                LEFT JOIN tmpGoodsPairSunMain AS Object_Goods_PairSun_Main
                                                              ON Object_Goods_PairSun_Main.Id = MovementItem.ObjectId
-                               LEFT JOIN MovementItemBoolean AS MIBoolean_Present
-                                                             ON MIBoolean_Present.MovementItemId = MovementItem.Id
-                                                            AND MIBoolean_Present.DescId         = zc_MIBoolean_Present()
                           WHERE MovementItem.MovementId in (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
                      );
                      
     ANALYSE tmpMI_all;
+
+    --raise notice 'Value 5: %', CLOCK_TIMESTAMP();
+    
+    CREATE TEMP TABLE tmpContainer ON COMMIT DROP AS 
+    SELECT Container.ObjectId
+         , SUM(Container.Amount)  AS Amount
+    FROM Container 
+    WHERE Container.DescId = zc_Container_Count()
+      AND Container.ObjectId in (SELECT DISTINCT tmpMI_all.ObjectId FROM tmpMI_all)
+      AND Container.WhereObjectId = vbUnitId
+      AND Container.Amount <> 0
+    GROUP BY Container.ObjectId;
+                             
+    ANALYSE tmpContainer;
+                            
+    
+    --raise notice 'Value 7: %', CLOCK_TIMESTAMP();
     
     OPEN Cursor2 FOR (
         WITH
@@ -528,15 +551,6 @@ BEGIN
                                                         AND tmpMov.ConfirmedKindId <> zc_Enum_ConfirmedKind_UnComplete() 
                                    GROUP BY tmpMI_all.ObjectId
                                   )
-          , tmpContainer AS (SELECT Container.ObjectId
-                                  , SUM(Container.Amount)  AS Amount
-                             FROM Container 
-                             WHERE Container.DescId = zc_Container_Count()
-                               AND Container.ObjectId in (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
-                               AND Container.WhereObjectId = vbUnitId
-                               AND Container.Amount <> 0
-                             GROUP BY Container.ObjectId
-                            )
           , tmpRemains AS (SELECT tmpMI.MovementId
                                 , tmpMI.GoodsId
                                 , tmpMI.Amount           AS Amount_mi
@@ -741,7 +755,7 @@ BEGIN
            , MovementItem.GoodsPairSunAmount                                     AS GoodsPairSunAmount
            , Object_DivisionParties.Id                                           AS DivisionPartiesId 
            , Object_DivisionParties.ValueData                                    AS DivisionPartiesName 
-           , MovementItem.isPresent                                              AS isPresent
+           , COALESCE (MIBoolean_Present.ValueData, False)                       AS isPresent
            , Object_Goods_Main.Multiplicity                                      AS MultiplicitySale
            , Object_Goods_Main.isMultiplicityError                               AS isMultiplicityError
            , Null::TDateTime                                                     AS FixEndDate 
@@ -824,6 +838,9 @@ BEGIN
           LEFT JOIN tmpMILinkObject AS MILinkObject_GoodsPresent
                                            ON MILinkObject_GoodsPresent.MovementItemId = MovementItem.Id
                                           AND MILinkObject_GoodsPresent.DescId = zc_MILinkObject_GoodsPresent()
+          LEFT JOIN tmpMIBoolean AS MIBoolean_Present
+                                        ON MIBoolean_Present.MovementItemId = MovementItem.Id
+                                       AND MIBoolean_Present.DescId         = zc_MIBoolean_Present()
           LEFT JOIN tmpMIBoolean AS MIBoolean_GoodsPresent
                                         ON MIBoolean_GoodsPresent.MovementItemId = MovementItem.Id
                                        AND MIBoolean_GoodsPresent.DescId         = zc_MIBoolean_GoodsPresent()

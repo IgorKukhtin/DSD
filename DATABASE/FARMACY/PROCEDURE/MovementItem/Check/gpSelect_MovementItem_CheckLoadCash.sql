@@ -59,6 +59,7 @@ RETURNS TABLE (Id Integer
              , GoodsPresentID Integer
              , isGoodsPresent boolean
              , PriceLoad TFloat
+             , isAsinoMain boolean, isAsinoPresent boolean
               )
 AS
 $BODY$
@@ -254,6 +255,11 @@ BEGIN
          ;
          
     ANALYSE tmpMovementItem; 
+
+    CREATE TEMP TABLE tmpAsinoPharmaSP ON COMMIT DROP AS 
+    SELECT * FROM gpSelect_AsinoPharmaSPAllGoods_Cash(inSession := '3');
+
+    ANALYZE tmpAsinoPharmaSP;
 
      -- Правим НДС если надо
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_NDSKind(), tmpMovementItem.Id, tmpMovementItem.NDSKindId)
@@ -513,6 +519,8 @@ BEGIN
            , COALESCE (MILinkObject_GoodsPresent.ObjectId, 0)                    AS GoodsPresentID
            , COALESCE (MIBoolean_GoodsPresent.ValueData, False)                  AS isGoodsPresent
            , MovementItem.PriceLoad
+           , COALESCE (tmpAsinoPharmaSP.IsAsinoMain , FALSE)                       AS IsAsinoMain
+           , COALESCE (tmpAsinoPharmaSP.IsAsinoPresent , FALSE)                    AS IsAsinoPresent
 
        FROM tmpMI AS MovementItem
 
@@ -571,6 +579,8 @@ BEGIN
             LEFT JOIN tmpMIBoolean AS MIBoolean_GoodsPresent
                                           ON MIBoolean_GoodsPresent.MovementItemId = MovementItem.Id
                                          AND MIBoolean_GoodsPresent.DescId         = zc_MIBoolean_GoodsPresent()
+                                         
+            LEFT JOIN tmpAsinoPharmaSP ON tmpAsinoPharmaSP.GoodsId = MovementItem.GoodsId
 
        ;
 END;
@@ -587,4 +597,4 @@ ALTER FUNCTION gpSelect_MovementItem_CheckLoadCash (Integer, TVarChar) OWNER TO 
 -- тест
 -- 
  
-select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 29602143 ,  inSession := '3');
+select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 31511778  ,  inSession := '3');

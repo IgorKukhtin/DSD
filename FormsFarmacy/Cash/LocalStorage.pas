@@ -497,6 +497,8 @@ begin
       AddIntField(LocalDataBaseDiff,   'MORIONCODE'); //Код мориона
       AddFloatField(LocalDataBaseDiff, 'PBPPRICE'); //Цена по промобонусу
       AddFloatField(LocalDataBaseDiff, 'PRICEVIEW'); //Цена для отображения
+      AddBoolField(LocalDataBaseDiff,  'ISASINOM'); //Парный товар главый
+      AddBoolField(LocalDataBaseDiff,  'ISASINOP'); //Парный товар подарок
 
       LocalDataBaseDiff.CreateTable;
     end;
@@ -541,7 +543,9 @@ begin
         (FindField('DEFERENDT') = nil) or
         (FindField('MORIONCODE') = nil) or
         (FindField('PBPPRICE') = nil) or
-        (FindField('PRICEVIEW') = nil));
+        (FindField('PRICEVIEW') = nil) or
+        (FindField('ISASINOM') = nil) or
+        (FindField('ISASINOP') = nil));
 
       Close;
 
