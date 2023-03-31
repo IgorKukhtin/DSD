@@ -5,14 +5,23 @@ DROP FUNCTION IF EXISTS gpSelect_AsinoPharmaSP_Cash (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_AsinoPharmaSP_Cash(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id                Integer
-             , MIId              Integer
-             , Queue             Integer
-             , OperDateEnd       TDateTime
-             , ChildIdList       TVarChar
-             , ChildAmountList   TVarChar
-             , SecondIdList      TVarChar
-             , SecondAmountList  TVarChar
+RETURNS TABLE (Queue              Integer
+             , OperDateEnd        TDateTime
+             , CountPair          Integer
+             , JuridicalId        Integer
+             , JuridicalName      TVarChar             
+             , GoodsMainId1       Integer
+             , MainAmount1        TFloat
+             , MainAmountOk1      TFloat
+             , GoodsMainId2       Integer
+             , MainAmount2        TFloat
+             , MainAmountOk2      TFloat
+             , GoodsPresentId1    Integer
+             , PresentAmount1     TFloat
+             , PresentAmountOk1   TFloat
+             , GoodsPresentId2    Integer
+             , PresentAmount2     TFloat
+             , PresentAmountOk2   TFloat
              )
 AS
 $BODY$
@@ -59,9 +68,20 @@ BEGIN
                            WHERE Movement.DescId = zc_Movement_AsinoPharmaSP()
                              AND Movement.StatusId = zc_Enum_Status_Complete()
                           )
+       , tmpMI AS (SELECT MovementItem.Id              
+                        , tmpMovement.OperDateEnd       
+                        , ROW_NUMBER() OVER (ORDER BY tmpMovement.Id DESC, MovementItem.Amount)::Integer AS Queue
+                   FROM tmpMovement
+
+                        INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Master()
+                                               AND MovementItem.MovementId = tmpMovement.Id
+                                               AND MovementItem.isErased = FALSE 
+
+                  )
        , tmpMIChild AS (SELECT MovementItem.ParentId
-                             , string_agg( Object_Goods.Id :: TVarChar, ';')                 AS ChildIdList
-                             , string_agg(zfConvert_FloatToString(MovementItem.Amount), ';') AS ChildAmountList
+                             , Object_Goods.Id        AS ChildId
+                             , MovementItem.Amount    AS ChildAmount
+                             , ROW_NUMBER() OVER (PARTITION BY MovementItem.ParentId ORDER BY Object_Goods.Id DESC) AS Ord
                         FROM tmpMovement 
                         
                              INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Child()
@@ -71,11 +91,11 @@ BEGIN
                              INNER JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.GoodsMainId = MovementItem.ObjectId
                                                            AND Object_Goods.RetailId = vbRetailId
 
-                        GROUP BY MovementItem.ParentId
                         )
       ,  tmpMISecond AS (SELECT MovementItem.ParentId
-                             , string_agg( Object_Goods.Id :: TVarChar, ';')                 AS SecondIdList
-                             , string_agg(zfConvert_FloatToString(MovementItem.Amount), ';') AS SecondAmountList
+                              , Object_Goods.Id     AS SecondId
+                              , MovementItem.Amount AS SecondAmount
+                              , ROW_NUMBER() OVER (PARTITION BY MovementItem.ParentId ORDER BY Object_Goods.Id DESC) AS Ord
                          FROM tmpMovement 
                         
                               INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Second()
@@ -85,30 +105,61 @@ BEGIN
                               INNER JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.GoodsMainId = MovementItem.ObjectId
                                                             AND Object_Goods.RetailId = vbRetailId
 
-                         GROUP BY MovementItem.ParentId
+                        )
+       , tmpMICount AS (SELECT MovementItem.ParentId
+                             , count(*)::Integer           AS CountPair
+                        FROM tmpMovement 
+                        
+                             INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Child()
+                                                    AND MovementItem.MovementId = tmpMovement.Id
+                                                    AND MovementItem.isErased = FALSE 
+                                                    
+                        GROUP BY MovementItem.ParentId
                         )
 
-        SELECT tmpMovement.Id
-             , MovementItem.Id
-             , MovementItem.Amount::Integer               AS Queue
-             , tmpMovement.OperDateEnd                    AS OperDateEnd
-             , tmpMIChild.ChildIdList::TVarChar           AS ChildIdList 
-             , tmpMIChild.ChildAmountList::TVarChar       AS ChildAmountList 
-             , tmpMISecond.SecondIdList::TVarChar         AS GoodsNamePresent 
-             , tmpMISecond.SecondAmountList::TVarChar     AS AmountPresent 
+        SELECT tmpMI.Queue                                AS Queue
+             , tmpMI.OperDateEnd                          AS OperDateEnd
+             , tmpMICount.CountPair                       AS CountPair
 
-        FROM tmpMovement 
-                        
-             INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Master()
-                                    AND MovementItem.MovementId = tmpMovement.Id
-                                    AND MovementItem.isErased = FALSE 
+             , 0::Integer                                 AS JuridicalId
+             , ''::TVarChar                               AS JuridicalName
 
-             LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = MovementItem.Id
+             , MIChild1.ChildId                           AS GoodsMainId1 
+             , MIChild1.ChildAmount                       AS MainAmount1
+             , 0::TFloat                                  AS MainAmountOk1
+             , MIChild2.ChildId                           AS GoodsMainId2
+             , MIChild2.ChildAmount                       AS MainAmount2
+             , 0::TFloat                                  AS MainAmountOk2
 
-             LEFT JOIN tmpMISecond ON tmpMISecond.ParentId = MovementItem.Id
+             , MISecond1.SecondId                         AS GoodsPresentId1
+             , MISecond1.SecondAmount                     AS PresentAmount1
+             , 0::TFloat                                  AS PresentAmountOk1
+             , MISecond2.SecondId                         AS GoodsPresentId2
+             , MISecond2.SecondAmount                     AS PresentAmount2
+             , 0::TFloat                                  AS PresentAmountOk2
 
-        WHERE COALESCE(tmpMIChild.ChildIdList, '') <> '' AND COALESCE(tmpMISecond.SecondIdList, '') <> ''
-        ORDER BY MovementItem.Amount, tmpMovement.Id, MovementItem.Id;
+        FROM tmpMI 
+        
+             LEFT JOIN tmpMICount ON tmpMICount.ParentId = tmpMI.Id
+
+             LEFT JOIN tmpMIChild AS MIChild1
+                                  ON MIChild1.ParentId = tmpMI.Id
+                                 AND MIChild1.Ord = 1
+
+             LEFT JOIN tmpMISecond AS MISecond1
+                                   ON MISecond1.ParentId = tmpMI.Id
+                                  AND MISecond1.Ord = MIChild1.Ord
+
+             LEFT JOIN tmpMIChild AS MIChild2
+                                  ON MIChild2.ParentId = tmpMI.Id
+                                 AND MIChild2.Ord = 2
+
+             LEFT JOIN tmpMISecond AS MISecond2
+                                   ON MISecond2.ParentId = tmpMI.Id
+                                  AND MISecond2.Ord = MIChild2.Ord
+
+        --WHERE COALESCE(tmpMIChild.ChildIdList, '') <> '' AND COALESCE(tmpMISecond.SecondIdList, '') <> ''
+        ORDER BY tmpMI.Queue;
 
 END;
 $BODY$

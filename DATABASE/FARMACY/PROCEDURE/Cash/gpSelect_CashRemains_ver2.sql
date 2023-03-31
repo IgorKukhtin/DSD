@@ -56,7 +56,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                
                isSpecial boolean,
                
-               PromoBonusPrice TFloat, IsAsinoMain boolean, IsAsinoPresent boolean,
+               PromoBonusPrice TFloat, isAsinoMain boolean, isAsinoPresent boolean,
                PriceView TFloat
               )
 AS

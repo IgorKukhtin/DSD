@@ -40,7 +40,9 @@ RETURNS TABLE (
     DeferredTR TFloat,
     MorionCode Integer,
     PromoBonusPrice TFloat,
-    PriceView TFloat
+    PriceView TFloat,
+    isAsinoMain Boolean, 
+    isAsinoPresent Boolean
 )
 AS
 $BODY$
@@ -232,6 +234,11 @@ BEGIN
 
     --raise notice 'Value 2: %', CURRENT_TIMESTAMP;
 	
+    CREATE TEMP TABLE tmpAsinoPharmaSP ON COMMIT DROP AS 
+    SELECT * FROM gpSelect_AsinoPharmaSPAllGoods_Cash(inSession := '3');
+
+    ANALYZE tmpAsinoPharmaSP;
+
     -- Данные
     WITH
          tmpDiff AS (SELECT GoodsRemains.ObjectId                                             AS ObjectId
@@ -734,7 +741,9 @@ BEGIN
                                        (100.0 - tmpMIPromoBonus.PromoBonus + tmpMIPromoBonus.MarginPercent) / 100, 2) END,
                              _DIFF.Price) , 
                              CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
-                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)  AS PriceView
+                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)  AS PriceView,
+            COALESCE (tmpAsinoPharmaSP.IsAsinoMain , FALSE)                       AS IsAsinoMain,
+            COALESCE (tmpAsinoPharmaSP.IsAsinoPresent , FALSE)                    AS IsAsinoPresent
         FROM _DIFF
 
             -- Тип срок/не срок
@@ -787,6 +796,8 @@ BEGIN
             LEFT JOIN tmpPriceChange ON tmpPriceChange.GoodsId = _DIFF.ObjectId
                                     AND (COALESCE(tmpPriceChange.PartionDateKindId, 0) = 0 
                                       OR COALESCE(tmpPriceChange.PartionDateKindId, 0) = _DIFF.PartionDateKindId)
+                                      
+            LEFT JOIN tmpAsinoPharmaSP ON tmpAsinoPharmaSP.GoodsId = _DIFF.ObjectId
 
         ORDER BY _DIFF.ObjectId
             ;

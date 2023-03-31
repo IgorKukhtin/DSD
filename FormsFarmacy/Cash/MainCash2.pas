@@ -550,7 +550,7 @@ type
     CurrencyField1: TCurrencyField;
     actSenClipboardName: TAction;
     C1: TMenuItem;
-    MemDataISGOODSPS: TBooleanField;
+    MemDataIISASINOM: TBooleanField;
     MemDataGOODSPSAM: TCurrencyField;
     spisCheckCombine: TdsdStoredProc;
     actCheckCombine: TOpenChoiceForm;
@@ -643,6 +643,12 @@ type
     MainisElRecipe: TcxGridDBColumn;
     MemDataPBPPRICE: TFloatField;
     MemDataPRICEVIEW: TFloatField;
+    spAsinoPharmaSP: TdsdStoredProcSQLite;
+    AsinoPharmaSPCDS: TClientDataSet;
+    AsinoPresentCDS: TClientDataSet;
+    MainisAsinoMain: TcxGridDBColumn;
+    MainisAsinoPresent: TcxGridDBColumn;
+    MemDataISASINOP: TBooleanField;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -914,6 +920,9 @@ type
     procedure LoadGoodsExpirationDate;
     procedure LoadSalePromoGoods;
     function CheckAddSalePromoGoods(AAdd : Boolean = True) : Boolean;
+    function CheckAddAsinoGoods(AisCheck : boolean) : Boolean;
+    function CheckAddAsinoGoodsPresent(AGoodsId : integer; AAmount : Currency; var AGoodsMainId : integer) : Boolean;
+    function AddAsinoGoodsMain(AGoodsId : integer; AAmount : Currency) : Boolean;
     function UpdateSalePromoGoods : Boolean;
     function CheckSalePromoGoods : Boolean;
     procedure LoadVIPSalePromoGoods;
@@ -1469,8 +1478,10 @@ begin
           FLocalDataBaseDiff.FieldByName('UKTZED').AsVariant
       else MemData.FieldByName('UKTZED').AsString :=
           Trim(FLocalDataBaseDiff.FieldByName('UKTZED').AsString);
-      MemData.FieldByName('ISGOODSPS').AsVariant :=
-        FLocalDataBaseDiff.FieldByName('ISGOODSPS').AsVariant;
+      MemData.FieldByName('ISASINOM').AsVariant :=
+        FLocalDataBaseDiff.FieldByName('ISASINOM').AsVariant;
+      MemData.FieldByName('ISASINOP').AsVariant :=
+        FLocalDataBaseDiff.FieldByName('ISASINOP').AsVariant;
       MemData.FieldByName('GOODSPMID').AsVariant :=
         FLocalDataBaseDiff.FieldByName('GOODSPMID').AsVariant;
       MemData.FieldByName('GOODSPSAM').AsVariant :=
@@ -1870,7 +1881,10 @@ begin
   GoodsSPIdCDS.Close;
   MedicalProgramSPCDS.Close;
   // очистить рецепт
-  ClearReceipt1303
+  ClearReceipt1303;
+
+  while RemainsCDS.ControlsDisabled do RemainsCDS.EnableControls;
+  while CheckCDS.ControlsDisabled do CheckCDS.EnableControls;
 end;
 
 procedure TMainCashForm2.actClearMoneyExecute(Sender: TObject);
@@ -3772,36 +3786,13 @@ begin
             exit;
           end;
 
-          if FieldByName('isGoodsPairSun').AsBoolean then
+          if FieldByName('isAsinoPresent').AsBoolean then
           begin
 
             // Только целое количество
             if (Round(FieldByName('Amount').AsCurrency) <> FieldByName('Amount').AsCurrency) then
             begin
               ShowMessage('Товар по соц.проекту должен продаваться целыми упаковками...');
-              exit;
-            end;
-
-            // Проверим наличие парного
-            nRecNo := RecNo;
-            nAmountPS := 0;
-            try
-              GoodsIdPS := FieldByName('GoodsId').AsInteger;
-              First;
-              while not Eof do
-              begin
-                if (FieldByName('GoodsPairSunMainId').AsInteger = GoodsIdPS) and
-                   ((FieldByName('GoodsPairSunAmount').AsCurrency = 1) or (FieldByName('JuridicalId').AsInteger <> 0)) then
-                  nAmountPS := nAmountPS + FieldByName('Amount').AsCurrency * FieldByName('GoodsPairSunAmount').AsCurrency;
-                Next;
-              end;
-            finally
-              RecNo := nRecNo;
-            end;
-
-            if nAmountPS < FieldByName('Amount').AsCurrency then
-            begin
-              ShowMessage('Количество товара <' + FieldByName('GoodsName').AsString + '> по соц.проекту больше количества парного товара...');
               exit;
             end;
           end;
@@ -4653,16 +4644,16 @@ begin
         else
           CheckCDS.FieldByName('PriceDiscount').AsVariant :=
             vipList.FieldByName('Price').AsFloat;
-        CheckCDS.FieldByName('isGoodsPairSun').AsVariant :=
-          vipList.FieldByName('isGoodsPairSun').AsVariant;
-        CheckCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
-          vipList.FieldByName('GoodsPairSunMainId').AsVariant;
-        CheckCDS.FieldByName('GoodsPairSunAmount').AsVariant :=
-          vipList.FieldByName('GoodsPairSunAmount').AsVariant;
         CheckCDS.FieldByName('isPresent').AsVariant :=
           vipList.FieldByName('isPresent').AsVariant;
+        CheckCDS.FieldByName('isGoodsPresent').AsVariant :=
+          vipList.FieldByName('isGoodsPresent').AsVariant;
         CheckCDS.FieldByName('JuridicalId').AsVariant :=
           vipList.FieldByName('JuridicalId').AsVariant;
+        CheckCDS.FieldByName('isAsinoMain').AsVariant :=
+          vipList.FieldByName('isAsinoMain').AsVariant;
+        CheckCDS.FieldByName('isAsinoPresent').AsVariant :=
+          vipList.FieldByName('isAsinoPresent').AsVariant;
         // ***21.10.18
         GoodsId := RemainsCDS.FieldByName('Id').AsInteger;
         PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
@@ -5162,12 +5153,9 @@ begin
         // и УСТАНОВИМ скидку
         CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
         CheckCDS.FieldByName('SummChangePercent').asCurrency :=
-          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-          CheckCDS.FieldByName('PriceSale').asCurrency,
-          FormParams.ParamByName('RoundingDown').Value) -
-          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-          CheckCDS.FieldByName('Price').asCurrency,
-          FormParams.ParamByName('RoundingDown').Value);
+          RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+                  (GoodsSPIdCDS.FieldByName('PriceSaleSP').asCurrency -
+                  GoodsSPIdCDS.FieldByName('PriceSP').asCurrency), - 2);
       end
       else if (DiscountServiceForm.gCode <> 0) and edPrice.Visible and (abs(edPrice.Value) > 0.0001) then
       begin
@@ -6032,16 +6020,14 @@ begin
           MemData.FieldByName('GOODSDINAME').AsVariant;
         RemainsCDS.FieldByName('UKTZED').AsVariant :=
           MemData.FieldByName('UKTZED').AsVariant;
-        RemainsCDS.FieldByName('isGoodsPairSun').AsVariant :=
-          MemData.FieldByName('ISGOODSPS').AsVariant;
-        RemainsCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
-          MemData.FieldByName('GOODSPMID').AsVariant;
-        RemainsCDS.FieldByName('GoodsPairSunAmount').AsVariant :=
-          MemData.FieldByName('GOODSPSAM').AsVariant;
+        RemainsCDS.FieldByName('isAsinoMain').AsVariant :=
+          MemData.FieldByName('ISASINOM').AsVariant;
+        RemainsCDS.FieldByName('IsAsinoPresent').AsVariant :=
+          MemData.FieldByName('ISASINOP').AsVariant;
         RemainsCDS.FieldByName('isGoodsForProject').AsVariant :=
           MemData.FieldByName('GOODSPROJ').AsVariant;
         RemainsCDS.FieldByName('isBanFiscalSale').AsVariant :=
-          MemData.FieldByName('GOODSPROJ').AsVariant;
+          MemData.FieldByName('BANFISCAL').AsVariant;
         RemainsCDS.FieldByName('GoodsDiscountMaxPrice').AsVariant :=
           MemData.FieldByName('GOODSDIMP').AsVariant;
         RemainsCDS.FieldByName('GoodsDiscountProcentSite').AsVariant :=
@@ -6114,12 +6100,10 @@ begin
             MemData.FieldByName('GOODSDINAME').AsVariant;
           RemainsCDS.FieldByName('UKTZED').AsVariant :=
             MemData.FieldByName('UKTZED').AsVariant;
-          RemainsCDS.FieldByName('isGoodsPairSun').AsVariant :=
-            MemData.FieldByName('ISGOODSPS').AsVariant;
-          RemainsCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
-            MemData.FieldByName('GOODSPMID').AsVariant;
-          RemainsCDS.FieldByName('GoodsPairSunAmount').AsVariant :=
-            MemData.FieldByName('GOODSPSAM').AsVariant;
+          RemainsCDS.FieldByName('isAsinoMain').AsVariant :=
+            MemData.FieldByName('ISASINOM').AsVariant;
+          RemainsCDS.FieldByName('IsAsinoPresent').AsVariant :=
+            MemData.FieldByName('ISASINOP').AsVariant;
           RemainsCDS.FieldByName('isBanFiscalSale').AsVariant :=
             MemData.FieldByName('BANFISCAL').AsVariant;
           RemainsCDS.FieldByName('isGoodsForProject').AsVariant :=
@@ -8974,15 +8958,13 @@ end;
 procedure TMainCashForm2.InsertUpdateBillCheckItems(AJuridicalId : Integer = 0; AJuridicalName : String = ''; AisGoodsPresent : boolean = False; APrice : Currency = 0);
 var
   lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent,
-    nAmount, nAmountPS, nAmountPSJ, nAmountPSM, nAmountM, nGoodsPairSunAmount, nRemains, nAmountPut: Currency;
-  lMsg: String; bOk, bBadJuridical : boolean;
-  lGoodsId_bySoldRegim, lTypeDiscount, nRecNo, nId, nGoodsPairSunMainId,
-  nJuridicalId, nJuridicalPSId : Integer;
+    nAmount, nAmountM, nRemains, nAmountPut: Currency;
+  lMsg: String; bOk, bBadJuridical, bIsAsinoMain, bIsAsinoPresent : boolean;
+  lGoodsId_bySoldRegim, lTypeDiscount, nRecNo, nId, nGoodsMain, nJuridicalId, nJuridicalPSId : Integer;
   nMultiplicity: Currency;
   nFixEndDate: Variant;
   Bookmark : TBookmark;
   cFilterOld, cJuridicalName, cJuridicalPSName, cResult : String;
-  ChoosingPairSunForm : TChoosingPairSunForm;
 begin
 
   // Ночные скидки
@@ -9080,367 +9062,37 @@ begin
     nId := SourceClientDataSet.FieldByName('GoodsId').AsInteger;
     APrice := SourceClientDataSet.FieldByName('Price').AsCurrency;
   end else nId := SourceClientDataSet.FieldByName('Id').AsInteger;
-  nGoodsPairSunMainId := SourceClientDataSet.FieldByName('GoodsPairSunMainId').AsInteger;
-  nGoodsPairSunAmount := SourceClientDataSet.FieldByName('GoodsPairSunAmount').AsInteger;
+  bIsAsinoMain := SourceClientDataSet.FieldByName('isAsinoMain').AsBoolean;
+  bIsAsinoPresent := SourceClientDataSet.FieldByName('isAsinoPresent').AsBoolean;
 
-  if (nGoodsPairSunAmount > 1)  then
+  if not FStepSecond and SourceClientDataSet.FieldByName('isAsinoPresent').AsBoolean then
   begin
-
-    Bookmark := CheckCDS.GetBookmark;
-    try
-      // Собираем сколько уже есть
-      nAmountPS := 0;
-      if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent',
-          VarArrayOf([nId,
-          SourceClientDataSet.FindField('PartionDateKindId').AsVariant,
-          SourceClientDataSet.FindField('NDSKindId').AsVariant,
-          SourceClientDataSet.FindField('DiscountExternalID').AsVariant,
-          SourceClientDataSet.FindField('DivisionPartiesID').AsVariant,
-          FormParams.ParamByName('AddPresent').Value, AisGoodsPresent]), []) then
-      begin
-        nAmountPS := nAmountPS + checkCDS.FieldByName('Amount').AsCurrency;
-      end;
-    finally
-      try
-        if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
-      except
-      end;
-      CheckCDS.FreeBookmark(Bookmark);
-    end;
-
-    // проверяем наличие по поставщику
-    if not gc_User.Local then
+    if (Round(nAmount) <> nAmount) then
     begin
-      spCheck_PairSunAmount.ParamByName('inGoodsId').Value := nId;
-      spCheck_PairSunAmount.ParamByName('inNDSKindId').Value := SourceClientDataSet.FieldByName('NDSKindId').AsVariant;
-      spCheck_PairSunAmount.ParamByName('inPartionDateKindId').Value := SourceClientDataSet.FieldByName('PartionDateKindId').AsVariant;
-      spCheck_PairSunAmount.ParamByName('inDivisionPartiesId').Value := SourceClientDataSet.FieldByName('DivisionPartiesId').AsVariant;
-      spCheck_PairSunAmount.ParamByName('inAmount').Value := nAmountPS + nAmount;
-      spCheck_PairSunAmount.ParamByName('outAmount').Value := 0;
-      spCheck_PairSunAmount.ParamByName('outJuridicalId').Value := 0;
-      spCheck_PairSunAmount.ParamByName('outJuridicalName').Value := '';
-      spCheck_PairSunAmount.Execute;
-      nJuridicalId := spCheck_PairSunAmount.ParamByName('outJuridicalId').Value;
-      cJuridicalName := spCheck_PairSunAmount.ParamByName('outJuridicalName').Value;
+      ShowMessage('Товар по соц.проекту должен продаваться целыми упаковками...');
+      exit;
     end;
 
-    // Правим привязку к поставщику
-    if nAmount < 0 then
-    try
-      if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent',
-          VarArrayOf([nId,
-          SourceClientDataSet.FindField('PartionDateKindId').AsVariant,
-          SourceClientDataSet.FindField('NDSKindId').AsVariant,
-          SourceClientDataSet.FindField('DiscountExternalID').AsVariant,
-          SourceClientDataSet.FindField('DivisionPartiesID').AsVariant,
-          FormParams.ParamByName('AddPresent').Value, AisGoodsPresent]), []) and
-          (CheckCDS.FieldByName('JuridicalId').AsInteger <> nJuridicalId) then
-      begin
-        CheckCDS.Edit;
-        if nJuridicalId = 0 then
-        begin
-          CheckCDS.FieldByName('JuridicalId').AsVariant := Null;
-          CheckCDS.FieldByName('JuridicalName').AsVariant := Null;
-        end else
-        begin
-          CheckCDS.FieldByName('JuridicalId').AsVariant := nJuridicalId;
-          CheckCDS.FieldByName('JuridicalName').AsVariant := cJuridicalName;
-        end;
-        CheckCDS.Post;
-      end;
-    finally
-      try
-        if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
-      except
-      end;
-      CheckCDS.FreeBookmark(Bookmark);
-    end;
-
-  end else if not FStepSecond and SourceClientDataSet.FieldByName('isGoodsPairSun').AsBoolean then
-  begin
-
-    Bookmark := CheckCDS.GetBookmark;
-    try
-      nAmountPS := 0;
-      if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent',
-          VarArrayOf([nId,
-          SourceClientDataSet.FindField('PartionDateKindId').AsVariant,
-          SourceClientDataSet.FindField('NDSKindId').AsVariant,
-          SourceClientDataSet.FindField('DiscountExternalID').AsVariant,
-          SourceClientDataSet.FindField('DivisionPartiesID').AsVariant,
-          FormParams.ParamByName('AddPresent').Value, AisGoodsPresent]), []) and
-          (CheckCDS.FieldByName('JuridicalId').AsInteger <> 0) then
-      begin
-        nJuridicalId := CheckCDS.FieldByName('JuridicalId').AsVariant;
-        cJuridicalName := CheckCDS.FieldByName('JuridicalName').AsVariant;
-        nAmountPS := nAmountPS + checkCDS.FieldByName('Amount').AsCurrency;
-      end;
-    finally
-      try
-        if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
-      except
-      end;
-      CheckCDS.FreeBookmark(Bookmark);
-    end;
-
-    if nJuridicalId <> 0 then
+    if nAmount > 0 then
     begin
-
-      // проверяем наличие по поставщику
-      if not gc_User.Local then
+      if not CheckAddAsinoGoodsPresent(nId, nAmount, nGoodsMain) then
       begin
-        spCheck_PairSunAmount.ParamByName('inGoodsId').Value := nId;
-        spCheck_PairSunAmount.ParamByName('inNDSKindId').Value := SourceClientDataSet.FieldByName('NDSKindId').AsVariant;
-        spCheck_PairSunAmount.ParamByName('inPartionDateKindId').Value := SourceClientDataSet.FieldByName('PartionDateKindId').AsVariant;
-        spCheck_PairSunAmount.ParamByName('inDivisionPartiesId').Value := SourceClientDataSet.FieldByName('DivisionPartiesId').AsVariant;
-        spCheck_PairSunAmount.ParamByName('inAmount').Value := nAmountPS + nAmount;
-        spCheck_PairSunAmount.ParamByName('outAmount').Value := 0;
-        spCheck_PairSunAmount.ParamByName('outJuridicalId').Value := 0;
-        spCheck_PairSunAmount.ParamByName('outJuridicalName').Value := '';
-        spCheck_PairSunAmount.Execute;
-        if spCheck_PairSunAmount.ParamByName('outJuridicalId').Value <> nJuridicalId then
-        begin
-          ShowMessage('Нет товара в наличии по поставщику ' + cJuridicalName + ' попробуйте распределить от основного товара!');
-          Exit;
-        end;
+        ShowMessage('Использование подарка без наличия основного товара и для сложных пар, по программе Асино, запрещено.');
+        exit;
       end;
-
-    end;
-  end else if FStepSecond and SourceClientDataSet.FieldByName('isGoodsPairSun').AsBoolean then
-  begin
-
-    Bookmark := CheckCDS.GetBookmark;
-    try
-      nAmountPS := 0;
-      if CheckCDS.Locate('GoodsId;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID;isPresent;isGoodsPresent',
-          VarArrayOf([nId,
-          SourceClientDataSet.FindField('PartionDateKindId').AsVariant,
-          SourceClientDataSet.FindField('NDSKindId').AsVariant,
-          SourceClientDataSet.FindField('DiscountExternalID').AsVariant,
-          SourceClientDataSet.FindField('DivisionPartiesID').AsVariant,
-          FormParams.ParamByName('AddPresent').Value, AisGoodsPresent]), []) and
-          (CheckCDS.FieldByName('JuridicalId').AsInteger <> nJuridicalId) then
-      begin
-        CheckCDS.Edit;
-        if nJuridicalId = 0 then
-        begin
-          CheckCDS.FieldByName('JuridicalId').AsVariant := Null;
-          CheckCDS.FieldByName('JuridicalName').AsVariant := Null;
-        end else
-        begin
-          CheckCDS.FieldByName('JuridicalId').AsVariant := nJuridicalId;
-          CheckCDS.FieldByName('JuridicalName').AsVariant := cJuridicalName;
-        end;
-        CheckCDS.Post;
-      end;
-    finally
-      try
-        if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
-      except
-      end;
-      CheckCDS.FreeBookmark(Bookmark);
+    end else
+    begin
+      ShowMessage('Поднятие подарка, по программе Асино, запрещено.');
+      exit;
     end;
   end;
 
-//  if (nAmount > 0) and SourceClientDataSet.FieldByName('isPresent').AsBoolean and
-//    (FormParams.ParamByName('LoyaltyGoodsId').Value <> nId) then
-//  begin
-//    ShowMessage('Подарки можно продавать только по акции!');
-//    exit;
-//  end;
-
   try
-    if not FStepSecond and SourceClientDataSet.FieldByName('isGoodsPairSun').AsBoolean then
-    begin
-      // Только целое количество
-      if (Round(nAmount) <> nAmount) then
-      begin
-        ShowMessage('Товар по соц.проекту должен продаваться целыми упаковками...');
-        exit;
-      end;
-      Bookmark := CheckCDS.GetBookmark;
-      nAmountPS := 0;
-      CheckCDS.First;
-      while not CheckCDS.Eof do
-      begin
-        if checkCDS.FieldByName('GoodsPairSunMainId').AsInteger = nId then
-          nAmountPS := nAmountPS + checkCDS.FieldByName('Amount').AsCurrency * checkCDS.FieldByName('GoodsPairSunAmount').AsCurrency;
-        if checkCDS.FieldByName('GoodsId').AsInteger = nId then
-          nAmountPS := nAmountPS - checkCDS.FieldByName('Amount').AsCurrency;
-        CheckCDS.Next;
-      end;
-      try
-        if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
-      except
-      end;
-      CheckCDS.FreeBookmark(Bookmark);
-
-      // Проверим наличие парного
-      if nAmount > 0 then
-      begin
-        if (nAmount - nAmountPS) > 0 then
-        begin
-          cFilterOld := RemainsCDS.Filter;
-          RemainsCDS.DisableControls;
-          RemainsCDS.Filtered := False;
-          RemainsCDS.Filter := 'Remains > 1 and GoodsPairSunMainId = ' + IntToStr(nId);
-          RemainsCDS.Filtered := True;
-          RemainsCDS.First;
-          nAmountM := nAmount;
-          ChoosingPairSunForm := TChoosingPairSunForm.Create(Self);
-          try
-            bOk := False;
-            nAmount := nAmount - nAmountPS;
-            while not RemainsCDS.Eof do
-            begin
-              if (RemainsCDS.FieldByName('Remains').AsCurrency >= nAmount / RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency)
-                 and (Frac(nAmount / RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency) = 0)
-                 and ((RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency = 1) or
-                      not gc_User.Local and (RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency > 1)) then
-              begin
-
-                if RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency > 1 then
-                begin
-                  spCheck_PairSunAmount.ParamByName('inGoodsId').Value := RemainsCDS.FieldByName('Id').AsInteger;
-                  spCheck_PairSunAmount.ParamByName('inNDSKindId').Value := RemainsCDS.FieldByName('NDSKindId').AsVariant;
-                  spCheck_PairSunAmount.ParamByName('inPartionDateKindId').Value := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
-                  spCheck_PairSunAmount.ParamByName('inDivisionPartiesId').Value := RemainsCDS.FieldByName('DivisionPartiesId').AsVariant;
-                  spCheck_PairSunAmount.ParamByName('inAmount').Value := nAmount / RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency;
-                  spCheck_PairSunAmount.ParamByName('outAmount').Value := 0;
-                  spCheck_PairSunAmount.ParamByName('outJuridicalId').Value := 0;
-                  spCheck_PairSunAmount.Execute;
-                  if spCheck_PairSunAmount.ParamByName('outJuridicalId').Value > 0 then
-                    ChoosingPairSunForm.ChoosingPairSunCDS.AppendRecord(
-                               [RemainsCDS.FieldByName('Id').AsInteger,
-                                RemainsCDS.FindField('GoodsCode').AsVariant,
-                                RemainsCDS.FindField('GoodsName').AsVariant,
-                                RemainsCDS.FindField('Remains').AsVariant,
-                                nAmount / RemainsCDS.FieldByName('GoodsPairSunAmount').AsCurrency,
-                                RemainsCDS.FindField('Price').AsVariant,
-                                RemainsCDS.FindField('PartionDateKindId').AsVariant,
-                                RemainsCDS.FindField('NDSKindId').AsVariant,
-                                RemainsCDS.FindField('DiscountExternalID').AsVariant,
-                                RemainsCDS.FindField('DivisionPartiesID').AsVariant]);
-                end else
-                    ChoosingPairSunForm.ChoosingPairSunCDS.AppendRecord(
-                               [RemainsCDS.FieldByName('Id').AsInteger,
-                                RemainsCDS.FindField('GoodsCode').AsVariant,
-                                RemainsCDS.FindField('GoodsName').AsVariant,
-                                RemainsCDS.FindField('Remains').AsVariant,
-                                nAmount,
-                                RemainsCDS.FindField('Price').AsVariant,
-                                RemainsCDS.FindField('PartionDateKindId').AsVariant,
-                                RemainsCDS.FindField('NDSKindId').AsVariant,
-                                RemainsCDS.FindField('DiscountExternalID').AsVariant,
-                                RemainsCDS.FindField('DivisionPartiesID').AsVariant]);
-              end;
-              RemainsCDS.Next;
-            end;
-
-            if ChoosingPairSunForm.ChoosingPairSunCDS.RecordCount > 0 then
-            begin
-
-              if ChoosingPairSunForm.ChoosingPairSunCDS.RecordCount > 1 then
-              begin
-                if ChoosingPairSunForm.ShowModal <> mrOk then Exit;
-              end;
-
-              if RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId;DiscountExternalID;DivisionPartiesID',
-                    VarArrayOf([ChoosingPairSunForm.ChoosingPairSunCDS.FieldByName('Id').AsInteger,
-                                ChoosingPairSunForm.ChoosingPairSunCDS.FieldByName('PartionDateKindId').AsVariant,
-                                ChoosingPairSunForm.ChoosingPairSunCDS.FieldByName('NDSKindId').AsVariant,
-                                ChoosingPairSunForm.ChoosingPairSunCDS.FieldByName('DiscountExternalID').AsVariant,
-                                ChoosingPairSunForm.ChoosingPairSunCDS.FieldByName('DivisionPartiesID').AsVariant]), []) then
-              begin
-                try
-                  FStepSecond := True;
-                  if CheckCDS = SourceClientDataSet then CheckCDS.Locate('GoodsId', nId, []);
-                  edAmount.Text := CurrToStr(ChoosingPairSunForm.ChoosingPairSunCDS.FieldByName('Amount').AsCurrency);
-                  InsertUpdateBillCheckItems;
-                  bOk := True;
-                finally
-                  FStepSecond := False;
-                end;
-              end;
-            end;
-
-            if not bOk then
-            begin
-              if nAmountPS < nAmount then
-              begin
-                ShowMessage('Парного товара к товару по соц.проекту не хватает или найден...');
-                exit;
-              end;
-            end;
-
-          finally
-            ChoosingPairSunForm.Free;
-            RemainsCDS.Filtered := False;
-            RemainsCDS.Filter := cFilterOld;
-            RemainsCDS.Filtered := True;
-            RemainsCDS.EnableControls;
-            try
-              if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
-            except
-            end;
-            CheckCDS.FreeBookmark(Bookmark);
-            nAmount := nAmountM;
-          end;
-        end;
-      end else if nAmount < 0 then
-      begin
-        nAmountPS := nAmountPS;
-        SourceClientDataSet.DisableControls;
-        CheckCDS.DisableControls;
-        try
-          if CheckCDS.Locate('GoodsPairSunMainId', nId, []) then
-          begin
-            if Frac(nAmountPS + nAmount / checkCDS.FieldByName('GoodsPairSunAmount').AsCurrency) <> 0 then
-            begin
-              ShowMessage('Нарушиться кратности парного товара попробуйте другое количество...');
-              exit;
-            end;
-
-            if (nAmount / checkCDS.FieldByName('GoodsPairSunAmount').AsCurrency + checkCDS.FieldByName('Amount').AsCurrency) < 0 then
-              edAmount.Text := CurrToStr(- checkCDS.FieldByName('Amount').AsCurrency)
-            else edAmount.Text := CurrToStr(nAmount / checkCDS.FieldByName('GoodsPairSunAmount').AsCurrency);
-
-            try
-              FStepSecond := True;
-              InsertUpdateBillCheckItems;
-            finally
-              FStepSecond := False;
-            end;
-          end;
-        finally
-          CheckCDS.EnableControls;
-          SourceClientDataSet.EnableControls;
-          try
-            if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
-          except
-          end;
-          CheckCDS.FreeBookmark(Bookmark);
-        end;
-      end;
-    end;
 
     if not CheckShareFromPrice(nAmount,
       SourceClientDataSet.FieldByName('Price').asCurrency,
       SourceClientDataSet.FieldByName('GoodsCode').AsInteger,
       SourceClientDataSet.FieldByName('GoodsName').AsString) then exit;
-
-    // if (nAmount > 0) and (CheckCDS.RecordCount > 0) then
-    // begin
-    // if checkCDS.Locate('GoodsId', SourceClientDataSet.FieldByName('Id').asInteger,[]) then
-    // begin
-    // if checkCDS.FieldByName('PartionDateKindId').AsInteger <> SourceClientDataSet.FieldByName('PartionDateKindId').AsInteger then
-    // begin
-    // ShowMessage('В чек уже опущен медикаменты со сроком <' + checkCDS.FieldByName('PartionDateKindName').Value + '>'#13#10 +
-    // 'Нельзя в один чек опускать один медикамент с разными сроками.');
-    // Exit;
-    // end;
-    // end;
-    // end;
 
     if Assigned(SourceClientDataSet.FindField('AmountMonth')) then
     begin
@@ -10046,14 +9698,12 @@ begin
           CheckCDS.FieldByName('TypeDiscount').AsVariant := lTypeDiscount;
           CheckCDS.FieldByName('UKTZED').AsVariant :=
             SourceClientDataSet.FindField('UKTZED').AsVariant;
-          CheckCDS.FieldByName('isGoodsPairSun').AsVariant :=
-            SourceClientDataSet.FindField('isGoodsPairSun').AsVariant;
-          CheckCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
-            SourceClientDataSet.FindField('GoodsPairSunMainId').AsVariant;
-          CheckCDS.FieldByName('GoodsPairSunAmount').AsVariant :=
-            SourceClientDataSet.FindField('GoodsPairSunAmount').AsVariant;
           CheckCDS.FieldByName('isPresent').AsVariant :=
             FormParams.ParamByName('AddPresent').Value;
+          CheckCDS.FieldByName('isAsinoMain').AsVariant :=
+            SourceClientDataSet.FindField('isAsinoMain').AsVariant;
+          CheckCDS.FieldByName('isAsinoPresent').AsVariant :=
+            SourceClientDataSet.FindField('isAsinoPresent').AsVariant;
 
           if RemainsCDS <> SourceClientDataSet then
           begin
@@ -10200,18 +9850,16 @@ begin
           CheckCDS.FieldByName('TypeDiscount').AsVariant := lTypeDiscount;
           CheckCDS.FieldByName('UKTZED').AsVariant :=
             SourceClientDataSet.FieldByName('UKTZED').AsVariant;
-          CheckCDS.FieldByName('isGoodsPairSun').AsVariant :=
-            SourceClientDataSet.FieldByName('isGoodsPairSun').AsVariant;
-          CheckCDS.FieldByName('GoodsPairSunMainId').AsVariant :=
-            SourceClientDataSet.FieldByName('GoodsPairSunMainId').AsVariant;
-          CheckCDS.FieldByName('GoodsPairSunAmount').AsVariant :=
-            SourceClientDataSet.FieldByName('GoodsPairSunAmount').AsVariant;
           CheckCDS.FieldByName('MultiplicitySale').AsVariant :=
             SourceClientDataSet.FieldByName('MultiplicitySale').AsVariant;
           CheckCDS.FieldByName('isMultiplicityError').AsVariant :=
             SourceClientDataSet.FieldByName('isMultiplicityError').AsVariant;
           CheckCDS.FieldByName('isPresent').AsVariant :=
             FormParams.ParamByName('AddPresent').Value;
+          CheckCDS.FieldByName('isAsinoMain').AsVariant :=
+            SourceClientDataSet.FieldByName('isAsinoMain').AsVariant;
+          CheckCDS.FieldByName('isAsinoPresent').AsVariant :=
+            SourceClientDataSet.FieldByName('isAsinoPresent').AsVariant;
 
           if RemainsCDS <> SourceClientDataSet then
           begin
@@ -10625,137 +10273,14 @@ begin
 
   finally
 
-    if not FStepSecond and not UnitConfigCDS.FindField('isPairedOnlyPromo').AsBoolean and
-       (nGoodsPairSunMainId <> 0) then
-    begin
-      nAmountPS := 0; nAmountPSJ := 0; nAmountPSM := 0; nJuridicalPSId := 0; cJuridicalPSName := '';
-      bBadJuridical := False;
-      Bookmark := CheckCDS.GetBookmark;
+    // Добавим основной товар по Асино
+    if not FStepSecond and bIsAsinoPresent and (nGoodsMain <> 0) then  AddAsinoGoodsMain(nGoodsMain, nAmount);
 
-      // Собираем наличие
-
-      CheckCDS.First;
-      while not CheckCDS.Eof do
-      begin
-        if (checkCDS.FieldByName('GoodsPairSunMainId').AsInteger = nGoodsPairSunMainId)
-          {and (Frac(checkCDS.FieldByName('Amount').AsCurrency) = 0)} then
-        begin
-          nAmountPS := nAmountPS + checkCDS.FieldByName('Amount').AsCurrency * checkCDS.FieldByName('GoodsPairSunAmount').AsCurrency;
-          if checkCDS.FieldByName('GoodsPairSunAmount').AsCurrency > 1 then
-          begin
-            nAmountPSJ := nAmountPSJ + checkCDS.FieldByName('Amount').AsCurrency * checkCDS.FieldByName('GoodsPairSunAmount').AsCurrency;
-            if (checkCDS.FieldByName('JuridicalId').AsInteger <> 0) then
-            begin
-              if (bBadJuridical = False) and ((nJuridicalPSId = 0) or (nJuridicalPSId = checkCDS.FieldByName('JuridicalId').AsInteger)) then
-              begin
-                nJuridicalPSId := checkCDS.FieldByName('JuridicalId').AsInteger;
-                cJuridicalPSName := checkCDS.FieldByName('JuridicalName').AsString;
-              end else bBadJuridical := True;
-            end else bBadJuridical := True;
-          end
-        end;
-
-        if checkCDS.FieldByName('GoodsId').AsInteger = nGoodsPairSunMainId then
-          nAmountPSM := nAmountPSM + checkCDS.FieldByName('Amount').AsCurrency;
-        CheckCDS.Next;
-      end;
-      try
-        if not CheckCDS.IsEmpty then CheckCDS.GotoBookmark(Bookmark);
-      except
-      end;
-      CheckCDS.FreeBookmark(Bookmark);
-
-      if (bBadJuridical = True) or gc_User.Local then
-      begin
-        nAmountPS := nAmountPS - nAmountPSJ;
-        nJuridicalPSId := 0;
-        cJuridicalPSName := '';
-        nAmountPSJ := 0;
-      end;
-
-      nAmountPS := Floor (nAmountPS);
-
-      if nAmountPSM < nAmountPS then
-      begin
-
-        cFilterOld := RemainsCDS.Filter;
-        RemainsCDS.DisableControls;
-        RemainsCDS.Filtered := False;
-        RemainsCDS.Filter := 'Remains >= 1 and Id = ' + IntToStr(nGoodsPairSunMainId);
-        RemainsCDS.Filtered := True;
-        RemainsCDS.First;
-        try
-          while not RemainsCDS.Eof do
-          begin
-
-            if nJuridicalPSId > 0 then
-            begin
-              spCheck_PairSunAmount.ParamByName('inGoodsId').Value := RemainsCDS.FieldByName('Id').AsVariant;
-              spCheck_PairSunAmount.ParamByName('inNDSKindId').Value := RemainsCDS.FieldByName('NDSKindId').AsVariant;
-              spCheck_PairSunAmount.ParamByName('inPartionDateKindId').Value := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
-              spCheck_PairSunAmount.ParamByName('inDivisionPartiesId').Value := RemainsCDS.FieldByName('DivisionPartiesId').AsVariant;
-              spCheck_PairSunAmount.ParamByName('inAmount').Value := RemainsCDS.FieldByName('Remains').AsCurrency;
-              spCheck_PairSunAmount.ParamByName('outAmount').Value := 0;
-              spCheck_PairSunAmount.ParamByName('outJuridicalId').Value := 0;
-              spCheck_PairSunAmount.Execute;
-              nRemains := spCheck_PairSunAmount.ParamByName('outAmount').Value;
-            end else nRemains := RemainsCDS.FieldByName('Remains').AsCurrency ;
-
-            if nRemains >= 1 then
-            begin
-              try
-                FStepSecond := True;
-                if nRemains <= (nAmountPS - nAmountPSM) then
-                  nAmount := nRemains
-                else nAmount := nAmountPS - nAmountPSM;
-                nAmountPSM := nAmountPSM + nAmount;
-                SoldRegim := True;
-                edAmount.Text := CurrToStr(nAmount);
-                SourceClientDataSet := RemainsCDS;
-                InsertUpdateBillCheckItems(nJuridicalPSId, cJuridicalPSName);
-              finally
-                FStepSecond := False;
-              end;
-            end;
-            RemainsCDS.Next;
-          end;
-        finally
-          RemainsCDS.Filtered := False;
-          RemainsCDS.Filter := cFilterOld;
-          RemainsCDS.Filtered := True;
-          RemainsCDS.EnableControls;
-          RemainsCDS.Locate('ID', nID, []);
-        end;
-
-      end else if nAmountPSM > nAmountPS then
-      begin
-        try
-          while (nAmountPSM <> nAmountPS) and CheckCDS.Locate('GoodsId', nGoodsPairSunMainId, []) do
-          begin
-            try
-              FStepSecond := True;
-              if checkCDS.FieldByName('Amount').AsCurrency < (nAmountPSM - nAmountPS) then
-                nAmount := - checkCDS.FieldByName('Amount').AsCurrency
-              else nAmount := nAmountPS - nAmountPSM;
-              nAmountPSM := nAmountPSM + nAmount;
-              SoldRegim := False;
-              CheckGrid.SetFocus;
-              SourceClientDataSet := checkCDS;
-              edAmount.Text := CurrToStr(nAmount);
-              InsertUpdateBillCheckItems(nJuridicalPSId, cJuridicalPSName);
-            finally
-              FStepSecond := False;
-            end;
-          end;
-        finally
-          CheckCDS.Locate('GoodsId', nID, []);
-          RemainsCDS.Locate('ID', nID, []);
-        end;
-      end;
-    end;
+    // Добавление и проверка парного товара Асино
+    if not FStepSecond and bIsAsinoMain then CheckAddAsinoGoods(False);
 
     // Добавление акционного товара
-    if not AisGoodsPresent then CheckAddSalePromoGoods;
+    if not AisGoodsPresent  then CheckAddSalePromoGoods;
   end;
 end;
 
@@ -10934,7 +10459,7 @@ Begin
     lblTotalSumm.Caption := FormatFloat(',0.00', FTotalSumm);
   finally
     RemainsCDS.Filtered := True;
-    RemainsCDS.RecNo := nID;
+    if RemainsCDS.RecordCount > nID then RemainsCDS.RecNo := nID;
     RemainsCDS.EnableControls;
   End;
 
@@ -11435,7 +10960,10 @@ begin
   GoodsSPIdCDS.Close;
   MedicalProgramSPCDS.Close;
   // очистить рецепт
-  ClearReceipt1303
+  ClearReceipt1303;
+
+  while RemainsCDS.ControlsDisabled do RemainsCDS.EnableControls;
+  while CheckCDS.ControlsDisabled do CheckCDS.EnableControls;
 end;
 
 procedure TMainCashForm2.ParentFormCloseQuery(Sender: TObject;
@@ -12264,12 +11792,9 @@ begin
           // и УСТАНОВИМ скидку
           CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
           CheckCDS.FieldByName('SummChangePercent').asCurrency :=
-            GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-            CheckCDS.FieldByName('PriceSale').asCurrency,
-            FormParams.ParamByName('RoundingDown').Value) -
-            GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
-            CheckCDS.FieldByName('Price').asCurrency,
-            FormParams.ParamByName('RoundingDown').Value);
+            RoundTo(CheckCDS.FieldByName('Amount').asCurrency *
+                    (GoodsSPIdCDS.FieldByName('PriceSaleSP').asCurrency -
+                    GoodsSPIdCDS.FieldByName('PriceSP').asCurrency), - 2);
         end
         else if (DiscountServiceForm.gCode <> 0) and edPrice.Visible and (abs(edPrice.Value) > 0.0001) then
         begin
@@ -13110,16 +12635,16 @@ begin
           ADS.FieldByName('DivisionPartiesName').AsVariant;
         myVIPListCDS.FieldByName('UKTZED').Value :=
           ADS.FieldByName('UKTZED').AsVariant;
-        myVIPListCDS.FieldByName('isGoodsPairSun').Value :=
-          ADS.FieldByName('isGoodsPairSun').AsVariant;
-        myVIPListCDS.FieldByName('GoodsPairSunMainId').Value :=
-          ADS.FieldByName('GoodsPairSunMainId').AsVariant;
-        myVIPListCDS.FieldByName('GoodsPairSunAmount').Value :=
-          ADS.FieldByName('GoodsPairSunAmount').AsVariant;
         myVIPListCDS.FieldByName('isPresent').Value :=
           ADS.FieldByName('isPresent').AsVariant;
+        myVIPListCDS.FieldByName('isGoodsPresent').Value :=
+          ADS.FieldByName('isGoodsPresent').AsVariant;
         myVIPListCDS.FieldByName('JuridicalId').Value :=
           ADS.FieldByName('JuridicalId').AsVariant;
+        myVIPListCDS.FieldByName('isAsinoMain').Value :=
+          ADS.FieldByName('isAsinoMain').AsVariant;
+        myVIPListCDS.FieldByName('isAsinoPresent').Value :=
+          ADS.FieldByName('isAsinoPresent').AsVariant;
         myVIPListCDS.Post;
         ADS.Next;
       End;
@@ -14448,6 +13973,579 @@ begin
     if not RemainsCDS.IsEmpty then RemainsCDS.GotoBookmark(RBookmark);
     RemainsCDS.FreeBookmark(RBookmark);
     RemainsCDS.EnableControls;
+  end;
+end;
+
+function TMainCashForm2.CheckAddAsinoGoods(AisCheck : boolean) : Boolean;
+  var I, nID, JuridicalId : Integer;
+      cFilter : String;
+      isGo : boolean;
+      nAmount, nAmountGo : Currency;
+begin
+  Result := True;
+  isGo := False; JuridicalId := 0;
+  spAsinoPharmaSP.Execute;
+  AsinoPresentCDS.CreateDataSet;
+  CheckCDS.DisableControls;
+  try
+    if AsinoPharmaSPCDS.Active and (AsinoPharmaSPCDS.RecordCount > 0) then
+    begin
+
+      // Собираем что выписано
+      CheckCDS.First;
+      while not CheckCDS.Eof do
+      begin
+        if checkCDS.FieldByName('isAsinoMain').AsBoolean then
+        begin
+          isGo := True;
+          AsinoPharmaSPCDS.First;
+          while not AsinoPharmaSPCDS.Eof do
+          begin
+
+            for I := 1 to AsinoPharmaSPCDS.FieldByName('CountPair').AsInteger do
+            begin
+              if (AsinoPharmaSPCDS.FieldByName('GoodsMainId' + IntToStr(I)).AsInteger = checkCDS.FieldByName('GoodsId').AsInteger) and
+                (not gc_User.Local or (AsinoPharmaSPCDS.FieldByName('PresentAmount1').AsCurrency = 1)) then
+              begin
+                AsinoPharmaSPCDS.Edit;
+                AsinoPharmaSPCDS.FieldByName('MainAmountOk' + IntToStr(I)).AsCurrency :=
+                  AsinoPharmaSPCDS.FieldByName('MainAmountOk' + IntToStr(I)).AsCurrency + checkCDS.FieldByName('Amount').AsCurrency;
+                AsinoPharmaSPCDS.Post;
+              end;
+            end;
+
+            AsinoPharmaSPCDS.Next;
+          end;
+
+        end else if checkCDS.FieldByName('isAsinoPresent').AsBoolean then
+        begin
+          isGo := True;
+
+          if AsinoPresentCDS.Locate('GoodsId', checkCDS.FieldByName('GoodsId').AsInteger, []) then
+            AsinoPresentCDS.Edit
+          else AsinoPresentCDS.Append;
+          AsinoPresentCDS.FieldByName('GoodsId').AsInteger := checkCDS.FieldByName('GoodsId').AsInteger;
+          AsinoPresentCDS.FieldByName('Remains').AsCurrency := AsinoPresentCDS.FieldByName('Remains').AsCurrency +
+                                                             checkCDS.FieldByName('Amount').AsCurrency;
+          AsinoPresentCDS.FieldByName('Amount').AsCurrency := AsinoPresentCDS.FieldByName('Amount').AsCurrency +
+                                                             checkCDS.FieldByName('Amount').AsCurrency;
+          AsinoPresentCDS.FieldByName('AmountOk').AsCurrency := 0;
+          if checkCDS.FieldByName('JuridicalId').AsInteger <> 0 then
+          begin
+            AsinoPresentCDS.FieldByName('JuridicalAmount').AsCurrency := AsinoPresentCDS.FieldByName('JuridicalAmount').AsCurrency +
+                                                                         checkCDS.FieldByName('Amount').AsCurrency;
+            AsinoPresentCDS.FieldByName('JuridicalAmountOk').AsCurrency := 0;
+          end else
+          begin
+            AsinoPresentCDS.FieldByName('JuridicalAmount').AsCurrency := AsinoPresentCDS.FieldByName('JuridicalAmount').AsCurrency;
+            AsinoPresentCDS.FieldByName('JuridicalAmountOk').AsCurrency := 0;
+          end;
+          AsinoPresentCDS.Post;
+        end;
+
+        CheckCDS.Next;
+      end;
+
+      if not isGo then Exit;
+
+      // Если есть пары более 1 проверяем поставщика
+      AsinoPharmaSPCDS.First;
+      while not AsinoPharmaSPCDS.Eof do
+      begin
+        if (AsinoPharmaSPCDS.FieldByName('PresentAmount1').AsCurrency > 1) and
+           (AsinoPharmaSPCDS.FieldByName('MainAmountOk1').AsCurrency > 0) then
+        begin
+
+          isGo := True;
+
+          if isGo then
+            for I := 2 to AsinoPharmaSPCDS.FieldByName('CountPair').AsInteger do
+            begin
+              isGo := AsinoPharmaSPCDS.FieldByName('MainAmountOk' + IntToStr(I - 1)).AsCurrency = AsinoPharmaSPCDS.FieldByName('MainAmountOk' + IntToStr(I)).AsCurrency;
+              if not isGo then Break;
+            end;
+
+          if isGo then
+            for I := 1 to AsinoPharmaSPCDS.FieldByName('CountPair').AsInteger do
+            begin
+              spCheck_PairSunAmount.ParamByName('inGoodsId').Value := AsinoPharmaSPCDS.FieldByName('GoodsMainId' + IntToStr(I)).AsInteger;
+              spCheck_PairSunAmount.ParamByName('inNDSKindId').Value := 0;
+              spCheck_PairSunAmount.ParamByName('inPartionDateKindId').Value := 0;
+              spCheck_PairSunAmount.ParamByName('inDivisionPartiesId').Value := 0;
+              spCheck_PairSunAmount.ParamByName('inAmount').Value := AsinoPharmaSPCDS.FieldByName('MainAmountOk' + IntToStr(I)).AsCurrency;
+              spCheck_PairSunAmount.ParamByName('outAmount').Value := 0;
+              spCheck_PairSunAmount.ParamByName('outJuridicalId').Value := 0;
+              spCheck_PairSunAmount.ParamByName('outJuridicalName').Value := '';
+              spCheck_PairSunAmount.Execute;
+
+              isGo := spCheck_PairSunAmount.ParamByName('outAmount').AsFloat >= AsinoPharmaSPCDS.FieldByName('MainAmountOk' + IntToStr(I)).AsCurrency;
+              if not isGo then Break;
+
+              spCheck_PairSunAmount.ParamByName('inGoodsId').Value := AsinoPharmaSPCDS.FieldByName('GoodsPresentId' + IntToStr(I)).AsInteger;
+              spCheck_PairSunAmount.ParamByName('inNDSKindId').Value := 0;
+              spCheck_PairSunAmount.ParamByName('inPartionDateKindId').Value := 0;
+              spCheck_PairSunAmount.ParamByName('inDivisionPartiesId').Value := 0;
+              spCheck_PairSunAmount.ParamByName('inAmount').Value := AsinoPharmaSPCDS.FieldByName('MainAmountOk' + IntToStr(I)).AsCurrency *
+                                                                     AsinoPharmaSPCDS.FieldByName('PresentAmount' + IntToStr(I)).AsCurrency;
+              spCheck_PairSunAmount.ParamByName('outAmount').Value := 0;
+              spCheck_PairSunAmount.ParamByName('outJuridicalId').Value := 0;
+              spCheck_PairSunAmount.ParamByName('outJuridicalName').Value := '';
+              spCheck_PairSunAmount.Execute;
+
+              isGo := spCheck_PairSunAmount.ParamByName('outAmount').AsFloat >=
+                      (AsinoPharmaSPCDS.FieldByName('MainAmountOk' + IntToStr(I)).AsCurrency *
+                       AsinoPharmaSPCDS.FieldByName('PresentAmount' + IntToStr(I)).AsCurrency);
+              if not isGo then Break;
+
+              AsinoPharmaSPCDS.Edit;
+              AsinoPharmaSPCDS.FieldByName('JuridicalId').AsVariant := spCheck_PairSunAmount.ParamByName('outJuridicalId').Value;
+              AsinoPharmaSPCDS.FieldByName('JuridicalName').AsString := spCheck_PairSunAmount.ParamByName('outJuridicalName').Value;
+              AsinoPharmaSPCDS.Post;
+            end;
+
+          if not isGo then
+            for I := 1 to AsinoPharmaSPCDS.FieldByName('CountPair').AsInteger do
+            begin
+              AsinoPharmaSPCDS.Edit;
+              AsinoPharmaSPCDS.FieldByName('JuridicalId').AsVariant := 0;
+              AsinoPharmaSPCDS.FieldByName('JuridicalName').AsString := '';
+              AsinoPharmaSPCDS.Post;
+            end;
+        end;
+
+        AsinoPharmaSPCDS.Next;
+      end;
+
+      // Необходимость проверки поставщика
+      AsinoPharmaSPCDS.First;
+      while not AsinoPharmaSPCDS.Eof do
+      begin
+        JuridicalId := JuridicalId or AsinoPharmaSPCDS.FieldByName('JuridicalId').AsInteger;
+        if JuridicalId > 0 then Break;
+        AsinoPharmaSPCDS.Next;
+      end;
+
+      // Дополняем остатки по подаркам
+      try
+        nID := RemainsCDS.RecNo;
+        RemainsCDS.DisableControls;
+        cFilter := RemainsCDS.Filter;
+        RemainsCDS.Filtered := False;
+        RemainsCDS.Filter := 'isAsinoPresent = True';
+        RemainsCDS.Filtered := True;
+        RemainsCDS.First;
+        while not RemainsCDS.Eof do
+        begin
+          if RemainsCDS.FieldByName('Remains').AsCurrency > 0 then
+          begin
+            if AsinoPresentCDS.Locate('GoodsId', RemainsCDS.FieldByName('Id').AsInteger, []) then
+              AsinoPresentCDS.Edit
+            else AsinoPresentCDS.Append;
+            AsinoPresentCDS.FieldByName('GoodsId').AsInteger := RemainsCDS.FieldByName('Id').AsInteger;
+            AsinoPresentCDS.FieldByName('Remains').AsCurrency := AsinoPresentCDS.FieldByName('Remains').AsCurrency +
+                                                                 RemainsCDS.FieldByName('Remains').AsCurrency;
+            AsinoPresentCDS.FieldByName('Amount').AsCurrency := AsinoPresentCDS.FieldByName('Amount').AsCurrency;
+            AsinoPresentCDS.FieldByName('AmountOk').AsCurrency := AsinoPresentCDS.FieldByName('AmountOk').AsCurrency;
+            AsinoPresentCDS.Post;
+          end;
+          RemainsCDS.Next;
+        end;
+      finally
+        RemainsCDS.Filtered := False;
+        RemainsCDS.Filter := cFilter;
+        RemainsCDS.Filtered := True;
+        RemainsCDS.RecNo := nID;
+        RemainsCDS.EnableControls;
+      end;
+
+      // Подбираем пары
+      AsinoPharmaSPCDS.First;
+      while not AsinoPharmaSPCDS.Eof do
+      begin
+        if (AsinoPharmaSPCDS.FieldByName('MainAmountOk1').AsCurrency > 0) and
+           (Round(AsinoPharmaSPCDS.FieldByName('MainAmountOk1').AsCurrency) = AsinoPharmaSPCDS.FieldByName('MainAmountOk1').AsCurrency) and
+           (frac(AsinoPharmaSPCDS.FieldByName('MainAmountOk1').AsCurrency / AsinoPharmaSPCDS.FieldByName('MainAmount1').AsCurrency) = 0) then
+        begin
+          isGo := True;
+
+          for I := 2 to AsinoPharmaSPCDS.FieldByName('CountPair').AsInteger do
+          begin
+            isGo := AsinoPharmaSPCDS.FieldByName('MainAmountOk' + IntToStr(I - 1)).AsCurrency = AsinoPharmaSPCDS.FieldByName('MainAmountOk' + IntToStr(I)).AsCurrency;
+            if not isGo then Break;
+          end;
+
+          // Можно применить если есть парный
+          if isGo then
+          begin
+            isGo := AsinoPresentCDS.Locate('GoodsId', AsinoPharmaSPCDS.FieldByName('GoodsPresentId1').AsInteger, []) and
+                   ((AsinoPresentCDS.FieldByName('Remains').AsCurrency - AsinoPresentCDS.FieldByName('AmountOk').AsCurrency) >=
+                   (AsinoPharmaSPCDS.FieldByName('MainAmountOk1').AsCurrency * AsinoPharmaSPCDS.FieldByName('PresentAmount1').AsCurrency)) and
+                   ((AsinoPharmaSPCDS.FieldByName('JuridicalId').AsVariant > 0) and (AsinoPharmaSPCDS.FieldByName('PresentAmount1').AsCurrency > 1) or
+                   (AsinoPharmaSPCDS.FieldByName('PresentAmount1').AsCurrency = 1));
+
+            if isGo then
+              for I := 2 to AsinoPharmaSPCDS.FieldByName('CountPair').AsInteger do
+              begin
+                isGo := AsinoPresentCDS.Locate('GoodsId', AsinoPharmaSPCDS.FieldByName('GoodsPresentId' + IntToStr(I)).AsInteger, []) and
+                       ((AsinoPresentCDS.FieldByName('Remains').AsCurrency - AsinoPresentCDS.FieldByName('AmountOk').AsCurrency) >=
+                       (AsinoPharmaSPCDS.FieldByName('MainAmountOk' + IntToStr(I)).AsCurrency * AsinoPharmaSPCDS.FieldByName('PresentAmount' + IntToStr(I)).AsCurrency));
+                if not isGo then Break;
+              end;
+
+            if isGo then
+            begin
+              for I := 1 to AsinoPharmaSPCDS.FieldByName('CountPair').AsInteger do
+              begin
+                if AsinoPresentCDS.Locate('GoodsId', AsinoPharmaSPCDS.FieldByName('GoodsPresentId' + IntToStr(I)).AsInteger, []) then
+                begin
+                  AsinoPresentCDS.Edit;
+                  if AsinoPharmaSPCDS.FieldByName('JuridicalId').AsVariant > 0 then
+                    AsinoPresentCDS.FieldByName('JuridicalAmountOk').AsCurrency := AsinoPresentCDS.FieldByName('JuridicalAmountOk').AsCurrency +
+                        AsinoPharmaSPCDS.FieldByName('MainAmountOk' + IntToStr(I)).AsCurrency * AsinoPharmaSPCDS.FieldByName('PresentAmount' + IntToStr(I)).AsCurrency
+                  else AsinoPresentCDS.FieldByName('AmountOk').AsCurrency := AsinoPresentCDS.FieldByName('AmountOk').AsCurrency +
+                       MIN((AsinoPresentCDS.FieldByName('Remains').AsCurrency - AsinoPresentCDS.FieldByName('AmountOk').AsCurrency),
+                       AsinoPharmaSPCDS.FieldByName('MainAmountOk1').AsCurrency * AsinoPharmaSPCDS.FieldByName('PresentAmount1').AsCurrency);
+                  AsinoPresentCDS.Post;
+                end;
+              end;
+            end;
+          end;
+        end;
+        AsinoPharmaSPCDS.Next;
+      end;
+
+      if not AisCheck then
+      begin
+
+        // Почистили привязку к поставщику
+        CheckCDS.First;
+        while not CheckCDS.Eof do
+        begin
+          if (CheckCDS.FieldByName('JuridicalId').AsVariant <> Null) and
+             CheckCDS.FieldByName('isAsinoMain').AsBoolean then
+          begin
+            CheckCDS.Edit;
+            CheckCDS.FieldByName('JuridicalId').AsVariant := Null;
+            CheckCDS.FieldByName('JuridicalName').AsVariant := Null;
+            CheckCDS.Post;
+            CheckCDS.First;
+            Continue;
+          end;
+          CheckCDS.Next;
+        end;
+
+
+        // Поправили привязки к поставщику
+        AsinoPharmaSPCDS.First;
+        while not AsinoPharmaSPCDS.Eof do
+        begin
+          if (AsinoPharmaSPCDS.FieldByName('PresentAmount1').AsCurrency > 1) then
+          begin
+
+            for I := 1 to AsinoPharmaSPCDS.FieldByName('CountPair').AsInteger do
+            begin
+              CheckCDS.First;
+              while not CheckCDS.Eof do
+              begin
+                if CheckCDS.FieldByName('GoodsId').AsInteger = AsinoPharmaSPCDS.FieldByName('GoodsMainId' + IntToStr(I)).AsInteger then
+                begin
+                  if (AsinoPharmaSPCDS.FieldByName('JuridicalId').AsInteger <> 0) and
+                     (CheckCDS.FieldByName('JuridicalId').AsInteger <> AsinoPharmaSPCDS.FieldByName('JuridicalId').AsInteger) then
+                  begin
+                    CheckCDS.Edit;
+                    CheckCDS.FieldByName('JuridicalId').AsVariant := AsinoPharmaSPCDS.FieldByName('JuridicalId').AsInteger;
+                    CheckCDS.FieldByName('JuridicalName').AsVariant := AsinoPharmaSPCDS.FieldByName('JuridicalName').AsString;
+                    CheckCDS.Post;
+                    CheckCDS.First;
+                    Continue;
+                  end;
+                end;
+                CheckCDS.Next;
+              end;
+            end;
+          end;
+
+          AsinoPharmaSPCDS.Next;
+        end;
+
+
+        // Почистили пары
+        while checkCDS.Locate('isAsinoPresent', True, []) do
+        begin
+          FStepSecond := True;
+          SoldRegim := False;
+          CheckGrid.SetFocus;
+          SourceClientDataSet := checkCDS;
+          edAmount.Text := CurrToStr( - checkCDS.FieldByName('Amount').AsCurrency);
+          InsertUpdateBillCheckItems;
+          FStepSecond := False;
+        end;
+
+        // сщздали пары заново
+        AsinoPresentCDS.Filtered := False;
+        AsinoPresentCDS.Filter := 'JuridicalAmountOk > 0';
+        AsinoPresentCDS.Filtered := True;
+        try
+          AsinoPresentCDS.First;
+          while not AsinoPresentCDS.Eof do
+          begin
+            nAmount := AsinoPresentCDS.FieldByName('JuridicalAmountOk').AsCurrency;
+            nID := RemainsCDS.RecNo;
+            RemainsCDS.DisableControls;
+            cFilter := RemainsCDS.Filter;
+            try
+              RemainsCDS.Filtered := False;
+              RemainsCDS.Filter := 'Remains > 0 and isAsinoPresent = True and Id = ' + AsinoPresentCDS.FieldByName('GoodsId').AsString;
+              RemainsCDS.Filtered := True;
+              RemainsCDS.First;
+              while not RemainsCDS.Eof do
+              begin
+
+                spCheck_PairSunAmount.ParamByName('inGoodsId').Value := RemainsCDS.FieldByName('Id').AsInteger;
+                spCheck_PairSunAmount.ParamByName('inNDSKindId').Value := RemainsCDS.FieldByName('NDSKindId').AsVariant;
+                spCheck_PairSunAmount.ParamByName('inPartionDateKindId').Value := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+                spCheck_PairSunAmount.ParamByName('inDivisionPartiesId').Value := RemainsCDS.FieldByName('DivisionPartiesId').AsVariant;
+                spCheck_PairSunAmount.ParamByName('inAmount').Value := nAmount;
+                spCheck_PairSunAmount.ParamByName('outAmount').Value := 0;
+                spCheck_PairSunAmount.ParamByName('outJuridicalId').Value := 0;
+                spCheck_PairSunAmount.ParamByName('outJuridicalName').Value := '';
+                spCheck_PairSunAmount.Execute;
+
+                if spCheck_PairSunAmount.ParamByName('outAmount').AsFloat < nAmount then
+                  nAmountGo := spCheck_PairSunAmount.ParamByName('outAmount').AsFloat
+                else nAmountGo := nAmount;
+                if nAmountGo > 0 then
+                begin
+                  FStepSecond := True;
+                  SoldRegim := True;
+                  CheckGrid.SetFocus;
+                  SourceClientDataSet := RemainsCDS;
+                  edAmount.Text := CurrToStr(nAmountGo);
+                  InsertUpdateBillCheckItems(spCheck_PairSunAmount.ParamByName('outJuridicalId').Value, spCheck_PairSunAmount.ParamByName('outJuridicalName').Value);
+                  FStepSecond := False;
+                  nAmount := nAmount - nAmountGo;
+                end;
+
+                if nAmount <= 0 then Break;
+
+              RemainsCDS.Next;
+              end;
+            finally
+              RemainsCDS.Filtered := False;
+              RemainsCDS.Filter := cFilter;
+              RemainsCDS.Filtered := True;
+              RemainsCDS.RecNo := nID;
+              RemainsCDS.EnableControls;
+            end;
+
+            AsinoPresentCDS.Next;
+          end;
+
+          AsinoPresentCDS.Filtered := False;
+          AsinoPresentCDS.Filter := 'AmountOk > 0';
+          AsinoPresentCDS.Filtered := True;
+          AsinoPresentCDS.First;
+          AsinoPresentCDS.First;
+          while not AsinoPresentCDS.Eof do
+          begin
+            nAmount := AsinoPresentCDS.FieldByName('AmountOk').AsCurrency;
+            nID := RemainsCDS.RecNo;
+            RemainsCDS.DisableControls;
+            cFilter := RemainsCDS.Filter;
+            try
+              RemainsCDS.Filtered := False;
+              RemainsCDS.Filter := 'Remains > 0 and isAsinoPresent = True and Id = ' + AsinoPresentCDS.FieldByName('GoodsId').AsString;
+              RemainsCDS.Filtered := True;
+              RemainsCDS.First;
+              while not RemainsCDS.Eof do
+              begin
+                if RemainsCDS.FieldByName('Remains').AsCurrency < nAmount then
+                  nAmountGo := RemainsCDS.FieldByName('Remains').AsCurrency
+                else nAmountGo := nAmount;
+                if nAmountGo > 0 then
+                begin
+                  FStepSecond := True;
+                  SoldRegim := True;
+                  CheckGrid.SetFocus;
+                  SourceClientDataSet := RemainsCDS;
+                  edAmount.Text := CurrToStr(nAmountGo);
+                  InsertUpdateBillCheckItems;
+                  FStepSecond := False;
+                  nAmount := nAmount - nAmountGo;
+                end;
+
+                if nAmount <= 0 then Break;
+
+              RemainsCDS.Next;
+              end;
+            finally
+              RemainsCDS.Filtered := False;
+              RemainsCDS.Filter := cFilter;
+              RemainsCDS.Filtered := True;
+              RemainsCDS.RecNo := nID;
+              RemainsCDS.EnableControls;
+            end;
+
+            AsinoPresentCDS.Next;
+          end;
+
+        finally
+          AsinoPresentCDS.Filtered := False;
+          AsinoPresentCDS.Filter := '';
+          FStepSecond := False;
+        end;
+
+      end else
+      begin
+        AsinoPresentCDS.Filtered := False;
+        AsinoPresentCDS.Filter := 'Amount > AmountOk or JuridicalAmount > JuridicalAmountOk';
+        AsinoPresentCDS.Filtered := True;
+        try
+          if AsinoPresentCDS.RecordCount > 0 then
+            raise Exception.Create('Ошиба проверки кратности парных товаров.');
+        finally
+          AsinoPresentCDS.Filtered := False;
+          AsinoPresentCDS.Filter := '';
+          FStepSecond := False;
+        end;
+      end;
+
+    end else
+    begin
+      if not AisCheck then
+      begin
+        while checkCDS.Locate('isAsinoPresent', True, []) do
+        begin
+          FStepSecond := True;
+          SoldRegim := False;
+          CheckGrid.SetFocus;
+          SourceClientDataSet := checkCDS;
+          edAmount.Text := CurrToStr( - checkCDS.FieldByName('Amount').AsCurrency);
+          InsertUpdateBillCheckItems;
+          FStepSecond := False;
+        end;
+      end else raise Exception.Create('Ошиба проверки кратности парных товаров.');
+    end;
+  finally
+
+    // Востановим курсор
+    CheckCDS.Last;
+    CheckCDS.EnableControls;
+
+    AsinoPharmaSPCDS.Close;
+    AsinoPresentCDS.Close;
+  end;
+end;
+
+function TMainCashForm2.AddAsinoGoodsMain(AGoodsId : integer; AAmount : Currency) : Boolean;
+  var nID : Integer;
+      cFilter : String;
+begin
+  nID := RemainsCDS.RecNo;
+  RemainsCDS.DisableControls;
+  cFilter := RemainsCDS.Filter;
+  try
+    RemainsCDS.Filtered := False;
+    RemainsCDS.Filter := 'isAsinoMain = True and ID = ' + IntToStr(AGoodsId) + ' and Remains >= ' + CurrToStr(AAmount);
+    RemainsCDS.Filtered := True;
+    RemainsCDS.First;
+    if RemainsCDS.RecordCount> 0 then
+    begin
+      FStepSecond := True;
+      SoldRegim := True;
+      CheckGrid.SetFocus;
+      SourceClientDataSet := RemainsCDS;
+      edAmount.Text := CurrToStr(AAmount);
+      InsertUpdateBillCheckItems;
+      FStepSecond := False;
+    end;
+  finally
+    RemainsCDS.Filtered := False;
+    RemainsCDS.Filter := cFilter;
+    RemainsCDS.Filtered := True;
+    RemainsCDS.RecNo := nID;
+    RemainsCDS.EnableControls;
+    FStepSecond := False
+  end;
+
+  CheckAddAsinoGoods(False);
+end;
+
+function TMainCashForm2.CheckAddAsinoGoodsPresent(AGoodsId : integer; AAmount : Currency; var AGoodsMainId : integer) : Boolean;
+  var nID : Integer;
+      cFilter : String;
+      ChoosingPairSunForm : TChoosingPairSunForm;
+begin
+  Result := False;
+  spAsinoPharmaSP.Execute;
+  ChoosingPairSunForm := TChoosingPairSunForm.Create(Self);
+
+  try
+
+    // Подбираем пару нсли возможно
+    AsinoPharmaSPCDS.First;
+    while not AsinoPharmaSPCDS.Eof do
+    begin
+      if (AsinoPharmaSPCDS.FieldByName('GoodsPresentId1').AsInteger = AGoodsId) and
+         (AsinoPharmaSPCDS.FieldByName('CountPair').AsInteger = 1) and
+         (AsinoPharmaSPCDS.FieldByName('MainAmount1').AsCurrency = 1) and
+         (AsinoPharmaSPCDS.FieldByName('PresentAmount1').AsCurrency = 1) then
+      begin
+
+        // Проверим остаток
+        try
+          nID := RemainsCDS.RecNo;
+          RemainsCDS.DisableControls;
+          cFilter := RemainsCDS.Filter;
+          RemainsCDS.Filtered := False;
+          RemainsCDS.Filter := 'isAsinoMain = True and ID = ' + AsinoPharmaSPCDS.FieldByName('GoodsMainId1').AsString + ' and Remains >= ' + CurrToStr(AAmount);
+          RemainsCDS.Filtered := True;
+          RemainsCDS.First;
+          if RemainsCDS.RecordCount> 0 then
+          begin
+            if not ChoosingPairSunForm.ChoosingPairSunCDS.Locate('Id', RemainsCDS.FieldByName('Id').AsInteger, []) then
+            begin
+              ChoosingPairSunForm.ChoosingPairSunCDS.AppendRecord(
+                         [RemainsCDS.FieldByName('Id').AsInteger,
+                          RemainsCDS.FindField('GoodsCode').AsVariant,
+                          RemainsCDS.FindField('GoodsName').AsVariant,
+                          RemainsCDS.FindField('Remains').AsVariant,
+                          AAmount,
+                          RemainsCDS.FindField('Price').AsVariant,
+                          RemainsCDS.FindField('PartionDateKindId').AsVariant,
+                          RemainsCDS.FindField('NDSKindId').AsVariant,
+                          RemainsCDS.FindField('DiscountExternalID').AsVariant,
+                          RemainsCDS.FindField('DivisionPartiesID').AsVariant]);
+            end;
+          end;
+        finally
+          RemainsCDS.Filtered := False;
+          RemainsCDS.Filter := cFilter;
+          RemainsCDS.Filtered := True;
+          RemainsCDS.RecNo := nID;
+          RemainsCDS.EnableControls;
+        end;
+      end;
+      AsinoPharmaSPCDS.Next;
+    end;
+
+    if ChoosingPairSunForm.ChoosingPairSunCDS.RecordCount = 1 then
+    begin
+      AGoodsMainId := ChoosingPairSunForm.ChoosingPairSunCDS.FieldByName('Id').AsInteger;
+      Result := True;
+    end else if ChoosingPairSunForm.ChoosingPairSunCDS.RecordCount > 1 then
+    begin
+      if ChoosingPairSunForm.ShowModal = mrOk  then
+      begin
+        AGoodsMainId := ChoosingPairSunForm.ChoosingPairSunCDS.FieldByName('Id').AsInteger;
+        Result := True;
+      end;
+    end ;
+
+  finally
+
+    AsinoPharmaSPCDS.Close;
+    ChoosingPairSunForm.Free;
   end;
 end;
 

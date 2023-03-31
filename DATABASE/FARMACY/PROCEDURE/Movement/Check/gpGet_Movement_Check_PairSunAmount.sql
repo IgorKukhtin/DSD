@@ -138,10 +138,11 @@ BEGIN
 
                         LEFT OUTER JOIN tmpContainerPD ON tmpContainerPD.ParentId = Container.ID
 
-                   WHERE Container.NDSKindId                           = inNDSKindId
+                   WHERE (Container.NDSKindId                           = inNDSKindId
                      AND COALESCE(Container.DivisionPartiesId, 0)      = COALESCE(inDivisionPartiesId, 0)
-                     AND COALESCE(Container.JuridicalId, 0)            = vbJuridicalId
                      AND COALESCE(tmpContainerPD.PartionDateKindId, 0) = COALESCE (inPartionDateKindId, 0)
+                      OR COALESCE (inNDSKindId, 0) = 0)
+                     AND COALESCE(Container.JuridicalId, 0)            = vbJuridicalId
                   )
     SELECT Amount
     INTO outAmount
@@ -165,4 +166,4 @@ $BODY$
 
 -- тест
 
-select * from gpGet_Movement_Check_PairSunAmount(inGoodsId := 596529 , inNDSKindId := 9 , inPartionDateKindId := 0 , inDivisionPartiesId := 0 , inAmount := 1 ,  inSession := '3');
+select * from gpGet_Movement_Check_PairSunAmount(inGoodsId := 17632924 , inNDSKindId := 0 , inPartionDateKindId := 0 , inDivisionPartiesId := 0 , inAmount := 1 ,  inSession := '3');

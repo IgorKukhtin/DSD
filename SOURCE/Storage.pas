@@ -172,6 +172,7 @@ begin
   begin
     if Terminated then Exit;
     Sleep(1000);
+    if Terminated then Exit;
     if TStorageFactory.GetStorage.IdHTTP.Connected then
     begin
       if MinutesBetween(Now, FDataStart) >= FTimeuutMin then
