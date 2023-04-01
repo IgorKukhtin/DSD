@@ -3281,6 +3281,34 @@ begin
         begin
           Result := false;
           ShowMessage('Получена неполная системная информация. Работа невозможна.');
+        end else if Length(gc_WebServers) = 0 then
+        begin
+          if (DM.tblObject_Const.RecordCount > 0) and (DM.tblObject_ConstWebService.AsString <> '') then
+          begin
+            SetLength(gc_WebServers, 1);
+
+            if DM.tblObject_ConstWebService_two.AsString <> '' then
+              SetLength(gc_WebServers, 2);
+
+            if DM.tblObject_ConstWebService_three.AsString <> '' then
+              SetLength(gc_WebServers_r, 1);
+
+            if DM.tblObject_ConstWebService_four.AsString <> '' then
+              SetLength(gc_WebServers_r, 2);
+
+            gc_WebServers[0] := DM.tblObject_ConstWebService.AsString;
+
+            if DM.tblObject_ConstWebService_two.AsString <> '' then
+              gc_WebServers[1] := DM.tblObject_ConstWebService_two.AsString;
+
+            if DM.tblObject_ConstWebService_three.AsString <> '' then
+              gc_WebServers_r[0] := DM.tblObject_ConstWebService_three.AsString;
+
+            if DM.tblObject_ConstWebService_four.AsString <> '' then
+              gc_WebServers_r[1] := DM.tblObject_ConstWebService_four.AsString;
+
+            gc_WebService := gc_WebServers[0];
+          end
         end;
       end
       else

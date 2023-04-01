@@ -830,7 +830,7 @@ var i: integer;
         Result := Result + 'b'
       else if (Code = 947) and (dsdProject = prFarmacy) then
         Result := Result + 'y'
-      else if ((Code = 180) or (Code = 8125) or (Code = 700)) and (dsdProject = prFarmacy) then
+      else if ((Code = 180) or (Code = 769) or (Code = 8125) or (Code = 700) or (Code = 8217)) and (dsdProject = prFarmacy) then
         Result := Result + '`'
 //      else if ((Code <= 0) or (Code >= 822) and (Code < 1000)) and (dsdProject = prFarmacy) then
 //        Result := Result  + C
