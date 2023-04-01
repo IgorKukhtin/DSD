@@ -90,7 +90,7 @@ object SendPodiumForm: TSendPodiumForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceList
+              Column = TotalSummPL
             end
             item
               Format = ',0.####'
@@ -198,7 +198,7 @@ object SendPodiumForm: TSendPodiumForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalSummPriceList
+              Column = TotalSummPL
             end
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
@@ -409,24 +409,47 @@ object SendPodiumForm: TSendPodiumForm
             DataBinding.FieldName = 'DiscountTax_From'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1089#1077#1079#1086#1085#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1054#1090' '#1082#1086#1075#1086')'
             Options.Editing = False
-            Width = 73
+            Width = 70
           end
           object DiscountTax_To: TcxGridDBColumn
             Caption = '% c. '#1089#1082'. ('#1050#1086#1084#1091')'
             DataBinding.FieldName = 'DiscountTax_To'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '% '#1089#1077#1079#1086#1085#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1050#1086#1084#1091')'
             Options.Editing = False
-            Width = 80
+            Width = 70
+          end
+          object DiscountTaxNext_From: TcxGridDBColumn
+            Caption = '% c. '#1089#1082'-2 ('#1054#1090' '#1082#1086#1075#1086')'
+            DataBinding.FieldName = 'DiscountTaxNext_From'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'  ('#1054#1090' '#1082#1086#1075#1086')'
+            Options.Editing = False
+            Width = 70
+          end
+          object DiscountTaxNext_To: TcxGridDBColumn
+            Caption = '% c. '#1089#1082'-2 ('#1050#1086#1084#1091')'
+            DataBinding.FieldName = 'DiscountTaxNext_To'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1050#1086#1084#1091')'
+            Options.Editing = False
+            Width = 70
           end
           object Remains: TcxGridDBColumn
             Caption = #1054#1089#1090'. ('#1086#1090' '#1082#1086#1075#1086')'
@@ -531,7 +554,7 @@ object SendPodiumForm: TSendPodiumForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1054#1090' '#1082#1086#1075#1086
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1054#1090' '#1082#1086#1075#1086' '#1041#1045#1047' '#1091#1095#1077#1090#1072' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
             Options.Editing = False
             Width = 70
           end
@@ -543,7 +566,7 @@ object SendPodiumForm: TSendPodiumForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1054#1090' '#1082#1086#1075#1086
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1054#1090' '#1082#1086#1075#1086' '#1041#1045#1047' '#1091#1095#1077#1090#1072' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
             Options.Editing = False
             Width = 80
           end
@@ -571,7 +594,7 @@ object SendPodiumForm: TSendPodiumForm
             Options.Editing = False
             Width = 80
           end
-          object TotalSummPriceList: TcxGridDBColumn
+          object TotalSummPL: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1054#1090' '#1082#1086#1075#1086', '#1087#1088#1072#1081#1089')'
             DataBinding.FieldName = 'TotalSummPL'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -693,7 +716,7 @@ object SendPodiumForm: TSendPodiumForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1050#1086#1084#1091
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1050#1086#1084#1091' '#1041#1045#1047' '#1091#1095#1077#1090#1072' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
             Width = 80
           end
           object OperPriceListTo_disc: TcxGridDBColumn
@@ -705,6 +728,7 @@ object SendPodiumForm: TSendPodiumForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1050#1086#1084#1091' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+            Options.Editing = False
             Width = 80
           end
           object OperPriceListToBalance_disc: TcxGridDBColumn
@@ -2251,7 +2275,7 @@ object SendPodiumForm: TSendPodiumForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'OperPriceListReal'
+          Name = 'OperPriceListReal_disc'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'OperPriceListTo'
@@ -2262,6 +2286,30 @@ object SendPodiumForm: TSendPodiumForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'OperPriceListTo_start'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperPriceList_disc'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperPriceList_disc'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperPriceList_grn'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperPriceListBalance'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperPriceList_grn_disc'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperPriceListBalance_disc'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True

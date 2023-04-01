@@ -191,6 +191,8 @@ type
     macInsert: TMultiAction;
     actUpdate_Down: TdsdExecStoredProc;
     actUpdate_UP: TdsdExecStoredProc;
+    DiscountTaxNext_From: TcxGridDBColumn;
+    DiscountTaxNext_To: TcxGridDBColumn;
   private
   public
   end;

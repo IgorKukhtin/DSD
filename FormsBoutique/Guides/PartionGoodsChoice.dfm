@@ -933,10 +933,18 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'OperPriceListReal'
+          Name = 'OperPriceList_disc'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'OperPriceListReal'
+          ComponentItem = 'OperPriceList_disc'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperPriceListReal_disc'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperPriceListReal_disc'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end
@@ -984,6 +992,22 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Value_choice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperPriceList_grn'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperPriceList_grn'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperPriceList_grn_disc'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperPriceList_grn_disc'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>

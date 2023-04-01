@@ -485,15 +485,12 @@ object SalePodiumForm: TSalePodiumForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 187
-    ExplicitHeight = 416
     ClientRectBottom = 448
     ClientRectRight = 1066
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 392
       object cxGrid: TcxGrid
         Left = 0
         Top = 83
@@ -501,7 +498,6 @@ object SalePodiumForm: TSalePodiumForm
         Height = 341
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 309
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -2882,7 +2878,7 @@ object SalePodiumForm: TSalePodiumForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'OperPriceListReal'
+          Name = 'OperPriceListReal_disc'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'OperPriceListReal'
@@ -3337,6 +3333,7 @@ object SalePodiumForm: TSalePodiumForm
       Host.MultiSelectSeparator = ','
       Login.Value = ''
       Login.Component = edLogin
+      Login.DataType = ftString
       Login.MultiSelectSeparator = ','
       Password.Value = ''
       Password.Component = edPassword
