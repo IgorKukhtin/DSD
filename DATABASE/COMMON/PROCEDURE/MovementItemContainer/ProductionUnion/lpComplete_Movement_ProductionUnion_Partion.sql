@@ -177,7 +177,7 @@ BEGIN
                          SELECT _tmpItem_Partion.MovementItemId                                                          AS MovementItemId_parent
                               , _tmpItem_Partion.PartionGoodsDate                                                        AS PartionGoodsDate
                               , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, _tmpItem_Partion.GoodsId)         AS GoodsId
-                              , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, CASE WHEN ObjectLink_ReceiptChild_Goods.ChildObjectId > 0 THEN 0 ELSE _tmpItem_Partion.GoodsKindId END) AS GoodsKindId
+                              , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, CASE WHEN ObjectLink_ReceiptChild_Goods.ChildObjectId > 0 THEN 0 ELSE zc_GoodsKind_WorkProgress() /*_tmpItem_Partion.GoodsKindId*/ END) AS GoodsKindId
                               , SUM (CASE WHEN ObjectFloat_Value_master.ValueData <> 0 THEN _tmpItem_Partion.OperCount * COALESCE (ObjectFloat_Value.ValueData, 0) / ObjectFloat_Value_master.ValueData ELSE _tmpItem_Partion.OperCount END) AS OperCount
                          FROM _tmpItem_Partion
                               LEFT JOIN ObjectFloat AS ObjectFloat_Value_master
@@ -220,7 +220,7 @@ BEGIN
                          GROUP BY _tmpItem_Partion.MovementItemId
                                 , _tmpItem_Partion.PartionGoodsDate
                                 , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, _tmpItem_Partion.GoodsId)
-                                , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, CASE WHEN ObjectLink_ReceiptChild_Goods.ChildObjectId > 0 THEN 0 ELSE _tmpItem_Partion.GoodsKindId END)
+                                , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, CASE WHEN ObjectLink_ReceiptChild_Goods.ChildObjectId > 0 THEN 0 ELSE zc_GoodsKind_WorkProgress() /*_tmpItem_Partion.GoodsKindId*/ END)
                          HAVING SUM (CASE WHEN ObjectFloat_Value_master.ValueData <> 0 THEN _tmpItem_Partion.OperCount * COALESCE (ObjectFloat_Value.ValueData, 0) / ObjectFloat_Value_master.ValueData ELSE _tmpItem_Partion.OperCount END) <> 0
                         )
        , tmpMI_child AS (-- список существующих элементов расхода на производство (их надо заменить)

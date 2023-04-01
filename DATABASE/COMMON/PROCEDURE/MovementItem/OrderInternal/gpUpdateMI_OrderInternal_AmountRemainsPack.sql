@@ -183,6 +183,26 @@ BEGIN
 
 --    RAISE EXCEPTION '<%>', (select count(*) from tmpAll where tmpAll.ContainerId = 0 and tmpAll.GoodsId = 593238 and tmpAll.GoodsKindId = 8335);
 
+     IF EXISTS (SELECT 1 FROM tmpAll WHERE tmpAll.ContainerId > 0 AND tmpAll.GoodsKindId = zc_GoodsKind_Basis()) --  AND tmpAll.Amount_start <> 0
+     THEN
+         RAISE EXCEPTION 'Ошибка. Найден остаток = <%> для <%> <%> для подразделения = <%>.(%)'
+         , (SELECT zfConvert_FloatToString (tmpAll.Amount_start) FROM tmpAll WHERE tmpAll.ContainerId > 0 AND tmpAll.GoodsKindId = zc_GoodsKind_Basis() ORDER BY tmpAll.ContainerId LIMIT 1)
+         , (SELECT lfGet_Object_ValueData (tmpAll.GoodsId) FROM tmpAll WHERE tmpAll.ContainerId > 0 AND tmpAll.GoodsKindId = zc_GoodsKind_Basis() ORDER BY tmpAll.ContainerId LIMIT 1)
+         , (SELECT lfGet_Object_ValueData_sh (tmpAll.GoodsKindId) FROM tmpAll WHERE tmpAll.ContainerId > 0 AND tmpAll.GoodsKindId = zc_GoodsKind_Basis() ORDER BY tmpAll.ContainerId LIMIT 1)
+         , (SELECT lfGet_Object_ValueData_sh (CLO_Unit.ObjectId)
+            FROM tmpAll
+                 JOIN  ContainerLinkObject AS CLO_Unit
+                                           ON CLO_Unit.ContainerId = tmpAll.ContainerId
+                                          AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+            WHERE tmpAll.ContainerId > 0 AND tmpAll.GoodsKindId = zc_GoodsKind_Basis()
+            ORDER BY tmpAll.ContainerId
+            LIMIT 1
+           )
+         , (SELECT tmpAll.ContainerId FROM tmpAll WHERE tmpAll.ContainerId > 0 AND tmpAll.GoodsKindId = zc_GoodsKind_Basis() ORDER BY tmpAll.ContainerId LIMIT 1)
+          ;
+     END IF;
+
+
 /*
 if inSession = '5'
 then
