@@ -78,8 +78,8 @@ BEGIN
                         )
 
         SELECT COALESCE (tmpMIChild.GoodsId, tmpMISecond.GoodsId) AS GoodsId
-             , COALESCE (tmpMIChild.GoodsId, 0) = 0               AS IsAsinoMain
-             , COALESCE (tmpMISecond.GoodsId, 0) = 0              AS IsAsinoPresent
+             , COALESCE (tmpMIChild.GoodsId, 0) <> 0               AS IsAsinoMain
+             , COALESCE (tmpMISecond.GoodsId, 0) <> 0              AS IsAsinoPresent
 
         FROM tmpMIChild 
 

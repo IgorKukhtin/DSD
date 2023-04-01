@@ -1426,6 +1426,8 @@ type
     miactChangePercentMovement: TMenuItem;
     actGoodsGroup_UKTZED: TdsdOpenForm;
     miGoodsGroup_UKTZED: TMenuItem;
+    actReport_Goods_byMovementSaleReturn: TdsdOpenForm;
+    N254: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
