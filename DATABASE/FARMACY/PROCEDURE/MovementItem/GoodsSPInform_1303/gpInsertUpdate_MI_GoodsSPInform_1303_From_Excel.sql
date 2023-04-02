@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_GoodsSPInform_1303_From_Excel()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSPInform_1303_From_Excel (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_GoodsSPInform_1303_From_Excel (Integer, TVarChar, TVarChar, TVarChar, TFloat, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_GoodsSPInform_1303_From_Excel(
     IN inMovementId               Integer   ,    -- Идентификатор документа
@@ -36,7 +36,7 @@ BEGIN
   vbUserId:= lpGetUserBySession (inSession);
   
   
-  IF TRIM(COALESCE(inIntenalSP_1303Id, '')) = ''
+  IF TRIM(COALESCE(inIntenalSP_1303Name, '')) = ''
   THEN
     RETURN;
   END IF;
@@ -45,7 +45,7 @@ BEGIN
         
      -- пытаемся найти "Міжнародна непатентована назва (Соц. проект)(2)" 
      -- если не находим записывае новый элемент в справочник
-     IF inIntenalSP_1303Id <> ''
+     IF inIntenalSP_1303Name <> ''
      THEN
        vbIntenalSP_1303Id := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_IntenalSP_1303() AND UPPER (TRIM(Object.ValueData)) ILIKE UPPER (TRIM(inIntenalSP_1303Name)) LIMIT 1);
        IF COALESCE (vbIntenalSP_1303Id, 0) = 0 AND COALESCE (inIntenalSP_1303Name, '') <> '' THEN

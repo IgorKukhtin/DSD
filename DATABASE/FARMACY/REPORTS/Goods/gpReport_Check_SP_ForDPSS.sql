@@ -56,10 +56,12 @@ BEGIN
                                    , tmp.OperDateStart
                                    , tmp.OperDateEnd
                                    , tmp.OperDate
+                                   , tmp.MedicalProgramSPId
                               FROM lpSelect_MovementItem_GoodsSP_onDate (inStartDate:= inStartDate, inEndDate:= inEndDate) AS tmp
                               )
 
           , tmpGoodsSP AS (SELECT DISTINCT MovementItem.GoodsId                         AS GoodsMainId
+                                , MovementItem.MedicalProgramSPId                       AS MedicalProgramSPId
                                 , MovementItem.OperDateStart                            AS OperDateStart
                                 , MovementItem.OperDateEnd                              AS OperDateEnd
                                 , MovementItem.OperDate                                 AS InsertDateSP
@@ -69,6 +71,7 @@ BEGIN
                                 , COALESCE(Object_BrandSP.ValueData,'')      ::TVarChar AS BrandSPName
                                 , COALESCE(Object_KindOutSP.Id ,0)           ::Integer  AS KindOutSPId
                                 , COALESCE(Object_KindOutSP.ValueData,'')    ::TVarChar AS KindOutSPName
+                                , COALESCE (MIString_IdSP.ValueData, '')     ::TVarChar AS IdSP
                                 , MIFloat_PriceSP.ValueData                             AS PriceSP
                                 , MIFloat_CountSP.ValueData                             AS CountSP
                                 , MIFloat_GroupSP.ValueData                             AS GroupSP
@@ -126,6 +129,9 @@ BEGIN
                                 LEFT JOIN MovementItemString AS MIString_ReestrDateSP
                                                              ON MIString_ReestrDateSP.MovementItemId = MovementItem.Id
                                                             AND MIString_ReestrDateSP.DescId = zc_MIString_ReestrDateSP()
+                                LEFT JOIN MovementItemString AS MIString_IdSP
+                                                             ON MIString_IdSP.MovementItemId = MovementItem.Id
+                                                            AND MIString_IdSP.DescId = zc_MIString_IdSP()
                                 LEFT JOIN MovementItemLinkObject AS MI_IntenalSP
                                                                  ON MI_IntenalSP.MovementItemId = MovementItem.Id
                                                                 AND MI_IntenalSP.DescId = zc_MILinkObject_IntenalSP()
@@ -219,7 +225,7 @@ BEGIN
                            , tmpGoodsSP.CountSP
                            , tmpGoodsSP.PriceSP                           
                            , tmpGoodsSP.PriceRetSP                        
-                      FROM tmpMI
+                       FROM tmpMI
                       
                            LEFT JOIN MovementItem AS MovementItem ON MovementItem.ID = tmpMI.MovementItemId
 
@@ -235,10 +241,22 @@ BEGIN
                                                       
                            LEFT JOIN tmpContainerIncome ON tmpContainerIncome.ContainerId = tmpMI.ContainerId
                            
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicalProgramSP
+                                                        ON MovementLinkObject_MedicalProgramSP.MovementId = tmpMI.MovementId
+                                                       AND MovementLinkObject_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+
+                           LEFT JOIN MovementItemString AS MIString_IdSP
+                                                        ON MIString_IdSP.MovementItemId = MovementItem.Id
+                                                       AND MIString_IdSP.DescId = zc_MIString_IdSP()
+
                            LEFT JOIN tmpGoodsSP AS tmpGoodsSP 
                                                 ON tmpGoodsSP.GoodsMainId = tmpMI.GoodsMainId
                                                AND DATE_TRUNC('DAY', tmpMI.OperDate ::TDateTime) >= tmpGoodsSP.OperDateStart
                                                AND DATE_TRUNC('DAY', tmpMI.OperDate ::TDateTime) <= tmpGoodsSP.OperDateEnd
+                                               AND tmpGoodsSP.MedicalProgramSPId = MovementLinkObject_MedicalProgramSP.ObjectId
+                                               AND (tmpGoodsSP.IdSP = COALESCE(MIString_IdSP.ValueData, '') OR COALESCE(MIString_IdSP.ValueData, '') = '')
+
+                                                       
                       GROUP BY tmpMI.GoodsId
                              , tmpMI.GoodsMainId
                              , MIFloat_Price.ValueData
@@ -310,4 +328,4 @@ $BODY$
 -- 
 
 
-select * from gpReport_Check_SP_ForDPSS(inStartDate := ('01.04.2021')::TDateTime , inEndDate := ('30.04.2021')::TDateTime , inJuridicalId := 10106457 ,  inSession := '3');
+select * from gpReport_Check_SP_ForDPSS(inStartDate := ('16.03.2023')::TDateTime , inEndDate := ('31.03.2023')::TDateTime , inJuridicalId := 2886776 ,  inSession := '3');

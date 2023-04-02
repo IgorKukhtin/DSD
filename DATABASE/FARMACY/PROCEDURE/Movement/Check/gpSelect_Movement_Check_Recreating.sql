@@ -106,6 +106,7 @@ BEGIN
                                                   , inJuridicalId         := MILinkObject_Juridical.ObjectId 
                                                   , inGoodsPresentId      := COALESCE (MILinkObject_GoodsPresent.ObjectId, 0) 
                                                   , inisGoodsPresent      := COALESCE (MIBoolean_GoodsPresent.ValueData, False)
+                                                  , inIdSP                := ''     -- ID лікар. засобу для СП
                                                   , inList_UID            := ''     -- UID строки
                                                   , inUserSession	      := inSession
                                                   , inSession             := inSession)
@@ -159,7 +160,10 @@ BEGIN
 
     PERFORM gpComplete_Movement_Check (outMovementId, inSession);
     
-    -- RAISE EXCEPTION 'Прошло.';
+    if inSession = '3'
+    THEN
+      RAISE EXCEPTION 'Прошло.';
+    END IF;
    
 END;
 $BODY$
@@ -171,4 +175,5 @@ $BODY$
  16.08.21                                                       *    
 */
 -- тест
--- select * from gpSelect_Movement_Check_Recreating(inMovementId := 24479161 ,  inSession := '3');
+-- 
+select * from gpSelect_Movement_Check_Recreating(inMovementId := 31580628  ,  inSession := '3');

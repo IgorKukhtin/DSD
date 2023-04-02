@@ -5456,6 +5456,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_PaymentHelsi: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1086#1087#1083#1072#1090#1099' "'#1061#1077#1083#1089#1080'"'
+      FormName = 'TReport_PaymentHelsiForm'
+      FormNameParam.Value = 'TReport_PaymentHelsiForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -5614,6 +5625,9 @@
         end
         object N343: TMenuItem
           Action = actReport_PaperRecipeSPInsulin
+        end
+        object N377: TMenuItem
+          Action = actReport_PaymentHelsi
         end
         object N134: TMenuItem
           Caption = '-'

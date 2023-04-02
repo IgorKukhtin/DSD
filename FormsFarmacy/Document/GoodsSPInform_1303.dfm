@@ -131,7 +131,6 @@ inherited GoodsSPInform_1303Form: TGoodsSPInform_1303Form
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 91
           end
           object Referral: TcxGridDBColumn [9]
@@ -340,16 +339,6 @@ inherited GoodsSPInform_1303Form: TGoodsSPInform_1303Form
           StoredProc = spInsertMI
         end>
       Caption = 'actInsertMI'
-    end
-    inherited actUpdateMainDS: TdsdUpdateDataSet
-      StoredProc = spUpdate_Goods
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Goods
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end>
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint_GoodsSP
