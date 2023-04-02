@@ -70,6 +70,10 @@ BEGIN
             + CAST (COALESCE (MovementFloat_TotalSummCompensation.ValueData, 0) AS NUMERIC (16, 2))
             -- + COALESCE (MovementFloat_TotalSummSocialAdd.ValueData, 0)
             + COALESCE (MovementFloat_TotalSummHouseAdd.ValueData,0)
+              -- плюс за санобработка
+            + COALESCE (MovementFloat_TotalSummMedicdayAdd.ValueData, 0)
+              -- минус за прогул
+            - COALESCE (MovementFloat_TotalSummSkip.ValueData, 0)
              ) :: TFloat AS TotalSummService
               -- !!!временно!!!
            , (COALESCE (MovementFloat_TotalSummMinus.ValueData, 0)
@@ -174,10 +178,16 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummAuditAdd
                                     ON MovementFloat_TotalSummAuditAdd.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummAuditAdd.DescId = zc_MovementFloat_TotalSummAuditAdd()
-
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummHouseAdd
                                     ON MovementFloat_TotalSummHouseAdd.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummHouseAdd.DescId = zc_MovementFloat_TotalSummHouseAdd()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMedicdayAdd
+                                    ON MovementFloat_TotalSummMedicdayAdd.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummMedicdayAdd.DescId = zc_MovementFloat_TotalSummMedicdayAdd()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummSkip
+                                    ON MovementFloat_TotalSummSkip.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummSkip.DescId = zc_MovementFloat_TotalSummSkip()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummAddOth
                                     ON MovementFloat_TotalSummAddOth.MovementId = Movement.Id
@@ -287,7 +297,12 @@ BEGIN
                            , COALESCE (MIFloat_SummHosp.ValueData, 0)         AS SummHosp
                            , COALESCE (MIFloat_SummHospOth.ValueData, 0)      AS SummHospOth
                            , CAST (COALESCE (MIFloat_SummCompensation.ValueData, 0) AS NUMERIC (16, 2)) AS SummCompensation
+                             --
                            , COALESCE (MIFloat_SummAuditAdd.ValueData, 0)     AS SummAuditAdd
+                             -- плюс за санобработка
+                           , COALESCE (MIFloat_SummMedicdayAdd.ValueData, 0)  AS SummMedicdayAdd
+                             -- минус за прогул
+                           , COALESCE (MIFloat_SummSkip.ValueData, 0)         AS SummSkip
 
                            , COALESCE (MIFloat_SummMinus.ValueData, 0)        AS SummMinus
                            , COALESCE (MIFloat_SummFine.ValueData, 0)         AS SummFine
@@ -373,6 +388,12 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_SummAuditAdd
                                                        ON MIFloat_SummAuditAdd.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummAuditAdd.DescId = zc_MIFloat_SummAuditAdd()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummMedicdayAdd
+                                                       ON MIFloat_SummMedicdayAdd.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummMedicdayAdd.DescId = zc_MIFloat_SummMedicdayAdd()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummSkip
+                                                       ON MIFloat_SummSkip.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummSkip.DescId = zc_MIFloat_SummSkip()
 
                            LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
                                                        ON MIFloat_SummHosp.MovementItemId = MovementItem.Id
@@ -452,6 +473,8 @@ BEGIN
                            , SUM (tmpMI_all.SummHospOth)      AS SummHospOth
                            , SUM (tmpMI_all.SummCompensation) AS SummCompensation
                            , SUM (tmpMI_all.SummAuditAdd)     AS SummAuditAdd
+                           , SUM (tmpMI_all.SummMedicdayAdd)  AS SummMedicdayAdd
+                           , SUM (tmpMI_all.SummSkip)         AS SummSkip
 
                            , SUM (tmpMI_all.SummMinus)        AS SummMinus
                            , SUM (tmpMI_all.SummFine)         AS SummFine
@@ -520,6 +543,8 @@ BEGIN
                             , tmpMI.SummHospOth
                             , tmpMI.SummCompensation
                             , tmpMI.SummAuditAdd
+                            , tmpMI.SummMedicdayAdd
+                            , tmpMI.SummSkip
 
                             , tmpMI.SummMinus
                             , tmpMI.SummFine
@@ -553,6 +578,8 @@ BEGIN
                             , 0 AS SummHospOth
                             , 0 AS SummCompensation
                             , 0 AS SummAuditAdd
+                            , 0 AS SummMedicdayAdd
+                            , 0 AS SummSkip
 
                             , 0 AS SummMinus
                             , 0 AS SummFine
@@ -594,6 +621,9 @@ BEGIN
                         , SUM (tmpAll.SummFineOth)            :: TFloat AS SummFineOth
                         , SUM (COALESCE (tmpAll.SummAdd,0) + COALESCE (tmpAll.SummAddOth,0) + COALESCE (tmpAll.SummHouseAdd,0) )   :: TFloat AS SummAdd
                         , SUM (tmpAll.SummAuditAdd)           :: TFloat AS SummAuditAdd
+                        , SUM (tmpAll.SummMedicdayAdd)        :: TFloat AS SummMedicdayAdd
+                        , SUM (tmpAll.SummSkip)               :: TFloat AS SummSkip
+                          --
             --            , SUM (tmpAll.SummSocialIn)         :: TFloat AS SummSocialIn
             --            , SUM (tmpAll.SummSocialAdd)        :: TFloat AS SummSocialAdd
                         , SUM (tmpAll.SummChild)              :: TFloat AS SummChild
@@ -633,6 +663,8 @@ BEGIN
                       OR 0 <> tmpAll.SummAdd
                       OR 0 <> tmpAll.SummAddOth
                       OR 0 <> tmpAll.SummAuditAdd
+                      OR 0 <> tmpAll.SummMedicdayAdd
+                      OR 0 <> tmpAll.SummSkip
                       OR 0 <> tmpAll.SummHouseAdd
                       -- OR 0 <> tmpAll.SummNalog
                       -- OR 0 <> tmpAll.SummNalogRet
@@ -822,12 +854,16 @@ BEGIN
             , tmpAll.SummNalogRet           :: TFloat AS SummNalogRet
 --            , tmpAll.SummCardRecalc       :: TFloat AS SummCardRecalc
               -- !!!временно!!!
-            , (tmpAll.SummMinus + tmpAll.SummFine + tmpAll.SummFineOth) :: TFloat AS SummMinus
+            , (COALESCE (tmpAll.SummMinus, 0) + COALESCE (tmpAll.SummFine, 0) + COALESCE (tmpAll.SummFineOth, 0) + COALESCE (tmpAll.SummSkip, 0)) :: TFloat AS SummMinus
             , (tmpAll.SummFine  + tmpAll.SummFineOth)              :: TFloat AS SummFine
             , tmpAll.SummAdd                :: TFloat AS SummAdd
-            , tmpAll.SummAuditAdd           :: TFloat AS SummAuditAdd
+            , (COALESCE (tmpAll.SummAuditAdd, 0) + COALESCE (tmpAll.SummMedicdayAdd, 0)) :: TFloat AS SummAuditAdd
+            , tmpAll.SummMedicdayAdd        :: TFloat AS SummMedicdayAdd
+            , tmpAll.SummSkip               :: TFloat AS SummSkip
+              --
 --            , tmpAll.SummSocialIn         :: TFloat AS SummSocialIn
 --            , tmpAll.SummSocialAdd        :: TFloat AS SummSocialAdd
+              --
             , tmpAll.SummChild              :: TFloat AS SummChild
             , tmpAll.SummMinusExt           :: TFloat AS SummMinusExt
 
@@ -923,4 +959,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_PersonalService_DetailPrint (inMovementId := 1001606, inisShowAll:= FALSE, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpSelect_Movement_PersonalService_DetailPrint (inMovementId := 10495948, inisShowAll:= TRUE, inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 16>";
+-- SELECT * FROM gpSelect_Movement_PersonalService_DetailPrint (inMovementId := 10495948, inisShowAll:= TRUE, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 16>";
