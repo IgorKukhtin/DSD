@@ -47,9 +47,9 @@ BEGIN
 
 
      -- !!!СНАЧАЛА - Ведомость охрана!!!
-     IF inUserId > 0 AND vbPersonalServiceListId = 301885 -- Ведомость охрана
+     IF inUserId > 0 -- AND vbPersonalServiceListId = 301885 -- Ведомость охрана
      THEN
-         PERFORM lpUpdate_MI_PersonalService_SummAuditAdd (inMovementId, inUserId);
+         PERFORM lpUpdate_MI_PersonalService_SummAuditAdd (inMovementId, vbPersonalServiceListId, inUserId);
      END IF;
 
 
@@ -79,6 +79,10 @@ BEGIN
                   + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummAuditAdd()), 0)
                   -- SummHouseAdd
                   + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummHouseAdd()), 0)
+                    -- "плюс" <за санобработка>
+                  + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummMedicdayAdd()), 0)
+                    -- "минус" <за прогул>
+                  - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummSkip()), 0)
                     -- 
                   , MovementItem.ParentId
                   )
