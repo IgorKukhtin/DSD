@@ -2846,7 +2846,12 @@ end;
 procedure TLoadFormTest.LoadGoodsSP_1303FormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPSearch_1303JournalForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPInform_1303JournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSPInform_1303JournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPInform_1303Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSPInform_1303Form');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPSearch_1303JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPSearch_1303JournalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPSearch_1303Form'));
@@ -2866,7 +2871,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_1303JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_1303JournalForm');
 
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountry_1303Form'));
   TdsdFormStorageFactory.GetStorage.Load('TCountry_1303Form');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountry_1303EditForm'));

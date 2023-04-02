@@ -22,4 +22,7 @@
     <Transaction>1899.12.30 00:00:00.000.022,=C:\Work\Temp\ProjectMobile\Components\Defaults.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.170,=C:\Work\Temp\ProjectMobile\Components\UtilConst.pas</Transaction>
   </Transactions>
+	<ActiveMobileDevice>
+		<NoProfile Android="" Android64="2bd070279805"/>
+	</ActiveMobileDevice>
 </BorlandProject>

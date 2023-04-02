@@ -1282,7 +1282,9 @@ uses
   Report_FulfillmentPlanMobileAppUser in '..\..\FormsFarmacy\Report\Report_FulfillmentPlanMobileAppUser.pas' {Report_FulfillmentPlanMobileAppUserForm: TParentForm},
   AsinoPharmaSPJournal in '..\..\FormsFarmacy\Document\AsinoPharmaSPJournal.pas' {AsinoPharmaSPJournalForm: TParentForm},
   AsinoPharmaSP in '..\..\FormsFarmacy\Document\AsinoPharmaSP.pas' {AsinoPharmaSPForm: TParentForm},
-  ActNumberAndAmountDialog in '..\..\FormsFarmacy\Document\ActNumberAndAmountDialog.pas' {ActNumberAndAmountDialogForm: TParentForm};
+  ActNumberAndAmountDialog in '..\..\FormsFarmacy\Document\ActNumberAndAmountDialog.pas' {ActNumberAndAmountDialogForm: TParentForm},
+  GoodsSPInform_1303Journal in '..\..\FormsFarmacy\Document\GoodsSPInform_1303Journal.pas' {GoodsSPInform_1303JournalForm: TParentForm},
+  GoodsSPInform_1303 in '..\..\FormsFarmacy\Document\GoodsSPInform_1303.pas' {GoodsSPInform_1303Form: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

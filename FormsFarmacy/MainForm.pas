@@ -1015,6 +1015,8 @@ type
     N375: TMenuItem;
     actAsinoPharmaSPJournal: TdsdOpenForm;
     N376: TMenuItem;
+    actGoodsSPInform_1303Journal: TdsdOpenForm;
+    N13034081: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

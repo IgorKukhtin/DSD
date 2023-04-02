@@ -75,10 +75,7 @@ BEGIN
                                    ON MovementBoolean_AutoVIPforSales.MovementId = Movement.Id
                                   AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
                                   
-         LEFT JOIN MovementLinkObject AS MLinkObject_Unit
-                                      ON MLinkObject_Unit.MovementId = Movement.Id
-                                     AND MLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()    
-         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MLinkObject_Unit.ObjectId                              
+         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMov.UnitId                         
 
     WHERE CASE WHEN MovementDate_Delay.ValueData is not Null 
                     THEN MovementDate_Delay.ValueData + INTERVAL '2 DAY'
@@ -94,9 +91,7 @@ BEGIN
                                                   THEN INTERVAL '10 DAY' 
                                                   ELSE INTERVAL '1 DAY' END
                ELSE Movement.OperDate + INTERVAL '7 DAY' END < DATE_TRUNC ('DAY', CURRENT_DATE)
-      AND COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False) = False
-      AND (tmpMov.UnitId <> 16701386 OR COALESCE (MovementLinkObject_CheckSourceKind.ObjectId , 0) <> 0 OR 
-           COALESCE (MovementString_InvNumberOrder.ValueData, '') <> '')) AS Movement;
+      AND COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False) = False) AS Movement;
                
 END;
 $BODY$
