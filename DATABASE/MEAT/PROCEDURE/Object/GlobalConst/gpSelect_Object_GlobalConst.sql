@@ -26,7 +26,7 @@ BEGIN
                                                      AND LOWER (pg_PROC.query) LIKE LOWER ('%' || gpSelect.Name ||'(%')
                )
      -- AND vbUserId = zfCalc_UserAdmin() :: Integer
-        AND 1=1
+        AND 1=0
  
      THEN -- !!! Œ“ Àﬁ◊»À» !!!
           PERFORM pg_cancel_backend (tmp.pId)
