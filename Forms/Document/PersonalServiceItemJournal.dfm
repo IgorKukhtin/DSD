@@ -5,6 +5,7 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitTop = -112
   ExplicitWidth = 1237
   ExplicitHeight = 744
   PixelsPerInch = 96
@@ -405,6 +406,26 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
               Format = ',0.####'
               Position = spFooter
               Column = SummChild
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DaySkip
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummSkip
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DayMedicday
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummMedicdayAdd
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -636,6 +657,26 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = SummHospOthRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DaySkip
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummSkip
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = DayMedicday
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummMedicdayAdd
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -1350,6 +1391,54 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1078#1080#1083#1100#1077
+            Width = 70
+          end
+          object DaySkip: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1077' '#1079#1072' '#1087#1088#1086#1075#1091#1083', '#1076#1085
+            DataBinding.FieldName = 'DaySkip'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1085#1077#1081' '#1091#1076#1077#1088#1078#1072#1085#1080#1081' '#1079#1072' '#1087#1088#1086#1075#1091#1083
+            Options.Editing = False
+            Width = 77
+          end
+          object SummSkip: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1077' '#1079#1072' '#1087#1088#1086#1075#1091#1083', '#1075#1088#1085'.'
+            DataBinding.FieldName = 'SummSkip'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1091#1076#1077#1088#1078#1072#1085#1080#1081' '#1079#1072' '#1087#1088#1086#1075#1091#1083
+            Options.Editing = False
+            Width = 80
+          end
+          object DayMedicday: TcxGridDBColumn
+            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091', '#1076#1085'.'
+            DataBinding.FieldName = 'DayMedicday'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1085#1077#1081' '#1076#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091
+            Options.Editing = False
+            Width = 70
+          end
+          object SummMedicdayAdd: TcxGridDBColumn
+            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091', '#1075#1088#1085
+            DataBinding.FieldName = 'SummMedicdayAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1099' '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091
+            Options.Editing = False
             Width = 70
           end
           object MemberName_mi: TcxGridDBColumn
@@ -2341,6 +2430,7 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
       FileNamePrefixParam.Value = ''
       FileNamePrefixParam.DataType = ftString
       FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
       Left = 1192
       Top = 216
     end
@@ -2559,6 +2649,7 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
       FileNamePrefixParam.Value = ''
       FileNamePrefixParam.DataType = ftString
       FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
       Left = 1072
       Top = 240
     end
