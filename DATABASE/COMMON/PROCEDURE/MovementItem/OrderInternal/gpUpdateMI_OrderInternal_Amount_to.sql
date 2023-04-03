@@ -212,6 +212,8 @@ BEGIN
 
         END IF;
 
+        -- сохранили свойство <последний расчет>
+        PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NPP_calc(), inMovementId, FALSE);
 
         -- пересчитали Итоговые суммы по накладной
         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
