@@ -24,6 +24,8 @@ AS
 $BODY$
    DECLARE vbUserId  Integer;
 
+   DECLARE vbSessionId Integer;
+
    DECLARE vbOperDate  TDateTime;
    DECLARE vbDayCount  Integer;
    DECLARE vbWeekCount Integer;
@@ -130,11 +132,11 @@ else*/
 
     -- !!!Временно 2 РАЗА - 2 Алгоритма - что б сравнить!!!
     IF inIsByDay = TRUE
-      THEN
-          PERFORM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= inMovementId, inId:= inId, inNumber:= inNumber, inIsClear:= inIsClear
-                                                        , inIsPack:= inIsPack, inIsPackSecond:= inIsPackSecond, inIsPackNext:= inIsPackNext, inIsPackNextSecond:= inIsPackNextSecond, inIsByDay:= FALSE, inSession:= inSession);
-          -- RETURN;
-      END IF;
+    THEN
+        PERFORM gpUpdateMI_OrderInternal_Amount_toPACK (inMovementId:= inMovementId, inId:= inId, inNumber:= inNumber, inIsClear:= inIsClear
+                                                      , inIsPack:= inIsPack, inIsPackSecond:= inIsPackSecond, inIsPackNext:= inIsPackNext, inIsPackNextSecond:= inIsPackNextSecond, inIsByDay:= FALSE, inSession:= inSession);
+        -- RETURN;
+    END IF;
     -- !!!Временно 2 РАЗА - 2 Алгоритма - что б сравнить!!!
 
 
@@ -144,6 +146,16 @@ else*/
         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
     ELSE
+        -- если № п/п уже рассчитан
+        IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId =zc_MovementBoolean_NPP_calc() AND MB.ValueData = TRUE)
+        THEN
+            -- найдем его
+            vbSessionId:= COALESCE ((SELECT MAX (MovementItem.Amount) FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Detail()), 1) :: Integer;
+        ELSE
+            -- определяется
+            vbSessionId:= (1 + COALESCE ((SELECT MAX (MovementItem.Amount) FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Detail()), 0)) :: Integer;
+        END IF;
+
         -- определяется
         SELECT Movement.OperDate
              ,  1 + EXTRACT (DAY FROM (zfConvert_DateTimeWithOutTZ (MovementDate_OperDateEnd.ValueData) - zfConvert_DateTimeWithOutTZ (MovementDate_OperDateStart.ValueData)))      AS DayCount
@@ -1366,7 +1378,106 @@ else*/
          END IF;
 
 
-    END IF;
+        -- сохранили новый расчет
+        PERFORM lpInsert_MovementItemProtocol (tmpMI.MovementItemId_new, vbUserId, tmpMI.isInsert)
+
+        FROM (SELECT tmpMI.MovementItemId_new, tmpMI.isInsert
+                     -- сохранили св-во
+                   , lpInsertUpdate_MovementItemFloat (tmpMI.DescId_1, tmpMI.MovementItemId_new, COALESCE (tmpMI.Amount_1, 0))
+                     -- сохранили св-во
+                   , lpInsertUpdate_MovementItemFloat (tmpMI.DescId_2, tmpMI.MovementItemId_new, COALESCE (tmpMI.Amount_2, 0))
+                     -- сохранили св-во
+                   , lpInsertUpdate_MovementItemFloat (tmpMI.DescId_3, tmpMI.MovementItemId_new, COALESCE (tmpMI.Amount_3, 0))
+                     -- сохранили св-во
+                   , lpInsertUpdate_MovementItemFloat (tmpMI.DescId_3, tmpMI.MovementItemId_new, COALESCE (tmpMI.Amount_3, 0))
+                     -- сохранили св-во
+                   , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), tmpMI.MovementItemId_new, tmpMI.isCalculated)
+                     -- сохранили протокол
+                   , lpInsertUpdate_MovementItemDate (tmpMI.DescId_date, tmpMI.MovementItemId_new, CURRENT_TIMESTAMP)
+                     -- сохранили протокол
+                   , CASE WHEN tmpMI.DescId_user > 0 THEN lpInsertUpdate_MovementItemLinkObject (tmpMI.DescId_user, tmpMI.MovementItemId_new, vbUserId) END
+
+              FROM (SELECT  tmpMI.DescId_1, tmpMI.Amount_1
+                          , tmpMI.DescId_2, tmpMI.Amount_2
+                          , tmpMI.DescId_3, tmpMI.Amount_3
+                          , tmpMI.DescId_4, tmpMI.Amount_4
+                          , tmpMI.isCalculated
+                            --
+                          , CASE WHEN tmpMI.MovementItemId > 0 THEN zc_MIDate_Update()       ELSE zc_MIDate_Insert() END AS DescId_date
+                          , CASE WHEN tmpMI.MovementItemId > 0 THEN zc_MILinkObject_Update() ELSE NULL               END AS DescId_user
+                          , CASE WHEN tmpMI.MovementItemId > 0 THEN FALSE                    ELSE TRUE               END AS isInsert
+                            -- сохранили элемент
+                          , lpInsertUpdate_MovementItem (ioId          := tmpMI.MovementItemId
+                                                       , inDescId      := zc_MI_Detail()
+                                                       , inObjectId    := CASE WHEN tmpMI.MovementItemId > 0 THEN tmpMI.UserId ELSE vbUserId END
+                                                       , inMovementId  := inMovementId
+                                                       , inAmount      := vbSessionId
+                                                       , inParentId    := tmpMI.ParentId
+                                                       , inUserId      := vbUserId
+                                                        ) AS MovementItemId_new
+                    FROM (WITH tmpMI_detail AS (SELECT MovementItem.Id AS MovementItemId, MovementItem.ParentId, MovementItem.ObjectId AS UserId
+                                                FROM MovementItem
+                                                WHERE MovementItem.MovementId =  inMovementId
+                                                  AND MovementItem.DescId     =  zc_MI_Detail()
+                                                  -- с этим № п/п
+                                                  AND MovementItem.Amount     =  vbSessionId
+                                               )
+                          --
+                          SELECT tmpMI_detail.MovementItemId
+                               , COALESCE (_tmpMI_Child.MovementItemId, tmpMI_detail.ParentId) AS ParentId
+                               , COALESCE (_tmpMI_Child.isCalculated, FALSE) AS isCalculated
+                               , tmpMI_detail.UserId
+                                 -- 1
+                               , CASE WHEN inIsByDay = TRUE
+                                      THEN zc_MIFloat_AmountPack()
+                                      ELSE zc_MIFloat_AmountPack_calc()
+                                 END AS DescId_1
+                                 --
+                               , _tmpMI_Child.AmountResult AS Amount_1
+
+                                 -- 2
+                               , CASE WHEN inIsByDay = TRUE
+                                      THEN zc_MIFloat_AmountPackSecond()
+                                      ELSE zc_MIFloat_AmountPackSecond_calc()
+                                 END AS DescId_2
+                                 --
+                               , _tmpMI_Child.AmountSecondResult AS Amount_2
+
+                                 -- 3
+                               , CASE WHEN inIsByDay = TRUE
+                                      THEN zc_MIFloat_AmountPackNext()
+                                      ELSE zc_MIFloat_AmountPackNext_calc()
+                                 END AS DescId_3
+                                 --
+                               , _tmpMI_Child.AmountNextResult AS Amount_3
+
+                                 -- 4
+                               , CASE WHEN inIsByDay = TRUE
+                                          THEN zc_MIFloat_AmountPackNextSecond()
+                                      ELSE zc_MIFloat_AmountPackNextSecond_calc()
+                                 END AS DescId_4
+                                 -- 4
+                               , _tmpMI_Child.AmountNextSecondResult AS Amount_4
+
+                          FROM _tmpMI_Child
+                               FULL JOIN tmpMI_detail ON tmpMI_detail.ParentId = _tmpMI_Child.MovementItemId
+                         ) AS tmpMI
+                   ) AS tmpMI
+
+             ) AS tmpMI;
+
+
+        -- только для этого режима
+        IF inIsByDay = FALSE
+        THEN
+             -- сохранили свойство <последний расчет>
+             PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NPP_calc(), inMovementId, TRUE);
+        END IF;
+
+
+
+    END IF;-- ELSE IF inIsClear = TRUE
+
 
 IF vbUserId = 5 AND inIsByDay = TRUE
    AND 1=0
