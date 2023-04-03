@@ -23,7 +23,7 @@ BEGIN
 
 
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
-     INSERT INTO ResourseProtocol (UserId
+   /*INSERT INTO ResourseProtocol (UserId
                                  , OperDate
                                  , Value1
                                  , Value2
@@ -66,7 +66,7 @@ BEGIN
     || ', ' || CASE WHEN inIsClear = TRUE THEN 'TRUE' ELSE 'FALSE' END
     || ', ' || inNumber     :: TVarChar
     || ', ' || inSession
-              ;
+              ;*/
 
 
     IF inIsClear = TRUE

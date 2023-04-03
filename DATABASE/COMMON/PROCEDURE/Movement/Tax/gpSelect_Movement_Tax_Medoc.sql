@@ -53,7 +53,7 @@ BEGIN
 
 
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
-     INSERT INTO ResourseProtocol (UserId
+   /*INSERT INTO ResourseProtocol (UserId
                                  , OperDate
                                  , Value1
                                  , Value2
@@ -93,7 +93,7 @@ BEGIN
              , inMovementId        :: TVarChar
     || ', ' || inisClientCopy      :: TVarChar
     || ', ' || inSession
-              ;
+              ;*/
 
 END;
 $BODY$

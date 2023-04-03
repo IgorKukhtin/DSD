@@ -244,7 +244,7 @@ BEGIN
 
 
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
-     INSERT INTO ResourseProtocol (UserId
+   /*INSERT INTO ResourseProtocol (UserId
                                  , OperDate
                                  , Value1
                                  , Value2
@@ -284,7 +284,7 @@ BEGIN
              , inMovementId :: TVarChar
     || ', ' || inSession
     || ', ' || (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
-              ;
+              ;*/
 
 
      --

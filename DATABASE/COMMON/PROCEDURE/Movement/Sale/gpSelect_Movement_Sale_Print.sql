@@ -1799,7 +1799,7 @@ BEGIN
     RETURN NEXT Cursor3;
 
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
-     INSERT INTO ResourseProtocol (UserId
+   /*INSERT INTO ResourseProtocol (UserId
                                  , OperDate
                                  , Value1
                                  , Value2
@@ -1838,7 +1838,7 @@ BEGIN
                -- ProtocolData
              , inMovementId :: TVarChar
     || ', ' || inSession
-              ;
+              ;*/
 
 END;
 $BODY$

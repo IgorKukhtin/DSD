@@ -39,7 +39,7 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
-     INSERT INTO ResourseProtocol (UserId
+   /*INSERT INTO ResourseProtocol (UserId
                                  , OperDate
                                  , Value1
                                  , Value2
@@ -85,7 +85,7 @@ BEGIN
     || ', inIsPackNextSecond:= ' || CASE WHEN inIsPackNextSecond = TRUE THEN 'TRUE' ELSE 'FALSE' END
     || ', inIsByDay:= '          || CASE WHEN inIsByDay          = TRUE THEN 'TRUE' ELSE 'FALSE' END
     || ', '                      || inSession
-              ;
+              ;*/
 
 
 /*
@@ -1389,13 +1389,13 @@ else*/
                      -- сохранили св-во
                    , lpInsertUpdate_MovementItemFloat (tmpMI.DescId_3, tmpMI.MovementItemId_new, COALESCE (tmpMI.Amount_3, 0))
                      -- сохранили св-во
-                   , lpInsertUpdate_MovementItemFloat (tmpMI.DescId_3, tmpMI.MovementItemId_new, COALESCE (tmpMI.Amount_3, 0))
+                   , lpInsertUpdate_MovementItemFloat (tmpMI.DescId_4, tmpMI.MovementItemId_new, COALESCE (tmpMI.Amount_4, 0))
                      -- сохранили св-во
                    , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), tmpMI.MovementItemId_new, tmpMI.isCalculated)
                      -- сохранили протокол
-                   , lpInsertUpdate_MovementItemDate (tmpMI.DescId_date, tmpMI.MovementItemId_new, CURRENT_TIMESTAMP)
+                   , CASE WHEN tmpMI.DescId_date = zc_MIDate_Insert() OR inIsByDay = FALSE THEN lpInsertUpdate_MovementItemDate (tmpMI.DescId_date, tmpMI.MovementItemId_new, CURRENT_TIMESTAMP) END
                      -- сохранили протокол
-                   , CASE WHEN tmpMI.DescId_user > 0 THEN lpInsertUpdate_MovementItemLinkObject (tmpMI.DescId_user, tmpMI.MovementItemId_new, vbUserId) END
+                   , CASE WHEN tmpMI.DescId_user > 0 AND inIsByDay = FALSE THEN lpInsertUpdate_MovementItemLinkObject (tmpMI.DescId_user, tmpMI.MovementItemId_new, vbUserId) END
 
               FROM (SELECT  tmpMI.DescId_1, tmpMI.Amount_1
                           , tmpMI.DescId_2, tmpMI.Amount_2
@@ -1421,11 +1421,13 @@ else*/
                                                   AND MovementItem.DescId     =  zc_MI_Detail()
                                                   -- с этим № п/п
                                                   AND MovementItem.Amount     =  vbSessionId
+                                                  -- временно
+                                                  AND MovementItem.isErased   =  FALSE
                                                )
                           --
                           SELECT tmpMI_detail.MovementItemId
                                , COALESCE (_tmpMI_Child.MovementItemId, tmpMI_detail.ParentId) AS ParentId
-                               , COALESCE (_tmpMI_Child.isCalculated, FALSE) AS isCalculated
+                               , COALESCE (_tmpMI_Child.isCalculated, TRUE) AS isCalculated
                                , tmpMI_detail.UserId
                                  -- 1
                                , CASE WHEN inIsByDay = TRUE
@@ -1459,7 +1461,12 @@ else*/
                                  -- 4
                                , _tmpMI_Child.AmountNextSecondResult AS Amount_4
 
-                          FROM _tmpMI_Child
+                          FROM (SELECT * FROM _tmpMI_Child
+                                WHERE _tmpMI_Child.AmountResult           <> 0
+                                   OR _tmpMI_Child.AmountSecondResult     <> 0
+                                   OR _tmpMI_Child.AmountNextResult       <> 0
+                                   OR _tmpMI_Child.AmountNextSecondResult <> 0
+                               ) AS _tmpMI_Child
                                FULL JOIN tmpMI_detail ON tmpMI_detail.ParentId = _tmpMI_Child.MovementItemId
                          ) AS tmpMI
                    ) AS tmpMI
