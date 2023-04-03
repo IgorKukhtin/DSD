@@ -272,6 +272,36 @@ type
     RemainsRK: TcxGridDBColumn;
     chRemainsRK: TcxGridDBColumn;
     chtRemainsRK: TcxGridDBColumn;
+    cxTabSheet2: TcxTabSheet;
+    cxGrid_Det: TcxGrid;
+    cxGridDBTableView_Det: TcxGridDBTableView;
+    GoodsCode_ch3: TcxGridDBColumn;
+    GoodsName_ch3: TcxGridDBColumn;
+    GoodsKindName_ch3: TcxGridDBColumn;
+    isCalculated_ch3: TcxGridDBColumn;
+    GoodsCode_basis_ch3: TcxGridDBColumn;
+    GoodsName_basis_ch3: TcxGridDBColumn;
+    InsertDate: TcxGridDBColumn;
+    InsertName: TcxGridDBColumn;
+    UpdateDate: TcxGridDBColumn;
+    UpdateName: TcxGridDBColumn;
+    Amount_ch3: TcxGridDBColumn;
+    AmountPack_ch3: TcxGridDBColumn;
+    AmountPackSecond_ch3: TcxGridDBColumn;
+    AmountPack_calc_ch3: TcxGridDBColumn;
+    AmountPackSecond_calc_ch3: TcxGridDBColumn;
+    AmountPackNext_ch3: TcxGridDBColumn;
+    AmountPackNextSecond_ch3: TcxGridDBColumn;
+    AmountPackNext_calc_ch3: TcxGridDBColumn;
+    AmountPackNextSecond_calc_ch3: TcxGridDBColumn;
+    isErased_ch3: TcxGridDBColumn;
+    cxGridLevel_Det: TcxGridLevel;
+    DetailDS: TDataSource;
+    DetailCDS: TClientDataSet;
+    spSelect_Detail: TdsdStoredProc;
+    dsdDBViewAddOnDetail: TdsdDBViewAddOn;
+    actProtocolDetail: TdsdOpenForm;
+    bbProtocolDetail: TdxBarButton;
   private
     { Private declarations }
   public

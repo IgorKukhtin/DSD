@@ -10,9 +10,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderInternal_Detail(
 RETURNS TABLE (Id Integer, ParentId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsId_basis Integer, GoodsCode_basis Integer, GoodsName_basis TVarChar
-             , GoodsId_detail Integer, GoodsCode_detail Integer, GoodsName_detail TVarChar
+             , GoodsId_complete Integer, GoodsCode_complete Integer, GoodsName_complete TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
-             , GoodsKindId_detail Integer, GoodsKindName_detail TVarChar
+             , GoodsKindId_complete Integer, GoodsKindName_complete TVarChar
              , Amount                    TFloat
              , AmountPack                TFloat
              , AmountPackSecond          TFloat
@@ -38,44 +38,58 @@ BEGIN
 
      RETURN QUERY
      WITH
-     tmpMI_master AS (SELECT MovementItem.Id                     AS MovementItemId
-                           , MovementItem.ObjectId               AS GoodsId_detail
-                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId_detail
+     tmpMI_master AS (SELECT MovementItem.Id                                       AS MovementItemId
+                           , COALESCE (MIFloat_ContainerId.ValueData, 0)           AS ContainerId
 
-                           , COALESCE (MILinkObject_Goods.ObjectId
-                                     , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201())
-                                                 THEN MovementItem.ObjectId
-                                            ELSE 0
-                                       END
-                                      )AS GoodsId
+                           , MovementItem.ObjectId                                 AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)         AS GoodsKindId
+                           
+                           , COALESCE (MILinkObject_GoodsComplete.ObjectId, 0)     AS GoodsId_complete
+                           , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0) AS GoodsKindId_complete
+
                            , COALESCE (MILinkObject_GoodsBasis.ObjectId, 0)        AS GoodsId_basis
-                           , COALESCE (MILinkObject_GoodsKindComplete.ObjectId
-                                     , CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId NOT IN (zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201())
-                                                 THEN zc_GoodsKind_Basis()
-                                            ELSE 0
-                                      END
-                                      ) AS GoodsKindId_complete
-                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                           INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                                  AND MovementItem.DescId     = zc_MI_Master()
-                                                  AND MovementItem.isErased   = tmpIsErased.isErased
-                           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                                ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
-                                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
---                                                       AND  = Object_InfoMoney_View.InfoMoneyId
 
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsBasis
-                                                            ON MILinkObject_GoodsBasis.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_GoodsBasis.DescId = zc_MILinkObject_GoodsBasis()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                                            ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
-                                                            ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                           /*, vbOperDate - (COALESCE (MIFloat_TermProduction.ValueData, 0) :: INteger :: TVarChar || ' DAY') :: INTERVAL AS PartionGoods_start
+                           , ObjectDate_Value.ValueData                      AS PartionDate_pf
+                           , CLO_GoodsKind.ObjectId                          AS GoodsKindId_pf
+                           , CASE WHEN MIFloat_ContainerId.ValueData > 0 THEN COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis()) END AS GoodsKindCompleteId_pf
+                           , CLO_Unit.ObjectId                               AS UnitId_pf
+                           */
+                           , MovementItem.isErased                                 AS isErased
+
+                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                                   AND MovementItem.DescId     = zc_MI_Master()
+                                                   AND MovementItem.isErased   = tmpIsErased.isErased
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                        ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                            --
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsBasis
+                                                             ON MILinkObject_GoodsBasis.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_GoodsBasis.DescId         = zc_MILinkObject_GoodsBasis()
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsComplete
+                                                             ON MILinkObject_GoodsComplete.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_GoodsComplete.DescId         = zc_MILinkObject_Goods()
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                             ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_GoodsKindComplete.DescId         = zc_MILinkObject_GoodsKindComplete()
+                            --
+                            /*LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                          ON CLO_Unit.ContainerId = MIFloat_ContainerId.ValueData :: Integer
+                                                         AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                            LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                          ON CLO_GoodsKind.ContainerId = MIFloat_ContainerId.ValueData :: Integer
+                                                         AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                            
+                            LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
+                                                 ON ObjectLink_GoodsKindComplete.ObjectId = CLO_PartionGoods.ObjectId
+                                                AND ObjectLink_GoodsKindComplete.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete() 
+                            */
                       )
                            
 
@@ -154,16 +168,16 @@ BEGIN
            , Object_Goods_basis.Id                       AS GoodsId_basis
            , Object_Goods_basis.ObjectCode               AS GoodsCode_basis
            , Object_Goods_basis.ValueData                AS GoodsName_basis
-           , Object_Goods_detail.Id                      AS GoodsId_detail
-           , Object_Goods_detail.ObjectCode              AS GoodsCode_detail
-           , Object_Goods_detail.ValueData               AS GoodsName_detail
+           , Object_Goods_complete.Id                    AS GoodsId_complete
+           , Object_Goods_complete.ObjectCode            AS GoodsCode_complete
+           , Object_Goods_complete.ValueData             AS GoodsName_complete
            --, ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , Object_GoodsKind.Id                         AS GoodsKindId
            , Object_GoodsKind.ValueData                  AS GoodsKindName
-           , Object_GoodsKind_detail.Id                  AS GoodsKindId_detail
-           , Object_GoodsKind_detail.ValueData           AS GoodsKindName_detail
-           
+           , Object_GoodsKind_complete.Id                AS GoodsKindId_complete
+           , Object_GoodsKind_complete.ValueData         AS GoodsKindName_complete
+         
            , MI_Detail.Amount                    ::TFloat AS Amount
                            
            , MI_Detail.AmountPack                ::TFloat AS AmountPack
@@ -189,11 +203,11 @@ BEGIN
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MI_Detail.Insertd
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MI_Detail.UpdateId
             
-            LEFT JOIN Object AS Object_Goods_detail ON Object_Goods_detail.Id = MI_Master.GoodsId_detail
-            LEFT JOIN Object AS Object_GoodsKind_detail ON Object_GoodsKind_detail.Id = MI_Master.GoodsKindId_detail
+            LEFT JOIN Object AS Object_Goods_complete ON Object_Goods_complete.Id = MI_Master.GoodsId_complete
+            LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = MI_Master.GoodsKindId_complete
             LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = MI_Master.GoodsId_basis
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Master.GoodsId
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = GoodsKindId_complete
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MI_Master.GoodsKindId
        ;
 
 END;
@@ -207,4 +221,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_MI_OrderInternal_Detail(inMovementId := 24884712 , inIsErased := 'False' ,  inSession := '9457');
+-- select * from gpSelect_MI_OrderInternal_Detail(inMovementId := 24901327 , inIsErased := 'False' ,  inSession := '9457');
