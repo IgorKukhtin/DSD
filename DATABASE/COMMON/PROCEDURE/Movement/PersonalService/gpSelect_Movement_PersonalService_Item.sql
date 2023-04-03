@@ -63,6 +63,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , SummSocialIn TFloat, SummSocialAdd TFloat
              , SummChild TFloat, SummChildRecalc TFloat, SummMinusExt TFloat, SummMinusExtRecalc TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
+             
+             , SummMedicdayAdd TFloat, DayMedicday TFloat
+             , SummSkip TFloat, DaySkip TFloat
              --, Amount_avance TFloat
              --, TotalSummChild TFloat, SummDiff TFloat
              --, DayCount_child TFloat
@@ -524,6 +527,11 @@ BEGIN
             , MIFloat_SummTransportAddLong.ValueData  AS SummTransportAddLong
             , MIFloat_SummTransportTaxi.ValueData     AS SummTransportTaxi
             , MIFloat_SummPhone.ValueData             AS SummPhone
+            
+            , MIFloat_SummMedicdayAdd.ValueData         ::TFloat AS SummMedicdayAdd
+            , MIFloat_DayMedicday.ValueData             ::TFloat AS DayMedicday
+            , MIFloat_SummSkip.ValueData                ::TFloat AS SummSkip
+            , MIFloat_DaySkip.ValueData                 ::TFloat AS DaySkip
             --, ( 1 * tmpMIContainer_pay.Amount_avance) :: TFloat AS Amount_avance
 
             --, COALESCE (tmpMIChild.Amount, 0)                                                 :: TFloat AS TotalSummChild
@@ -898,6 +906,22 @@ BEGIN
                                         ON MIFloat_DayAudit.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_DayAudit.DescId = zc_MIFloat_DayAudit()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_SummMedicdayAdd
+                                        ON MIFloat_SummMedicdayAdd.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummMedicdayAdd.DescId = zc_MIFloat_SummMedicdayAdd()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_DayMedicday
+                                        ON MIFloat_DayMedicday.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_DayMedicday.DescId = zc_MIFloat_DayMedicday()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_SummSkip
+                                        ON MIFloat_SummSkip.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummSkip.DescId = zc_MIFloat_SummSkip()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_DaySkip
+                                        ON MIFloat_DaySkip.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_DaySkip.DescId = zc_MIFloat_DaySkip()
+
             LEFT JOIN tmpMovementItemFloat AS MIFloat_SummAvance
                                         ON MIFloat_SummAvance.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummAvance.DescId = zc_MIFloat_SummAvance()
@@ -976,6 +1000,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 03.04.23         * 
  18.11.21         * TotalSummHouseAdd
  16.11.21         * isMail
  27.09.21         * isExport
