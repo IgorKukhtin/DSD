@@ -1621,10 +1621,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_BonusInetOrder() RETURNS Integer AS $BODY$
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_BonusInetOrder', 'Маркет бонусы для инет заказов, %' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_BonusInetOrder');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_PriceMargSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceMargSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PriceMargSP', 'Гранична оптово-відпускна ціна в перерахунку на одиницю лікарської форми (грн.)(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceMargSP');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 01.04.23                                                                                                     * zc_MIFloat_PriceMargSP
  27.03.23         * zc_MIFloat_SummMedicdayAdd
                     zc_MIFloat_SummSkip
                     zc_MIFloat_DayMedicday

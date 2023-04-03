@@ -1821,8 +1821,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     object actVchasnoEDIDesadv: TdsdVchasnoEDIAction
       Category = 'VchasnoEDI'
       MoveParams = <>
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1103#1074#1082#1080' '#1080#1079' '#1042#1095#1072#1089#1085#1086' EDI'
+      Caption = 'actVchasnoEDIDesadv'
       Host.Value = 'https://edi.vchasno.ua/api/documents'
       Host.DataType = ftString
       Host.MultiSelectSeparator = ','
@@ -1837,6 +1836,96 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       DateTo.MultiSelectSeparator = ','
       EDI = EDI
       EDIDocType = ediDesadv
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object mactVchasnoEDIOrdrsp: TMultiAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPrintStoredProc
+        end
+        item
+          Action = actVchasnoEDIOrdrsp
+        end
+        item
+          Action = actUpdateEdiDesadvTrue
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1079#1072#1082#1072#1079#1072'> '#1074'  '#1042#1095#1072#1089#1085 +
+        #1086' EDI?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1079#1072#1082#1072#1079#1072'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1079#1072#1082#1072#1079#1072'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1103' '#1079#1072#1082#1072#1079#1072'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      ImageIndex = 84
+    end
+    object actVchasnoEDIOrdrsp: TdsdVchasnoEDIAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      Caption = 'actVchasnoEDIOrdrsp'
+      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 43313d
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 43313d
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediOrdrsp
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object mactVchasnoEDIDeclar: TMultiAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPrintStoredProc
+        end
+        item
+          Action = actVchasnoEDIDeclar
+        end
+        item
+          Action = actUpdateEdiDesadvTrue
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1091#1102' '#1085#1072#1082#1083#1072#1076#1085#1091#1102'> '#1074'  '#1042#1095#1072#1089#1085#1086 +
+        ' EDI?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'> '#1074'  '#1042#1095#1072#1089#1085#1086' EDI'
+      ImageIndex = 84
+    end
+    object actVchasnoEDIDeclar: TdsdVchasnoEDIAction
+      Category = 'VchasnoEDI'
+      MoveParams = <>
+      Caption = 'actVchasnoEDIDeclar'
+      Host.Value = 'https://edi.vchasno.ua/api/documents'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Token.Value = 'VgNbifqqRwQrl0csYoiEGGo66xFvVs-WDWWytda8gSGtubbj7eKcZWl_XzkWbEmk'
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      DateFrom.Value = 43313d
+      DateFrom.DataType = ftDateTime
+      DateFrom.MultiSelectSeparator = ','
+      DateTo.Value = 43313d
+      DateTo.DataType = ftDateTime
+      DateTo.MultiSelectSeparator = ','
+      EDI = EDI
+      EDIDocType = ediDeclar
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
@@ -2144,7 +2233,15 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'bbVchasnoEDIDesadv'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end>
     end
     object dxBarSeparator1: TdxBarSeparator
@@ -2156,6 +2253,14 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     end
     object bbVchasnoEDIDesadv: TdxBarButton
       Action = mactVchasnoEDIDesadv
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mactVchasnoEDIOrdrsp
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = mactVchasnoEDIDeclar
       Category = 0
     end
   end

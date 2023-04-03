@@ -215,6 +215,12 @@ type
     dsVchasnoEDI: TdxBarSubItem;
     dxBarSeparator1: TdxBarSeparator;
     bbVchasnoEDIDesadv: TdxBarButton;
+    mactVchasnoEDIOrdrsp: TMultiAction;
+    actVchasnoEDIOrdrsp: TdsdVchasnoEDIAction;
+    mactVchasnoEDIDeclar: TMultiAction;
+    actVchasnoEDIDeclar: TdsdVchasnoEDIAction;
+    dxBarButton1: TdxBarButton;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

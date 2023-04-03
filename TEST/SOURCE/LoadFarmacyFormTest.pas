@@ -1174,7 +1174,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppUserForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaymentHelsiForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PaymentHelsiForm');
+
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FulfillmentPlanMobileAppUserForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppForm'));
@@ -1182,7 +1186,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FulfillmentPlanMobileAppDialogForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_TabletkiRecreateForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_TabletkiRecreateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_TabletkiRecreateForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_TabletkiRecreateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_TabletkiRecreateDialogForm');
@@ -2846,7 +2850,12 @@ end;
 procedure TLoadFormTest.LoadGoodsSP_1303FormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPSearch_1303JournalForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPInform_1303JournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSPInform_1303JournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPInform_1303Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSPInform_1303Form');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPSearch_1303JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPSearch_1303JournalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPSearch_1303Form'));
@@ -2866,7 +2875,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP_1303JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSP_1303JournalForm');
 
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountry_1303Form'));
   TdsdFormStorageFactory.GetStorage.Load('TCountry_1303Form');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountry_1303EditForm'));

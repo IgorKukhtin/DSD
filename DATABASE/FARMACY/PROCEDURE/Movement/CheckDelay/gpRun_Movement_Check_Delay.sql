@@ -74,19 +74,24 @@ BEGIN
          LEFT JOIN MovementBoolean AS MovementBoolean_AutoVIPforSales
                                    ON MovementBoolean_AutoVIPforSales.MovementId = Movement.Id
                                   AND MovementBoolean_AutoVIPforSales.DescId = zc_MovementBoolean_AutoVIPforSales()
+                                  
+         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMov.UnitId                         
 
     WHERE CASE WHEN MovementDate_Delay.ValueData is not Null 
                     THEN MovementDate_Delay.ValueData + INTERVAL '2 DAY'
                WHEN MovementDate_UserConfirmedKind.ValueData is not Null AND COALESCE (MovementString_InvNumberOrder.ValueData, '') = ''
                     THEN MovementDate_UserConfirmedKind.ValueData + INTERVAL '2 DAY'
                WHEN MovementDate_UserConfirmedKind.ValueData is not Null AND COALESCE (MovementString_InvNumberOrder.ValueData, '') <> ''
-                    THEN MovementDate_UserConfirmedKind.ValueData + INTERVAL '1 DAY'
+                    THEN MovementDate_UserConfirmedKind.ValueData + 
+                         CASE WHEN Object_Unit.ValueData ILIKE 'Апт. пункт %' AND date_part('isodow', CURRENT_DATE)::Integer in (6, 7)
+                              THEN INTERVAL '10 DAY' 
+                              ELSE INTERVAL '1 DAY' END
                WHEN MovementLinkObject_CheckSourceKind.ObjectId = zc_Enum_CheckSourceKind_Tabletki() 
-                    THEN Movement.OperDate + INTERVAL '1 DAY'
+                    THEN Movement.OperDate + CASE WHEN Object_Unit.ValueData ILIKE 'Апт. пункт %'  AND date_part('isodow', CURRENT_DATE)::Integer in (6, 7)
+                                                  THEN INTERVAL '10 DAY' 
+                                                  ELSE INTERVAL '1 DAY' END
                ELSE Movement.OperDate + INTERVAL '7 DAY' END < DATE_TRUNC ('DAY', CURRENT_DATE)
-      AND COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False) = False
-      AND (tmpMov.UnitId <> 16701386 OR COALESCE (MovementLinkObject_CheckSourceKind.ObjectId , 0) <> 0 OR 
-           COALESCE (MovementString_InvNumberOrder.ValueData, '') <> '')) AS Movement;
+      AND COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False) = False) AS Movement;
                
 END;
 $BODY$

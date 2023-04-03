@@ -178,7 +178,7 @@ BEGIN
      -- пытаемся найти "Міжнародна непатентована назва (Соц. проект)" 
      -- если не находим записывае новый элемент в справочник
      vbIntenalSPName := TRIM (inIntenalSPName)||', '||TRIM (inIntenalSPName_Lat); --сливаем Укр и лат. названия через зпт.
-     vbIntenalSPId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_IntenalSP() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(vbIntenalSPName)) );
+     vbIntenalSPId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_IntenalSP() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(vbIntenalSPName)) LIMIT 1);
      IF COALESCE (vbIntenalSPId, 0) = 0 AND COALESCE (vbIntenalSPName, '') <> '' THEN
         -- записываем новый элемент
         vbIntenalSPId := gpInsertUpdate_Object_IntenalSP (ioId     := 0
@@ -190,7 +190,7 @@ BEGIN
 
      -- пытаемся найти "Торговельна назва лікарського засобу (Соц. проект)"
      -- если не находим записывае новый элемент в справочник
-     vbKindOutSPId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_KindOutSP() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inKindOutSPName)));
+     vbKindOutSPId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_KindOutSP() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inKindOutSPName)) LIMIT 1);
      IF COALESCE (vbKindOutSPId, 0) = 0 AND COALESCE (inKindOutSPName, '')<> '' THEN
         -- записываем новый элемент
         vbKindOutSPId := gpInsertUpdate_Object_KindOutSP (ioId     := 0
@@ -202,7 +202,7 @@ BEGIN
 
      -- пытаемся найти "Форма випуску (Соц. проект)"
      -- если не находим записывае новый элемент в справочник
-     vbBrandSPId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_BrandSP() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inBrandSPName)));
+     vbBrandSPId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_BrandSP() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inBrandSPName)) LIMIT 1);
      IF COALESCE (vbBrandSPId, 0) = 0 AND COALESCE (inBrandSPName, '')<> '' THEN
         -- записываем новый элемент
         vbBrandSPId := gpInsertUpdate_Object_BrandSP (ioId     := 0
@@ -403,4 +403,7 @@ $BODY$
      inEndDate             := '' , -- Дата окончания
 
 
-     inSession := '3');*/);
+     inSession := '3');*/
+     
+     
+select * from gpInsertUpdate_MI_GoodsSPHelsi_From_ExcelFull(inOperDate := ('01.08.2023')::TDateTime , inColSP := 7500 , inMedicalProgramSPId := '1318eabc-1a1a-42f6-8450-61e11c19eede' , inCountSPMin := '100' , inCountSP := '100' , inPriceSP := '0.0' , inPriceOptSP := '0' , inPriceRetSP := '' , inDailyCompensationSP := '' , inPaymentSP := '' , inDenumeratorValue := '1.0' , inReestrDateSP := '2024-02-05' , inPack := '70.0' , inIntenalSPName := 'етанол' , inIntenalSPName_Lat := 'Ethanol' , inBrandSPName := 'СПИРТ ЕТИЛОВИЙ 70 %' , inKindOutSPName := 'SOLUTION' , inMakerSP := '"АТ \"Лубнифарм\""' , inCountry := 'UA' , inReestrSP := 'UA/17228/01/01' , inIdSP := 'df125d7e-35e5-4c6a-9c99-45fe1efc1163' , inProgramId := '525df984-65be-4ae7-a18d-d662642a8acb' , inNumeratorUnit := 'PERCENT' , inDenumeratorUnit := 'FLACON' , inName := 'етанол 70 відсоток/мл, розчин' , inEndDate := '' ,  inSession := '3');

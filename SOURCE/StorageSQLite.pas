@@ -431,8 +431,8 @@ end;
 
 initialization
 
+  if SQLiteFile <> '' then Add_SQLiteLog('Create MutexSQLite');
   MutexSQLite := CreateMutex(nil, false, 'farmacycashMutexSQLite');
-  Add_SQLiteLog('Create MutexSQLite');
   GetLastError;
   ZSQLiteConnection := TZConnection.Create(Nil);
   ZSQLiteConnection.Protocol := 'sqlite-3';
