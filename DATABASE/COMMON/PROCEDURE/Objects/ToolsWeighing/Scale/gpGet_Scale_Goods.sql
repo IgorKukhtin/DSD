@@ -201,7 +201,7 @@ BEGIN
           OR tmpGoods_ScaleCeh.GoodsId > 0
       ;
 
-
+/*
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
      INSERT INTO ResourseProtocol (UserId
                                  , OperDate
@@ -244,7 +244,7 @@ BEGIN
     || ', ' || inBarCode
     || ', ' || inBranchCode      :: TVarChar
     || ', ' || inSession
-        ;
+        ;*/
 
 END;
 $BODY$

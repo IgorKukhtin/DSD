@@ -787,7 +787,7 @@ BEGIN
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
       ;
-
+/*
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
      INSERT INTO ResourseProtocol (UserId
                                  , OperDate
@@ -830,7 +830,7 @@ BEGIN
     || ', ' || inBranchCode :: TVarChar
     || ', ' || inBarCode
     || ', ' || inSession
-              ;
+              ;*/
 
 END;
 $BODY$
