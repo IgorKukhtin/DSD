@@ -228,7 +228,7 @@ type
     chGoodsCode_packTo: TcxGridDBColumn;
     chGoodsName_packTo: TcxGridDBColumn;
     chGoodsKindName_packTo: TcxGridDBColumn;
-    cxTabSheet1: TcxTabSheet;
+    tsAll: TcxTabSheet;
     cxGridPlan: TcxGrid;
     cxGridDBTableViewPlan: TcxGridDBTableView;
     plNum: TcxGridDBColumn;
@@ -272,7 +272,7 @@ type
     RemainsRK: TcxGridDBColumn;
     chRemainsRK: TcxGridDBColumn;
     chtRemainsRK: TcxGridDBColumn;
-    cxTabSheet2: TcxTabSheet;
+    tsDetail: TcxTabSheet;
     cxGrid_Det: TcxGrid;
     cxGridDBTableView_Det: TcxGridDBTableView;
     GoodsCode_ch3: TcxGridDBColumn;
@@ -302,6 +302,30 @@ type
     dsdDBViewAddOnDetail: TdsdDBViewAddOn;
     actProtocolDetail: TdsdOpenForm;
     bbProtocolDetail: TdxBarButton;
+    AmountPack: TcxGridDBColumn;
+    AmountPackSecond: TcxGridDBColumn;
+    AmountPack_calc: TcxGridDBColumn;
+    AmountSecondPack_calc: TcxGridDBColumn;
+    AmountPackNext: TcxGridDBColumn;
+    AmountPackNextSecond: TcxGridDBColumn;
+    AmountPackNext_calc: TcxGridDBColumn;
+    AmountPackNextSecond_calc: TcxGridDBColumn;
+    AmountPack_dt: TcxGridDBColumn;
+    AmountPackSecond_dt: TcxGridDBColumn;
+    AmountPack_calc_dt: TcxGridDBColumn;
+    AmountSecondPack_calc_dt: TcxGridDBColumn;
+    AmountPackNext_dt: TcxGridDBColumn;
+    AmountPackNextSecond_dt: TcxGridDBColumn;
+    AmountPackNext_calc_dt: TcxGridDBColumn;
+    AmountPackNextSecond_calc_dt: TcxGridDBColumn;
+    chAmountPack_dt: TcxGridDBColumn;
+    chAmountPackSecond_dt: TcxGridDBColumn;
+    chAmountPack_calc_dt: TcxGridDBColumn;
+    chAmountSecondPack_calc_dt: TcxGridDBColumn;
+    chAmountPackNext_dt: TcxGridDBColumn;
+    chAmountPackNextSecond_dt: TcxGridDBColumn;
+    chAmountPackNext_calc_dt: TcxGridDBColumn;
+    chAmountPackNextSecond_calc_dt: TcxGridDBColumn;
   private
     { Private declarations }
   public

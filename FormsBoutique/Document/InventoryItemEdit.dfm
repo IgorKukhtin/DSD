@@ -272,6 +272,10 @@ object InventoryItemEditForm: TInventoryItemEditForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Inventory'
@@ -312,7 +316,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         Component = ceOperCount
         DataType = ftFloat
         ParamType = ptInput
@@ -320,7 +324,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
       end
       item
         Name = 'inAmountSecond'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -330,6 +334,14 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Value = '0'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
