@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_OrderInternalPackRemains(
 RETURNS SETOF REFCURSOR
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId    Integer;
+   DECLARE vbSessionId Integer;
 
    DECLARE Cursor1 refcursor;
    DECLARE Cursor2 refcursor;
@@ -30,6 +31,78 @@ BEGIN
      -- получааем  _Result_Master, _Result_Child, _Result_ChildTotal
      PERFORM lpSelect_MI_OrderInternalPackRemains (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inUserId:= vbUserId) ;
 
+     --
+     vbSessionId:= (SELECT MAX(MovementItem.Amount) :: Integer
+                    FROM MovementItem
+                    WHERE MovementItem.MovementId = inMovementId
+                       AND MovementItem.DescId    = zc_MI_Detail()
+                       AND MovementItem.isErased  = FALSE
+                   );
+
+     --
+     CREATE TEMP TABLE _tmpResult_Detail (ParentId                  Integer
+                                        , AmountPack                TFloat
+                                        , AmountPackSecond          TFloat
+
+                                        , AmountPack_calc           TFloat
+                                        , AmountSecondPack_calc     TFloat
+
+                                        , AmountPackNext            TFloat
+                                        , AmountPackNextSecond      TFloat
+
+                                        , AmountPackNext_calc       TFloat
+                                        , AmountPackNextSecond_calc TFloat
+                                         ) ON COMMIT DROP;
+     --
+     INSERT INTO _tmpResult_Detail (ParentId
+                                  , AmountPack, AmountPackSecond
+                                  , AmountPack_calc, AmountSecondPack_calc
+                                  , AmountPackNext, AmountPackNextSecond
+                                  , AmountPackNext_calc, AmountPackNextSecond_calc
+                                   )
+        --
+        SELECT MovementItem.ParentId
+             , SUM (COALESCE (MIFloat_AmountPack.ValueData, 0))                AS AmountPack
+             , SUM (COALESCE (MIFloat_AmountPackSecond.ValueData, 0))          AS AmountPackSecond
+             , SUM (COALESCE (MIFloat_AmountPack_calc.ValueData, 0))           AS AmountPack_calc
+             , SUM (COALESCE (MIFloat_AmountPackSecond_calc.ValueData, 0))     AS AmountSecondPack_calc
+
+             , SUM (COALESCE (MIFloat_AmountPackNext.ValueData, 0))            AS AmountPackNext
+             , SUM (COALESCE (MIFloat_AmountPackNextSecond.ValueData, 0))      AS AmountPackNextSecond
+             , SUM (COALESCE (MIFloat_AmountPackNext_calc.ValueData, 0))       AS AmountPackNext_calc
+             , SUM (COALESCE (MIFloat_AmountPackNextSecond_calc.ValueData, 0)) AS AmountPackNextSecond_calc
+        FROM MovementItem
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPack
+                                         ON MIFloat_AmountPack.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPack.DescId = zc_MIFloat_AmountPack()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPackSecond
+                                         ON MIFloat_AmountPackSecond.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPackSecond.DescId = zc_MIFloat_AmountPackSecond()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPack_calc
+                                         ON MIFloat_AmountPack_calc.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPack_calc.DescId = zc_MIFloat_AmountPack_calc()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPackSecond_calc
+                                         ON MIFloat_AmountPackSecond_calc.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPackSecond_calc.DescId = zc_MIFloat_AmountPackSecond_calc()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPackNext
+                                         ON MIFloat_AmountPackNext.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPackNext.DescId = zc_MIFloat_AmountPackNext()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPackNextSecond
+                                         ON MIFloat_AmountPackNextSecond.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPackNextSecond.DescId = zc_MIFloat_AmountPackNextSecond()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPackNext_calc
+                                         ON MIFloat_AmountPackNext_calc.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPackNext_calc.DescId = zc_MIFloat_AmountPackNext_calc()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPackNextSecond_calc
+                                         ON MIFloat_AmountPackNextSecond_calc.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPackNextSecond_calc.DescId = zc_MIFloat_AmountPackNextSecond_calc()
+        WHERE MovementItem.MovementId = inMovementId
+          AND MovementItem.DescId     = zc_MI_Detail()
+          AND MovementItem.Amount     = vbSessionId
+          AND MovementItem.isErased   = FALSE
+        GROUP BY MovementItem.ParentId
+       ;
 
      --
      CREATE TEMP TABLE _tmpGoodsByGoodsKind_NormPack (GoodsId Integer, GoodsKindId Integer, NormPack TFloat ) ON COMMIT DROP;
@@ -55,7 +128,7 @@ BEGIN
           WHERE Object_GoodsByGoodsKind.DescId   = zc_Object_GoodsByGoodsKind()
             AND Object_GoodsByGoodsKind.isErased = FALSE
          ;
-                              
+
      --
      CREATE TEMP TABLE _tmpResult_Child (Id                        Integer
                                        , ContainerId               Integer
@@ -67,18 +140,23 @@ BEGIN
                                        , GoodsKindName             TVarChar
                                        , MeasureName               TVarChar
                                        , GoodsGroupNameFull        TVarChar
+
                                        , AmountPack                TFloat
                                        , AmountPackSecond          TFloat
                                        , AmountPackTotal           TFloat
+
                                        , AmountPack_calc           TFloat
                                        , AmountSecondPack_calc     TFloat
                                        , AmountPackTotal_calc      TFloat
+
                                        , AmountPackNext            TFloat
                                        , AmountPackNextSecond      TFloat
                                        , AmountPackNextTotal       TFloat
+
                                        , AmountPackNext_calc       TFloat
                                        , AmountPackNextSecond_calc TFloat
                                        , AmountPackNextTotal_calc  TFloat
+
                                        , AmountPackAllTotal        TFloat
                                        , AmountPackAllTotal_calc   TFloat
                                        , Amount_result_two         TFloat
@@ -196,6 +274,7 @@ BEGIN
 
                                          WHERE Object_GoodsByGoodsKind.DescId   = zc_Object_GoodsByGoodsKind()
                                            AND Object_GoodsByGoodsKind.isErased = FALSE
+                                         --AND 1=0
                                         )
        -- результат
        SELECT _Result_Child.Id
@@ -354,14 +433,14 @@ BEGIN
             , _Result_Child.GoodsKindId_complete
 
             , _tmpGoodsByGoodsKind_NormPack.NormPack  ::TFloat
-            , CAST (CASE WHEN COALESCE (_tmpGoodsByGoodsKind_NormPack.NormPack,0) <> 0 
+            , CAST (CASE WHEN COALESCE (_tmpGoodsByGoodsKind_NormPack.NormPack,0) <> 0
                          THEN (COALESCE (_Result_Child.AmountPack,0)
                              + COALESCE (_Result_Child.AmountPackSecond,0)
                              + COALESCE (_Result_Child.AmountPackNext,0)
                              + COALESCE (_Result_Child.AmountPackNextSecond,0)) / _tmpGoodsByGoodsKind_NormPack.NormPack
                          ELSE 0
                     END  AS NUMERIC (16,2)) ::TFloat AS HourPack_calc  -- расчет сколько врмени надо на весь план
-                    
+
        FROM (SELECT _Result_Child.Id
                   , _Result_Child.ContainerId
                   , _Result_Child.KeyId
@@ -1002,17 +1081,75 @@ BEGIN
 
               -- разница да/нет AmountPartnerTotal и AmountPartnerOldTotal
             , CASE WHEN COALESCE (_Result_Master.AmountPartnerTotal,0) <> COALESCE (_Result_Master.AmountPartnerOldTotal,0) THEN TRUE ELSE FALSE END :: Boolean AS isDiff1
-              -- разница да/нет zc_MIFloat_AmountPrIn и Income_CEH 
+              -- разница да/нет zc_MIFloat_AmountPrIn и Income_CEH
             , CASE WHEN COALESCE (FLOOR (_Result_Master.Income_CEH),0) <> COALESCE (FLOOR (_Result_Master.AmountPrIn)   ,0) THEN TRUE ELSE FALSE END :: Boolean AS isDiff2
 
             , (COALESCE (_Result_Master.AmountPartnerTotal,0) - COALESCE (_Result_Master.AmountPartnerOldTotal,0)) :: TFloat AS AmountPartnerTotal_diff
             , (COALESCE (FLOOR (_Result_Master.Income_CEH),0) - COALESCE (FLOOR (_Result_Master.AmountPrIn)   ,0)) :: TFloat AS Income_CEH_diff
+
+            , _Result_Child.AmountPack                :: TFloat AS AmountPack
+            , _Result_Child.AmountPackSecond          :: TFloat AS AmountPackSecond
+
+            , _Result_Child.AmountPack_calc           :: TFloat AS AmountPack_calc
+            , _Result_Child.AmountSecondPack_calc     :: TFloat AS AmountSecondPack_calc
+
+            , _Result_Child.AmountPackNext            :: TFloat AS AmountPackNext
+            , _Result_Child.AmountPackNextSecond      :: TFloat AS AmountPackNextSecond
+
+            , _Result_Child.AmountPackNext_calc       :: TFloat AS AmountPackNext_calc
+            , _Result_Child.AmountPackNextSecond_calc :: TFloat AS AmountPackNextSecond_calc
+                     
+            , _tmpResult_Detail.AmountPack                :: TFloat AS AmountPack_dt
+            , _tmpResult_Detail.AmountPackSecond          :: TFloat AS AmountPackSecond_dt
+
+            , _tmpResult_Detail.AmountPack_calc           :: TFloat AS AmountPack_calc_dt
+            , _tmpResult_Detail.AmountSecondPack_calc     :: TFloat AS AmountSecondPack_calc_dt
+
+            , _tmpResult_Detail.AmountPackNext            :: TFloat AS AmountPackNext_dt
+            , _tmpResult_Detail.AmountPackNextSecond      :: TFloat AS AmountPackNextSecond_dt
+
+            , _tmpResult_Detail.AmountPackNext_calc       :: TFloat AS AmountPackNext_calc_dt
+            , _tmpResult_Detail.AmountPackNextSecond_calc :: TFloat AS AmountPackNextSecond_calc_dt
 
        FROM _Result_Master
            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                          ON MIBoolean_Calculated.MovementItemId = _Result_Master.Id
                                         AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
            LEFT JOIN Object ON Object.Id = COALESCE (_Result_Master.GoodsKindId, zc_GoodsKind_Basis())
+           LEFT JOIN (SELECT _Result_Child.KeyId
+
+                           , SUM (_Result_Child.AmountPack)                AS AmountPack
+                           , SUM (_Result_Child.AmountPackSecond)          AS AmountPackSecond
+
+                           , SUM (_Result_Child.AmountPack_calc)           AS AmountPack_calc
+                           , SUM (_Result_Child.AmountSecondPack_calc)     AS AmountSecondPack_calc
+
+                           , SUM (_Result_Child.AmountPackNext)            AS AmountPackNext
+                           , SUM (_Result_Child.AmountPackNextSecond)      AS AmountPackNextSecond
+
+                           , SUM (_Result_Child.AmountPackNext_calc)       AS AmountPackNext_calc
+                           , SUM (_Result_Child.AmountPackNextSecond_calc) AS AmountPackNextSecond_calc
+                      FROM _Result_Child
+                      GROUP BY _Result_Child.KeyId
+                     ) AS _Result_Child ON _Result_Child.KeyId = _Result_Master.KeyId
+
+           LEFT JOIN (SELECT _Result_Child.KeyId
+
+                           , SUM (_tmpResult_Detail.AmountPack)                AS AmountPack
+                           , SUM (_tmpResult_Detail.AmountPackSecond)          AS AmountPackSecond
+
+                           , SUM (_tmpResult_Detail.AmountPack_calc)           AS AmountPack_calc
+                           , SUM (_tmpResult_Detail.AmountSecondPack_calc)     AS AmountSecondPack_calc
+
+                           , SUM (_tmpResult_Detail.AmountPackNext)            AS AmountPackNext
+                           , SUM (_tmpResult_Detail.AmountPackNextSecond)      AS AmountPackNextSecond
+
+                           , SUM (_tmpResult_Detail.AmountPackNext_calc)       AS AmountPackNext_calc
+                           , SUM (_tmpResult_Detail.AmountPackNextSecond_calc) AS AmountPackNextSecond_calc
+                      FROM _Result_Child
+                           JOIN _tmpResult_Detail ON _tmpResult_Detail.ParentId = _Result_Child.Id
+                      GROUP BY _Result_Child.KeyId
+                     ) AS _tmpResult_Detail ON _tmpResult_Detail.KeyId = _Result_Master.KeyId
        ;
        RETURN NEXT Cursor1;
 
@@ -1045,6 +1182,18 @@ BEGIN
             , _Result_Child.AmountPackNext_calc
             , _Result_Child.AmountPackNextSecond_calc
             , _Result_Child.AmountPackNextTotal_calc
+
+            , _tmpResult_Detail.AmountPack                :: TFloat AS AmountPack_dt
+            , _tmpResult_Detail.AmountPackSecond          :: TFloat AS AmountPackSecond_dt
+
+            , _tmpResult_Detail.AmountPack_calc           :: TFloat AS AmountPack_calc_dt
+            , _tmpResult_Detail.AmountSecondPack_calc     :: TFloat AS AmountSecondPack_calc_dt
+
+            , _tmpResult_Detail.AmountPackNext            :: TFloat AS AmountPackNext_dt
+            , _tmpResult_Detail.AmountPackNextSecond      :: TFloat AS AmountPackNextSecond_dt
+
+            , _tmpResult_Detail.AmountPackNext_calc       :: TFloat AS AmountPackNext_calc_dt
+            , _tmpResult_Detail.AmountPackNextSecond_calc :: TFloat AS AmountPackNextSecond_calc_dt
 
             , _Result_Child.AmountPackAllTotal
             , _Result_Child.AmountPackAllTotal_calc
@@ -1130,15 +1279,33 @@ BEGIN
 
             , CASE WHEN _Result_Child.AmountPartnerTotal <> _Result_Child.AmountPartnerOldTotal THEN TRUE ELSE FALSE END :: Boolean AS isDiff1           -- разница да/нет AmountPartnerTotal и AmountPartnerOldTotal
             , (COALESCE (_Result_Child.AmountPartnerTotal,0) - COALESCE (_Result_Child.AmountPartnerOldTotal,0)) :: TFloat AS AmountPartnerTotal_diff
-            
+
             , _Result_Child.NormPack      ::TFloat
             , _Result_Child.HourPack_calc ::TFloat
        FROM _tmpResult_Child AS _Result_Child
            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                          ON MIBoolean_Calculated.MovementItemId = _Result_Child.Id
                                         AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
+
+           LEFT JOIN (SELECT _tmpResult_Detail.ParentId
+
+                           , SUM (_tmpResult_Detail.AmountPack)                AS AmountPack
+                           , SUM (_tmpResult_Detail.AmountPackSecond)          AS AmountPackSecond
+
+                           , SUM (_tmpResult_Detail.AmountPack_calc)           AS AmountPack_calc
+                           , SUM (_tmpResult_Detail.AmountSecondPack_calc)     AS AmountSecondPack_calc
+
+                           , SUM (_tmpResult_Detail.AmountPackNext)            AS AmountPackNext
+                           , SUM (_tmpResult_Detail.AmountPackNextSecond)      AS AmountPackNextSecond
+
+                           , SUM (_tmpResult_Detail.AmountPackNext_calc)       AS AmountPackNext_calc
+                           , SUM (_tmpResult_Detail.AmountPackNextSecond_calc) AS AmountPackNextSecond_calc
+                      FROM _tmpResult_Detail
+                      GROUP BY _tmpResult_Detail.ParentId
+                     ) AS _tmpResult_Detail ON _tmpResult_Detail.ParentId = _Result_Child.Id
+
        WHERE _Result_Child.GoodsId_complete > 0
-       ;
+      ;
        RETURN NEXT Cursor2;
 
        OPEN Cursor3 FOR
@@ -1297,7 +1464,7 @@ BEGIN
 
             , _tmpGoodsByGoodsKind_NormPack.NormPack  ::TFloat
 
-            , CAST (CASE WHEN COALESCE (_tmpGoodsByGoodsKind_NormPack.NormPack,0) <> 0 
+            , CAST (CASE WHEN COALESCE (_tmpGoodsByGoodsKind_NormPack.NormPack,0) <> 0
                          THEN (COALESCE (_Result_ChildTotal.AmountPack,0)
                              + COALESCE (_Result_ChildTotal.AmountPackSecond,0)
                              + COALESCE (_Result_ChildTotal.AmountPackNext,0)

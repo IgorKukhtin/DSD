@@ -79,7 +79,7 @@ BEGIN
                       )
                )
    --OR vbUserId = 5
-  --AND vbUserId <> 5
+    AND vbUserId <> 5
 
     THEN
         RAISE EXCEPTION 'Ошибка.Период закрыт с <%>.'

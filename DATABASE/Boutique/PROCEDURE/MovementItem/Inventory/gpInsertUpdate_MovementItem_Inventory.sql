@@ -31,6 +31,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
    OUT outAmountClientPriceListSumm         TFloat    , -- сумма по прайсу у покупателя - Расчетный остаток
 
     IN inComment                            TVarChar  , -- примечание
+   OUT outMessageText                       Text      ,
     IN inSession                            TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -42,10 +43,14 @@ $BODY$
    DECLARE vbOperDate TDateTime;
    DECLARE vbFromId Integer;
    DECLARE vbToId Integer;
+   DECLARE vbPartionId_find Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
 
+
+     --
+     outMessageText:= 'Ошибка.';
 
      -- определяются параметры из документа
      SELECT Movement.OperDate
@@ -178,6 +183,39 @@ BEGIN
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+     
+     --
+     vbPartionId_find:= (SELECT MovementItem.PartionId FROM MovementItem WHERE MovementItem.Id = ioId);
+     --
+     outMessageText:= 'Элемент сохранен.'
+                    || CHR (13)
+                    || COALESCE ((SELECT 'Код : ' || zfConvert_FloatToString (Object_Goods.ObjectCode)
+                                       || CHR (13)
+                                       || lfGet_Object_ValueData_sh (Object_PartionGoods.LabelId)
+                                       || CHR (13)
+                                       || 'размер : ' || lfGet_Object_ValueData_sh (Object_PartionGoods.GoodsSizeId)
+                                       || CHR (13)
+                                       || lfGet_Object_ValueData_sh (Object_PartionGoods.PartnerId)
+                                       || CHR (13)
+                                       || 'Цена : ' || zfConvert_FloatToString (Object_PartionGoods.OperPriceList)
+                                       || CHR (13)
+                                       || 'Факт остаток : ' || zfConvert_FloatToString ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = ioId))
+                                       || CHR (13)
+                                       || 'Расч. остаток : ' || zfConvert_FloatToString (COALESCE (Container.Amount,0))
+                                  FROM Object_PartionGoods
+                                       LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Object_PartionGoods.GoodsId
+                                       LEFT JOIN Container ON Container.PartionId     = vbPartionId_find
+                                                          AND Container.WhereObjectId = vbFromId
+                                                          AND Container.DescId        = zc_Container_Count()
+                                       LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                                     ON CLO_Client.ContainerId = Container.Id
+                                                                    AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
+                                  WHERE Object_PartionGoods.MovementItemId = vbPartionId_find
+                                    AND CLO_Client.ContainerId IS NULL
+                                 ) , 'ОШИБКА!')
+                    ;
+
+    -- RAISE EXCEPTION 'Ошибка.', outMessageText;
 
 END;
 $BODY$

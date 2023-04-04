@@ -103,7 +103,7 @@ BEGIN
 -- end if;
 
      -- очень важная проверка
-     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
+     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete() AND vbUserId <> 5
      THEN
          IF vbStatusId = zc_Enum_Status_Erased()
          THEN
@@ -445,13 +445,34 @@ BEGIN
            OR ObjectString_ArticleGLN.ValueData      <> ''
            OR ObjectString_CodeSticker.ValueData     <> ''
            OR ObjectString_Goods_ShortName.ValueData <> ''
+           OR ObjectFloat_BoxCount.ValueData         <> 0
        )
-     , tmpObject_GoodsPropertyValueGroup AS
+    /*, tmpObject_GoodsPropertyValueGroup AS
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
              , tmpObject_GoodsPropertyValue.Article
-             , tmpObject_GoodsPropertyValue.BoxCount
+           --, tmpObject_GoodsPropertyValue.BoxCount
+           --, tmpObject_GoodsPropertyValue.GoodsBoxName_short
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue
+              WHERE Article <> '' OR ArticleGLN <> ''
+              GROUP BY GoodsId
+             ) AS tmpGoodsProperty_find
+             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
+       )*/
+     , tmpObject_GoodsPropertyValueGroup_GoodsBoxName_short AS
+       (SELECT tmpObject_GoodsPropertyValue.GoodsId
              , tmpObject_GoodsPropertyValue.GoodsBoxName_short
-        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' GROUP BY GoodsId
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue
+              WHERE GoodsBoxName_short <> ''
+              GROUP BY GoodsId
+             ) AS tmpGoodsProperty_find
+             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
+       )
+     , tmpObject_GoodsPropertyValueGroup_BoxCount AS
+       (SELECT tmpObject_GoodsPropertyValue.GoodsId
+             , tmpObject_GoodsPropertyValue.BoxCount
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue
+              WHERE BoxCount <> 0
+              GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
        )
@@ -584,14 +605,14 @@ BEGIN
            , Object_Goods.ValueData                     AS GoodsName
            , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
            , COALESCE (tmpObject_GoodsPropertyValue.CodeSticker, '') :: TVarChar  AS CodeSticker
-           , COALESCE (tmpObject_GoodsPropertyValue.GoodsBoxName_short, tmpObject_GoodsPropertyValueGroup.GoodsBoxName_short) AS GoodsBoxName_short
+           , COALESCE (tmpObject_GoodsPropertyValue.GoodsBoxName_short, tmpObject_GoodsPropertyValueGroup_GoodsBoxName_short.GoodsBoxName_short) AS GoodsBoxName_short
            
-           , CAST (CASE WHEN COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0) > 0
-                             THEN CAST ((tmpMI.Amount + tmpMI.AmountSecond) / COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0) AS NUMERIC (16, 4))
+           , CAST (CASE WHEN COALESCE (tmpObject_GoodsPropertyValueGroup_BoxCount.BoxCount, tmpObject_GoodsPropertyValue.BoxCount, 0) > 0
+                             THEN CAST ((tmpMI.Amount + tmpMI.AmountSecond) / COALESCE (tmpObject_GoodsPropertyValueGroup_BoxCount.BoxCount, tmpObject_GoodsPropertyValue.BoxCount, 0) AS NUMERIC (16, 4))
                         ELSE 0
                    END AS NUMERIC(16,1)) :: TFloat AS AmountBox
           
-           , COALESCE (tmpObject_GoodsPropertyValue.BoxCount, tmpObject_GoodsPropertyValueGroup.BoxCount, 0)     :: TFloat    AS BoxCount
+           , COALESCE (tmpObject_GoodsPropertyValueGroup_BoxCount.BoxCount, tmpObject_GoodsPropertyValue.BoxCount, 0)     :: TFloat    AS BoxCount
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
 
@@ -671,8 +692,14 @@ BEGIN
 
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
-            LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = tmpMI.GoodsId
-                                                       AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
+
+            /*LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = tmpMI.GoodsId
+                                                       AND tmpObject_GoodsPropertyValue.GoodsId IS NULL*/
+            LEFT JOIN tmpObject_GoodsPropertyValueGroup_GoodsBoxName_short ON tmpObject_GoodsPropertyValueGroup_GoodsBoxName_short.GoodsId = tmpMI.GoodsId
+                                                                          AND COALESCE (tmpObject_GoodsPropertyValue.GoodsBoxName_short, '') = ''
+            LEFT JOIN tmpObject_GoodsPropertyValueGroup_BoxCount ON tmpObject_GoodsPropertyValueGroup_BoxCount.GoodsId = tmpMI.GoodsId
+                                                                AND COALESCE (tmpObject_GoodsPropertyValue.BoxCount, 0) = 0
+
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
 
