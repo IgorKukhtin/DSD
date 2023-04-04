@@ -4436,8 +4436,11 @@ begin
       lMessageText:=FMessageText;
       FMessageText:='';
       //
-      raise Exception.Create(lMessageText);
-      //ShowMessage(FMessageText);
+      if gc_ProgramName = 'Boutique.exe'
+      then
+           ShowMessage(lMessageText)
+      else
+          raise Exception.Create(lMessageText);
   end;
 end;
 
