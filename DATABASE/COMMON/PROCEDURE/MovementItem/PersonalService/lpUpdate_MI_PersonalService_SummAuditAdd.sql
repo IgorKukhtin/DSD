@@ -60,8 +60,8 @@ BEGIN
                         , COALESCE (MIF_SummSkip.ValueData, 0)     AS SummSkip_mi
                         , COALESCE (MIF_DaySkip.ValueData, 0)      AS DaySkip_mi
 
-                        , COALESCE (MIF_SummMedicdayAdd.ValueData, 0) AS SummAuditAdd_mi
-                        , COALESCE (MIF_DayMedicday.ValueData, 0)     AS DayAudit_mi
+                        , COALESCE (MIF_SummMedicdayAdd.ValueData, 0) AS SummMedicdayAdd_mi
+                        , COALESCE (MIF_DayMedicday.ValueData, 0)     AS DayMedicday_mi
 
                    FROM  MovementItem
                         LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
@@ -108,8 +108,8 @@ BEGIN
               , tmpMI.SummSkip_mi
               , tmpMI.DaySkip_mi
 
-              , tmpMI.SummAuditAdd_mi
-              , tmpMI.DayAudit_mi
+              , tmpMI.SummMedicdayAdd_mi
+              , tmpMI.DayMedicday_mi
 
               , MI_SheetWorkTime.ObjectId               AS MemberId
               , COALESCE(MIObject_Position.ObjectId, 0) AS PositionId
@@ -154,8 +154,8 @@ BEGIN
                 , tmpMI.DayAudit_mi
                 , tmpMI.SummSkip_mi
                 , tmpMI.DaySkip_mi
-                , tmpMI.SummAuditAdd_mi
-                , tmpMI.DayAudit_mi
+                , tmpMI.SummMedicdayAdd_mi
+                , tmpMI.DayMedicday_mi
                 , COALESCE (MIObject_Position.ObjectId, 0)
                 , COALESCE (ObjectFloat_Summ.ValueData, 0)
                 , tmpMI.MovementItemId

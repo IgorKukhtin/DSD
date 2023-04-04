@@ -66,6 +66,7 @@ type
     GuidesComposition: TdsdGuides;
     edText_info: TcxTextEdit;
     cxLabel10: TcxLabel;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

@@ -76,7 +76,7 @@ BEGIN
      END IF;
 
      -- проверка
-     IF zfCalc_SummBarCode (inBarCode) <> SUBSTRING (inBarCode FROM 13 FOR 1)
+     IF zfCalc_SummBarCode (inBarCode) <> SUBSTRING (inBarCode FROM 13 FOR 1) :: Integer
      THEN
          RAISE EXCEPTION 'Ошибка.Ошибка в Контрольной цифре <%> для Штрихкода = <%>.', zfCalc_SummBarCode (inBarCode), inBarCode;
      END IF;
@@ -98,10 +98,14 @@ BEGIN
                             FROM Container
                                  INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = Container.PartionId
                                                                AND Object_PartionGoods.GoodsId        = Container.ObjectId
+                                 LEFT JOIN ContainerLinkObject AS CLO_Client
+                                                               ON CLO_Client.ContainerId = Container.Id
+                                                              AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                             WHERE Container.DescId = zc_Container_Count()
                               AND Container.ObjectId = vbGoodsId
                               AND (Container.WhereObjectId = vbUnitId OR COALESCE (vbUnitId,0) = 0)
                               AND COALESCE (Container.Amount,0) <> 0
+                              AND CLO_Client.ContainerId IS NULL
                             GROUP BY Container.ObjectId 
                                    , Object_PartionGoods.GoodsSizeId
                           ) AS tmp
