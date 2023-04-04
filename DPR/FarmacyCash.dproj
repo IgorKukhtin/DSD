@@ -412,6 +412,11 @@
             <Form>InternshipConfirmationFormЬфшт</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\FormsFarmacy\Cash\CashCloseSaleInsuranceCompaniesDialog.pas">
+            <Form>CashCloseSaleInsuranceCompaniesDialogForm</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TParentForm</DesignClass>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -465,6 +470,12 @@
                 </Source>
             </Delphi.Personality>
             <Deployment Version="3">
+                <DeployFile LocalName="..\BIN\FarmacyCash.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>FarmacyCash.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="..\BIN\FarmacyCash.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>FarmacyCash.exe</RemoteName>

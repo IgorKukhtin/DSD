@@ -410,10 +410,13 @@ end;
 procedure TLoadFormTest.LoadCashRegisterFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayoutFileCashForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleInsuranceCompaniesCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleInsuranceCompaniesCashForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLayoutFileCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLayoutFileCashForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPReceiptListForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPReceiptListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPReceiptListForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJackdawsGreenJournalCashForm'));

@@ -4656,6 +4656,10 @@
 				<Form>Report_PaymentHelsiForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SaleInsuranceCompaniesCash.pas">
+				<Form>SaleInsuranceCompaniesCashForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

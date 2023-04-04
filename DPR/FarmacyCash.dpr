@@ -141,7 +141,8 @@ uses
   ListGoodsKeyword in '..\FormsFarmacy\Cash\ListGoodsKeyword.pas' {ListGoodsKeywordForm: TParentForm},
   EnterBuyerForSite in '..\FormsFarmacy\Cash\EnterBuyerForSite.pas' {EnterBuyerForSiteForm},
   SalePromoGoodsDialog in '..\FormsFarmacy\Cash\SalePromoGoodsDialog.pas' {SalePromoGoodsForm: TParentForm},
-  InternshipConfirmation in '..\FormsFarmacy\Cash\InternshipConfirmation.pas' {InternshipConfirmationForm‹Ù¯Ú};
+  InternshipConfirmation in '..\FormsFarmacy\Cash\InternshipConfirmation.pas' {InternshipConfirmationForm‹Ù¯Ú},
+  CashCloseSaleInsuranceCompaniesDialog in '..\FormsFarmacy\Cash\CashCloseSaleInsuranceCompaniesDialog.pas' {CashCloseSaleInsuranceCompaniesDialogForm: TParentForm};
 
 {$R *.res}
 

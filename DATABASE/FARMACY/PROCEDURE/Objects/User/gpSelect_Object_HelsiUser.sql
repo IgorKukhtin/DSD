@@ -34,12 +34,12 @@ BEGIN
    END IF;
 
    CREATE TEMP TABLE tmpMov ON COMMIT DROP AS 
-     SELECT MLO_Insert.ObjectId               AS UserId
+     SELECT MLO_UserKeyId.ObjectId            AS UserId
           , max(Movement.OperDate)::TDateTime AS OperDate       
      FROM Movement
-          INNER JOIN MovementLinkObject AS MLO_Insert
-                                        ON MLO_Insert.MovementId = Movement.Id
-                                       AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+          INNER JOIN MovementLinkObject AS MLO_UserKeyId
+                                        ON MLO_UserKeyId.MovementId = Movement.Id
+                                       AND MLO_UserKeyId.DescId = zc_MovementLinkObject_UserKeyId()
           INNER JOIN MovementLinkObject AS MovementLinkObject_SPKind
                                        ON MovementLinkObject_SPKind.MovementId = Movement.Id
                                       AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
@@ -48,7 +48,7 @@ BEGIN
      WHERE Movement.DescId = zc_Movement_Check()
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.OperDate >= CURRENT_DATE - INTERVAL '2 MONTH'
-     GROUP BY MLO_Insert.ObjectId;
+     GROUP BY MLO_UserKeyId.ObjectId;
         
    ANALYSE tmpMov;
 
@@ -202,5 +202,6 @@ ALTER FUNCTION gpSelect_Object_HelsiUser (Boolean, TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_Object_HelsiUser (False, '3')
+
 
 select * from gpSelect_Object_HelsiUser(inIsShowAll := 'False' ,  inSession := '3');

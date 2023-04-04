@@ -45,4 +45,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_MedicalProgramSPLink (ioId:=0, inCode:=0, inMedicalProgramSPLinkKindId:=0, inSession:='2')
+-- SELECT * FROM gpInsertUpdate_Object_MedicalProgramSPLink (ioId:=0, inCode:=0, inMedicalProgramSPId:=0, inUnitId := 0, inSession:='2')

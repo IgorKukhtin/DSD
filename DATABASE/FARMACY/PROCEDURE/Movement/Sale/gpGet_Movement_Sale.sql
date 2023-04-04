@@ -47,6 +47,7 @@ RETURNS TABLE (Id Integer
              , isNP Boolean
              , MedicSPForm TVarChar 
              , ChangePercent TFloat
+             , CashRegisterName TVarChar, ZReport Integer, FiscalCheckNumber TVarChar, TotalSummPayAdd TFloat
              )
 AS
 $BODY$
@@ -111,6 +112,10 @@ BEGIN
           , CASE WHEN inSession IN ('8720522', '374175', '19085095') THEN TRUE ELSE FALSE END::Boolean AS isNP
           , 'TMedicSP_ObjectForm' ::TVarChar                     AS MedicSPForm
           , NULL::TFloat                                         AS ChangePercent
+          , ''::TVarChar                                     AS CashRegisterName
+          , Null::Integer                                    AS ZReport
+          , ''::TVarChar                                     AS FiscalCheckNumber
+          , Null::TFloat                                     AS TotalSummPayAdd
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
 
@@ -185,6 +190,11 @@ BEGIN
           , CASE WHEN COALESCE(Object_InsuranceCompanies.Id, 0) > 0 
                  THEN COALESCE(MovementFloat_ChangePercent.ValueData, 100)
                  ELSE NULL END :: TFloat                                 AS ChangePercent
+
+          , Object_CashRegister.ValueData                    AS CashRegisterName
+          , MovementFloat_ZReport.ValueData::Integer         AS ZReport
+          , MovementString_FiscalCheckNumber.ValueData       AS FiscalCheckNumber
+          , MovementFloat_TotalSummPayAdd.ValueData          AS TotalSummPayAdd
           
         FROM Movement_Sale_View AS Movement_Sale
 
@@ -218,6 +228,22 @@ BEGIN
          LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                  ON MovementFloat_ChangePercent.MovementId = Movement_Sale.Id
                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                      ON MovementLinkObject_CashRegister.MovementId = Movement_Sale.Id
+                                     AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+         LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
+ 
+         LEFT JOIN MovementFloat AS MovementFloat_ZReport
+                                 ON MovementFloat_ZReport.MovementId =  Movement_Sale.Id
+                                AND MovementFloat_ZReport.DescId = zc_MovementFloat_ZReport()
+         LEFT JOIN MovementString AS MovementString_FiscalCheckNumber
+                                  ON MovementString_FiscalCheckNumber.MovementId = Movement_Sale.ID
+                                 AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
+         LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayAdd
+                                 ON MovementFloat_TotalSummPayAdd.MovementId =  Movement_Sale.Id
+                                AND MovementFloat_TotalSummPayAdd.DescId = zc_MovementFloat_TotalSummPayAdd()
+                                
         WHERE Movement_Sale.Id =  inMovementId;
     END IF;
 
@@ -238,4 +264,5 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
  13.10.15                                                                        *
 */
 
--- select * from gpGet_Movement_Sale(inMovementId := 0 , inOperDate := ('30.04.2017')::TDateTime ,  inSession := '374175');
+-- 
+select * from gpGet_Movement_Sale(inMovementId := 30678777 , inOperDate := ('03.04.2023')::TDateTime ,  inSession := '3');

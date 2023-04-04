@@ -649,6 +649,8 @@ type
     MainisAsinoMain: TcxGridDBColumn;
     MainisAsinoPresent: TcxGridDBColumn;
     MemDataISASINOP: TBooleanField;
+    actSaleInsuranceCompaniesCash: TdsdOpenForm;
+    N56: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

@@ -50,6 +50,7 @@ RETURNS TABLE (Id Integer
              , UpdateName TVarChar, UpdateDate TDateTime
 
              , GoodsCode Integer, GoodsName TVarChar
+             , CashRegisterName TVarChar, ZReport Integer, FiscalCheckNumber TVarChar, TotalSummPayAdd TFloat
               )
 
 AS
@@ -210,6 +211,11 @@ BEGIN
           , tmpMI.GoodsCode
           , tmpMI.GoodsName
 
+          , Object_CashRegister.ValueData                    AS CashRegisterName
+          , MovementFloat_ZReport.ValueData::Integer         AS ZReport
+          , MovementString_FiscalCheckNumber.ValueData       AS FiscalCheckNumber
+          , MovementFloat_TotalSummPayAdd.ValueData          AS TotalSummPayAdd
+
         FROM tmpMovement_Sale_View AS Movement_Sale 
          
             LEFT JOIN MovementLinkMovement AS MLM_Child
@@ -269,6 +275,21 @@ BEGIN
                                  ON ObjectLink_Unit_Juridical.ObjectId = Movement_Sale.UnitId
                                 AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                         ON MovementLinkObject_CashRegister.MovementId = Movement_Sale.Id
+                                        AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+            LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
+   
+            LEFT JOIN MovementFloat AS MovementFloat_ZReport
+                                    ON MovementFloat_ZReport.MovementId =  Movement_Sale.Id
+                                   AND MovementFloat_ZReport.DescId = zc_MovementFloat_ZReport()
+            LEFT JOIN MovementString AS MovementString_FiscalCheckNumber
+                                     ON MovementString_FiscalCheckNumber.MovementId = Movement_Sale.ID
+                                    AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayAdd
+                                    ON MovementFloat_TotalSummPayAdd.MovementId =  Movement_Sale.Id
+                                   AND MovementFloat_TotalSummPayAdd.DescId = zc_MovementFloat_TotalSummPayAdd()
        ;
 
 END;
