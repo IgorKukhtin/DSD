@@ -331,6 +331,8 @@ end;
                   then begin
                      //
                       if (FormCode = 11518) or (FormCode = 11530) or (FormCode = 12860) or (FormCode = 14025) or (FormCode = 16271) or (FormCode = 16325) or (FormCode = 19580) or (FormCode = 19583) or (FormCode = 20097) or (FormCode = 20100) or (FormCode = 21343) or (FormCode = 21340)
+                         //01.04.2023
+                       or (FormCode = 23005)or (FormCode = 23011)
                      then
                        DocKind := 'Tax'
                      else
