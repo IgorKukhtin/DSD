@@ -58,6 +58,12 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
    
    --
+   IF inReceiptLevelName ILIKE 'Streeting console'
+   THEN
+       inReceiptLevelName:= 'Steering console';
+   END IF;
+
+   --
    IF COALESCE (TRIM (inGoodsName_child), '') = '' OR
       upper(TRIM(SPLIT_PART (inArticle, '-', 3))) NOT IN ('01', '02', '03', '*ICE WHITE', 'BEL', 'BASIS') THEN RETURN; END IF;
       
@@ -373,14 +379,20 @@ BEGIN
 
    IF inReplacement ILIKE 'ДА' AND COALESCE (vbProdColorPatternId, 0) = 0
    THEN
-     RAISE EXCEPTION 'Ошибка В Boat Structure не найдена замена для <%> <%> <%>'
+     RAISE EXCEPTION 'Ошибка В Boat Structure не найдена замена для <%> <%> <%> <%>'
       , CASE WHEN inReceiptLevelName ILIKE 'Steering console' 
                   THEN 'Fiberglass '   || TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))
              WHEN inReceiptLevelName ILIKE 'Hull' OR inReceiptLevelName ILIKE 'Deck' OR inReceiptLevelName ILIKE 'Deck color' 
                   THEN 'Fiberglass - '   || TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))
              ELSE TRIM(SPLIT_PART (inReceiptLevelName, '/', 1))                                                         
         END
-      , inArticle, inGoodsName_child;  
+      , inArticle, inGoodsName_child
+      , CASE WHEN inReceiptLevelName ILIKE 'Steering console' 
+             THEN 'Fiberglass '   || TRIM(SPLIT_PART (COALESCE(NULLIF(SPLIT_PART (inReceiptLevelName, '-', 2), ''), inReceiptLevelName), '/', 1))
+             ELSE 'Fiberglass - ' || TRIM(SPLIT_PART (COALESCE(NULLIF(SPLIT_PART (inReceiptLevelName, '-', 2), ''), inReceiptLevelName), '/', 1))
+        END
+       ;  
+
    END IF;
 
    BEGIN
@@ -754,7 +766,7 @@ BEGIN
                                         COALESCE (ObjectLink_GoodsChild.ChildObjectId, 0) = COALESCE (vbGoods_GoodsChildId, 0))
                                    AND COALESCE (ObjectLink_ReceiptLevel.ChildObjectId, 0) = COALESCE (vbReceiptLevelId, 0)
                                  );
-                                 
+
        IF COALESCE (vbReceiptGoodsChildId, 0) = 0 OR
           NOT EXISTS (SELECT Object_ReceiptGoodsChild.Id
                       FROM Object AS Object_ReceiptGoodsChild
@@ -797,6 +809,7 @@ BEGIN
                                                                                  , inIsEnabled          := TRUE                 ::Boolean
                                                                                  , inSession            := inSession            ::TVarChar
                                                                                   ) AS tmp);
+
        END IF;
      END IF;
      
@@ -882,12 +895,10 @@ BEGIN
                                                                                                                              AND OC.DescId = zc_Object_ReceiptProdModelChild()), '')    ::TVarChar
                                                                                       , inReceiptProdModelId := vbReceiptProdModelId  ::Integer
                                                                                       , inObjectId           := vbGoodsId_child       ::Integer
-                                                                                      , inReceiptLevelId_top := (SELECT OL.ChildObjectId FROM ObjectLink AS OL 
-                                                                                                                 WHERE OL.ObjectId = COALESCE (vbReceiptProdModelChildId, 0) 
-                                                                                                                   AND OL.DescId = zc_ObjectLink_ReceiptProdModelChild_ReceiptLevel()) ::Integer
+                                                                                      , inReceiptLevelId_top := vbReceiptLevelId      ::Integer
                                                                                       , inReceiptLevelId     := vbReceiptLevelId      ::Integer
-                                                                                      , ioValue              := vbAmount              ::TFloat
-                                                                                      , ioValue_service      := 0                     ::TFloat
+                                                                                      , ioValue              := vbAmount              ::TVarChar
+                                                                                      , ioValue_service      := 0                     ::TVarChar
                                                                                       , ioForCount           := vbForCount
                                                                                       , ioIsCheck            := FALSE
                                                                                       , inSession            := inSession             ::TVarChar
