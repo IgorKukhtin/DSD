@@ -115,7 +115,7 @@ BEGIN
         , ROUND(sum(tmpMI.Summ) / sum(tmpMI.Amount), 2)::TFloat                        AS Price
         , (ROUND(sum(tmpMI.Summ) / sum(tmpMI.Amount), 2) * sum(tmpMI.Amount))::TFloat  AS Summ
         , CASE WHEN tmpMI.WayName NOT ILIKE '%кополь%'
-               THEN 'Гордієнко Дмитро Валерійович'
+               THEN 'Ткачов Євген Владіславович'
                ELSE 'Барiлко Ростислав Володимирович' END::TVarChar AS Driver
         , CASE WHEN tmpMI.WayName NOT ILIKE '%кополь%'
                THEN 'Renault kangoo'

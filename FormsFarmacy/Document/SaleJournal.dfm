@@ -329,6 +329,39 @@ inherited SaleJournalForm: TSaleJournalForm
             Options.Editing = False
             Width = 57
           end
+          object CashRegisterName: TcxGridDBColumn
+            Caption = #1050#1072#1089#1089#1072
+            DataBinding.FieldName = 'CashRegisterName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
+          end
+          object ZReport: TcxGridDBColumn
+            Caption = 'Z '#1086#1090#1095#1077#1090
+            DataBinding.FieldName = 'ZReport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
+          end
+          object FiscalCheckNumber: TcxGridDBColumn
+            Caption = #8470' '#1092#1080#1089#1082'. '#1095#1077#1082#1072
+            DataBinding.FieldName = 'FiscalCheckNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 59
+          end
+          object TotalSummPayAdd: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'TotalSummPayAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
         end
       end
     end

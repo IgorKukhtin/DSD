@@ -253,6 +253,7 @@ inherited Report_PaymentHelsiForm: TReport_PaymentHelsiForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          OptionsView.GroupFooterMultiSummaries = True
           OptionsView.GroupSummaryLayout = gslStandard
           Styles.Content = nil
           Styles.Inactive = nil

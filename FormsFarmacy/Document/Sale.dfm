@@ -705,6 +705,55 @@ inherited SaleForm: TSaleForm
       Top = 116
       Caption = #1048#1053#1053' '#1087#1072#1094#1080#1077#1085#1090#1072
     end
+    object edTotalSummPayAdd: TcxTextEdit
+      Left = 660
+      Top = 132
+      Properties.Alignment.Horz = taRightJustify
+      Properties.ReadOnly = True
+      TabOrder = 42
+      Width = 93
+    end
+    object cxLabel23: TcxLabel
+      Left = 660
+      Top = 116
+      Caption = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1099
+    end
+    object edFiscalCheckNumber: TcxTextEdit
+      Left = 660
+      Top = 94
+      Properties.ReadOnly = True
+      TabOrder = 44
+      Width = 78
+    end
+    object cxLabel24: TcxLabel
+      Left = 660
+      Top = 78
+      Caption = #8470' '#1092#1080#1089#1082'. '#1095#1077#1082#1072
+    end
+    object edZReport: TcxTextEdit
+      Left = 660
+      Top = 59
+      Properties.ReadOnly = True
+      TabOrder = 46
+      Width = 55
+    end
+    object cxLabel32: TcxLabel
+      Left = 660
+      Top = 44
+      Caption = 'Z '#1086#1090#1095#1077#1090
+    end
+    object edCashRegisterName: TcxTextEdit
+      Left = 660
+      Top = 22
+      Properties.ReadOnly = True
+      TabOrder = 48
+      Width = 81
+    end
+    object cxLabel25: TcxLabel
+      Left = 660
+      Top = 4
+      Caption = #1050#1072#1089#1089#1072
+    end
   end
   object cxLabel8: TcxLabel [2]
     Left = 379
@@ -1959,6 +2008,34 @@ inherited SaleForm: TSaleForm
         Component = ceChangePercent
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashRegisterName'
+        Value = Null
+        Component = edCashRegisterName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ZReport'
+        Value = Null
+        Component = edZReport
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FiscalCheckNumber'
+        Value = Null
+        Component = edFiscalCheckNumber
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSummPayAdd'
+        Value = Null
+        Component = edTotalSummPayAdd
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 272
@@ -2686,8 +2763,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 656
-    Top = 120
+    Left = 584
+    Top = 128
   end
   object GuidesMedicSP: TdsdGuides
     KeyField = 'Id'

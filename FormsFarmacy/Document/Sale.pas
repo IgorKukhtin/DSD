@@ -150,6 +150,14 @@ type
     ceChangePercent: TcxCurrencyEdit;
     cxLabel22: TcxLabel;
     SummIC: TcxGridDBColumn;
+    edTotalSummPayAdd: TcxTextEdit;
+    cxLabel23: TcxLabel;
+    edFiscalCheckNumber: TcxTextEdit;
+    cxLabel24: TcxLabel;
+    edZReport: TcxTextEdit;
+    cxLabel32: TcxLabel;
+    edCashRegisterName: TcxTextEdit;
+    cxLabel25: TcxLabel;
   private
     { Private declarations }
   public

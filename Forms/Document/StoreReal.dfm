@@ -2,26 +2,25 @@ inherited StoreRealForm: TStoreRealForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1058#1058'>'
   ClientHeight = 397
   ClientWidth = 937
-  ExplicitLeft = -217
   ExplicitWidth = 953
   ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 76
+    Top = 113
     Width = 937
-    Height = 321
+    Height = 284
     ExplicitTop = 76
     ExplicitWidth = 937
     ExplicitHeight = 321
-    ClientRectBottom = 321
+    ClientRectBottom = 284
     ClientRectRight = 937
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 937
       ExplicitHeight = 297
       inherited cxGrid: TcxGrid
         Width = 937
-        Height = 297
+        Height = 260
         ExplicitWidth = 937
         ExplicitHeight = 297
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -50,6 +49,21 @@ inherited StoreRealForm: TStoreRealForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_last3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_last2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_last1
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -79,6 +93,21 @@ inherited StoreRealForm: TStoreRealForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_last3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_last2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_last1
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -156,7 +185,18 @@ inherited StoreRealForm: TStoreRealForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object InfoMoneyCode: TcxGridDBColumn [7]
+          object Amount_last1: TcxGridDBColumn [7]
+            Caption = #1050#1086#1083'-'#1074#1086' 1 ('#1087#1088#1077#1076'. '#1086#1089#1090'.)'
+            DataBinding.FieldName = 'Amount_last1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' 1 ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080')'
+            Width = 65
+          end
+          object InfoMoneyCode: TcxGridDBColumn [8]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -165,7 +205,7 @@ inherited StoreRealForm: TStoreRealForm
             Options.Editing = False
             Width = 45
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [8]
+          object InfoMoneyGroupName: TcxGridDBColumn [9]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -174,7 +214,7 @@ inherited StoreRealForm: TStoreRealForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyDestinationName: TcxGridDBColumn [9]
+          object InfoMoneyDestinationName: TcxGridDBColumn [10]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -183,7 +223,7 @@ inherited StoreRealForm: TStoreRealForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyName: TcxGridDBColumn [10]
+          object InfoMoneyName: TcxGridDBColumn [11]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -192,12 +232,34 @@ inherited StoreRealForm: TStoreRealForm
             Options.Editing = False
             Width = 100
           end
-          object GUID: TcxGridDBColumn [11]
+          object GUID: TcxGridDBColumn [12]
             DataBinding.FieldName = 'GUID'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 70
+          end
+          object Amount_last2: TcxGridDBColumn [13]
+            Caption = #1050#1086#1083'-'#1074#1086' 2 ('#1087#1088#1077#1076'. '#1086#1089#1090'.)'
+            DataBinding.FieldName = 'Amount_last2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' 2 ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080')'
+            Width = 64
+          end
+          object Amount_last3: TcxGridDBColumn [14]
+            Caption = #1050#1086#1083'-'#1074#1086' 3 ('#1087#1088#1077#1076'. '#1086#1089#1090'.)'
+            DataBinding.FieldName = 'Amount_last3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' 3 ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080')'
             Width = 70
           end
         end
@@ -206,10 +268,11 @@ inherited StoreRealForm: TStoreRealForm
   end
   inherited DataPanel: TPanel
     Width = 937
-    Height = 50
+    Height = 87
     TabOrder = 3
+    ExplicitTop = -4
     ExplicitWidth = 937
-    ExplicitHeight = 50
+    ExplicitHeight = 87
     inherited edInvNumber: TcxTextEdit
       Left = 179
       ExplicitLeft = 179
@@ -254,11 +317,60 @@ inherited StoreRealForm: TStoreRealForm
       TabOrder = 7
       Width = 222
     end
+    object cxLabel4: TcxLabel
+      Left = 353
+      Top = 5
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+    end
+    object edMovementLast1: TcxButtonEdit
+      Left = 4
+      Top = 64
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 9
+      Text = ' '
+      Width = 340
+    end
+    object cxLabel5: TcxLabel
+      Left = 353
+      Top = 5
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+    end
+    object edMovementLast2: TcxButtonEdit
+      Left = 353
+      Top = 64
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Text = ' '
+      Width = 284
+    end
+    object edMovementLast3: TcxButtonEdit
+      Left = 643
+      Top = 64
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 12
+      Text = ' '
+      Width = 284
+    end
   end
   object cxLabel21: TcxLabel [2]
-    Left = 353
-    Top = 5
-    Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+    Left = 4
+    Top = 46
+    Caption = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' 1'
   end
   object edPartner: TcxButtonEdit [3]
     Left = 353
@@ -284,6 +396,16 @@ inherited StoreRealForm: TStoreRealForm
     Properties.ReadOnly = True
     TabOrder = 9
     Width = 133
+  end
+  object cxLabel6: TcxLabel [6]
+    Left = 353
+    Top = 46
+    Caption = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' 2'
+  end
+  object cxLabel7: TcxLabel [7]
+    Left = 643
+    Top = 46
+    Caption = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' 3'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -684,7 +806,7 @@ inherited StoreRealForm: TStoreRealForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -717,14 +839,14 @@ inherited StoreRealForm: TStoreRealForm
       item
         Name = 'PartnerId'
         Value = Null
-        Component = PartnerGuides
+        Component = GuidesPartner
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
         Value = Null
-        Component = PartnerGuides
+        Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -740,6 +862,30 @@ inherited StoreRealForm: TStoreRealForm
         Name = 'GUID'
         Value = Null
         Component = edGUID
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberFull_last1'
+        Value = Null
+        Component = GuidesMovLast1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberFull_last2'
+        Value = Null
+        Component = GuidesMovLast2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberFull_last3'
+        Value = Null
+        Component = GuidesMovLast3
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -776,7 +922,7 @@ inherited StoreRealForm: TStoreRealForm
       item
         Name = 'inPartnerId'
         Value = Null
-        Component = PartnerGuides
+        Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -784,7 +930,7 @@ inherited StoreRealForm: TStoreRealForm
       item
         Name = 'outPartnerName'
         Value = Null
-        Component = PartnerGuides
+        Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -914,14 +1060,14 @@ inherited StoreRealForm: TStoreRealForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inAmountSecond'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1023,7 +1169,7 @@ inherited StoreRealForm: TStoreRealForm
     Left = 304
     Top = 312
   end
-  object PartnerGuides: TdsdGuides
+  object GuidesPartner: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartner
     Key = '0'
@@ -1037,7 +1183,7 @@ inherited StoreRealForm: TStoreRealForm
       item
         Name = 'Key'
         Value = '0'
-        Component = PartnerGuides
+        Component = GuidesPartner
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1046,7 +1192,7 @@ inherited StoreRealForm: TStoreRealForm
       item
         Name = 'TextValue'
         Value = ' '
-        Component = PartnerGuides
+        Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1069,5 +1215,149 @@ inherited StoreRealForm: TStoreRealForm
       end>
     Left = 448
     Top = 8
+  end
+  object GuidesMovLast1: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMovementLast1
+    DisableGuidesOpen = True
+    Key = '0'
+    TextValue = ' '
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesMovLast1
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ' '
+        Component = GuidesMovLast1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 136
+    Top = 56
+  end
+  object GuidesMovLast2: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMovementLast2
+    DisableGuidesOpen = True
+    Key = '0'
+    TextValue = ' '
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesMovLast2
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ' '
+        Component = GuidesMovLast2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 528
+    Top = 48
+  end
+  object GuidesMovLast3: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMovementLast3
+    DisableGuidesOpen = True
+    Key = '0'
+    TextValue = ' '
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesMovLast3
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ' '
+        Component = GuidesMovLast3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 672
+    Top = 56
   end
 end

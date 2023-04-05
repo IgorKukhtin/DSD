@@ -50,7 +50,7 @@ type
     GoodsGroupNameFull: TcxGridDBColumn;
     cxLabel21: TcxLabel;
     edPartner: TcxButtonEdit;
-    PartnerGuides: TdsdGuides;
+    GuidesPartner: TdsdGuides;
     LineNum: TcxGridDBColumn;
     actShowMessage: TShowMessageAction;
     cxLabel22: TcxLabel;
@@ -58,6 +58,16 @@ type
     cxLabel3: TcxLabel;
     edGUID: TcxTextEdit;
     GUID: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    edMovementLast1: TcxButtonEdit;
+    GuidesMovLast1: TdsdGuides;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    GuidesMovLast2: TdsdGuides;
+    edMovementLast2: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    GuidesMovLast3: TdsdGuides;
+    edMovementLast3: TcxButtonEdit;
   private
     { Private declarations }
   public
