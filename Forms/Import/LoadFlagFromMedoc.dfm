@@ -63,7 +63,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = 42005d
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'J1201013'
+      CharCode.Value = 'J1201014'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxJur'
     end
@@ -73,7 +73,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = 42005d
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'J1201213'
+      CharCode.Value = 'J1201214'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxCorrectiveJur'
     end
@@ -83,7 +83,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = Null
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'F1201013'
+      CharCode.Value = 'F1201014'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxFiz'
     end
@@ -93,7 +93,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = Null
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'F1201213'
+      CharCode.Value = 'F1201214'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxCorrectiveFiz'
     end
@@ -149,7 +149,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = 43101d
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'J1201012'
+      CharCode.Value = 'J1201013'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxJur'
     end
@@ -159,7 +159,7 @@ inherited LoadFlagFromMedocForm: TLoadFlagFromMedocForm
       PeriodDate.Value = 43101d
       PeriodDate.Component = dePeriodDate
       PeriodDate.MultiSelectSeparator = ','
-      CharCode.Value = 'J1201212'
+      CharCode.Value = 'J1201213'
       CharCode.MultiSelectSeparator = ','
       Caption = 'TaxCorrectiveJur'
     end
