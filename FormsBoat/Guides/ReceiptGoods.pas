@@ -221,6 +221,8 @@ type
     macInsertUpdate_Unit_list: TMultiAction;
     macInsertUpdate_Unit: TMultiAction;
     bbInsertUpdate_Unit: TdxBarButton;
+    bbProtocolGoods: TdxBarButton;
+    bbProtocolPattern: TdxBarButton;
   private
     { Private declarations }
   public

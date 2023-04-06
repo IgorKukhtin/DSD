@@ -3,7 +3,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1052#1086#1076#1077#1083#1080'>'
   ClientHeight = 443
-  ClientWidth = 1293
+  ClientWidth = 1221
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object PanelMaster: TPanel
     Left = 0
     Top = 59
-    Width = 1293
+    Width = 1221
     Height = 209
     Align = alTop
     BevelEdges = [beLeft]
@@ -29,7 +29,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
-      Width = 1293
+      Width = 1221
       Height = 192
       Align = alClient
       PopupMenu = PopupMenu
@@ -301,7 +301,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object Panel3: TPanel
       Left = 0
       Top = 0
-      Width = 1293
+      Width = 1221
       Height = 17
       Align = alTop
       Caption = #1057#1073#1086#1088#1082#1072' '#1084#1086#1076#1077#1083#1080
@@ -344,11 +344,11 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 151
+      Width = 135
     end
   end
   object PanelProdColorPattern: TPanel
-    Left = 781
+    Left = 709
     Top = 273
     Width = 512
     Height = 170
@@ -668,7 +668,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object PanelGoods: TPanel
     Left = 0
     Top = 273
-    Width = 773
+    Width = 701
     Height = 170
     Align = alClient
     BevelEdges = [beLeft]
@@ -677,7 +677,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object cxGridGoods: TcxGrid
       Left = 0
       Top = 17
-      Width = 773
+      Width = 701
       Height = 153
       Align = alClient
       PopupMenu = PopupMenuColor
@@ -1288,27 +1288,25 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object Panel1: TPanel
       Left = 0
       Top = 0
-      Width = 773
+      Width = 701
       Height = 17
       Align = alTop
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
-      ExplicitLeft = 80
-      ExplicitTop = 1
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 268
-    Width = 1293
+    Width = 1221
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
   end
   object cxRightSplitter: TcxSplitter
-    Left = 773
+    Left = 701
     Top = 273
     Width = 8
     Height = 170
@@ -1318,10 +1316,10 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object Panel4: TPanel
     Left = 0
     Top = 0
-    Width = 1293
+    Width = 1221
     Height = 33
     Align = alTop
-    TabOrder = 9
+    TabOrder = 7
     object lbSearchArticle: TcxLabel
       Left = 22
       Top = 6
@@ -1343,6 +1341,26 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         21)
       Width = 125
     end
+  end
+  object clReceiptGoods: TcxLabel
+    Left = 111
+    Top = 82
+    Hint = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080
+    Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1086#1074':'
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object edReceiptGoods: TcxButtonEdit
+    Left = 183
+    Top = 82
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 130
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -1460,6 +1478,22 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdate_ReceiptGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowAll'
         end
         item
@@ -1505,6 +1539,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         item
           Visible = True
           ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolPattern'
         end
         item
           Visible = True
@@ -1763,6 +1805,32 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     end
     object ppPrintStructureGoodsAll: TdxBarButton
       Action = actPrintStructureGoodsAll
+      Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = clReceiptGoods
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edReceiptGoods
+    end
+    object bbInsertUpdate_ReceiptGoods: TdxBarButton
+      Action = actspInsertUpdate_ReceiptGoods
+      Category = 0
+    end
+    object bbProtocolGoods: TdxBarButton
+      Action = actProtocolGoods
+      Category = 0
+    end
+    object bbProtocolPattern: TdxBarButton
+      Action = actProtocolPattern
       Category = 0
     end
   end
@@ -2471,6 +2539,81 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       PictureFields.Strings = (
         'photo1')
     end
+    object actspInsertUpdate_ReceiptGoods: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_ReceiptGoods
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_ReceiptGoods
+        end>
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1072
+      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1072
+      ImageIndex = 82
+      QuestionBeforeExecute = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1072'>?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1082#1086#1087#1080#1088#1086#1074#1072#1085#1099
+    end
+    object actProtocolGoods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099' / '#1059#1089#1083#1091#1075#1080' '
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099' / '#1059#1089#1083#1091#1075#1080' '
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = GoodsChildCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = GoodsChildCDS
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actProtocolPattern: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' Boat Structure'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' Boat Structure'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ProdColorPatternCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProdColorPatternCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptProdModel'
@@ -3080,8 +3223,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 888
-    Top = 136
+    Left = 872
+    Top = 120
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -3143,7 +3286,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   end
   object ChildViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = ChildView
+    View = cxGridDBTableViewGoods
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -3294,8 +3437,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 815
-    Top = 50
+    Left = 791
+    Top = 34
   end
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle
@@ -3422,5 +3565,61 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     PackSize = 1
     Left = 696
     Top = 184
+  end
+  object spInsertUpdate_ReceiptGoods: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_ReceiptProdModelChild_byReceiptGoods'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inReceiptProdModelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptGoodsId'
+        Value = Null
+        Component = GuidesReceiptGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 152
+    Top = 176
+  end
+  object GuidesReceiptGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edReceiptGoods
+    FormNameParam.Value = 'TReceiptGoodsForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TReceiptGoodsForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesReceiptGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesReceiptGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 224
+    Top = 72
   end
 end
