@@ -28,6 +28,7 @@ $BODY$
    DECLARE vbUserId   Integer;
    DECLARE vbUserName TVarChar;
    DECLARE vbPartnerId Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_StoreReal());
@@ -35,6 +36,7 @@ BEGIN
       vbUserName:= (SELECT Object.ValueData FROM Object WHERE Object.Id = vbUserId);
 
       vbPartnerId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Partner());
+      vbOperDate  := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
       
       IF COALESCE(inMovementId, 0) = 0 
       THEN
@@ -73,6 +75,7 @@ BEGIN
                                       WHERE Movement.DescId = zc_Movement_StoreReal()
                                         AND Movement.StatusId <> zc_Enum_Status_Erased()
                                         AND Movement.Id <> inMovementId
+                                        AND Movement.OperDate <=vbOperDate
                                       ) AS tmp
                                 WHERE tmp.Ord < 4
                                 )

@@ -201,6 +201,18 @@ type
     spSelectPrintStructureGoodsAll: TdsdStoredProc;
     ppPrintStructureGoodsAll: TdxBarButton;
     UnitName: TcxGridDBColumn;
+    actspInsertUpdate_ReceiptGoods: TdsdExecStoredProc;
+    spInsertUpdate_ReceiptGoods: TdsdStoredProc;
+    clReceiptGoods: TcxLabel;
+    edReceiptGoods: TcxButtonEdit;
+    GuidesReceiptGoods: TdsdGuides;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    bbInsertUpdate_ReceiptGoods: TdxBarButton;
+    actProtocolGoods: TdsdOpenForm;
+    actProtocolPattern: TdsdOpenForm;
+    bbProtocolGoods: TdxBarButton;
+    bbProtocolPattern: TdxBarButton;
   private
     { Private declarations }
   public
