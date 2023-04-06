@@ -1400,11 +1400,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_CancelBansSUN() RETURNS
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_CancelBansSUN', 'Отмена запретов по всем СУН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_CancelBansSUN');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_MedicalProgramSP(), 'zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript', 'Электронные рецепты' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript');
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 06.04.23                                                                                                          * zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript
  18.03.23                                                                                                          * zc_ObjectBoolean_CashSettings_CancelBansSUN
  14.03.23         * zc_ObjectBoolean_PersonalServiceList_AvanceNot
                     zc_ObjectBoolean_Unit_Avance

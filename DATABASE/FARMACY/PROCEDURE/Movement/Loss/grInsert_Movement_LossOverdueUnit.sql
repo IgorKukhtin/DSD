@@ -113,7 +113,7 @@
                           WHERE Container.DescId = zc_Container_CountPartionDate()
                             AND Container.WhereObjectId = inUnitID
                             AND Container.Amount > 0
-                            AND ObjectDate_ExpirationDate.ValueData < date_trunc('month', vbOperDate - INTERVAL '85 DAY')
+                            AND ObjectDate_ExpirationDate.ValueData < date_trunc('month', vbOperDate - INTERVAL '120 DAY')
                             AND COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = FALSE),
          --  Перемещения в списания
          tmpMovementSend AS (SELECT MovementItem.ObjectId                   AS GoodsId 

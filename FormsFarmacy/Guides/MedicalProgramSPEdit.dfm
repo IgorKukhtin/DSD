@@ -94,7 +94,7 @@
     Top = 251
     Caption = #1041#1077#1079#1087#1083#1072#1090#1085#1086
     TabOrder = 10
-    Width = 121
+    Width = 81
   end
   object edGroupMedicalProgramSP: TcxButtonEdit
     Left = 40
@@ -112,6 +112,13 @@
     Left = 40
     Top = 152
     Caption = #1043#1088#1091#1087#1087#1072' '#1084#1077#1076#1080#1094#1080#1085#1089#1082#1080#1093' '#1087#1088#1086#1075#1088#1072#1084#1084' '#1089#1086#1094'. '#1087#1088#1086#1077#1082#1090#1086#1074
+  end
+  object cbElectronicPrescript: TcxCheckBox
+    Left = 175
+    Top = 250
+    Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1077' '#1088#1077#1094#1077#1087#1090#1099
+    TabOrder = 13
+    Width = 161
   end
   object ActionList: TActionList
     Left = 256
@@ -205,6 +212,14 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisElectronicPrescript'
+        Value = Null
+        Component = cbElectronicPrescript
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 307
@@ -288,6 +303,13 @@
         Name = 'isFree'
         Value = Null
         Component = cbisFree
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isElectronicPrescript'
+        Value = Null
+        Component = cbElectronicPrescript
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
