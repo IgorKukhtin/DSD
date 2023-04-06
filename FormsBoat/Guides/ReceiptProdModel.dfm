@@ -154,6 +154,15 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Options.Editing = False
           Width = 80
         end
+        object ProdColorName_pcp: TcxGridDBColumn
+          Caption = '~Farbe'
+          DataBinding.FieldName = 'ProdColorName_pcp'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = 'Farbe Boat Structure'
+          Options.Editing = False
+          Width = 80
+        end
         object EngineName: TcxGridDBColumn
           Caption = 'Engine'
           DataBinding.FieldName = 'EngineName'
@@ -168,15 +177,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           DataBinding.FieldName = 'MaterialOptionsName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 80
-        end
-        object ProdColorName_pcp: TcxGridDBColumn
-          Caption = '~Farbe'
-          DataBinding.FieldName = 'ProdColorName_pcp'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = 'Farbe Boat Structure'
           Options.Editing = False
           Width = 80
         end
@@ -2551,8 +2551,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         item
           StoredProc = spSelect_Goods
         end>
-      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1072
-      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1072
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1052#1086#1076#1077#1083#1080
+      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1052#1086#1076#1077#1083#1080
       ImageIndex = 82
       QuestionBeforeExecute = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1072'>?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1082#1086#1087#1080#1088#1086#1074#1072#1085#1099

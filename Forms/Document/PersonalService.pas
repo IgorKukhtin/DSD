@@ -298,7 +298,12 @@ type
     ExecuteDialogPeriod: TExecuteDialog;
     actInsertUpdate_Avance: TdsdExecStoredProc;
     macInsertUpdate_AvanceAuto: TMultiAction;
-    bb: TdxBarButton;
+    bbnsertUpdate_AvanceAuto: TdxBarButton;
+    spGetImportSettingComp: TdsdStoredProc;
+    actGetImportSettingCompens: TdsdExecStoredProc;
+    actDoLoad_Compens: TExecuteImportSettingsAction;
+    macLoad_Compens: TMultiAction;
+    bbLoad_Compens: TdxBarButton;
   private
     { Private declarations }
   public

@@ -881,14 +881,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalService_RecalcForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalService_RecalcForm');
   //exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
   //exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceItemJournalForm');
 
@@ -896,7 +896,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalChoiceForm');
-
+  }
 end;
 
 procedure TLoadFormTest.LoadPersonalTransportFormTest;

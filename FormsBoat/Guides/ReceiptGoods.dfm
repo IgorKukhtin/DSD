@@ -37,6 +37,8 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitLeft = -296
+      ExplicitTop = 23
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -477,6 +479,26 @@
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
+    end
+    object clReceiptGoods: TcxLabel
+      Left = 171
+      Top = 23
+      Hint = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080
+      Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1086#1074':'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edReceiptGoods: TcxButtonEdit
+      Left = 296
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 3
+      Width = 130
     end
   end
   object PanelGoods: TPanel
@@ -1502,6 +1524,22 @@
         end
         item
           Visible = True
+          ItemName = 'bbclReceiptGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbedReceiptGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowAllErased'
         end
         item
@@ -1843,6 +1881,20 @@
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' Boat Structure'
       Visible = ivAlways
       ImageIndex = 34
+    end
+    object bbclReceiptGoods: TdxBarControlContainerItem
+      Caption = 'clReceiptGoods'
+      Category = 0
+      Hint = 'clReceiptGoods'
+      Visible = ivAlways
+      Control = clReceiptGoods
+    end
+    object bbedReceiptGoods: TdxBarControlContainerItem
+      Caption = 'clReceiptGoods'
+      Category = 0
+      Hint = 'ReceiptGoods'
+      Visible = ivAlways
+      Control = edReceiptGoods
     end
   end
   object ActionList: TActionList
@@ -2988,6 +3040,24 @@
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1084#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1084#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074
     end
+    object actspInsertUpdate_ReceiptGoods: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_ReceiptGoods
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_ReceiptGoods
+        end
+        item
+          StoredProc = spSelect_child1
+        end>
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1072
+      Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1072
+      ImageIndex = 82
+      QuestionBeforeExecute = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1072'>?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1082#1086#1087#1080#1088#1086#1074#1072#1085#1099
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptGoods'
@@ -3877,5 +3947,61 @@
     PackSize = 1
     Left = 1084
     Top = 8
+  end
+  object GuidesReceiptGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edReceiptGoods
+    FormNameParam.Value = 'TReceiptGoodsChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TReceiptGoodsChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesReceiptGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesReceiptGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 344
+    Top = 72
+  end
+  object spInsertUpdate_ReceiptGoods: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_ReceiptGoodsChild_byReceiptGoods'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inReceiptProdModelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptGoodsId'
+        Value = ''
+        Component = GuidesReceiptGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 176
+    Top = 192
   end
 end

@@ -1402,6 +1402,9 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_PersonalServiceSummService() RE
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_PersonalServiceSummAvance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_PersonalServiceSummAvance' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_PersonalServiceSummAvance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_PersonalServiceSummAvance' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+-- ЗП Загрузка начислений Компенсации 
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_PersonalServiceCompensation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_PersonalServiceCompensation' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_PersonalServiceCompensation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_PersonalServiceCompensation' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 --Загрузка в Документ <Ведомость начисления зарплаты>   zc_MIFloat_SummMinusExtRecalc  Удержания сторон. юр.л. (ввод)
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_PersonalServiceSMER() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_PersonalServiceSMER' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
