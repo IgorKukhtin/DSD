@@ -498,7 +498,7 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 130
+      Width = 201
     end
   end
   object PanelGoods: TPanel
@@ -1353,6 +1353,8 @@
       Color = clLime
       ParentBackground = False
       TabOrder = 1
+      ExplicitLeft = 337
+      ExplicitTop = 145
     end
   end
   object cxSplitter1: TcxSplitter
@@ -1529,6 +1531,10 @@
         item
           Visible = True
           ItemName = 'bbedReceiptGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdate_ReceiptGoods'
         end
         item
           Visible = True
@@ -1895,6 +1901,10 @@
       Hint = 'ReceiptGoods'
       Visible = ivAlways
       Control = edReceiptGoods
+    end
+    object bbInsertUpdate_ReceiptGoods: TdxBarButton
+      Action = actspInsertUpdate_ReceiptGoods
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -3985,7 +3995,7 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'inReceiptProdModelId'
+        Name = 'inReceiptGoodsId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
@@ -3993,7 +4003,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReceiptGoodsId'
+        Name = 'inReceiptGoodsId_mask'
         Value = ''
         Component = GuidesReceiptGoods
         ComponentItem = 'Key'

@@ -230,6 +230,7 @@ type
     bbedReceiptGoods: TdxBarControlContainerItem;
     spInsertUpdate_ReceiptGoods: TdsdStoredProc;
     actspInsertUpdate_ReceiptGoods: TdsdExecStoredProc;
+    bbInsertUpdate_ReceiptGoods: TdxBarButton;
   private
     { Private declarations }
   public
