@@ -51,6 +51,9 @@ $BODY$
    DECLARE vbProdColorName TVarChar;
    DECLARE vbProdColor_ChildId Integer; 
    DECLARE vbProdColorId Integer; 
+
+   DECLARE vbMeasureName TVarChar;
+   DECLARE vbMeasureId Integer;
       
    DECLARE text_var1 Text;
 BEGIN
@@ -62,6 +65,15 @@ BEGIN
    THEN
        inReceiptLevelName:= 'Steering console';
    END IF;
+   
+   --
+   inReceiptLevelName:= CASE inReceiptLevelName
+                             WHEN 'HULL/(Корпус)' THEN '1-HULL/(Корпус)'
+                             WHEN 'DECK/(Палуба)' THEN '2-DECK/(Палуба)'
+                             WHEN 'СЭ' THEN '3-СЭ'
+                             WHEN 'БС' THEN '4-БС'
+                             ELSE inReceiptLevelName
+                        END;
 
    --
    IF COALESCE (TRIM (inGoodsName_child), '') = '' OR
@@ -89,7 +101,30 @@ BEGIN
        RAISE EXCEPTION 'Ошибка преобразования в число <%>.', inAmount;        
      END IF;
    END IF;
+   
+   -- Measure
+   vbMeasureName:= CASE WHEN inAmount ILIKE '%м.п.%'  THEN 'м.п.'
+                        WHEN inAmount ILIKE '%м.кв.%' THEN 'м.кв.'
+
+                        WHEN inAmount ILIKE '%шт.%'   THEN 'шт.'
+                        WHEN inAmount ILIKE '%шт%'    THEN 'шт.'
+                                                      
+                        WHEN inAmount ILIKE '%уп.%'   THEN 'уп.'
+                        WHEN inAmount ILIKE '%уп%'    THEN 'уп.'
+
+                        WHEN inAmount ILIKE '%к-т.%'  THEN 'к-т.'
+                        WHEN inAmount ILIKE '%к-т%'   THEN 'к-т.'
+                                                      
+                        WHEN inAmount ILIKE '%ml.%'   THEN 'ml.'
+                        WHEN inAmount ILIKE '%ml%'    THEN 'ml.'
+
+                        WHEN inAmount ILIKE '%st.%'   THEN 'st.'
+                        WHEN inAmount ILIKE '%st%'    THEN 'st.'
      
+                        WHEN inAmount ILIKE '%м.%'    THEN 'м.'
+                        WHEN inAmount ILIKE '%м%'     THEN 'м.'
+                   END;
+
    -- Заменяем А 
    inGoodsName := REPLACE(inGoodsName, chr(1040)||'GL-', 'AGL-');
    inGoodsName_child := REPLACE(inGoodsName_child, chr(1040)||'GL-', 'AGL-');
@@ -767,6 +802,25 @@ BEGIN
                                    AND COALESCE (ObjectLink_ReceiptLevel.ChildObjectId, 0) = COALESCE (vbReceiptLevelId, 0)
                                  );
 
+         --IF inReceiptLevelName ILIKE 'Steering console'
+         IF 1=0 -- inArticle_child = '54890600251'
+         THEN
+           RAISE EXCEPTION 'Ошибка.<%>  <%>  <%>  <%>   <%>   <%>   <%>   <%>   <%>'
+                       , (inArticle)
+                       , vbReceiptGoodsChildId
+                       , lfGet_Object_ValueData (vbGoods_GoodsChildId)
+                       , inArticle_child
+
+                       , vbReceiptGoodsId
+                       , vbGoodsId_child
+                       
+                       , vbProdColorPatternId
+                       , vbGoods_GoodsChildId
+                       , vbReceiptLevelId
+                          ;
+         END IF;
+
+                                 
        IF COALESCE (vbReceiptGoodsChildId, 0) = 0 OR
           NOT EXISTS (SELECT Object_ReceiptGoodsChild.Id
                       FROM Object AS Object_ReceiptGoodsChild
@@ -906,6 +960,22 @@ BEGIN
        END IF;
     
      END IF;
+     
+     
+   -- сохранили
+   IF vbMeasureName  <> ''
+   THEN
+       vbMeasureId:= (SELECT Object.Id FROM Object WHERE Object.ValueData ILIKE vbMeasureName LIMIT 1);
+       IF COALESCE (vbMeasureId, 0) = 0 
+       THEN
+           -- сохранили
+           vbMeasureId := lpInsertUpdate_Object (vbMeasureId, zc_Object_Measure(), 0, vbMeasureName);
+       END IF;
+
+        -- сохранили
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Measure(), vbGoodsId_child, vbMeasureId);
+   END IF;
+
      
      
    EXCEPTION

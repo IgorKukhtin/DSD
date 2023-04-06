@@ -436,7 +436,16 @@ BEGIN
          , COALESCE (tmpRes.GoodsGroupNameFull, CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.GoodsGroupNameFull ELSE NULL END, tmpRes.GoodsGroupNameFull) ::TVarChar AS GoodsGroupNameFull
          , COALESCE (tmpRes.GoodsGroupName, CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.GoodsGroupName ELSE NULL END, tmpRes.GoodsGroupName)             ::TVarChar AS GoodsGroupName
          , COALESCE (tmpRes.Article, CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.Article ELSE NULL END, tmpRes.Article)                                  ::TVarChar AS Article
-         , CASE WHEN tmpRes.Comment <> '' THEN tmpRes.Comment ELSE COALESCE (tmpRes.ProdColorName, CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.ProdColorName ELSE NULL END, tmpRes.ProdColorName) END ::TVarChar AS ProdColorName
+         , CASE WHEN tmpRes.Comment <> ''
+                THEN tmpRes.Comment
+                ELSE COALESCE (tmpRes.ProdColorName
+                             , CASE WHEN tmpRes.NPP_pcp = 1 OR tmpProdColorPattern.GoodsId IS NULL
+                                    THEN tmpProdColorPattern.ProdColorName
+                                    ELSE NULL
+                               END
+                             , tmpRes.ProdColorName
+                              )
+           END ::TVarChar AS ProdColorName
          , COALESCE (tmpRes.MeasureName, CASE WHEN tmpRes.NPP_pcp = 1 THEN tmpProdColorPattern.MeasureName ELSE NULL END, tmpRes.MeasureName)                     ::TVarChar  AS MeasureName
 
          , tmpRes.MaterialOptionsId
