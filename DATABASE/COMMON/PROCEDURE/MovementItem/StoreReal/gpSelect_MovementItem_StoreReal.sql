@@ -33,13 +33,15 @@ RETURNS TABLE (Id                       Integer
 AS
 $BODY$
    DECLARE vbUserId Integer; 
-   DECLARE vbPartnerId Integer;
+   DECLARE vbPartnerId Integer; 
+   DECLARE vbOperDate TDateTime;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_StoreReal());
       vbUserId:= lpGetUserBySession (inSession);
 
       vbPartnerId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Partner());
+      vbOperDate  := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
      IF inShowAll THEN
 
@@ -83,7 +85,8 @@ BEGIN
                                                                          AND MovementLinkObject_Partner.ObjectId = vbPartnerId
                                        WHERE Movement.DescId = zc_Movement_StoreReal()
                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                         AND Movement.Id <> inMovementId
+                                         AND Movement.Id <> inMovementId 
+                                         AND Movement.OperDate <=vbOperDate
                                        ) AS tmp
                                  WHERE tmp.Ord < 4
                                  )
@@ -299,6 +302,7 @@ BEGIN
                                        WHERE Movement.DescId = zc_Movement_StoreReal()
                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
                                          AND Movement.Id <> inMovementId
+                                         AND Movement.OperDate <=vbOperDate
                                        ) AS tmp
                                  WHERE tmp.Ord < 4
                                  )

@@ -2547,6 +2547,9 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdate_ReceiptGoods
+        end
+        item
+          StoredProc = spSelect_Goods
         end>
       Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1072
       Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1072
