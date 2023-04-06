@@ -1,10 +1,9 @@
--- Function: gpSelect_Movement_Income_Pfizer()
+-- Function: gpSelect_Movement_Income_Pfizer_All()
 
---DROP FUNCTION IF EXISTS gpSelect_Movement_Income_Pfizer (TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Income_Pfizer (Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_Income_Pfizer (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Income_Pfizer (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Income_Pfizer(
-    IN inDiscountExternalId Integer ,   -- Программа
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -13,29 +12,30 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Statu
              , ToId Integer, ToName TVarChar, JuridicalId Integer, JuridicalName TVarChar, ToOKPO TVarChar
              , ContractId Integer, ContractName TVarChar
              , isRegistered Boolean
+             , UserName TVarChar
+             , Password TVarChar
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
-
-   DECLARE vbUnitId Integer;
-   DECLARE vbUnitKey TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- Определяется Аптека
-     vbUnitKey := COALESCE (lpGet_DefaultValue ('zc_Object_Unit', vbUserId), '');
-     vbUnitId  := CASE WHEN vbUnitKey = '' THEN 0 ELSE vbUnitKey :: Integer END;
-
 
      -- Вернули все что надо загружать в медреестр Pfizer МДМ
-     PERFORM gpUpdate_Movement_Income_isRegistered_Auto (inDiscountExternalId:= inDiscountExternalId, inStartDate:= CURRENT_DATE - INTERVAL '20 DAY', inEndDate:= CURRENT_DATE, inSession:= inSession);
+     PERFORM gpUpdate_Movement_Income_isRegistered_Auto (inStartDate:= CURRENT_DATE - INTERVAL '30 DAY', inEndDate:= CURRENT_DATE, inSession:= inSession);
 
      -- Вернули все что надо загружать в медреестр Pfizer МДМ
      RETURN QUERY
-        WITH tmpUnit AS (SELECT vbUnitId AS UnitId)
+        WITH tmpUnit AS (SELECT DISTINCT DE.UnitId
+                              , DE.UserName
+                              , DE.Password
+                         FROM gpSelect_Object_DiscountExternalTools( inSession := inSession) AS DE
+                         WHERE DE.DiscountExternalId IN (SELECT Id FROM gpSelect_Object_DiscountExternal( inSession := '3') WHERE service = 'CardService')
+                           AND COALESCE(DE.UnitId, 0) > 0)
         -- Результат
+        
         SELECT Movement.Id                                AS MovementId
              , Movement.InvNumber                         AS InvNumber
              , Movement.OperDate                          AS OperDate
@@ -60,12 +60,14 @@ BEGIN
              , Object_Contract.ValueData                  AS ContractName
 
              , MovementBoolean.ValueData                  AS isRegistered
+             
+             , tmpUnit.UserName
+             , tmpUnit.Password
 
         FROM MovementBoolean
             LEFT JOIN Movement ON Movement.Id       = MovementBoolean.MovementId
                               AND Movement.DescId   = zc_Movement_Income()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
-                              -- AND Movement.OperDate BETWEEN 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -119,9 +121,7 @@ BEGIN
 
         WHERE MovementBoolean.DescId    = zc_MovementBoolean_Registered()
           AND MovementBoolean.ValueData = FALSE
-          AND inSession <> zfCalc_UserAdmin()
         ORDER BY Movement.OperDate DESC, Movement.Id DESC
-        LIMIT 1
        ;
 
 END;
@@ -136,4 +136,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Movement_Income_Pfizer (inDiscountExternalId := 15615415  , inSession:= '3')
+SELECT * FROM gpSelect_Movement_Income_Pfizer (inSession:= '3')

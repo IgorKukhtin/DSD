@@ -1,10 +1,9 @@
 -- Function: gpUpdate_Movement_Income_isRegistered_Auto()
 
---DROP FUNCTION IF EXISTS gpUpdate_Movement_Income_isRegistered_Auto (TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Movement_Income_isRegistered_Auto (Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Income_isRegistered_Auto (TDateTime, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_Movement_Income_isRegistered_Auto (Integer, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Income_isRegistered_Auto(
-    IN inDiscountExternalId  Integer ,   -- Программа
     IN inStartDate           TDateTime , --
     IN inEndDate             TDateTime , --
     IN inSession             TVarChar    -- сессия пользователя
@@ -36,7 +35,7 @@ BEGIN
                INNER JOIN ObjectLink AS ObjectLink_BarCode_Object
                                      ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
                                     AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
-                                    AND ObjectLink_BarCode_Object.ChildObjectId = inDiscountExternalId
+                                    AND ObjectLink_BarCode_Object.ChildObjectId  in (SELECT Id FROM gpSelect_Object_DiscountExternal( inSession := '3') WHERE service = 'CardService')
           WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
             AND Movement.DescId   = zc_Movement_Income()
             AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -56,4 +55,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_Movement_Income_isRegistered_Auto (inStartDate:= '01.11.2016', inEndDate:= '30.11.2016', inSession:= '2')
+-- SELECT * FROM gpUpdate_Movement_Income_isRegistered_Auto (inStartDate:= CURRENT_DATE - INTERVAL '20 DAY', inEndDate:= CURRENT_DATE, inSession:= '3')
