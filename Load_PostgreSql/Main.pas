@@ -24,12 +24,6 @@ uses
   , IdHTTP, IdSSLOpenSSL, IdSSLOpenSSLHeaders, IdCTypes;
 
 type
-  TCurrencyItem = record
-    Name:   string;
-  end;
-  TArrayCurrencyList = array of TCurrencyItem;
-
-type
   TCustomIdHTTP = class(TIdHTTP)
   public
     constructor Create(AOwner: TComponent);
@@ -37,6 +31,13 @@ type
   private
     procedure OnStatusInfoEx(ASender: TObject; const AsslSocket: PSSL; const AWhere, Aret: TIdC_INT; const AType, AMsg: String);
   end;
+
+type
+  TCurrencyItem = record
+    Name:   string;
+  end;
+  TArrayCurrencyList = array of TCurrencyItem;
+
 
 
   TMainForm = class(TForm)
@@ -373,6 +374,7 @@ type
     procedure StartProcess;
   end;
 
+  function GetRestHTTPjson(AURL : string) : String; stdcall; external 'ProjectFunction.dll';
 
 var
   MainForm: TMainForm;
@@ -638,7 +640,7 @@ begin
     while StrToDate(StartDateCompleteEdit.Text) + count <= StrToDate(EndDateCompleteEdit.Text)
     do count:= count + 1;
     //
-    myLogMemo_add('__start Currency_all');
+    myLogMemo_add('__start Currency_all - ProjectFunction.dll');
     myLogMemo_add(StartDateCompleteEdit.Text);
     myLogMemo_add(IntToStr(count));
     myLogMemo_add(EndDateCompleteEdit.Text);
@@ -689,10 +691,14 @@ begin
 
   // if OperDate >= StrToDate('20.03.2022') then ShowMessage(DateToStr(OperDate));
   try
-  XML.XML.Text := GetHTTPjson('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date='
-                             + FormatDateTime('YYYYMMDD', OperDate)
-                             );
+//  XML.XML.Text := GetHTTPjson('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date='
+  //                           + FormatDateTime('YYYYMMDD', OperDate)
+    //                         );
+  XML.XML.Text := GetRestHTTPjson('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date='
+                                + FormatDateTime('YYYYMMDD', OperDate)
+                                 );
   except
+
        if isMsgCurrency_all = true then ShowMessage(DateToStr(OperDate));
        //
        myLogMemo_add('__err-1 open Currency_day');
