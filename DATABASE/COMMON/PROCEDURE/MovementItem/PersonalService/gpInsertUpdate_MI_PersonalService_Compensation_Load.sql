@@ -83,7 +83,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.У <%> не найдена <Должность> = <%> в справочнике.', inFIO, inPositionName;
      END IF;
 
-      -- находим ПОдразделение
+     -- находим Подразделение
      vbUnitId := (SELECT Object.Id
                   FROM Object 
                   WHERE Object.DescId = zc_Object_Unit() 
@@ -96,6 +96,30 @@ BEGIN
      END IF;
 
             
+     -- проверка
+     IF 1 < (SELECT COUNT(*)
+             FROM (SELECT Object_Personal_View.PersonalId
+                        , ROW_NUMBER() OVER (PARTITION BY Object_Personal_View.MemberId
+                                             -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
+                                             ORDER BY CASE WHEN COALESCE (Object_Personal_View.DateOut, zc_DateEnd()) = zc_DateEnd() THEN 0 ELSE 1 END
+                                                    , CASE WHEN Object_Personal_View.isOfficial = TRUE THEN 0 ELSE 1 END
+                                                    , CASE WHEN Object_Personal_View.isMain = TRUE THEN 0 ELSE 1 END
+                                                    , Object_Personal_View.MemberId
+                                            ) AS Ord
+                   FROM Object_Personal_View
+                   WHERE Object_Personal_View.PositionId = vbPositionId
+                     AND Object_Personal_View.UnitId = vbUnitId
+                     AND Object_Personal_View.isErased = FALSE
+                     --AND Object_Personal_View.MemberId = vbMemberId
+                     AND REPLACE (REPLACE(TRIM (Object_Personal_View.PersonalName),'''',''),'`','') ILIKE REPLACE (REPLACE (TRIM (inFIO),'''',''),'`','')
+                  ) AS tmp
+             WHERE tmp.Ord = 1
+            )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Найдено больше одного ФИО для <%> <%> <%> (%) (%).', lfGet_Object_ValueData_sh (vbUnitId), inFIO, lfGet_Object_ValueData_sh (vbPositionId), vbUnitId, vbPositionId;
+     END IF;
+
+     -- находим
      vbPersonalId := (SELECT tmp.PersonalId
                       FROM (SELECT Object_Personal_View.PersonalId
                                  , ROW_NUMBER() OVER (PARTITION BY Object_Personal_View.MemberId
@@ -109,10 +133,11 @@ BEGIN
                             WHERE Object_Personal_View.PositionId = vbPositionId
                               AND Object_Personal_View.UnitId = vbUnitId
                               --AND Object_Personal_View.MemberId = vbMemberId
+                              AND Object_Personal_View.isErased = FALSE
                               AND REPLACE (REPLACE(TRIM (Object_Personal_View.PersonalName),'''',''),'`','') ILIKE REPLACE (REPLACE (TRIM (inFIO),'''',''),'`','')
-                            ) AS tmp
+                           ) AS tmp
                       WHERE tmp.Ord = 1
-                      );
+                     );
 
      -- проверка
      IF COALESCE (vbPersonalId, 0) = 0
@@ -134,8 +159,10 @@ BEGIN
                                   AND REPLACE (REPLACE(TRIM (Object_Personal_View.PersonalName),'''',''),'`','') ILIKE REPLACE (REPLACE (TRIM (inFIO),'''',''),'`','')
                                 ) AS tmp
                           WHERE tmp.Ord = 1
-                          );
-          vbPositionId:= vbPositionId_2; --если нашли по должности 2 переопределяем
+                         );
+
+          -- если нашли по должности 2 переопределяем
+          vbPositionId:= vbPositionId_2;
            
           IF COALESCE (vbPersonalId, 0) = 0
           THEN         
@@ -195,7 +222,7 @@ BEGIN
                                                                                                   AND gpSelect.UnitId = vbUnitId
       LIMIT 1;
 
-     --дописываем данные по компенсации отпуска
+     -- дописываем данные по компенсации отпуска
      PERFORM -- Положено дней отпуска
              lpInsertUpdate_MovementItemFloat (zc_MIFloat_DayVacation(), COALESCE (gpSelect.Id,0), inDayVacation)
              -- использовано дней отпуска
