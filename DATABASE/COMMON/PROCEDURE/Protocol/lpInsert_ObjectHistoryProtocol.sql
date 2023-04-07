@@ -1,6 +1,8 @@
 -- DROP FUNCTION lpInsert_ObjectProtocol (IN inObjectId Integer, IN inUserId Integer);
 
-DROP FUNCTION IF EXISTS lpInsert_ObjectHistoryProtocol (Integer, Integer, Boolean, Boolean);
+-- DROP FUNCTION IF EXISTS lpInsert_ObjectHistoryProtocol (Integer, Integer, Boolean, Boolean);
+DROP FUNCTION IF EXISTS lpInsert_ObjectHistoryProtocol (Integer, Integer, TDateTime, TDateTime, TFloat, Boolean, Boolean);
+DROP FUNCTION IF EXISTS lpInsert_ObjectHistoryProtocol (Integer, Integer, TDateTime, TDateTime, TFloat, TBlob, Boolean, Boolean);
 
 CREATE OR REPLACE FUNCTION lpInsert_ObjectHistoryProtocol(
     IN inObjectId   Integer, 
@@ -8,6 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsert_ObjectHistoryProtocol(
     IN inStartDate  TDateTime,
     IN inEndDate    TDateTime,
     IN inPrice      TFloat,
+    IN inAddXML     TBlob DEFAULT '',
     IN inIsUpdate   Boolean DEFAULT NULL, -- Признак
     IN inIsErased   Boolean DEFAULT NULL  -- Признак, если НЕ пустой тогда в протокол св-ва не пишутся
 )
@@ -36,6 +39,14 @@ BEGIN
                 , Object.DescId
            FROM Object
            WHERE Object.Id = inObjectId 
+
+          UNION ALL
+           SELECT inAddXML AS FieldXML
+                , 2        AS GroupId
+                , 0        AS DescId
+           WHERE inAddXML <> ''
+           
+
           /*UNION
            SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectFloatDesc.ItemName) || '" FieldValue = "' || COALESCE (ObjectFloat.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
                 , 2 AS GroupId

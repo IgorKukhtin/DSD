@@ -168,7 +168,9 @@ BEGIN
          , tmpEmployeeScheduleVIP.HoursWork
          , tmpHoursWorkDay.HoursWorkDay
          
-         , ROUND(CASE WHEN COALESCE (ObjectFloat_Rate.ValueData, 0) > 0 AND
+         , ROUND(CASE WHEN tmpEmployeeScheduleVIP.OperDate = '31.03.2023' AND tmpEmployeeScheduleVIP.UserId = 2431210
+                      THEN 2000
+                      WHEN COALESCE (ObjectFloat_Rate.ValueData, 0) > 0 AND
                             ROUND(COALESCE(tmpCalcMonthSum.SummPhone * ObjectFloat_PercentOther.ValueData / 100, 0) +
                                   COALESCE(tmpCalcMonthSum.SummSale * ObjectFloat_PercentOther.ValueData / 100, 0) +
                                   COALESCE(tmpCalcMonthSum.SummNP * ObjectFloat_PercentPhone.ValueData / 100, 0), 2) < ObjectFloat_Rate.ValueData 
@@ -180,8 +182,10 @@ BEGIN
          , tmpUserReferals.ApplicationAward
          
          
-         , (ROUND(CASE WHEN COALESCE (ObjectFloat_Rate.ValueData, 0) > 0 AND
-                            ROUND(COALESCE(tmpCalcMonthSum.SummPhone * ObjectFloat_PercentOther.ValueData / 100, 0) +
+         , (ROUND(CASE WHEN tmpEmployeeScheduleVIP.OperDate = '31.03.2023' AND tmpEmployeeScheduleVIP.UserId = 2431210
+                      THEN 2000
+                      WHEN COALESCE (ObjectFloat_Rate.ValueData, 0) > 0 AND
+                             ROUND(COALESCE(tmpCalcMonthSum.SummPhone * ObjectFloat_PercentOther.ValueData / 100, 0) +
                                   COALESCE(tmpCalcMonthSum.SummSale * ObjectFloat_PercentOther.ValueData / 100, 0) +
                                   COALESCE(tmpCalcMonthSum.SummNP * ObjectFloat_PercentPhone.ValueData / 100, 0), 2) < ObjectFloat_Rate.ValueData 
                       THEN ObjectFloat_Rate.ValueData / tmpHoursWorkDay.CountUser
@@ -243,4 +247,4 @@ ALTER FUNCTION gpReport_Movement_WagesVIP_CalcMonthUser (TDateTime, TVarChar) OW
 -- тест
 -- 
 
-select * from gpReport_Movement_WagesVIP_CalcMonthUser(inOperDate := ('01.01.2023')::TDateTime ,  inSession := '3');
+select * from gpReport_Movement_WagesVIP_CalcMonthUser(inOperDate := ('01.03.2023')::TDateTime ,  inSession := '3');

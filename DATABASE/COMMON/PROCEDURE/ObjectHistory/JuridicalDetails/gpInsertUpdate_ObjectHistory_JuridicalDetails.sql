@@ -27,6 +27,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
 $BODY$
  DECLARE vbUserId Integer;
  DECLARE vbJuridicalId_find Integer;
+ DECLARE vbAddXML TBlob;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_...());
@@ -96,7 +97,7 @@ BEGIN
            RAISE EXCEPTION 'Ошибка.Нет прав добавлять с пустым <ОКПО>.';
        END IF;
    END IF;
-   
+
 
    -- Вставляем или меняем объект историю
    ioId := lpInsertUpdate_ObjectHistory(ioId, zc_ObjectHistory_JuridicalDetails(), inJuridicalId, inOperDate, vbUserId);
@@ -127,10 +128,69 @@ BEGIN
    -- № филиала
    PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_InvNumberBranch(), ioId, inInvNumberBranch);
 
+
+   -- протокол
+   SELECT STRING_AGG (D.FieldXML, '') INTO vbAddXML
+   FROM
+        (SELECT D.FieldXML
+         FROM 
+          (-- Float
+           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectHistoryFloatDesc.ItemName) || '" FieldValue = "' || COALESCE (zfConvert_FloatToString (ObjectHistoryFloat.ValueData), 'NULL') || '"/>' AS FieldXML
+                , 2 AS GroupId
+                , ObjectHistoryFloat.DescId
+           FROM ObjectHistoryFloat
+                JOIN ObjectHistoryFloatDesc ON ObjectHistoryFloatDesc.Id = ObjectHistoryFloat.DescId
+           WHERE ObjectHistoryFloat.ObjectHistoryId = ioId
+
+          UNION
+           -- Date
+           SELECT '<Field FieldName = "' || zfStrToXmlStr (ObjectHistoryDateDesc.ItemName)
+               || '" FieldValue = "' || COALESCE (zfConvert_DateToString (ObjectHistoryDate.ValueData), 'NULL') || '"/>' :: TVarChar AS FieldXML
+                , 3 AS GroupId
+                , ObjectHistoryDate.DescId
+           FROM ObjectHistoryDate
+                JOIN ObjectHistoryDateDesc ON ObjectHistoryDateDesc.Id = ObjectHistoryDate.DescId
+           WHERE ObjectHistoryDate.ObjectHistoryId = ioId
+
+          UNION
+           -- Link
+           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectHistoryLinkDesc.ItemName) || '" FieldValue = "' || zfStrToXmlStr(COALESCE (Object.ValueData, 'NULL')) || '"/>' AS FieldXML 
+                , 4 AS GroupId
+                , ObjectHistoryLink.DescId
+           FROM ObjectHistoryLink
+                JOIN Object ON Object.Id = ObjectHistoryLink.ObjectId
+                JOIN ObjectHistoryLinkDesc ON ObjectHistoryLinkDesc.Id = ObjectHistoryLink.DescId
+           WHERE ObjectHistoryLink.ObjectHistoryId = ioId
+
+          UNION
+           -- String
+           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectHistoryStringDesc.ItemName)
+               || '" FieldValue = "' || zfStrToXmlStr(COALESCE (ObjectHistoryString.ValueData, 'NULL'))
+               || '"/>' AS FieldXML 
+                , 5 AS GroupId
+                , ObjectHistoryString.DescId
+           FROM ObjectHistoryString
+                JOIN ObjectHistoryStringDesc ON ObjectHistoryStringDesc.Id = ObjectHistoryString.DescId
+           WHERE ObjectHistoryString.ObjectHistoryId = ioId
+
+          /*UNION
+           -- Boolean
+           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectHistoryBooleanDesc.ItemName) || '" FieldValue = "' || COALESCE (ObjectHistoryBoolean.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+                , 6 AS GroupId
+                , ObjectHistoryBoolean.DescId
+           FROM ObjectHistoryBoolean
+                JOIN ObjectHistoryBooleanDesc ON ObjectHistoryBooleanDesc.Id = ObjectHistoryBoolean.DescId
+           WHERE ObjectHistoryBoolean.ObjectHistoryId = ioId*/
+          ) AS D
+           ORDER BY D.GroupId, D.DescId
+        ) AS D;
+
+
    -- сохранили протокол
-   PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, vbUserId, ObjectHistory.StartDate, ObjectHistory.EndDate, 0)
-   FROM ObjectHistory WHERE Id = ioId;
-   
+   PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, vbUserId, ObjectHistory.StartDate, ObjectHistory.EndDate, 0, vbAddXML)
+   FROM ObjectHistory
+   WHERE Id = ioId;
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 

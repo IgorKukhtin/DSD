@@ -8,14 +8,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsKindNew(
     IN inName                TVarChar  ,    -- Название объекта <Тип товара>
     IN inSession             TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE Code_max Integer;  
    
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsKindNew());
+   --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsKindNew());
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- Если код не установлен, определяем его каи последний+1
    inCode := lfGet_ObjectCode (inCode, zc_Object_GoodsKindNew());

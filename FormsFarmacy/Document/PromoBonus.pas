@@ -88,6 +88,8 @@ type
     PriceSale: TcxGridDBColumn;
     PriceBonus: TcxGridDBColumn;
     PriceBonusSite: TcxGridDBColumn;
+    cbShowPrice: TcxCheckBox;
+    bbShowPrice: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

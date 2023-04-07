@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_MedicalProgramSP()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MedicalProgramSP (Integer, Integer, TVarChar, Integer, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MedicalProgramSP (Integer, Integer, TVarChar, Integer, Integer, TVarChar, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MedicalProgramSP(
  INOUT ioId	                       Integer   ,    -- ключ объекта <Медицинские программы соц. проектов> 
@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MedicalProgramSP(
     IN inGroupMedicalProgramSPId   Integer   ,    -- Медицинские программы соц. проектов
     IN inProgramId                 TVarChar  ,    -- Идентификатор медицинской программы
     IN inisFree                    Boolean   ,    -- Безплатно
+    IN inisElectronicPrescript     Boolean   ,    -- Электронные рецепты
     IN inSession                   TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -46,6 +47,8 @@ BEGIN
 
     -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean( zc_ObjectBoolean_MedicalProgramSP_Free(), ioId, inisFree);
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean( zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript(), ioId, inisElectronicPrescript);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

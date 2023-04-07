@@ -24,7 +24,7 @@ $BODY$
 BEGIN
     vbStartDate := date_trunc('month', inMonth);
     vbEndDate := date_trunc('month', inMonth) + Interval '1 MONTH';
-    vbDayInMonth := (DATE_PART('day', vbEndDate - vbStartDate) + 1)::TFloat;
+    vbDayInMonth := (vbEndDate::Date - vbStartDate::Date)::TFloat;
 
     -- Контролшь использования подразделения
     inUnitId := gpGet_CheckingUser_Unit(inUnitId, inSession);
@@ -496,4 +496,5 @@ ALTER FUNCTION gpSelect_Report_SoldDay (TDateTime, Integer, Boolean, Boolean, Bo
  28.09.15                                                                        *
 */
 
-select * from gpSelect_Report_SoldDay(inMonth := ('30.09.2022')::TDateTime , inUnitId := 9951517 , inQuasiSchedule := 'False' , inisNoStaticCodes := 'True' , inisSP := 'True' ,  inSession := '3');
+
+select * from gpSelect_Report_SoldDay(inMonth := ('01.04.2023')::TDateTime , inUnitId := 18712420 , inQuasiSchedule := 'False' , inisNoStaticCodes := 'True' , inisSP := 'True' ,  inSession := '3');

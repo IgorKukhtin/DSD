@@ -30,7 +30,8 @@ BEGIN
             , tmpSecond AS (SELECT CASE WHEN 25 < (SELECT COUNT(*) FROM tmpProcess)
                                              THEN 60
 
-                                        WHEN 1 < (SELECT tmpCount.Res FROM tmpCount)
+                                        WHEN CASE WHEN EXTRACT (DAY FROM CURRENT_DATE) BETWEEN 1 AND 10 THEN 0 ELSE 2 END
+                                               < (SELECT tmpCount.Res FROM tmpCount)
                                              AND (inProcName ILIKE 'gpReport_JuridicalCollation'
                                                  )
                                              THEN 25

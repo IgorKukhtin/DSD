@@ -3,7 +3,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
   Top = 0
   Caption = #1058#1080#1087#1099' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
   ClientHeight = 376
-  ClientWidth = 624
+  ClientWidth = 737
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,10 +20,11 @@ object WorkTimeKindForm: TWorkTimeKindForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 624
+    Width = 737
     Height = 350
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 624
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -44,7 +45,6 @@ object WorkTimeKindForm: TWorkTimeKindForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -72,7 +72,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
         DataBinding.FieldName = 'ShortName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 100
       end
       object Tax: TcxGridDBColumn
         Caption = '% '#1080#1079#1084'. '#1088'.'#1095'.'
@@ -82,7 +82,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = '% '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1088#1072#1073#1086#1095#1080#1093' '#1095#1072#1089#1086#1074
-        Width = 36
+        Width = 55
       end
       object Summ: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1088#1072#1073'. '#1076#1077#1085#1100', '#1075#1088#1085
@@ -93,7 +93,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1091#1084#1084#1072' '#1074' '#1075#1088#1085' '#1079#1072' '#1101#1090#1086#1090' '#1088#1072#1073#1086#1095#1080#1081' '#1076#1077#1085#1100
         Options.Editing = False
-        Width = 67
+        Width = 100
       end
       object Value: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
@@ -101,7 +101,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 61
+        Width = 70
       end
       object PairDayName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1089#1084#1077#1085#1099
