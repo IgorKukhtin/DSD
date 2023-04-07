@@ -223,6 +223,14 @@ type
     bbInsertUpdate_Unit: TdxBarButton;
     bbProtocolGoods: TdxBarButton;
     bbProtocolPattern: TdxBarButton;
+    clReceiptGoods: TcxLabel;
+    edReceiptGoods: TcxButtonEdit;
+    GuidesReceiptGoods: TdsdGuides;
+    bbclReceiptGoods: TdxBarControlContainerItem;
+    bbedReceiptGoods: TdxBarControlContainerItem;
+    spInsertUpdate_ReceiptGoods: TdsdStoredProc;
+    actspInsertUpdate_ReceiptGoods: TdsdExecStoredProc;
+    bbInsertUpdate_ReceiptGoods: TdxBarButton;
   private
     { Private declarations }
   public

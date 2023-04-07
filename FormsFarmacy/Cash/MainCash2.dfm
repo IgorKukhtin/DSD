@@ -2779,6 +2779,7 @@ inherited MainCashForm2: TMainCashForm2
       Align = alLeft
       Properties.ReadOnly = True
       TabOrder = 0
+      ExplicitTop = -3
       Height = 61
       Width = 348
     end
@@ -9153,7 +9154,7 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 712
+    Left = 696
     Top = 56
   end
   object gpGet_Movement_GoodsSP_ID: TdsdStoredProc
@@ -20729,14 +20730,22 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'outMedicalProgramSPID'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSPKindIdName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     SQLList = <
       item
         SQL.Strings = (
-          
-            'SELECT gas.MedicalProgramSPID AS outMedicalProgramSPID FROM Good' +
-            'sAllSP gas '
+          'SELECT gas.MedicalProgramSPID AS outMedicalProgramSPID'
+          '     , CASE WHEN gas.pricesp =0 '
+          '            THEN '#39#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1088#1077#1094#1077#1087#1090#39
+          '            ELSE '#39#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#39' END AS outSPKindIdName'
+          'FROM GoodsAllSP gas'
           'WHERE gas.MedicalProgramIdSP = :inProgramId'
           '  AND gas.isParticipates = 1'
           'LIMIT 1')

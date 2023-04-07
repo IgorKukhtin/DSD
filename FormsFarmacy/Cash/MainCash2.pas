@@ -875,6 +875,8 @@ type
     FActiveAlertsDate : TDateTime;
     FHint: THintWindow;
 
+    FOfLineDateTime: TDateTime;
+
     FBuyerForSite : string;
     FMobMessCount : Integer;
 
@@ -7144,6 +7146,7 @@ begin
       exit;
     end;
     FormParams.ParamByName('MedicalProgramSPId').Value := spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value;
+    SPKindName := spAvailabilityCheckMedicalProgram.ParamByName('outSPKindIdName').Value;
   end else FormParams.ParamByName('MedicalProgramSPId').Value := 0;
 
   if SPKindId = 4823010 then
@@ -7431,12 +7434,12 @@ begin
     exit;
   end;
   FormParams.ParamByName('MedicalProgramSPId').Value := spAvailabilityCheckMedicalProgram.ParamByName('outMedicalProgramSPID').Value;
+  FormParams.ParamByName('SPKindName').Value := spAvailabilityCheckMedicalProgram.ParamByName('outSPKindIdName').Value;
 
   FormParams.ParamByName('InvNumberSP').Value := InvNumberSP;
   FormParams.ParamByName('OperDateSP').Value := OperDateSP;
   FormParams.ParamByName('SPKindId').Value :=
     UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger;
-  FormParams.ParamByName('SPKindName').Value := 'Доступні Ліки';
   FormParams.ParamByName('RoundingDown').Value := True;
   FormParams.ParamByName('HelsiID').Value := HelsiID;
   FormParams.ParamByName('HelsiIDList').Value := HelsiIDList;
@@ -8694,6 +8697,7 @@ begin
   FStepSecond := False;
   FError_Blink := 0;
   FBuyerForSite := '';
+  FOfLineDateTime := Now;
   //
   edDays.Value := 7;
   PanelMCSAuto.Visible := false;
@@ -13202,8 +13206,19 @@ begin
       lblActiveAlerts.Style.Color := clLime;
       lblActiveAlerts.Caption := '';
       lblActiveAlerts.Hint := 'Тревоги нет';
+      if MinutesBetween(Now, FOfLineDateTime) >= 15 then
+      begin
+        FOfLineDateTime := Now;
+        try
+          spGet_User_IsAdmin.Execute(false, false, false);
+          gc_User.Local := false;
+          ShowTrayMessage('Режим работы: В сети');
+        except
+        end;
+      end;
     end else
     begin
+      FOfLineDateTime := Now;
       spActiveAlerts.ParamByName('outActiveAlerts').Value := '';
       spActiveAlerts.ParamByName('outStartDate').Value := Null;
       spActiveAlerts.ParamByName('outShowPUSH').Value := False;

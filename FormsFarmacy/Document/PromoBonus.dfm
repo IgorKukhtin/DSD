@@ -8,22 +8,20 @@ inherited PromoBonusForm: TPromoBonusForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 116
+    Top = 117
     Width = 954
-    Height = 444
+    Height = 443
     ExplicitTop = 116
     ExplicitWidth = 954
     ExplicitHeight = 444
-    ClientRectBottom = 444
+    ClientRectBottom = 443
     ClientRectRight = 954
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 954
       ExplicitHeight = 420
       inherited cxGrid: TcxGrid
         Width = 954
-        Height = 420
-        ExplicitLeft = 296
-        ExplicitTop = 3
+        Height = 419
         ExplicitWidth = 954
         ExplicitHeight = 420
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -275,6 +273,13 @@ inherited PromoBonusForm: TPromoBonusForm
           end
         end
       end
+      object cbShowPrice: TcxCheckBox
+        Left = 760
+        Top = 80
+        Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1094#1077#1085#1099
+        TabOrder = 1
+        Width = 121
+      end
     end
   end
   inherited DataPanel: TPanel
@@ -398,6 +403,14 @@ inherited PromoBonusForm: TPromoBonusForm
       TabOrder = 15
       Width = 120
     end
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = cbShowPrice
+        Properties.Strings = (
+          'Checked')
+      end>
   end
   inherited ActionList: TActionList
     object actRefreshUnit: TdsdDataSetRefresh [0]
@@ -747,6 +760,14 @@ inherited PromoBonusForm: TPromoBonusForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isShowPrice'
+        Value = Null
+        Component = cbShowPrice
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 328
@@ -757,7 +778,7 @@ inherited PromoBonusForm: TPromoBonusForm
     DockControlHeights = (
       0
       0
-      27
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -857,6 +878,14 @@ inherited PromoBonusForm: TPromoBonusForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowPrice'
         end>
     end
     object bbOpenPartionDateKind: TdxBarButton
@@ -910,6 +939,13 @@ inherited PromoBonusForm: TPromoBonusForm
     object dxBarButton7: TdxBarButton
       Action = mactUpdate_BonusInetOrder
       Category = 0
+    end
+    object bbShowPrice: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbShowPrice
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1371,6 +1407,7 @@ inherited PromoBonusForm: TPromoBonusForm
     RefreshAction = actRefreshUnit
     ComponentList = <
       item
+        Component = cbShowPrice
       end
       item
       end>

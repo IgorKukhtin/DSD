@@ -76,6 +76,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     isFree: TcxGridDBColumn;
     GroupMedicalProgramSPName: TcxGridDBColumn;
+    isElectronicPrescript: TcxGridDBColumn;
   private
     { Private declarations }
   public

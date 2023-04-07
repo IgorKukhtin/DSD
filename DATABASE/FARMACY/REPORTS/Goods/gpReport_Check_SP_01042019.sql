@@ -491,7 +491,7 @@ BEGIN
                                                      ON MIFloat_Price.MovementItemId = MI_Check.Id
                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
                          LEFT JOIN MovementItemString AS MIString_IdSP
-                                                      ON MIString_IdSP.MovementItemId = MovementItem.Id
+                                                      ON MIString_IdSP.MovementItemId = MI_Check.Id
                                                      AND MIString_IdSP.DescId = zc_MIString_IdSP()
                                                     
                          LEFT JOIN tmpMI_CheckPriceWithVAT ON tmpMI_CheckPriceWithVAT.Id = MI_Check.Id
@@ -853,5 +853,6 @@ $BODY$
 -- тест  select * from gpReport_Check_SP_01042019(inStartDate := ('01.03.2021')::TDateTime , inEndDate := ('15.03.2021')::TDateTime , inJuridicalId := 2886776 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 10959824 ,  inSession := '3');
 
 
-select * from gpReport_Check_SP(inStartDate := ('16.03.2023')::TDateTime , inEndDate := ('20.03.2023')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 0 , inMedicalProgramSPId := 18078175 , inGroupMedicalProgramSPId := 0 ,  inSession := '3');
+select * from gpReport_Check_SP(inStartDate := ('04.04.2023')::TDateTime , inEndDate := ('30.04.2023')::TDateTime , inJuridicalId := 1311462 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 10959824 , inMedicalProgramSPId := 0 , inGroupMedicalProgramSPId := 0 ,  inSession := '3');
+
 

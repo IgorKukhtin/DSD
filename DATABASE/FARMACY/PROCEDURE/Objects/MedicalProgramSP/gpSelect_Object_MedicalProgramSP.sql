@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , SPKindId Integer, SPKindName TVarChar
              , GroupMedicalProgramSPId Integer, GroupMedicalProgramSPName TVarChar
              , ProgramId TVarChar
-             , isFree Boolean
+             , isFree Boolean, isElectronicPrescript Boolean
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -32,6 +32,7 @@ BEGIN
 
           , ObjectString_ProgramId.ValueData           AS ProgramId
           , COALESCE(ObjectBoolean_Free.ValueData, FALSE) AS isFree
+          , COALESCE(ObjectBoolean_ElectronicPrescript.ValueData, FALSE) AS isElectronicPrescript
 
           , Object_MedicalProgramSP.isErased           AS isErased
      FROM Object AS Object_MedicalProgramSP
@@ -53,6 +54,9 @@ BEGIN
          LEFT JOIN ObjectBoolean AS ObjectBoolean_Free 	
                                  ON ObjectBoolean_Free.ObjectId = Object_MedicalProgramSP.Id
                                 AND ObjectBoolean_Free.DescId = zc_ObjectBoolean_MedicalProgramSP_Free()
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_ElectronicPrescript
+                                 ON ObjectBoolean_ElectronicPrescript.ObjectId = Object_MedicalProgramSP.Id
+                                AND ObjectBoolean_ElectronicPrescript.DescId = zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript()
 
      WHERE Object_MedicalProgramSP.DescId = zc_Object_MedicalProgramSP()
        AND (ObjectLink_MedicalProgramSP_SPKind.ChildObjectId = inSPKindId OR inSPKindId = 0);

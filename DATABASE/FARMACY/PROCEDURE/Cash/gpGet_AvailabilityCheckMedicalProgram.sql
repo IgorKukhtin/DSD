@@ -6,9 +6,10 @@ CREATE OR REPLACE FUNCTION gpGet_AvailabilityCheckMedicalProgram(
     IN inSPKindId             Integer   ,  -- ключ объекта <СП> 
     IN inProgramId            TVarChar  ,  -- ключ объекта <Программа> 
    OUT outMedicalProgramSPID  Integer   , 
+   OUT outSPKindIdName        TVarChar  , 
     IN inSession              TVarChar     -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -27,6 +28,8 @@ BEGIN
        vbUnitKey := '0';
     END IF;
     vbUnitId := vbUnitKey::Integer;
+    
+    outSPKindIdName := (SELECT Object.ValueData FROM Object WHERE ID = inSPKindId);
     
     SELECT ObjectLink_MedicalProgramSP.ChildObjectId
     INTO outMedicalProgramSPID
@@ -61,6 +64,16 @@ BEGIN
     THEN
       outMedicalProgramSPID := 0;
     END IF;    
+    
+    IF COALESCE (outMedicalProgramSPID, 0) <> 0 AND
+       EXISTS (SELECT *
+               FROM ObjectBoolean AS ObjectBoolean_ElectronicPrescript
+               WHERE ObjectBoolean_ElectronicPrescript.ObjectId = outMedicalProgramSPID
+                 AND ObjectBoolean_ElectronicPrescript.DescId = zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript()
+                 AND ObjectBoolean_ElectronicPrescript.ValueData = TRUE)
+    THEN
+      outSPKindIdName := 'Электронный рецепт';
+    END IF;
     
 END;
 $BODY$
