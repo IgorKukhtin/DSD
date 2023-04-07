@@ -55,86 +55,278 @@ BEGIN
     vbRemainsDate = CURRENT_TIMESTAMP;
     vbisAdmin := EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
                  AND vbUserId NOT IN (183242);
+                 
+    --raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+                 
+    -- Цена со скидкой
+    CREATE TEMP TABLE tmpPriceChange ON COMMIT DROP AS
+     SELECT DISTINCT ObjectLink_PriceChange_Goods.ChildObjectId        AS GoodsId
+          , PriceChange_Value_Retail.ValueData                         AS PriceChange
+          , PriceChange_FixPercent_Retail.ValueData                    AS FixPercent
+          , PriceChange_FixDiscount_Retail.ValueData                   AS FixDiscount
+          , PriceChange_Multiplicity_Retail.ValueData                  AS Multiplicity
+     FROM Object AS Object_PriceChange
+       
+          -- скидка по сети
+          LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Retail
+                               ON ObjectLink_PriceChange_Retail.ObjectId = Object_PriceChange.Id
+                              AND ObjectLink_PriceChange_Retail.DescId = zc_ObjectLink_PriceChange_Retail()
+                              AND ObjectLink_PriceChange_Retail.ChildObjectId = vbObjectId
+          -- цена со скидкой по сети
+          LEFT JOIN ObjectFloat AS PriceChange_Value_Retail
+                                ON PriceChange_Value_Retail.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                               AND PriceChange_Value_Retail.DescId = zc_ObjectFloat_PriceChange_Value()
+          -- процент скидки по сети.
+          LEFT JOIN ObjectFloat AS PriceChange_FixPercent_Retail
+                                ON PriceChange_FixPercent_Retail.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                               AND PriceChange_FixPercent_Retail.DescId = zc_ObjectFloat_PriceChange_FixPercent()
+          -- сумма скидки по сети.
+          LEFT JOIN ObjectFloat AS PriceChange_FixDiscount_Retail
+                                ON PriceChange_FixDiscount_Retail.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                               AND PriceChange_FixDiscount_Retail.DescId = zc_ObjectFloat_PriceChange_FixDiscount()
+          -- Кратность отпуска по сети.
+          LEFT JOIN ObjectFloat AS PriceChange_Multiplicity_Retail
+                                ON PriceChange_Multiplicity_Retail.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                               AND PriceChange_Multiplicity_Retail.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
+          -- Дата окончания действия скидки по сети.
+          LEFT JOIN ObjectDate AS PriceChange_FixEndDate_Retail
+                               ON PriceChange_FixEndDate_Retail.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                              AND PriceChange_FixEndDate_Retail.DescId = zc_ObjectDate_PriceChange_FixEndDate()
 
-    -- Результат
-    RETURN QUERY
-        WITH
-        tmpGoods AS (SELECT Goods_Retail.Id
-                          , Goods_Main.ObjectCode
-                          , Goods_Main.Name
-                          , Goods_Main.GoodsGroupId
-                          , Goods_Main.NDSKindId
-                     FROM Object_Goods_Main AS Goods_Main
-                          INNER JOIN Object_Goods_Retail AS Goods_Retail
-                                                         ON Goods_Main.Id  = Goods_Retail.GoodsMainId
-                                                        AND (Goods_Retail.RetailId = vbObjectId OR inisRetail = FALSE) 
-                     WHERE (','||inCodeSearch||',' ILIKE '%,'||CAST(Goods_Main.ObjectCode AS TVarChar)||',%' AND inCodeSearch <> '')
-                        OR (upper(Goods_Main.Name) ILIKE UPPER('%'||inGoodsSearch||'%')  AND inGoodsSearch <> '' AND inCodeSearch = '')
+          LEFT JOIN ObjectLink AS ObjectLink_PriceChange_PartionDateKind_Retail
+                                ON ObjectLink_PriceChange_PartionDateKind_Retail.ObjectId  = ObjectLink_PriceChange_Retail.ObjectId
+                               AND ObjectLink_PriceChange_PartionDateKind_Retail.DescId    = zc_ObjectLink_PriceChange_PartionDateKind()
+
+          LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Goods
+                               ON ObjectLink_PriceChange_Goods.ObjectId = ObjectLink_PriceChange_Retail.ObjectId
+                              AND ObjectLink_PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
+
+     WHERE Object_PriceChange.DescId = zc_Object_PriceChange()
+       AND Object_PriceChange.isErased = FALSE
+       AND (COALESCE (PriceChange_Value_Retail.ValueData, 0) <> 0 OR
+           COALESCE (PriceChange_FixPercent_Retail.ValueData, 0) <> 0 OR
+           COALESCE (PriceChange_FixDiscount_Retail.ValueData, 0) <> 0)
+       AND COALESCE (PriceChange_Multiplicity_Retail.ValueData, 0) IN (0, 1)
+       AND COALESCE (PriceChange_FixEndDate_Retail.ValueData, CURRENT_DATE) >= CURRENT_DATE   
+       AND COALESCE (ObjectLink_PriceChange_PartionDateKind_Retail.ChildObjectId, 0) = 0;
+                                 
+    ANALYSE tmpPriceChange;
+               
+    --raise notice 'Value 2: %', CLOCK_TIMESTAMP();
+                   
+    -- Цена со скидкой
+    CREATE TEMP TABLE tmpPriceChangeUnit ON COMMIT DROP AS
+    SELECT DISTINCT ObjectLink_PriceChange_Goods.ChildObjectId        AS GoodsId
+                  , ObjectLink_PriceChange_Unit.ChildObjectId                  AS UnitId
+                  , PriceChange_Value_Unit.ValueData                           AS PriceChange
+                  , PriceChange_FixPercent_Unit.ValueData                      AS FixPercent
+                  , PriceChange_FixDiscount_Unit.ValueData                     AS FixDiscount
+                  , PriceChange_Multiplicity_Unit.ValueData                    AS Multiplicity
+             FROM Object AS Object_PriceChange
+                  -- скидка по подразд
+                  LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Unit
+                                       ON ObjectLink_PriceChange_Unit.ObjectId = Object_PriceChange.Id
+                                      AND ObjectLink_PriceChange_Unit.DescId = zc_ObjectLink_PriceChange_Unit()
+                                      AND ObjectLink_PriceChange_Unit.ChildObjectId <> 0
+                  -- цена со скидкой по подразд.
+                  LEFT JOIN ObjectFloat AS PriceChange_Value_Unit
+                                        ON PriceChange_Value_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                       AND PriceChange_Value_Unit.DescId = zc_ObjectFloat_PriceChange_Value()
+                                       AND COALESCE (PriceChange_Value_Unit.ValueData, 0) <> 0
+                  -- процент скидки по подразд.
+                  LEFT JOIN ObjectFloat AS PriceChange_FixPercent_Unit
+                                        ON PriceChange_FixPercent_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                       AND PriceChange_FixPercent_Unit.DescId = zc_ObjectFloat_PriceChange_FixPercent()
+                                       AND COALESCE (PriceChange_FixPercent_Unit.ValueData, 0) <> 0
+                  -- сумма скидки по подразд.
+                  LEFT JOIN ObjectFloat AS PriceChange_FixDiscount_Unit
+                                        ON PriceChange_FixDiscount_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                       AND PriceChange_FixDiscount_Unit.DescId = zc_ObjectFloat_PriceChange_FixDiscount()
+                                       AND COALESCE (PriceChange_FixDiscount_Unit.ValueData, 0) <> 0
+                  -- Кратность отпуска
+                  LEFT JOIN ObjectFloat AS PriceChange_Multiplicity_Unit
+                                        ON PriceChange_Multiplicity_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                       AND PriceChange_Multiplicity_Unit.DescId = zc_ObjectFloat_PriceChange_Multiplicity()
+                                       AND COALESCE (PriceChange_Multiplicity_Unit.ValueData, 0) <> 0
+                  -- Дата окончания действия скидки
+                  LEFT JOIN ObjectDate AS PriceChange_FixEndDate_Unit
+                                       ON PriceChange_FixEndDate_Unit.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                      AND PriceChange_FixEndDate_Unit.DescId = zc_ObjectDate_PriceChange_FixEndDate()
+                                                                
+                  LEFT JOIN ObjectLink AS ObjectLink_PriceChange_PartionDateKind_Unit
+                                       ON ObjectLink_PriceChange_PartionDateKind_Unit.ObjectId  = ObjectLink_PriceChange_Unit.ObjectId
+                                      AND ObjectLink_PriceChange_PartionDateKind_Unit.DescId    = zc_ObjectLink_PriceChange_PartionDateKind()
+
+                  LEFT JOIN ObjectLink AS ObjectLink_PriceChange_Goods
+                                       ON ObjectLink_PriceChange_Goods.ObjectId = ObjectLink_PriceChange_Unit.ObjectId
+                                      AND ObjectLink_PriceChange_Goods.DescId = zc_ObjectLink_PriceChange_Goods()
+                                                                
+             WHERE Object_PriceChange.DescId = zc_Object_PriceChange()
+               AND Object_PriceChange.isErased = FALSE
+               AND (COALESCE (PriceChange_Value_Unit.ValueData, 0) <> 0 OR
+                   COALESCE (PriceChange_FixPercent_Unit.ValueData, 0) <> 0 OR
+                   COALESCE (PriceChange_FixDiscount_Unit.ValueData, 0) <> 0)
+               AND COALESCE (PriceChange_Multiplicity_Unit.ValueData, 0) IN (0, 1)
+               AND COALESCE (PriceChange_FixEndDate_Unit.ValueData, CURRENT_DATE) >= CURRENT_DATE   
+               AND COALESCE (ObjectLink_PriceChange_PartionDateKind_Unit.ChildObjectId, 0) = 0;
+                                     
+    ANALYSE tmpPriceChangeUnit;
+    
+    --raise notice 'Value 3: %', CLOCK_TIMESTAMP();
+    
+    -- Промо бонусы                                  
+    CREATE TEMP TABLE tmpPromoBonus ON COMMIT DROP AS
+    SELECT PromoBonus.GoodsID
+         , PromoBonus.UnitID
+         , PromoBonus.MarginPercent
+         , PromoBonus.PromoBonus 
+         , PromoBonus.BonusInetOrder 
+    FROM gpSelect_PromoBonus_MarginPercent(inUnitId := 0,  inSession := inSession) AS PromoBonus 
+    WHERE PromoBonus.BonusInetOrder > 0 or PromoBonus.PromoBonus > 0;
+
+    ANALYSE tmpPromoBonus;
+    
+    --raise notice 'Value 4: %', CLOCK_TIMESTAMP();
+    
+    CREATE TEMP TABLE tmpGoods ON COMMIT DROP AS
+     SELECT Goods_Retail.Id
+          , Goods_Main.ObjectCode
+          , Goods_Main.Name
+          , Goods_Main.GoodsGroupId
+          , Goods_Main.NDSKindId
+     FROM Object_Goods_Main AS Goods_Main
+          INNER JOIN Object_Goods_Retail AS Goods_Retail
+                                         ON Goods_Main.Id  = Goods_Retail.GoodsMainId
+                                        AND (Goods_Retail.RetailId = vbObjectId OR inisRetail = FALSE) 
+     WHERE (','||inCodeSearch||',' ILIKE '%,'||CAST(Goods_Main.ObjectCode AS TVarChar)||',%' AND inCodeSearch <> '')
+        OR (upper(Goods_Main.Name) ILIKE UPPER('%'||inGoodsSearch||'%')  AND inGoodsSearch <> '' AND inCodeSearch = '');
+                        
+    ANALYSE tmpGoods;                 
+
+    --raise notice 'Value 5: %', CLOCK_TIMESTAMP();
+
+    CREATE TEMP TABLE containerAll ON COMMIT DROP AS
+     SELECT Container.descid
+          , Container.Id                AS ContainerId
+          , Container.ParentId
+          , Container.Amount
+          , Container.ObjectID          AS GoodsId
+          , Container.WhereObjectId     AS UnitId
+     FROM Container
+     WHERE Container.ObjectID in (SELECT tmpGoods.Id FROM tmpGoods)
+       AND Container.descid IN (zc_Container_Count(), zc_Container_CountPartionDate())
+       AND Container.WhereObjectId IN (SELECT T1.ID FROM gpSelect_Object_Unit(False, False, '3') AS T1);
+                         
+    ANALYSE containerAll; 
+    
+    --raise notice 'Value 6: %', CLOCK_TIMESTAMP();
+    
+    CREATE TEMP TABLE tmpPrice_View ON COMMIT DROP AS
+    WITH tmpPrice AS (SELECT Price_Goods.ObjectId        AS Id
+                           , Price_Goods.ChildObjectId   AS GoodsId
+                      FROM ObjectLink AS Price_Goods
+                      WHERE Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                        AND Price_Goods.ChildObjectId IN (SELECT tmpGoods.Id FROM tmpGoods )
                      )
+                     
+    SELECT Price_Goods.Id              AS Id
+         , Price_Unit.ChildObjectId    AS UnitId
+         , Price_Goods.GoodsId         AS GoodsId
+         , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                 AND ObjectFloat_Goods_Price.ValueData > 0
+                THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                WHEN COALESCE (tmpPriceChangeUnit.PriceChange, tmpPriceChange.PriceChange, 0) > 0 
+                THEN COALESCE (tmpPriceChangeUnit.PriceChange, tmpPriceChange.PriceChange, 0)
+                WHEN COALESCE (tmpPriceChangeUnit.FixPercent, tmpPriceChange.FixPercent, 0) > 0 
+                THEN Round(Price_Value.ValueData  * (100.0 - COALESCE (tmpPriceChangeUnit.FixPercent, tmpPriceChange.FixPercent, 0)) / 100.0, 2)
+                WHEN COALESCE (tmpPriceChangeUnit.FixDiscount, tmpPriceChange.FixDiscount, 0) > 0 
+                 AND Price_Value.ValueData  > COALESCE (tmpPriceChangeUnit.FixDiscount, tmpPriceChange.FixDiscount, 0)
+                THEN Round(Price_Value.ValueData  - COALESCE (tmpPriceChangeUnit.FixDiscount, tmpPriceChange.FixDiscount, 0), 2)
+                WHEN COALESCE (tmpPromoBonus.PromoBonus, 0) > 0
+                THEN Round(Price_Value.ValueData * 100.0 / (100.0 + tmpPromoBonus.MarginPercent) * 
+                          (100.0 - tmpPromoBonus.PromoBonus + tmpPromoBonus.MarginPercent) / 100, 2)
+                ELSE ROUND (Price_Value.ValueData, 2)
+           END :: TFloat                           AS Price
+         , Price_DateChange.ValueData              AS DateChange 
+    FROM tmpPrice AS Price_Goods
+         LEFT JOIN ObjectLink AS Price_Unit
+                ON Price_Unit.ObjectId = Price_Goods.Id
+               AND Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+         LEFT JOIN ObjectFloat AS Price_Value
+                               ON Price_Value.ObjectId = Price_Unit.ObjectId
+                              AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+         LEFT JOIN ObjectDate AS Price_DateChange
+                              ON Price_DateChange.ObjectId = Price_Unit.ObjectId
+                             AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
+           -- Фикс цена для всей Сети
+         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.GoodsId
+                               AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                 ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.GoodsId
+                                AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+                                
+         LEFT JOIN tmpPriceChangeUnit ON tmpPriceChangeUnit.GoodsId = Price_Goods.GoodsId  
+                                     AND tmpPriceChangeUnit.UnitId = Price_Unit.ChildObjectId
+         LEFT JOIN tmpPriceChange ON tmpPriceChange.GoodsId = Price_Goods.GoodsId  
+                                 AND COALESCE (tmpPriceChangeUnit.GoodsId, 0) = 0
 
-      , containerAll AS (SELECT Container.descid
-                              , Container.Id                AS ContainerId
-                              , Container.ParentId
-                              , Container.Amount
-                              , Container.ObjectID          AS GoodsId
-                              , Container.WhereObjectId     AS UnitId
-                         FROM Container
-                         WHERE Container.ObjectID in (SELECT tmpGoods.Id FROM tmpGoods)
-                           AND Container.descid IN (zc_Container_Count(), zc_Container_CountPartionDate())
-                           AND Container.whereobjectid IN (SELECT T1.ID FROM gpSelect_Object_Unit(False, False, '3') AS T1)
-                         )
-      , containerPD AS (SELECT Container.ParentId
-                             , MIN(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS ExpirationDate
-                        FROM containerAll AS Container
+         -- Соц Проо бонус
+         LEFT JOIN tmpPromoBonus ON tmpPromoBonus.GoodsId = Price_Goods.GoodsId
+                                AND tmpPromoBonus.UnitId = Price_Unit.ChildObjectId;
+                          
+    ANALYSE tmpPrice_View;
+    
+    --raise notice 'Value 7: %', CLOCK_TIMESTAMP();
+            
+    CREATE TEMP TABLE containerCount ON COMMIT DROP AS
+     SELECT Container.ContainerId       AS ContainerId
+          , Container.Amount
+          , Container.GoodsId           AS GoodsId
+          , Container.UnitId            AS UnitId
+     FROM containerAll AS Container
+     WHERE Container.descid = zc_container_count();
+                           
+    ANALYSE containerCount;
+    
+    --raise notice 'Value 8: %', CLOCK_TIMESTAMP();
+    
+    CREATE TEMP TABLE containerPD ON COMMIT DROP AS
+    SELECT Container.ParentId
+         , MIN(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS ExpirationDate
+    FROM containerAll AS Container
 
-                             LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.ContainerId
-                                                          AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+         LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.ContainerId
+                                      AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
 
-                             LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
-                                                  ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId 
-                                                 AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+         LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                              ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId 
+                             AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
                                                  
-                        WHERE Container.DescId = zc_Container_CountPartionDate()
-                          AND Container.Amount > 0
-                        GROUP BY Container.ParentId
-                         )
-      , containerCount AS (SELECT Container.ContainerId       AS ContainerId
-                                , Container.Amount
-                                , Container.GoodsId           AS GoodsId
-                                , Container.UnitId            AS UnitId
-                           FROM containerAll AS Container
-                           WHERE Container.descid = zc_container_count()
-                           )
-
-      , tmpMIC AS (SELECT MIContainer.ContainerId
-                        , MIContainer.Amount
-                        , MIContainer.MovementDescId
-                   FROM MovementItemContainer AS MIContainer
-                   WHERE MIContainer.ContainerId IN (SELECT ContainerCount.ContainerId FROM ContainerCount)
-                     AND MIContainer.OperDate >= CURRENT_TIMESTAMP - INTERVAL '1 day'
-                     AND MIContainer.MovementDescId in (zc_Movement_Check(), zc_Movement_Sale())
-                      )
-      , containerCheck AS (SELECT
-                                 ContainerCount.GoodsId
-                               , ContainerCount.UnitId
-                               , COALESCE(SUM(-1.0 * MIContainer.Amount), 0) AS DailyCheck
-                          FROM ContainerCount
-                              LEFT JOIN tmpMIC AS MIContainer
-                                                              ON MIContainer.ContainerId = ContainerCount.ContainerId
-                                                             AND MIContainer.MovementDescId = zc_Movement_Check()
-                          GROUP BY ContainerCount.GoodsId , ContainerCount.UnitId
-                      )
-      , containerSale AS (SELECT
-                                 ContainerCount.GoodsId
-                               , ContainerCount.UnitId
-                               , COALESCE(SUM(-1.0 * MIContainer.Amount), 0) AS DailySale
-                          FROM ContainerCount
-                              LEFT JOIN tmpMIC AS MIContainer
-                                                              ON MIContainer.ContainerId = ContainerCount.ContainerId
-                                                             AND MIContainer.MovementDescId = zc_Movement_Sale()
-                          GROUP BY ContainerCount.GoodsId , ContainerCount.UnitId
-                      )
-      , tmpCLO AS (SELECT * FROM ContainerlinkObject  AS ContainerLinkObject_MovementItem
+    WHERE Container.DescId = zc_Container_CountPartionDate()
+      AND Container.Amount > 0
+    GROUP BY Container.ParentId;
+                         
+    ANALYSE containerPD;
+    
+    --raise notice 'Value 9: %', CLOCK_TIMESTAMP();
+    
+    CREATE TEMP TABLE tmpMIC ON COMMIT DROP AS
+     SELECT MIContainer.ContainerId
+          , MIContainer.Amount
+          , MIContainer.MovementDescId
+     FROM MovementItemContainer AS MIContainer
+     WHERE MIContainer.ContainerId IN (SELECT containerCount.ContainerId FROM containerCount)
+       AND MIContainer.OperDate >= CURRENT_TIMESTAMP - INTERVAL '1 day'
+       AND MIContainer.MovementDescId in (zc_Movement_Check(), zc_Movement_Sale());
+                      
+    ANALYSE tmpMIC;
+    
+    --raise notice 'Value 10: %', CLOCK_TIMESTAMP();
+    
+    CREATE TEMP TABLE tmpData ON COMMIT DROP AS
+    WITH
+        tmpCLO AS (SELECT * FROM ContainerlinkObject  AS ContainerLinkObject_MovementItem
                    WHERE ContainerLinkObject_MovementItem.Containerid IN (SELECT containerCount.ContainerId FROM containerCount))
 
       , tmpData_Inc AS (SELECT containerCount.Amount
@@ -171,16 +363,40 @@ BEGIN
                                                              AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                         GROUP BY tmpData_Inc.GoodsId, tmpData_Inc.UnitId
                         )
-      , tmpData AS (SELECT tmpData_all.UnitId
-                         , tmpData_all.GoodsId
-                         , SUM (tmpData_all.Amount)   AS Amount
-                         , min (tmpData_all.MinExpirationDate) AS MinExpirationDate
-                    FROM  tmpData_all
-                    GROUP BY tmpData_all.GoodsId
-                           , tmpData_all.UnitId
-                    HAVING (SUM (tmpData_all.Amount) <> 0)
-                    )
+    SELECT tmpData_all.UnitId
+         , tmpData_all.GoodsId
+         , SUM (tmpData_all.Amount)   AS Amount
+         , min (tmpData_all.MinExpirationDate) AS MinExpirationDate
+    FROM  tmpData_all
+    GROUP BY tmpData_all.GoodsId
+           , tmpData_all.UnitId
+    HAVING (SUM (tmpData_all.Amount) <> 0);   
+                    
+    ANALYSE tmpData;
 
+    -- Результат
+    RETURN QUERY
+        WITH
+        containerCheck AS (SELECT
+                                 ContainerCount.GoodsId
+                               , ContainerCount.UnitId
+                               , COALESCE(SUM(-1.0 * MIContainer.Amount), 0) AS DailyCheck
+                          FROM ContainerCount
+                              LEFT JOIN tmpMIC AS MIContainer
+                                                              ON MIContainer.ContainerId = ContainerCount.ContainerId
+                                                             AND MIContainer.MovementDescId = zc_Movement_Check()
+                          GROUP BY ContainerCount.GoodsId , ContainerCount.UnitId
+                      )
+      , containerSale AS (SELECT
+                                 ContainerCount.GoodsId
+                               , ContainerCount.UnitId
+                               , COALESCE(SUM(-1.0 * MIContainer.Amount), 0) AS DailySale
+                          FROM ContainerCount
+                              LEFT JOIN tmpMIC AS MIContainer
+                                                              ON MIContainer.ContainerId = ContainerCount.ContainerId
+                                                             AND MIContainer.MovementDescId = zc_Movement_Sale()
+                          GROUP BY ContainerCount.GoodsId , ContainerCount.UnitId
+                      )
       , tmpIncome AS (SELECT MovementLinkObject_To.ObjectId          AS UnitId
                            , MI_Income.ObjectId                      AS GoodsId
                            , SUM(COALESCE (MI_Income.Amount, 0))     AS AmountIncome
@@ -378,39 +594,6 @@ BEGIN
                                                       ON ObjectFloat_NDSKind_NDS.ObjectId = tmpGoods.NDSKindId
                            )
 
-      , tmpPrice AS (SELECT Price_Goods.ObjectId        AS Id
-                          , Price_Goods.ChildObjectId   AS GoodsId
-                     FROM ObjectLink AS Price_Goods
-                     WHERE Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                       AND Price_Goods.ChildObjectId IN (SELECT tmpGoods.Id FROM tmpGoods )
-                    )
-      , tmpPrice_View AS (SELECT Price_Goods.Id              AS Id
-                               , Price_Unit.ChildObjectId    AS UnitId
-                               , Price_Goods.GoodsId         AS GoodsId
-                               , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
-                                       AND ObjectFloat_Goods_Price.ValueData > 0
-                                      THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
-                                      ELSE ROUND (Price_Value.ValueData, 2)
-                                 END :: TFloat                           AS Price
-                               , Price_DateChange.ValueData              AS DateChange 
-                          FROM tmpPrice AS Price_Goods
-                               LEFT JOIN ObjectLink AS Price_Unit
-                                      ON Price_Unit.ObjectId = Price_Goods.Id
-                                     AND Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                               LEFT JOIN ObjectFloat AS Price_Value
-                                                     ON Price_Value.ObjectId = Price_Unit.ObjectId
-                                                    AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
-                               LEFT JOIN ObjectDate AS Price_DateChange
-                                                    ON Price_DateChange.ObjectId = Price_Unit.ObjectId
-                                                   AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
-                                 -- Фикс цена для всей Сети
-                               LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
-                                                      ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.GoodsId
-                                                     AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
-                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                                       ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.GoodsId
-                                                      AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
-                          )
       , tmpPrice_Site AS (SELECT Object_PriceSite.Id                        AS Id
                                , ROUND(Price_Value.ValueData,2)::TFloat     AS Price
                                , Price_Goods.ChildObjectId                  AS GoodsId
@@ -514,6 +697,8 @@ BEGIN
                  , tmpGoodsParams.GoodsGroupName
                  , tmpGoodsParams.GoodsName
            ;
+           
+     --raise notice 'Value 20: %', CLOCK_TIMESTAMP();
 
 END;
 $BODY$
@@ -535,4 +720,5 @@ $BODY$
 -- SELECT * FROM gpSelect_GoodsSearchRemains ('4282', 'глюкоз', inSession := '3')
 -- select * from gpSelect_GoodsSearchRemains(inCodeSearch := '' , inGoodsSearch := 'маска защит' ,  inSession := '3'); 36584
 
-select * from gpSelect_GoodsSearchRemains(inCodeSearch := '1825' , inGoodsSearch := '' , inisRetail := 'False' ,  inSession := '3');
+
+select * from gpSelect_GoodsSearchRemains(inCodeSearch := '' , inGoodsSearch := 'хьюмер' , inisRetail := 'False' ,  inSession := '3');

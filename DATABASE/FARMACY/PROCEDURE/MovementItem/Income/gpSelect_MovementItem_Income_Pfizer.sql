@@ -38,7 +38,7 @@ BEGIN
                INNER JOIN ObjectLink AS ObjectLink_BarCode_Object
                                      ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
                                     AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
-                                    AND ObjectLink_BarCode_Object.ChildObjectId in (2807930, 15615415)
+                                    AND ObjectLink_BarCode_Object.ChildObjectId IN (SELECT Id FROM gpSelect_Object_DiscountExternal(inSession := inSession) AS D WHERE D.service = 'CardService')
                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
                LEFT JOIN MovementItemFloat AS MIFloat_Price
@@ -74,4 +74,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpSelect_MovementItem_Income_Pfizer (inMovementId:= 25016495, inSession:= '3')
+SELECT * FROM gpSelect_MovementItem_Income_Pfizer (inMovementId:= 22244129, inSession:= '3')

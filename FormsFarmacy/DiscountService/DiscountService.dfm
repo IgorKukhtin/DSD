@@ -122,7 +122,7 @@ object DiscountServiceForm: TDiscountServiceForm
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 312
+    Left = 272
     Top = 56
   end
   object spSelectUnloadItem: TdsdStoredProc
@@ -150,7 +150,7 @@ object DiscountServiceForm: TDiscountServiceForm
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 312
+    Left = 272
     Top = 6
   end
   object spSelectUnloadMovement: TdsdStoredProc

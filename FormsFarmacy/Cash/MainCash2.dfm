@@ -2779,7 +2779,6 @@ inherited MainCashForm2: TMainCashForm2
       Align = alLeft
       Properties.ReadOnly = True
       TabOrder = 0
-      ExplicitTop = -3
       Height = 61
       Width = 348
     end

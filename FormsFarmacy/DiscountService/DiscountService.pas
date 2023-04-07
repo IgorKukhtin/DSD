@@ -77,6 +77,18 @@ type
                                lFromOKPO, lFromName : String;
                                lToOKPO, lToName : String;
                                var lMsg : string) :Boolean;
+    // Send Movement - Income
+    function fPfizer_SendMovement (lURL : String;
+                                   lService : String;
+                                   lPort : String;
+                                   lUserName : String;
+                                   lPassword : String;
+                                   lMovementId: Integer;
+                                   lOperDate : TDateTime;
+                                   lInvNumber : String;
+                                   lFromOKPO, lFromName : String;
+                                   lToOKPO, lToName : String;
+                                   var lMsg : string) :Boolean;
 
     property isBeforeSale : boolean read GetBeforeSale write SetBeforeSale;
     property isPrepared : boolean read GetPrepared;
@@ -1228,6 +1240,51 @@ begin
     Result:= lMsg = '';
 
 end;
+
+// Send Movement - Income
+function TDiscountServiceForm.fPfizer_SendMovement (lURL : String;
+                                                    lService : String;
+                                                    lPort : String;
+                                                    lUserName : String;
+                                                    lPassword : String;
+                                                    lMovementId: Integer;
+                                                    lOperDate : TDateTime;
+                                                    lInvNumber : String;
+                                                    lFromOKPO, lFromName : String;
+                                                    lToOKPO, lToName : String;
+                                                    var lMsg : string) :Boolean;
+begin
+   // сохраним "нужные" параметры-Main
+   gURL        := lURL;
+   gService    := lService;
+   gPort       := lPort;
+   gUserName   := lUserName;
+   gPassword   := lPassword;
+
+   //Инициализировали данными
+   HTTPRIO.WSDLLocation := gURL;
+   HTTPRIO.Service := gService;
+   HTTPRIO.Port := gPort;
+
+   //
+   Application.ProcessMessages;
+   //
+   lMsg:= '';
+   fPfizer_SendItem (lMovementId
+                   , lOperDate
+                   , lInvNumber
+                   , lFromOKPO
+                   , lFromName
+                   , lToOKPO
+                   , lToName
+                   , lMsg);
+   //
+   Sleep(200);
+
+   // вернули результат
+   Result:= lMsg = '';
+end;
+
 // Send Item - Income
 function TDiscountServiceForm.fPfizer_SendItem (lMovementId: Integer;
                                                 lOperDate : TDateTime;
