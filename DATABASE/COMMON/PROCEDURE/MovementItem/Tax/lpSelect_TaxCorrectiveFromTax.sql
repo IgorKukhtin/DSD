@@ -62,7 +62,9 @@ BEGIN
                     (SELECT MovementItem.ObjectId                         AS GoodsId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                           , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
-                                                                                    , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                                                                    , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                    , zc_Enum_DocumentTaxKind_ChangePercent()
+                                                                                     )
                                  THEN COALESCE (MIFloat_PriceTax_calc.ValueData, 0) 
                                  ELSE COALESCE (MIFloat_Price.ValueData, 0)
                             END AS Price
@@ -103,6 +105,7 @@ BEGIN
                                                                           , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                           , zc_Enum_DocumentTaxKind_Goods()
                                                                           , zc_Enum_DocumentTaxKind_Change()
+                                                                          , zc_Enum_DocumentTaxKind_ChangePercent()
                                                                            )
                                   AND tmpMICorrective.LineNumTax <> 0 
                                       THEN tmpMICorrective.LineNumTax
