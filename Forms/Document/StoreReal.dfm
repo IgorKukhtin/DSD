@@ -10,19 +10,19 @@ inherited StoreRealForm: TStoreRealForm
     Top = 113
     Width = 937
     Height = 284
-    ExplicitTop = 76
+    ExplicitTop = 113
     ExplicitWidth = 937
-    ExplicitHeight = 321
+    ExplicitHeight = 284
     ClientRectBottom = 284
     ClientRectRight = 937
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 937
-      ExplicitHeight = 297
+      ExplicitHeight = 260
       inherited cxGrid: TcxGrid
         Width = 937
         Height = 260
         ExplicitWidth = 937
-        ExplicitHeight = 297
+        ExplicitHeight = 260
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -186,14 +186,14 @@ inherited StoreRealForm: TStoreRealForm
             Width = 55
           end
           object Amount_last1: TcxGridDBColumn [7]
-            Caption = #1050#1086#1083'-'#1074#1086' 1 ('#1087#1088#1077#1076'. '#1086#1089#1090'.)'
+            Caption = #1054#1089#1090'. '#1079#1072' '#1076#1072#1090#1072' 1'
             DataBinding.FieldName = 'Amount_last1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' 1 ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080')'
+            HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080
             Width = 65
           end
           object InfoMoneyCode: TcxGridDBColumn [8]
@@ -241,25 +241,25 @@ inherited StoreRealForm: TStoreRealForm
             Width = 70
           end
           object Amount_last2: TcxGridDBColumn [13]
-            Caption = #1050#1086#1083'-'#1074#1086' 2 ('#1087#1088#1077#1076'. '#1086#1089#1090'.)'
+            Caption = #1054#1089#1090'. '#1079#1072' '#1076#1072#1090#1072' 2'
             DataBinding.FieldName = 'Amount_last2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' 2 ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080')'
+            HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080
             Width = 64
           end
           object Amount_last3: TcxGridDBColumn [14]
-            Caption = #1050#1086#1083'-'#1074#1086' 3 ('#1087#1088#1077#1076'. '#1086#1089#1090'.)'
+            Caption = #1054#1089#1090'. '#1079#1072' '#1076#1072#1090#1072' 3'
             DataBinding.FieldName = 'Amount_last3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' 3 ('#1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080')'
+            HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080
             Width = 70
           end
         end
@@ -270,7 +270,6 @@ inherited StoreRealForm: TStoreRealForm
     Width = 937
     Height = 87
     TabOrder = 3
-    ExplicitTop = -4
     ExplicitWidth = 937
     ExplicitHeight = 87
     inherited edInvNumber: TcxTextEdit
@@ -323,7 +322,7 @@ inherited StoreRealForm: TStoreRealForm
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
     end
     object edMovementLast1: TcxButtonEdit
-      Left = 4
+      Left = 353
       Top = 64
       Properties.Buttons = <
         item
@@ -333,7 +332,7 @@ inherited StoreRealForm: TStoreRealForm
       Properties.ReadOnly = True
       TabOrder = 9
       Text = ' '
-      Width = 340
+      Width = 135
     end
     object cxLabel5: TcxLabel
       Left = 353
@@ -341,7 +340,7 @@ inherited StoreRealForm: TStoreRealForm
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
     end
     object edMovementLast2: TcxButtonEdit
-      Left = 353
+      Left = 502
       Top = 64
       Properties.Buttons = <
         item
@@ -351,7 +350,7 @@ inherited StoreRealForm: TStoreRealForm
       Properties.ReadOnly = True
       TabOrder = 11
       Text = ' '
-      Width = 284
+      Width = 135
     end
     object edMovementLast3: TcxButtonEdit
       Left = 643
@@ -364,13 +363,13 @@ inherited StoreRealForm: TStoreRealForm
       Properties.ReadOnly = True
       TabOrder = 12
       Text = ' '
-      Width = 284
+      Width = 222
     end
   end
   object cxLabel21: TcxLabel [2]
-    Left = 4
+    Left = 353
     Top = 46
-    Caption = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' 1'
+    Caption = #1054#1089#1090#1072#1090#1086#1082' '#1079#1072' '#1076#1072#1090#1072' 1'
   end
   object edPartner: TcxButtonEdit [3]
     Left = 353
@@ -398,14 +397,14 @@ inherited StoreRealForm: TStoreRealForm
     Width = 133
   end
   object cxLabel6: TcxLabel [6]
-    Left = 353
+    Left = 502
     Top = 46
-    Caption = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' 2'
+    Caption = #1054#1089#1090#1072#1090#1086#1082' '#1079#1072' '#1076#1072#1090#1072' 2'
   end
   object cxLabel7: TcxLabel [7]
     Left = 643
     Top = 46
-    Caption = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' 3'
+    Caption = #1054#1089#1090#1072#1090#1086#1082' '#1079#1072' '#1076#1072#1090#1072' 3'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1222,10 +1221,10 @@ inherited StoreRealForm: TStoreRealForm
     DisableGuidesOpen = True
     Key = '0'
     TextValue = ' '
-    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.Value = 'TObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPartner_ObjectForm'
+    FormName = 'TObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -1261,8 +1260,8 @@ inherited StoreRealForm: TStoreRealForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 136
-    Top = 56
+    Left = 408
+    Top = 72
   end
   object GuidesMovLast2: TdsdGuides
     KeyField = 'Id'
@@ -1270,10 +1269,10 @@ inherited StoreRealForm: TStoreRealForm
     DisableGuidesOpen = True
     Key = '0'
     TextValue = ' '
-    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.Value = 'TObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPartner_ObjectForm'
+    FormName = 'TObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -1309,8 +1308,8 @@ inherited StoreRealForm: TStoreRealForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 528
-    Top = 48
+    Left = 544
+    Top = 72
   end
   object GuidesMovLast3: TdsdGuides
     KeyField = 'Id'
@@ -1318,10 +1317,10 @@ inherited StoreRealForm: TStoreRealForm
     DisableGuidesOpen = True
     Key = '0'
     TextValue = ' '
-    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.Value = 'TObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPartner_ObjectForm'
+    FormName = 'TObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -1357,7 +1356,7 @@ inherited StoreRealForm: TStoreRealForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 672
-    Top = 56
+    Left = 680
+    Top = 72
   end
 end

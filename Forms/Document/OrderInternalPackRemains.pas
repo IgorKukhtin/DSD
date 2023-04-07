@@ -281,10 +281,10 @@ type
     isCalculated_ch3: TcxGridDBColumn;
     GoodsCode_basis_ch3: TcxGridDBColumn;
     GoodsName_basis_ch3: TcxGridDBColumn;
-    InsertDate: TcxGridDBColumn;
-    InsertName: TcxGridDBColumn;
-    UpdateDate: TcxGridDBColumn;
-    UpdateName: TcxGridDBColumn;
+    InsertDate_ch3: TcxGridDBColumn;
+    InsertName_ch3: TcxGridDBColumn;
+    UpdateDate_ch3: TcxGridDBColumn;
+    UpdateName_ch3: TcxGridDBColumn;
     Amount_ch3: TcxGridDBColumn;
     AmountPack_ch3: TcxGridDBColumn;
     AmountPackSecond_ch3: TcxGridDBColumn;
@@ -326,6 +326,14 @@ type
     chAmountPackNextSecond_dt: TcxGridDBColumn;
     chAmountPackNext_calc_dt: TcxGridDBColumn;
     chAmountPackNextSecond_calc_dt: TcxGridDBColumn;
+    AmountPack_diff_ch3: TcxGridDBColumn;
+    AmountPackSecond_diff_ch3: TcxGridDBColumn;
+    AmountPack_calc_diff_ch3: TcxGridDBColumn;
+    AmountPackSecond_calc_diff_ch3: TcxGridDBColumn;
+    AmountPackNext_diff_ch3: TcxGridDBColumn;
+    AmountPackNextSecond_diff_ch3: TcxGridDBColumn;
+    AmountPackNext_calc_diff_ch3: TcxGridDBColumn;
+    AmountPackNextSecond_calc_diff_ch3: TcxGridDBColumn;
   private
     { Private declarations }
   public

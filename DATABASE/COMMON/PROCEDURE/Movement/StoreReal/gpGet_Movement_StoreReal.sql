@@ -62,9 +62,9 @@ BEGIN
            RETURN QUERY
            WITH 
             --предыдущие 3 документа
-            tmpMovement_last AS (SELECT MAX (CASE WHEN tmp.Ord = 1 THEN ('№ ' || tmp.InvNumber || ' от ' || zfConvert_DateToString (tmp.OperDate)  ) ELSE '' END) :: TVarChar AS InvNumberFull_last1
-                                     , MAX (CASE WHEN tmp.Ord = 2 THEN ('№ ' || tmp.InvNumber || ' от ' || zfConvert_DateToString (tmp.OperDate)  ) ELSE '' END) :: TVarChar AS InvNumberFull_last2
-                                     , MAX (CASE WHEN tmp.Ord = 3 THEN ('№ ' || tmp.InvNumber || ' от ' || zfConvert_DateToString (tmp.OperDate)  ) ELSE '' END) :: TVarChar AS InvNumberFull_last3
+            tmpMovement_last AS (SELECT MAX (CASE WHEN tmp.Ord = 1 THEN zfConvert_DateToString (tmp.OperDate) || ' / ' || tmp.InvNumber ELSE '' END) :: TVarChar AS InvNumberFull_last1
+                                      , MAX (CASE WHEN tmp.Ord = 2 THEN zfConvert_DateToString (tmp.OperDate) || ' / ' || tmp.InvNumber ELSE '' END) :: TVarChar AS InvNumberFull_last2
+                                      , MAX (CASE WHEN tmp.Ord = 3 THEN zfConvert_DateToString (tmp.OperDate) || ' / ' || tmp.InvNumber ELSE '' END) :: TVarChar AS InvNumberFull_last3
                                 FROM (SELECT Movement.*
                                            , ROW_NUMBER() OVER (ORDER BY Movement.OperDate Desc) AS Ord
                                       FROM Movement

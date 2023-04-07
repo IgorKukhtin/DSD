@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpUpdateMI_OrderInternal_AmountPack(
     IN inAmountPackSecond        TFloat    , -- Количество дозаказ
     IN inAmountPackNext          TFloat    , -- Количество
     IN inAmountPackNextSecond    TFloat    , -- Количество дозаказ
-   OUT outIsCalculated           Boolean   , -- 
+   OUT outIsCalculated           Boolean   , --
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS Boolean
@@ -20,6 +20,7 @@ $BODY$
    DECLARE vbParentId Integer;
    DECLARE vbGoodsId_complete Integer;
    DECLARE vbGoodsKindId_complete Integer;
+   DECLARE vbMovementItemId_detail Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
@@ -33,6 +34,9 @@ BEGIN
      -- сохранили свойство <Изменять факт при пересчете>
      IF  inAmountPackNext       <> COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_AmountPackNext()), 0)
       OR inAmountPackNextSecond <> COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_AmountPackNextSecond()), 0)
+      --
+      OR inAmountPack           <> COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_AmountPack()), 0)
+      OR inAmountPackSecond     <> COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_AmountPackSecond()), 0)
      THEN
          outIsCalculated:= FALSE;
          PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), inId, FALSE);
@@ -45,13 +49,40 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack(), inId, inAmountPack);
      -- сохранили свойство <Количество дозаказ>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond(), inId, inAmountPackSecond);
-     
+
      -- сохранили свойство <Количество заказ на УПАК план2>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext(), inId, inAmountPackNext);
      -- сохранили свойство <Количество дозаказ план2>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond(), inId, inAmountPackNextSecond);
-     
-    
+
+     -- нашли
+     vbMovementItemId_detail:= (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Detail() AND MI.ParentId = inId AND MI.isErased = FALSE ORDER BY MI.Amount DESC LIMIT 1);
+     --
+     IF COALESCE (vbMovementItemId_detail, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Элемент детализации не найден.';
+     END IF;
+
+     -- сохранили свойство <Количество заказ на УПАК>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPack(), vbMovementItemId_detail, inAmountPack);
+     -- сохранили свойство <Количество дозаказ>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackSecond(), vbMovementItemId_detail, inAmountPackSecond);
+
+     -- сохранили свойство <Количество заказ на УПАК план2>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNext(), vbMovementItemId_detail, inAmountPackNext);
+     -- сохранили свойство <Количество дозаказ план2>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond(), vbMovementItemId_detail, inAmountPackNextSecond);
+     -- сохранили
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), vbMovementItemId_detail, outIsCalculated);
+
+     -- сохранили протокол
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), vbMovementItemId_detail, CURRENT_TIMESTAMP);
+     -- сохранили протокол
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), vbMovementItemId_detail, vbUserId);
+
+     -- сохранили протокол !!!после изменений!!!
+     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId_detail, vbUserId, FALSE);
+
      -- нашли
      vbGoodsId_complete:= (SELECT MILO.ObjectId
                            FROM MovementItemLinkObject AS MILO
@@ -77,8 +108,8 @@ BEGIN
      IF 1 < (SELECT COUNT(*) FROM MovementItem AS MI JOIN MovementItemLinkObject AS MILO_2 ON MILO_2.MovementItemId = MI.Id AND MILO_2.DescId = zc_MILinkObject_GoodsKind() AND MILO_2.ObjectId = vbGoodsKindId_complete WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE AND MI.ObjectId = vbGoodsId_complete)
       --AND vbUserId = 5
      THEN
-         RAISE EXCEPTION 'Ошибка.Кол-во vbGoodsKindId_complete  = %   %   %   %.' , inMovementId, vbGoodsId_complete, vbGoodsKindId_complete 
-             , (SELECT COUNT(*) FROM MovementItem AS MI JOIN MovementItemLinkObject AS MILO_2 ON MILO_2.MovementItemId = MI.Id AND MILO_2.DescId = zc_MILinkObject_GoodsKind() AND MILO_2.ObjectId = vbGoodsKindId_complete 
+         RAISE EXCEPTION 'Ошибка.Кол-во vbGoodsKindId_complete  = %   %   %   %.' , inMovementId, vbGoodsId_complete, vbGoodsKindId_complete
+             , (SELECT COUNT(*) FROM MovementItem AS MI JOIN MovementItemLinkObject AS MILO_2 ON MILO_2.MovementItemId = MI.Id AND MILO_2.DescId = zc_MILinkObject_GoodsKind() AND MILO_2.ObjectId = vbGoodsKindId_complete
                 WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE AND MI.ObjectId = vbGoodsId_complete
                );
 
@@ -165,4 +196,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- 
+--

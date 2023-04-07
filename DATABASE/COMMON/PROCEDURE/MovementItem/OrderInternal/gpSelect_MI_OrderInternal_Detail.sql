@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , GoodsId_complete Integer, GoodsCode_complete Integer, GoodsName_complete TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , GoodsKindId_complete Integer, GoodsKindName_complete TVarChar
+
              , Amount                    TFloat
              , AmountPack                TFloat
              , AmountPackSecond          TFloat
@@ -23,6 +24,16 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , AmountPackNext_calc       TFloat
              , AmountPackNextSecond_calc TFloat
              , isCalculated              Boolean     
+
+             , AmountPack_diff                TFloat
+             , AmountPackSecond_diff          TFloat
+             , AmountPack_calc_diff           TFloat
+             , AmountPackSecond_calc_diff     TFloat
+             , AmountPackNext_diff            TFloat
+             , AmountPackNextSecond_diff      TFloat
+             , AmountPackNext_calc_diff       TFloat
+             , AmountPackNextSecond_calc_diff TFloat
+
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
@@ -112,6 +123,10 @@ BEGIN
                            , MIFloat_AmountPackNext_calc.ValueData       AS AmountPackNext_calc
                            , MIFloat_AmountPackNextSecond_calc.ValueData AS AmountPackNextSecond_calc
                            , MovementItem.isErased             AS isErased
+
+                             -- № п/п
+                           , ROW_NUMBER() OVER (PARTITION BY MovementItem.ParentId ORDER BY MovementItem.Id ASC) AS Ord
+
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                            INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                   AND MovementItem.DescId     = zc_MI_Detail()
@@ -190,6 +205,15 @@ BEGIN
            , MI_Detail.AmountPackNextSecond_calc ::TFloat AS AmountPackNextSecond_calc
            , MI_Detail.isCalculated             ::Boolean AS isCalculated           
 
+           , (COALESCE (MI_Detail.AmountPack, 0)                - COALESCE (tmpMI_detail_old.AmountPack,                MI_Detail.AmountPack, 0))                ::TFloat AS AmountPack_diff
+           , (COALESCE (MI_Detail.AmountPackSecond, 0)          - COALESCE (tmpMI_detail_old.AmountPackSecond,          MI_Detail.AmountPackSecond, 0))          ::TFloat AS AmountPackSecond_diff
+           , (COALESCE (MI_Detail.AmountPack_calc, 0)           - COALESCE (tmpMI_detail_old.AmountPack_calc,           MI_Detail.AmountPack_calc, 0))           ::TFloat AS AmountPack_calc_diff
+           , (COALESCE (MI_Detail.AmountPackSecond_calc, 0)     - COALESCE (tmpMI_detail_old.AmountPackSecond_calc,     MI_Detail.AmountPackSecond_calc, 0))     ::TFloat AS AmountPackSecond_calc_diff
+           , (COALESCE (MI_Detail.AmountPackNext, 0)            - COALESCE (tmpMI_detail_old.AmountPackNext,            MI_Detail.AmountPackNext, 0))            ::TFloat AS AmountPackNext_diff
+           , (COALESCE (MI_Detail.AmountPackNextSecond, 0)      - COALESCE (tmpMI_detail_old.AmountPackNextSecond,      MI_Detail.AmountPackNextSecond, 0))      ::TFloat AS AmountPackNextSecond_diff
+           , (COALESCE (MI_Detail.AmountPackNext_calc, 0)       - COALESCE (tmpMI_detail_old.AmountPackNext_calc,       MI_Detail.AmountPackNext_calc, 0))       ::TFloat AS AmountPackNext_calc_diff
+           , (COALESCE (MI_Detail.AmountPackNextSecond_calc, 0) - COALESCE (tmpMI_detail_old.AmountPackNextSecond_calc, MI_Detail.AmountPackNextSecond_calc, 0)) ::TFloat AS AmountPackNextSecond_calc_diff
+
            , Object_Insert.ValueData AS InsertName
            , Object_Update.ValueData AS UpdateName
            , MI_Detail.InsertDate
@@ -199,6 +223,10 @@ BEGIN
 
        FROM tmpMI_detail AS MI_Detail
             LEFT JOIN tmpMI_master AS MI_Master ON MI_Master.MovementItemId = MI_Detail.ParentId
+
+            LEFT JOIN tmpMI_detail AS tmpMI_detail_old ON tmpMI_detail_old.ParentId = MI_Detail.ParentId
+                                                      AND tmpMI_detail_old.Amount   = MI_Detail.Amount - 1
+            
 
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MI_Detail.Insertd
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MI_Detail.UpdateId
@@ -221,4 +249,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_MI_OrderInternal_Detail(inMovementId := 24901327 , inIsErased := 'False' ,  inSession := '9457');
+-- SELECT * FROM gpSelect_MI_OrderInternal_Detail(inMovementId := 24901327 , inIsErased := 'False' ,  inSession := '9457');
