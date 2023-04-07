@@ -138,7 +138,7 @@ BEGIN
                                                       , inJuridicalId  := 0
                                                       , inPaidKindId   := 0     --zc_Enum_PaidKind_FirstForm()
                                                       , inTradeMarkId  := 0
-                                                      , inGoodsGroupId := inGoodsGroupId
+                                                      , inGoodsGroupId := 0 --inGoodsGroupId
                                                       , inInfoMoneyId  := 0
                                                       , inIsPartner    := FALSE
                                                       , inIsTradeMark  := FALSE
@@ -158,28 +158,6 @@ BEGIN
                           , CASE WHEN _tmpGoods.GroupNum = 2 THEN tmpReport.GoodsId ELSE 0 END
                     ;
 
-
-
-select * 
-from gpReport_GoodsMI_SaleReturnIn(inStartDate :=
- ('27.03.2023')::TDateTime 
- , inEndDate := ('31.03.2023')::TDateTime 
- , inBranchId := 8374 
- , inAreaId := 0 
- , inRetailId := 0 
- , inJuridicalId := 0 
- , inPaidKindId := 3 ,
-  inTradeMarkId := 0 
- , inGoodsGroupId := 1979 
- , inInfoMoneyId := 0 
- , inIsPartner := 'False' 
- , inIsTradeMark := 'False' 
- , inIsGoods := 'False' 
- , inIsGoodsKind := 'False' 
- , inisContract := 'False' 
- , inIsOLAP := 'True' 
- , inIsDate := 'False' 
- ,  inSession := '9457');
 
     -- Результат для 1-ой страницы
     OPEN Cursor1 FOR
