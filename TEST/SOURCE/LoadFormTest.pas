@@ -4088,11 +4088,11 @@ end;
 
 procedure TLoadFormTest.LoadStaffListFormTest;
 begin
-  {
+
   //штатное расписание данные
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListDataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListDataForm');
-  //штатное расписание выбор
+  {//штатное расписание выбор
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListEditForm'));
@@ -4100,11 +4100,12 @@ begin
   //Типы сумм для штатного расписания
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListSummKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListSummKindForm');
-  }
+
   //Календарь рабочих дней
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCalendarForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCalendarForm');
-end;
+  }
+  end;
 
 procedure TLoadFormTest.LoadMobileTariffFormTest;
 begin

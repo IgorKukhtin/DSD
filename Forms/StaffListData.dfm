@@ -19,7 +19,7 @@ object StaffListDataForm: TStaffListDataForm
   TextHeight = 13
   object cxGridStaffList: TcxGrid
     Left = 0
-    Top = 49
+    Top = 52
     Width = 975
     Height = 256
     Align = alTop
@@ -27,6 +27,8 @@ object StaffListDataForm: TStaffListDataForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = 32
+    ExplicitTop = 29
     object cxGridDBTableViewStaffLis: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListDS
@@ -137,14 +139,17 @@ object StaffListDataForm: TStaffListDataForm
   end
   object cxGridStaffListCost: TcxGrid
     Left = 0
-    Top = 311
+    Top = 314
     Width = 975
-    Height = 138
+    Height = 135
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = 72
+    ExplicitTop = 295
+    ExplicitHeight = 138
     object cxGridDBTableViewStaffListCost: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListCostDS
@@ -296,34 +301,36 @@ object StaffListDataForm: TStaffListDataForm
     Left = 0
     Top = 26
     Width = 975
-    Height = 23
+    Height = 26
     Align = alTop
     TabOrder = 7
+    ExplicitTop = 20
     object ceUnit: TcxButtonEdit
-      Left = 471
-      Top = 0
+      Left = 171
+      Top = 2
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 0
       Width = 258
     end
-    object cxLabel5: TcxLabel
-      Left = 353
-      Top = 1
-      Align = alCustom
+    object cxLabel2: TcxLabel
+      Left = 81
+      Top = 3
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
   end
   object cxSplitterBottom: TcxSplitter
     Left = 0
-    Top = 305
+    Top = 308
     Width = 975
     Height = 6
     AlignSplitter = salTop
     Control = cxGridStaffList
+    ExplicitTop = 305
   end
   object cxSplitter1: TcxSplitter
     Left = 0
@@ -332,6 +339,32 @@ object StaffListDataForm: TStaffListDataForm
     Height = 6
     AlignSplitter = salBottom
     Control = cxGridStaffListSumm
+  end
+  object cxLabel15: TcxLabel
+    Left = 659
+    Top = 107
+    Caption = #1042#1099#1073#1088#1072#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077
+  end
+  object edHoursPlan: TcxCurrencyEdit
+    Left = 748
+    Top = 106
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 11
+    Width = 60
+  end
+  object cxLabel1: TcxLabel
+    Left = 814
+    Top = 107
+    Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077
+  end
+  object edHoursPlan_new: TcxCurrencyEdit
+    Left = 884
+    Top = 106
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 13
+    Width = 60
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -384,10 +417,6 @@ object StaffListDataForm: TStaffListDataForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbInsertSL'
-        end
         item
           Visible = True
           ItemName = 'bbEdit'
@@ -487,6 +516,30 @@ object StaffListDataForm: TStaffListDataForm
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem4'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_HoursPlan'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -579,11 +632,56 @@ object StaffListDataForm: TStaffListDataForm
       Action = actShowAll
       Category = 0
     end
+    object bbUpdate_HoursPlan: TdxBarButton
+      Action = macUpdate_HoursPlan
+      Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel15
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edHoursPlan
+    end
+    object dxBarControlContainerItem3: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel1
+    end
+    object dxBarControlContainerItem4: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edHoursPlan_new
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 296
     Top = 160
+    object actRefreshMain: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectStaffList
+      StoredProcList = <
+        item
+          StoredProc = spSelectStaffList
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -763,6 +861,18 @@ object StaffListDataForm: TStaffListDataForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actUpdate_HoursPlan: TdsdUpdateDataSet
+      Category = 'HoursPlan'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_HoursPlan
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_HoursPlan
+        end>
+      Caption = 'actUpdate_HoursPlan'
+      ImageIndex = 74
     end
     object actUpdateStaffList: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1089,6 +1199,30 @@ object StaffListDataForm: TStaffListDataForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object macUpdate_HoursPlan_list: TMultiAction
+      Category = 'HoursPlan'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_HoursPlan
+        end>
+      Caption = 'macUpdate_HoursPlan_list'
+      ImageIndex = 74
+    end
+    object macUpdate_HoursPlan: TMultiAction
+      Category = 'HoursPlan'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_HoursPlan
+        end
+        item
+          Action = actRefreshMain
+        end>
+      Caption = #1047#1072#1084#1077#1085#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1076#1083#1103' <1.'#1054#1073#1097'.'#1087#1083'.'#1095'.'#1074' '#1084#1077#1089'. '#1085#1072' '#1095#1077#1083#1086#1074#1077#1082#1072'>'
+      Hint = #1047#1072#1084#1077#1085#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1076#1083#1103' <1.'#1054#1073#1097'.'#1087#1083'.'#1095'.'#1074' '#1084#1077#1089'. '#1085#1072' '#1095#1077#1083#1086#1074#1077#1082#1072'>'
+      ImageIndex = 74
+    end
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 168
@@ -1162,7 +1296,7 @@ object StaffListDataForm: TStaffListDataForm
       item
         Name = 'UnitId'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'inUnitId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1270,8 +1404,8 @@ object StaffListDataForm: TStaffListDataForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 672
-    Top = 128
+    Left = 552
+    Top = 200
   end
   object StaffListCostCDS: TClientDataSet
     Aggregates = <>
@@ -1453,7 +1587,7 @@ object StaffListDataForm: TStaffListDataForm
     Left = 506
     Top = 541
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
@@ -1465,7 +1599,7 @@ object StaffListDataForm: TStaffListDataForm
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1474,14 +1608,14 @@ object StaffListDataForm: TStaffListDataForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 743
-    Top = 15
+    Left = 303
+    Top = 31
   end
   object dsdDBViewAddOnStaffListCost: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1581,9 +1715,42 @@ object StaffListDataForm: TStaffListDataForm
     RefreshAction = actRefresh
     ComponentList = <
       item
-        Component = UnitGuides
+        Component = GuidesUnit
       end>
     Left = 40
     Top = 136
+  end
+  object spUpdate_HoursPlan: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_StaffList_HoursPlan'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inHoursPlan'
+        Value = ''
+        Component = edHoursPlan
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inHoursPlan_new'
+        Value = False
+        Component = edHoursPlan_new
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 770
+    Top = 133
   end
 end
