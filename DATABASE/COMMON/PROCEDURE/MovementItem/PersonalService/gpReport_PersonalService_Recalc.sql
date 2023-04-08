@@ -102,77 +102,77 @@ BEGIN
      , tmpMIFloat AS (SELECT MovementItemFloat.*
                       FROM MovementItemFloat
                       WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_All.MovementItemId FROM tmpMI_All)
-                        AND MovementItemFloat.DescId IN (zc_MIFloat_SummCard()
-                                                       , zc_MIFloat_SummAvance()
-                                                       , zc_MIFloat_SummCompensation()
-                                                       , zc_MIFloat_SummAddOth()
-                                                       , zc_MIFloat_SummMinusExt()
-                                                       , zc_MIFloat_SummChild()
-                                                       , zc_MIFloat_SummHospOth()
-                                                       , zc_MIFloat_SummFineOth()
-                                                       , zc_MIFloat_SummNalogRet()
-                                                       , zc_MIFloat_SummNalog()
-                                                       , zc_MIFloat_SummCardSecond()
-                                                       )
+                        AND MovementItemFloat.DescId IN (zc_MIFloat_SummCardRecalc()
+                                                       , zc_MIFloat_SummAvanceRecalc()
+                                                       , zc_MIFloat_SummCompensationRecalc()
+                                                       , zc_MIFloat_SummAddOthRecalc()
+                                                       , zc_MIFloat_SummMinusExtRecalc()
+                                                       , zc_MIFloat_SummChildRecalc()
+                                                       , zc_MIFloat_SummHospOthRecalc()
+                                                       , zc_MIFloat_SummFineOthRecalc()
+                                                       , zc_MIFloat_SummNalogRetRecalc()
+                                                       , zc_MIFloat_SummNalogRecalc()
+                                                       , zc_MIFloat_SummCardSecondRecalc()
+                                                      )
                      )
 
      , tmpMI AS (SELECT tmpMI.*
-                      , COALESCE (MIFloat_SummCard.ValueData,0)         AS SummCard
-                      , COALESCE (MIFloat_SummCardSecond.ValueData,0)   AS SummCardSecond
-                      , COALESCE (MIFloat_SummNalog.ValueData,0)        AS SummNalog
-                      , COALESCE (MIFloat_SummNalogRet.ValueData,0)     AS SummNalogRet
-                      , COALESCE (MIFloat_SummFineOth.ValueData,0)      AS SummFineOth
-                      , COALESCE (MIFloat_SummHospOth.ValueData,0)      AS SummHospOth
-                      , COALESCE (MIFloat_SummChild.ValueData,0)        AS SummChild
-                      , COALESCE (MIFloat_SummMinusExt.ValueData,0)     AS SummMinusExt
-                      , COALESCE (MIFloat_SummAddOth.ValueData,0)       AS SummAddOth 
-                      , COALESCE (MIFloat_SummCompensation.ValueData,0) AS SummCompensation
-                      , COALESCE (MIFloat_SummAvance.ValueData,0)       AS SummAvance 
+                      , COALESCE (MIFloat_SummCardRecalc.ValueData,0)         AS SummCardRecalc
+                      , COALESCE (MIFloat_SummCardSecondRecalc.ValueData,0)   AS SummCardSecondRecalc
+                      , COALESCE (MIFloat_SummNalogRecalc.ValueData,0)        AS SummNalogRecalc
+                      , COALESCE (MIFloat_SummNalogRetRecalc.ValueData,0)     AS SummNalogRetRecalc
+                      , COALESCE (MIFloat_SummFineOthRecalc.ValueData,0)      AS SummFineOthRecalc
+                      , COALESCE (MIFloat_SummHospOthRecalc.ValueData,0)      AS SummHospOthRecalc
+                      , COALESCE (MIFloat_SummChildRecalc.ValueData,0)        AS SummChildRecalc
+                      , COALESCE (MIFloat_SummMinusExtRecalc.ValueData,0)     AS SummMinusExtRecalc
+                      , COALESCE (MIFloat_SummAddOthRecalc.ValueData,0)       AS SummAddOthRecalc 
+                      , COALESCE (MIFloat_SummCompensationRecalc.ValueData,0) AS SummCompensationRecalc
+                      , COALESCE (MIFloat_SummAvanceRecalc.ValueData,0)       AS SummAvanceRecalc
                  FROM tmpMI_All AS tmpMI
-                      LEFT JOIN tmpMIFloat AS MIFloat_SummCard
-                                              ON MIFloat_SummCard.MovementItemId = tmpMI.MovementItemId
-                                             AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
-                      LEFT JOIN tmpMIFloat AS MIFloat_SummCardSecond
-                                              ON MIFloat_SummCardSecond.MovementItemId = tmpMI.MovementItemId
-                                             AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()
-                      LEFT JOIN tmpMIFloat AS MIFloat_SummNalog
-                                              ON MIFloat_SummNalog.MovementItemId = tmpMI.MovementItemId
-                                             AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
-                      LEFT JOIN tmpMIFloat AS MIFloat_SummNalogRet
-                                              ON MIFloat_SummNalogRet.MovementItemId = tmpMI.MovementItemId
-                                             AND MIFloat_SummNalogRet.DescId = zc_MIFloat_SummNalogRet()
-                      LEFT JOIN tmpMIFloat AS MIFloat_SummFineOth
-                                              ON MIFloat_SummFineOth.MovementItemId = tmpMI.MovementItemId
-                                             AND MIFloat_SummFineOth.DescId = zc_MIFloat_SummFineOth()
-                      LEFT JOIN tmpMIFloat AS MIFloat_SummHospOth
-                                              ON MIFloat_SummHospOth.MovementItemId = tmpMI.MovementItemId
-                                             AND MIFloat_SummHospOth.DescId = zc_MIFloat_SummHospOth()
-                      LEFT JOIN tmpMIFloat AS MIFloat_SummChild
-                                              ON MIFloat_SummChild.MovementItemId = tmpMI.MovementItemId
-                                             AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
-                      LEFT JOIN tmpMIFloat AS MIFloat_SummMinusExt
-                                              ON MIFloat_SummMinusExt.MovementItemId = tmpMI.MovementItemId
-                                             AND MIFloat_SummMinusExt.DescId = zc_MIFloat_SummMinusExt()
-                      LEFT JOIN tmpMIFloat AS MIFloat_SummAddOth
-                                              ON MIFloat_SummAddOth.MovementItemId = tmpMI.MovementItemId
-                                             AND MIFloat_SummAddOth.DescId = zc_MIFloat_SummAddOth()
-                      LEFT JOIN tmpMIFloat AS MIFloat_SummCompensation
-                                              ON MIFloat_SummCompensation.MovementItemId = tmpMI.MovementItemId
-                                             AND MIFloat_SummCompensation.DescId = zc_MIFloat_SummCompensation()
-                      LEFT JOIN tmpMIFloat AS MIFloat_SummAvance
-                                              ON MIFloat_SummAvance.MovementItemId = tmpMI.MovementItemId
-                                             AND MIFloat_SummAvance.DescId = zc_MIFloat_SummAvance()
-                      WHERE COALESCE (MIFloat_SummCard.ValueData,0)        <> 0
-                         OR COALESCE (MIFloat_SummCardSecond.ValueData,0)  <> 0
-                         OR COALESCE (MIFloat_SummNalog.ValueData,0)       <> 0
-                         OR COALESCE (MIFloat_SummNalogRet.ValueData,0)    <> 0
-                         OR COALESCE (MIFloat_SummFineOth.ValueData,0)     <> 0
-                         OR COALESCE (MIFloat_SummHospOth.ValueData,0)     <> 0
-                         OR COALESCE (MIFloat_SummChild.ValueData,0)       <> 0
-                         OR COALESCE (MIFloat_SummMinusExt.ValueData,0)    <> 0
-                         OR COALESCE (MIFloat_SummAddOth.ValueData,0)      <> 0
-                         OR COALESCE (MIFloat_SummCompensation.ValueData,0)<> 0
-                         OR COALESCE (MIFloat_SummAvance.ValueData,0)      <> 0
+                      LEFT JOIN tmpMIFloat AS MIFloat_SummCardRecalc
+                                              ON MIFloat_SummCardRecalc.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
+                      LEFT JOIN tmpMIFloat AS MIFloat_SummCardSecondRecalc
+                                              ON MIFloat_SummCardSecondRecalc.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
+                      LEFT JOIN tmpMIFloat AS MIFloat_SummNalogRecalc
+                                              ON MIFloat_SummNalogRecalc.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()
+                      LEFT JOIN tmpMIFloat AS MIFloat_SummNalogRetRecalc
+                                              ON MIFloat_SummNalogRetRecalc.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummNalogRetRecalc.DescId = zc_MIFloat_SummNalogRetRecalc()
+                      LEFT JOIN tmpMIFloat AS MIFloat_SummFineOthRecalc
+                                              ON MIFloat_SummFineOthRecalc.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummFineOthRecalc.DescId = zc_MIFloat_SummFineOthRecalc()
+                      LEFT JOIN tmpMIFloat AS MIFloat_SummHospOthRecalc
+                                              ON MIFloat_SummHospOthRecalc.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummHospOthRecalc.DescId = zc_MIFloat_SummHospOthRecalc()
+                      LEFT JOIN tmpMIFloat AS MIFloat_SummChildRecalc
+                                              ON MIFloat_SummChildRecalc.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummChildRecalc.DescId = zc_MIFloat_SummChildRecalc()
+                      LEFT JOIN tmpMIFloat AS MIFloat_SummMinusExtRecalc
+                                              ON MIFloat_SummMinusExtRecalc.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummMinusExtRecalc.DescId = zc_MIFloat_SummMinusExtRecalc()
+                      LEFT JOIN tmpMIFloat AS MIFloat_SummAddOthRecalc
+                                              ON MIFloat_SummAddOthRecalc.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummAddOthRecalc.DescId = zc_MIFloat_SummAddOthRecalc()
+                      LEFT JOIN tmpMIFloat AS MIFloat_SummCompensationRecalc
+                                              ON MIFloat_SummCompensationRecalc.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummCompensationRecalc.DescId = zc_MIFloat_SummCompensationRecalc()
+                      LEFT JOIN tmpMIFloat AS MIFloat_SummAvanceRecalc
+                                              ON MIFloat_SummAvanceRecalc.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummAvanceRecalc.DescId = zc_MIFloat_SummAvanceRecalc()
+                 WHERE COALESCE (MIFloat_SummCardRecalc.ValueData,0)        <> 0
+                    OR COALESCE (MIFloat_SummCardSecondRecalc.ValueData,0)  <> 0
+                    OR COALESCE (MIFloat_SummNalogRecalc.ValueData,0)       <> 0
+                    OR COALESCE (MIFloat_SummNalogRetRecalc.ValueData,0)    <> 0
+                    OR COALESCE (MIFloat_SummFineOthRecalc.ValueData,0)     <> 0
+                    OR COALESCE (MIFloat_SummHospOthRecalc.ValueData,0)     <> 0
+                    OR COALESCE (MIFloat_SummChildRecalc.ValueData,0)       <> 0
+                    OR COALESCE (MIFloat_SummMinusExtRecalc.ValueData,0)    <> 0
+                    OR COALESCE (MIFloat_SummAddOthRecalc.ValueData,0)      <> 0
+                    OR COALESCE (MIFloat_SummCompensationRecalc.ValueData,0)<> 0
+                    OR COALESCE (MIFloat_SummAvanceRecalc.ValueData,0)      <> 0
                  )
 
      --выбираем все документы для тек.месяца начислений
@@ -226,77 +226,77 @@ BEGIN
      , tmpMIFloat_PS AS (SELECT MovementItemFloat.*
                          FROM MovementItemFloat
                          WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_PS.MovementItemId FROM tmpMI_PS)
-                           AND MovementItemFloat.DescId IN (zc_MIFloat_SummCardRecalc()
-                                                          , zc_MIFloat_SummAvanceRecalc()
-                                                          , zc_MIFloat_SummCompensationRecalc()
-                                                          , zc_MIFloat_SummAddOthRecalc()
-                                                          , zc_MIFloat_SummMinusExtRecalc()
-                                                          , zc_MIFloat_SummChildRecalc()
-                                                          , zc_MIFloat_SummHospOthRecalc()
-                                                          , zc_MIFloat_SummFineOthRecalc()
-                                                          , zc_MIFloat_SummNalogRetRecalc()
-                                                          , zc_MIFloat_SummNalogRecalc()
-                                                          , zc_MIFloat_SummCardSecondRecalc()
+                           AND MovementItemFloat.DescId IN (zc_MIFloat_SummCard()
+                                                          , zc_MIFloat_SummAvance()
+                                                          , zc_MIFloat_SummCompensation()
+                                                          , zc_MIFloat_SummAddOth()
+                                                          , zc_MIFloat_SummMinusExt()
+                                                          , zc_MIFloat_SummChild()
+                                                          , zc_MIFloat_SummHospOth()
+                                                          , zc_MIFloat_SummFineOth()
+                                                          , zc_MIFloat_SummNalogRet()
+                                                          , zc_MIFloat_SummNalog()
+                                                          , zc_MIFloat_SummCardSecond()
                                                           ) 
                         )
      
      , tmpMI_Data AS (SELECT tmpMI.*
-                           , COALESCE (MIFloat_SummCardRecalc.ValueData,0)         AS SummCardRecalc
-                           , COALESCE (MIFloat_SummCardSecondRecalc.ValueData,0)   AS SummCardSecondRecalc
-                           , COALESCE (MIFloat_SummNalogRecalc.ValueData,0)        AS SummNalogRecalc
-                           , COALESCE (MIFloat_SummNalogRetRecalc.ValueData,0)     AS SummNalogRetRecalc
-                           , COALESCE (MIFloat_SummFineOthRecalc.ValueData,0)      AS SummFineOthRecalc
-                           , COALESCE (MIFloat_SummHospOthRecalc.ValueData,0)      AS SummHospOthRecalc
-                           , COALESCE (MIFloat_SummChildRecalc.ValueData,0)        AS SummChildRecalc
-                           , COALESCE (MIFloat_SummMinusExtRecalc.ValueData,0)     AS SummMinusExtRecalc
-                           , COALESCE (MIFloat_SummAddOthRecalc.ValueData,0)       AS SummAddOthRecalc 
-                           , COALESCE (MIFloat_SummCompensationRecalc.ValueData,0) AS SummCompensationRecalc
-                           , COALESCE (MIFloat_SummAvanceRecalc.ValueData,0)       AS SummAvanceRecalc
+                           , COALESCE (MIFloat_SummCard.ValueData,0)         AS SummCard
+                           , COALESCE (MIFloat_SummCardSecond.ValueData,0)   AS SummCardSecond
+                           , COALESCE (MIFloat_SummNalog.ValueData,0)        AS SummNalog
+                           , COALESCE (MIFloat_SummNalogRet.ValueData,0)     AS SummNalogRet
+                           , COALESCE (MIFloat_SummFineOth.ValueData,0)      AS SummFineOth
+                           , COALESCE (MIFloat_SummHospOth.ValueData,0)      AS SummHospOth
+                           , COALESCE (MIFloat_SummChild.ValueData,0)        AS SummChild
+                           , COALESCE (MIFloat_SummMinusExt.ValueData,0)     AS SummMinusExt
+                           , COALESCE (MIFloat_SummAddOth.ValueData,0)       AS SummAddOth 
+                           , COALESCE (MIFloat_SummCompensation.ValueData,0) AS SummCompensation
+                           , COALESCE (MIFloat_SummAvance.ValueData,0)       AS SummAvance                           
                       FROM tmpMI_PS AS tmpMI
-                           LEFT JOIN tmpMIFloat_PS AS MIFloat_SummCardRecalc
-                                                ON MIFloat_SummCardRecalc.MovementItemId = tmpMI.MovementItemId
-                                               AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
-                           LEFT JOIN tmpMIFloat_PS AS MIFloat_SummCardSecondRecalc
-                                                ON MIFloat_SummCardSecondRecalc.MovementItemId = tmpMI.MovementItemId
-                                               AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
-                           LEFT JOIN tmpMIFloat_PS AS MIFloat_SummNalogRecalc
-                                                ON MIFloat_SummNalogRecalc.MovementItemId = tmpMI.MovementItemId
-                                               AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()
-                           LEFT JOIN tmpMIFloat_PS AS MIFloat_SummNalogRetRecalc
-                                                ON MIFloat_SummNalogRetRecalc.MovementItemId = tmpMI.MovementItemId
-                                               AND MIFloat_SummNalogRetRecalc.DescId = zc_MIFloat_SummNalogRetRecalc()
-                           LEFT JOIN tmpMIFloat_PS AS MIFloat_SummFineOthRecalc
-                                                ON MIFloat_SummFineOthRecalc.MovementItemId = tmpMI.MovementItemId
-                                               AND MIFloat_SummFineOthRecalc.DescId = zc_MIFloat_SummFineOthRecalc()
-                           LEFT JOIN tmpMIFloat_PS AS MIFloat_SummHospOthRecalc
-                                                ON MIFloat_SummHospOthRecalc.MovementItemId = tmpMI.MovementItemId
-                                               AND MIFloat_SummHospOthRecalc.DescId = zc_MIFloat_SummHospOthRecalc()
-                           LEFT JOIN tmpMIFloat_PS AS MIFloat_SummChildRecalc
-                                                ON MIFloat_SummChildRecalc.MovementItemId = tmpMI.MovementItemId
-                                               AND MIFloat_SummChildRecalc.DescId = zc_MIFloat_SummChildRecalc()
-                           LEFT JOIN tmpMIFloat_PS AS MIFloat_SummMinusExtRecalc
-                                                ON MIFloat_SummMinusExtRecalc.MovementItemId = tmpMI.MovementItemId
-                                               AND MIFloat_SummMinusExtRecalc.DescId = zc_MIFloat_SummMinusExtRecalc()
-                           LEFT JOIN tmpMIFloat_PS AS MIFloat_SummAddOthRecalc
-                                                ON MIFloat_SummAddOthRecalc.MovementItemId = tmpMI.MovementItemId
-                                               AND MIFloat_SummAddOthRecalc.DescId = zc_MIFloat_SummAddOthRecalc()
-                           LEFT JOIN tmpMIFloat_PS AS MIFloat_SummCompensationRecalc
-                                                ON MIFloat_SummCompensationRecalc.MovementItemId = tmpMI.MovementItemId
-                                               AND MIFloat_SummCompensationRecalc.DescId = zc_MIFloat_SummCompensationRecalc()
-                           LEFT JOIN tmpMIFloat_PS AS MIFloat_SummAvanceRecalc
-                                                ON MIFloat_SummAvanceRecalc.MovementItemId = tmpMI.MovementItemId
-                                               AND MIFloat_SummAvanceRecalc.DescId = zc_MIFloat_SummAvanceRecalc()
-                 WHERE COALESCE (MIFloat_SummCardRecalc.ValueData,0)        <> 0
-                    OR COALESCE (MIFloat_SummCardSecondRecalc.ValueData,0)  <> 0
-                    OR COALESCE (MIFloat_SummNalogRecalc.ValueData,0)       <> 0
-                    OR COALESCE (MIFloat_SummNalogRetRecalc.ValueData,0)    <> 0
-                    OR COALESCE (MIFloat_SummFineOthRecalc.ValueData,0)     <> 0
-                    OR COALESCE (MIFloat_SummHospOthRecalc.ValueData,0)     <> 0
-                    OR COALESCE (MIFloat_SummChildRecalc.ValueData,0)       <> 0
-                    OR COALESCE (MIFloat_SummMinusExtRecalc.ValueData,0)    <> 0
-                    OR COALESCE (MIFloat_SummAddOthRecalc.ValueData,0)      <> 0
-                    OR COALESCE (MIFloat_SummCompensationRecalc.ValueData,0)<> 0
-                    OR COALESCE (MIFloat_SummAvanceRecalc.ValueData,0)      <> 0
+                      LEFT JOIN tmpMIFloat_PS AS MIFloat_SummCard
+                                              ON MIFloat_SummCard.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+                      LEFT JOIN tmpMIFloat_PS AS MIFloat_SummCardSecond
+                                              ON MIFloat_SummCardSecond.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()
+                      LEFT JOIN tmpMIFloat_PS AS MIFloat_SummNalog
+                                              ON MIFloat_SummNalog.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
+                      LEFT JOIN tmpMIFloat_PS AS MIFloat_SummNalogRet
+                                              ON MIFloat_SummNalogRet.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummNalogRet.DescId = zc_MIFloat_SummNalogRet()
+                      LEFT JOIN tmpMIFloat_PS AS MIFloat_SummFineOth
+                                              ON MIFloat_SummFineOth.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummFineOth.DescId = zc_MIFloat_SummFineOth()
+                      LEFT JOIN tmpMIFloat_PS AS MIFloat_SummHospOth
+                                              ON MIFloat_SummHospOth.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummHospOth.DescId = zc_MIFloat_SummHospOth()
+                      LEFT JOIN tmpMIFloat_PS AS MIFloat_SummChild
+                                              ON MIFloat_SummChild.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
+                      LEFT JOIN tmpMIFloat_PS AS MIFloat_SummMinusExt
+                                              ON MIFloat_SummMinusExt.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummMinusExt.DescId = zc_MIFloat_SummMinusExt()
+                      LEFT JOIN tmpMIFloat_PS AS MIFloat_SummAddOth
+                                              ON MIFloat_SummAddOth.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummAddOth.DescId = zc_MIFloat_SummAddOth()
+                      LEFT JOIN tmpMIFloat_PS AS MIFloat_SummCompensation
+                                              ON MIFloat_SummCompensation.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummCompensation.DescId = zc_MIFloat_SummCompensation()
+                      LEFT JOIN tmpMIFloat_PS AS MIFloat_SummAvance
+                                              ON MIFloat_SummAvance.MovementItemId = tmpMI.MovementItemId
+                                             AND MIFloat_SummAvance.DescId = zc_MIFloat_SummAvance()
+                      WHERE COALESCE (MIFloat_SummCard.ValueData,0)        <> 0
+                         OR COALESCE (MIFloat_SummCardSecond.ValueData,0)  <> 0
+                         OR COALESCE (MIFloat_SummNalog.ValueData,0)       <> 0
+                         OR COALESCE (MIFloat_SummNalogRet.ValueData,0)    <> 0
+                         OR COALESCE (MIFloat_SummFineOth.ValueData,0)     <> 0
+                         OR COALESCE (MIFloat_SummHospOth.ValueData,0)     <> 0
+                         OR COALESCE (MIFloat_SummChild.ValueData,0)       <> 0
+                         OR COALESCE (MIFloat_SummMinusExt.ValueData,0)    <> 0
+                         OR COALESCE (MIFloat_SummAddOth.ValueData,0)      <> 0
+                         OR COALESCE (MIFloat_SummCompensation.ValueData,0)<> 0
+                         OR COALESCE (MIFloat_SummAvance.ValueData,0)      <> 0                           
                       )
 
 
@@ -344,29 +344,29 @@ BEGIN
             , COALESCE (Object_UnitFineSubject.ValueData, '') :: TVarChar AS UnitFineSubjectName
             
             --
-            , COALESCE (tmpMI_Data.SummCardRecalc,0)       ::TFloat  AS SummCardRecalc       +
-            , COALESCE (tmpMI_Data.SummCardSecondRecalc,0) ::TFloat  AS SummCardSecondRecalc +
-            , COALESCE (tmpMI_Data.SummNalogRecalc,0)      ::TFloat  AS SummNalogRecalc    +
-            , COALESCE (tmpMI_Data.SummNalogRetRecalc,0)   ::TFloat  AS SummNalogRetRecalc    +
-            , COALESCE (tmpMI_Data.SummFineOthRecalc,0)    ::TFloat  AS SummFineOthRecalc   +
-            , COALESCE (tmpMI_Data.SummHospOthRecalc,0)    ::TFloat  AS SummHospOthRecalc      +
-            , COALESCE (tmpMI_Data.SummChildRecalc,0)      ::TFloat  AS SummChildRecalc +
-            , COALESCE (tmpMI_Data.SummMinusExtRecalc,0)   ::TFloat  AS SummMinusExtRecalc    +
-            , COALESCE (tmpMI_Data.SummAddOthRecalc,0)      ::TFloat AS SummAddOthRecalc      +
-            , COALESCE (tmpMI_Data.SummCompensationRecalc,0)::TFloat AS SummCompensationRecalc   +
-            , COALESCE (tmpMI_Data.SummAvanceRecalc,0)      ::TFloat AS SummAvanceRecalc
+            , COALESCE (tmpMI.SummCardRecalc,0)       ::TFloat  AS SummCardRecalc       
+            , COALESCE (tmpMI.SummCardSecondRecalc,0) ::TFloat  AS SummCardSecondRecalc 
+            , COALESCE (tmpMI.SummNalogRecalc,0)      ::TFloat  AS SummNalogRecalc    
+            , COALESCE (tmpMI.SummNalogRetRecalc,0)   ::TFloat  AS SummNalogRetRecalc    
+            , COALESCE (tmpMI.SummFineOthRecalc,0)    ::TFloat  AS SummFineOthRecalc   
+            , COALESCE (tmpMI.SummHospOthRecalc,0)    ::TFloat  AS SummHospOthRecalc      
+            , COALESCE (tmpMI.SummChildRecalc,0)      ::TFloat  AS SummChildRecalc 
+            , COALESCE (tmpMI.SummMinusExtRecalc,0)   ::TFloat  AS SummMinusExtRecalc    
+            , COALESCE (tmpMI.SummAddOthRecalc,0)      ::TFloat AS SummAddOthRecalc      
+            , COALESCE (tmpMI.SummCompensationRecalc,0)::TFloat AS SummCompensationRecalc   
+            , COALESCE (tmpMI.SummAvanceRecalc,0)      ::TFloat AS SummAvanceRecalc
             ---
-            , COALESCE (tmpMI.SummCard,0)        ::TFloat  AS SummCard
-            , COALESCE (tmpMI.SummCardSecond,0)  ::TFloat  AS SummCardSecond
-            , COALESCE (tmpMI.SummNalog,0)       ::TFloat  AS SummNalog
-            , COALESCE (tmpMI.SummNalogRet,0)    ::TFloat  AS SummNalogRet
-            , COALESCE (tmpMI.SummFineOth,0)     ::TFloat  AS SummFineOth
-            , COALESCE (tmpMI.SummHospOth,0)     ::TFloat  AS SummHospOth
-            , COALESCE (tmpMI.SummChild,0)       ::TFloat  AS SummChild
-            , COALESCE (tmpMI.SummMinusExt,0)    ::TFloat  AS SummMinusExt
-            , COALESCE (tmpMI.SummAddOth,0)      ::TFloat  AS SummAddOth 
-            , COALESCE (tmpMI.SummCompensation,0)::TFloat  AS SummCompensation
-            , COALESCE (tmpMI.SummAvance,0)      ::TFloat  AS SummAvance
+            , COALESCE (tmpMI_Data.SummCard,0)        ::TFloat  AS SummCard
+            , COALESCE (tmpMI_Data.SummCardSecond,0)  ::TFloat  AS SummCardSecond
+            , COALESCE (tmpMI_Data.SummNalog,0)       ::TFloat  AS SummNalog
+            , COALESCE (tmpMI_Data.SummNalogRet,0)    ::TFloat  AS SummNalogRet
+            , COALESCE (tmpMI_Data.SummFineOth,0)     ::TFloat  AS SummFineOth
+            , COALESCE (tmpMI_Data.SummHospOth,0)     ::TFloat  AS SummHospOth
+            , COALESCE (tmpMI_Data.SummChild,0)       ::TFloat  AS SummChild
+            , COALESCE (tmpMI_Data.SummMinusExt,0)    ::TFloat  AS SummMinusExt
+            , COALESCE (tmpMI_Data.SummAddOth,0)      ::TFloat  AS SummAddOth 
+            , COALESCE (tmpMI_Data.SummCompensation,0)::TFloat  AS SummCompensation
+            , COALESCE (tmpMI_Data.SummAvance,0)      ::TFloat  AS SummAvance
 
 
 /*            , COALESCE (MIBoolean_isAuto.ValueData, FALSE)    :: Boolean   AS isAuto
@@ -450,3 +450,4 @@ $BODY$
 
 -- тест
 --SELECT * FROM gpReport_PersonalService_Recalc (inMovementId:= 24691665, inSession:= '9457')
+--select * from gpReport_PersonalService_Recalc(inMovementId := 24750747 ,  inSession := '9457');
