@@ -20,6 +20,13 @@ RETURNS TABLE (Id                       Integer
              , Amount_last1             TFloat
              , Amount_last2             TFloat
              , Amount_last3             TFloat
+             , Amount_last4             TFloat
+             , Amount_Weight            TFloat
+             , Weight_last1             TFloat
+             , Weight_last2             TFloat
+             , Weight_last3             TFloat
+             , Weight_last4             TFloat
+             , TotalWeight_last         TFloat
              , GoodsKindId              Integer
              , GoodsKindName            TVarChar                         
              , MeasureName              TVarChar
@@ -88,13 +95,14 @@ BEGIN
                                          AND Movement.Id <> inMovementId 
                                          AND Movement.OperDate <=vbOperDate
                                        ) AS tmp
-                                 WHERE tmp.Ord < 4
+                                 WHERE tmp.Ord < 5
                                  )
            , tmpMI_last AS (SELECT MovementItem.ObjectId                         AS GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                  , SUM (CASE WHEN Movement.Ord = 1 THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_last1
                                  , SUM (CASE WHEN Movement.Ord = 2 THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_last2
                                  , SUM (CASE WHEN Movement.Ord = 3 THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_last3
+                                 , SUM (CASE WHEN Movement.Ord = 4 THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_last4
                             FROM tmpMovement_last AS Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
@@ -120,7 +128,14 @@ BEGIN
              , 0 ::TFloat AS Amount_last1
              , 0 ::TFloat AS Amount_last2
              , 0 ::TFloat AS Amount_last3
-
+             , 0 ::TFloat AS Amount_last4
+             , 0 ::TFloat AS Amount_Weight
+             , 0 ::TFloat AS Weight_last1
+             , 0 ::TFloat AS Weight_last2
+             , 0 ::TFloat AS Weight_last3
+             , 0 ::TFloat AS Weight_last4
+             , 0 ::TFloat AS TotalWeight_last             
+             
              , tmpMI.GoodsKindId
              , Object_GoodsKind.ValueData AS GoodsKindName
              , Object_Measure.ValueData   AS MeasureName
@@ -187,7 +202,18 @@ BEGIN
              , tmpMI_last.Amount_last1 ::TFloat
              , tmpMI_last.Amount_last2 ::TFloat
              , tmpMI_last.Amount_last3 ::TFloat
-             
+             , tmpMI_last.Amount_last4 ::TFloat
+             --вес
+             , (tmpMI.Amount            * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
+             , (tmpMI_last.Amount_last1 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight_last1
+             , (tmpMI_last.Amount_last2 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight_last2
+             , (tmpMI_last.Amount_last3 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight_last3
+             , (tmpMI_last.Amount_last4 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight_last4
+             , ((COALESCE (tmpMI_last.Amount_last1,0)
+               + COALESCE (tmpMI_last.Amount_last2,0)
+               + COALESCE (tmpMI_last.Amount_last3,0)
+               + COALESCE (tmpMI_last.Amount_last4,0)) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS TotalWeight_last
+
              , Object_GoodsKind.Id        AS GoodsKindId
              , Object_GoodsKind.ValueData AS GoodsKindName
              , Object_Measure.ValueData   AS MeasureName
@@ -210,6 +236,10 @@ BEGIN
                                   ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
              LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                     ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -234,7 +264,18 @@ BEGIN
              , tmpMI_last.Amount_last1 ::TFloat
              , tmpMI_last.Amount_last2 ::TFloat
              , tmpMI_last.Amount_last3 ::TFloat
-             
+             , tmpMI_last.Amount_last4 ::TFloat
+             --вес
+             , (tmpMI.Amount            * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
+             , (tmpMI_last.Amount_last1 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight_last1
+             , (tmpMI_last.Amount_last2 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight_last2
+             , (tmpMI_last.Amount_last3 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight_last3
+             , (tmpMI_last.Amount_last4 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight_last4
+             , ((COALESCE (tmpMI_last.Amount_last1,0)
+               + COALESCE (tmpMI_last.Amount_last2,0)
+               + COALESCE (tmpMI_last.Amount_last3,0)
+               + COALESCE (tmpMI_last.Amount_last4,0)) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS TotalWeight_last
+
              , COALESCE (Object_GoodsKind.Id, 0) AS GoodsKindId
              , Object_GoodsKind.ValueData        AS GoodsKindName
              , Object_Measure.ValueData          AS MeasureName
@@ -258,6 +299,9 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                     ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                   ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
@@ -304,13 +348,14 @@ BEGIN
                                          AND Movement.Id <> inMovementId
                                          AND Movement.OperDate <=vbOperDate
                                        ) AS tmp
-                                 WHERE tmp.Ord < 4
+                                 WHERE tmp.Ord < 5
                                  )
            , tmpMI_last AS (SELECT MovementItem.ObjectId                         AS GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                  , SUM (CASE WHEN Movement.Ord = 1 THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_last1
                                  , SUM (CASE WHEN Movement.Ord = 2 THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_last2
                                  , SUM (CASE WHEN Movement.Ord = 3 THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_last3
+                                 , SUM (CASE WHEN Movement.Ord = 4 THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_last4
                             FROM tmpMovement_last AS Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId = zc_MI_Master()
@@ -336,6 +381,17 @@ BEGIN
              , tmpMI_last.Amount_last1 ::TFloat
              , tmpMI_last.Amount_last2 ::TFloat
              , tmpMI_last.Amount_last3 ::TFloat
+             , tmpMI_last.Amount_last4 ::TFloat
+             --вес
+             , (tmpMI.Amount            * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
+             , (tmpMI_last.Amount_last1 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight_last1
+             , (tmpMI_last.Amount_last2 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight_last2
+             , (tmpMI_last.Amount_last3 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight_last3
+             , (tmpMI_last.Amount_last4 * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Weight_last4
+             , ((COALESCE (tmpMI_last.Amount_last1,0)
+               + COALESCE (tmpMI_last.Amount_last2,0)
+               + COALESCE (tmpMI_last.Amount_last3,0)
+               + COALESCE (tmpMI_last.Amount_last4,0)) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS TotalWeight_last
              
              , Object_GoodsKind.Id        AS GoodsKindId
              , Object_GoodsKind.ValueData AS GoodsKindName
@@ -359,6 +415,10 @@ BEGIN
                                   ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
              LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                     ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
