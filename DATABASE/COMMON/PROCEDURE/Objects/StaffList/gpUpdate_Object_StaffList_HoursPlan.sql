@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpUpdate_Object_StaffList_HoursPlan (Integer, TFloat, TF
 
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_StaffList_HoursPlan(
-    IN inUnitId              Integer,       -- ѕодразделение
+    IN inId                  Integer,       -- 
     IN inHoursPlan           TFloat    , -- ќбщий план часов за мес€ц на человека
     IN inHoursPlan_new       TFloat    , -- новое значение
     IN inSession             TVarChar    -- сесси€ пользовател€
@@ -26,34 +26,21 @@ BEGIN
                        ;
    END IF;
 
-  IF inUnitId <> 0 
-  THEN 
-      INSERT INTO _tmpUnit(UnitId)
-                 SELECT inUnitId;
-  ELSE 
-      INSERT INTO _tmpUnit (UnitId)
-                 SELECT OBJECT.Id FROM OBJECT
-                 WHERE OBJECT.DescId = zc_Object_Unit();
-  END IF;
+   --если по ошибке указали 0 - поругатьс€
+   IF COALESCE (inHoursPlan_new,0) = 0
+   THEN
+       RAISE EXCEPTION 'ќшибка.запрещено устанавливать значение = 0';
+   END IF;
 
-
+   --проверка соответствует ли выбранный элемент условию 
+   IF (SELECT OF.ValueData FROM ObjectFloat AS OF WHERE OF.DescId = zc_ObjectFloat_StaffList_HoursPlan() AND OF.ObjectId = inId) <> inHoursPlan
+   THEN
+       RETURN;
+   END IF;
+   
    -- пересохранили свойство <ќбщий план часов за мес€ц на человека>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_HoursPlan(), Object_StaffList.Id, inHoursPlan_new)
-         , lpInsert_ObjectProtocol (Object_StaffList.Id, vbUserId)
-   FROM _tmpUnit
-          LEFT JOIN ObjectLink AS ObjectLink_StaffList_Unit
-                               ON ObjectLink_StaffList_Unit.ChildObjectId = _tmpUnit.UnitId
-                              AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit()
-                                
-          LEFT JOIN Object AS Object_StaffList ON Object_StaffList.Id = ObjectLink_StaffList_Unit.ObjectId
-          
-          LEFT JOIN ObjectFloat AS ObjectFloat_HoursPlan 
-                                ON ObjectFloat_HoursPlan.ObjectId = Object_StaffList.Id 
-                               AND ObjectFloat_HoursPlan.DescId = zc_ObjectFloat_StaffList_HoursPlan()
-
-   WHERE Object_StaffList.DescId = zc_Object_StaffList()
-     AND Object_StaffList.isErased = False
-     AND COALESCE (ObjectFloat_HoursPlan.ValueData,0) = inHoursPlan;
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_HoursPlan(), inId, inHoursPlan_new);
+   PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
  
 END;
 $BODY$

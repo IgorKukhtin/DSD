@@ -27,8 +27,6 @@ object StaffListDataForm: TStaffListDataForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 32
-    ExplicitTop = 29
     object cxGridDBTableViewStaffLis: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListDS
@@ -147,9 +145,6 @@ object StaffListDataForm: TStaffListDataForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 72
-    ExplicitTop = 295
-    ExplicitHeight = 138
     object cxGridDBTableViewStaffListCost: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListCostDS
@@ -303,8 +298,7 @@ object StaffListDataForm: TStaffListDataForm
     Width = 975
     Height = 26
     Align = alTop
-    TabOrder = 7
-    ExplicitTop = 20
+    TabOrder = 6
     object ceUnit: TcxButtonEdit
       Left = 171
       Top = 2
@@ -330,7 +324,6 @@ object StaffListDataForm: TStaffListDataForm
     Height = 6
     AlignSplitter = salTop
     Control = cxGridStaffList
-    ExplicitTop = 305
   end
   object cxSplitter1: TcxSplitter
     Left = 0
@@ -350,7 +343,7 @@ object StaffListDataForm: TStaffListDataForm
     Top = 106
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 11
+    TabOrder = 10
     Width = 60
   end
   object cxLabel1: TcxLabel
@@ -680,6 +673,7 @@ object StaffListDataForm: TStaffListDataForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -1206,6 +1200,7 @@ object StaffListDataForm: TStaffListDataForm
         item
           Action = actUpdate_HoursPlan
         end>
+      View = cxGridDBTableViewStaffLis
       Caption = 'macUpdate_HoursPlan_list'
       ImageIndex = 74
     end
@@ -1214,7 +1209,7 @@ object StaffListDataForm: TStaffListDataForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actUpdate_HoursPlan
+          Action = macUpdate_HoursPlan_list
         end
         item
           Action = actRefreshMain
@@ -1726,10 +1721,10 @@ object StaffListDataForm: TStaffListDataForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inUnitId'
+        Name = 'inId'
         Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
+        Component = StaffListCDS
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
