@@ -10985,6 +10985,7 @@ inherited MainForm: TMainForm
       end
       object N254: TMenuItem
         Action = actReport_Goods_byMovementSaleReturn
+        Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1072#1084' '#1087#1086' '#1076#1072#1090#1072#1084' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1092#1072#1082#1090')'
       end
       object N92: TMenuItem
         Caption = '-'
