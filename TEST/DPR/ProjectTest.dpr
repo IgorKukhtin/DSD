@@ -420,7 +420,6 @@ uses
   Retail in '..\..\Forms\Guides\Retail.pas' {RetailForm: TParentForm},
   RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
   StoreRealJournal in '..\..\Forms\Document\StoreRealJournal.pas' {StoreRealJournalForm: TParentForm},
-  StoreReal in '..\..\Forms\Document\StoreReal.pas' {StoreRealForm: TParentForm},
   AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
   ProductionSeparate in '..\..\Forms\Document\ProductionSeparate.pas' {ProductionSeparateForm: TParentForm},
   PriceCorrectiveJournal in '..\..\Forms\Document\PriceCorrectiveJournal.pas' {PriceCorrectiveJournalForm: TParentForm},
@@ -1424,7 +1423,8 @@ uses
   Report_PersonalService_Recalc in '..\..\Forms\Report\Report_PersonalService_Recalc.pas' {Report_PersonalService_RecalcForm: TParentForm},
   GoodsGroup_UKTZED in '..\..\Forms\Guides\GoodsGroup_UKTZED.pas' {GoodsGroup_UKTZEDForm: TParentForm},
   Report_Goods_byMovementSaleReturn in '..\..\Forms\Report\Report_Goods_byMovementSaleReturn.pas' {Report_Goods_byMovementSaleReturnForm: TParentForm},
-  Report_Goods_byMovementSaleReturnDialog in '..\..\Forms\Report\Report_Goods_byMovementSaleReturnDialog.pas' {Report_Goods_byMovementSaleReturnDialogForm: TParentForm};
+  Report_Goods_byMovementSaleReturnDialog in '..\..\Forms\Report\Report_Goods_byMovementSaleReturnDialog.pas' {Report_Goods_byMovementSaleReturnDialogForm: TParentForm},
+  StoreReal in '..\..\Forms\Document\StoreReal.pas' {StoreRealForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer
              , InvNumberFull_last1 TVarChar
              , InvNumberFull_last2 TVarChar
              , InvNumberFull_last3 TVarChar
+             , InvNumberFull_last4 TVarChar
               )
 AS
 $BODY$
@@ -56,15 +57,17 @@ BEGIN
 
                   , '' ::TVarChar                               AS InvNumberFull_last1
                   , '' ::TVarChar                               AS InvNumberFull_last2
-                  , '' ::TVarChar                               AS InvNumberFull_last3 
+                  , '' ::TVarChar                               AS InvNumberFull_last3
+                  , '' ::TVarChar                               AS InvNumberFull_last4 
              FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
       ELSE
            RETURN QUERY
            WITH 
-            --предыдущие 3 документа
+            --предыдущие 4  документа
             tmpMovement_last AS (SELECT MAX (CASE WHEN tmp.Ord = 1 THEN zfConvert_DateToString (tmp.OperDate) || ' / ' || tmp.InvNumber ELSE '' END) :: TVarChar AS InvNumberFull_last1
                                       , MAX (CASE WHEN tmp.Ord = 2 THEN zfConvert_DateToString (tmp.OperDate) || ' / ' || tmp.InvNumber ELSE '' END) :: TVarChar AS InvNumberFull_last2
                                       , MAX (CASE WHEN tmp.Ord = 3 THEN zfConvert_DateToString (tmp.OperDate) || ' / ' || tmp.InvNumber ELSE '' END) :: TVarChar AS InvNumberFull_last3
+                                      , MAX (CASE WHEN tmp.Ord = 4 THEN zfConvert_DateToString (tmp.OperDate) || ' / ' || tmp.InvNumber ELSE '' END) :: TVarChar AS InvNumberFull_last4
                                 FROM (SELECT Movement.*
                                            , ROW_NUMBER() OVER (ORDER BY Movement.OperDate Desc) AS Ord
                                       FROM Movement
@@ -77,7 +80,7 @@ BEGIN
                                         AND Movement.Id <> inMovementId
                                         AND Movement.OperDate <=vbOperDate
                                       ) AS tmp
-                                WHERE tmp.Ord < 4
+                                WHERE tmp.Ord < 5
                                 )
 
 
@@ -96,6 +99,7 @@ BEGIN
                   , tmpMovement_last.InvNumberFull_last1 ::TVarChar
                   , tmpMovement_last.InvNumberFull_last2 ::TVarChar
                   , tmpMovement_last.InvNumberFull_last3 ::TVarChar
+                  , tmpMovement_last.InvNumberFull_last4 ::TVarChar
              FROM Movement
                   LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

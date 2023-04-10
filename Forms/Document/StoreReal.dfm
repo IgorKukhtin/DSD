@@ -64,6 +64,31 @@ inherited StoreRealForm: TStoreRealForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_last1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Weight_last1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Weight_last2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Weight_last3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Weight_last4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalWeight_last
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -108,6 +133,31 @@ inherited StoreRealForm: TStoreRealForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_last1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Weight_last1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Weight_last2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Weight_last3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Weight_last4
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalWeight_last
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -185,18 +235,7 @@ inherited StoreRealForm: TStoreRealForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object Amount_last1: TcxGridDBColumn [7]
-            Caption = #1054#1089#1090'. '#1079#1072' '#1076#1072#1090#1072' 1'
-            DataBinding.FieldName = 'Amount_last1'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080
-            Width = 65
-          end
-          object InfoMoneyCode: TcxGridDBColumn [8]
+          object InfoMoneyCode: TcxGridDBColumn [7]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -205,7 +244,7 @@ inherited StoreRealForm: TStoreRealForm
             Options.Editing = False
             Width = 45
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [9]
+          object InfoMoneyGroupName: TcxGridDBColumn [8]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -214,7 +253,7 @@ inherited StoreRealForm: TStoreRealForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyDestinationName: TcxGridDBColumn [10]
+          object InfoMoneyDestinationName: TcxGridDBColumn [9]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -223,7 +262,7 @@ inherited StoreRealForm: TStoreRealForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyName: TcxGridDBColumn [11]
+          object InfoMoneyName: TcxGridDBColumn [10]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -232,7 +271,7 @@ inherited StoreRealForm: TStoreRealForm
             Options.Editing = False
             Width = 100
           end
-          object GUID: TcxGridDBColumn [12]
+          object GUID: TcxGridDBColumn [11]
             DataBinding.FieldName = 'GUID'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -240,16 +279,31 @@ inherited StoreRealForm: TStoreRealForm
             Options.Editing = False
             Width = 70
           end
+          object Amount_last1: TcxGridDBColumn [12]
+            Caption = #1054#1089#1090'. '#1079#1072' '#1076#1072#1090#1072' 1'
+            DataBinding.FieldName = 'Amount_last1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080
+            Options.Editing = False
+            Width = 65
+          end
           object Amount_last2: TcxGridDBColumn [13]
             Caption = #1054#1089#1090'. '#1079#1072' '#1076#1072#1090#1072' 2'
             DataBinding.FieldName = 'Amount_last2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080
-            Width = 64
+            Options.Editing = False
+            Width = 70
           end
           object Amount_last3: TcxGridDBColumn [14]
             Caption = #1054#1089#1090'. '#1079#1072' '#1076#1072#1090#1072' 3'
@@ -257,9 +311,95 @@ inherited StoreRealForm: TStoreRealForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount_last4: TcxGridDBColumn [15]
+            Caption = #1054#1089#1090'. '#1079#1072' '#1076#1072#1090#1072' 4'
+            DataBinding.FieldName = 'Amount_last4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086', '#1074#1077#1089
+            DataBinding.FieldName = 'Amount_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object Weight_last1: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1079#1072' '#1076#1072#1090#1072' 1, '#1074#1077#1089
+            DataBinding.FieldName = 'Weight_last1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080', '#1074#1077#1089
+            Options.Editing = False
+            Width = 70
+          end
+          object Weight_last2: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1079#1072' '#1076#1072#1090#1072' 2, '#1074#1077#1089
+            DataBinding.FieldName = 'Weight_last2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080', '#1074#1077#1089
+            Options.Editing = False
+            Width = 70
+          end
+          object Weight_last3: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1079#1072' '#1076#1072#1090#1072' 3, '#1074#1077#1089
+            DataBinding.FieldName = 'Weight_last3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080', '#1074#1077#1089
+            Options.Editing = False
+            Width = 70
+          end
+          object Weight_last4: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1079#1072' '#1076#1072#1090#1072' 4, '#1074#1077#1089
+            DataBinding.FieldName = 'Weight_last4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080', '#1074#1077#1089
+            Options.Editing = False
+            Width = 70
+          end
+          object TotalWeight_last: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1054#1089#1090'. '#1079#1072' 4 '#1076#1072#1090#1099', '#1074#1077#1089
+            DataBinding.FieldName = 'TotalWeight_last'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1087#1088#1077#1076#1099#1076#1091#1097#1080#1077' '#1086#1089#1090#1072#1090#1082#1080', '#1074#1077#1089
+            Options.Editing = False
             Width = 70
           end
         end
@@ -363,7 +503,20 @@ inherited StoreRealForm: TStoreRealForm
       Properties.ReadOnly = True
       TabOrder = 12
       Text = ' '
-      Width = 222
+      Width = 149
+    end
+    object edMovementLast4: TcxButtonEdit
+      Left = 798
+      Top = 64
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 13
+      Text = ' '
+      Width = 149
     end
   end
   object cxLabel21: TcxLabel [2]
@@ -405,6 +558,11 @@ inherited StoreRealForm: TStoreRealForm
     Left = 643
     Top = 46
     Caption = #1054#1089#1090#1072#1090#1086#1082' '#1079#1072' '#1076#1072#1090#1072' 3'
+  end
+  object cxLabel8: TcxLabel [8]
+    Left = 798
+    Top = 46
+    Caption = #1054#1089#1090#1072#1090#1086#1082' '#1079#1072' '#1076#1072#1090#1072' 4'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -887,6 +1045,14 @@ inherited StoreRealForm: TStoreRealForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberFull_last4'
+        Value = Null
+        Component = GuidesMovLast4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -951,8 +1117,8 @@ inherited StoreRealForm: TStoreRealForm
       end
       item
       end>
-    Left = 160
-    Top = 192
+    Left = 600
+    Top = 328
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
@@ -1357,6 +1523,54 @@ inherited StoreRealForm: TStoreRealForm
         MultiSelectSeparator = ','
       end>
     Left = 680
+    Top = 72
+  end
+  object GuidesMovLast4: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMovementLast4
+    DisableGuidesOpen = True
+    Key = '0'
+    TextValue = ' '
+    FormNameParam.Value = 'TObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesMovLast4
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ' '
+        Component = GuidesMovLast4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RetailName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 832
     Top = 72
   end
 end

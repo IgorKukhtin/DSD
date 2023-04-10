@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, Vcl.Grids, Vcl.DBGrids, cxContainer, dsdGuides,
-  cxTextEdit, cxMaskEdit, cxLabel, Vcl.ExtCtrls, cxSplitter;
+  cxTextEdit, cxMaskEdit, cxLabel, Vcl.ExtCtrls, cxSplitter, cxCurrencyEdit;
 
 type
   TStaffListDataForm = class(TParentForm)
@@ -97,12 +97,11 @@ type
     bbStaffListSummKind: TdxBarButton;
     actStaffListSumm: TdsdUpdateDataSet;
     clUnitName: TcxGridDBColumn;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     actInsert: TdsdInsertUpdateAction;
     bbInsertSL: TdxBarButton;
     Panel1: TPanel;
     ceUnit: TcxButtonEdit;
-    cxLabel5: TcxLabel;
     actUpdate: TdsdInsertUpdateAction;
     dsdDBViewAddOnStaffListCost: TdsdDBViewAddOn;
     dsdDBViewAddOnStaffListSumm: TdsdDBViewAddOn;
@@ -130,6 +129,21 @@ type
     bbProtocolSumm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    spUpdate_HoursPlan: TdsdStoredProc;
+    actUpdate_HoursPlan: TdsdUpdateDataSet;
+    macUpdate_HoursPlan_list: TMultiAction;
+    macUpdate_HoursPlan: TMultiAction;
+    actRefreshMain: TdsdDataSetRefresh;
+    bbUpdate_HoursPlan: TdxBarButton;
+    cxLabel15: TcxLabel;
+    edHoursPlan: TcxCurrencyEdit;
+    cxLabel1: TcxLabel;
+    edHoursPlan_new: TcxCurrencyEdit;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    dxBarControlContainerItem3: TdxBarControlContainerItem;
+    dxBarControlContainerItem4: TdxBarControlContainerItem;
+    cxLabel2: TcxLabel;
   private
     { Private declarations }
   public

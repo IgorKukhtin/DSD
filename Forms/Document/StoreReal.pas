@@ -68,6 +68,9 @@ type
     cxLabel7: TcxLabel;
     GuidesMovLast3: TdsdGuides;
     edMovementLast3: TcxButtonEdit;
+    edMovementLast4: TcxButtonEdit;
+    GuidesMovLast4: TdsdGuides;
+    cxLabel8: TcxLabel;
   private
     { Private declarations }
   public

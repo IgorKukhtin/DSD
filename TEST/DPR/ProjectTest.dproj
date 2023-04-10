@@ -1215,10 +1215,6 @@
 				<Form>StoreRealJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\StoreReal.pas">
-				<Form>StoreRealForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocument.pas">
 				<Form>AncestorDocumentForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4963,6 +4959,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Goods_byMovementSaleReturnDialog.pas">
 				<Form>Report_Goods_byMovementSaleReturnDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\StoreReal.pas">
+				<Form>StoreRealForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
