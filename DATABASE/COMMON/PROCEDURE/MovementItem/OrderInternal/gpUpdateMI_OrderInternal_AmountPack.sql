@@ -60,7 +60,12 @@ BEGIN
      --
      IF COALESCE (vbMovementItemId_detail, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Элемент детализации не найден.';
+         vbMovementItemId_detail:= lpInsertUpdate_MovementItem (vbMovementItemId_detail, zc_MI_Detail(), vbUserId, inMovementId, COALESCE ((SELECT MAX (MI.Amount) FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Detail()), 1), inId);
+         --
+         -- сохранили протокол
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), vbMovementItemId_detail, CURRENT_TIMESTAMP);
+         -- сохранили протокол
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), vbMovementItemId_detail, vbUserId);
      END IF;
 
      -- сохранили свойство <Количество заказ на УПАК>

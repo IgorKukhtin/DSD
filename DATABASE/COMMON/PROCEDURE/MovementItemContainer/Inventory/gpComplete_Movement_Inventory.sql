@@ -1170,7 +1170,9 @@ BEGIN
                                THEN _tmpItem.OperSumm -- !!!тоже в первый раз, преход с Integer!!!
                                
                         --WHEN inMovementId = 24210332 -- ЦЕХ упаковки - 30.12.2022
-                          WHEN vbUnitId = 8451 -- ЦЕХ пакування
+                          WHEN (vbUnitId = 8451 -- ЦЕХ пакування
+                             OR vbUnitId = vbUnitId)
+                           AND _tmpItem.OperSumm <> 0
                                THEN _tmpItem.OperSumm -- !!!тоже НЕ 1 раз!!!
                                 
 
