@@ -48,7 +48,15 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 98
+        Width = 77
+      end
+      object DescName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1090#1086#1074#1072#1088')'
+        DataBinding.FieldName = 'DescName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 62
       end
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
@@ -56,7 +64,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 34
+        Width = 45
       end
       object GoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
@@ -64,7 +72,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 147
+        Width = 111
       end
       object GoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076
@@ -72,7 +80,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 61
+        Width = 46
       end
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -80,7 +88,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 36
+        Width = 26
       end
       object StartDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089
@@ -88,7 +96,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 53
+        Width = 40
       end
       object EndDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1086
@@ -96,7 +104,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 43
       end
       object ValuePrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
@@ -106,7 +114,7 @@ object PriceListItemForm: TPriceListItemForm
         Properties.DisplayFormat = ',0.00##;-,0.00##'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 52
       end
       object PriceNoVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
@@ -117,7 +125,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 69
+        Width = 52
       end
       object PriceWVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
@@ -128,7 +136,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 54
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -144,7 +152,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 41
       end
       object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -170,7 +178,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 100
+        Width = 75
       end
       object ObjectId: TcxGridDBColumn
         DataBinding.FieldName = 'ObjectId'
@@ -184,7 +192,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 48
+        Width = 36
       end
       object UpdateName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
@@ -192,7 +200,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 79
+        Width = 60
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
@@ -448,7 +456,7 @@ object PriceListItemForm: TPriceListItemForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdate_Zero'
         end
         item
           Visible = True
@@ -467,6 +475,20 @@ object PriceListItemForm: TPriceListItemForm
           ItemName = 'bbStartLoad'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbInsertRecord_TradeMark'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceFormTradeMark'
+        end
+        item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -557,8 +579,16 @@ object PriceListItemForm: TPriceListItemForm
       Action = actStartLoad
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdate_Zero: TdxBarButton
       Action = macUpdate_Zero
+      Category = 0
+    end
+    object bbInsertRecord_TradeMark: TdxBarButton
+      Action = actInsertRecordTradeMark
+      Category = 0
+    end
+    object bbChoiceFormTradeMark: TdxBarButton
+      Action = actChoiceFormTradeMark
       Category = 0
     end
   end
@@ -978,6 +1008,49 @@ object PriceListItemForm: TPriceListItemForm
       Caption = 'O'#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084
       Hint = 'O'#1073#1085#1091#1083#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084
       ImageIndex = 77
+    end
+    object actInsertRecordTradeMark: TInsertRecord
+      Category = 'TradeMark'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
+      Action = actChoiceFormTradeMark
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072'>'
+      ImageIndex = 0
+    end
+    object actChoiceFormTradeMark: TOpenChoiceForm
+      Category = 'TradeMark'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072'>'
+      ImageIndex = 1
+      FormName = 'TTradeMarkForm'
+      FormNameParam.Value = 'TTradeMarkForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   object dsdStoredProc: TdsdStoredProc

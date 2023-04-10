@@ -2288,12 +2288,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItem_SeparateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItem_SeparateForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
   {TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListEditForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemForm');
   exit;
@@ -2309,7 +2309,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListTaxDialogForm');
- }
+
 end;
 
 procedure TLoadFormTest.LoadQualityFormTest;
