@@ -516,6 +516,29 @@ BEGIN
                              -- AND 1=0
                            GROUP BY MIContainer.ObjectId_Analyzer
                                   , MIContainer.ObjectIntId_Analyzer
+
+                          UNION
+                           SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
+                                , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
+                                , SUM (MIContainer.Amount)                       AS Amount
+                                , MAX (MIContainer.ObjectExtId_Analyzer)         AS UnitId_pf
+                           FROM MovementItemContainer AS MIContainer
+                                -- Склады База + Реализации
+                                INNER JOIN tmpUnit_SKLAD ON tmpUnit_SKLAD.UnitId = MIContainer.WhereObjectId_Analyzer
+                                                        AND tmpUnit_SKLAD.UnitId = 8458 -- Склад База ГП
+                                -- Ирна
+                                INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                      ON ObjectLink_Goods_InfoMoney.ObjectId      = MIContainer.ObjectId_Analyzer
+                                                     AND ObjectLink_Goods_InfoMoney.DescId        = zc_ObjectLink_Goods_InfoMoney()
+                                                     AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                     )
+                           WHERE MIContainer.OperDate       = vbOperDate
+                             AND MIContainer.DescId         = zc_MIContainer_Count()
+                             AND MIContainer.MovementDescId = zc_Movement_Send()
+                             AND MIContainer.isActive       = TRUE
+                             -- AND 1=0
+                           GROUP BY MIContainer.ObjectId_Analyzer
+                                  , MIContainer.ObjectIntId_Analyzer
                           )
              -- Приход пр-во (ФАКТ)
            , tmpIncome AS (SELECT tmpIncome_all.GoodsId

@@ -16,6 +16,8 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_ProductionUnion_Kopchenie());
 
+    --
+    IF EXTRACT (MONTH FROM inStartDate) IN (2) THEN RETURN; END IF;
 
     -- Пересчет
  -- PERFORM lpUpdate_Movement_ProductionUnion_Kopchenie (inIsUpdate  := TRUE

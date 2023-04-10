@@ -17,11 +17,17 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_ProductionUnion_Partion());
 
-    -- пересчет Рецептур, временно захардкодил
-    PERFORM lpUpdate_Object_Receipt_Total (Object.Id, zfCalc_UserAdmin() :: Integer) FROM Object WHERE DescId = zc_Object_Receipt();
-    -- пересчет Рецептур, временно захардкодил
-    PERFORM lpUpdate_Object_Receipt_Parent (0, 0, 0);
+    --
+    IF EXTRACT (MONTH FROM inStartDate) IN (2) THEN RETURN; END IF;
 
+    --
+    IF EXTRACT (MONTH FROM inStartDate) IN (2)
+    THEN
+        -- пересчет Рецептур, временно захардкодил
+        PERFORM lpUpdate_Object_Receipt_Total (Object.Id, zfCalc_UserAdmin() :: Integer) FROM Object WHERE DescId = zc_Object_Receipt();
+        -- пересчет Рецептур, временно захардкодил
+        PERFORM lpUpdate_Object_Receipt_Parent (0, 0, 0);
+    END IF;
 
     -- Пересчет
     PERFORM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate  := TRUE
