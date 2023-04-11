@@ -114,22 +114,21 @@ BEGIN
            , ObjectFloat_Left1.ValueData       AS Left1
            , ObjectFloat_Left2.ValueData       AS Left2
 
+           , ObjectFloat_Width1_70_70.ValueData      AS Width1_70_70
+           , ObjectFloat_Width2_70_70.ValueData      AS Width2_70_70
+           , ObjectFloat_Width3_70_70.ValueData      AS Width3_70_70
+           , ObjectFloat_Width4_70_70.ValueData      AS Width4_70_70
+           , ObjectFloat_Width5_70_70.ValueData      AS Width5_70_70
+           , ObjectFloat_Width6_70_70.ValueData      AS Width6_70_70
+           , ObjectFloat_Width7_70_70.ValueData      AS Width7_70_70
+           , ObjectFloat_Width8_70_70.ValueData      AS Width8_70_70
+           , ObjectFloat_Width9_70_70.ValueData      AS Width9_70_70
+           , ObjectFloat_Width10_70_70.ValueData     AS Width10_70_70
 
-           , ObjectFloat_Width1.ValueData      AS Width1_70_70
-           , ObjectFloat_Width2.ValueData      AS Width2_70_70
-           , ObjectFloat_Width3.ValueData      AS Width3_70_70
-           , ObjectFloat_Width4.ValueData      AS Width4_70_70
-           , ObjectFloat_Width5.ValueData      AS Width5_70_70
-           , ObjectFloat_Width6.ValueData      AS Width6_70_70
-           , ObjectFloat_Width7.ValueData      AS Width7_70_70
-           , ObjectFloat_Width8.ValueData      AS Width8_70_70
-           , ObjectFloat_Width9.ValueData      AS Width9_70_70
-           , ObjectFloat_Width10.ValueData     AS Width10_70_70
-
-           , ObjectFloat_Level1.ValueData      AS Level1_70_70
-           , ObjectFloat_Level2.ValueData      AS Level2_70_70
-           , ObjectFloat_Left1.ValueData       AS Left1_70_70
-           , ObjectFloat_Left2.ValueData       AS Left2_70_70
+           , ObjectFloat_Level1_70_70.ValueData      AS Level1_70_70
+           , ObjectFloat_Level2_70_70.ValueData      AS Level2_70_70
+           , ObjectFloat_Left1_70_70.ValueData       AS Left1_70_70
+           , ObjectFloat_Left2_70_70.ValueData       AS Left2_70_70
 
            , ObjectBoolean_Default.ValueData AS isDefault
            
