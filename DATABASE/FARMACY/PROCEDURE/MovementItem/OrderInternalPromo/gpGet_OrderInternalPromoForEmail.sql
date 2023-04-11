@@ -32,14 +32,15 @@ BEGIN
    WHERE Movement.ID = inMovementId;
 
    -- Юр. лица надо добавлять и в gpSelect_MovementItem_OrderInternalPromo_ExportJuridical
-   
-   vbMail := CASE WHEN inJuridicalId = 59611  THEN 'Druzhkevich@optimapharm.ua,EHlopotova@optimapharm.ua'  -- СП "Оптима-Фарм, ЛТД"
+    
+   vbMail := CASE WHEN inJuridicalId = 59611  THEN 'VPikush@optimapharm.ua'                                -- СП "Оптима-Фарм, ЛТД"
                   WHEN inJuridicalId = 59610 THEN 'centr2_cc@badm.biz'                                     -- БаДМ
                   WHEN inJuridicalId = 59612 THEN 'volitskayairina@ventaltd.com.ua'                        -- Вента
                   WHEN inJuridicalId = 183353 THEN 'n.ivanova@fitolek.com'                                 -- Фито-лек
                   WHEN inJuridicalId = 410822 THEN 'zakaz@ametrin.com.ua'                                  -- Аметрин 
                   WHEN inJuridicalId = 183319 THEN 'elhovskiy.a@dolphi.com.ua'                             -- Долфи Украина
-                  WHEN inJuridicalId = 183332 THEN 'Ruslana.Danilova@uf.ua'                                -- Медцентр М.Т.К.
+                  WHEN inJuridicalId = 183332 THEN 'Ihor.Loboda@uf.ua'                                     -- Медцентр М.Т.К.
+                  WHEN inJuridicalId = 18926945 THEN 'bpa@konex.com.ua'                                    -- Конекс
                   ELSE '' END;          
    
     -- проверка

@@ -425,16 +425,6 @@ inherited GoodsSP408_1303Form: TGoodsSP408_1303Form
         end>
       Caption = 'actInsertMI'
     end
-    inherited actUpdateMainDS: TdsdUpdateDataSet
-      StoredProc = spUpdate_Goods
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Goods
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end>
-    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint_GoodsSP
       StoredProcList = <
@@ -1307,10 +1297,18 @@ inherited GoodsSP408_1303Form: TGoodsSP408_1303Form
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIntenalSPId'
+        Name = 'inCol'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'IntenalSPId'
+        ComponentItem = 'Col'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIntenalSP_1303Id'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IntenalSP_1303Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1347,18 +1345,10 @@ inherited GoodsSP408_1303Form: TGoodsSP408_1303Form
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMakerSP_1303Id'
+        Name = 'inMakerCountrySP_1303Id'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MakerSP_1303Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCountry_1303Id'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Country_1303Id'
+        ComponentItem = 'MakerCountrySP_1303Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1377,15 +1367,6 @@ inherited GoodsSP408_1303Form: TGoodsSP408_1303Form
         Component = MasterCDS
         ComponentItem = 'ReestrSP'
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inReestrDateSP'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ReestrDateSP'
-        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1442,19 +1423,19 @@ inherited GoodsSP408_1303Form: TGoodsSP408_1303Form
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inID_MED_FORM'
+        Name = 'outPriceOOC'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'ID_MED_FORM'
-        ParamType = ptInput
+        ComponentItem = 'PriceOOC'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMorionSP'
+        Name = 'outPriceSale'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'MorionSP'
-        ParamType = ptInput
+        ComponentItem = 'PriceSale'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 160

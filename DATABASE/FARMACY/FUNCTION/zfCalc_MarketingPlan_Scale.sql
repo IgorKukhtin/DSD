@@ -1,13 +1,15 @@
 -- Function: zfCalc_MarketingPlan_Scale
 
 --DROP FUNCTION IF EXISTS zfCalc_MarketingPlan_Scale (Integer, TDateTime, TFloat, TFloat, TFloat);
-DROP FUNCTION IF EXISTS zfCalc_MarketingPlan_Scale (Integer, TDateTime, Integer, TFloat, TFloat, TFloat);
+--DROP FUNCTION IF EXISTS zfCalc_MarketingPlan_Scale (Integer, TDateTime, Integer, TFloat, TFloat, TFloat);
+DROP FUNCTION IF EXISTS zfCalc_MarketingPlan_Scale (Integer, TDateTime, Integer, TFloat, TFloat, TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION zfCalc_MarketingPlan_Scale (
        IN inScaleCalcMarketingPlanID Integer,
        IN inOperDate TDateTime,
        IN inUniitID Integer,
        IN inTotalExecutionLine TFloat,
+       IN inTotalExecutionFixed TFloat,
        IN inAmountTheFineTab TFloat,
        IN inBonusAmountTab TFloat
        )
@@ -35,6 +37,11 @@ BEGIN
 
   IF  date_trunc('month', inOperDate) >= '01.11.2022'
   THEN
+  
+    IF  date_trunc('month', inOperDate) >= '01.04.2023' AND inBonusAmountTab > 0 AND Round(inTotalExecutionFixed, 2) < 45
+    THEN
+      inBonusAmountTab := ROUND(inBonusAmountTab * 0.7, 2);
+    END IF;  
   
     SELECT Object_Unit.ValueData ILIKE 'Апт. пункт %'
          , Object_UnitCategory.ObjectCode 
@@ -78,7 +85,7 @@ BEGIN
     END IF;
     
     IF vbTotal < 0 AND vbisAP = TRUE THEN vbTotal := 0; END IF;
-                                       
+                                           
   ELSEIF  date_trunc('month', inOperDate) >= '01.04.2022' and date_trunc('month', inOperDate) <= '01.05.2022'
   THEN
     vbTotal := inBonusAmountTab;
@@ -165,4 +172,4 @@ ALTER FUNCTION zfCalc_MarketingPlan_Scale (Integer, TDateTime, Integer, TFloat, 
 */
 
 -- тест 
-SELECT * FROM zfCalc_MarketingPlan_Scale (zc_Enum_ScaleCalcMarketingPlan_CC1(), '01.04.2023', 10779386, 75.96, 607.45, 99.44)	
+SELECT * FROM zfCalc_MarketingPlan_Scale (zc_Enum_ScaleCalcMarketingPlan_CC1(), '01.04.2023', 10779386, 76.96, 10, 607.45, 99.44)

@@ -67,7 +67,7 @@ BEGIN
      SELECT DISTINCT tmpOrderInternal.JuridicalId
      FROM (SELECT T1.Id, T1.JuridicalId
            FROM gpSelect_MI_OrderInternalPromo(inMovementId := inMovementId , inIsErased := 'False' ,  inSession := inSession) AS T1
-           WHERE T1.JuridicalId in (59611, 59610, 59612, 183353, 410822, 183319, 183332)
+           WHERE T1.JuridicalId in (59611, 59610, 59612, 183353, 410822, 183319, 183332, 18926945)
              AND T1.Amount > 0) AS tmpOrderInternal 
           INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                  AND MovementItem.DescId = zc_MI_Child()

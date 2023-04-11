@@ -1,8 +1,8 @@
 -- Function: lpInsertUpdate_MovementItem_GoodsSP408_1303()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_GoodsSP408_1303 (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                                        , TVarChar, TVarChar, TDateTime, TFloat, Integer, TFloat, Integer, TDateTime
-                                                                        , Integer);
+                                                                   , TVarChar, TVarChar, TDateTime, TFloat, Integer, TFloat, Integer, TDateTime
+                                                                   , Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_GoodsSP408_1303(
  INOUT ioId                     Integer   ,    -- Ключ объекта <Элемент документа>
@@ -41,7 +41,7 @@ BEGIN
     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
     -- сохранили <Элемент документа>
-    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), COALESCE (inGoodsId, inMovementId, inCol, NULL);
+    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), COALESCE (inGoodsId, 0), inMovementId, inCol, NULL);
     
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ValiditySP(), ioId, inValiditySP);
