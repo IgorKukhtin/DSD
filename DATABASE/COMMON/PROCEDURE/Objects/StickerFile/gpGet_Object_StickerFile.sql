@@ -15,6 +15,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Width6 TFloat, Width7 TFloat, Width8 TFloat, Width9 TFloat, Width10 TFloat
              , Level1 TFloat, Level2 TFloat
              , Left1 TFloat, Left2 TFloat
+             , Width1_70_70 TFloat, Width2_70_70 TFloat, Width3_70_70 TFloat, Width4_70_70 TFloat, Width5_70_70 TFloat
+             , Width6_70_70 TFloat, Width7_70_70 TFloat, Width8_70_70 TFloat, Width9_70_70 TFloat, Width10_70_70 TFloat
+             , Level1_70_70 TFloat, Level2_70_70 TFloat
+             , Left1_70_70 TFloat, Left2_70_70 TFloat
              , isDefault Boolean
              ) AS
 $BODY$
@@ -58,6 +62,22 @@ BEGIN
            , CAST (0 as TFloat)        AS Left1
            , CAST (0 as TFloat)        AS Left2
 
+           , CAST (0 as TFloat)        AS Width1_70_70
+           , CAST (0 as TFloat)        AS Width2_70_70
+           , CAST (0 as TFloat)        AS Width3_70_70
+           , CAST (0 as TFloat)        AS Width4_70_70
+           , CAST (0 as TFloat)        AS Width5_70_70
+           , CAST (0 as TFloat)        AS Width6_70_70
+           , CAST (0 as TFloat)        AS Width7_70_70
+           , CAST (0 as TFloat)        AS Width8_70_70
+           , CAST (0 as TFloat)        AS Width9_70_70
+           , CAST (0 as TFloat)        AS Width10_70_70
+
+           , CAST (0 as TFloat)        AS Level1_70_70
+           , CAST (0 as TFloat)        AS Level2_70_70
+           , CAST (0 as TFloat)        AS Left1_70_70
+           , CAST (0 as TFloat)        AS Left2_70_70
+
            , CAST (False AS Boolean)   AS isDefault
            ;
    ELSE
@@ -93,6 +113,23 @@ BEGIN
            , ObjectFloat_Level2.ValueData      AS Level2
            , ObjectFloat_Left1.ValueData       AS Left1
            , ObjectFloat_Left2.ValueData       AS Left2
+
+
+           , ObjectFloat_Width1.ValueData      AS Width1_70_70
+           , ObjectFloat_Width2.ValueData      AS Width2_70_70
+           , ObjectFloat_Width3.ValueData      AS Width3_70_70
+           , ObjectFloat_Width4.ValueData      AS Width4_70_70
+           , ObjectFloat_Width5.ValueData      AS Width5_70_70
+           , ObjectFloat_Width6.ValueData      AS Width6_70_70
+           , ObjectFloat_Width7.ValueData      AS Width7_70_70
+           , ObjectFloat_Width8.ValueData      AS Width8_70_70
+           , ObjectFloat_Width9.ValueData      AS Width9_70_70
+           , ObjectFloat_Width10.ValueData     AS Width10_70_70
+
+           , ObjectFloat_Level1.ValueData      AS Level1_70_70
+           , ObjectFloat_Level2.ValueData      AS Level2_70_70
+           , ObjectFloat_Left1.ValueData       AS Left1_70_70
+           , ObjectFloat_Left2.ValueData       AS Left2_70_70
 
            , ObjectBoolean_Default.ValueData AS isDefault
            
@@ -176,6 +213,63 @@ BEGIN
                                   ON ObjectFloat_Left2.ObjectId = Object_StickerFile.Id 
                                  AND ObjectFloat_Left2.DescId = zc_ObjectFloat_StickerFile_Left2()
 
+       ---
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width1_70_70
+                                  ON ObjectFloat_Width1_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width1_70_70.DescId = zc_ObjectFloat_StickerFile_Width1_70_70()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width2_70_70
+                                  ON ObjectFloat_Width2_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width2_70_70.DescId = zc_ObjectFloat_StickerFile_Width2_70_70()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width3_70_70
+                                  ON ObjectFloat_Width3_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width3_70_70.DescId = zc_ObjectFloat_StickerFile_Width3_70_70()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width4_70_70
+                                  ON ObjectFloat_Width4_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width4_70_70.DescId = zc_ObjectFloat_StickerFile_Width4_70_70()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width5_70_70
+                                  ON ObjectFloat_Width5_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width5_70_70.DescId = zc_ObjectFloat_StickerFile_Width5_70_70()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width6_70_70
+                                  ON ObjectFloat_Width6_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width6_70_70.DescId = zc_ObjectFloat_StickerFile_Width6_70_70()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width7_70_70
+                                  ON ObjectFloat_Width7_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width7_70_70.DescId = zc_ObjectFloat_StickerFile_Width7_70_70()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width8_70_70
+                                  ON ObjectFloat_Width8_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width8_70_70.DescId = zc_ObjectFloat_StickerFile_Width8_70_70()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width9_70_70
+                                  ON ObjectFloat_Width9_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width9_70_70.DescId = zc_ObjectFloat_StickerFile_Width9_70_70()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Width10_70_70
+                                  ON ObjectFloat_Width10_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Width10_70_70.DescId = zc_ObjectFloat_StickerFile_Width10_70_70()                                  
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Level1_70_70
+                                  ON ObjectFloat_Level1_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Level1_70_70.DescId = zc_ObjectFloat_StickerFile_Level1_70_70()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Level2_70_70
+                                  ON ObjectFloat_Level2_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Level2_70_70.DescId = zc_ObjectFloat_StickerFile_Level2_70_70()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Left1_70_70
+                                  ON ObjectFloat_Left1_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Left1_70_70.DescId = zc_ObjectFloat_StickerFile_Left1_70_70()
+ 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Left2_70_70
+                                  ON ObjectFloat_Left2_70_70.ObjectId = Object_StickerFile.Id 
+                                 AND ObjectFloat_Left2_70_70.DescId = zc_ObjectFloat_StickerFile_Left2_70_70()
+
        WHERE Object_StickerFile.Id = inId;
       
    END IF;
@@ -187,6 +281,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.04.23         *
  08.05.18         *
  19.12.17         *
  23.10.17         *

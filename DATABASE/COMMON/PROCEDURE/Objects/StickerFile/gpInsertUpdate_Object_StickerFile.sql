@@ -4,9 +4,16 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, TV
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, Integer, Integer, TVarChar, TVarChar
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
+/*DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, Integer, Integer, TVarChar, TVarChar
+                                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                          , TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);*/
+
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_StickerFile (Integer, Integer, Integer, Integer, TVarChar, TVarChar
                                                           , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                          , TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
+                                                          , TFloat, TFloat, TFloat, TFloat
+                                                          , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                          , TFloat, TFloat, TFloat, TFloat
+                                                          , Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerFile(
    INOUT ioId                       Integer,     -- ид
@@ -29,6 +36,21 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerFile(
       IN inLevel2                   TFloat,
       IN inLeft1                    TFloat, 
       IN inLeft2                    TFloat,
+      IN inWidth1_70_70             TFloat, 
+      IN inWidth2_70_70             TFloat,
+      IN inWidth3_70_70             TFloat,
+      IN inWidth4_70_70             TFloat,
+      IN inWidth5_70_70             TFloat,
+      IN inWidth6_70_70             TFloat,
+      IN inWidth7_70_70             TFloat,
+      IN inWidth8_70_70             TFloat,
+      IN inWidth9_70_70             TFloat,
+      IN inWidth10_70_70            TFloat,
+      IN inLevel1_70_70             TFloat, 
+      IN inLevel2_70_70             TFloat,
+      IN inLeft1_70_70              TFloat, 
+      IN inLeft2_70_70              TFloat,
+
       IN inisDefault                Boolean ,    --
       IN inSession                  TVarChar     -- Пользователь
       )
@@ -104,7 +126,38 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Left1(), ioId, inLeft1);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Left2(), ioId, inLeft2);
-   
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width1_70_70(), ioId, inWidth1_70_70);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width2_70_70(), ioId, inWidth2_70_70);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width3_70_70(), ioId, inWidth3_70_70);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width4_70_70(), ioId, inWidth4_70_70);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width5_70_70(), ioId, inWidth5_70_70);
+      -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width6_70_70(), ioId, inWidth6_70_70);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width7_70_70(), ioId, inWidth7_70_70);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width8_70_70(), ioId, inWidth8_70_70);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width9_70_70(), ioId, inWidth9_70_70);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Width10_70_70(), ioId, inWidth10_70_70);
+
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Level1_70_70(), ioId, inLevel1_70_70);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Level2_70_70(), ioId, inLevel2_70_70);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Left1_70_70(), ioId, inLeft1_70_70);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerFile_Left2_70_70(), ioId, inLeft2_70_70);   
 
    -- пытаемся найти "Способ изготовления продукта"
    -- если не находим записывае новый элемент в справочник
@@ -133,6 +186,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.04.23         *
  08.05.18         *
  19.12.17         *
  23.10.17         *
