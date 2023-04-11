@@ -1,7 +1,7 @@
-inherited GoodsSPInform_1303JournalForm: TGoodsSPInform_1303JournalForm
+inherited GoodsSP408_1303JournalForm: TGoodsSP408_1303JournalForm
   Caption = 
     #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1077#1077#1089#1090#1088' '#1055#1086#1089#1090'. 1303 ('#1056#1077#1077#1089#1090#1088' '#1055#1086#1089#1090'. 1303 ('#1088#1077#1077#1089#1090#1088' ' +
-    '408 '#1089' '#1089#1072#1081#1090#1072')>'
+    '408 '#1076#1086#1082#1091#1084#1077#1085#1090' '#1052#1054#1047')>'
   ClientHeight = 535
   ClientWidth = 910
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -133,8 +133,8 @@ inherited GoodsSPInform_1303JournalForm: TGoodsSPInform_1303JournalForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ShortCut = 16429
-      FormName = 'TGoodsSPInform_1303_MovementForm'
-      FormNameParam.Value = 'TGoodsSPInform_1303_MovementForm'
+      FormName = 'TGoodsSP408_1303_MovementForm'
+      FormNameParam.Value = 'TGoodsSP408_1303_MovementForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -164,8 +164,8 @@ inherited GoodsSPInform_1303JournalForm: TGoodsSPInform_1303JournalForm
       IdFieldName = 'Id'
     end
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TGoodsSPInform_1303Form'
-      FormNameParam.Value = 'TGoodsSPInform_1303Form'
+      FormName = 'TGoodsSP408_1303Form'
+      FormNameParam.Value = 'TGoodsSP408_1303Form'
       GuiParams = <
         item
           Name = 'Id'
@@ -193,8 +193,8 @@ inherited GoodsSPInform_1303JournalForm: TGoodsSPInform_1303JournalForm
         end>
     end
     inherited actInsertMask: TdsdInsertUpdateAction
-      FormName = 'TGoodsSPInform_1303_MovementForm'
-      FormNameParam.Value = 'TGoodsSPInform_1303_MovementForm'
+      FormName = 'TGoodsSP408_1303_MovementForm'
+      FormNameParam.Value = 'TGoodsSP408_1303_MovementForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -219,8 +219,8 @@ inherited GoodsSPInform_1303JournalForm: TGoodsSPInform_1303JournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TGoodsSPInform_1303Form'
-      FormNameParam.Value = 'TGoodsSPInform_1303Form'
+      FormName = 'TGoodsSP408_1303Form'
+      FormNameParam.Value = 'TGoodsSP408_1303Form'
       GuiParams = <
         item
           Name = 'Id'
@@ -265,10 +265,10 @@ inherited GoodsSPInform_1303JournalForm: TGoodsSPInform_1303JournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint_GoodsSPInform_1303
+      StoredProc = spSelectPrint_GoodsSP408_1303
       StoredProcList = <
         item
-          StoredProc = spSelectPrint_GoodsSPInform_1303
+          StoredProc = spSelectPrint_GoodsSP408_1303
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -368,7 +368,7 @@ inherited GoodsSPInform_1303JournalForm: TGoodsSPInform_1303JournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_GoodsSPInform_1303'
+    StoredProcName = 'gpSelect_Movement_GoodsSP408_1303'
     Params = <
       item
         Name = 'instartdate'
@@ -518,7 +518,7 @@ inherited GoodsSPInform_1303JournalForm: TGoodsSPInform_1303JournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_GoodsSPInform_1303'
+    StoredProcName = 'gpComplete_Movement_GoodsSP408_1303'
     Params = <
       item
         Name = 'inmovementid'
@@ -546,7 +546,7 @@ inherited GoodsSPInform_1303JournalForm: TGoodsSPInform_1303JournalForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_GoodsSPInform_1303'
+    StoredProcName = 'gpUnComplete_Movement_GoodsSP408_1303'
     Params = <
       item
         Name = 'inmovementid'
@@ -560,7 +560,7 @@ inherited GoodsSPInform_1303JournalForm: TGoodsSPInform_1303JournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_GoodsSPInform_1303'
+    StoredProcName = 'gpSetErased_Movement_GoodsSP408_1303'
     Params = <
       item
         Name = 'inmovementid'
@@ -613,7 +613,7 @@ inherited GoodsSPInform_1303JournalForm: TGoodsSPInform_1303JournalForm
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_GoodsSPInform_1303'
+    StoredProcName = 'gpReComplete_Movement_GoodsSP408_1303'
     Left = 488
     Top = 152
   end
@@ -629,8 +629,8 @@ inherited GoodsSPInform_1303JournalForm: TGoodsSPInform_1303JournalForm
     Left = 700
     Top = 270
   end
-  object spSelectPrint_GoodsSPInform_1303: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_GoodsSPInform_1303_Print'
+  object spSelectPrint_GoodsSP408_1303: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_GoodsSP408_1303_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -654,7 +654,7 @@ inherited GoodsSPInform_1303JournalForm: TGoodsSPInform_1303JournalForm
     Top = 248
   end
   object spInsertMovement_Mask: TdsdStoredProc
-    StoredProcName = 'gpInsert_Movement_GoodsSPInform_1303_Mask'
+    StoredProcName = 'gpInsert_Movement_GoodsSP408_1303_Mask'
     DataSets = <>
     OutputType = otResult
     Params = <

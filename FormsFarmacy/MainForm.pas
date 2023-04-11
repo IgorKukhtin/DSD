@@ -1019,6 +1019,9 @@ type
     N13034081: TMenuItem;
     actReport_PaymentHelsi: TdsdOpenForm;
     N377: TMenuItem;
+    actGoodsSP408_1303Journal: TdsdOpenForm;
+    N4081: TMenuItem;
+    N4082: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

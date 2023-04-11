@@ -4660,6 +4660,14 @@
 				<Form>SaleInsuranceCompaniesCashForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\GoodsSP408_1303Journal.pas">
+				<Form>GoodsSP408_1303JournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\GoodsSP408_1303.pas">
+				<Form>GoodsSP408_1303Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
