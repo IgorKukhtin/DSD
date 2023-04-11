@@ -101,7 +101,13 @@ BEGIN
                       AND Contract.StartDate <= CURRENT_DATE 
                       AND Contract.EndDate >= CURRENT_DATE
                     GROUP BY Contract.JuridicalBasisId
-                           , Contract.JuridicalId)
+                           , Contract.JuridicalId),
+    tmpUnit AS (SELECT * FROM Object AS Object_Unit WHERE Object_Unit.DescId = zc_Object_Unit()),
+    tmpObjectBoolean AS (SELECT * FROM ObjectBoolean WHERE ObjectBoolean.ObjectId IN (SELECT tmpUnit.Id FROM tmpUnit)),
+    tmpObjectFloat AS (SELECT * FROM ObjectFloat WHERE ObjectFloat.ObjectId IN (SELECT tmpUnit.Id FROM tmpUnit)),
+    tmpObjectDate AS (SELECT * FROM ObjectDate WHERE ObjectDate.ObjectId IN (SELECT tmpUnit.Id FROM tmpUnit)),
+    tmpObjectString AS (SELECT * FROM ObjectString WHERE ObjectString.ObjectId IN (SELECT tmpUnit.Id FROM tmpUnit)),
+    tmpObjectLink AS (SELECT * FROM ObjectLink WHERE ObjectLink.ObjectId IN (SELECT tmpUnit.Id FROM tmpUnit))
                             
     SELECT 
         Object_Unit.Id                                       AS Id
@@ -305,13 +311,13 @@ BEGIN
       , COALESCE (ObjectBoolean_SendErrorTelegramBot.ValueData, FALSE):: Boolean         AS isSendErrorTelegramBot
       , COALESCE (ObjectBoolean_ColdOutSUN.ValueData, FALSE):: Boolean                   AS isColdOutSUN
 
-    FROM Object AS Object_Unit
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+    FROM tmpUnit AS Object_Unit
+        LEFT JOIN tmpObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
         LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
         
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+        LEFT JOIN tmpObjectLink AS ObjectLink_Unit_Juridical
                              ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
@@ -320,17 +326,17 @@ BEGIN
                              ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
          
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_MarginCategory
+        LEFT JOIN tmpObjectLink AS ObjectLink_Unit_MarginCategory
                              ON ObjectLink_Unit_MarginCategory.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_MarginCategory.DescId = zc_ObjectLink_Unit_MarginCategory()
         LEFT JOIN Object AS Object_MarginCategory ON Object_MarginCategory.Id = ObjectLink_Unit_MarginCategory.ChildObjectId
 
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_ProvinceCity
+        LEFT JOIN tmpObjectLink AS ObjectLink_Unit_ProvinceCity
                              ON ObjectLink_Unit_ProvinceCity.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
         LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
 
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_UserManager
+        LEFT JOIN tmpObjectLink AS ObjectLink_Unit_UserManager
                              ON ObjectLink_Unit_UserManager.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_UserManager.DescId = zc_ObjectLink_Unit_UserManager()
         LEFT JOIN Object AS Object_UserManager ON Object_UserManager.Id = ObjectLink_Unit_UserManager.ChildObjectId
@@ -340,26 +346,26 @@ BEGIN
                             AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
 
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_Driver
+        LEFT JOIN tmpObjectLink AS ObjectLink_Unit_Driver
                              ON ObjectLink_Unit_Driver.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_Driver.DescId = zc_ObjectLink_Unit_Driver()
         LEFT JOIN Object AS Object_Driver ON Object_Driver.Id = ObjectLink_Unit_Driver.ChildObjectId
 
-        LEFT JOIN ObjectString AS ObjectString_ListDaySUN
+        LEFT JOIN tmpObjectString AS ObjectString_ListDaySUN
                                ON ObjectString_ListDaySUN.ObjectId = Object_Unit.Id 
                               AND ObjectString_ListDaySUN.DescId = zc_ObjectString_Unit_ListDaySUN()
 
-        LEFT JOIN ObjectString AS ObjectString_ListDaySUN_pi
+        LEFT JOIN tmpObjectString AS ObjectString_ListDaySUN_pi
                                ON ObjectString_ListDaySUN_pi.ObjectId = Object_Unit.Id 
                               AND ObjectString_ListDaySUN_pi.DescId = zc_ObjectString_Unit_ListDaySUN_pi()
 
-        LEFT JOIN ObjectString AS ObjectString_SUN_v1_Lock
+        LEFT JOIN tmpObjectString AS ObjectString_SUN_v1_Lock
                                ON ObjectString_SUN_v1_Lock.ObjectId = Object_Unit.Id 
                               AND ObjectString_SUN_v1_Lock.DescId = zc_ObjectString_Unit_SUN_v1_Lock()
-        LEFT JOIN ObjectString AS ObjectString_SUN_v2_Lock
+        LEFT JOIN tmpObjectString AS ObjectString_SUN_v2_Lock
                                ON ObjectString_SUN_v2_Lock.ObjectId = Object_Unit.Id 
                               AND ObjectString_SUN_v2_Lock.DescId = zc_ObjectString_Unit_SUN_v2_Lock()
-        LEFT JOIN ObjectString AS ObjectString_SUN_v4_Lock
+        LEFT JOIN tmpObjectString AS ObjectString_SUN_v4_Lock
                                ON ObjectString_SUN_v4_Lock.ObjectId = Object_Unit.Id 
                               AND ObjectString_SUN_v4_Lock.DescId = zc_ObjectString_Unit_SUN_v4_Lock()
 
@@ -370,15 +376,15 @@ BEGIN
                                ON ObjectString_Phone.ObjectId = Object_Member.Id 
                               AND ObjectString_Phone.DescId = zc_ObjectString_Member_Phone()
 
-        LEFT JOIN ObjectString AS ObjectString_PharmacyManager
+        LEFT JOIN tmpObjectString AS ObjectString_PharmacyManager
                                ON ObjectString_PharmacyManager.ObjectId = Object_Unit.Id 
                               AND ObjectString_PharmacyManager.DescId = zc_ObjectString_Unit_PharmacyManager()
 
-        LEFT JOIN ObjectString AS ObjectString_PharmacyManagerPhone
+        LEFT JOIN tmpObjectString AS ObjectString_PharmacyManagerPhone
                                ON ObjectString_PharmacyManagerPhone.ObjectId = Object_Unit.Id 
                               AND ObjectString_PharmacyManagerPhone.DescId = zc_ObjectString_Unit_PharmacyManagerPhone()
 
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_UserManager2
+        LEFT JOIN tmpObjectLink AS ObjectLink_Unit_UserManager2
                              ON ObjectLink_Unit_UserManager2.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_UserManager2.DescId = zc_ObjectLink_Unit_UserManager2()
         LEFT JOIN Object AS Object_UserManager2 ON Object_UserManager2.Id = ObjectLink_Unit_UserManager2.ChildObjectId
@@ -395,7 +401,7 @@ BEGIN
                                ON ObjectString_Phone2.ObjectId = Object_Member2.Id 
                               AND ObjectString_Phone2.DescId = zc_ObjectString_Member_Phone()
 
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_UserManager3
+        LEFT JOIN tmpObjectLink AS ObjectLink_Unit_UserManager3
                              ON ObjectLink_Unit_UserManager3.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_UserManager3.DescId = zc_ObjectLink_Unit_UserManager3()
         LEFT JOIN Object AS Object_UserManager3 ON Object_UserManager3.Id = ObjectLink_Unit_UserManager3.ChildObjectId
@@ -412,370 +418,370 @@ BEGIN
                                ON ObjectString_Phone3.ObjectId = Object_Member3.Id 
                               AND ObjectString_Phone3.DescId = zc_ObjectString_Member_Phone()
 
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_Area
+        LEFT JOIN tmpObjectLink AS ObjectLink_Unit_Area
                              ON ObjectLink_Unit_Area.ObjectId = Object_Unit.Id 
                             AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
         LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
 
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_UnitRePrice
+        LEFT JOIN tmpObjectLink AS ObjectLink_Unit_UnitRePrice
                              ON ObjectLink_Unit_UnitRePrice.ObjectId = Object_Unit.Id 
                             AND ObjectLink_Unit_UnitRePrice.DescId = zc_ObjectLink_Unit_UnitRePrice()
         LEFT JOIN Object AS Object_UnitRePrice ON Object_UnitRePrice.Id = ObjectLink_Unit_UnitRePrice.ChildObjectId
 
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_PartnerMedical
+        LEFT JOIN tmpObjectLink AS ObjectLink_Unit_PartnerMedical
                              ON ObjectLink_Unit_PartnerMedical.ObjectId = Object_Unit.Id 
                             AND ObjectLink_Unit_PartnerMedical.DescId = zc_ObjectLink_Unit_PartnerMedical()
         LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = ObjectLink_Unit_PartnerMedical.ChildObjectId
 
-        LEFT JOIN ObjectLink AS ObjectLink_Unit_Layout
+        LEFT JOIN tmpObjectLink AS ObjectLink_Unit_Layout
                              ON ObjectLink_Unit_Layout.ObjectId = Object_Unit.Id 
                             AND ObjectLink_Unit_Layout.DescId = zc_ObjectLink_Unit_Layout()
         LEFT JOIN Object AS Object_Layout ON Object_Layout.Id = ObjectLink_Unit_Layout.ChildObjectId
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isLeaf 
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsCategory 
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_GoodsCategory 
                                 ON ObjectBoolean_GoodsCategory.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_GoodsCategory.DescId = zc_ObjectBoolean_Unit_GoodsCategory()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SP 
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SP 
                                 ON ObjectBoolean_SP.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SP.DescId = zc_ObjectBoolean_Unit_SP()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN
                                 ON ObjectBoolean_SUN.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_v2
                                 ON ObjectBoolean_SUN_v2.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v2.DescId = zc_ObjectBoolean_Unit_SUN_v2()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v3
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_v3
                                 ON ObjectBoolean_SUN_v3.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v3.DescId = zc_ObjectBoolean_Unit_SUN_v3()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_in
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_in
                                 ON ObjectBoolean_SUN_in.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_in.DescId = zc_ObjectBoolean_Unit_SUN_in()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_out
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_out
                                 ON ObjectBoolean_SUN_out.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_out.DescId = zc_ObjectBoolean_Unit_SUN_out()
                                
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_Supplement_in
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_Supplement_in
                                 ON ObjectBoolean_SUN_Supplement_in.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_Supplement_in.DescId = zc_ObjectBoolean_Unit_SUN_Supplement_in()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_Supplement_out
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_Supplement_out
                                 ON ObjectBoolean_SUN_Supplement_out.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_Supplement_out.DescId = zc_ObjectBoolean_Unit_SUN_Supplement_out()
                                
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_Supplement_Priority
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_Supplement_Priority
                                 ON ObjectBoolean_SUN_Supplement_Priority.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_Supplement_Priority.DescId = zc_ObjectBoolean_Unit_SUN_Supplement_Priority()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_in
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_v2_in
                                 ON ObjectBoolean_SUN_v2_in.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v2_in.DescId = zc_ObjectBoolean_Unit_SUN_v2_in()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_out
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_v2_out
                                 ON ObjectBoolean_SUN_v2_out.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v2_out.DescId = zc_ObjectBoolean_Unit_SUN_v2_out()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_Supplement_in
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_v2_Supplement_in
                                 ON ObjectBoolean_SUN_v2_Supplement_in.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v2_Supplement_in.DescId = zc_ObjectBoolean_Unit_SUN_v2_Supplement_in()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_Supplement_out
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_v2_Supplement_out
                                 ON ObjectBoolean_SUN_v2_Supplement_out.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v2_Supplement_out.DescId = zc_ObjectBoolean_Unit_SUN_v2_Supplement_out()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v1_SupplementAddCash
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_v1_SupplementAddCash
                                 ON ObjectBoolean_SUN_v1_SupplementAddCash.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v1_SupplementAddCash.DescId = zc_ObjectBoolean_Unit_SUN_SupplementAddCash()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v1_SupplementAdd30Cash
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_v1_SupplementAdd30Cash
                                 ON ObjectBoolean_SUN_v1_SupplementAdd30Cash.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v1_SupplementAdd30Cash.DescId = zc_ObjectBoolean_Unit_SUN_SupplementAdd30Cash()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v3_in
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_v3_in
                                 ON ObjectBoolean_SUN_v3_in.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v3_in.DescId = zc_ObjectBoolean_Unit_SUN_v3_in()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v3_out
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_v3_out
                                 ON ObjectBoolean_SUN_v3_out.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v3_out.DescId = zc_ObjectBoolean_Unit_SUN_v3_out()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v4
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_v4
                                 ON ObjectBoolean_SUN_v4.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v4.DescId = zc_ObjectBoolean_Unit_SUN_v4()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v4_in
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_v4_in
                                 ON ObjectBoolean_SUN_v4_in.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v4_in.DescId = zc_ObjectBoolean_Unit_SUN_v4_in()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v4_out
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_v4_out
                                 ON ObjectBoolean_SUN_v4_out.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v4_out.DescId = zc_ObjectBoolean_Unit_SUN_v4_out()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_NotSold
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_NotSold
                                 ON ObjectBoolean_SUN_NotSold.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_NotSold.DescId = zc_ObjectBoolean_Unit_SUN_NotSold()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_NotSoldIn
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_NotSoldIn
                                 ON ObjectBoolean_SUN_NotSoldIn.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_NotSoldIn.DescId = zc_ObjectBoolean_Unit_SUN_NotSoldIn()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_TopNo
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_TopNo
                                 ON ObjectBoolean_TopNo.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_TopNo.DescId = zc_ObjectBoolean_Unit_TopNo()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_TechnicalRediscount
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_TechnicalRediscount
                                 ON ObjectBoolean_TechnicalRediscount.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_TechnicalRediscount.DescId = zc_ObjectBoolean_Unit_TechnicalRediscount()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_AlertRecounting
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_AlertRecounting
                                 ON ObjectBoolean_AlertRecounting.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_AlertRecounting.DescId = zc_ObjectBoolean_Unit_AlertRecounting()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_LockSale
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUN_v2_LockSale
                                 ON ObjectBoolean_SUN_v2_LockSale.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v2_LockSale.DescId = zc_ObjectBoolean_Unit_SUN_v2_LockSale()
 
-        LEFT JOIN ObjectString AS ObjectString_Unit_Address
+        LEFT JOIN tmpObjectString AS ObjectString_Unit_Address
                                ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
                               AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
 
-        LEFT JOIN ObjectString AS ObjectString_Unit_Phone
+        LEFT JOIN tmpObjectString AS ObjectString_Unit_Phone
                                ON ObjectString_Unit_Phone.ObjectId = Object_Unit.Id
                               AND ObjectString_Unit_Phone.DescId = zc_ObjectString_Unit_Phone()
 
-        LEFT JOIN ObjectString AS ObjectString_Unit_TelegramId
+        LEFT JOIN tmpObjectString AS ObjectString_Unit_TelegramId
                                ON ObjectString_Unit_TelegramId.ObjectId = Object_Unit.Id
                               AND ObjectString_Unit_TelegramId.DescId = zc_ObjectString_Unit_TelegramId()
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_TaxService
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_TaxService
                               ON ObjectFloat_TaxService.ObjectId = Object_Unit.Id
                              AND ObjectFloat_TaxService.DescId = zc_ObjectFloat_Unit_TaxService()
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_TaxServiceNigth
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_TaxServiceNigth
                               ON ObjectFloat_TaxServiceNigth.ObjectId = Object_Unit.Id
                              AND ObjectFloat_TaxServiceNigth.DescId = zc_ObjectFloat_Unit_TaxServiceNigth()
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_KoeffInSUN
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_KoeffInSUN
                               ON ObjectFloat_KoeffInSUN.ObjectId = Object_Unit.Id
                              AND ObjectFloat_KoeffInSUN.DescId = zc_ObjectFloat_Unit_KoeffInSUN()
-        LEFT JOIN ObjectFloat AS ObjectFloat_KoeffOutSUN
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_KoeffOutSUN
                               ON ObjectFloat_KoeffOutSUN.ObjectId = Object_Unit.Id
                              AND ObjectFloat_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN()
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_KoeffInSUN_v3
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_KoeffInSUN_v3
                               ON ObjectFloat_KoeffInSUN_v3.ObjectId = Object_Unit.Id
                              AND ObjectFloat_KoeffInSUN_v3.DescId = zc_ObjectFloat_Unit_KoeffInSUN_v3()
-        LEFT JOIN ObjectFloat AS ObjectFloat_KoeffOutSUN_v3
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_KoeffOutSUN_v3
                               ON ObjectFloat_KoeffOutSUN_v3.ObjectId = Object_Unit.Id
                              AND ObjectFloat_KoeffOutSUN_v3.DescId = zc_ObjectFloat_Unit_KoeffOutSUN_v3()
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_T1_SUN_v2
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_T1_SUN_v2
                               ON ObjectFloat_T1_SUN_v2.ObjectId = Object_Unit.Id
                              AND ObjectFloat_T1_SUN_v2.DescId = zc_ObjectFloat_Unit_T1_SUN_v2()
-        LEFT JOIN ObjectFloat AS ObjectFloat_T2_SUN_v2
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_T2_SUN_v2
                               ON ObjectFloat_T2_SUN_v2.ObjectId = Object_Unit.Id
                              AND ObjectFloat_T2_SUN_v2.DescId = zc_ObjectFloat_Unit_T2_SUN_v2()
-        LEFT JOIN ObjectFloat AS ObjectFloat_T1_SUN_v4
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_T1_SUN_v4
                               ON ObjectFloat_T1_SUN_v4.ObjectId = Object_Unit.Id
                              AND ObjectFloat_T1_SUN_v4.DescId = zc_ObjectFloat_Unit_T1_SUN_v4()
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_SunIncome
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_SunIncome
                               ON ObjectFloat_SunIncome.ObjectId = Object_Unit.Id
                              AND ObjectFloat_SunIncome.DescId = zc_ObjectFloat_Unit_SunIncome()
-        LEFT JOIN ObjectFloat AS ObjectFloat_Sun_v2Income
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_Sun_v2Income
                               ON ObjectFloat_Sun_v2Income.ObjectId = Object_Unit.Id
                              AND ObjectFloat_Sun_v2Income.DescId = zc_ObjectFloat_Unit_Sun_v2Income()
-        LEFT JOIN ObjectFloat AS ObjectFloat_Sun_v4Income
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_Sun_v4Income
                               ON ObjectFloat_Sun_v4Income.ObjectId = Object_Unit.Id
                              AND ObjectFloat_Sun_v4Income.DescId = zc_ObjectFloat_Unit_Sun_v4Income()
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_HT_SUN_v1
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_HT_SUN_v1
                               ON ObjectFloat_HT_SUN_v1.ObjectId = Object_Unit.Id
                              AND ObjectFloat_HT_SUN_v1.DescId = zc_ObjectFloat_Unit_HT_SUN_v1()
-        LEFT JOIN ObjectFloat AS ObjectFloat_HT_SUN_v2
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_HT_SUN_v2
                               ON ObjectFloat_HT_SUN_v2.ObjectId = Object_Unit.Id
                              AND ObjectFloat_HT_SUN_v2.DescId = zc_ObjectFloat_Unit_HT_SUN_v2()
-        LEFT JOIN ObjectFloat AS ObjectFloat_HT_SUN_v4
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_HT_SUN_v4
                               ON ObjectFloat_HT_SUN_v4.ObjectId = Object_Unit.Id
                              AND ObjectFloat_HT_SUN_v4.DescId = zc_ObjectFloat_Unit_HT_SUN_v4()
-        LEFT JOIN ObjectFloat AS ObjectFloat_HT_SUN_All
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_HT_SUN_All
                               ON ObjectFloat_HT_SUN_All.ObjectId = Object_Unit.Id
                              AND ObjectFloat_HT_SUN_All.DescId = zc_ObjectFloat_Unit_HT_SUN_All()
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_LimitSUN_N
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_LimitSUN_N
                               ON ObjectFloat_LimitSUN_N.ObjectId = Object_Unit.Id
                              AND ObjectFloat_LimitSUN_N.DescId = zc_ObjectFloat_Unit_LimitSUN_N()
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_DeySupplSun1
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_DeySupplSun1
                               ON ObjectFloat_DeySupplSun1.ObjectId = Object_Unit.Id
                              AND ObjectFloat_DeySupplSun1.DescId = zc_ObjectFloat_Unit_DeySupplSun1()
-        LEFT JOIN ObjectFloat AS ObjectFloat_MonthSupplSun1
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_MonthSupplSun1
                               ON ObjectFloat_MonthSupplSun1.ObjectId = Object_Unit.Id
                              AND ObjectFloat_MonthSupplSun1.DescId = zc_ObjectFloat_Unit_MonthSupplSun1()
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_PercentSAUA
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_PercentSAUA
                               ON ObjectFloat_PercentSAUA.ObjectId = Object_Unit.Id
                              AND ObjectFloat_PercentSAUA.DescId = zc_ObjectFloat_Unit_PercentSAUA()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_RepriceAuto
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_RepriceAuto
                                 ON ObjectBoolean_RepriceAuto.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_RepriceAuto.DescId = zc_ObjectBoolean_Unit_RepriceAuto()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_Over
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_Over
                                 ON ObjectBoolean_Over.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_Over.DescId = zc_ObjectBoolean_Unit_Over()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_UploadBadm
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_UploadBadm
                                 ON ObjectBoolean_UploadBadm.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_UploadBadm.DescId = zc_ObjectBoolean_Unit_UploadBadm()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_MarginCategory
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_MarginCategory
                                 ON ObjectBoolean_MarginCategory.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_MarginCategory.DescId = zc_ObjectBoolean_Unit_MarginCategory()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_Report
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_Report
                                 ON ObjectBoolean_Report.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_Report.DescId = zc_ObjectBoolean_Unit_Report()
                                
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCashMCS
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_NotCashMCS
                                 ON ObjectBoolean_NotCashMCS.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_NotCashMCS.DescId = zc_ObjectBoolean_Unit_NotCashMCS()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCashListDiff
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_NotCashListDiff
                                 ON ObjectBoolean_NotCashListDiff.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_NotCashListDiff.DescId = zc_ObjectBoolean_Unit_NotCashListDiff()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUA
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SUA
                                 ON ObjectBoolean_SUA.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_SUA.DescId = zc_ObjectBoolean_Unit_SUA()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_ShareFromPrice
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_ShareFromPrice
                                 ON ObjectBoolean_ShareFromPrice.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ShareFromPrice.DescId = zc_ObjectBoolean_Unit_ShareFromPrice()
                                
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_OutUKTZED_SUN1
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_OutUKTZED_SUN1
                                 ON ObjectBoolean_OutUKTZED_SUN1.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_OutUKTZED_SUN1.DescId = zc_ObjectBoolean_Unit_OutUKTZED_SUN1()
                                
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_CheckUKTZED
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_CheckUKTZED
                                 ON ObjectBoolean_CheckUKTZED.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_CheckUKTZED.DescId = zc_ObjectBoolean_Unit_CheckUKTZED()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsUKTZEDRRO
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_GoodsUKTZEDRRO
                                 ON ObjectBoolean_GoodsUKTZEDRRO.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_GoodsUKTZEDRRO.DescId = zc_ObjectBoolean_Unit_GoodsUKTZEDRRO()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_MessageByTime
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_MessageByTime
                                 ON ObjectBoolean_MessageByTime.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_MessageByTime.DescId = zc_ObjectBoolean_Unit_MessageByTime()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_MessageByTimePD
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_MessageByTimePD
                                 ON ObjectBoolean_MessageByTimePD.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_MessageByTimePD.DescId = zc_ObjectBoolean_Unit_MessageByTimePD()
                                
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_ParticipDistribListDiff
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_ParticipDistribListDiff
                                 ON ObjectBoolean_ParticipDistribListDiff.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ParticipDistribListDiff.DescId = zc_ObjectBoolean_Unit_ParticipDistribListDiff()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_PauseDistribListDiff
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_PauseDistribListDiff
                                 ON ObjectBoolean_PauseDistribListDiff.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_PauseDistribListDiff.DescId = zc_ObjectBoolean_Unit_PauseDistribListDiff()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_RequestDistribListDiff
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_RequestDistribListDiff
                                 ON ObjectBoolean_RequestDistribListDiff.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_RequestDistribListDiff.DescId = zc_ObjectBoolean_Unit_RequestDistribListDiff()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_BlockCommentSendTP
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_BlockCommentSendTP
                                 ON ObjectBoolean_BlockCommentSendTP.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_BlockCommentSendTP.DescId = zc_ObjectBoolean_Unit_BlockCommentSendTP()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_ErrorRROToVIP
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_ErrorRROToVIP
                                 ON ObjectBoolean_ErrorRROToVIP.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ErrorRROToVIP.DescId = zc_ObjectBoolean_Unit_ErrorRROToVIP()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_OnlyTimingSUN
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_OnlyTimingSUN
                                 ON ObjectBoolean_OnlyTimingSUN.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_OnlyTimingSUN.DescId = zc_ObjectBoolean_Unit_SUN_OnlyTiming()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowMessageSite
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_ShowMessageSite
                                 ON ObjectBoolean_ShowMessageSite.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ShowMessageSite.DescId = zc_ObjectBoolean_Unit_ShowMessageSite()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_ExpressVIPConfirm
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_ExpressVIPConfirm
                                 ON ObjectBoolean_ExpressVIPConfirm.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ExpressVIPConfirm.DescId = zc_ObjectBoolean_Unit_ExpressVIPConfirm()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowPlanEmployeeUser
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_ShowPlanEmployeeUser
                                 ON ObjectBoolean_ShowPlanEmployeeUser.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ShowPlanEmployeeUser.DescId = zc_ObjectBoolean_Unit_ShowPlanEmployeeUser()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowPlanMobileAppUser
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_ShowPlanMobileAppUser
                                 ON ObjectBoolean_ShowPlanMobileAppUser.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ShowPlanMobileAppUser.DescId = zc_ObjectBoolean_Unit_ShowPlanMobileAppUser()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowActiveAlerts
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_ShowActiveAlerts
                                 ON ObjectBoolean_ShowActiveAlerts.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ShowActiveAlerts.DescId = zc_ObjectBoolean_Unit_ShowActiveAlerts()
 
-        LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
+        LEFT JOIN tmpObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id
                             AND ObjectDate_StartServiceNigth.DescId = zc_ObjectDate_Unit_StartServiceNigth()
 
-        LEFT JOIN ObjectDate AS ObjectDate_EndServiceNigth
+        LEFT JOIN tmpObjectDate AS ObjectDate_EndServiceNigth
                              ON ObjectDate_EndServiceNigth.ObjectId = Object_Unit.Id
                             AND ObjectDate_EndServiceNigth.DescId = zc_ObjectDate_Unit_EndServiceNigth()
 
-        LEFT JOIN ObjectDate AS ObjectDate_Create
+        LEFT JOIN tmpObjectDate AS ObjectDate_Create
                              ON ObjectDate_Create.ObjectId = Object_Unit.Id
                             AND ObjectDate_Create.DescId = zc_ObjectDate_Unit_Create()
-        LEFT JOIN ObjectDate AS ObjectDate_Close
+        LEFT JOIN tmpObjectDate AS ObjectDate_Close
                              ON ObjectDate_Close.ObjectId = Object_Unit.Id
                             AND ObjectDate_Close.DescId = zc_ObjectDate_Unit_Close()
 
-        LEFT JOIN ObjectDate AS ObjectDate_TaxUnitStart
+        LEFT JOIN tmpObjectDate AS ObjectDate_TaxUnitStart
                              ON ObjectDate_TaxUnitStart.ObjectId = Object_Unit.Id
                             AND ObjectDate_TaxUnitStart.DescId = zc_ObjectDate_Unit_TaxUnitStart()
 
-        LEFT JOIN ObjectDate AS ObjectDate_TaxUnitEnd
+        LEFT JOIN tmpObjectDate AS ObjectDate_TaxUnitEnd
                              ON ObjectDate_TaxUnitEnd.ObjectId = Object_Unit.Id
                             AND ObjectDate_TaxUnitEnd.DescId = zc_ObjectDate_Unit_TaxUnitEnd()
 
-        LEFT JOIN ObjectDate AS ObjectDate_SP
+        LEFT JOIN tmpObjectDate AS ObjectDate_SP
                              ON ObjectDate_SP.ObjectId = Object_Unit.Id
                             AND ObjectDate_SP.DescId = zc_ObjectDate_Unit_SP()
 
-        LEFT JOIN ObjectDate AS ObjectDate_StartSP
+        LEFT JOIN tmpObjectDate AS ObjectDate_StartSP
                              ON ObjectDate_StartSP.ObjectId = Object_Unit.Id
                             AND ObjectDate_StartSP.DescId = zc_ObjectDate_Unit_StartSP()
 
-        LEFT JOIN ObjectDate AS ObjectDate_EndSP
+        LEFT JOIN tmpObjectDate AS ObjectDate_EndSP
                              ON ObjectDate_EndSP.ObjectId = Object_Unit.Id
                             AND ObjectDate_EndSP.DescId = zc_ObjectDate_Unit_EndSP()
 
         LEFT JOIN tmpByBadm ON tmpByBadm.UnitId = Object_Unit.Id
 
-        LEFT JOIN ObjectDate AS ObjectDate_MondayStart
+        LEFT JOIN tmpObjectDate AS ObjectDate_MondayStart
                              ON ObjectDate_MondayStart.ObjectId = Object_Unit.Id
                             AND ObjectDate_MondayStart.DescId = zc_ObjectDate_Unit_MondayStart()
-        LEFT JOIN ObjectDate AS ObjectDate_MondayEnd
+        LEFT JOIN tmpObjectDate AS ObjectDate_MondayEnd
                              ON ObjectDate_MondayEnd.ObjectId = Object_Unit.Id
                             AND ObjectDate_MondayEnd.DescId = zc_ObjectDate_Unit_MondayEnd()
-        LEFT JOIN ObjectDate AS ObjectDate_SaturdayStart
+        LEFT JOIN tmpObjectDate AS ObjectDate_SaturdayStart
                              ON ObjectDate_SaturdayStart.ObjectId = Object_Unit.Id
                             AND ObjectDate_SaturdayStart.DescId = zc_ObjectDate_Unit_SaturdayStart()
-        LEFT JOIN ObjectDate AS ObjectDate_SaturdayEnd
+        LEFT JOIN tmpObjectDate AS ObjectDate_SaturdayEnd
                              ON ObjectDate_SaturdayEnd.ObjectId = Object_Unit.Id
                             AND ObjectDate_SaturdayEnd.DescId = zc_ObjectDate_Unit_SaturdayEnd()
-        LEFT JOIN ObjectDate AS ObjectDate_SundayStart
+        LEFT JOIN tmpObjectDate AS ObjectDate_SundayStart
                              ON ObjectDate_SundayStart.ObjectId = Object_Unit.Id
                             AND ObjectDate_SundayStart.DescId = zc_ObjectDate_Unit_SundayStart()
-        LEFT JOIN ObjectDate AS ObjectDate_SundayEnd 
+        LEFT JOIN tmpObjectDate AS ObjectDate_SundayEnd 
                              ON ObjectDate_SundayEnd.ObjectId = Object_Unit.Id
                             AND ObjectDate_SundayEnd.DescId = zc_ObjectDate_Unit_SundayEnd()
-        LEFT JOIN ObjectDate AS ObjectDate_FirstCheck
+        LEFT JOIN tmpObjectDate AS ObjectDate_FirstCheck
                              ON ObjectDate_FirstCheck.ObjectId = Object_Unit.Id
                             AND ObjectDate_FirstCheck.DescId = zc_ObjectDate_Unit_FirstCheck()
                             
-        LEFT JOIN ObjectString AS ObjectString_SetDateRROList
+        LEFT JOIN tmpObjectString AS ObjectString_SetDateRROList
                                ON ObjectString_SetDateRROList.ObjectId = Object_Unit.Id
                               AND ObjectString_SetDateRROList.DescId = zc_ObjectString_Unit_SetDateRROList()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_AutospaceOS
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_AutospaceOS
                                 ON ObjectBoolean_AutospaceOS.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_AutospaceOS.DescId = zc_ObjectBoolean_Unit_AutospaceOS()
 
-        LEFT JOIN ObjectLink AS ObjectLink_UnitSAUA_Master  
+        LEFT JOIN tmpObjectLink AS ObjectLink_UnitSAUA_Master  
                              ON ObjectLink_UnitSAUA_Master .ObjectId = Object_Unit.Id 
                             AND ObjectLink_UnitSAUA_Master .DescId = zc_ObjectLink_Unit_UnitSAUA()
         LEFT JOIN Object AS Object_UnitSAUA_Master ON Object_UnitSAUA_Master.Id = ObjectLink_UnitSAUA_Master .ChildObjectId
@@ -791,24 +797,23 @@ BEGIN
                               ON tmpContract.JuridicalBasisId  = ObjectLink_Unit_Juridical.ChildObjectId
                              AND tmpContract.JuridicalId  =  ObjectLink_PartnerMedical_Juridical.ChildObjectId
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_ReplaceSte2ListDif
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_ReplaceSte2ListDif
                                 ON ObjectBoolean_ReplaceSte2ListDif.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ReplaceSte2ListDif.DescId = zc_ObjectBoolean_Unit_ReplaceSte2ListDif()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_DividePartionDate
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_DividePartionDate
                                 ON ObjectBoolean_DividePartionDate.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_DividePartionDate.DescId = zc_ObjectBoolean_Unit_DividePartionDate()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SendErrorTelegramBot
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_SendErrorTelegramBot
                                 ON ObjectBoolean_SendErrorTelegramBot.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_SendErrorTelegramBot.DescId = zc_ObjectBoolean_Unit_SendErrorTelegramBot()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_ColdOutSUN
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_ColdOutSUN
                                 ON ObjectBoolean_ColdOutSUN.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_ColdOutSUN.DescId = zc_ObjectBoolean_Unit_ColdOutSUN()
 
-    WHERE Object_Unit.DescId = zc_Object_Unit()
-      AND (inisShowAll = True OR Object_Unit.isErased = False)
+    WHERE (inisShowAll = True OR Object_Unit.isErased = False)
       AND (inisShowActive = False OR ObjectLink_Unit_Juridical.ChildObjectId <> 393053
                                  AND ObjectLink_Juridical_Retail.ChildObjectId = 4
                                  AND ObjectLink_Unit_Juridical.ObjectId <> 389328
@@ -866,4 +871,6 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Object_Unit (False, True, '2')
+
+select * from gpSelect_Object_Unit(inisShowAll := 'False' , inisShowActive := 'False' ,  inSession := '3');
+

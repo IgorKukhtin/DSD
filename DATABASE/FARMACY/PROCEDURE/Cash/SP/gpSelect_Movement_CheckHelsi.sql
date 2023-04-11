@@ -128,8 +128,13 @@ BEGIN
                                                             ON MIString_DosageIdSP.MovementItemId = MovementItem.Id
                                                            AND MIString_DosageIdSP.DescId = zc_MIString_DosageIdSP()
 
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_ElectronicPrescript
+                                                       ON ObjectBoolean_ElectronicPrescript.ObjectId = COALESCE (MLO_MedicalProgramSP.ObjectId, 18076882)
+                                                      AND ObjectBoolean_ElectronicPrescript.DescId = zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript()
+
                           WHERE Movement.DescId = zc_Movement_GoodsSP()
                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                            AND COALESCE (ObjectBoolean_ElectronicPrescript.ValueData, False) = False
                          )
 
       SELECT ROW_NUMBER() OVER (ORDER BY Movement.OperDate)::Integer AS Ord
@@ -276,7 +281,7 @@ BEGIN
         AND MovementItem.Amount > 0
         AND MovementItem.IsErased = False
         AND COALESCE(MovementBoolean_PaperRecipeSP.ValueData, False) = False
-        AND COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 0) <> 20079831
+        AND COALESCE (tmpGoodsSP.GoodsId, 0) <> 0
         
       ORDER BY Movement.OperDate;
 
@@ -295,5 +300,4 @@ $BODY$
 
 --SELECT * FROM gpSelect_Movement_CheckHelsi (inStartDate:= '24.05.2022', inSession:= '3')
 
-select * from gpSelect_Movement_CheckHelsi(inStartDate := ('20.03.2023')::TDateTime ,  inSession := '3')
-where InvNumberSP = '0000-E399-HKHA-9138';
+select * from gpSelect_Movement_CheckHelsi(inStartDate := CURRENT_DATE ,  inSession := '3');

@@ -28,7 +28,7 @@ type
     Property Local: Boolean read GetLocal Write SetLocal;
     Property LocalMaxAtempt: Byte read GetLocalMaxAtempt Write SetLocalMaxAtempt;
     property Login: String read FLogin;
-    constructor Create(ASession: String; ALocal: Boolean = false);
+    constructor Create(ASession: String; ALogin: String = ''; ALocal: Boolean = false);
   end;
 
   ///	<summary>
@@ -95,11 +95,11 @@ Begin
   result := True;
 End;
 {------------------------------------------------------------------------------}
-constructor TUser.Create(ASession: String; ALocal: Boolean = false);
+constructor TUser.Create(ASession: String; ALogin: String = ''; ALocal: Boolean = false);
 begin
   FSession := ASession;
   FLocal := ALocal;
-  FLogin := '';
+  FLogin := ALogin;
 end;
 {------------------------------------------------------------------------------}
 class function TAuthentication.spCheckGoogleOTPAuthent (pStorage: IStorage; const pSession, pProjectName, pUserName, pGoogleSecret: string; ANeedShowException: Boolean = True): boolean;

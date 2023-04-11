@@ -340,7 +340,7 @@ Begin
       Begin
         if (DecodeString(User.FieldByName('Pass').AsString) = APassword) then
         Begin
-          pUser := TUser.Create(User.FieldByName('Id').AsString, True);
+          pUser := TUser.Create(User.FieldByName('Id').AsString, User.FieldByName('Name').AsString, True);
           IniUtils.gUserCode  := User.FieldByName('Code').AsInteger;
           result := True;
           exit;
