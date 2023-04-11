@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer
              , Comment TVarChar
              , isFixedPercent Boolean
              , AddBonusPercent TFloat
+             , PercPositionCheck TFloat
              , MakerPromoName  TVarChar
              , isErased Boolean
               )
@@ -98,6 +99,7 @@ BEGIN
                                 , MIString_Comment.ValueData       ::TVarChar AS Comment
                                 , COALESCE (MIBoolean_FixedPercent.ValueData, FALSE)                                AS isFixedPercent
                                 , MIFloat_AddBonusPercent.ValueData                                                 AS AddBonusPercent
+                                , MIFloat_PercPositionCheck.ValueData                                               AS PercPositionCheck
                                 , MI_PromoUnit.IsErased
                          FROM MovementItem AS MI_PromoUnit
                              LEFT JOIN MovementItemString AS MIString_Comment
@@ -113,6 +115,9 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_AddBonusPercent
                                                          ON MIFloat_AddBonusPercent.MovementItemId = MI_PromoUnit.Id
                                                         AND MIFloat_AddBonusPercent.DescId = zc_MIFloat_AddBonusPercent()
+                             LEFT JOIN MovementItemFloat AS MIFloat_PercPositionCheck
+                                                         ON MIFloat_PercPositionCheck.MovementItemId = MI_PromoUnit.Id
+                                                        AND MIFloat_PercPositionCheck.DescId = zc_MIFloat_PercPositionCheck()
 
                              LEFT JOIN MovementItemBoolean AS MIBoolean_FixedPercent
                                                            ON MIBoolean_FixedPercent.MovementItemId = MI_PromoUnit.Id
@@ -134,7 +139,8 @@ BEGIN
                  , COALESCE(MI_PromoUnit.Comment, '') ::TVarChar AS Comment
                  , COALESCE(MI_PromoUnit.isFixedPercent, False) ::BOOLEAN AS isFixedPercent
                  , MI_PromoUnit.AddBonusPercent              AS AddBonusPercent
-                 , GoodsPromo.MakerPromoName                                                                  AS MakerPromoName 
+                 , MI_PromoUnit.PercPositionCheck            AS PercPositionCheck
+                 , GoodsPromo.MakerPromoName                 AS MakerPromoName 
                  , COALESCE(MI_PromoUnit.IsErased,FALSE)     AS isErased
             FROM tmpPrice
                 FULL OUTER JOIN MI_PromoUnit ON tmpPrice.GoodsId = MI_PromoUnit.GoodsId
@@ -157,6 +163,7 @@ BEGIN
                 , MIString_Comment.ValueData       ::TVarChar AS Comment
                 , COALESCE (MIBoolean_FixedPercent.ValueData, FALSE)                                         AS isFixedPercent
                 , MIFloat_AddBonusPercent.ValueData                                                          AS AddBonusPercent
+                , MIFloat_PercPositionCheck.ValueData                                                        AS PercPositionCheck
                 , GoodsPromo.MakerPromoName                                                                  AS MakerPromoName 
                 , MI_PromoUnit.IsErased
            FROM MovementItem AS MI_PromoUnit
@@ -173,6 +180,9 @@ BEGIN
               LEFT JOIN MovementItemFloat AS MIFloat_AddBonusPercent
                                           ON MIFloat_AddBonusPercent.MovementItemId = MI_PromoUnit.Id
                                          AND MIFloat_AddBonusPercent.DescId = zc_MIFloat_AddBonusPercent()
+              LEFT JOIN MovementItemFloat AS MIFloat_PercPositionCheck
+                                          ON MIFloat_PercPositionCheck.MovementItemId = MI_PromoUnit.Id
+                                         AND MIFloat_PercPositionCheck.DescId = zc_MIFloat_PercPositionCheck()
 
               LEFT JOIN MovementItemBoolean AS MIBoolean_FixedPercent
                                             ON MIBoolean_FixedPercent.MovementItemId = MI_PromoUnit.Id

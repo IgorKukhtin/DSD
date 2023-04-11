@@ -293,6 +293,9 @@ BEGIN
                                    LEFT JOIN ObjectLink AS ObjectLink_GroupMedicalProgramSP
                                                         ON ObjectLink_GroupMedicalProgramSP.ObjectId = COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882)
                                                        AND ObjectLink_GroupMedicalProgramSP.DescId = zc_ObjectLink_MedicalProgramSP_GroupMedicalProgramSP()
+                                   LEFT JOIN ObjectBoolean AS ObjectBoolean_ElectronicPrescript
+                                                           ON ObjectBoolean_ElectronicPrescript.ObjectId =COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882)
+                                                          AND ObjectBoolean_ElectronicPrescript.DescId = zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript()
 
                                    LEFT JOIN MovementBoolean AS MovementBoolean_PaperRecipeSP
                                                              ON MovementBoolean_PaperRecipeSP.MovementId = Movement_Check.Id
@@ -303,7 +306,7 @@ BEGIN
                                 AND Movement_Check.StatusId = zc_Enum_Status_Complete()
                                 AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
                                 AND COALESCE (MovementLinkObject_SPKind.ObjectId, 0) = zc_Enum_SPKind_SP()
-                                AND (COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882) = inMedicalProgramSPId OR COALESCE(inMedicalProgramSPId, 0) = 0 AND COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882) <> 20079831)
+                                AND (COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882) = inMedicalProgramSPId OR COALESCE(inMedicalProgramSPId, 0) = 0 AND COALESCE (ObjectBoolean_ElectronicPrescript.ValueData, False) = False)
                                 AND (COALESCE (ObjectLink_GroupMedicalProgramSP.ChildObjectId, 0) = inGroupMedicalProgramSPId OR COALESCE(inGroupMedicalProgramSPId, 0) = 0)
                                 AND COALESCE (MovementBoolean_PaperRecipeSP.ValueData,  False) = False
                               )
@@ -854,5 +857,4 @@ $BODY$
 
 
 select * from gpReport_Check_SP(inStartDate := ('04.04.2023')::TDateTime , inEndDate := ('30.04.2023')::TDateTime , inJuridicalId := 1311462 , inUnitId := 0 , inHospitalId := 0 , inJuridicalMedicId := 10959824 , inMedicalProgramSPId := 0 , inGroupMedicalProgramSPId := 0 ,  inSession := '3');
-
 

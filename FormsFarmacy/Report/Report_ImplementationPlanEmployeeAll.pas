@@ -43,6 +43,7 @@ type
     DaysWorked: TcxGridDBColumn;
     FixedPercent: TcxGridDBColumn;
     AddBonusPercentTab: TcxGridDBColumn;
+    TotalExecutionFixed: TcxGridDBColumn;
   private
     { Private declarations }
   public

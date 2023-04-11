@@ -1625,10 +1625,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_PriceMargSP() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_PriceMargSP', 'Гранична оптово-відпускна ціна в перерахунку на одиницю лікарської форми (грн.)(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceMargSP');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_PercPositionCheck() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PercPositionCheck'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PercPositionCheck', 'Процент выполнения маркет позиции с галочкой' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PercPositionCheck');
+  
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 10.04.23                                                                                                     * zc_MIFloat_PercPositionCheck
  01.04.23                                                                                                     * zc_MIFloat_PriceMargSP
  27.03.23         * zc_MIFloat_SummMedicdayAdd
                     zc_MIFloat_SummSkip
