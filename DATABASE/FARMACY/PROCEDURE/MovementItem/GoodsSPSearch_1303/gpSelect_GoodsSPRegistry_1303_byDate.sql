@@ -132,6 +132,60 @@ BEGIN
                                         AND MovementItem.isErased   = FALSE
                                         AND COALESCE (MovementItem.ObjectId, 0) <> 0
                                      )
+     , tmpMovGoodsSPSearch_408 AS (SELECT Movement.Id                           AS Id
+                                         , Movement.InvNumber                    AS InvNumber
+                                         , Movement.OperDate                     AS OperDate
+                                         , MovementDate_OperDateStart.ValueData  AS OperDateStart
+                                         , MovementDate_OperDateEnd.ValueData    AS OperDateEnd
+                                         , ROW_NUMBER() OVER (ORDER BY MovementDate_OperDateStart.ValueData) AS Ord
+
+                                    FROM Movement 
+
+                                         LEFT JOIN MovementDate AS MovementDate_OperDateStart
+                                                                ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                                               AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+
+                                         LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+                                                                ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                                               AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+
+                                    WHERE Movement.DescId = zc_Movement_GoodsSP408_1303()
+                                      AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                      AND Movement.Id >= 28678810
+                                      AND MovementDate_OperDateStart.ValueData <= inEndDate 
+                                      AND MovementDate_OperDateEnd.ValueData >= inStartDate
+                                    )
+     , tmpMIGoodsSPSearch_408All AS (SELECT MovementItem.Id
+                                           , MovementItem.MovementId
+                                           , MovementItem.ObjectId                                         AS GoodsId
+                                           , MIFloat_PriceOptSP.ValueData                                  AS PriceOptSP
+                                           , ROUND(MIFloat_PriceOptSP.ValueData  *  1.1 * 1.1 * (1.0 + COALESCE(ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2)::TFloat AS PriceSale
+
+                                                                            -- № п/п - на всякий случай
+                                           , ROW_NUMBER() OVER (PARTITION BY MovementItem.MovementId, MovementItem.ObjectId ORDER BY MIDate_OrderDateSP.ValueData DESC) AS Ord
+                                      FROM MovementItem
+
+                                           LEFT JOIN MovementItemFloat AS MIFloat_PriceOptSP
+                                                                       ON MIFloat_PriceOptSP.MovementItemId = MovementItem.Id
+                                                                      AND MIFloat_PriceOptSP.DescId = zc_MIFloat_PriceOptSP()
+                                           LEFT JOIN MovementItemFloat AS MIFloat_OrderNumberSP
+                                                                       ON MIFloat_OrderNumberSP.MovementItemId = MovementItem.Id
+                                                                      AND MIFloat_OrderNumberSP.DescId = zc_MIFloat_OrderNumberSP()  
+                                           LEFT JOIN MovementItemDate AS MIDate_OrderDateSP
+                                                                      ON MIDate_OrderDateSP.MovementItemId = MovementItem.Id
+                                                                     AND MIDate_OrderDateSP.DescId = zc_MIDate_OrderDateSP()
+
+                                           LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId 
+                                           LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                                                ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods.NDSKindId
+
+                                      WHERE MovementItem.MovementId in (SELECT tmpMovGoodsSPSearch_408.ID FROM tmpMovGoodsSPSearch_408)
+                                        AND MovementItem.DescId     = zc_MI_Master()
+                                        AND MovementItem.isErased   = FALSE
+                                        AND COALESCE (MovementItem.ObjectId, 0) <> 0
+                                        AND COALESCE (MIFloat_PriceOptSP.ValueData, 0) > 0
+                                        AND COALESCE (MovementItem.ObjectId, 0) NOT IN (SELECT DISTINCT tmpMIGoodsSPSearch_1303All.GoodsId FROM tmpMIGoodsSPSearch_1303All)
+                                     )
 
 
                                       
@@ -151,6 +205,23 @@ BEGIN
 
          LEFT JOIN tmpMovGoodsSPSearch_1303 AS tmpMovGoodsSPSearch_1303Next
                                             ON tmpMovGoodsSPSearch_1303Next.Ord =  tmpMovGoodsSPSearch_1303.Ord + 1
+    UNION ALL
+    SELECT tmpMIGoodsSPSearch_408All.GoodsId
+         , tmpMovGoodsSPSearch_408.OperDateStart            AS DateStart
+         , CASE WHEN tmpMovGoodsSPSearch_408Next.OperDateStart IS NULL
+                  OR tmpMovGoodsSPSearch_408.OperDateEnd > tmpMovGoodsSPSearch_408Next.OperDateStart
+           THEN tmpMovGoodsSPSearch_408.OperDateEnd  
+           ELSE tmpMovGoodsSPSearch_408Next.OperDateStart - INTERVAL '1 DAY' END :: TDateTime  AS DateEnd
+         , tmpMIGoodsSPSearch_408All.PriceOptSP
+         , tmpMIGoodsSPSearch_408All.PriceSale
+         , tmpMIGoodsSPSearch_408All.Id                     AS MovementItemId
+    FROM tmpMovGoodsSPSearch_408
+
+         INNER JOIN tmpMIGoodsSPSearch_408All ON tmpMIGoodsSPSearch_408All.MovementId = tmpMovGoodsSPSearch_408.Id
+                                             AND tmpMIGoodsSPSearch_408All.Ord = 1
+
+         LEFT JOIN tmpMovGoodsSPSearch_408 AS tmpMovGoodsSPSearch_408Next
+                                           ON tmpMovGoodsSPSearch_408Next.Ord =  tmpMovGoodsSPSearch_408.Ord + 1
     UNION ALL
     SELECT tmpMIGoodsSP_1303.GoodsId
          , tmpMIGoodsSP_1303.DateStart
@@ -178,4 +249,4 @@ $BODY$
 -- 
 
 
-select * from gpSelect_GoodsSPRegistry_1303_byDate(inStartDate := '16.07.2022', inEndDate  := '31.07.2022', inSession := '3')
+select * from gpSelect_GoodsSPRegistry_1303_byDate(inStartDate := '01.04.2023', inEndDate  := '30.04.2023', inSession := '3')
