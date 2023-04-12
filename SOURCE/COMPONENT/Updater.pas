@@ -677,13 +677,13 @@ begin
      FileWriteString(ExtractFilePath(ParamStr(0)) + 'midas.dll', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('midas.dll'), ''));
 
   //4.1. libeay32.dll грузим - дл€ SMS
-  if (gc_ProgramName = 'FarmacyCash.exe') then UpdateDll('libeay32.dll');
+  if dsdProject = prFarmacy then UpdateDll('libeay32.dll');
 
   //4.2. ssleay32.dll грузим - дл€ SMS
-  if (gc_ProgramName = 'FarmacyCash.exe') then UpdateDll('ssleay32.dll');
+  if dsdProject = prFarmacy then UpdateDll('ssleay32.dll');
 
   //4.3. sqlite3.dll грузим - дл€ SQLite
-  if (gc_ProgramName = 'FarmacyCash.exe') then UpdateDll('sqlite3.dll');
+  if dsdProject = prFarmacy then UpdateDll('sqlite3.dll');
 
   //5. «апускаем Upgrader дл€ замени EXE
   Execute(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe ' + ParamStr(0), ExtractFileDir(ParamStr(0)));

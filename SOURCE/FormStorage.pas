@@ -4,7 +4,7 @@ interface
 
 uses
   Classes, Forms, dsdDB, Xml.XMLDoc, ParentForm, UnilWin, UtilConst,
-  StorageSQLite;
+  StorageSQLite, Datasnap.DBClient;
 
 type
 
@@ -169,7 +169,9 @@ begin
                // »щем кроссы и если есть то форму грузим заново
                isNewLoad := False;
                for j := 0 to Screen.Forms[i].ComponentCount - 1 do
-                 if (Screen.Forms[i].Components[j] is TCrossDBViewAddOn) or (Screen.Forms[i].Components[j] is TCrossDBViewReportAddOn) then
+                 if (Screen.Forms[i].Components[j] is TCrossDBViewAddOn) or
+                    (Screen.Forms[i].Components[j] is TCrossDBViewReportAddOn) or
+                    (Screen.Forms[i].Components[j] is TClientDataSet) and not (TClientDataSet(Screen.Forms[i].Components[j]).State in [dsInactive, dsBrowse])  then
                  begin
                     isNewLoad := True;
                     Break;

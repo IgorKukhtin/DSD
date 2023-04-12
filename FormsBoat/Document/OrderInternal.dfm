@@ -2141,6 +2141,19 @@ object OrderInternalForm: TOrderInternalForm
       ImageIndex = 14
       ShortCut = 113
     end
+    object actInsertRecordBoat: TInsertRecord
+      Category = 'Boat'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGrid_MasterDBTableView
+      Action = actChoiceFormOrderClient
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
+      ImageIndex = 0
+    end
     object actMIDetailAllProtocolOpenForm: TdsdOpenForm
       Category = 'Protocol'
       TabSheet = cxTabSheet1
@@ -2625,19 +2638,6 @@ object OrderInternalForm: TOrderInternalForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1059#1079#1077#1083'>'
       ShortCut = 45
-      ImageIndex = 0
-    end
-    object actInsertRecordBoat: TInsertRecord
-      Category = 'Boat'
-      TabSheet = cxTabSheetMain
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      View = cxGrid_MasterDBTableView
-      Action = actChoiceFormOrderClient
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
       ImageIndex = 0
     end
     object actChoiceFormOrderClientItem: TOpenChoiceForm

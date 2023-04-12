@@ -127,8 +127,13 @@ BEGIN
                                                             ON MIString_DosageIdSP.MovementItemId = MovementItem.Id
                                                            AND MIString_DosageIdSP.DescId = zc_MIString_DosageIdSP()
 
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_ElectronicPrescript
+                                                       ON ObjectBoolean_ElectronicPrescript.ObjectId = COALESCE (MLO_MedicalProgramSP.ObjectId, 18076882)
+                                                      AND ObjectBoolean_ElectronicPrescript.DescId = zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript()
+
                           WHERE Movement.DescId = zc_Movement_GoodsSP()
                             AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                            AND COALESCE (ObjectBoolean_ElectronicPrescript.ValueData, False) = False
                          ),
            tmpMovement AS (SELECT Movement.*
                                 , Object_Helsi_IdSP.ValueData                        AS SPKindName
@@ -146,12 +151,16 @@ BEGIN
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicalProgramSP
                                                              ON MovementLinkObject_MedicalProgramSP.MovementId = Movement.Id
                                                             AND MovementLinkObject_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
+ 
+                                LEFT JOIN ObjectBoolean AS ObjectBoolean_ElectronicPrescript
+                                                        ON ObjectBoolean_ElectronicPrescript.ObjectId = COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882)
+                                                       AND ObjectBoolean_ElectronicPrescript.DescId = zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript()
                                                             
                            WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                              AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                              AND Movement.DescId = zc_Movement_Check()
                              AND Movement.StatusId = zc_Enum_Status_Complete()
-                             AND COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 0) <> 20079831
+                             AND COALESCE (ObjectBoolean_ElectronicPrescript.ValueData, False) = False
                            ), 
            tmpMovementLinkObject AS (SELECT * FROM MovementLinkObject 
                                      WHERE MovementLinkObject.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)), 
@@ -297,6 +306,7 @@ BEGIN
       WHERE MovementItem.Amount > 0
         AND MovementItem.IsErased = False
         AND COALESCE(MovementBoolean_PaperRecipeSP.ValueData, False) = False
+        AND COALESCE (tmpGoodsSP.GoodsId, 0) <> 0
       ORDER BY Object_Parent.ValueData, Object_Unit.ValueData, Movement.OperDate;
 
 END;

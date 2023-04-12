@@ -82,6 +82,13 @@ type
     cxLabel20: TcxLabel;
     cxLabel21: TcxLabel;
     cxLabel22: TcxLabel;
+    cxLabel23: TcxLabel;
+    cxLabel24: TcxLabel;
+    cxLabel25: TcxLabel;
+    cxLabel26: TcxLabel;
+    cxLabel27: TcxLabel;
+    cxLabel28: TcxLabel;
+    cxLabel29: TcxLabel;
   private
     { Private declarations }
   public

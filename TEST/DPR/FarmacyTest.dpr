@@ -1286,7 +1286,9 @@ uses
   GoodsSPInform_1303Journal in '..\..\FormsFarmacy\Document\GoodsSPInform_1303Journal.pas' {GoodsSPInform_1303JournalForm: TParentForm},
   GoodsSPInform_1303 in '..\..\FormsFarmacy\Document\GoodsSPInform_1303.pas' {GoodsSPInform_1303Form: TParentForm},
   Report_PaymentHelsi in '..\..\FormsFarmacy\Report\Report_PaymentHelsi.pas' {Report_PaymentHelsiForm: TParentForm},
-  SaleInsuranceCompaniesCash in '..\..\FormsFarmacy\Document\SaleInsuranceCompaniesCash.pas' {SaleInsuranceCompaniesCashForm: TParentForm};
+  SaleInsuranceCompaniesCash in '..\..\FormsFarmacy\Document\SaleInsuranceCompaniesCash.pas' {SaleInsuranceCompaniesCashForm: TParentForm},
+  GoodsSP408_1303Journal in '..\..\FormsFarmacy\Document\GoodsSP408_1303Journal.pas' {GoodsSP408_1303JournalForm: TParentForm},
+  GoodsSP408_1303 in '..\..\FormsFarmacy\Document\GoodsSP408_1303.pas' {GoodsSP408_1303Form: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

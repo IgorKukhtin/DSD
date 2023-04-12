@@ -2853,6 +2853,11 @@ end;
 procedure TLoadFormTest.LoadGoodsSP_1303FormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP408_1303JournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSP408_1303JournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSP408_1303Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSP408_1303Form');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPInform_1303JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPInform_1303JournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPInform_1303Form'));

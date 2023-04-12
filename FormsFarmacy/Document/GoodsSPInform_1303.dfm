@@ -1,5 +1,5 @@
 inherited GoodsSPInform_1303Form: TGoodsSPInform_1303Form
-  Caption = #1056#1077#1077#1089#1090#1088' '#1055#1086#1089#1090'. 1303 ('#1055#1088#1080#1082#1072#1079' 408)'
+  Caption = #1056#1077#1077#1089#1090#1088' '#1055#1086#1089#1090'. 1303 ('#1088#1077#1077#1089#1090#1088' 408 '#1089' '#1089#1072#1081#1090#1072')'
   ClientHeight = 554
   ClientWidth = 1043
   AddOnFormData.AddOnFormRefresh.ParentList = 'Loss'

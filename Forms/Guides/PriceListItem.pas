@@ -105,9 +105,14 @@ type
     actInsertUpdate_Zero: TdsdExecStoredProc;
     macUpdate_Zero: TMultiAction;
     macUpdate_Zero_list: TMultiAction;
-    bb: TdxBarButton;
+    bbUpdate_Zero: TdxBarButton;
     spGet_error: TdsdStoredProc;
     actGet_error: TdsdExecStoredProc;
+    actInsertRecordTradeMark: TInsertRecord;
+    actChoiceFormTradeMark: TOpenChoiceForm;
+    bbInsertRecord_TradeMark: TdxBarButton;
+    bbChoiceFormTradeMark: TdxBarButton;
+    DescName: TcxGridDBColumn;
   private
     { Private declarations }
   public

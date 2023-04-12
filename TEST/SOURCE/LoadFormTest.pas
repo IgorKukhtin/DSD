@@ -2288,12 +2288,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItem_SeparateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItem_SeparateForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
   {TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListEditForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemForm');
   exit;
@@ -2309,7 +2309,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListTaxDialogForm');
- }
+
 end;
 
 procedure TLoadFormTest.LoadQualityFormTest;
@@ -3765,19 +3765,20 @@ end;
 
 procedure TLoadFormTest.LoadStickerFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerHeaderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerHeaderForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerHeaderEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerHeaderEditForm');
    exit;
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSticker_ListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSticker_ListForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerEditForm');
   //
@@ -3819,12 +3820,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerNormEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerSortNormForm');
   //
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerFileForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerFileForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerFileEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerFileEditForm');
-
+  exit;
+  {
   //StickerPack
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerPackForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerPackForm');

@@ -1183,6 +1183,14 @@ begin
         FSaveLocalVIP := 0;
       end;
 
+      //Получение товаров
+      if MinutesBetween(iniLocalListGoodsDateGet, Now) >= 12 then
+      begin
+        Add_Log('Start SaveLocalGoods');
+        if not gc_User.Local then SaveLocalGoods;
+        Add_Log('End SaveLocalGoods');
+      end;
+
     end else
     begin
       tiServise.Hint := 'Ошибка связи с сервером.';

@@ -44,7 +44,6 @@ object StickerFileForm: TStickerFileForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -254,6 +253,146 @@ object StickerFileForm: TStickerFileForm
         HeaderHint = #1054#1090#1089#1090#1091#1087' '#1089#1083#1077#1074#1072' 2-'#1086#1081' '#1089#1090#1088'.'
         Options.Editing = False
         Width = 23
+      end
+      object Width1_70_70: TcxGridDBColumn
+        Caption = '1-'#1072#1103' 70*70'
+        DataBinding.FieldName = 'Width1_70_70'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1080#1088#1080#1085#1072' 1-'#1086#1081' '#1089#1090#1088'. (70*70)'
+        Options.Editing = False
+        Width = 42
+      end
+      object Width2_70_70: TcxGridDBColumn
+        Caption = '2-'#1072#1103' 70*70'
+        DataBinding.FieldName = 'Width2_70_70'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1080#1088#1080#1085#1072' 2-'#1086#1081' '#1089#1090#1088'. (70*70)'
+        Options.Editing = False
+        Width = 42
+      end
+      object Width3_70_70: TcxGridDBColumn
+        Caption = '3-'#1072#1103' 70*70'
+        DataBinding.FieldName = 'Width3_70_70'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1080#1088#1080#1085#1072' 3-'#1086#1081' '#1089#1090#1088'. (70*70)'
+        Options.Editing = False
+        Width = 42
+      end
+      object Width4_70_70: TcxGridDBColumn
+        Caption = '4-'#1072#1103' 70*70'
+        DataBinding.FieldName = 'Width4_70_70'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1080#1088#1080#1085#1072' 4-'#1086#1081' '#1089#1090#1088'. (70*70)'
+        Options.Editing = False
+        Width = 42
+      end
+      object Width5_70_70: TcxGridDBColumn
+        Caption = '5-'#1072#1103' 70*70'
+        DataBinding.FieldName = 'Width5_70_70'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1080#1088#1080#1085#1072' 5-'#1086#1081' '#1089#1090#1088'. (70*70)'
+        Options.Editing = False
+        Width = 42
+      end
+      object Width6_70_70: TcxGridDBColumn
+        Caption = '6-'#1072#1103' 70*70'
+        DataBinding.FieldName = 'Width6_70_70'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1080#1088#1080#1085#1072' 6-'#1086#1081' '#1089#1090#1088'. (70*70)'
+        Options.Editing = False
+        Width = 42
+      end
+      object Width7_70_70: TcxGridDBColumn
+        Caption = '7-'#1072#1103' 70*70'
+        DataBinding.FieldName = 'Width7_70_70'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1080#1088#1080#1085#1072' 7-'#1086#1081' '#1089#1090#1088'. (70*70)'
+        Options.Editing = False
+        Width = 42
+      end
+      object Width8_70_70: TcxGridDBColumn
+        Caption = '8-'#1072#1103' 70*70'
+        DataBinding.FieldName = 'Width8_70_70'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1080#1088#1080#1085#1072' 8-'#1086#1081' '#1089#1090#1088'. (70*70)'
+        Options.Editing = False
+        Width = 42
+      end
+      object Width9_70_70: TcxGridDBColumn
+        Caption = '9-'#1072#1103' 70*70'
+        DataBinding.FieldName = 'Width9_70_70'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1080#1088#1080#1085#1072' 9-'#1086#1081' '#1089#1090#1088'. (70*70)'
+        Options.Editing = False
+        Width = 42
+      end
+      object Width10_70_70: TcxGridDBColumn
+        Caption = '10-'#1072#1103' 70*70'
+        DataBinding.FieldName = 'Width10_70_70'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1080#1088#1080#1085#1072' 10-'#1086#1081' '#1089#1090#1088'. (70*70)'
+        Options.Editing = False
+        Width = 42
+      end
+      object Level1_70_70: TcxGridDBColumn
+        Caption = #1059#1088'.1 70*70'
+        DataBinding.FieldName = 'Level1_70_70'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1080#1088#1080#1085#1072' 1-'#1075#1086' '#1091#1088#1086#1074#1085#1103' (70*70)'
+        Options.Editing = False
+        Width = 42
+      end
+      object Level2_70_70: TcxGridDBColumn
+        Caption = #1059#1088'.2 70*70'
+        DataBinding.FieldName = 'Level2_70_70'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1064#1080#1088#1080#1085#1072' 2-'#1075#1086' '#1091#1088#1086#1074#1085#1103' (70*70)'
+        Options.Editing = False
+        Width = 42
+      end
+      object Left1_70_70: TcxGridDBColumn
+        Caption = '1-'#1072#1103' 70*70'
+        DataBinding.FieldName = 'Left1_70_70'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1089#1090#1091#1087' '#1089#1083#1077#1074#1072' 1-'#1086#1081' '#1089#1090#1088'.'
+        Options.Editing = False
+        Width = 42
+      end
+      object Left2_70_70: TcxGridDBColumn
+        Caption = '2-'#1072#1103' 70*70'
+        DataBinding.FieldName = 'Left2_70_70'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1089#1090#1091#1087' '#1089#1083#1077#1074#1072' 2-'#1086#1081' '#1089#1090#1088'. (70*70)'
+        Options.Editing = False
+        Width = 42
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -681,10 +820,13 @@ object StickerFileForm: TStickerFileForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 368
     Top = 128
   end

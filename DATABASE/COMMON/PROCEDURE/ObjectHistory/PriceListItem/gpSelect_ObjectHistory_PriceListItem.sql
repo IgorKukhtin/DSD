@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListItem(
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer , ObjectId Integer
-                , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+                , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, DescName TVarChar
                 , GoodsKindId Integer, GoodsKindName TVarChar
                 , isErased Boolean, GoodsGroupNameFull TVarChar
                 , MeasureName TVarChar
@@ -221,7 +221,8 @@ BEGIN
            , tmpPrice.PriceListItemObjectId AS ObjectId
            , Object_Goods.Id                AS GoodsId     --ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode
-           , Object_Goods.ValueData         AS GoodsName
+           , Object_Goods.ValueData         AS GoodsName 
+           , ObjectDesc_Goods.ItemName      AS DescName
            , Object_GoodsKind.Id            AS GoodsKindId
            , Object_GoodsKind.ValueData     AS GoodsKindName
            , Object_Goods.isErased          AS isErased
@@ -289,6 +290,8 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyId
        FROM tmpData AS tmpPrice
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpPrice.GoodsId
+          LEFT JOIN ObjectDesc AS ObjectDesc_Goods ON ObjectDesc_Goods.Id = Object_Goods.DescId
+          
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpPrice.GoodsKindId
           
           LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
@@ -414,8 +417,9 @@ BEGIN
              ObjectHistory_PriceListItem.Id
            , ObjectLink_PriceListItem_PriceList.ObjectId
            , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
-           , Object_Goods.ObjectCode AS GoodsCode
-           , Object_Goods.ValueData  AS GoodsName
+           , Object_Goods.ObjectCode    AS GoodsCode
+           , Object_Goods.ValueData     AS GoodsName
+           , ObjectDesc_Goods.ItemName  AS DescName
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
            , Object_Goods.isErased   AS isErased
@@ -488,7 +492,8 @@ BEGIN
                                  ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                 AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_PriceListItem_Goods.ChildObjectId
-
+            LEFT JOIN ObjectDesc AS ObjectDesc_Goods ON ObjectDesc_Goods.Id = Object_Goods.DescId
+            
             LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
                                  ON ObjectLink_PriceListItem_GoodsKind.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                 AND ObjectLink_PriceListItem_GoodsKind.DescId   = zc_ObjectLink_PriceListItem_GoodsKind()

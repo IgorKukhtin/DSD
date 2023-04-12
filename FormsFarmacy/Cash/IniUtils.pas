@@ -525,7 +525,7 @@ begin
   end;
 end;
 
-//Регистрационный номер текущего кассового аппарата
+//Дата последней загрузки остатков
 function iniLocalListGoodsDateGet: TDateTime;
 begin
   Result := GetValueDateTime('Common','ListGoodsDate',IncDay(Now(), - 1));

@@ -773,6 +773,65 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerFile_Left2() RETURNS Integer AS
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_StickerFile_Left2', zc_Object_StickerFile(), '—колько пробелов слева дл€ остальных, начина€ со 2-ой' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Left2');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerFile_Width1_70_70() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width1_70_70'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_StickerFile_Width1_70_70', zc_Object_StickerFile(), 'Ўирина 1-ой строки 70*70' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width1_70_70');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerFile_Width2_70_70() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width2_70_70'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_StickerFile_Width2_70_70', zc_Object_StickerFile(), 'Ўирина 2-ой строки 70*70' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width2_70_70');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerFile_Width3_70_70() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width3_70_70'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_StickerFile_Width3_70_70', zc_Object_StickerFile(), 'Ўирина 3-ой строки 70*70' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width3_70_70');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerFile_Width4_70_70() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width4_70_70'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_StickerFile_Width4_70_70', zc_Object_StickerFile(), 'Ўирина 4-ой строки 70*70' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width4_70_70');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerFile_Width5_70_70() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width5_70_70'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_StickerFile_Width5_70_70', zc_Object_StickerFile(), 'Ўирина 5-ой строки 70*70' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width5_70_70');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerFile_Width6_70_70() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width6_70_70'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_StickerFile_Width6_70_70', zc_Object_StickerFile(), 'Ўирина 6-ой строки 70*70' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width6_70_70');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerFile_Width7_70_70() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width7_70_70'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_StickerFile_Width7_70_70', zc_Object_StickerFile(), 'Ўирина 7-ой строки 70*70' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width7_70_70');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerFile_Width8_70_70() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width8_70_70'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_StickerFile_Width8_70_70', zc_Object_StickerFile(), 'Ўирина 8-ой строки 70*70' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width8_70_70');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerFile_Width9_70_70() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width9_70_70'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_StickerFile_Width9_70_70', zc_Object_StickerFile(), 'Ўирина 9-ой строки 70*70' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width9_70_70');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerFile_Width10_70_70() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width10_70_70'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_StickerFile_Width10_70_70', zc_Object_StickerFile(), 'Ўирина 10-ой строки 70*70' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Width10_70_70');
+
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerFile_Level1_70_70() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Level1_70_70'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_StickerFile_Level1_70_70', zc_Object_StickerFile(), 'Ўирина Level1 70*70' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Level1_70_70');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerFile_Level2_70_70() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Level2_70_70'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_StickerFile_Level2_70_70', zc_Object_StickerFile(), 'Ўирина Level2 70*70' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Level2_70_70');
+
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerFile_Left1_70_70() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Left1_70_70'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_StickerFile_Left1_70_70', zc_Object_StickerFile(), '—колько пробелов слева дл€ 1-ой √лавной строки 70*70' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Left1_70_70');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerFile_Left2_70_70() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Left2_70_70'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_StickerFile_Left2_70_70', zc_Object_StickerFile(), '—колько пробелов слева дл€ остальных, начина€ со 2-ой 70*70' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerFile_Left2_70_70');
+
+
 
 -- StickerProperty
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_StickerProperty_Value1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StickerProperty_Value1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

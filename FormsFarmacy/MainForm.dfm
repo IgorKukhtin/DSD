@@ -5448,7 +5448,7 @@
     object actGoodsSPInform_1303Journal: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1056#1077#1077#1089#1090#1088' '#1055#1086#1089#1090'. 1303 ('#1055#1088#1080#1082#1072#1079' 408)'
+      Caption = #1056#1077#1077#1089#1090#1088' 408 '#1089' '#1089#1072#1081#1090#1072
       FormName = 'TGoodsSPInform_1303JournalForm'
       FormNameParam.Value = 'TGoodsSPInform_1303JournalForm'
       FormNameParam.DataType = ftString
@@ -5462,6 +5462,17 @@
       Caption = #1054#1090#1095#1077#1090' '#1086#1087#1083#1072#1090#1099' "'#1061#1077#1083#1089#1080'"'
       FormName = 'TReport_PaymentHelsiForm'
       FormNameParam.Value = 'TReport_PaymentHelsiForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsSP408_1303Journal: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1056#1077#1077#1089#1090#1088' 408 '#1076#1086#1082#1091#1084#1077#1085#1090' '#1052#1054#1047
+      FormName = 'TGoodsSP408_1303JournalForm'
+      FormNameParam.Value = 'TGoodsSP408_1303JournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -5663,7 +5674,13 @@
           Action = actGoodsSPSearch_1303Journal
         end
         object N13034081: TMenuItem
-          Action = actGoodsSPInform_1303Journal
+          Caption = #1056#1077#1077#1089#1090#1088' '#1055#1086#1089#1090'. 1303 ('#1056#1077#1077#1089#1090#1088' 408)'
+          object N4082: TMenuItem
+            Action = actGoodsSP408_1303Journal
+          end
+          object N4081: TMenuItem
+            Action = actGoodsSPInform_1303Journal
+          end
         end
       end
       object N103: TMenuItem
