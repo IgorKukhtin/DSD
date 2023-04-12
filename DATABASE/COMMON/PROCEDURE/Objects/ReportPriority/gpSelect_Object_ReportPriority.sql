@@ -122,6 +122,34 @@ BEGIN
              , 18                                 :: Integer  AS Code
              , 'gpUpdate_MI_PersonalService_Compensation' :: TVarChar AS Name
              , FALSE                              :: Boolean  AS isErased
+             
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 19                                 :: Integer  AS Code
+             , 'gpReport_JuridicalBalance'        :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+             
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 20                                 :: Integer  AS Code
+             , 'gpComplete_Movement_PersonalService'        :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 21                                 :: Integer  AS Code
+             , 'gpReComplete_Movement_PersonalService'        :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+             
+       UNION ALL
+        SELECT 0                                  :: Integer  AS Id
+             , 22                                 :: Integer  AS Code
+             , 'gpUpdate_Status_PersonalService'        :: TVarChar AS Name
+             , FALSE                              :: Boolean  AS isErased
+             
+             
+             
+             
 
         ORDER BY 2
        ;
