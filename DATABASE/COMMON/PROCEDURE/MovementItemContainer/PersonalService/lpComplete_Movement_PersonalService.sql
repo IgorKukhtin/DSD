@@ -48,6 +48,9 @@ BEGIN
 
      -- !!!СНАЧАЛА - Ведомость охрана!!!
      IF inUserId > 0 -- AND vbPersonalServiceListId = 301885 -- Ведомость охрана
+     AND NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbPersonalServiceListId AND OB.DescId = zc_ObjectBoolean_PersonalServiceList_Recalc() AND OB.ValueData = TRUE)
+     AND NOT EXISTS (SELECT 1 FROM ObjectBoolean AS OB WHERE OB.ObjectId = vbPersonalServiceListId AND OB.DescId = zc_ObjectBoolean_PersonalServiceList_Detail() AND OB.ValueData = TRUE)
+     AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbPersonalServiceListId AND OL.DescId = zc_ObjectLink_PersonalServiceList_PaidKind() AND OL.ChildObjectId = zc_Enum_PaidKind_FirstForm())
      THEN
          PERFORM lpUpdate_MI_PersonalService_SummAuditAdd (inMovementId, vbPersonalServiceListId, inUserId);
      END IF;

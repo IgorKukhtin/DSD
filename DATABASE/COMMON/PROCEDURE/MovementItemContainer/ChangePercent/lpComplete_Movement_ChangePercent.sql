@@ -166,10 +166,10 @@ BEGIN
             , tmpMI.OperSumm_Partner_noDiscount
             
               -- сумма СКИДКИ для суммы БЕЗ НДС - с округлением до 2-х знаков
-            , tmpMI.OperSumm_Partner_noDiscount - tmpMI.OperSumm_Partner_Discount AS OperSumm_Partner_Discount
+            , tmpMI.OperSumm_percent AS OperSumm_Partner_Discount
 
               -- конечная сумма СКИДКИ c НДС
-            , CAST ((1 + vbVATPercent / 100) * (tmpMI.OperSumm_Partner_noDiscount - tmpMI.OperSumm_Partner_Discount) AS NUMERIC (16, 2)) AS OperSumm_Partner
+            , tmpMI.OperSumm_percent + CAST (vbVATPercent / 100 * tmpMI.OperSumm_percent AS NUMERIC (16, 2)) AS OperSumm_Partner
               
               -- Бизнес из Товара
             , tmpMI.BusinessId
@@ -186,12 +186,17 @@ BEGIN
                    , tmpMI.Price_original
                      -- цена БЕЗ СКИДКИ и БЕЗ НДС - с округлением до 2-х знаков
                    , tmpMI.OperPrice
+                     -- цена СКИДКИ и БЕЗ НДС - с округлением до 2-х знаков
+                   , CAST (tmpMI.OperPrice * vbDiscountPercent / 100 AS NUMERIC (16, 2)) AS OperPrice_percent
 
                      -- сумма БЕЗ СКИДКИ и БЕЗ НДС - с округлением до 2-х знаков
                    , CAST (tmpMI.OperCount * tmpMI.OperPrice AS NUMERIC (16, 2)) AS OperSumm_Partner_noDiscount
 
                      -- сумма со СКИДКОЙ БЕЗ НДС - с округлением до 2-х знаков
-                   , CAST (tmpMI.OperCount * CAST (tmpMI.OperPrice * (1 - vbDiscountPercent / 100) AS NUMERIC (16, 2)) AS NUMERIC (16, 2)) AS OperSumm_Partner_Discount
+                   , CAST (tmpMI.OperCount * (tmpMI.OperPrice - CAST (tmpMI.OperPrice * vbDiscountPercent / 100 AS NUMERIC (16, 2))) AS NUMERIC (16, 2)) AS OperSumm_Partner_Discount
+
+                     -- сумма СКИДКИ БЕЗ НДС - с округлением до 2-х знаков
+                   , CAST (tmpMI.OperCount * CAST (tmpMI.OperPrice * vbDiscountPercent / 100 AS NUMERIC (16, 2)) AS NUMERIC (16, 2)) AS OperSumm_percent
 
                     -- Бизнес из Товара
                    , COALESCE (ObjectLink_Goods_Business.ChildObjectId, 8370) AS BusinessId -- АЛАН
@@ -220,14 +225,12 @@ BEGIN
                                               AS NUMERIC (16, 2))
              
                                 ELSE -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
-                                     CAST (CASE WHEN MIFloat_CountForPrice.ValueData <> 0
-                                                THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
-                                                ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                                           END  AS NUMERIC (16, 2)
-                                          )
+                                     CASE WHEN MIFloat_CountForPrice.ValueData <> 0
+                                               THEN COALESCE (MIFloat_Price.ValueData, 0) / MIFloat_CountForPrice.ValueData
+                                               ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                     END
              
                            END AS OperPrice
-
       
                     FROM Movement
                          JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
@@ -267,13 +270,13 @@ BEGIN
 
 
      -- если не равны ДВЕ Итоговые суммы по Контрагенту
-     IF COALESCE (vbOperSumm_Partner, 0) <> COALESCE (vbOperSumm_Partner_byItem, 0)
+   /*IF COALESCE (vbOperSumm_Partner, 0) <> COALESCE (vbOperSumm_Partner_byItem, 0)
      THEN
          -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
          UPDATE _tmpItem SET OperSumm_Partner = OperSumm_Partner - (vbOperSumm_Partner_byItem - vbOperSumm_Partner)
          WHERE MovementItemId IN (SELECT _tmpItem.MovementItemId FROM _tmpItem ORDER BY OperSumm_Partner DESC LIMIT 1);
 
-     END IF;
+     END IF;*/
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

@@ -500,15 +500,21 @@ BEGIN
      END IF;
 
      -- !!!ÂÀÆÍÎ - äîñòóï!!!
-     UPDATE Movement SET AccessKeyId = lpGetAccessKey (ObjectLink_User_Member.ObjectId, zc_Enum_Process_InsertUpdate_Movement_PersonalService())
-     FROM (SELECT DISTINCT _tmpMI_Recalc.MovementId_to, _tmpMI_Recalc.PersonalServiceListId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.MovementItemId_to <> 0 AND _tmpMI_Recalc.PersonalServiceListId_to <> 0) AS tmp
-          LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
-                               ON ObjectLink_PersonalServiceList_Member.ObjectId = tmp.PersonalServiceListId_to
-                              AND ObjectLink_PersonalServiceList_Member.DescId = zc_ObjectLink_PersonalServiceList_Member()
-          LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                               ON ObjectLink_User_Member.ChildObjectId = ObjectLink_PersonalServiceList_Member.ChildObjectId
-                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-     WHERE Movement.Id = tmp.MovementId_to;
+     UPDATE Movement SET AccessKeyId = tmp.AccessKeyId
+     FROM (WITH tmp AS (SELECT DISTINCT _tmpMI_Recalc.MovementId_to, _tmpMI_Recalc.PersonalServiceListId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.MovementItemId_to <> 0 AND _tmpMI_Recalc.PersonalServiceListId_to <> 0)
+           SELECT tmp.MovementId_to
+                , lpGetAccessKey (ObjectLink_User_Member.ObjectId, zc_Enum_Process_InsertUpdate_Movement_PersonalService()) AS AccessKeyId
+           FROM tmp
+                LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                     ON ObjectLink_PersonalServiceList_Member.ObjectId = tmp.PersonalServiceListId_to
+                                    AND ObjectLink_PersonalServiceList_Member.DescId = zc_ObjectLink_PersonalServiceList_Member()
+                LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                     ON ObjectLink_User_Member.ChildObjectId = ObjectLink_PersonalServiceList_Member.ChildObjectId
+                                    AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+          ) AS tmp
+     WHERE Movement.Id = tmp.MovementId_to
+       AND COALESCE (Movement.AccessKeyId, 0) <> tmp.AccessKeyId
+    ;
 
 
 

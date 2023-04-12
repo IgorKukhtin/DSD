@@ -70,7 +70,9 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Разрешен просмотр долги Маркетинг - НАЛ
-     vbIsInfoMoneyDestination_21500:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = vbUserId AND tmp.RoleId = 8852398);
+     vbIsInfoMoneyDestination_21500:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = vbUserId AND tmp.RoleId = 8852398)
+                                   OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = vbUserId AND tmp.RoleId = 2) -- Роль администратора
+                                  ;
 
      -- Партия
      IF inMovementId_Partion <> 0
@@ -543,3 +545,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_JuridicalCollation (inStartDate:= '01.01.2017', inEndDate:= '01.01.2017', inJuridicalId:= 0, inPartnerId:=0, inContractId:= 0, inAccountId:= 0, inPaidKindId:= 0, inInfoMoneyId:= 0, inCurrencyId:= 0, inMovementId_Partion:=0, inSession:= zfCalc_UserAdmin());
+-- select * from gpReport_JuridicalCollation(inStartDate := ('11.04.2023')::TDateTime , inEndDate := ('11.04.2023')::TDateTime , inJuridicalId := 6629649 , inPartnerId := 0 , inContractId := 0 , inAccountId := 0 , inPaidKindId := 0 , inInfoMoneyId := 0 , inCurrencyId := 0 , inMovementId_Partion := 0 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');

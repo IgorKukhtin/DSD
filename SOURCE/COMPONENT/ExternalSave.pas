@@ -147,6 +147,7 @@ begin
   while not FSourceDataSet.Eof do begin
     FDataSet.Append;
     for I := 0 to FDataSet.FieldCount - 1 do
+      if not FSourceDataSet.FieldByName(FDataSet.Fields[i].FieldName).IsNull then
         FDataSet.Fields[i].Value := FSourceDataSet.FieldByName(FDataSet.Fields[i].FieldName).Value;
     FDataSet.Post;
     FSourceDataSet.Next;

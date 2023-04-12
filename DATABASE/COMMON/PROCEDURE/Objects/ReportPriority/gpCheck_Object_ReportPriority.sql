@@ -21,9 +21,21 @@ BEGIN
 
       RETURN QUERY
         WITH tmpProcess AS (SELECT * FROM pg_stat_activity WHERE state ILIKE 'active')
-         , tmpCount_all AS (SELECT COUNT (*) :: Integer AS Res FROM tmpProcess WHERE query ILIKE ('%' || inProcName || '(%') AND inProcName NOT ILIKE '%Inventory%'
+         , tmpCount_all AS (SELECT COUNT (*) :: Integer AS Res FROM tmpProcess WHERE query ILIKE ('%' || inProcName || '(%')
+                                                                                 --
+                                                                                 AND inProcName NOT ILIKE '%Inventory%'
+                                                                                 --
+                                                                                 AND inProcName NOT ILIKE '%Complete_Movement_PersonalService%'
+                                                                                 AND inProcName NOT ILIKE '%gpUpdate_Status_PersonalService%'
                           UNION ALL
                            SELECT COUNT (*) :: Integer AS Res FROM tmpProcess WHERE query ILIKE ('%Inventory%') AND inProcName ILIKE '%Inventory%'
+                          UNION ALL
+                           SELECT COUNT (*) :: Integer AS Res FROM tmpProcess WHERE (query ILIKE ('%Complete_Movement_PersonalService%')
+                                                                                  OR query ILIKE ('%gpUpdate_Status_PersonalService%')
+                                                                                    )
+                                                                                AND (inProcName ILIKE '%Complete_Movement_PersonalService%'
+                                                                                  OR inProcName ILIKE '%gpUpdate_Status_PersonalService%'
+                                                                                    )
                           )
             , tmpCount AS (SELECT SUM (COALESCE (tmpCount_all.Res, 0)) :: Integer AS Res FROM tmpCount_all
                           )

@@ -187,7 +187,7 @@ BEGIN
      --
      vbPartionId_find:= (SELECT MovementItem.PartionId FROM MovementItem WHERE MovementItem.Id = ioId);
      --
-     outMessageText:= 'Элемент сохранен.'
+     outMessageText:= '' /*'Элемент сохранен.'
                     || CHR (13)
                     || COALESCE ((SELECT 'Код : ' || zfConvert_FloatToString (Object_Goods.ObjectCode)
                                        || CHR (13)
@@ -212,7 +212,7 @@ BEGIN
                                                                     AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                                   WHERE Object_PartionGoods.MovementItemId = vbPartionId_find
                                     AND CLO_Client.ContainerId IS NULL
-                                 ) , 'ОШИБКА!')
+                                 ) , 'ОШИБКА!')*/
                     ;
 
     -- RAISE EXCEPTION 'Ошибка.', outMessageText;
