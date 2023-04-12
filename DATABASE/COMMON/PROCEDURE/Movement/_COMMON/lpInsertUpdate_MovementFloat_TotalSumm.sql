@@ -116,7 +116,7 @@ BEGIN
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)
           , COALESCE(ObjectFloat_NDSKind_NDS.ValueData, COALESCE (MovementFloat_VATPercent.ValueData, 0))
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 AND Movement.DescId <> zc_Movement_ChangePercent() THEN -1 * MovementFloat_ChangePercent.ValueData 
-                 WHEN Movement.DescId = zc_Movement_ChangePercent() THEN 0--MovementFloat_ChangePercent.ValueData 
+                 WHEN Movement.DescId = zc_Movement_ChangePercent() THEN COALESCE (MovementFloat_ChangePercent.ValueData, 0)
                  ELSE 0
             END AS DiscountPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 AND Movement.DescId <> zc_Movement_ChangePercent() THEN MovementFloat_ChangePercent.ValueData
@@ -444,6 +444,12 @@ BEGIN
                                , COALESCE (MIFloat_Price.ValueData, 0)         AS Price_original  
                                , COALESCE (MIFloat_PriceTare.ValueData, 0)     AS PriceTare
                                , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
+                               
+                                 -- округлили
+                               , CASE WHEN vbMovementDescId = zc_Movement_ChangePercent()
+                                           THEN CAST (MIFloat_Price.ValueData * vbDiscountPercent / 100 AS NUMERIC (16, 2))
+                                      ELSE 0
+                                 END AS Price_ChangePercent
 
                                , COALESCE (MIFloat_ChangePercent.ValueData, 0) AS ChangePercent
 
@@ -835,8 +841,13 @@ BEGIN
                   -- Количество вес !!!ушло!!!
                 , OperCount_KgFrom
 
+ 
                   -- Сумма без НДС
-                , CASE WHEN NOT vbPriceWithVAT OR vbVATPercent = 0
+                , CASE WHEN vbMovementDescId = zc_Movement_ChangePercent()
+                            -- для документа ChangePercent - без НДС
+                            THEN (Sum_ChangePercent)
+
+                       WHEN NOT vbPriceWithVAT OR vbVATPercent = 0
                             -- если цены без НДС или %НДС=0
                             THEN (OperSumm_Partner)
                        WHEN vbPriceWithVAT AND 1=1
@@ -848,7 +859,11 @@ BEGIN
                   END AS OperSumm_MVAT
 
                   -- Сумма с НДС
-                , CASE -- если цены с НДС
+                , CASE WHEN vbMovementDescId = zc_Movement_ChangePercent()
+                            -- для документа ChangePercent - с НДС
+                            THEN (Sum_ChangePercent_plus)
+
+                       -- если цены с НДС
                        WHEN vbPriceWithVAT OR vbVATPercent = 0
                             THEN (OperSumm_Partner)
                        -- если цены без НДС, и новая Схема для НДС - 6 знаков
@@ -881,7 +896,11 @@ BEGIN
                 , OperSumm_VAT_2018
 
                   -- Сумма по Контрагенту
-                , CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0
+                , CASE WHEN vbMovementDescId = zc_Movement_ChangePercent()
+                            -- для документа ChangePercent - с НДС
+                            THEN (Sum_ChangePercent_plus)
+
+                       WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0
                           -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
                           THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
                                     WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
@@ -1154,6 +1173,11 @@ BEGIN
                         --
                       , SUM (tmpMI.OperSumm_LossAsset) AS OperSumm_LossAsset
 
+                        -- для документа ChangePercent - без НДС
+                      , SUM (tmpMI.Sum_ChangePercent) AS Sum_ChangePercent
+                        -- для документа ChangePercent - с НДС
+                      , SUM (tmpMI.Sum_ChangePercent + CAST (tmpMI.Sum_ChangePercent * vbVATPercent / 100 AS NUMERIC (16, 2))) AS Sum_ChangePercent_plus
+
                        -- сумма начисления зп
                       , SUM (tmpMI.OperSumm_ToPay)       AS OperSumm_ToPay
                       , SUM (tmpMI.OperSumm_Service)     AS OperSumm_Service
@@ -1208,6 +1232,9 @@ BEGIN
 
                                -- Сумма DIFF для НН в колонке 13/1строка
                              , tmpMI.SummTaxDiff_calc
+                             
+                               -- для документа ChangePercent - без НДС
+                             , tmpMI.Sum_ChangePercent
 
                              , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
                                          -- так переводится в валюту zc_Enum_Currency_Basis
@@ -1382,6 +1409,12 @@ BEGIN
                                    , tmpMI.PriceTare
                                    , tmpMI.CountForPrice
 
+                                     -- для документа ChangePercent - без НДС
+                                   , CASE WHEN vbMovementDescId = zc_Movement_ChangePercent()
+                                              THEN CAST (tmpMI.OperCount_calc * tmpMI.Price_ChangePercent AS NUMERIC (16, 2))
+                                         ELSE 0
+                                     END AS Sum_ChangePercent
+
                                    , tmpMI.ChangePercent
                                      -- Сумма DIFF для НН в колонке 13/1строка
                                    , tmpMI.SummTaxDiff_calc
@@ -1393,6 +1426,7 @@ BEGIN
 
                                      -- !!!важное кол-во, для него zc_MovementFloat_TotalCount !!! - !!! ПЕРВАЯ Строка !!!
                                    , (CASE WHEN vbIsNPP_calc = TRUE THEN 1 * tmpMI.AmountTax_calc ELSE tmpMI.OperCount_Master END) AS OperCount_Master
+
 
                                    , tmpMI.OperCount_Child
                                    , tmpMI.OperCount_Partner -- Количество у контрагента
@@ -1492,6 +1526,9 @@ BEGIN
                                    , tmpMI.Price_original 
                                    , tmpMI.PriceTare
                                    , tmpMI.CountForPrice
+
+                                     -- для документа ChangePercent - без НДС
+                                   , 0 AS Sum_ChangePercent
 
                                    , tmpMI.ChangePercent
                                      -- Сумма DIFF для НН в колонке 13/1строка
@@ -1629,6 +1666,9 @@ BEGIN
                                    , tmpMI.Price_original  
                                    , tmpMI.PriceTare
                                    , tmpMI.CountForPrice
+
+                                     -- для документа ChangePercent - без НДС
+                                   , 0 AS Sum_ChangePercent
 
                                    , tmpMI.ChangePercent
                                      -- Сумма DIFF для НН в колонке 13/1строка

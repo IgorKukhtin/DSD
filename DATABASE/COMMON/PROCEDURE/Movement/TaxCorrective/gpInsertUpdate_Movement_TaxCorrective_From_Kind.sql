@@ -429,16 +429,13 @@ BEGIN
                             -- OperPrice
                           , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                       -- в "налоговом документе" всегда будут без НДС
-                                      THEN CAST (( COALESCE (MIFloat_Price.ValueData, 0)                                                       -- цена
-                                                 - CAST ( (MIFloat_Price.ValueData * (1 - vbDiscountPercent / 100)) AS NUMERIC (16, 2))           -- цена со скидкой
-                                                 )
-                                                   / (1 + vbVATPercent / 100) 
+                                      THEN CAST (CAST ( MIFloat_Price.ValueData * vbDiscountPercent / 100 AS NUMERIC (16, 2)) -- цена скидки
+                                               / (1 + vbVATPercent / 100)
                                                AS NUMERIC (16, 2))
-                                 ELSE ( COALESCE (MIFloat_Price.ValueData, 0)                                                       -- цена
-                                       - CAST ( (MIFloat_Price.ValueData * (1 - vbDiscountPercent / 100)) AS NUMERIC (16, 2))           -- цена со скидкой
-                                       )
+                                 ELSE CAST (MIFloat_Price.ValueData * vbDiscountPercent / 100 AS NUMERIC (16, 2))             -- цена скидки
  
                             END AS OperPrice
+
                             -- OperPrice_original
                           , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                       -- в "налоговом документе" всегда будут без НДС
@@ -465,29 +462,28 @@ BEGIN
                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
                      GROUP BY tmpTax.Id
-                          , MovementItem.ObjectId
-                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                          , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
-                                      -- в "налоговом документе" всегда будут без НДС
-                                      THEN CAST (( COALESCE (MIFloat_Price.ValueData, 0)                                                       -- цена
-                                                 - CAST ( (MIFloat_Price.ValueData * (1 - vbDiscountPercent / 100)) AS NUMERIC (16, 2))           -- цена со скидкой
-                                                 )
-                                                   / (1 + vbVATPercent / 100) 
-                                               AS NUMERIC (16, 2))
-                                 ELSE ( COALESCE (MIFloat_Price.ValueData, 0)                                                       -- цена
-                                       - CAST ( (MIFloat_Price.ValueData * (1 - vbDiscountPercent / 100)) AS NUMERIC (16, 2))           -- цена со скидкой
-                                       )
- 
-                            END
-                            -- OperPrice_original
-                          , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
-                                      -- в "налоговом документе" всегда будут без НДС
-                                      THEN CAST (COALESCE (MIFloat_Price.ValueData, 0)
-                                               / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
-                                 ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                            END
-                            -- CountForPrice
-                          , MIFloat_CountForPrice.ValueData
+                           , MovementItem.ObjectId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
+                             -- OperPrice
+                           , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
+                                       -- в "налоговом документе" всегда будут без НДС
+                                       THEN CAST (CAST ( MIFloat_Price.ValueData * vbDiscountPercent / 100 AS NUMERIC (16, 2)) -- цена скидки
+                                                / (1 + vbVATPercent / 100)
+                                                AS NUMERIC (16, 2))
+                                  ELSE CAST (MIFloat_Price.ValueData * vbDiscountPercent / 100 AS NUMERIC (16, 2))             -- цена скидки
+  
+                             END
+
+                             -- OperPrice_original
+                           , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
+                                       -- в "налоговом документе" всегда будут без НДС
+                                       THEN CAST (COALESCE (MIFloat_Price.ValueData, 0)
+                                                / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
+                                  ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                             END
+                             -- CountForPrice
+                           , MIFloat_CountForPrice.ValueData
                      )
         
                 , tmpMovement_Corrective AS (SELECT MIN (MovementLinkMovement_Corrective.MovementId) AS MovementId

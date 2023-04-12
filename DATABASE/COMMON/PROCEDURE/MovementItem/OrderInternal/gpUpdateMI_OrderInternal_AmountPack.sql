@@ -56,7 +56,16 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPackNextSecond(), inId, inAmountPackNextSecond);
 
      -- нашли
-     vbMovementItemId_detail:= (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Detail() AND MI.ParentId = inId AND MI.isErased = FALSE ORDER BY MI.Amount DESC LIMIT 1);
+     vbMovementItemId_detail:= (SELECT MI.Id
+                                FROM MovementItem AS MI
+                                WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Detail() AND MI.ParentId = inId AND MI.isErased = FALSE
+                                  AND MI.Amount = (-- !!!Последний по всем!!!
+                                                   SELECT MAX (MovementItem.Amount)
+                                                   FROM MovementItem
+                                                   WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Detail() AND MovementItem.isErased = FALSE
+                                                  )
+                                LIMIT 1
+                               );
      --
      IF COALESCE (vbMovementItemId_detail, 0) = 0
      THEN

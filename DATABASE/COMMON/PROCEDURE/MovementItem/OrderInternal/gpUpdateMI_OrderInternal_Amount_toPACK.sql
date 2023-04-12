@@ -1424,6 +1424,13 @@ else*/
                                                   -- временно
                                                   AND MovementItem.isErased   =  FALSE
                                                )
+                         , tmpMI_detail_all AS (SELECT DISTINCT MovementItem.ParentId
+                                                FROM MovementItem
+                                                WHERE MovementItem.MovementId =  inMovementId
+                                                  AND MovementItem.DescId     =  zc_MI_Detail()
+                                                  -- временно
+                                                  AND MovementItem.isErased   =  FALSE
+                                               )
                           --
                           SELECT tmpMI_detail.MovementItemId
                                , COALESCE (_tmpMI_Child.MovementItemId, tmpMI_detail.ParentId) AS ParentId
@@ -1461,11 +1468,14 @@ else*/
                                  -- 4
                                , _tmpMI_Child.AmountNextSecondResult AS Amount_4
 
-                          FROM (SELECT * FROM _tmpMI_Child
+                          FROM (SELECT *
+                                FROM _tmpMI_Child
+                                     LEFT JOIN tmpMI_detail_all ON tmpMI_detail_all.ParentId = _tmpMI_Child.MovementItemId
                                 WHERE _tmpMI_Child.AmountResult           <> 0
                                    OR _tmpMI_Child.AmountSecondResult     <> 0
                                    OR _tmpMI_Child.AmountNextResult       <> 0
                                    OR _tmpMI_Child.AmountNextSecondResult <> 0
+                                   OR tmpMI_detail_all.ParentId            > 0
                                ) AS _tmpMI_Child
                                FULL JOIN tmpMI_detail ON tmpMI_detail.ParentId = _tmpMI_Child.MovementItemId
                          ) AS tmpMI

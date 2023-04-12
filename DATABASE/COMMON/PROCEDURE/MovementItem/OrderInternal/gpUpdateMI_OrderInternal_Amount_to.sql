@@ -159,8 +159,14 @@ BEGIN
             RAISE EXCEPTION 'Ошибка.Не определено параметр <inNumber> = %.', inNumber;
         END IF;
 
+
         -- пересчитали Итоговые суммы по накладной
         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+        -- сохранили свойство <последний расчет>
+        PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NPP_calc(), inMovementId, FALSE);
+        -- сохранили протокол
+        PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
     ELSEIF inAmount > 0 AND ((inAmount > 5 AND inNumber IN (1, 3)) OR inNumber NOT IN (1, 3))
     THEN
@@ -211,9 +217,6 @@ BEGIN
             END IF;
 
         END IF;
-
-        -- сохранили свойство <последний расчет>
-        PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NPP_calc(), inMovementId, FALSE);
 
         -- пересчитали Итоговые суммы по накладной
         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
