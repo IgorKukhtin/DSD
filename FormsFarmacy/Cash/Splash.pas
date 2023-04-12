@@ -18,7 +18,7 @@ type
 
 var
   frmSplash: TfrmSplash;
-procedure StartSplash(AStatus: String = '');
+procedure StartSplash(AStatus: String = ''; ACaption: String = 'Farmacy cash');
 procedure EndSplash;
 procedure ChangeStatus(AStatus: String);
 
@@ -26,10 +26,13 @@ implementation
 
 {$R *.dfm}
 
-procedure StartSplash(AStatus: String = '');
+procedure StartSplash(AStatus: String = ''; ACaption: String = 'Farmacy cash');
 Begin
   if not assigned(frmSplash) then
+  begin
     frmSplash := TfrmSplash.Create(nil);
+    frmSplash.Caption := ACaption;
+  end;
   frmSplash.Show;
   frmSplash.Refresh;
   if AStatus <> '' then

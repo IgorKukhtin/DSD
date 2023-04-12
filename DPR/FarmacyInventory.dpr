@@ -3,6 +3,7 @@ program FarmacyInventory;
 uses
   MidasLib,
   Vcl.Forms,
+  Vcl.Controls,
   Winapi.Windows,
   System.SysUtils,
   AncestorBase in '..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
@@ -12,10 +13,13 @@ uses
   Authentication in '..\SOURCE\Authentication.pas',
   Storage in '..\SOURCE\Storage.pas',
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
   Log in '..\SOURCE\Log.pas',
   dsdApplication in '..\SOURCE\dsdApplication.pas',
-  MainUnit in '..\FormsFarmacy\Inventory\MainUnit.pas' {MainForm};
+  LoginForm in '..\SOURCE\LoginForm.pas' {LoginForm},
+  Updater in '..\SOURCE\COMPONENT\Updater.pas',
+  Splash in '..\FormsFarmacy\Cash\Splash.pas' {frmSplash},
+  MainInventoryUnit in '..\FormsFarmacy\Inventory\MainInventoryUnit.pas' {MainForm},
+  IniUtils in '..\FormsFarmacy\Inventory\IniUtils.pas';
 
 {$R *.res}
 
@@ -36,13 +40,42 @@ begin
   Logger.Enabled := FindCmdLineSwitch('log');
   ConnectionPath := '..\INIT\farmacy_init.php';
   SQLiteFile := iniLocalDataBaseSQLite;
-  gc_ProgramName := 'FarmacyCash.exe';
+  gc_ProgramName := 'FarmacyInventory.exe';
   dsdProject := prFarmacy;
   TdsdApplication.Create;
 
+  with TLoginForm.Create(Application) do
+  Begin
+    // Позволяем переход в локальный режим
+    AllowLocalConnect := True;
+    gc_User.LocalMaxAtempt:=2;
 
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1234', gc_User);
-  Application.CreateForm(TdmMain, dmMain);
+    if ShowModal <> mrOk then
+    begin
+      Free;
+      exit;
+    end;
+
+    if not gc_User.Local then
+    Begin
+      //InitCashSession(True);
+      if not FileExists(ExtractFilePath(ParamStr(0)) + 'sqlite3.dll') then TUpdater.UpdateDll('sqlite3.dll');
+      TUpdater.AutomaticUpdateProgram;
+      if not FindCmdLineSwitch('skipcheckconnect') then TUpdater.AutomaticCheckConnect;
+
+      StartSplash('Старт', 'Проведение инвентаризации');
+      try
+        ChangeStatus('Получение Сотрудников и настроек');
+        SaveUserSettings;
+      finally
+        EndSplash;
+      end;
+    End;
+
+    Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TMainForm, MainForm);
+  //StartCheckConnectThread(2);
+  End;
   Application.Run;
+  CloseHandle(hMutexCurr);
 end.

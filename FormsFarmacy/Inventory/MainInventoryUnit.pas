@@ -1,4 +1,4 @@
-unit MainUnit;
+unit MainInventoryUnit;
 
 interface
 
@@ -18,17 +18,16 @@ uses
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
   cxImageComboBox, cxNavigator, dxDateRanges, Data.Bind.Components,
-  Data.Bind.ObjectScope, System.Actions, dsdDB, Datasnap.DBClient, dsdAction;
+  Data.Bind.ObjectScope, System.Actions, dsdDB, Datasnap.DBClient, dsdAction,
+  AncestorBase, cxPropertiesStore, dsdAddOn;
 
 type
-  TMainForm = class(TForm)
+  TMainForm = class(TAncestorBaseForm)
     Panel3: TPanel;
-    ActionList1: TActionList;
-    FormParams: TdsdFormParams;
     spSelectUnloadMovement: TdsdStoredProc;
     MasterCDS: TClientDataSet;
     MasterDS: TDataSource;
-    actSelectUnloadMovement: TdsdExecStoredProc;
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
 
@@ -46,6 +45,8 @@ var
 implementation
 
 {$R *.dfm}
+
+uses UnilWin, CommonData;
 
 procedure TMainForm.Add_Log(AMessage: String);
 var
@@ -68,5 +69,11 @@ begin
   end;
 end;
 
+
+procedure TMainForm.FormCreate(Sender: TObject);
+begin
+  Self.Caption := 'Проведение инвентаризации (' + GetFileVersionString(ParamStr(0)) + ')' +  ' - <' + gc_User.Login + '>';
+
+end;
 
 end.

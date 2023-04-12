@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Classes, System.IOUtils, Vcl.Forms, Vcl.Dialogs,
   Authentication, VKDBFDataSet, DB, DataSnap.DBClient, Soap.EncdDecd, Windows,
-  IniUtils, StorageSQLite;
+  IniUtils, StorageSQLite, CommonData;
 
 type
   TSaveLocalMode = (slmRewrite, slmUpdate, slmAppend);
@@ -326,14 +326,21 @@ Begin
   User := TClientDataSet.Create(nil);
   try
 
-    WaitForSingleObject(MutexUserSettings, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
+    // Локальное хранилище логинов пока деля инвентаризации только SQLite
+    WaitForSingleObject(MutexUserSettings, INFINITE);
     try
       LoadLocalData(User, UserSettings_lcl);
-      User.Open;
     finally
       ReleaseMutex(MutexUserSettings);
     end;
 
+    if not User.Active then
+    begin
+      ShowMessage('Ошибка подключения к локальной базе данных.');
+      Exit;
+    end;
+
+    User.First;
     while not User.Eof do
     Begin
       if SameText(User.FieldByName('Name').AsString, ALogin) then
@@ -370,7 +377,6 @@ begin
     WaitForSingleObject(MutexUserSettings, INFINITE); // только для формы2;  защищаем так как есть в приложениее и сервисе
     try
       LoadLocalData(User, UserSettings_lcl);
-      User.Open;
     finally
       ReleaseMutex(MutexUserSettings);
     end;
@@ -396,6 +402,7 @@ Begin
 
   SaveSQLiteData(ASrc, TPath.GetFileNameWithoutExtension(AFileName));
 
+  if gc_ProgramName = 'FarmacyInventory.exe' then Exit;
   if not ASaveLocal then Exit;
 
   if FileExists(AFileName) and (GetFileSizeByName(AFileName) > 0) then
@@ -424,6 +431,8 @@ procedure LoadLocalData(ADst: TClientDataSet; AFileName: String; AShowError : Bo
   var I : integer;
 Begin
   LoadSQLiteData(ADst, TPath.GetFileNameWithoutExtension(AFileName), AShowError);
+
+  if gc_ProgramName = 'FarmacyInventory.exe' then Exit;
 
   if ADst.Active then Exit;
 
