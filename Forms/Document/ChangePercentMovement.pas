@@ -39,13 +39,13 @@ type
     cxLabel8: TcxLabel;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colGoodsKindName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colCountForPrice: TcxGridDBColumn;
-    colAmountSumm: TcxGridDBColumn;
+    colCode_1: TcxGridDBColumn;
+    colName_1: TcxGridDBColumn;
+    colGoodsKindName_1: TcxGridDBColumn;
+    colAmount_1: TcxGridDBColumn;
+    colPrice_1: TcxGridDBColumn;
+    colCountForPrice_1: TcxGridDBColumn;
+    colAmountSumm_1: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
@@ -57,7 +57,7 @@ type
     PrintItemsCDS: TClientDataSet;
     bbTaxCorrective: TdxBarButton;
     bbPrint_by_Tax: TdxBarButton;
-    colMeasureName: TcxGridDBColumn;
+    colMeasureName_1: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
     cxLabel10: TcxLabel;
     edPaidKindTo: TcxButtonEdit;
@@ -125,7 +125,7 @@ type
     bbOpenReportCheckAmountForm: TdxBarButton;
     bbOpenReportCheckForm: TdxBarButton;
     bbUpdateAuto: TdxBarButton;
-    LineNum: TcxGridDBColumn;
+    LineNum_1: TcxGridDBColumn;
     spUpdateMIMaster: TdsdStoredProc;
     actUpdate_MI_ChangePercent: TdsdExecStoredProc;
     bbUpdate_MI_ChangePercent: TdxBarButton;
@@ -147,25 +147,25 @@ type
     cxGridDBColumn11: TcxGridDBColumn;
     cxGridDBColumn12: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
-    cxPageControl1: TcxPageControl;
+    PageControl1: TcxPageControl;
     cxTabSheet1: TcxTabSheet;
     cxGrid2: TcxGrid;
     cxGridDBTableView2: TcxGridDBTableView;
-    cxGridDBColumn13: TcxGridDBColumn;
-    cxGridDBColumn14: TcxGridDBColumn;
-    cxGridDBColumn15: TcxGridDBColumn;
-    cxGridDBColumn16: TcxGridDBColumn;
-    cxGridDBColumn17: TcxGridDBColumn;
-    cxGridDBColumn18: TcxGridDBColumn;
-    cxGridDBColumn19: TcxGridDBColumn;
-    cxGridDBColumn20: TcxGridDBColumn;
-    cxGridDBColumn21: TcxGridDBColumn;
-    cxGridDBColumn22: TcxGridDBColumn;
-    cxGridDBColumn23: TcxGridDBColumn;
-    cxGridDBColumn24: TcxGridDBColumn;
+    LineNum: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    AmountSumm: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    CountForPrice: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    Price_ChangePercent: TcxGridDBColumn;
+    Sum_ChangePercent: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     cxTabSheet2: TcxTabSheet;
-    cxGridDetail: TcxGrid;
+    cxGrid3: TcxGrid;
     cxGridDBTableViewDetail: TcxGridDBTableView;
     LineNum_ch2: TcxGridDBColumn;
     GoodsCode_ch2: TcxGridDBColumn;
@@ -184,6 +184,9 @@ type
     DetailCDS: TClientDataSet;
     actGridToExcelDetail: TdsdGridToExcel;
     bbGridToExcelDetail: TdxBarButton;
+    Sum_Diff1: TcxGridDBColumn;
+    Sum_Diff1_tax: TcxGridDBColumn;
+    Sum_Diff1_tax_plus: TcxGridDBColumn;
   private
     { Private declarations }
   public
