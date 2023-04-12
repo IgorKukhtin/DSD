@@ -2,7 +2,6 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080' )>'
   ClientHeight = 639
   ClientWidth = 1140
-  ExplicitTop = -151
   ExplicitWidth = 1156
   ExplicitHeight = 678
   PixelsPerInch = 96
@@ -7602,7 +7601,72 @@
       Caption = 'actUpdateChildTotalDS'
       DataSource = ChildTotalDS
     end
-    object actPrintDiff: TdsdPrintAction [18]
+    object actPrintRemains_fact: TdsdPrintAction [18]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintRemains_fact
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintRemains_fact
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1072' ('#1044#1077#1090#1072#1083#1100#1085#1086' '#1088#1072#1089#1095'.'#1092#1072#1082#1090')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1072' ('#1044#1077#1090#1072#1083#1100#1085#1086' '#1088#1072#1089#1095'.'#1092#1072#1082#1090')'
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsName_complete;GoodsKindName_complete;Num' +
+            ';'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = edInvNumber
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080' '#1076#1077#1090#1072#1083#1100#1085#1086')'
+      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080' '#1076#1077#1090#1072#1083#1100#1085#1086')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintDiff: TdsdPrintAction [19]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemains
@@ -7686,7 +7750,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintDetail: TdsdPrintAction [19]
+    object actPrintDetail: TdsdPrintAction [20]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemains
@@ -7770,7 +7834,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintRemainsLessUpak: TdsdPrintAction [20]
+    object actPrintRemainsLessUpak: TdsdPrintAction [21]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemainsLess
@@ -7839,7 +7903,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintRemainsLess: TdsdPrintAction [21]
+    object actPrintRemainsLess: TdsdPrintAction [22]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemainsLess
@@ -7908,7 +7972,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintRemains: TdsdPrintAction [22]
+    object actPrintRemains: TdsdPrintAction [23]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemains
@@ -8028,7 +8092,7 @@
         item
         end>
     end
-    object actProtocolDetail: TdsdOpenForm [25]
+    object actProtocolDetail: TdsdOpenForm [26]
       Category = 'DSDLib'
       TabSheet = tsDetail
       MoveParams = <>
@@ -8068,7 +8132,7 @@
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [29]
+    object actGoodsKindChoice: TOpenChoiceForm [30]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -8095,7 +8159,7 @@
         end>
       isShowModal = True
     end
-    object actProtocolChild: TdsdOpenForm [30]
+    object actProtocolChild: TdsdOpenForm [31]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -8126,7 +8190,7 @@
         end>
       isShowModal = False
     end
-    object actProtocolTotal: TdsdOpenForm [31]
+    object actProtocolTotal: TdsdOpenForm [32]
       Category = 'DSDLib'
       TabSheet = tsTotal
       MoveParams = <>
@@ -8847,6 +8911,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbPrintRemains_fact'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateAmount_to'
         end
         item
@@ -9079,6 +9151,10 @@
     end
     object bbProtocolDetail: TdxBarButton
       Action = actProtocolDetail
+      Category = 0
+    end
+    object bbPrintRemains_fact: TdxBarButton
+      Action = actPrintRemains_fact
       Category = 0
     end
   end
@@ -10732,5 +10808,25 @@
     PropertiesCellList = <>
     Left = 718
     Top = 457
+  end
+  object spSelectPrintRemains_fact: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_DetailsPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 639
+    Top = 144
   end
 end

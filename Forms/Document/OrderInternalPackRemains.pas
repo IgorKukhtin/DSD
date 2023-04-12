@@ -334,6 +334,8 @@ type
     AmountPackNextSecond_diff_ch3: TcxGridDBColumn;
     AmountPackNext_calc_diff_ch3: TcxGridDBColumn;
     AmountPackNextSecond_calc_diff_ch3: TcxGridDBColumn;
+    actPrintRemains_fact: TdsdPrintAction;
+    bbPrintRemains_fact: TdxBarButton;
   private
     { Private declarations }
   public
@@ -345,6 +347,7 @@ implementation
 {$R *.dfm}
 
 initialization
+
   RegisterClass(TOrderInternalPackRemainsForm);
 
 end.
