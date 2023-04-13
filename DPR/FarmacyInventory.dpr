@@ -18,7 +18,7 @@ uses
   LoginForm in '..\SOURCE\LoginForm.pas' {LoginForm},
   Updater in '..\SOURCE\COMPONENT\Updater.pas',
   Splash in '..\FormsFarmacy\Cash\Splash.pas' {frmSplash},
-  MainInventoryUnit in '..\FormsFarmacy\Inventory\MainInventoryUnit.pas' {MainForm},
+  MainInventoryUnit in '..\FormsFarmacy\Inventory\MainInventoryUnit.pas' {MainInventoryForm},
   IniUtils in '..\FormsFarmacy\Inventory\IniUtils.pas';
 
 {$R *.res}
@@ -73,7 +73,7 @@ begin
     End;
 
     Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TMainInventoryForm, MainInventoryForm);
   //StartCheckConnectThread(2);
   End;
   Application.Run;

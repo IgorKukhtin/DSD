@@ -22,7 +22,7 @@ uses
   AncestorBase, cxPropertiesStore, dsdAddOn;
 
 type
-  TMainForm = class(TAncestorBaseForm)
+  TMainInventoryForm = class(TAncestorBaseForm)
     Panel3: TPanel;
     spSelectUnloadMovement: TdsdStoredProc;
     MasterCDS: TClientDataSet;
@@ -40,7 +40,7 @@ type
   end;
 
 var
-  MainForm: TMainForm;
+  MainInventoryForm: TMainInventoryForm;
 
 implementation
 
@@ -48,7 +48,7 @@ implementation
 
 uses UnilWin, CommonData;
 
-procedure TMainForm.Add_Log(AMessage: String);
+procedure TMainInventoryForm.Add_Log(AMessage: String);
 var
   F: TextFile;
 
@@ -70,7 +70,7 @@ begin
 end;
 
 
-procedure TMainForm.FormCreate(Sender: TObject);
+procedure TMainInventoryForm.FormCreate(Sender: TObject);
 begin
   Self.Caption := 'Проведение инвентаризации (' + GetFileVersionString(ParamStr(0)) + ')' +  ' - <' + gc_User.Login + '>';
 

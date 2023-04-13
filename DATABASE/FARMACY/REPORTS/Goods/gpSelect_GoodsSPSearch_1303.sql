@@ -41,6 +41,8 @@ RETURNS TABLE (Id            Integer
              , NDS           TFloat
              , PriceOOC      TFloat
              , PriceSale     TFloat
+             
+             , isOrder408    Boolean
 
              , Color_Count   Integer
 
@@ -50,6 +52,7 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbMovementId Integer;
+    DECLARE vbMovement408Id Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_GoodsSPSearch_1303());
@@ -69,6 +72,25 @@ BEGIN
 
     WHERE Movement.DescId = zc_Movement_GoodsSPSearch_1303()
       AND Movement.StatusId = zc_Enum_Status_Complete()
+      AND MovementDate_OperDateStart.ValueData <= CURRENT_DATE
+      AND MovementDate_OperDateEnd.ValueData >= CURRENT_DATE 
+    ORDER BY Movement.OperDate DESC
+    LIMIT 1;
+
+    SELECT Movement.Id                           AS Id
+    INTO vbMovement408Id
+    FROM Movement 
+
+         LEFT JOIN MovementDate AS MovementDate_OperDateStart
+                                ON MovementDate_OperDateStart.MovementId = Movement.Id
+                               AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+
+         LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+                                ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                               AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+
+    WHERE Movement.DescId = zc_Movement_GoodsSP408_1303()
+      AND Movement.StatusId <> zc_Enum_Status_Erased()
       AND MovementDate_OperDateStart.ValueData <= CURRENT_DATE
       AND MovementDate_OperDateEnd.ValueData >= CURRENT_DATE 
     ORDER BY Movement.OperDate DESC
@@ -105,6 +127,11 @@ BEGIN
                                   , COALESCE (Object_IntenalSP_1303.ValueData,'')   ::TVarChar AS IntenalSP_1303Name
                                   , COALESCE (Object_BrandSP.Id ,0)            ::Integer  AS BrandSPId
                                   , COALESCE (Object_BrandSP.ValueData,'')     ::TVarChar AS BrandSPName
+                                  
+                                  , MovementItem.MovementId <> vbMovementId               AS isOrder408
+                                  
+                                  , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId 
+                                                       ORDER BY CASE WHEN MovementItem.MovementId = vbMovementId THEN 0 ELSE 1 END) AS Ord
 
                                   , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
                               FROM MovementItem
@@ -137,8 +164,9 @@ BEGIN
                                    LEFT JOIN Object AS Object_BrandSP ON Object_BrandSP.Id = MI_BrandSP.ObjectId 
 
                                WHERE MovementItem.DescId = zc_MI_Master()
-                                 AND MovementItem.MovementId = vbMovementId
+                                 AND MovementItem.MovementId in (vbMovementId, COALESCE(vbMovement408Id, 0))
                                  AND MovementItem.isErased = FALSE
+                                 AND (MovementItem.MovementId = vbMovementId OR COALESCE (MIFloat_PriceOptSP.ValueData, 0) > 0)
                                  AND (COALESCE (Object_IntenalSP_1303.ValueData,'') ILIKE '%'||inText||'%'
                                    OR COALESCE (Object_BrandSP.ValueData,'') ILIKE '%'||inText||'%'))
       , tmpMILinkObject AS (SELECT * FROM MovementItemLinkObject
@@ -185,9 +213,10 @@ BEGIN
                     THEN ROUND(MovementItem.PriceOptSP  * 
                         (100.0 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)) / 100.0 * 1.1 * 1.1, 2) END::TFloat AS PriceSale
              
+             , MovementItem.isOrder408 AS isOrder408
+
              , zc_Color_White() AS Color_Count
-
-
+             
              , COALESCE (MovementItem.isErased, FALSE)    ::Boolean  AS isErased
 
         FROM tmpMovementItem AS MovementItem
@@ -228,6 +257,8 @@ BEGIN
                                               ON MI_Currency.MovementItemId = MovementItem.Id
                                              AND MI_Currency.DescId = zc_MILinkObject_Currency()
              LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MI_Currency.ObjectId 
+             
+        WHERE MovementItem.Ord = 1
 
         ORDER BY MovementItem.Col
 
@@ -245,4 +276,4 @@ $BODY$
 
 --ТЕСТ
 -- 
-SELECT * FROM gpSelect_GoodsSPSearch_1303 (inText:= 'Анал', inSession:= '3')
+SELECT * FROM gpSelect_GoodsSPSearch_1303 (inText:= 'Капец', inSession:= '3')

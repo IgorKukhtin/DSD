@@ -140,7 +140,7 @@
             <Form>frmSplash</Form>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Inventory\MainInventoryUnit.pas">
-            <Form>MainForm</Form>
+            <Form>MainInventoryForm</Form>
         </DCCReference>
         <DCCReference Include="..\FormsFarmacy\Inventory\IniUtils.pas"/>
         <None Include="ModelSupport_FarmacyInventory\default.txaPackage"/>

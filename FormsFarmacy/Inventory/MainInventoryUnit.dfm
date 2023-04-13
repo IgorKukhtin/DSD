@@ -1,4 +1,4 @@
-inherited MainForm: TMainForm
+inherited MainInventoryForm: TMainInventoryForm
   Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
   ClientHeight = 330
   ClientWidth = 751

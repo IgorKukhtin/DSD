@@ -1063,8 +1063,8 @@ end;
 
 procedure TLoadFormTest.LoadLoadFormTest;
 begin
-{
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromRemains_1303Form'));
+
+{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsFromRemains_1303Form'));
     TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsFromRemains_1303Form');
 
 
@@ -2868,7 +2868,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPSearch_1303Form'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPSearch_1303Form');
-    exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceGoodsSPSearch_1303Form'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceGoodsSPSearch_1303Form');
 

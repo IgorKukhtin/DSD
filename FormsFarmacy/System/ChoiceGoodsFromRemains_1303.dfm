@@ -6,27 +6,28 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
   ShowHint = True
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 901
-  ExplicitHeight = 459
+  ExplicitWidth = 903
+  ExplicitHeight = 467
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 885
-    Height = 394
+    Height = 393
+    ExplicitTop = 27
     ExplicitWidth = 885
-    ExplicitHeight = 394
-    ClientRectBottom = 394
+    ExplicitHeight = 393
+    ClientRectBottom = 393
     ClientRectRight = 885
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 885
-      ExplicitHeight = 394
+      ExplicitHeight = 393
       inherited cxGrid: TcxGrid
         Top = 49
         Width = 885
-        Height = 345
+        Height = 344
         ExplicitTop = 49
         ExplicitWidth = 885
-        ExplicitHeight = 345
+        ExplicitHeight = 344
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -92,6 +93,14 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object isOrder408: TcxGridDBColumn
+            Caption = #1055#1088#1080#1082#1072#1079' 408'
+            DataBinding.FieldName = 'isOrder408'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -643,7 +652,7 @@ inherited ChoiceGoodsFromRemains_1303Form: TChoiceGoodsFromRemains_1303Form
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
