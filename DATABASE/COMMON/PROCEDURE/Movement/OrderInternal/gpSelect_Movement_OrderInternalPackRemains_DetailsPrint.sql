@@ -44,13 +44,17 @@ RETURNS TABLE (Id                   Integer
              , AmountPack2_Sh  TFloat
              , AmountPack3_Sh  TFloat
              , AmountPack4_Sh  TFloat
-             , AmountPack5_Sh  TFloat  
+             , AmountPack5_Sh  TFloat
+             , AmountPackTotal_Sh TFloat  
 
              , InsertDate1 TVarChar
              , InsertDate2 TVarChar
              , InsertDate3 TVarChar
              , InsertDate4 TVarChar
-             , InsertDate5 TVarChar
+             , InsertDate5 TVarChar  
+             
+             , Income_PACK_to TFloat
+             , Income_PACK_from TFloat
               )
 AS
 $BODY$
@@ -315,6 +319,7 @@ BEGIN
                 , SUM (COALESCE (tmpMI_detail.AmountPack3,0)) OVER (PARTITION BY tmpMI_master.GoodsId_complete) ::TFloat  AS AmountPack3_all
                 , SUM (COALESCE (tmpMI_detail.AmountPack4,0)) OVER (PARTITION BY tmpMI_master.GoodsId_complete) ::TFloat  AS AmountPack4_all
                 , SUM (COALESCE (tmpMI_detail.AmountPack5,0)) OVER (PARTITION BY tmpMI_master.GoodsId_complete) ::TFloat  AS AmountPack5_all
+                , SUM (COALESCE (tmpMI_detail.AmountPackAll,0)) OVER (PARTITION BY tmpMI_master.GoodsId_complete) ::TFloat  AS AmountPackTotal_All
                 
                 , tmpMI_detail.AmountPack1  ::TFloat
                 , tmpMI_detail.AmountPack2  ::TFloat
@@ -322,17 +327,39 @@ BEGIN
                 , tmpMI_detail.AmountPack4  ::TFloat
                 , tmpMI_detail.AmountPack5  ::TFloat
 
+                , (COALESCE (tmpMI_detail.AmountPack1,0)
+                 + COALESCE (tmpMI_detail.AmountPack2,0)
+                 + COALESCE (tmpMI_detail.AmountPack3,0)
+                 + COALESCE (tmpMI_detail.AmountPack4,0)
+                 + COALESCE (tmpMI_detail.AmountPack5,0))  ::TFloat AS AmountPackTotal
+                
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpMI_master.MeasureId = zc_Measure_Sh() THEN (tmpMI_detail.AmountPack1 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack1_Sh
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpMI_master.MeasureId = zc_Measure_Sh() THEN (tmpMI_detail.AmountPack2 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack2_Sh
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpMI_master.MeasureId = zc_Measure_Sh() THEN (tmpMI_detail.AmountPack3 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack3_Sh
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpMI_master.MeasureId = zc_Measure_Sh() THEN (tmpMI_detail.AmountPack4 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack4_Sh
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpMI_master.MeasureId = zc_Measure_Sh() THEN (tmpMI_detail.AmountPack5 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack5_Sh
+
+                , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpMI_master.MeasureId = zc_Measure_Sh() THEN ((COALESCE (tmpMI_detail.AmountPack1,0)
+                                                                                                               + COALESCE (tmpMI_detail.AmountPack2,0)
+                                                                                                               + COALESCE (tmpMI_detail.AmountPack3,0)
+                                                                                                               + COALESCE (tmpMI_detail.AmountPack4,0)
+                                                                                                               + COALESCE (tmpMI_detail.AmountPack5,0)) / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPackTotal_Sh
                 
-                , zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate1) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar  AS InsertDate1
-                , zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate2) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar  AS InsertDate2
-                , zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate3) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar  AS InsertDate3
-                , zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate4) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar  AS InsertDate4
-                , zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate5) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar  AS InsertDate5                
+                
+                , (zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate1) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar 
+                  ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '1)' WHEN vbMaxAmount > 5 THEN '1-'|| (vbMaxAmount - 4)::integer ||')' ELSE ')' END) ::TVarChar  AS InsertDate1
+                , (zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate2) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar
+                  ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '2)' WHEN vbMaxAmount > 5 THEN ''|| (vbMaxAmount - 3)::integer ||')' ELSE ')' END) ::TVarChar  AS InsertDate2
+                , (zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate3) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar 
+                  ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '3)' WHEN vbMaxAmount > 5 THEN ''|| (vbMaxAmount - 2)::integer ||')' ELSE ')' END) ::TVarChar  AS InsertDate3
+                , (zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate4) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar  
+                  ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '4)' WHEN vbMaxAmount > 5 THEN ''|| (vbMaxAmount - 1)::integer ||')' ELSE ')' END) ::TVarChar  AS InsertDate4
+                , (zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate5) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar                 
+                  ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '5)' WHEN vbMaxAmount > 5 THEN ''|| (vbMaxAmount)::integer ||')' ELSE ')' END) ::TVarChar      AS InsertDate5 
+                  
+                --
+                , 0 ::TFloat AS Income_PACK_to
+                , 0 ::TFloat AS Income_PACK_from
            FROM tmpMI_detail_3 AS tmpMI_detail
               LEFT JOIN tmpMI_master ON tmpMI_master.Id = tmpMI_detail.ParentId
 
