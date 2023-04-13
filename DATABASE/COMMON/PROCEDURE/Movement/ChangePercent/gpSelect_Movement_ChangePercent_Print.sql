@@ -67,8 +67,17 @@ BEGIN
      OPEN Cursor1 FOR
     WITH 
     tmpMI AS (SELECT 
-                    -- сумма скидки
+                    -- сумма БЕЗ скидки, БЕЗ НДС
                     SUM (CAST (MovementItem.Amount
+                             * CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                                    THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData
+                                    ELSE MIFloat_Price.ValueData
+                               END
+                               AS NUMERIC (16, 2)
+                              )) ::TFloat AS Sum_1 
+
+                    -- сумма скидки
+                  , SUM (CAST (MovementItem.Amount
                              * CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                                           THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData
                                           ELSE MIFloat_Price.ValueData
@@ -122,9 +131,15 @@ BEGIN
            , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
            , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
            , MovementFloat_TotalCount.ValueData         AS TotalCount
-           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+
+         /*, CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT*/
+           
+           , (CAST (tmpMI.Sum_1 * (1 + MovementFloat_VATPercent.ValueData / 100) AS NUMERIC (16, 2)) - tmpMI.Sum_1) :: TFloat AS TotalSummVAT
+           , tmpMI.Sum_1 :: TFloat AS TotalSummMVAT
+           , (CAST (tmpMI.Sum_1 * (1 + MovementFloat_VATPercent.ValueData / 100) AS NUMERIC (16, 2))) :: TFloat AS TotalSummPVAT
+
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
           -- , MovementFloat_TotalSummPVAT.ValueData * MovementFloat_ChangePercent.ValueData  / 100  AS TotalSumm_ChangePercent 
           , (tmpMI.Sum_Diff1 + tmpMI.Sum_Diff1_tax) :: TFloat  AS TotalSumm_ChangePercent 
@@ -337,7 +352,8 @@ BEGIN
           , vbVATPercent AS VATPercent
      FROM tmpMI
      ORDER BY  tmpMI.GoodsName, tmpMI.GoodsKindName
-;
+    ;
+
     RETURN NEXT Cursor2;
 
 END;
@@ -351,5 +367,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Movement_ChangePercent_Print (inMovementId :=24672369 , inSession := '9457');
---FETCH ALL "<unnamed portal 36>";
+-- SELECT * FROM gpSelect_Movement_ChangePercent_Print (inMovementId :=24672369 , inSession := '9457'); --FETCH ALL "<unnamed portal 36>";
