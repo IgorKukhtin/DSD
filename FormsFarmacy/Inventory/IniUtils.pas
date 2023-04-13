@@ -5,6 +5,8 @@ interface
 function iniLocalDataBaseSQLite: String;
 
 procedure SaveUserSettings;
+procedure SaveFormData;
+procedure SaveUserUnit;
 
 var gUserCode : Integer;
 
@@ -55,5 +57,70 @@ begin
   end;
 end;
 
+procedure SaveFormData;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_Inventory_Object_Form';
+        sp.Params.Clear;
+        sp.Execute;
+        SaveLocalData(ds, FormData_lcl);
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        ShowMessage('SaveFormData Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+procedure SaveUserUnit;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_Object_Unit_Active';
+        sp.Params.Clear;
+        sp.Params.AddParam('inNotUnitId', ftInteger, ptInput, 0);
+        sp.Execute;
+        SaveLocalData(ds, 'Unit');
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        ShowMessage('SaveUserUnit Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
 
 end.

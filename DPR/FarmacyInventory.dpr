@@ -65,8 +65,12 @@ begin
 
       StartSplash('Старт', 'Проведение инвентаризации');
       try
-        ChangeStatus('Получение Сотрудников и настроек');
+        ChangeStatus('Получение "Сотрудников и настроек"');
         SaveUserSettings;
+        ChangeStatus('Получение "Форм"');
+        SaveFormData;
+        ChangeStatus('Получение "Аптек"');
+        SaveUserUnit;
       finally
         EndSplash;
       end;

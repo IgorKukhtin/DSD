@@ -387,6 +387,8 @@ begin
 
     if AFormName = 'TMainCashForm2' then
       LoadSQLiteSQL(ClientDataSet, 'select MainForm from UserSettings where Id = ''' + ASession + '''')
+    else if AFormName = 'TMainInventoryForm' then
+      LoadSQLiteSQL(ClientDataSet, 'select MainInventoryForm from UserSettings where Id = ''' + ASession + '''')
     else if AFormName = 'TdmMain' then
       LoadSQLiteSQL(ClientDataSet, 'select DataModulForm from UserSettings where Id = ''' + ASession + '''')
     else LoadSQLiteSQL(ClientDataSet, 'select ' + AData + ' from FormData where FormName = ''' + AFormName + '''');
