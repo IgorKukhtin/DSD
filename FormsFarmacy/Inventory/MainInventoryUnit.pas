@@ -34,6 +34,7 @@ type
     actLoadData: TMultiAction;
     actUnitChoice: TOpenChoiceForm;
     FormParams: TdsdFormParams;
+    spGet_User_IsAdmin: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);
@@ -55,11 +56,31 @@ implementation
 
 {$R *.dfm}
 
-uses UnilWin, CommonData;
+uses UnilWin, CommonData, IniUtils, Splash;
 
 procedure TMainInventoryForm.actDoLoadDataExecute(Sender: TObject);
 begin
-  //
+
+  try
+    spGet_User_IsAdmin.Execute;
+  except
+  end;
+
+  if gc_User.Local then
+  begin
+    ShowMessage('В локальном режим не работает.');
+    Exit;
+  end;
+
+  StartSplash('Старт', 'Проведение инвентаризации');
+  try
+    ChangeStatus('Получение "Товаров"');
+    SaveGoods;
+    ChangeStatus('Получение "Штрих кодов товаров"');
+    SaveGoodsBarCode;
+  finally
+    EndSplash;
+  end;
 end;
 
 procedure TMainInventoryForm.Add_Log(AMessage: String);

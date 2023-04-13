@@ -21,7 +21,7 @@ inherited MainInventoryForm: TMainInventoryForm
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 19
-    Top = 144
+    Top = 136
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -33,11 +33,11 @@ inherited MainInventoryForm: TMainInventoryForm
           'Top'
           'Width')
       end>
-    Top = 208
+    Top = 192
   end
   inherited ActionList: TActionList
     Left = 15
-    Top = 79
+    Top = 71
     object actDoLoadData: TAction
       Category = 'DSDLib'
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
@@ -68,7 +68,7 @@ inherited MainInventoryForm: TMainInventoryForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
     end
     object actLoadData: TMultiAction
       Category = 'DSDLib'
@@ -129,7 +129,22 @@ inherited MainInventoryForm: TMainInventoryForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 24
-    Top = 264
+    Left = 16
+    Top = 248
+  end
+  object spGet_User_IsAdmin: TdsdStoredProc
+    StoredProcName = 'gpGet_User_IsAdmin'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'gpGet_User_IsAdmin'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 240
+    Top = 238
   end
 end

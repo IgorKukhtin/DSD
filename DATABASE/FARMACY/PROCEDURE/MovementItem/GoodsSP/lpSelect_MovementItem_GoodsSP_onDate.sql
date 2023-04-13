@@ -16,6 +16,7 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
              , OperDateEnd TDateTime
              , MedicalProgramSPId Integer 
              , GroupMedicalProgramSPId Integer 
+             , isElectronicPrescript Boolean
               )
 AS
 $BODY$
@@ -31,6 +32,7 @@ BEGIN
                 , MovementDate_OperDateEnd.ValueData   AS OperDateEnd
                 , MLO_MedicalProgramSP.ObjectId        AS MedicalProgramSPId
                 , ObjectLink_GroupMedicalProgramSP.ChildObjectId AS GroupMedicalProgramSPId
+                , COALESCE (ObjectBoolean_ElectronicPrescript.ValueData, False) AS isElectronicPrescript
            FROM Movement
                  INNER JOIN MovementDate AS MovementDate_OperDateStart
                                          ON MovementDate_OperDateStart.MovementId = Movement.Id
@@ -54,10 +56,15 @@ BEGIN
                                       ON ObjectLink_GroupMedicalProgramSP.ObjectId = MLO_MedicalProgramSP.ObjectId
                                      AND ObjectLink_GroupMedicalProgramSP.DescId = zc_ObjectLink_MedicalProgramSP_GroupMedicalProgramSP()
                                      
+                 LEFT JOIN ObjectBoolean AS ObjectBoolean_ElectronicPrescript
+                                         ON ObjectBoolean_ElectronicPrescript.ObjectId = COALESCE (MLO_MedicalProgramSP.ObjectId, 18076882)
+                                        AND ObjectBoolean_ElectronicPrescript.DescId = zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript()
+
            WHERE Movement.StatusId = zc_Enum_Status_Complete()
              AND Movement.DescId = zc_Movement_GoodsSP()
              AND (COALESCE (MLO_MedicalProgramSP.ObjectId, 0) = inMedicalProgramSPId OR COALESCE (inMedicalProgramSPId, 0) = 0)
              AND (COALESCE (ObjectLink_GroupMedicalProgramSP.ChildObjectId, 0) = inGroupMedicalProgramSPId OR COALESCE(inGroupMedicalProgramSPId, 0) = 0)
+             
            ;
     
 END;

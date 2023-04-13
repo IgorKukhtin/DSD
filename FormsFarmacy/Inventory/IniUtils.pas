@@ -7,6 +7,8 @@ function iniLocalDataBaseSQLite: String;
 procedure SaveUserSettings;
 procedure SaveFormData;
 procedure SaveUserUnit;
+procedure SaveGoods;
+procedure SaveGoodsBarCode;
 
 var gUserCode : Integer;
 
@@ -89,6 +91,7 @@ begin
     freeAndNil(sp);
   end;
 end;
+
 procedure SaveUserUnit;
 var
   sp : TdsdStoredProc;
@@ -115,6 +118,72 @@ begin
       on E: Exception do
       begin
         ShowMessage('SaveUserUnit Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
+procedure SaveGoods;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_Inventory_Goods';
+        sp.Params.Clear;
+        sp.Execute;
+        SaveLocalData(ds, 'Goods');
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        ShowMessage('SaveGoods Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
+procedure SaveGoodsBarCode;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_Inventory_Goods_BarCode';
+        sp.Params.Clear;
+        sp.Execute;
+        SaveLocalData(ds, 'GoodsBarCode');
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        ShowMessage('SaveGoods Exception: ' + E.Message);
         Exit;
       end;
     end;
