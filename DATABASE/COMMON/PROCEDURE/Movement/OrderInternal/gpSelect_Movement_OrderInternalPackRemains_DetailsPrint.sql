@@ -33,12 +33,14 @@ RETURNS TABLE (Id                   Integer
              , AmountPack3_all     TFloat
              , AmountPack4_all     TFloat
              , AmountPack5_all     TFloat
-
+             , AmountPackTotal_All TFloat
+ 
              , AmountPack1     TFloat
              , AmountPack2     TFloat
              , AmountPack3     TFloat
              , AmountPack4     TFloat
              , AmountPack5     TFloat
+             , AmountPackTotal TFloat
 
              , AmountPack1_Sh  TFloat
              , AmountPack2_Sh  TFloat
@@ -54,8 +56,11 @@ RETURNS TABLE (Id                   Integer
              , InsertDate5 TVarChar  
              
              , Income_PACK_to TFloat
-             , Income_PACK_from TFloat
-              )
+             , Income_PACK_from TFloat   
+             , Income_PACK_toAll TFloat
+             , Income_PACK_fromAll TFloat
+                
+             )
 AS
 $BODY$
     DECLARE vbUserId Integer;
@@ -95,7 +100,7 @@ BEGIN
 
 
      -- формируются данные в _Result_Master, _Result_Child, _Result_ChildTotal
-     --PERFORM lpSelect_MI_OrderInternalPackRemains (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inUserId:= vbUserId) ;
+     PERFORM lpSelect_MI_OrderInternalPackRemains (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inUserId:= vbUserId) ;
 
      --количество операций
      vbMaxAmount := (SELECT Max(MovementItem.Amount) FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Detail());
@@ -129,6 +134,7 @@ BEGIN
                            , Object_Measure_basis.ValueData      AS MeasureName_basis 
                            
                            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+
                       FROM MovementItem
 
                             LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
@@ -298,8 +304,66 @@ BEGIN
                         GROUP BY tmpMI_detail.ParentId
                         )
 
+             -- хардкодим - Склады База + Реализации + Склад Поклейки этикетки
+           , tmpUnit_SKLAD AS (SELECT UnitId, FALSE AS isContainer FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect_Object_Unit_byGroup
+                              UNION
+                               SELECT 9073781 AS UnitId, FALSE AS isContainer
+                              )
+            -- хардкодим - Цех Упаковки
+           , tmpUnit_PACK  AS (SELECT 8451 AS UnitId)
+             -- Приход - с Цеха Упаковки
+           , tmpPACK AS (SELECT MIContainer.ObjectId_Analyzer                    AS GoodsId
+                                , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
+                                , SUM (CASE WHEN MIContainer.isActive = TRUE  THEN      MIContainer.Amount ELSE 0 END) AS Amount_to
+                                , SUM (CASE WHEN MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_from
+                                , MIContainer.WhereObjectId_Analyzer             AS UnitId_pf
+                           FROM MovementItemContainer AS MIContainer
+                                -- Склады База + Реализации
+                                INNER JOIN tmpUnit_SKLAD   ON tmpUnit_SKLAD.UnitId   = MIContainer.ObjectExtId_Analyzer
+                                -- Цех Упаковки
+                                INNER JOIN tmpUnit_PACK ON tmpUnit_PACK.UnitId = MIContainer.WhereObjectId_Analyzer
+                                -- убрали Тару
+                                INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                      ON ObjectLink_Goods_InfoMoney.ObjectId      = MIContainer.ObjectId_Analyzer
+                                                     AND ObjectLink_Goods_InfoMoney.DescId        = zc_ObjectLink_Goods_InfoMoney()
+                                                     AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                    , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                    , zc_Enum_InfoMoney_30201() -- Мясное сырье
+                                                                                                     )
+                           WHERE MIContainer.OperDate       = vbOperDate
+                             AND MIContainer.DescId         = zc_MIContainer_Count()
+                             AND MIContainer.MovementDescId = zc_Movement_Send()
+                             -- AND MIContainer.isActive       = FALSE
+                             AND MIContainer.Amount <> 0
+                             -- AND 1=0
+                           GROUP BY MIContainer.ObjectId_Analyzer
+                                  , MIContainer.ObjectIntId_Analyzer
+                                  , MIContainer.WhereObjectId_Analyzer
+                          )
 
-
+           , tmpLpSelect AS (SELECT _Result_Master.Id
+                                  , _Result_Master.Income_PACK_to
+                                  , ( COALESCE (_Result_Child.AmountPack,0) 
+                                    + COALESCE (_Result_Child.AmountPackSecond,0) 
+                                    + COALESCE (_Result_Child.AmountPackNext,0) 
+                                    + COALESCE (_Result_Child.AmountPackNextSecond,0)) AS AmountPack
+                             FROM _Result_Master
+                                  LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
+                                                                ON MIBoolean_Calculated.MovementItemId = _Result_Master.Id
+                                                               AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
+                                  LEFT JOIN Object ON Object.Id = COALESCE (_Result_Master.GoodsKindId, zc_GoodsKind_Basis())
+                                  LEFT JOIN (SELECT _Result_Child.KeyId
+                                                  , SUM (_Result_Child.AmountPack)                AS AmountPack
+                                                  , SUM (_Result_Child.AmountPackSecond)          AS AmountPackSecond
+                       
+                                                  , SUM (_Result_Child.AmountPackNext)            AS AmountPackNext
+                                                  , SUM (_Result_Child.AmountPackNextSecond)      AS AmountPackNextSecond
+                       
+                                             FROM _Result_Child
+                                             GROUP BY _Result_Child.KeyId
+                                            ) AS _Result_Child ON _Result_Child.KeyId = _Result_Master.KeyId
+                     
+)
            -- Результат
            SELECT tmpMI_master.Id
                 --, tmpMI_master.KeyId
@@ -358,8 +422,17 @@ BEGIN
                   ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '5)' WHEN vbMaxAmount > 5 THEN ''|| (vbMaxAmount)::integer ||')' ELSE ')' END) ::TVarChar      AS InsertDate5 
                   
                 --
-                , 0 ::TFloat AS Income_PACK_to
-                , 0 ::TFloat AS Income_PACK_from
+                --, 0 ::TFloat AS Income_PACK_to
+                --, 0 ::TFloat AS Income_PACK_from
+
+                , (tmpPACK.Amount_to   * CASE WHEN tmpMI_master.MeasureId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS Income_PACK_to
+                , (tmpPACK.Amount_from * CASE WHEN tmpMI_master.MeasureId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS Income_PACK_from
+                --, COALESCE (tmpLpSelect.AmountPack,0) ::TFloat AS Income_PACK_from
+                
+                , SUM ((tmpPACK.Amount_to   * CASE WHEN tmpMI_master.MeasureId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)) OVER (PARTITION BY tmpMI_master.GoodsId_complete) ::TFloat AS Income_PACK_toAll
+                , SUM ((tmpPACK.Amount_from * CASE WHEN tmpMI_master.MeasureId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)) OVER (PARTITION BY tmpMI_master.GoodsId_complete) ::TFloat AS Income_PACK_fromAll
+                ---, SUM (COALESCE (tmpLpSelect.AmountPack,0)) OVER (PARTITION BY tmpMI_master.GoodsId_complete)   ::TFloat AS Income_PACK_from
+                
            FROM tmpMI_detail_3 AS tmpMI_detail
               LEFT JOIN tmpMI_master ON tmpMI_master.Id = tmpMI_detail.ParentId
 
@@ -367,6 +440,11 @@ BEGIN
                                     ON ObjectFloat_Weight.ObjectId = tmpMI_master.GoodsId
                                    AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
+              LEFT JOIN tmpPACK ON tmpPACK.GoodsId = tmpMI_master.GoodsId
+                               AND tmpPACK.GoodsKindId = tmpMI_master.GoodsKindId 
+            
+              LEFT JOIN tmpLpSelect ON tmpLpSelect.Id = tmpMI_master.Id
+                
            WHERE COALESCE (tmpMI_detail.AmountPack1, 0) <> 0
               OR COALESCE (tmpMI_detail.AmountPack2, 0) <> 0
               OR COALESCE (tmpMI_detail.AmountPack3, 0) <> 0
@@ -385,4 +463,4 @@ $BODY$
 */
 
 -- тест
---  select * from gpSelect_Movement_OrderInternalPackRemains_DetailsPrint(inMovementId := 24933183 ,  inSession := '9457');
+-- select * from gpSelect_Movement_OrderInternalPackRemains_DetailsPrint(inMovementId := 24933183 ,  inSession := '9457');
