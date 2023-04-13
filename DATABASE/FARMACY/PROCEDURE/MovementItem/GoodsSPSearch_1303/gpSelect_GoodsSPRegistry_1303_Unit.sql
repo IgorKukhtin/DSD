@@ -16,6 +16,7 @@ RETURNS TABLE (GoodsId         Integer
              , Remains         TFloat
              , PriceSaleIncome TFloat
              , MovementItemId  Integer
+             , isOrder408     Boolean
              )
 AS
 $BODY$
@@ -159,6 +160,7 @@ BEGIN
            , tmpContainer.Amount::TFloat      AS Remains
 
            , COALESCE(tmpGoodsSPRegistry_1303.MovementItemId, tmpGoodsSPRegistry_408.MovementItemId)   AS MovementItemId
+           , COALESCE(tmpGoodsSPRegistry_1303.MovementItemId, 0) = 0                                   AS isOrder408
 
       FROM tmpGoodsSPRegistry_1303 AS tmpGoodsSPRegistry_1303
       
@@ -274,6 +276,7 @@ BEGIN
          , tmpData_1303.Remains
          , tmpIncome_1303.PriceSale AS PriceSaleIncome
          , tmpData_1303.MovementItemId
+         , tmpData_1303.isOrder408
     FROM tmpData_1303  
     
          LEFT JOIN tmpIncome_1303 ON tmpIncome_1303.GoodsId = tmpData_1303.GoodsId

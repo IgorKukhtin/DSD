@@ -1,4 +1,4 @@
-unit MainUnit;
+unit MainInventoryUnit;
 
 interface
 
@@ -18,17 +18,25 @@ uses
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
   cxImageComboBox, cxNavigator, dxDateRanges, Data.Bind.Components,
-  Data.Bind.ObjectScope, System.Actions, dsdDB, Datasnap.DBClient, dsdAction;
+  Data.Bind.ObjectScope, System.Actions, dsdDB, Datasnap.DBClient, dsdAction,
+  AncestorBase, cxPropertiesStore, dsdAddOn;
 
 type
-  TMainForm = class(TForm)
+  TMainInventoryForm = class(TAncestorBaseForm)
     Panel3: TPanel;
-    ActionList1: TActionList;
-    FormParams: TdsdFormParams;
     spSelectUnloadMovement: TdsdStoredProc;
     MasterCDS: TClientDataSet;
     MasterDS: TDataSource;
-    actSelectUnloadMovement: TdsdExecStoredProc;
+    actDoLoadData: TAction;
+    MainMenu: TMainMenu;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    actLoadData: TMultiAction;
+    actUnitChoice: TOpenChoiceForm;
+    FormParams: TdsdFormParams;
+    procedure FormCreate(Sender: TObject);
+    procedure ParentFormDestroy(Sender: TObject);
+    procedure actDoLoadDataExecute(Sender: TObject);
   private
     { Private declarations }
 
@@ -41,13 +49,20 @@ type
   end;
 
 var
-  MainForm: TMainForm;
+  MainInventoryForm: TMainInventoryForm;
 
 implementation
 
 {$R *.dfm}
 
-procedure TMainForm.Add_Log(AMessage: String);
+uses UnilWin, CommonData;
+
+procedure TMainInventoryForm.actDoLoadDataExecute(Sender: TObject);
+begin
+  //
+end;
+
+procedure TMainInventoryForm.Add_Log(AMessage: String);
 var
   F: TextFile;
 
@@ -68,5 +83,18 @@ begin
   end;
 end;
 
+
+procedure TMainInventoryForm.FormCreate(Sender: TObject);
+begin
+  FormClassName := Self.ClassName;
+  Self.Caption := 'Проведение инвентаризации (' + GetFileVersionString(ParamStr(0)) + ')' +  ' - <' + gc_User.Login + '>';
+  UserSettingsStorageAddOn.LoadUserSettings;
+end;
+
+procedure TMainInventoryForm.ParentFormDestroy(Sender: TObject);
+begin
+  inherited;
+  if not gc_User.Local then UserSettingsStorageAddOn.SaveUserSettings;
+end;
 
 end.

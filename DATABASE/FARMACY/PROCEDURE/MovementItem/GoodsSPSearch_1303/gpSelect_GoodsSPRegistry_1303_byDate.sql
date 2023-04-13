@@ -13,6 +13,7 @@ RETURNS TABLE (GoodsId        Integer
              , PriceOptSP     TFloat
              , PriceSale      TFloat
              , MovementItemId Integer
+             , isOrder408     Boolean
              )
 AS
 $BODY$
@@ -198,6 +199,7 @@ BEGIN
          , tmpMIGoodsSPSearch_1303All.PriceOptSP
          , tmpMIGoodsSPSearch_1303All.PriceSale
          , tmpMIGoodsSPSearch_1303All.Id                     AS MovementItemId
+         , False                                             AS isOrder408
     FROM tmpMovGoodsSPSearch_1303
 
          INNER JOIN tmpMIGoodsSPSearch_1303All ON tmpMIGoodsSPSearch_1303All.MovementId = tmpMovGoodsSPSearch_1303.Id
@@ -215,6 +217,7 @@ BEGIN
          , tmpMIGoodsSPSearch_408All.PriceOptSP
          , tmpMIGoodsSPSearch_408All.PriceSale
          , tmpMIGoodsSPSearch_408All.Id                     AS MovementItemId
+         , True                                             AS isOrder408
     FROM tmpMovGoodsSPSearch_408
 
          INNER JOIN tmpMIGoodsSPSearch_408All ON tmpMIGoodsSPSearch_408All.MovementId = tmpMovGoodsSPSearch_408.Id
@@ -229,6 +232,7 @@ BEGIN
          , tmpMIGoodsSP_1303.PriceOptSP
          , tmpMIGoodsSP_1303.PriceSale
          , tmpGoodsSPRegistry_1303.MovementItemId
+         , False                                             AS isOrder408
     FROM tmpMIGoodsSP_1303
 
          LEFT JOIN tmpGoodsSPRegistry_1303 ON tmpGoodsSPRegistry_1303.GoodsMainId = tmpMIGoodsSP_1303.GoodsId

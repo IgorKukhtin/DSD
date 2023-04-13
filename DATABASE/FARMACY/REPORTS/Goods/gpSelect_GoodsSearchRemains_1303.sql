@@ -34,6 +34,7 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , IntenalSPName TVarChar
              , BrandSPId     Integer 
              , BrandSPName   TVarChar
+             , isOrder408    Boolean
              , Color_calc Integer
              , ColorMinPrice_calc Integer
              )
@@ -565,6 +566,7 @@ BEGIN
                              , tmpGoods.IntenalSPName
                              , tmpGoods.BrandSPId
                              , tmpGoods.BrandSPName
+                             , tmpGoods1303.isOrder408
 
                         FROM tmpGoods 
                             LEFT JOIN tmpUnit AS Object_Unit ON 1=1
@@ -648,6 +650,7 @@ BEGIN
              , tmpResult.IntenalSPName
              , tmpResult.BrandSPId
              , tmpResult.BrandSPName
+             , tmpResult.isOrder408
              , CASE WHEN tmpResult.PriceSale_1303 <
                          CASE WHEN COALESCE(tmpResult.Amount, 0) <> 0 
                               THEN CASE WHEN tmpResult.PriceSale < COALESCE (tmpResult.PriceSaleIncome, tmpResult.Price_min)
@@ -689,4 +692,4 @@ $BODY$
 -- select * from gpSelect_GoodsSearchRemains_1303(inCodeSearch := '' , inGoodsSearch := 'Ìåòàì³çîë íàòð³þ' , inPartnerMedicalID := 0 ,  inSession := '3');
 
 
-select * from gpSelect_GoodsSearchRemains_1303(inCodeSearch := '' , inGoodsSearch := 'ÍÀÊËÎÔ' , inPartnerMedicalID := 0 ,  inSession := '3');
+select * from gpSelect_GoodsSearchRemains_1303(inCodeSearch := '' , inGoodsSearch := 'êàðâ' , inPartnerMedicalID := 0 ,  inSession := '3');

@@ -49,26 +49,29 @@
         <DCC_UsePackage>fmx;IndySystem;DBXInterBaseDriver;DataSnapCommon;DataSnapClient;DataSnapServer;DataSnapProviderClient;DbxCommonDriver;dbxcds;DBXOracleDriver;CustomIPTransport;dsnap;fmxase;IndyCore;inetdbxpress;bindcompfmx;rtl;dbrtl;DbxClientDriver;bindcomp;inetdb;xmlrtl;ibxpress;IndyProtocols;DBXMySQLDriver;bindengine;soaprtl;DBXInformixDriver;DBXFirebirdDriver;inet;fmxobj;DBXSybaseASADriver;fmxdae;dbexpress;DataSnapIndy10ServerTransport;$(DCC_UsePackage)</DCC_UsePackage>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
-        <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
+        <DCC_DcuOutput>..\DCU\$(Config)\$(ProductVersion)\$(Platform)</DCC_DcuOutput>
         <DCC_E>false</DCC_E>
         <DCC_N>false</DCC_N>
         <DCC_S>false</DCC_S>
         <DCC_F>false</DCC_F>
         <DCC_K>false</DCC_K>
         <SanitizedProjectName>FarmacyInventory</SanitizedProjectName>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_UsePackage>fsADO16;dxdborRS16;dxTileControlRS16;dxPScxVGridLnkRS16;cxLibraryRS16;dxLayoutControlRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;ZLibExGZ;cxExportRS16;dxBarRS16;dxSkinsdxNavBarPainterRS16;ZComponentD16;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;TeeDB;dxDBXServerModeRS16;ProjectComponent;ZParseSqlD16;frxTee16;Rave100VCL;vclib;inetdbbde;cxPivotGridOLAPRS16;dxPSCoreRS16;dxPScxGridLnkRS16;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;fsIBX16;dxPScxTLLnkRS16;vclimg;dxPsPrVwAdvRS16;fmi;cxTreeListRS16;dxComnRS16;ZLibEx;vcldb;dxSkinsdxRibbonPainterRS16;dxADOServerModeRS16;vcldsnap;dxBarExtDBItemsRS16;DBXDb2Driver;Intraweb_120_160;vclribbon;frxe16;dxSkinscxSchedulerPainterRS16;GMLib_DXE2_VCL;vcl;CloudService;DBXMSSQLDriver;CodeSiteExpressPkg;FmxTeeUI;cxDataRS16;cxBarEditItemRS16;cxPageControldxBarPopupMenuRS16;fsTee16;dxDockingRS16;dxPSDBTeeChartRS16;cxSchedulerGridRS16;webdsnap;dxBarExtItemsRS16;dxtrmdRS16;dxPSLnksRS16;ZCoreD16;dxSkinsdxDLPainterRS16;dxPSTeeChartRS16;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;ProjectDesignComponent;dxPScxExtCommonRS16;vcldbx;dxNavBarRS16;frx16;dxPSdxDBOCLnkRS16;dxSkinsdxBarPainterRS16;Tee;DBXOdbcDriver;dxdbtrRS16;dxSkinsCoreRS16;svnui;cxPivotGridChartRS16;dxPScxCommonRS16;dxmdsRS16;fsBDE16;intrawebdb_120_160;frxDB16;dxSpellCheckerRS16;ZDbcD16;fs16;TeeUI;FMXTee;vclactnband;dxServerModeRS16;bindcompvcl;cxEditorsRS16;cxGridRS16;cxPivotGridRS16;vclie;dxPScxSchedulerLnkRS16;dxPSdxDBTVLnkRS16;cxSchedulerRS16;dxPSPrVwRibbonRS16;dxSkinscxPCPainterRS16;vcltouch;websnap;VclSmp;fsDB16;dxTabbedMDIRS16;DataSnapConnectors;dxPSdxOCLnkRS16;dsnapcon;GMLib_DXE2;dxPSdxFCLnkRS16;dxThemeRS16;dcldxSkinsCoreRS16;vclx;svn;dxFlowChartRS16;bdertl;ZPlainD16;dxGDIPlusRS16;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
-        <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-        <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <DCC_ExeOutput>..\BIN</DCC_ExeOutput>
-        <DCC_DcuOutput>..\DCU</DCC_DcuOutput>
+        <DCC_DcuOutput>..\DCU\$(Config)\$(ProductVersion)\$(Platform)</DCC_DcuOutput>
+        <VerInfo_MajorVer>0</VerInfo_MajorVer>
+        <VerInfo_Build>1</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=0.0.0.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <DCC_UsePackage>dxdborRS16;dxTileControlRS16;dxPScxVGridLnkRS16;cxLibraryRS16;dxLayoutControlRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;dxBarRS16;dxSkinsdxNavBarPainterRS16;ZComponentD16;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;TeeDB;dxDBXServerModeRS16;ProjectComponent;ZParseSqlD16;vclib;cxPivotGridOLAPRS16;dxPSCoreRS16;dxPScxGridLnkRS16;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;dxPScxTLLnkRS16;vclimg;dxPsPrVwAdvRS16;cxTreeListRS16;dxComnRS16;vcldb;dxSkinsdxRibbonPainterRS16;dxADOServerModeRS16;vcldsnap;dxBarExtDBItemsRS16;DBXDb2Driver;dxSkinscxSchedulerPainterRS16;GMLib_DXE2_VCL;vcl;DBXMSSQLDriver;cxDataRS16;cxBarEditItemRS16;cxPageControldxBarPopupMenuRS16;dxDockingRS16;dxPSDBTeeChartRS16;cxSchedulerGridRS16;webdsnap;dxBarExtItemsRS16;dxtrmdRS16;dxPSLnksRS16;ZCoreD16;dxSkinsdxDLPainterRS16;dxPSTeeChartRS16;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;ProjectDesignComponent;dxPScxExtCommonRS16;dxNavBarRS16;dxPSdxDBOCLnkRS16;dxSkinsdxBarPainterRS16;Tee;DBXOdbcDriver;dxdbtrRS16;dxSkinsCoreRS16;cxPivotGridChartRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;ZDbcD16;TeeUI;vclactnband;dxServerModeRS16;bindcompvcl;cxEditorsRS16;cxGridRS16;cxPivotGridRS16;vclie;dxPScxSchedulerLnkRS16;dxPSdxDBTVLnkRS16;cxSchedulerRS16;dxPSPrVwRibbonRS16;dxSkinscxPCPainterRS16;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;DataSnapConnectors;dxPSdxOCLnkRS16;dsnapcon;GMLib_DXE2;dxPSdxFCLnkRS16;dxThemeRS16;dcldxSkinsCoreRS16;vclx;dxFlowChartRS16;ZPlainD16;dxGDIPlusRS16;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
@@ -84,13 +87,15 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <BT_BuildType>Debug</BT_BuildType>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <Icon_MainIcon>FarmacyInventory.ico</Icon_MainIcon>
         <UWP_DelphiLogo44>..\FormsFarmacy\Inventory\FarmacyInventory_150.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>..\FormsFarmacy\Inventory\FarmacyInventory_40.png</UWP_DelphiLogo150>
+        <VerInfo_MajorVer>0</VerInfo_MajorVer>
+        <VerInfo_Build>1</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=0.0.0.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -100,8 +105,10 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Locale>1033</VerInfo_Locale>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <VerInfo_MajorVer>0</VerInfo_MajorVer>
+        <VerInfo_Build>1</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=0.0.0.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -123,12 +130,20 @@
             <Form>dmMain</Form>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\IniUtils.pas"/>
         <DCCReference Include="..\SOURCE\Log.pas"/>
         <DCCReference Include="..\SOURCE\dsdApplication.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Inventory\MainUnit.pas">
-            <Form>MainForm</Form>
+        <DCCReference Include="..\SOURCE\LoginForm.pas">
+            <Form>LoginForm</Form>
         </DCCReference>
+        <DCCReference Include="..\SOURCE\COMPONENT\Updater.pas"/>
+        <DCCReference Include="..\FormsFarmacy\Cash\Splash.pas">
+            <Form>frmSplash</Form>
+        </DCCReference>
+        <DCCReference Include="..\FormsFarmacy\Inventory\MainInventoryUnit.pas">
+            <Form>MainInventoryForm</Form>
+        </DCCReference>
+        <DCCReference Include="..\FormsFarmacy\Inventory\IniUtils.pas"/>
+        <None Include="ModelSupport_FarmacyInventory\default.txaPackage"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -199,6 +214,12 @@
                 <DeployFile LocalName="..\BIN\FarmacyInventory.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>FarmacyInventory.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="ModelSupport_FarmacyInventory\default.txaPackage" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -977,6 +998,7 @@
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">False</Platform>
             </Platforms>
+            <ModelSupport>True</ModelSupport>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>
