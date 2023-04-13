@@ -50,7 +50,10 @@ RETURNS TABLE (Id                   Integer
              , InsertDate2 TVarChar
              , InsertDate3 TVarChar
              , InsertDate4 TVarChar
-             , InsertDate5 TVarChar
+             , InsertDate5 TVarChar  
+             
+             , Income_PACK_to TFloat
+             , Income_PACK_from TFloat
               )
 AS
 $BODY$
@@ -328,11 +331,20 @@ BEGIN
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpMI_master.MeasureId = zc_Measure_Sh() THEN (tmpMI_detail.AmountPack4 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack4_Sh
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpMI_master.MeasureId = zc_Measure_Sh() THEN (tmpMI_detail.AmountPack5 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack5_Sh
                 
-                , zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate1) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar  AS InsertDate1
-                , zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate2) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar  AS InsertDate2
-                , zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate3) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar  AS InsertDate3
-                , zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate4) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar  AS InsertDate4
-                , zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate5) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar  AS InsertDate5                
+                , (zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate1) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar 
+                  ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '1)' WHEN vbMaxAmount > 5 THEN '1-'|| (vbMaxAmount - 4)::integer ||')' ELSE ')' END) ::TVarChar  AS InsertDate1
+                , (zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate2) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar
+                  ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '2)' WHEN vbMaxAmount > 5 THEN ''|| (vbMaxAmount - 3)::integer ||')' ELSE ')' END) ::TVarChar  AS InsertDate2
+                , (zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate3) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar 
+                  ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '3)' WHEN vbMaxAmount > 5 THEN ''|| (vbMaxAmount - 2)::integer ||')' ELSE ')' END) ::TVarChar  AS InsertDate3
+                , (zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate4) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar  
+                  ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '4)' WHEN vbMaxAmount > 5 THEN ''|| (vbMaxAmount - 1)::integer ||')' ELSE ')' END) ::TVarChar  AS InsertDate4
+                , (zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate5) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar                 
+                  ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '5)' WHEN vbMaxAmount > 5 THEN ''|| (vbMaxAmount)::integer ||')' ELSE ')' END) ::TVarChar      AS InsertDate5 
+                  
+                --
+                , 0 ::TFloat AS Income_PACK_to
+                , 0 ::TFloat AS Income_PACK_from
            FROM tmpMI_detail_3 AS tmpMI_detail
               LEFT JOIN tmpMI_master ON tmpMI_master.Id = tmpMI_detail.ParentId
 
