@@ -67,17 +67,30 @@ BEGIN
      OPEN Cursor1 FOR
     WITH 
     tmpMI AS (SELECT 
-                   -- сумма скидки 1) разница суммы без скидки и суммы со скидкой
-                    SUM (CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                    THEN CAST (MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                                 ELSE CAST  (MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                            END AS TFloat)
-                    - CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                           THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,4))
-                                        ELSE MovementItem.Amount
-                                   END AS TFloat)
-                             * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
-                           AS NUMERIC (16, 2)))  ::TFloat AS Sum_Diff1 
+                    -- сумма скидки
+                    SUM (CAST (MovementItem.Amount
+                             * CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                                          THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData
+                                          ELSE MIFloat_Price.ValueData
+                                     END
+                                   * vbChangePercent / 100 AS NUMERIC (16, 2)
+                                    )
+                               AS NUMERIC (16, 2)
+                              )) ::TFloat AS Sum_Diff1 
+
+                    -- сумма скидки С НДС
+                  , SUM (CAST (CAST (MovementItem.Amount
+                                   * CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                                                THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData
+                                                ELSE MIFloat_Price.ValueData
+                                           END
+                                         * vbChangePercent / 100 AS NUMERIC (16, 2)
+                                          )
+                                     AS NUMERIC (16, 2)
+                                    )
+                             * vbVATPercent / 100
+                               AS NUMERIC (16, 2)
+                              )) ::TFloat AS Sum_Diff1_tax
                FROM MovementItem
                     LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                 ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -114,7 +127,7 @@ BEGIN
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
           -- , MovementFloat_TotalSummPVAT.ValueData * MovementFloat_ChangePercent.ValueData  / 100  AS TotalSumm_ChangePercent 
-          , (tmpMI.Sum_Diff1 * (1 + vbVATPercent / 100))  AS TotalSumm_ChangePercent 
+          , (tmpMI.Sum_Diff1 + tmpMI.Sum_Diff1_tax) :: TFloat  AS TotalSumm_ChangePercent 
            
            , Object_From.Id                    	     AS FromId
            , Object_From.ValueData                   AS FromName
@@ -243,6 +256,7 @@ BEGIN
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
 
             LEFT JOIN tmpMI ON 1= 1 
+
        WHERE Movement.Id = inMovementId
       ;
     RETURN NEXT Cursor1;
@@ -269,45 +283,31 @@ BEGIN
           
                    , vbChangePercent AS ChangePercent
           
-                   --  без НДС
-                   , CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                            THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,4))
-                                         ELSE MovementItem.Amount
-                                    END AS TFloat)
-                              * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
-                            AS NUMERIC (16, 2))   AS Sum_ChangePercent
-          
-                   /* --сумма НДС для Сумма со скидкой
-                   , (CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                    THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,4))
-                                 ELSE MovementItem.Amount
-                            END AS TFloat)
-                           * (CAST (MIFloat_Price.ValueData * (1-vbChangePercent / 100) AS NUMERIC (16,2)) 
-                              * vbVATPercent/100)
-                      )  AS Sum_VATPercent*/ 
-                   
-                   /*--сумма скидки с НДС
-                   , CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                            THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,4))
-                                         ELSE MovementItem.Amount
-                                    END AS TFloat)
-                              * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
-                            
-                           * (1+vbVATPercent/100)  
-                           AS NUMERIC (16, 2)
-                           ) AS Sum_ChangePercent_vat
-                   */
-                   -- сумма скидки 1) разница суммы без скидки и суммы со скидкой
-                   , (CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                    THEN CAST (MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                                 ELSE CAST  (MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                            END AS TFloat)
-                    - CAST ( CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                                           THEN CAST (MovementItem.Amount / MIFloat_CountForPrice.ValueData AS NUMERIC (16,4))
-                                        ELSE MovementItem.Amount
-                                   END AS TFloat)
-                             * CAST ( (MIFloat_Price.ValueData *(1 - vbChangePercent / 100)) AS NUMERIC (16, 2))
-                           AS NUMERIC (16, 2)))  ::TFloat AS Sum_Diff1 
+                     -- сумма скидки
+                   , (CAST (MovementItem.Amount
+                          * CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                                       THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData
+                                       ELSE MIFloat_Price.ValueData
+                                  END
+                                * vbChangePercent / 100 AS NUMERIC (16, 2)
+                                 )
+                            AS NUMERIC (16, 2)
+                           )) ::TFloat AS Sum_Diff1 
+ 
+                     -- сумма скидки С НДС
+                   , (CAST (CAST (MovementItem.Amount
+                                * CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                                             THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData
+                                             ELSE MIFloat_Price.ValueData
+                                        END
+                                      * vbChangePercent / 100 AS NUMERIC (16, 2)
+                                       )
+                                  AS NUMERIC (16, 2)
+                                 )
+                          * vbVATPercent / 100
+                            AS NUMERIC (16, 2)
+                           )) ::TFloat AS Sum_Diff1_tax
+
                FROM MovementItem
                     LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
                     LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
@@ -332,8 +332,8 @@ BEGIN
                  AND MovementItem.isErased   = FALSE
               )
      SELECT tmpMI.*
-          , CAST ((tmpMI.Sum_Diff1 * vbVATPercent/100) AS NUMERIC (16,2))  AS Sum_VATPercent 
-          , CAST ((tmpMI.Sum_Diff1 +(tmpMI.Sum_Diff1 * vbVATPercent/100))  AS NUMERIC (16,2)) AS Sum_ChangePercent_vat
+          , tmpMI.Sum_Diff1_tax :: TFloat AS Sum_VATPercent 
+          , (tmpMI.Sum_Diff1 + tmpMI.Sum_Diff1_tax) :: TFloat AS Sum_ChangePercent_vat
           , vbVATPercent AS VATPercent
      FROM tmpMI
      ORDER BY  tmpMI.GoodsName, tmpMI.GoodsKindName
