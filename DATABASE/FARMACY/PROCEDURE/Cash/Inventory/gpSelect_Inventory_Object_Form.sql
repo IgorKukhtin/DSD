@@ -26,7 +26,7 @@ BEGIN
         INNER JOIN ObjectBLOB AS ObjectBLOB_FormData 
                               ON ObjectBLOB_FormData.ObjectId = Object.Id
                              AND ObjectBLOB_FormData.DescId   = zc_ObjectBlob_Form_Data() 
-   WHERE Object.ValueData IN ('TUnitLocalForm')
+   WHERE Object.ValueData IN ('TUnitLocalForm', 'TDataDialogForm')
      AND Object.DescId = zc_Object_Form()
     ;
     
