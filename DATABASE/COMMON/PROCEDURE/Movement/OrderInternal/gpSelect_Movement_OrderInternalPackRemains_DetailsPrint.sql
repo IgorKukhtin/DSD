@@ -134,7 +134,11 @@ BEGIN
                            , Object_Measure_basis.ValueData      AS MeasureName_basis 
                            
                            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-
+                           
+                           , COALESCE (MovementItem.Amount,0)
+                           + COALESCE (MIFloat_AmountSecond.ValueData,0)
+                           + COALESCE (MIFloat_AmountNext.ValueData,0)
+                           + COALESCE (MIFloat_AmountNextSecond.ValueData,0) AS AmountTotal
                       FROM MovementItem
 
                             LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
@@ -180,6 +184,16 @@ BEGIN
                                                  ON ObjectLink_Goods_Measure_basis.ObjectId = Object_Goods_basis.Id
                                                 AND ObjectLink_Goods_Measure_basis.DescId   = zc_ObjectLink_Goods_Measure()
                             LEFT JOIN Object AS Object_Measure_basis ON Object_Measure_basis.Id = ObjectLink_Goods_Measure_basis.ChildObjectId
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                        ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountNext
+                                                        ON MIFloat_AmountNext.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountNext.DescId = zc_MIFloat_AmountNext()
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountNextSecond
+                                                        ON MIFloat_AmountNextSecond.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountNextSecond.DescId = zc_MIFloat_AmountNextSecond()
 
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Master()
@@ -421,18 +435,14 @@ BEGIN
                 , (zfConvert_TimeShortToString ( MAX (tmpMI_detail.InsertDate5) OVER (ORDER BY tmpMI_detail.AmountPack1 DESC)) ::TVarChar                 
                   ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '5)' WHEN vbMaxAmount > 5 THEN ''|| (vbMaxAmount)::integer ||')' ELSE ')' END) ::TVarChar      AS InsertDate5 
                   
-                --
-                --, 0 ::TFloat AS Income_PACK_to
-                --, 0 ::TFloat AS Income_PACK_from
 
-                , (tmpPACK.Amount_to   * CASE WHEN tmpMI_master.MeasureId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS Income_PACK_to
-                , (tmpPACK.Amount_from * CASE WHEN tmpMI_master.MeasureId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS Income_PACK_from
-                --, COALESCE (tmpLpSelect.AmountPack,0) ::TFloat AS Income_PACK_from
+                --, (tmpPACK.Amount_to   * CASE WHEN tmpMI_master.MeasureId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS Income_PACK_to
+                --, (tmpPACK.Amount_from * CASE WHEN tmpMI_master.MeasureId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS Income_PACK_from
+                , 0 ::TFloat AS Income_PACK_to
+                , 0 ::TFloat AS Income_PACK_from 
                 
-                , SUM ((tmpPACK.Amount_to   * CASE WHEN tmpMI_master.MeasureId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)) OVER (PARTITION BY tmpMI_master.GoodsId_complete) ::TFloat AS Income_PACK_toAll
-                , SUM ((tmpPACK.Amount_from * CASE WHEN tmpMI_master.MeasureId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END)) OVER (PARTITION BY tmpMI_master.GoodsId_complete) ::TFloat AS Income_PACK_fromAll
-                ---, SUM (COALESCE (tmpLpSelect.AmountPack,0)) OVER (PARTITION BY tmpMI_master.GoodsId_complete)   ::TFloat AS Income_PACK_from
-                
+                , (tmpPACK.Amount_to   * CASE WHEN tmpMI_master.MeasureId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS Income_PACK_toAll
+                , tmpFrom.AmountTotal  ::TFloat AS Income_PACK_fromAll
            FROM tmpMI_detail_3 AS tmpMI_detail
               LEFT JOIN tmpMI_master ON tmpMI_master.Id = tmpMI_detail.ParentId
 
@@ -440,10 +450,13 @@ BEGIN
                                     ON ObjectFloat_Weight.ObjectId = tmpMI_master.GoodsId
                                    AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
-              LEFT JOIN tmpPACK ON tmpPACK.GoodsId = tmpMI_master.GoodsId
-                               AND tmpPACK.GoodsKindId = tmpMI_master.GoodsKindId 
+              LEFT JOIN tmpPACK ON tmpPACK.GoodsId = tmpMI_master.GoodsId_complete
+                               AND tmpPACK.GoodsKindId = tmpMI_master.GoodsKindId_complete 
             
-              LEFT JOIN tmpLpSelect ON tmpLpSelect.Id = tmpMI_master.Id
+              LEFT JOIN (SELECT tmpMI_master.GoodsId, tmpMI_master.GoodsKindId, SUM (tmpMI_master.AmountTotal) AS AmountTotal
+                         FROM tmpMI_master
+                         GROUP BY tmpMI_master.GoodsId, tmpMI_master.GoodsKindId) AS tmpFrom ON tmpFrom.GoodsId = tmpMI_master.GoodsId_complete
+                                                                                            AND tmpFrom.GoodsKindId = tmpMI_master.GoodsKindId_complete
                 
            WHERE COALESCE (tmpMI_detail.AmountPack1, 0) <> 0
               OR COALESCE (tmpMI_detail.AmountPack2, 0) <> 0
