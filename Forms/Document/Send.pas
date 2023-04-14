@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  ExternalLoad;
 
 type
   TSendForm = class(TAncestorDocumentForm)
@@ -174,6 +175,11 @@ type
     cxGridChild: TcxGrid;
     cxGridDBTableViewChild: TcxGridDBTableView;
     cxGridLevel1: TcxGridLevel;
+    spGetImportSetting: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macLoadExcel: TMultiAction;
+    bbLoadExcel: TdxBarButton;
   private
     { Private declarations }
   public
