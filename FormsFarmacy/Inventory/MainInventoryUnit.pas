@@ -35,9 +35,15 @@ type
     actUnitChoice: TOpenChoiceForm;
     FormParams: TdsdFormParams;
     spGet_User_IsAdmin: TdsdStoredProc;
+    mactCreteNewInvent: TMultiAction;
+    actDataDialog: TExecuteDialog;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    actReCreteInventDate: TAction;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);
+    procedure actReCreteInventDateExecute(Sender: TObject);
   private
     { Private declarations }
 
@@ -81,6 +87,21 @@ begin
   finally
     EndSplash;
   end;
+end;
+
+procedure TMainInventoryForm.actReCreteInventDateExecute(Sender: TObject);
+ var OperDate: TDateTime; UnitName : String; isSave: boolean;
+begin
+
+  if not ChechActiveInv(OperDate, UnitName, isSave) then
+  begin
+
+    raise Exception.Create ('Прервано сотрудником...');
+  end;
+
+  if not CreateInventoryTable then Exit;
+
+
 end;
 
 procedure TMainInventoryForm.Add_Log(AMessage: String);
