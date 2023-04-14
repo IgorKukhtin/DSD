@@ -10,17 +10,17 @@ inherited Report_ImplementationPlanEmployeeUserForm: TReport_ImplementationPlanE
   inherited PageControl: TcxPageControl
     Width = 1087
     Height = 313
-    ExplicitWidth = 1111
+    ExplicitWidth = 1087
     ExplicitHeight = 313
     ClientRectBottom = 313
     ClientRectRight = 1087
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1111
+      ExplicitWidth = 1087
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 1087
         Height = 313
-        ExplicitWidth = 1111
+        ExplicitWidth = 1087
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -129,6 +129,16 @@ inherited Report_ImplementationPlanEmployeeUserForm: TReport_ImplementationPlanE
             Options.Editing = False
             Width = 89
           end
+          object TotalExecutionFixed: TcxGridDBColumn
+            Caption = '% '#1087#1086#1079#1080#1094#1080#1080' '#1089' '#1075#1072#1083#1086#1095#1082#1086#1081
+            DataBinding.FieldName = 'TotalExecutionFixed'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object AmountTheFineTab: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
             DataBinding.FieldName = 'AmountTheFineTab'
@@ -184,7 +194,7 @@ inherited Report_ImplementationPlanEmployeeUserForm: TReport_ImplementationPlanE
   end
   inherited Panel: TPanel
     Width = 1087
-    ExplicitWidth = 1111
+    ExplicitWidth = 1087
     inherited deStart: TcxDateEdit
       EditValue = 43344d
       Properties.DisplayFormat = 'mmmm yyyy'
