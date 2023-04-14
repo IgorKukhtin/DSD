@@ -17,6 +17,7 @@ RETURNS TABLE (
   NormOfManDays           Integer,
   FactOfManDays           Integer,
   TotalExecutionLine      TFloat,
+  TotalExecutionFixed     TFloat,
   AmountTheFineTab        TFloat,
   BonusAmountTab          TFloat,
   Total                   TFloat,
@@ -218,6 +219,7 @@ BEGIN
             FactOfManDays      Integer,
 
             TotalExecutionLine TFloat,
+            TotalExecutionFixed TFloat,
             AmountTheFineTab   TFloat,
             BonusAmountTab     TFloat,
             Total              TFloat,
@@ -238,6 +240,7 @@ BEGIN
              UnitName,
              UnitCategoryCode,
              TotalExecutionLine,
+             TotalExecutionFixed,
              AmountTheFineTab,
              BonusAmountTab,
              Total)
@@ -248,7 +251,7 @@ BEGIN
        tmpUserUnitDayTable.UnitId,
        Object_Unit.ValueData,
        COALESCE (Object_UnitCategory.ObjectCode, 0),
-       0, 0, 0, 0
+       0, 0, 0, 0, 0
     FROM tmpUserUnitDayTable
 
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUserUnitDayTable.UnitId
@@ -609,7 +612,8 @@ BEGIN
 
        -- Собираем Общий % выполнения построчный:
      UPDATE tmpResult SET
-          TotalExecutionLine = ROUND(CASE WHEN Implementation.CountConsider <> 0 THEN 1.0 * Implementation.CountAmount / Implementation.CountConsider * 100 ELSE 0 END + 
+          TotalExecutionLine = ROUND(CASE WHEN Implementation.CountConsider <> 0 
+                                          THEN 1.0 * Implementation.CountAmount / Implementation.CountConsider * 100 ELSE 0 END + 
                                                COALESCE (Implementation.CountFixedPercent * CASE WHEN UnitCategoryCode = 2
                                                                                                  THEN vbFixedPercentA
                                                                                                  WHEN UnitCategoryCode = 3
@@ -618,7 +622,10 @@ BEGIN
                                                                                                  THEN vbFixedPercentC
                                                                                                  WHEN UnitCategoryCode = 8
                                                                                                  THEN vbFixedPercentD
-                                                                                                 ELSE 0 END, 0), 2)
+                                          ELSE 0 END, 0), 2)
+        , TotalExecutionFixed = ROUND(CASE WHEN Implementation.CountConsiderFixed <> 0
+                                           THEN 1.0 * Implementation.CountAmountFixed / Implementation.CountConsiderFixed * 100
+                                           ELSE 0 END, 2)
         , CountAmount   = Implementation.CountAmount
         , CountConsider = Implementation.CountConsider
         , CountRecord   = Implementation.CountRecord
@@ -638,6 +645,9 @@ BEGIN
              SUM(CASE WHEN COALESCE(Implementation.isFixedPercent, False) = TRUE AND
                  Implementation.Amount > 0 AND Implementation.AmountPlanTab > 0 AND
                  Implementation.Amount >= Implementation.AmountPlanTab then 1 else 0 end)::Integer  AS CountFixedPercent,             
+             SUM(CASE WHEN Implementation.Amount > 0 AND Implementation.AmountPlanTab > 0 AND Implementation.isFixedPercent = True AND
+                 Implementation.Amount >= Implementation.AmountPlanTab then 1 else 0 end)::Integer  AS CountAmountFixed,
+             SUM(CASE WHEN Implementation.AmountPlanTab >= 0.1 AND Implementation.isFixedPercent = True then 1 else 0 end)::Integer AS CountConsiderFixed,
              Count(*)::Integer                                                                      AS CountRecord
            FROM
              (WITH tmpPromoUnitKoeff AS (SELECT MI_PromoUnit.ObjectId                             AS GoodsId
@@ -683,6 +693,7 @@ BEGIN
                                                             , vbDateStart
                                                             , tmpResult.UnitId
                                                             , tmpResult.TotalExecutionLine
+                                                            , tmpResult.TotalExecutionFixed
                                                             , tmpResult.AmountTheFineTab
                                                             , tmpResult.BonusAmountTab) 
      FROM (SELECT
@@ -768,6 +779,7 @@ BEGIN
         Result.NormOfManDays,
         Result.FactOfManDays,
         Result.TotalExecutionLine,
+        Result.TotalExecutionFixed,
         Result.AmountTheFineTab,
         Result.BonusAmountTab,
         CASE WHEN (Result.Total > 0 OR date_part('day', vbDateStart - tmpUser.DateIn)::INTEGER > 90) AND COALESCE(Personal_View.PositionCode, 1) = 1 THEN Result.Total ELSE 0 END::TFloat AS Total,

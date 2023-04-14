@@ -119,6 +119,7 @@ type
     spGetTotal: TdsdStoredProc;
     colisFixedPercent: TcxGridDBBandedColumn;
     colAddBonusPercent: TcxGridDBBandedColumn;
+    cdsResultTotalExecutionFixed: TCurrencyField;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cdsListBandsAfterOpen(DataSet: TDataSet);
     procedure ClientDataSetCalcFields(DataSet: TDataSet);
@@ -153,6 +154,7 @@ type
     FCountO : Integer;
     FCountAllO : Integer;
     FCountYes : Integer;
+    FCountFixed : Integer;
     FCountFixedPercent : Integer;
     FFixedPercent : Currency;
     FStyle : TcxStyle;
@@ -452,6 +454,10 @@ begin
     Dataset['TotalExecutionLine'] := (ClientDataSet.RecordCount - FCountO) / FCountYes * 100 + FCountFixedPercent * FFixedPercent
   else Dataset['TotalExecutionLine'] := 0;
 
+  if FCountFixed <> 0 then
+    Dataset['TotalExecutionFixed'] := FCountFixedPercent / FCountFixed * 100
+  else Dataset['TotalExecutionFixed'] := 0;
+
   if FCountYes <> 0 then
     Dataset['TotalExecutionAllLine'] := (ClientDataSet.RecordCount - FCountAllO) / FCountYes * 100
   else Dataset['TotalExecutionAllLine'] := 0;
@@ -510,6 +516,7 @@ begin
   FCountAllO := 0;
   FCountYes := 0;
   FCountFixedPercent := 0;
+  FCountFixed := 0;
   try
     ClientDataSet.AfterPost :=  Nil;
     ClientDataSet.DisableControls;
@@ -529,6 +536,7 @@ begin
       if ClientDataSet.FieldByName('AmountPlanTab').AsCurrency >= 0.1 then
       begin
         ClientDataSet.FieldByName('Consider').AsString := 'Yes';
+        if ClientDataSet.FieldByName('isFixedPercent').AsBoolean then Inc(FCountFixed);
         Inc(FCountYes);
       end else ClientDataSet.FieldByName('Consider').AsString := 'No';
       ClientDataSet.Post;
@@ -568,6 +576,10 @@ begin
       cdsResult.FieldByName('TotalExecutionLine').AsCurrency := (ClientDataSet.RecordCount - FCountO) / FCountYes * 100 + FCountFixedPercent * FFixedPercent
     else cdsResult.FieldByName('TotalExecutionLine').AsCurrency := 0;
 
+    if FCountFixed <> 0 then
+      cdsResult.FieldByName('TotalExecutionFixed').AsCurrency := FCountFixedPercent / FCountFixed * 100
+    else cdsResult.FieldByName('TotalExecutionFixed').AsCurrency := 0;
+
     if FCountYes <> 0 then
       cdsResult.FieldByName('TotalExecutionAllLine').AsCurrency := (ClientDataSet.RecordCount - FCountAllO) / FCountYes * 100
     else cdsResult.FieldByName('TotalExecutionAllLine').AsCurrency := 0;
@@ -575,6 +587,7 @@ begin
     spGetTotal.ParamByName('inUnitId').Value := FUnitId;
     spGetTotal.ParamByName('inOperDate').Value := deStart.Date;
     spGetTotal.ParamByName('inTotalExecutionLine').Value := cdsResult.FieldByName('TotalExecutionLine').AsCurrency;
+    spGetTotal.ParamByName('inTotalExecutionFixed').Value := cdsResult.FieldByName('TotalExecutionFixed').AsCurrency;
     spGetTotal.ParamByName('inAmountTheFineTab').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[0];
     spGetTotal.ParamByName('inBonusAmountTab').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[1];
     spGetTotal.ParamByName('outTotal').Value := 0;
@@ -897,6 +910,7 @@ begin
   FCountAllO := 0;
   FUnitCalck := 0;
   FCountFixedPercent := 0;
+  FCountFixed := 0;
   FFixedPercent := 1;
   FAmountPlan := Nil;
   FAmountPlanAward := Nil;

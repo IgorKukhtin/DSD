@@ -1,11 +1,13 @@
 -- Function: gpReport_ImplementationPeriodTotal
 
-DROP FUNCTION IF EXISTS gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ImplementationPeriodTotal (
        IN inUnitId Integer,
        IN inOperDate TDateTime,
        IN inTotalExecutionLine TFloat,
+       IN inTotalExecutionFixed TFloat,
        IN inAmountTheFineTab TFloat,
        IN inBonusAmountTab TFloat,
       OUT outTotal TFloat,
@@ -35,6 +37,7 @@ BEGIN
                                         , inOperDate
                                         , inUnitId
                                         , inTotalExecutionLine
+                                        , inTotalExecutionFixed
                                         , inAmountTheFineTab
                                         , inBonusAmountTab); 
 
