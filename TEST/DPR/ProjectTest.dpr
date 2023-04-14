@@ -1264,7 +1264,6 @@ uses
   ReturnDescKind in '..\..\Forms\Kind\ReturnDescKind.pas' {ReturnDescKindForm: TParentForm},
   Report_ProfitLoss_gridDialog in '..\..\Forms\Report\Report_ProfitLoss_gridDialog.pas' {Report_ProfitLoss_gridDialogForm: TParentForm},
   Report_JuridicalSold_BranchDialog in '..\..\Forms\Report\Report_JuridicalSold_BranchDialog.pas' {Report_JuridicalSold_BranchDialogForm: TParentForm},
-  Report_JuridicalSold_Branch in '..\..\Forms\Report\Report_JuridicalSold_Branch.pas' {Report_JuridicalSold_BranchForm: TParentForm},
   Report_JuridicalDefermentPayment_Branch in '..\..\Forms\Report\Report_JuridicalDefermentPayment_Branch.pas' {Report_JuridicalDefermentPayment_BranchForm: TParentForm},
   Report_JuridicalDefermentPayment_BranchDialog in '..\..\Forms\Report\Report_JuridicalDefermentPayment_BranchDialog.pas' {Report_JuridicalDefermentPayment_BranchDialogForm: TParentForm},
   ContractGoodsJournal in '..\..\Forms\Document\ContractGoodsJournal.pas' {ContractGoodsJournalForm: TParentForm},
@@ -1424,7 +1423,8 @@ uses
   GoodsGroup_UKTZED in '..\..\Forms\Guides\GoodsGroup_UKTZED.pas' {GoodsGroup_UKTZEDForm: TParentForm},
   Report_Goods_byMovementSaleReturn in '..\..\Forms\Report\Report_Goods_byMovementSaleReturn.pas' {Report_Goods_byMovementSaleReturnForm: TParentForm},
   Report_Goods_byMovementSaleReturnDialog in '..\..\Forms\Report\Report_Goods_byMovementSaleReturnDialog.pas' {Report_Goods_byMovementSaleReturnDialogForm: TParentForm},
-  StoreReal in '..\..\Forms\Document\StoreReal.pas' {StoreRealForm: TParentForm};
+  StoreReal in '..\..\Forms\Document\StoreReal.pas' {StoreRealForm: TParentForm},
+  Report_JuridicalSold_Branch in '..\..\Forms\Report\Report_JuridicalSold_Branch.pas' {Report_JuridicalSold_BranchForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

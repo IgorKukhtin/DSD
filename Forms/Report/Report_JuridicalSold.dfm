@@ -4,7 +4,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   ClientWidth = 1118
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1134
-  ExplicitHeight = 591
+  ExplicitHeight = 595
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -306,6 +306,16 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
               Format = ',0.00##'
               Kind = skSum
               Column = ReturnInRealSumm_total
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ChangePercentSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ChangePercentSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -587,6 +597,16 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
               Format = ',0.00##'
               Kind = skSum
               Column = ReturnInRealSumm_total
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ChangePercentSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ChangePercentSumm
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -1201,6 +1221,19 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object ChangePercentSumm: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072' ('#1040#1082#1090')'
+            DataBinding.FieldName = 'ChangePercentSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1082#1090' '#1087#1088#1077#1076#1086#1089#1090'. '#1089#1082#1080#1076#1082#1080
+            Width = 80
+          end
           object TransferDebtSumm: TcxGridDBColumn
             Caption = #1055'.'#1076#1086#1083#1075#1072' (+)'#1087#1088#1086#1076'. (-)'#1074#1086#1079#1074#1088'.'
             DataBinding.FieldName = 'TransferDebtSumm'
@@ -1566,6 +1599,20 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ChangePercentSumm_Currency: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072' ('#1040#1082#1090') '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'ChangePercentSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1082#1090' '#1087#1088#1077#1076#1086#1089#1090'. '#1089#1082#1080#1076#1082#1080' '#1074' '#1074#1072#1083'.'
             Width = 80
           end
           object TransferDebtSumm_Currency: TcxGridDBColumn

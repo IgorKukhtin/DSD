@@ -40,7 +40,7 @@ RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarCha
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
              , IncomeSumm TFloat, ReturnOutSumm TFloat, SaleSumm TFloat, SaleRealSumm TFloat, SaleSumm_10300 TFloat, SaleRealSumm_total TFloat, ReturnInSumm TFloat, ReturnInRealSumm TFloat, ReturnInSumm_10300 TFloat, ReturnInRealSumm_total TFloat
-             , PriceCorrectiveSumm TFloat
+             , PriceCorrectiveSumm TFloat, ChangePercentSumm TFloat
              , MoneySumm TFloat, ServiceSumm TFloat, ServiceRealSumm TFloat, TransferDebtSumm TFloat, SendDebtSumm TFloat, ChangeCurrencySumm TFloat, OtherSumm TFloat
              , EndAmount_A TFloat, EndAmount_P TFloat, EndAmount_D TFloat, EndAmount_K TFloat
 
@@ -49,7 +49,7 @@ RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarCha
              , IncomeSumm_Currency TFloat, ReturnOutSumm_Currency TFloat
              , SaleSumm_Currency TFloat, SaleRealSumm_Currency TFloat, SaleSumm_10300_Currency TFloat, SaleRealSumm_Currency_total TFloat
              , ReturnInSumm_Currency TFloat, ReturnInRealSumm_Currency TFloat, ReturnInSumm_10300_Currency TFloat, ReturnInRealSumm_Currency_total TFloat
-             , PriceCorrectiveSumm_Currency TFloat
+             , PriceCorrectiveSumm_Currency TFloat, ChangePercentSumm_Currency TFloat
              , MoneySumm_Currency TFloat, ServiceSumm_Currency TFloat, ServiceRealSumm_Currency TFloat
              , TransferDebtSumm_Currency TFloat, SendDebtSumm_Currency TFloat, ChangeCurrencySumm_Currency TFloat, OtherSumm_Currency TFloat
              , EndAmount_Currency_A TFloat, EndAmount_Currency_P TFloat, EndAmount_Currency_D TFloat, EndAmount_Currency_K TFloat
@@ -261,7 +261,8 @@ BEGIN
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnIn()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInRealSumm
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnIn()) AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10300() THEN 1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInSumm_10300
 
-                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PriceCorrective()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS PriceCorrectiveSumm
+                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PriceCorrective()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS PriceCorrectiveSumm  
+                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ChangePercent()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)   AS ChangePercentSumm
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END
                   --                    + CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Income(), zc_Movement_IncomeAsset()) AND MIContainer.Amount > 0   THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END
                                        ) AS MoneySumm
@@ -280,6 +281,7 @@ BEGIN
                                                                                                                                     , zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService(), zc_Movement_TransportService()
                                                                                                                                     , zc_Movement_SendDebt()
                                                                                                                                     , zc_Movement_Currency()
+                                                                                                                                    , zc_Movement_ChangePercent()
                                                                                                                                      )
                                                                                                    THEN MIContainer.Amount
                                                                                               ELSE 0
@@ -303,6 +305,7 @@ BEGIN
                                  , 0 AS ReturnInRealSumm_Currency
                                  , 0 AS ReturnInSumm_10300_Currency
                                  , 0 AS PriceCorrectiveSumm_Currency
+                                 , 0 AS ChangePercentSumm_Currency
                                  , 0 AS MoneySumm_Currency
                                  , 0 AS ServiceSumm_Currency
                                  , 0 AS ServiceRealSumm_Currency
@@ -335,6 +338,7 @@ BEGIN
                                  , 0 AS ReturnInRealSumm
                                  , 0 AS ReturnInSumm_10300
                                  , 0 AS PriceCorrectiveSumm
+                                 , 0 AS ChangePercentSumm
                                  , 0 AS MoneySumm
                                  , 0 AS ServiceSumm
                                  , 0 AS ServiceRealSumm
@@ -362,6 +366,7 @@ BEGIN
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ReturnIn()) AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10300() THEN 1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInSumm_10300_Currency
 
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_PriceCorrective()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS PriceCorrectiveSumm_Currency
+                                 , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ChangePercent()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END)   AS ChangePercentSumm_Currency
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END
                                        ) AS MoneySumm_Currency
                                  , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm_Currency
@@ -378,7 +383,8 @@ BEGIN
                                                                                                                                     , zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()
                                                                                                                                     , zc_Movement_Service(), zc_Movement_ProfitLossService(), zc_Movement_ProfitIncomeService(), zc_Movement_TransportService()
                                                                                                                                     , zc_Movement_SendDebt()
-                                                                                                                                    , zc_Movement_Currency()
+                                                                                                                                    , zc_Movement_Currency() 
+                                                                                                                                    , zc_Movement_ChangePercent()
                                                                                                                                      )
                                                                                                    THEN MIContainer.Amount
                                                                                               ELSE 0
@@ -499,6 +505,7 @@ BEGIN
         (Operation.ReturnInSumm_10300 * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
         ((Operation.ReturnInRealSumm + Operation.ReturnInSumm_10300) * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat AS ReturnInRealSumm_total,
         (Operation.PriceCorrectiveSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.ChangePercentSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat AS ChangePercentSumm,
         (Operation.MoneySumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
         (Operation.ServiceSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
         (Operation.ServiceRealSumm * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
@@ -533,6 +540,7 @@ BEGIN
         (Operation.ReturnInSumm_10300_Currency * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat,
         ((Operation.ReturnInRealSumm_Currency + Operation.ReturnInSumm_10300_Currency) * COALESCE (tmpReport_res.Koeff, 1.0)) ::TFloat AS ReturnInRealSumm_total_Currency,
         (Operation.PriceCorrectiveSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))::TFloat,
+        (Operation.ChangePercentSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))  ::TFloat,
         (Operation.MoneySumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))          ::TFloat,
         (Operation.ServiceSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))        ::TFloat,
         (Operation.ServiceRealSumm_Currency * COALESCE (tmpReport_res.Koeff, 1.0))    ::TFloat,
@@ -567,6 +575,7 @@ BEGIN
                , SUM (Operation_all.ReturnInRealSumm)    AS ReturnInRealSumm
                , SUM (Operation_all.ReturnInSumm_10300)  AS ReturnInSumm_10300
                , SUM (Operation_all.PriceCorrectiveSumm) AS PriceCorrectiveSumm
+               , SUM (Operation_all.ChangePercentSumm)   AS ChangePercentSumm
                , SUM (Operation_all.MoneySumm)           AS MoneySumm
                , SUM (Operation_all.ServiceSumm)         AS ServiceSumm
                , SUM (Operation_all.ServiceRealSumm)     AS ServiceRealSumm
@@ -588,6 +597,7 @@ BEGIN
                , SUM (Operation_all.ReturnInRealSumm_Currency)    AS ReturnInRealSumm_Currency
                , SUM (Operation_all.ReturnInSumm_10300_Currency)  AS ReturnInSumm_10300_Currency
                , SUM (Operation_all.PriceCorrectiveSumm_Currency) AS PriceCorrectiveSumm_Currency
+               , SUM (Operation_all.ChangePercentSumm_Currency)   AS ChangePercentSumm_Currency
                , SUM (Operation_all.MoneySumm_Currency)           AS MoneySumm_Currency
                , SUM (Operation_all.ServiceSumm_Currency)         AS ServiceSumm_Currency
                , SUM (Operation_all.ServiceRealSumm_Currency)     AS ServiceRealSumm_Currency
@@ -729,6 +739,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 14.04.23         * add ChangePercentSumm
  13.01.20         * add Currency
  29.08.15         * add inIsPartionMovement
  14.11.14         * add inCurrencyId
