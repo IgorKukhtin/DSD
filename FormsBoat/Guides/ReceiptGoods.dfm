@@ -37,8 +37,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = -296
-      ExplicitTop = 23
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -119,6 +117,7 @@
         OptionsData.Inserting = False
         OptionsView.CellAutoHeight = True
         OptionsView.Footer = True
+        OptionsView.GroupByBox = False
         OptionsView.GroupSummaryLayout = gslAlignWithColumns
         OptionsView.HeaderAutoHeight = True
         OptionsView.HeaderHeight = 40
@@ -580,18 +579,29 @@
         OptionsData.DeletingConfirmation = False
         OptionsView.CellAutoHeight = True
         OptionsView.Footer = True
+        OptionsView.GroupByBox = False
         OptionsView.GroupSummaryLayout = gslAlignWithColumns
         OptionsView.HeaderAutoHeight = True
         OptionsView.HeaderHeight = 40
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object NPP_ch1: TcxGridDBColumn
+        object NPP_calc_ch1: TcxGridDBColumn
           Caption = #8470' '#1087'/'#1087
+          DataBinding.FieldName = 'NPP_calc'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #8470' '#1087'/'#1087' '#1088#1072#1089#1095#1077#1090#1085#1099#1081
+          Options.Editing = False
+          Width = 40
+        end
+        object NPP_ch1: TcxGridDBColumn
+          Caption = '***'#8470' '#1087'/'#1087
           DataBinding.FieldName = 'NPP'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #8470' '#1087'/'#1087' '#1074' '#1079#1072#1075#1088#1091#1079#1082#1077' '#1080#1079' '#1101#1082#1089#1077#1083#1103
           Options.Editing = False
-          Width = 40
+          Width = 45
         end
         object DescName_ch1: TcxGridDBColumn
           Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -955,6 +965,11 @@
             Format = ',0.00##'
             Kind = skSum
             Column = EKPriceWVAT_summ_ch2
+          end
+          item
+            Format = ',0.00##;-,0.00##; ;'
+            Kind = skSum
+            Column = Value_ch2
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -979,6 +994,11 @@
           item
             Format = ',0.00##'
             Kind = skSum
+          end
+          item
+            Format = ',0.00##;-,0.00##; ;'
+            Kind = skSum
+            Column = Value_ch2
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
@@ -989,6 +1009,7 @@
         OptionsData.DeletingConfirmation = False
         OptionsView.CellAutoHeight = True
         OptionsView.Footer = True
+        OptionsView.GroupByBox = False
         OptionsView.GroupSummaryLayout = gslAlignWithColumns
         OptionsView.HeaderAutoHeight = True
         OptionsView.HeaderHeight = 40
@@ -1001,13 +1022,23 @@
           HeaderAlignmentVert = vaCenter
           Width = 35
         end
-        object NPP_ch2: TcxGridDBColumn
+        object NPP_calc_ch2: TcxGridDBColumn
           Caption = #8470' '#1087'/'#1087
+          DataBinding.FieldName = 'NPP_calc'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #8470' '#1087'/'#1087' '#1088#1072#1089#1095#1077#1090#1085#1099#1081
+          Options.Editing = False
+          Width = 40
+        end
+        object NPP_ch2: TcxGridDBColumn
+          Caption = '***'#8470' '#1087'/'#1087
           DataBinding.FieldName = 'NPP'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #8470' '#1087'/'#1087' '#1074' '#1079#1072#1075#1088#1091#1079#1082#1077' '#1080#1079' '#1101#1082#1089#1077#1083#1103
           Options.Editing = False
-          Width = 40
+          Width = 45
         end
         object ProdColorGroupName_ch2: TcxGridDBColumn
           Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
@@ -1353,8 +1384,6 @@
       Color = clLime
       ParentBackground = False
       TabOrder = 1
-      ExplicitLeft = 337
-      ExplicitTop = 145
     end
   end
   object cxSplitter1: TcxSplitter

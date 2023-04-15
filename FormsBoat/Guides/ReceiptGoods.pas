@@ -125,7 +125,7 @@ type
     Panel2: TPanel;
     cxGridCh2: TcxGrid;
     cxGridDBTableViewCh2: TcxGridDBTableView;
-    NPP_ch2: TcxGridDBColumn;
+    NPP_calc_ch2: TcxGridDBColumn;
     GoodsGroupNameFull_ch2: TcxGridDBColumn;
     GoodsGroupName_2: TcxGridDBColumn;
     Article_2: TcxGridDBColumn;
@@ -231,6 +231,8 @@ type
     spInsertUpdate_ReceiptGoods: TdsdStoredProc;
     actspInsertUpdate_ReceiptGoods: TdsdExecStoredProc;
     bbInsertUpdate_ReceiptGoods: TdxBarButton;
+    NPP_calc_ch1: TcxGridDBColumn;
+    NPP_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -97,6 +97,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         OptionsData.Inserting = False
         OptionsView.CellAutoHeight = True
         OptionsView.Footer = True
+        OptionsView.GroupByBox = False
         OptionsView.GroupSummaryLayout = gslAlignWithColumns
         OptionsView.HeaderAutoHeight = True
         OptionsView.HeaderHeight = 40
@@ -408,6 +409,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         OptionsData.Inserting = False
         OptionsView.CellAutoHeight = True
         OptionsView.Footer = True
+        OptionsView.GroupByBox = False
         OptionsView.GroupSummaryLayout = gslAlignWithColumns
         OptionsView.HeaderAutoHeight = True
         OptionsView.HeaderHeight = 40
@@ -744,6 +746,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         OptionsData.DeletingConfirmation = False
         OptionsView.CellAutoHeight = True
         OptionsView.Footer = True
+        OptionsView.GroupByBox = False
         OptionsView.GroupSummaryLayout = gslAlignWithColumns
         OptionsView.HeaderAutoHeight = True
         OptionsView.HeaderHeight = 40
@@ -1319,7 +1322,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     Width = 1221
     Height = 33
     Align = alTop
-    TabOrder = 7
+    TabOrder = 6
     object lbSearchArticle: TcxLabel
       Left = 22
       Top = 6
