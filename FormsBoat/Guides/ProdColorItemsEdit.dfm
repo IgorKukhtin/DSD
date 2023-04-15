@@ -47,12 +47,12 @@ object ProdColorItemsEditForm: TProdColorItemsEditForm
   end
   object edCode: TcxCurrencyEdit
     Left = 10
-    Top = 30
+    Top = 28
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = False
-    Style.Color = 15073510
+    Style.Color = clWhite
     TabOrder = 4
     Width = 273
   end
@@ -102,7 +102,7 @@ object ProdColorItemsEditForm: TProdColorItemsEditForm
     Width = 273
   end
   object edProdColorPattern: TcxButtonEdit
-    Left = 8
+    Left = 10
     Top = 71
     Properties.Buttons = <
       item

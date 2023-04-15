@@ -189,7 +189,7 @@
         Width = 100
       end
       object ProdColorPatternName: TcxGridDBColumn
-        Caption = #1069#1083#1077#1084#1077#1085#1090' Boat Structure'
+        Caption = #1069#1083#1077#1084#1077#1085#1090' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088#1072
         DataBinding.FieldName = 'ProdColorPatternName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -201,7 +201,7 @@
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 97
+        Width = 120
       end
       object BrandName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082#1072

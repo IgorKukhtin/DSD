@@ -1296,9 +1296,11 @@
       end
       object miProdColorPattern: TMenuItem
         Action = actProdColorPattern
+        Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' - '#1069#1083#1077#1084#1077#1085#1090#1099'  '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080
       end
       object miProdColorGroup: TMenuItem
         Action = actProdColorGroup
+        Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088' - '#1069#1083#1077#1084#1077#1085#1090#1099
       end
       object miColorPattern: TMenuItem
         Action = actColorPattern
