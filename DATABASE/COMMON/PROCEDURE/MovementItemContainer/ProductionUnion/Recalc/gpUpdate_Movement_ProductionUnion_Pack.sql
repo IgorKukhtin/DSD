@@ -17,14 +17,15 @@ BEGIN
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_ProductionUnion_Pack());
 
    --
-   IF EXTRACT (MONTH FROM inStartDate) IN (2) THEN RETURN; END IF;
+   --IF EXTRACT (MONTH FROM inStartDate) IN (2) THEN RETURN; END IF;
+   --
 	
    IF (DATE_TRUNC ('MONTH', inStartDate) < DATE_TRUNC ('MONTH', CURRENT_DATE)
        OR EXTRACT (DAY FROM CURRENT_DATE) >= 20
       )
       AND inStartDate <>  CURRENT_DATE - INTERVAL '1 DAY'
       AND (EXTRACT (DAY FROM inStartDate)  / 2 - FLOOR (EXTRACT (DAY FROM inStartDate)  / 2)
-        <> EXTRACT (DAY FROM CURRENT_DATE) / 2 - FLOOR (EXTRACT (DAY FROM CURRENT_DATE) / 2)
+        <> (0 + EXTRACT (DAY FROM CURRENT_DATE)) / 2 - FLOOR ((0 + EXTRACT (DAY FROM CURRENT_DATE)) / 2)
       --OR EXTRACT (DAY FROM inStartDate) < 14
           )
       AND 1=1

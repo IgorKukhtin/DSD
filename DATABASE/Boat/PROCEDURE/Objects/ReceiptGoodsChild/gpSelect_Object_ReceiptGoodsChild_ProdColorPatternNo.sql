@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo(
     IN inIsErased        Boolean,       -- признак показать удаленные да / нет 
     IN inSession         TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
+RETURNS TABLE (Id Integer, NPP Integer, NPP_calc Integer, Comment TVarChar
              , Value NUMERIC (16, 8), Value_service NUMERIC (16, 8), ForCount TFloat
              , ReceiptGoodsId Integer, ReceiptGoodsName TVarChar
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar, DescName TVarChar
@@ -57,7 +57,8 @@ BEGIN
      RETURN QUERY
      SELECT 
            Object_ReceiptGoodsChild.Id              AS Id
-         , ROW_NUMBER() OVER (PARTITION BY Object_ReceiptGoods.Id ORDER BY Object_ReceiptGoodsChild.Id ASC) :: Integer AS NPP
+         , ObjectFloat_NPP.ValueData     :: Integer AS NPP
+         , ROW_NUMBER() OVER (PARTITION BY Object_ReceiptGoods.Id ORDER BY Object_ReceiptGoodsChild.Id ASC) :: Integer AS NPP_calc
          , Object_ReceiptGoodsChild.ValueData       AS Comment
 
          , CASE WHEN ObjectDesc.Id <> zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END ELSE Null END :: NUMERIC (16, 8) AS Value
@@ -126,6 +127,11 @@ BEGIN
                               AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
           LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
+
+          -- NPP
+          LEFT JOIN ObjectFloat AS ObjectFloat_NPP
+                                ON ObjectFloat_NPP.ObjectId = Object_ReceiptGoodsChild.Id
+                               AND ObjectFloat_NPP.DescId   = zc_ObjectFloat_ReceiptGoodsChild_NPP()
 
           -- значение в сборке
           LEFT JOIN ObjectFloat AS ObjectFloat_Value

@@ -92,6 +92,16 @@ BEGIN
      END IF;
 
    
+     -- проверка Юр. лицо
+     IF inContractId > 0 AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inContractId AND OL.DescId = zc_ObjectLink_Contract_Juridical() AND OL.ChildObjectId = inJuridicalId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Выбрано Юр. лицо = <%> не соответствует значению в договоре = <%>'
+                       , lfGet_Object_ValueData (inJuridicalId) 
+                       , lfGet_Object_ValueData ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inContractId AND OL.DescId = zc_ObjectLink_Contract_Juridical()))
+                        ;
+     END IF;
+
+
      -- проверка вводят или "кол-во и цену" или "сумму"
      IF ((COALESCE (inCountDebet, 0) + COALESCE (inCountKredit, 0)) <> 0 OR (COALESCE (inPrice, 0)) <> 0 )
       AND (COALESCE (ioAmountIn, 0) + COALESCE (ioAmountOut, 0) <> 0 OR COALESCE (ioAmountCurrencyDebet, 0) + COALESCE (ioAmountCurrencyKredit, 0) <> 0)

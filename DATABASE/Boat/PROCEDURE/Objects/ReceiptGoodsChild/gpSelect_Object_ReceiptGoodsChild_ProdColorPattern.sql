@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, ReceiptGoodsId Integer
              , Comment TVarChar
              , isEnabled Boolean
              , isErased Boolean
-             , NPP Integer
+             , NPP Integer, NPP_calc Integer
 
                -- Boat Structure 
              , ProdColorPatternId Integer, ProdColorPatternCode Integer, ProdColorPatternName TVarChar, ProdColorPatternName_all TVarChar
@@ -142,7 +142,9 @@ BEGIN
           , tmpProdColorPattern.Comment       :: TVarChar AS Comment
           , tmpProdColorPattern.isEnabled     :: Boolean  AS isEnabled
           , tmpProdColorPattern.isErased      :: Boolean  AS isErased
-          , ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ReceiptGoodsId ORDER BY Object_ProdColorPattern.ObjectCode ASC) :: Integer AS NPP
+ 
+          , ObjectFloat_NPP.ValueData         :: Integer  AS NPP
+          , ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ReceiptGoodsId ORDER BY Object_ProdColorPattern.ObjectCode ASC) :: Integer AS NPP_calc
 
           , Object_ProdColorPattern.Id                    AS ProdColorPatternId
           , Object_ProdColorPattern.ObjectCode            AS ProdColorPatternCode
@@ -212,6 +214,11 @@ BEGIN
                                ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
                               AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
           LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+
+          -- NPP
+          LEFT JOIN ObjectFloat AS ObjectFloat_NPP
+                                ON ObjectFloat_NPP.ObjectId = tmpProdColorPattern.ReceiptGoodsChildId
+                               AND ObjectFloat_NPP.DescId   = zc_ObjectFloat_ReceiptGoodsChild_NPP()
 
           -- Модель
           LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern_ColorPattern

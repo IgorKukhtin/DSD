@@ -2067,6 +2067,94 @@ end if;
                                                );
 
 
+     -- !!!исправление ошибки!!!
+     IF inMovementId = 25003577
+     THEN
+         INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId
+                                           , AccountId, ObjectId_Analyzer, WhereObjectId_Analyzer
+                                           , Amount, OperDate, IsActive)
+    
+             with tmp1 as (select Container.Id, Container.DescId, Container.ObjectId, Container.Amount, Container.ParentId
+                              , CLO_1.Objectid AS UnitId, CLO_3.Objectid AS GoodsId, CLO_4.Objectid AS InfoMoneyId, CLO_5.Objectid AS InfoMoneyDetailId
+                           from Container 
+                                inner join ContainerLinkObject AS CLO_1 on CLO_1.ContainerId = Container.Id
+                                                                       AND CLO_1.DescId      = zc_ContainerLinkObject_Unit()
+                                                                       AND CLO_1.ObjectId    = 2790412 -- ;"ЦЕХ Тушенка"
+                                left join ContainerLinkObject AS CLO_2 on CLO_2.ContainerId = Container.Id
+                                                                      AND CLO_2.DescId      = zc_ContainerLinkObject_JuridicalBasis()
+                                                                      
+                                left join ContainerLinkObject AS CLO_3 on CLO_3.ContainerId = Container.Id
+                                                                      AND CLO_3.DescId      = zc_ContainerLinkObject_Goods()
+                                left join ContainerLinkObject AS CLO_4 on CLO_4.ContainerId = Container.Id
+                                                                      AND CLO_4.DescId      = zc_ContainerLinkObject_InfoMoney()
+                                left join ContainerLinkObject AS CLO_5 on CLO_5.ContainerId = Container.Id
+                                                                      AND CLO_5.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
+                           where CLO_2.ObjectId > 0
+                           -- and Container.Amount <> 0
+                           )
+             , tmpRes AS (select Container.Id   AS ContainerId_from, Container.ObjectId   AS AccountId_from, Container.Amount   AS Amount_from
+                               , Container_2.Id AS ContainerId_to,   Container_2.ObjectId AS AccountId_to,   Container_2.Amount AS Amount_to
+                               , CLO_1.Objectid AS UnitId, CLO_3.Objectid AS GoodsId, CLO_4.Objectid AS InfoMoneyId, CLO_5.Objectid AS InfoMoneyDetailId
+                          
+                                 -- № п/п
+                               , ROW_NUMBER() OVER (PARTITION BY Container.Id ORDER BY Container_2.Amount DESC) AS Ord
+
+                          from Container 
+                               inner join ContainerLinkObject AS CLO_1 on CLO_1.ContainerId = Container.Id
+                                                                      AND CLO_1.DescId      = zc_ContainerLinkObject_Unit()
+                                                                      AND CLO_1.ObjectId    = 2790412 -- ;"ЦЕХ Тушенка"
+                               left join ContainerLinkObject AS CLO_2 on CLO_2.ContainerId = Container.Id
+                                                                     AND CLO_2.DescId      = zc_ContainerLinkObject_JuridicalBasis()
+                                                                     AND CLO_2.ObjectId    > 0
+                          
+                               left join ContainerLinkObject AS CLO_3 on CLO_3.ContainerId = Container.Id
+                                                                     AND CLO_3.DescId      = zc_ContainerLinkObject_Goods()
+                               left join ContainerLinkObject AS CLO_4 on CLO_4.ContainerId = Container.Id
+                                                                     AND CLO_4.DescId      = zc_ContainerLinkObject_InfoMoney()
+                               left join ContainerLinkObject AS CLO_5 on CLO_5.ContainerId = Container.Id
+                                                                     AND CLO_5.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
+                          
+                          
+                                left join tmp1 AS Container_2 on Container_2.ParentId = Container.ParentId
+                                                             and Container_2.ObjectId = Container.ObjectId 
+                                                             and Container_2.DescId = Container.DescId 
+                                                             and Container_2.GoodsId = CLO_3.ObjectId
+                                                           --and Container_2.InfoMoneyId = CLO_4.ObjectId
+                                                           --and Container_2.InfoMoneyDetailId = CLO_5.ObjectId
+                          where Container.DescId = 2 
+                            AND Container.Amount <> 0
+                            and CLO_2.ContainerId is null
+                            and Container_2.ParentId  is NOT null
+                         )
+             --
+             SELECT 0 AS Id, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 256266208 AS MovementItemId
+                  , tmpRes.ContainerId_from AS ContainerId
+                  , tmpRes.AccountId_from   AS AccountId
+                  , tmpRes.GoodsId AS ObjectId_Analyzer
+                  , tmpRes.UnitId  AS WhereObjectId_Analyzer
+                  , -1 * tmpRes.Amount_from AS Amount
+                  , vbOperDate AS OperDate
+                  , FALSE AS IsActive
+             FROM tmpRes
+             WHERE tmpRes.Ord = 1
+            UNION ALL
+             SELECT 0 AS Id, zc_MIContainer_Summ() AS DescId, vbMovementDescId, inMovementId, 256266208 AS MovementItemId
+                  , tmpRes.ContainerId_to AS ContainerId
+                  , tmpRes.AccountId_to   AS AccountId
+                  , tmpRes.GoodsId AS ObjectId_Analyzer
+                  , tmpRes.UnitId  AS WhereObjectId_Analyzer
+                  , 1 * tmpRes.Amount_from AS Amount
+                  , vbOperDate AS OperDate
+                  , TRUE AS IsActive
+             FROM tmpRes
+             WHERE tmpRes.Ord = 1
+            ;
+
+         -- RAISE EXCEPTION 'Ошибка.<%> ', (select count(*) from  _tmpMIContainer_insert);
+
+     END IF; -- !!!исправление ошибки!!!
+     
+
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();

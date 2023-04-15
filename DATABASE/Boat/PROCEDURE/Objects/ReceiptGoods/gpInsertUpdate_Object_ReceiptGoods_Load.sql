@@ -1,9 +1,11 @@
 --
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoods_Load (INTEGER, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoods_Load (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoods_Load (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoods_Load(
-    IN inRecNum                INTEGER ,  -- Строка загрузки
+    IN inRecNum                Integer ,  -- Строка загрузки
+    IN inNPP                   TVarChar,  -- № п/п
     IN inArticle               TVarChar,  -- Артикул-результат
     IN inReceiptLevelName      TVarChar,  -- Название сборки
     IN inGoodsName             TVarChar,  -- Название-результат
@@ -60,6 +62,26 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
    
+
+   -- !!!тест!!!
+ /*IF TRIM (inArticle_child) ILIKE  '38.200.00'
+   OR TRIM (inGoodsName_child) ILIKE 'Anti-vibration rubber peak latch 96x29 mm'
+   THEN
+      RAISE EXCEPTION 'Ошибка %<%>  %<%>  %<%>  %<%>.', CHR (13), inArticle_child, CHR (13), inGoodsName_child, CHR (13), zfConvert_CheckStringToFloat (inAmount), CHR (13), inAmount;
+   END IF;*/
+	
+
+   -- !!!замена!!!
+   inArticle               := TRIM (inArticle);
+   inReceiptLevelName      := TRIM (inReceiptLevelName);
+   inGoodsName             := TRIM (inGoodsName);
+   inGroupName             := TRIM (inGroupName);
+   inReplacement           := TRIM (inReplacement);
+   inArticle_child         := TRIM (inArticle_child);
+   inGoodsName_child       := TRIM (inGoodsName_child);
+   inGroupName_child       := TRIM (inGroupName_child);
+   inAmount                := TRIM (inAmount);
+
    --
    IF inReceiptLevelName ILIKE 'Streeting console'
    THEN
@@ -162,7 +184,8 @@ BEGIN
      THEN
        RAISE EXCEPTION 'Ошибка Шаблон сборка Модели <%> не найден.', 'Agilis-'||TRIM(SPLIT_PART (inArticle, '-', 2));        
      END IF;
-     
+
+     -- удаление
      PERFORM gpUpdate_Object_isErased_ReceiptProdModelChild(inObjectId := Object_ReceiptProdModelChild.Id
                                                           , inIsErased := TRUE
                                                           , inSession  := inSession)
@@ -634,20 +657,43 @@ BEGIN
 
          IF TRIM (inArticle_child) <> ''
          THEN
-            -- по артикулу
-            vbGoodsId_child := (SELECT ObjectString_Article.ObjectId
-                                FROM ObjectString AS ObjectString_Article
-                                     INNER JOIN Object ON Object.Id       = ObjectString_Article.ObjectId
-                                                      AND Object.DescId   = zc_Object_Goods()
-                                                      AND Object.isErased = FALSE
-                                WHERE ObjectString_Article.ValueData = inArticle_child
-                                  AND ObjectString_Article.DescId    = zc_ObjectString_Article()
-                                LIMIT 1
-                               );
-         ELSE
+             -- по артикулу
+             vbGoodsId_child := (SELECT ObjectString_Article.ObjectId
+                                 FROM ObjectString AS ObjectString_Article
+                                      INNER JOIN Object ON Object.Id       = ObjectString_Article.ObjectId
+                                                       AND Object.DescId   = zc_Object_Goods()
+                                                       AND Object.isErased = FALSE
+                                 WHERE ObjectString_Article.ValueData = inArticle_child
+                                   AND ObjectString_Article.DescId    = zc_ObjectString_Article()
+                                 LIMIT 1
+                                );
+             IF vbGoodsId_child <> 0 AND NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbGoodsId_child AND Object.DescId = zc_Object_Goods() AND Object.ValueData ILIKE TRIM (inGoodsName_child))
+            AND inGoodsName_child NOT ILIKE 'ПФ%'
+            -- !!!временно отключил!!!
+            AND 1=1
+             THEN
+                 -- заменяем название товара "последним" значением, т.к. у одного артикула могут быть разные названия
+                 UPDATE Object SET ValueData = TRIM (inGoodsName_child) WHERE Object.Id = vbGoodsId_child AND Object.DescId = zc_Object_Goods();
+             
+               /*RAISE EXCEPTION 'Ошибка.Для Артикул = <%>%разные названия комплектующих %<%> %<%> %<%> %<%> %'
+                                , inArticle_child
+                                , CHR (13)
+                                , CHR (13)
+                                , TRIM (inGoodsName_child)
+                                , CHR (13)
+                                , (SELECT Object.ValueData FROM Object WHERE Object.Id = vbGoodsId_child)
+                                , CHR (13)
+                                , vbGoodsId_child
+                                , CHR (13)
+                                , inNPP
+                                , CHR (13)
+                                 ;*/
+             END IF;
 
-            -- по названию
-            vbGoodsId_child := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ValueData ILIKE TRIM (inGoodsName_child));
+         ELSE
+             -- по названию
+             vbGoodsId_child := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ValueData ILIKE TRIM (inGoodsName_child));
+
          END IF;
          
          IF vbReceiptProdModel = TRUE AND COALESCE (vbGoodsId_child, 0) = 0 
@@ -794,6 +840,12 @@ BEGIN
                                       LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
                                                            ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
                                                           AND ObjectLink_ReceiptLevel.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
+                                      -- NPP
+                                      LEFT JOIN ObjectFloat AS ObjectFloat_NPP
+                                                            ON ObjectFloat_NPP.ObjectId  = Object_ReceiptGoodsChild.Id
+                                                           AND ObjectFloat_NPP.DescId    = zc_ObjectFloat_ReceiptGoodsChild_NPP()
+                                                           AND ObjectFloat_NPP.ValueData = inNPP
+                                                          
                                  WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
                                    AND Object_ReceiptGoodsChild.isErased = FALSE
                                    AND COALESCE (ObjectLink_ProdColorPattern.ChildObjectId, 0) = COALESCE (vbProdColorPatternId, 0)
@@ -863,6 +915,9 @@ BEGIN
                                                                                  , inIsEnabled          := TRUE                 ::Boolean
                                                                                  , inSession            := inSession            ::TVarChar
                                                                                   ) AS tmp);
+
+           -- еще это св-во
+           PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptGoodsChild_NPP(), vbReceiptGoodsChildId, inNPP);
 
        END IF;
      END IF;

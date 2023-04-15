@@ -145,6 +145,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReceiptGoodsChild_ForCount() RETURNS I
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_ReceiptGoodsChild(), 'zc_ObjectFloat_ReceiptGoodsChild_ForCount', 'ƒл€ кол-во' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptGoodsChild_ForCount');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReceiptGoodsChild_NPP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptGoodsChild_NPP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReceiptGoodsChild(), 'zc_ObjectFloat_ReceiptGoodsChild_NPP', 'ƒл€ кол-во' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptGoodsChild_NPP');
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReceiptService_EKPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptService_EKPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_ReceiptService(), 'zc_ObjectFloat_ReceiptService_EKPrice', '¬х. цена без ндс' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptService_EKPrice');
