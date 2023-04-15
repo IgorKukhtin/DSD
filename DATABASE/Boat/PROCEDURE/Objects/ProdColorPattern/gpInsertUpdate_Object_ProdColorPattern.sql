@@ -119,8 +119,14 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorPattern_ColorPattern(), ioId, inColorPatternId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorPattern_Goods(), ioId, inGoodsId);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorPattern_ProdOptions(), ioId, inProdOptionsId);
+
+   IF inProdOptionsId > 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение Опция = <%> не может быть установлено.', lfGet_Object_ValueData_sh (inProdOptionsId);
+       --
+       -- сохранили свойство <>
+       -- PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdColorPattern_ProdOptions(), ioId, inProdOptionsId);
+   END IF;
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>

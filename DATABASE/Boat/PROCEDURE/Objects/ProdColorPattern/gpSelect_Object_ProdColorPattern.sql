@@ -18,7 +18,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_all TVarChar
              , ModelId Integer, ModelCode Integer, ModelName TVarChar, ModelName_full TVarChar
              , BrandId Integer, BrandName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , ProdOptionsId Integer, ProdOptionsName TVarChar
+             , ProdOptionsId Integer, ProdOptionsId_find Integer, ProdOptionsName TVarChar
+             , MaterialOptionsId_find Integer, MaterialOptionsName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased Boolean
@@ -51,6 +52,34 @@ BEGIN
                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                      , inOperDate   := CURRENT_DATE) AS tmp
                            )
+        , tmpProdOptions AS (SELECT Object.Id                                 AS ProdOptionsId
+                                  , Object.ObjectCode                         AS ProdOptionsCode
+                                  , Object.ValueData                          AS ProdOptionsName
+                                  , ObjectLink_Model.ChildObjectId            AS ModelId
+                                  , ObjectLink_ProdColorPattern.ChildObjectId AS ProdColorPatternId
+                                  , ObjectLink_MaterialOptions.ChildObjectId  AS MaterialOptionsId
+                                  , Object_MaterialOptions.ValueData          AS MaterialOptionsName
+                                    -- № п/п
+                                  , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Model.ChildObjectId, ObjectLink_ProdColorPattern.ChildObjectId ORDER BY Object.ObjectCode ASC) AS Ord
+                            FROM Object
+                                 -- есть эта структура
+                                 INNER JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                                       ON ObjectLink_ProdColorPattern.ObjectId      = Object.Id
+                                                      AND ObjectLink_ProdColorPattern.DescId        = zc_ObjectLink_ProdOptions_ProdColorPattern()
+                                                      AND ObjectLink_ProdColorPattern.ChildObjectId > 0
+                                 -- 
+                                 INNER JOIN ObjectLink AS ObjectLink_Model
+                                                       ON ObjectLink_Model.ObjectId = Object.Id
+                                                      AND ObjectLink_Model.DescId   = zc_ObjectLink_ProdOptions_Model()
+                                 --
+                                 LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                                      ON ObjectLink_MaterialOptions.ObjectId = Object.Id
+                                                     AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ProdOptions_MaterialOptions()
+                                 LEFT JOIN Object AS Object_MaterialOptions ON Object_MaterialOptions.Id = ObjectLink_MaterialOptions.ChildObjectId
+
+                            WHERE Object.DescId   = zc_Object_ProdOptions()
+                              AND Object.isErased = FALSE
+                           )
         , tmpData AS (SELECT
                             Object_ProdColorPattern.Id         AS Id
                           , Object_ProdColorPattern.ObjectCode AS Code
@@ -75,7 +104,10 @@ BEGIN
                           , Object_Goods.ValueData             ::TVarChar AS GoodsName
 
                           , Object_ProdOptions.Id              ::Integer  AS ProdOptionsId
-                          , Object_ProdOptions.ValueData       ::TVarChar AS ProdOptionsName
+                          , tmpProdOptions.ProdOptionsId       ::Integer  AS ProdOptionsId_find
+                          , COALESCE (Object_ProdOptions.ValueData, tmpProdOptions.ProdOptionsName) :: TVarChar AS ProdOptionsName
+                          , tmpProdOptions.MaterialOptionsId   ::Integer  AS MaterialOptionsId_find
+                          , tmpProdOptions.MaterialOptionsName            AS MaterialOptionsName
 
                           , Object_Insert.ValueData            AS InsertName
                           , ObjectDate_Insert.ValueData        AS InsertDate
@@ -211,6 +243,11 @@ BEGIN
                                                 ON ObjectDate_Insert.ObjectId = Object_ProdColorPattern.Id
                                                AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
 
+                           -- Опция - только первая
+                           LEFT JOIN tmpProdOptions ON tmpProdOptions.ModelId            = Object_Model.Id
+                                                   AND tmpProdOptions.ProdColorPatternId = Object_ProdColorPattern.Id
+                                                   AND tmpProdOptions.Ord                = 1
+
                       WHERE Object_ProdColorPattern.DescId = zc_Object_ProdColorPattern()
                        AND (Object_ProdColorPattern.isErased = FALSE OR inIsErased = TRUE)
                      )
@@ -263,7 +300,10 @@ BEGIN
          , tmpData.GoodsName
 
          , tmpData.ProdOptionsId
+         , tmpData.ProdOptionsId_find
          , tmpData.ProdOptionsName
+         , tmpData.MaterialOptionsId_find
+         , tmpData.MaterialOptionsName
 
          , tmpData.InsertName
          , tmpData.InsertDate
@@ -328,7 +368,10 @@ BEGIN
          , tmpData.GoodsName
 
          , tmpData.ProdOptionsId
+         , tmpData.ProdOptionsId_find
          , tmpData.ProdOptionsName
+         , tmpData.MaterialOptionsId_find
+         , tmpData.MaterialOptionsName
 
          , tmpData.InsertName
          , tmpData.InsertDate
@@ -370,7 +413,10 @@ BEGIN
                            , tmpData.GoodsName
 
                            , 0     :: Integer   AS ProdOptionsId
+                           , 0     :: Integer   AS ProdOptionsId_find
                            , ''    :: TVarChar  AS ProdOptionsName
+                           , 0     :: Integer   AS MaterialOptionsId_find
+                           , ''    :: TVarChar  AS MaterialOptionsName
 
                            , NULL  :: TVarChar  AS InsertName
                            , NULL  :: TDateTime AS InsertDate
