@@ -62,13 +62,11 @@ type
     spGetImportSettingId: TdsdStoredProc;
     bbStartLoadDop: TdxBarButton;
     bbStartLoadHelsi: TdxBarButton;
-    ExchangeRate: TcxGridDBColumn;
     Dosage_1303Name: TcxGridDBColumn;
     actGoodsMain: TOpenChoiceForm;
     spClearGoods: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
     Color_Count: TcxGridDBColumn;
-    Col: TcxGridDBColumn;
     actChoiceGoodsSP408_1303: TdsdOpenForm;
     dxBarButton2: TdxBarButton;
     GoodsCode: TcxGridDBColumn;
@@ -82,8 +80,6 @@ type
     NDS: TcxGridDBColumn;
     PriceOOC: TcxGridDBColumn;
     PriceSale: TcxGridDBColumn;
-    isSale: TcxGridDBColumn;
-    DoubleId: TcxGridDBColumn;
     actGoodsMainEdit: TOpenChoiceForm;
     spUpdate_Goods: TdsdStoredProc;
     spGetImportSettingId_del: TdsdStoredProc;

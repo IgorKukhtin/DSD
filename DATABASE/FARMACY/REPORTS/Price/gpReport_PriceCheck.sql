@@ -291,8 +291,8 @@ BEGIN
 
     -- Удаляем что номально
     DELETE FROM tmpResult
-    WHERE PriceProc < inPercent
-       AND isBadPriceSite = False;
+    WHERE PriceProc < inPercent;
+    --   AND isBadPriceSite = False;
 
     ANALYSE tmpResult;
 
@@ -678,4 +678,5 @@ $BODY$
 -- select * from gpReport_PriceCheck(inPercent := 5, inUserId := 0, inisHideExceptRed := False, inisRetail := False, inManagerUnitsOnly := True, inSession := '3');               
 
 
-select * from gpReport_PriceCheck(inPercent := 20 , inPercentSite := 20 , inUserId := 0 , inisHideExceptRed := 'False' , inisRetail := 'True' , inManagerUnitsOnly := 'False' ,  inSession := '3');
+select * from gpReport_PriceCheck(inPercent := 35 , inPercentSite := 100 , inUserId := 0 , inisHideExceptRed := 'False' , inisRetail := 'True' , inManagerUnitsOnly := 'False' ,  inSession := '3');
+

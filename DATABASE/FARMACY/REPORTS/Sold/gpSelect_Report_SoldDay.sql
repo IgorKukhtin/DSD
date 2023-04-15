@@ -402,6 +402,7 @@ BEGIN
            ,Object_Juridical.ValueData::TVarChar                                AS UnitJuridical
            ,Object_Unit.ValueData::TVarChar                                     AS UnitName
            ,Object_ProvinceCity.ValueData                                       AS ProvinceCityName
+           ,ObjectHistory_JuridicalDetails.OKPO                                 AS OKPO
 
            ,T0.PlanAmount::TFloat                                               AS PlanAmount
            ,(SUM(T0.PlanAmount)OVER(PARTITION BY T0.UnitId
@@ -459,6 +460,8 @@ BEGIN
                                 ON ObjectLink_Unit_ProvinceCity.ObjectId = Object_Unit.Id
                                AND ObjectLink_Unit_ProvinceCity.DescId = zc_ObjectLink_Unit_ProvinceCity()
            LEFT JOIN Object AS Object_ProvinceCity ON Object_ProvinceCity.Id = ObjectLink_Unit_ProvinceCity.ChildObjectId
+           
+           LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := ObjectLinkJuridical.childobjectid, inFullName := '', inOKPO := '', inSession := '3') AS ObjectHistory_JuridicalDetails ON 1=1           
        ORDER BY
            Object_Unit.ValueData
           ,T0.PlanDate;
@@ -497,4 +500,5 @@ ALTER FUNCTION gpSelect_Report_SoldDay (TDateTime, Integer, Boolean, Boolean, Bo
 */
 
 
-select * from gpSelect_Report_SoldDay(inMonth := ('01.04.2023')::TDateTime , inUnitId := 18712420 , inQuasiSchedule := 'False' , inisNoStaticCodes := 'True' , inisSP := 'True' ,  inSession := '3');
+select * from gpSelect_Report_SoldDay(inMonth := ('06.04.2023')::TDateTime , inUnitId := 183289 , inQuasiSchedule := 'False' , inisNoStaticCodes := 'True' , inisSP := 'True' ,  inSession := '3');
+

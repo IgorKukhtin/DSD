@@ -11,6 +11,7 @@ RETURNS TABLE (GoodsId        Integer
              , PriceOptSP     TFloat
              , PriceSale      TFloat
              , MovementItemId Integer
+             , isOrder408     Boolean
              )
 AS
 $BODY$
@@ -125,6 +126,7 @@ BEGIN
              , COALESCE(tmpGoodsSPRegistry_1303.PriceSale, tmpGoodsSPRegistry_408.PriceSale)             AS PriceSale
 
              , COALESCE(tmpGoodsSPRegistry_1303.MovementItemId, tmpGoodsSPRegistry_408.MovementItemId)   AS MovementItemId
+             , COALESCE(tmpGoodsSPRegistry_1303.MovementItemId, 0) = 0                                   AS isOrder408
 
         FROM tmpGoodsSPRegistry_1303
         

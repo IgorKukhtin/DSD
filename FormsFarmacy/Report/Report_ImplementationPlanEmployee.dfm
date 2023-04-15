@@ -418,7 +418,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
         end
       end
       object cxUnitCategory: TcxGrid
-        Left = 691
+        Left = 753
         Top = 1
         Width = 328
         Height = 137
@@ -471,7 +471,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       object cxResult: TcxGrid
         Left = 401
         Top = 1
-        Width = 290
+        Width = 352
         Height = 137
         Align = alLeft
         TabOrder = 2
@@ -494,6 +494,16 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
             Options.Editing = False
             Width = 77
           end
+          object cxGridDBTableView2Column1: TcxGridDBColumn
+            Caption = '% '#1087#1086#1079#1080#1094#1080#1080' '#1089' '#1075#1072#1083#1086#1095#1082#1086#1081
+            DataBinding.FieldName = 'TotalExecutionFixed'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object cxGridDBColumn8: TcxGridDBColumn
             Caption = #1054#1073#1097#1080#1081'  % '#1074#1099#1087'. '#1087#1088#1080' 100% '#1087#1088#1080#1089#1091#1090#1089#1090#1074'.'
             DataBinding.FieldName = 'TotalExecutionAllLine'
@@ -503,7 +513,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1073#1097#1080#1081' % '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1086#1089#1090#1088#1086#1095#1085#1099#1081' '#1087#1088#1080' 100% '#1087#1088#1080#1089#1091#1090#1089#1090#1074#1080#1080' '#1074' '#1072#1087#1090#1077#1082#1077'.'
             Options.Editing = False
-            Width = 77
+            Width = 71
           end
           object cxGridDBColumn6: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1088#1077#1084#1080#1080', '#1096#1090#1088#1072#1092#1072':'
@@ -516,7 +526,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Styles.Content = dmMain.cxGreenEdit
-            Width = 67
+            Width = 62
           end
           object cxGridDBColumn7: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086':'
@@ -939,6 +949,10 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
         DataType = ftCurrency
       end
       item
+        Name = 'TotalExecutionFixed'
+        DataType = ftCurrency
+      end
+      item
         Name = 'TotalExecutionAllLine'
         DataType = ftCurrency
       end
@@ -957,14 +971,19 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     Left = 40
     Top = 384
     Data = {
-      BA0000009619E0BD010000001800000004000000000003000000BA0012546F74
+      EA0000009619E0BD010000001800000005000000000003000000EA0012546F74
       616C457865637574696F6E4C696E650800040000000100075355425459504502
-      00490006004D6F6E65790015546F74616C457865637574696F6E416C6C4C696E
-      65080004000000010007535542545950450200490006004D6F6E657900084177
-      617264696E67010049000000010005574944544802000200030005546F74616C
-      080004000000010007535542545950450200490006004D6F6E6579000000}
+      00490006004D6F6E65790013546F74616C457865637574696F6E466978656408
+      0004000000010007535542545950450200490006004D6F6E65790015546F7461
+      6C457865637574696F6E416C6C4C696E65080004000000010007535542545950
+      450200490006004D6F6E657900084177617264696E6701004900000001000557
+      4944544802000200030005546F74616C08000400000001000753554254595045
+      0200490006004D6F6E6579000000}
     object cdsResultTotalExecutionLine: TCurrencyField
       FieldName = 'TotalExecutionLine'
+    end
+    object cdsResultTotalExecutionFixed: TCurrencyField
+      FieldName = 'TotalExecutionFixed'
     end
     object cdsResultTotalExecutionAllLine: TCurrencyField
       FieldName = 'TotalExecutionAllLine'
@@ -1052,6 +1071,13 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       end
       item
         Name = 'inTotalExecutionLine'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTotalExecutionFixed'
         Value = Null
         DataType = ftFloat
         ParamType = ptInput

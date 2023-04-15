@@ -52,7 +52,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                
                PriceSaleOOC1303 TFloat, 
                PriceSale1303 TFloat,
-               BrandSPName TVarChar,
+               BrandSPName TVarChar,               
+               isOrder408 boolean,
                
                isSpecial boolean,
                
@@ -307,9 +308,10 @@ BEGIN
                                , MIFloat_PaymentSP.ValueData   AS PaymentSP
                                , MIFloat_CountSP.ValueData     AS CountSP
                                , MIFloat_CountSPMin.ValueData  AS CountSPMin
+                               , COALESCE (ObjectBoolean_ElectronicPrescript.ValueData, False) AS isElectronicPrescript
                                                                 -- № п/п - на всякий случай
                                , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId 
-                                                    ORDER BY Movement.OperDate DESC, MIFloat_CountSPMin.ValueData DESC) AS Ord
+                                                    ORDER BY COALESCE (ObjectBoolean_ElectronicPrescript.ValueData, False), Movement.OperDate DESC, MIFloat_CountSPMin.ValueData DESC) AS Ord
                           FROM Movement
                                INNER JOIN MovementDate AS MovementDate_OperDateStart
                                                        ON MovementDate_OperDateStart.MovementId = Movement.Id
@@ -324,6 +326,10 @@ BEGIN
                                                              ON MLO_MedicalProgramSP.MovementId = Movement.Id
                                                             AND MLO_MedicalProgramSP.DescId = zc_MovementLink_MedicalProgramSP()
                                LEFT JOIN tmpMedicalProgramSPUnit ON tmpMedicalProgramSPUnit.MedicalProgramSPId = MLO_MedicalProgramSP.ObjectId
+
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_ElectronicPrescript
+                                                       ON ObjectBoolean_ElectronicPrescript.ObjectId = COALESCE (MLO_MedicalProgramSP.ObjectId, 18076882)
+                                                      AND ObjectBoolean_ElectronicPrescript.DescId = zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript()
 
                                LEFT JOIN MovementFloat AS MovementFloat_PercentPayment
                                                        ON MovementFloat_PercentPayment.MovementId = Movement.Id
@@ -891,7 +897,7 @@ BEGIN
                  ELSE Object_Goods_Main.MakerName END AS MakerName,
             CashSessionSnapShot.Remains,
             zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) AS Price,
 
             --
@@ -899,10 +905,10 @@ BEGIN
             --
             CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
                  THEN ROUND (CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                                            CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                                            CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceRetSP, 0)
                                   THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                                            CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                                            CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                             COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                                   ELSE COALESCE (tmpGoodsSP.PriceRetSP, 0) END * tmpGoodsSP.PercentPayment / 100, 2) -- Фиксированный % доплаты
                                        
@@ -910,7 +916,7 @@ BEGIN
                       THEN 0 -- по 0, т.к. цена доплаты = 0
 
                  WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                       THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
 
@@ -918,7 +924,7 @@ BEGIN
                  --      THEN CashSessionSnapShot.Price -- по нашей цене, т.к. она меньше чем цена доплаты
 
                  WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                    AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
                          - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
@@ -929,12 +935,12 @@ BEGIN
                       THEN 0
 
                  WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                       THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
                          - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
                          - zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                            ) -- разница с ценой возмещения и "округлили в большую"
 
@@ -948,18 +954,18 @@ BEGIN
             --
             CASE WHEN COALESCE (tmpGoodsSP.PercentPayment, 0) > 0
                  THEN CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                                     CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                                     CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                      COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceRetSP, 0)
                            THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                                     CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                                     CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                      COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                            ELSE COALESCE (tmpGoodsSP.PriceRetSP, 0) END -- Фиксированный % доплаты
             ELSE
               CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                         THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) -- по нашей цене, т.к. она меньше чем цена возмещения
                    ELSE
 
@@ -967,28 +973,28 @@ BEGIN
                         THEN 0 -- по 0, т.к. цена доплаты = 0
 
                    WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0)
                         THEN 0 -- по 0, т.к. наша меньше чем цена возмещения
 
                    WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                      AND 0 > COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
                            - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
                            - zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                              ) -- разница с ценой возмещения и "округлили в большую"
                         THEN 0
 
                    WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) < COALESCE (tmpGoodsSP.PriceSP, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0)
                         THEN COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) -- "округлили в меньшую" и цену доплаты уменьшим на ...
                            - (COALESCE (CEIL (tmpGoodsSP.PriceSP * 100) / 100, 0) + COALESCE (FLOOR (tmpGoodsSP.PaymentSP * 100) / 100, 0) 
                            - zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                               CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                                COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                              ) -- разница с ценой возмещения и "округлили в большую"
 
@@ -1008,7 +1014,7 @@ BEGIN
             CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END    AS isPromo,
             COALESCE(GoodsPromo.isPromoForSale, FALSE)                                AS isPromoForSale,
             COALESCE(GoodsPromo.RelatedProductId, ObjectFloat_RelatedProduct.ValueData)::Integer  AS RelatedProductId,
-            CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END :: Boolean  AS isSP,
+            CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END :: Boolean  AS isSP,
             tmpGoodsSP.GoodsId IS NOT NULL                     AS isElRecipe,
             Object_IntenalSP.ValueData                         AS IntenalSPName,
             CashSessionSnapShot.MinExpirationDate,
@@ -1073,12 +1079,12 @@ BEGIN
                   AND Object_Goods_Retail.Price > 0
                    OR COALESCE(tmpPriceChange.PartionDateKindId, 0) <> 0
                  THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
             ELSE
             CASE WHEN COALESCE(CashSessionSnapShot.PartionDateKindId, 0) <> 0 AND COALESCE(CashSessionSnapShot.PartionDateDiscount, 0) <> 0 THEN
                  CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) > CashSessionSnapShot.PriceWithVAT
                          AND CashSessionSnapShot.PriceWithVAT <= vbPriceSamples 
                          AND vbPriceSamples > 0
@@ -1089,19 +1095,19 @@ BEGIN
                                       WHEN CashSessionSnapShot.PartionDateKindId = zc_Enum_PartionDateKind_3() THEN 100.0 - vbSamples22
                                       WHEN CashSessionSnapShot.PartionDateKindId = zc_Enum_PartionDateKind_1() THEN 100.0 - vbSamples3
                                       ELSE 100 END  / 100, 
-                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END), 2)
+                                 CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END), 2)
                       WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) > CashSessionSnapShot.PriceWithVAT
                          AND CashSessionSnapShot.PriceWithVAT > 0
                       THEN ROUND(zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) - (zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0) - CashSessionSnapShot.PriceWithVAT) *
                                  CashSessionSnapShot.PartionDateDiscount / 100, 2)
                       ELSE zfCalc_PriceCash(CashSessionSnapShot.Price, 
-                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                         CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                  END
                  ELSE NULL
@@ -1144,6 +1150,9 @@ BEGIN
           , tmpGoodsSP_1303.PriceSaleIncome                        AS PriceSale1303
 
           , Object_BrandSP.ValueData                               AS BrandSPName
+          
+          , COALESCE(tmpGoodsSP_1303.isOrder408, False)            AS isOrder408
+          
           , COALESCE(Object_Goods_Retail.SummaWages, 0) <> 0 OR 
             COALESCE(Object_Goods_Retail.PercentWages, 0) <> 0 OR
             COALESCE (Object_Goods_Main.isStealthBonuses, False) OR
@@ -1162,7 +1171,7 @@ BEGIN
                                         COALESCE(tmpPriceChange.Multiplicity, 0) > 1)
                                   THEN Round(CashSessionSnapShot.Price * 100.0 / (100.0 + tmpMIPromoBonus.MarginPercent) * 
                                        (100.0 - tmpMIPromoBonus.PromoBonus + tmpMIPromoBonus.MarginPercent) / 100, 2) END , 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)  AS PromoBonusPrice
           , COALESCE (tmpAsinoPharmaSP.IsAsinoMain , FALSE)                       AS IsAsinoMain
           , COALESCE (tmpAsinoPharmaSP.IsAsinoPresent , FALSE)                    AS IsAsinoPresent
@@ -1176,7 +1185,7 @@ BEGIN
                                   THEN Round(CashSessionSnapShot.Price * 100.0 / (100.0 + tmpMIPromoBonus.MarginPercent) * 
                                        (100.0 - tmpMIPromoBonus.PromoBonus + tmpMIPromoBonus.MarginPercent) / 100, 2) END,
                              CashSessionSnapShot.Price) , 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)  AS PriceView
           
          FROM

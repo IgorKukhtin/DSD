@@ -210,8 +210,6 @@ begin
       // Форма работате в связке с FarmacyCashServise.exe
       Application.CreateForm(TMainCashForm2, MainCashForm);
 
-      Application.CreateForm(TfrmSplash, frmSplash);
-
       EndSplash;
       StartCheckConnectThread(2);
     end;

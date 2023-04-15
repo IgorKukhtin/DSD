@@ -3,27 +3,27 @@ inherited InventoryForm: TInventoryForm
   ClientHeight = 643
   ClientWidth = 878
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 894
-  ExplicitHeight = 682
+  ExplicitWidth = 896
+  ExplicitHeight = 690
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 115
+    Top = 119
     Width = 878
-    Height = 528
-    ExplicitTop = 115
+    Height = 524
+    ExplicitTop = 119
     ExplicitWidth = 878
-    ExplicitHeight = 528
-    ClientRectBottom = 528
+    ExplicitHeight = 524
+    ClientRectBottom = 524
     ClientRectRight = 878
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 878
-      ExplicitHeight = 504
+      ExplicitHeight = 500
       inherited cxGrid: TcxGrid
         Width = 878
-        Height = 504
+        Height = 500
         ExplicitWidth = 878
-        ExplicitHeight = 504
+        ExplicitHeight = 500
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -471,7 +471,7 @@ inherited InventoryForm: TInventoryForm
         Left = 0
         Top = 54
         Width = 878
-        Height = 450
+        Height = 446
         Align = alClient
         TabOrder = 1
         object cxGridChildDBTableView: TcxGridDBTableView
@@ -1330,7 +1330,7 @@ inherited InventoryForm: TInventoryForm
     DockControlHeights = (
       0
       0
-      26
+      30
       0)
     inherited Bar: TdxBar
       ItemLinks = <

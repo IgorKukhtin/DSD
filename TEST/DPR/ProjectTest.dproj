@@ -4340,10 +4340,6 @@
 				<Form>Report_JuridicalSold_BranchDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_JuridicalSold_Branch.pas">
-				<Form>Report_JuridicalSold_BranchForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_JuridicalDefermentPayment_Branch.pas">
 				<Form>Report_JuridicalDefermentPayment_BranchForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4963,6 +4959,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\StoreReal.pas">
 				<Form>StoreRealForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalSold_Branch.pas">
+				<Form>Report_JuridicalSold_BranchForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

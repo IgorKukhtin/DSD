@@ -39,7 +39,7 @@ RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarCha
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
              , IncomeSumm TFloat, ReturnOutSumm TFloat, SaleSumm TFloat, SaleRealSumm TFloat, SaleSumm_10300 TFloat, SaleRealSumm_total TFloat, ReturnInSumm TFloat, ReturnInRealSumm TFloat, ReturnInSumm_10300 TFloat, ReturnInRealSumm_total TFloat
-             , PriceCorrectiveSumm TFloat
+             , PriceCorrectiveSumm TFloat, ChangePercentSumm TFloat
              , MoneySumm TFloat, ServiceSumm TFloat, ServiceRealSumm TFloat, TransferDebtSumm TFloat, SendDebtSumm TFloat, ChangeCurrencySumm TFloat, OtherSumm TFloat
              , EndAmount_A TFloat, EndAmount_P TFloat, EndAmount_D TFloat, EndAmount_K TFloat
 
@@ -48,7 +48,7 @@ RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarCha
              , IncomeSumm_Currency TFloat, ReturnOutSumm_Currency TFloat
              , SaleSumm_Currency TFloat, SaleRealSumm_Currency TFloat, SaleSumm_10300_Currency TFloat, SaleRealSumm_Currency_total TFloat
              , ReturnInSumm_Currency TFloat, ReturnInRealSumm_Currency TFloat, ReturnInSumm_10300_Currency TFloat, ReturnInRealSumm_Currency_total TFloat
-             , PriceCorrectiveSumm_Currency TFloat
+             , PriceCorrectiveSumm_Currency TFloat, ChangePercentSumm_Currency TFloat
              , MoneySumm_Currency TFloat, ServiceSumm_Currency TFloat, ServiceRealSumm_Currency TFloat
              , TransferDebtSumm_Currency TFloat, SendDebtSumm_Currency TFloat, ChangeCurrencySumm_Currency TFloat, OtherSumm_Currency TFloat
              , EndAmount_Currency_A TFloat, EndAmount_Currency_P TFloat, EndAmount_Currency_D TFloat, EndAmount_Currency_K TFloat

@@ -11,16 +11,25 @@ uses
   ZConnection, ZEncoding, Datasnap.Provider, System.Zip,
   {$IFDEF DELPHI103RIO} System.JSON {$ELSE} Data.DBXJSON {$ENDIF};
 
+// Архивирование базы
 procedure SQLiteChechAndArc;
 
 procedure SaveSQLiteData(ASrc: TClientDataSet; ATableName: String);
 procedure LoadSQLiteData(ADst: TClientDataSet; ATableName: String; AShowError : Boolean = True);
+// Выполнить запрос и поместить результат в ClientDataSet
 procedure LoadSQLiteSQL(ADst: TClientDataSet; ASQL: String; AParams : TdsdParams = Nil; AShowError : Boolean = True);
 
 function LoadSQLiteFormData(AFormName, AData, ASession: String) : string;
 
-procedure DeleteSQLiteData(ATableName: String);
+// Функции работы с данными
+function SQLite_TableExists(ATableName: String) : boolean;
+// Удалить таблицу
+procedure SQLite_TableDelete(ATableName: String);
 
+// Выполнить скрипт
+function SQLite_ExecSQL(ASQL: String) : boolean;
+// Добаить запись в таблицу
+function SQLite_Insert(ATableName: String; AParams : TdsdParams = Nil) : Boolean;
 
 implementation
 
@@ -93,7 +102,7 @@ begin
 end;
 
 procedure SaveSQLiteData(ASrc: TClientDataSet; ATableName: String);
-  var ZQuery: TZQuery; I, J : Integer; S, SD : string;
+  var ZQuery: TZQuery; I : Integer; S : string;
       jsonItem : TJSONObject; JSONA: TJSONArray;
 
 begin
@@ -237,7 +246,7 @@ begin
 end;
 
 procedure LoadSQLiteData(ADst: TClientDataSet; ATableName: String; AShowError : Boolean = True);
-  var  ZQuery: TZQuery; I : Integer;
+  var  ZQuery: TZQuery;
        DataSetProvider: TDataSetProvider;
        ClientDataSet: TClientDataSet;
 begin
@@ -387,6 +396,8 @@ begin
 
     if AFormName = 'TMainCashForm2' then
       LoadSQLiteSQL(ClientDataSet, 'select MainForm from UserSettings where Id = ''' + ASession + '''')
+    else if AFormName = 'TMainInventoryForm' then
+      LoadSQLiteSQL(ClientDataSet, 'select MainInventoryForm from UserSettings where Id = ''' + ASession + '''')
     else if AFormName = 'TdmMain' then
       LoadSQLiteSQL(ClientDataSet, 'select DataModulForm from UserSettings where Id = ''' + ASession + '''')
     else LoadSQLiteSQL(ClientDataSet, 'select ' + AData + ' from FormData where FormName = ''' + AFormName + '''');
@@ -399,7 +410,37 @@ begin
   end;
 end;
 
-procedure DeleteSQLiteData(ATableName: String);
+function SQLite_TableExists(ATableName: String) : boolean;
+  var  ZQuery: TZQuery;
+begin
+  Result := False;
+  try
+    Add_SQLiteLog('Stert MutexSQLite TableExists: ' + ATableName);
+    WaitForSingleObject(MutexSQLite, INFINITE);
+    try
+      ZSQLiteConnection.Database := SQLiteFile;
+      ZSQLiteConnection.Connect;
+      ZQuery := TZQuery.Create(Nil);
+      ZQuery.Connection := ZSQLiteConnection;
+      try
+          // Проверяем наличие таблицы
+        ZQuery.SQL.Text := 'SELECT name FROM sqlite_master WHERE type = ''table'' AND name= ''' + ATableName + '''';
+        ZQuery.Open;
+        Result := ZQuery.RecordCount = 1;
+      finally
+        ZQuery.Free;
+        ZSQLiteConnection.Disconnect;
+      end;
+    finally
+      ReleaseMutex(MutexSQLite);
+      Add_SQLiteLog('End MutexSQLite');
+    end;
+  Except on E: Exception do
+     Add_SQLiteLog('Ошибка проверки наличия таблицы '+ ATableName + ' - ' + E.Message);
+  end;
+end;
+
+procedure SQLite_TableDelete(ATableName: String);
   var  ZQuery: TZQuery;
 begin
   try
@@ -429,9 +470,97 @@ begin
   end;
 end;
 
+function SQLite_ExecSQL(ASQL: String) : boolean;
+  var ZQuery: TZQuery;
+begin
+  Result := False;
+  try
+    Add_SQLiteLog('Stert MutexSQLite ExecSQL');
+    WaitForSingleObject(MutexSQLite, INFINITE);
+    try
+      ZSQLiteConnection.Database := SQLiteFile;
+      ZSQLiteConnection.Connect;
+      ZQuery := TZQuery.Create(Nil);
+      ZQuery.Connection := ZSQLiteConnection;
+      try
+
+          // Выполняем скрипт
+        ZQuery.SQL.Text := ASQL;
+        ZQuery.ExecSQL;
+
+        Result := True;
+      finally
+        ZQuery.Free;
+        ZSQLiteConnection.Disconnect;
+      end;
+    finally
+      ReleaseMutex(MutexSQLite);
+      Add_SQLiteLog('End MutexSQLite');
+    end;
+  Except on E: Exception do
+    Add_SQLiteLog('Ошибка выполнения скрипта: ' + ASQL + ' - ' + E.Message);
+  end;
+end;
+
+function SQLite_Insert(ATableName: String; AParams : TdsdParams = Nil) : Boolean;
+  var  ZQuery: TZQuery; I : Integer;
+       cMessages : String;
+begin
+  Result := False;
+
+  try
+    Add_SQLiteLog('Start MutexSQLite SQL');
+    WaitForSingleObject(MutexSQLite, INFINITE);
+    try
+      ZSQLiteConnection.Database := SQLiteFile;
+      ZSQLiteConnection.Connect;
+      ZQuery := TZQuery.Create(Nil);
+      ZQuery.Connection := ZSQLiteConnection;
+      try
+
+        if gc_isDebugMode then
+        begin
+          cMessages :=  'INSERT INTO ' + ATableName;
+          if Assigned(AParams) then
+            for I := 0 to AParams.Count - 1 do if AParams[I].ParamType in [ptInput, ptInputOutput] then
+              cMessages :=  cMessages + #13#10 + AParams[I].Name + ' = ' + AParams[I].AsString;
+          TMessagesForm.Create(nil).Execute(cMessages, cMessages, true);
+        end;
+
+          // Вставка записи
+        ZQuery.SQL.Text := 'SELECT * FROM ' + ATableName + ' LIMIT 0';
+        ZQuery.Open;
+        ZQuery.Append;
+
+        if Assigned(AParams) then
+          for I := 0 to AParams.Count - 1 do if AParams[I].ParamType in [ptInput, ptInputOutput] then
+            if Assigned(ZQuery.FindField(AParams[I].Name)) then
+              ZQuery.FieldByName(AParams[I].Name).Value := AParams[I].Value;
+
+        ZQuery.Post;
+
+        if Assigned(AParams) then
+          for I := 0 to AParams.Count - 1 do if AParams[I].ParamType in [ptOutput, ptInputOutput] then
+            if Assigned(ZQuery.FindField(AParams[I].Name)) then
+              AParams[I].Value := ZQuery.FieldByName(AParams[I].Name).Value;
+
+        Result := True;
+
+      finally
+        ZQuery.Free;
+        ZSQLiteConnection.Disconnect;
+      end;
+    finally
+      ReleaseMutex(MutexSQLite);
+      Add_SQLiteLog('End MutexSQLite');
+    end;
+  Except on E: Exception do
+     Add_SQLiteLog('Ошибка вставки данных '+ ATableName + ' - ' + E.Message);
+  end;
+end;
+
 initialization
 
-  if SQLiteFile <> '' then Add_SQLiteLog('Create MutexSQLite');
   MutexSQLite := CreateMutex(nil, false, 'farmacycashMutexSQLite');
   GetLastError;
   ZSQLiteConnection := TZConnection.Create(Nil);

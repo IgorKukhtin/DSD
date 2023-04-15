@@ -651,6 +651,7 @@ type
     MemDataISASINOP: TBooleanField;
     actSaleInsuranceCompaniesCash: TdsdOpenForm;
     N56: TMenuItem;
+    MainisOrder408: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -9096,7 +9097,7 @@ begin
         (Self.FormParams.ParamByName('SPTax').Value = 0) and
         (SourceClientDataSet.FieldByName('isElRecipe').AsBoolean = false) then
       begin
-        ShowMessage('Ошибка.Выбранный код товара не участвует в выписке элетронных рецептов!');
+        ShowMessage('Ошибка.Выбранный код товара не участвует в выписке электронных рецептов!');
         exit;
       end;
 

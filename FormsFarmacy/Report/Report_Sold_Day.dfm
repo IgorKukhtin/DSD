@@ -3,20 +3,19 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
   ClientHeight = 575
   ClientWidth = 1129
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 1145
-  ExplicitHeight = 614
+  ExplicitWidth = 1147
+  ExplicitHeight = 622
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 48
+    Top = 52
     Width = 1129
-    Height = 527
+    Height = 523
     TabOrder = 3
-    Properties.ActivePage = tsPivot
-    ExplicitTop = 48
+    ExplicitTop = 52
     ExplicitWidth = 1129
-    ExplicitHeight = 527
-    ClientRectBottom = 527
+    ExplicitHeight = 523
+    ClientRectBottom = 523
     ClientRectRight = 1129
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
@@ -24,12 +23,12 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 1129
-      ExplicitHeight = 503
+      ExplicitHeight = 499
       inherited cxGrid: TcxGrid
         Width = 1129
-        Height = 276
+        Height = 272
         ExplicitWidth = 1129
-        ExplicitHeight = 276
+        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -102,6 +101,14 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Width = 80
+          end
+          object OKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
           end
           object ProvinceCityName: TcxGridDBColumn
             Caption = #1056#1072#1081#1086#1085
@@ -219,7 +226,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 276
+        Top = 272
         Width = 1129
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -228,7 +235,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
       end
       object grChart: TcxGrid
         Left = 0
-        Top = 284
+        Top = 280
         Width = 1129
         Height = 219
         Align = alBottom
@@ -275,13 +282,12 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         Left = 0
         Top = 0
         Width = 579
-        Height = 503
+        Height = 499
         Align = alLeft
         DataSource = MasterDS
         Groups = <>
         OptionsView.RowGrandTotalWidth = 118
         TabOrder = 0
-        ExplicitLeft = -6
         object pcolPlanDate: TcxDBPivotGridField
           AreaIndex = 2
           AllowedAreas = [faColumn, faRow, faFilter]
@@ -388,7 +394,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         Left = 587
         Top = 0
         Width = 542
-        Height = 503
+        Height = 499
         Align = alClient
         TabOrder = 1
         object cxGridDBChartView1: TcxGridDBChartView
@@ -414,7 +420,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
         Left = 579
         Top = 0
         Width = 8
-        Height = 503
+        Height = 499
         HotZoneClassName = 'TcxMediaPlayer8Style'
         Control = cxDBPivotGrid1
       end
@@ -480,7 +486,6 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
   inherited ActionList: TActionList
     inherited actGridToExcel: TdsdGridToExcel
       TabSheet = tsMain
-      Enabled = False
     end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -536,6 +541,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
       Category = 'DSDLib'
       TabSheet = tsPivot
       MoveParams = <>
+      Enabled = False
       Grid = cxDBPivotGrid1
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -645,7 +651,7 @@ inherited Report_Sold_DayForm: TReport_Sold_DayForm
     DockControlHeights = (
       0
       0
-      26
+      30
       0)
     inherited Bar: TdxBar
       ItemLinks = <

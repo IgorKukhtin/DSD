@@ -5,27 +5,28 @@ inherited ChoiceGoodsSPSearch_1303Form: TChoiceGoodsSPSearch_1303Form
   ClientWidth = 743
   ShowHint = True
   AddOnFormData.isAlwaysRefresh = True
-  ExplicitWidth = 759
-  ExplicitHeight = 501
+  ExplicitWidth = 761
+  ExplicitHeight = 509
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 743
-    Height = 436
+    Height = 435
+    ExplicitTop = 27
     ExplicitWidth = 743
-    ExplicitHeight = 436
-    ClientRectBottom = 436
+    ExplicitHeight = 435
+    ClientRectBottom = 435
     ClientRectRight = 743
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 743
-      ExplicitHeight = 436
+      ExplicitHeight = 435
       inherited cxGrid: TcxGrid
         Top = 27
         Width = 743
-        Height = 409
+        Height = 408
         ExplicitTop = 27
         ExplicitWidth = 743
-        ExplicitHeight = 409
+        ExplicitHeight = 408
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -86,6 +87,14 @@ inherited ChoiceGoodsSPSearch_1303Form: TChoiceGoodsSPSearch_1303Form
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object isOrder408: TcxGridDBColumn
+            Caption = #1055#1088#1080#1082#1072#1079' 408'
+            DataBinding.FieldName = 'isOrder408'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -519,7 +528,7 @@ inherited ChoiceGoodsSPSearch_1303Form: TChoiceGoodsSPSearch_1303Form
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
