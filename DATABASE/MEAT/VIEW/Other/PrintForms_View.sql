@@ -190,8 +190,9 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('30487219','32049199')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
+
       UNION
--- Фоззі-Фуд ТОВ + СІЛЬПО-ФУД
+      -- Фоззі-Фуд ТОВ + СІЛЬПО-ФУД
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -202,10 +203,14 @@ AS
            , CAST ('PrintMovement_Sale32294926' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('32294926', '40720198', '32294897', '42751590', '41028986')
+       AND OH_JuridicalDetails.OKPO IN ('32294926', '40720198', '32294897', '42751590', '41028986'
+                                      -- Експансія ТОВ ...
+                                      , '32294905', '35278624', '38939423', '38183389', '34902541', '36577999'
+                                       )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
--- ЕПІЦЕНТР К ТОВ, Рідо Груп, Легіон 2015 ТОВ, Арітейл, Понтем Плюс
+
+     UNION
+      -- ЕПІЦЕНТР К ТОВ, Рідо Груп, Легіон 2015 ТОВ, Арітейл, Понтем Плюс
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -218,8 +223,9 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32490244', '41744911', '39775097', '41135005', '30728887', '41609092') 
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
--- ЧСПМ ЛОГІСТИК ТОВ 41750857
+
+     UNION
+      -- ЧСПМ ЛОГІСТИК ТОВ 41750857
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -232,8 +238,9 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('41750857')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
--- Ашан Україна Гіпермаркет ТОВ + РІАЛ ІСТЕЙТ Ф.К.А.У.
+
+     UNION
+      -- Ашан Україна Гіпермаркет ТОВ + РІАЛ ІСТЕЙТ Ф.К.А.У.
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -246,8 +253,9 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('35442481', '34431547')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
--- Амстор Торгiвельний будинок ТОВ + Амстор Трейд
+
+     UNION
+      -- Амстор Торгiвельний будинок ТОВ + Амстор Трейд
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -260,8 +268,9 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32516492', '39135315', '39622918')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
--- Adventis + Billa + Kray
+
+     UNION
+      -- Adventis + Billa + Kray
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -280,8 +289,9 @@ AS
              OR (ObjectLink_Retail.ChildObjectId IN (310862) -- Рост Харьков   
                   AND OH_JuridicalDetails.OKPO <> '43094673')      --другая печать   ДЛК "ПІЛОТ"
             )
-      UNION
--- Omega+РТЦ ТОВ(Варус)
+
+     UNION
+      -- Omega+РТЦ ТОВ(Варус)
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -294,8 +304,9 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('30982361', '33184262')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
--- Таврія
+
+     UNION
+      -- Таврія
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -308,8 +319,9 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('31929492', '32334104', '19202597')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
--- Furshet
+
+     UNION
+      -- Furshet
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -322,8 +334,9 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('37910513','37910542')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
--- ЖД
+
+     UNION
+      -- ЖД
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -339,8 +352,9 @@ AS
                                       , '01074874','24755803','04791599','01073946','01074741','25927436'
                                        )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
--- FM
+
+     UNION
+      -- FM
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -355,8 +369,9 @@ AS
                                    -- , '37077262' -- Атік Агро ТОВ  ОКПО 37077262
                                        )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
--- Objora
+
+     UNION
+      -- Objora
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -369,8 +384,9 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('22447463', '37223357', '37223320')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
--- Новус
+
+     UNION
+      -- Новус
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -383,8 +399,9 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('36003603')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
--- Лабр+Твич+Финест+Джуна+Группа Ритейлу Украины + ТОВ Нордон + Амиата + Легион-2015 + ФРЕЯ 2017 ТОВ + Левайс
+
+     UNION
+      -- Лабр+Твич+Финест+Джуна+Группа Ритейлу Украины + ТОВ Нордон + Амиата + Легион-2015 + ФРЕЯ 2017 ТОВ + Левайс
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -416,8 +433,9 @@ AS
                                       , '43233918' -- на нового клиента Хотей 43233918
                                        )  -- добвавили из др.группу ритейл
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
--- Сидоров 2902403938
+
+     UNION
+      -- Сидоров 2902403938
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -430,8 +448,9 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('2902403938')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
--- Восторг 32437180
+
+     UNION
+      -- Восторг 32437180
       SELECT
              zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
@@ -444,8 +463,8 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32437180')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      UNION
 
+     UNION
       --   ДЛК "ПІЛОТ"
       SELECT
              zc_Movement_Sale()
@@ -459,8 +478,9 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('43094673') 
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
+
+
       UNION
-      
       -- налоговая
       SELECT
              zc_Movement_Sale()
