@@ -176,7 +176,8 @@ BEGIN
                                 , MAX (COALESCE (MIFloat_LevelNumber.ValueData, 0))   AS LevelNumber
                                 , SUM (COALESCE (MIFloat_BoxCount.ValueData, 0))      AS BoxCount
                                 , COUNT (*)                                           AS BoxCount_calc
-                                , SUM (COALESCE (MIFloat_BoxNumber.ValueData, 0))     AS BoxNumber
+                              --, SUM (COALESCE (MIFloat_BoxNumber.ValueData, 0))     AS BoxNumber
+                                , MAX (COALESCE (MIFloat_BoxNumber.ValueData, 0))     AS BoxNumber
                                 , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
                                 , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) AS AmountPartnerWeight
                                 , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS AmountPartnerSh
@@ -521,7 +522,9 @@ BEGIN
                   ELSE FALSE
              END :: Boolean AS isFozzi
 
-           , CASE WHEN tmpMovementParam.ContractId = 4440485 -- Фоззі для договора Id = 4440485 + доп страничка
+           , CASE WHEN tmpMovementParam.ContractId IN (4440485 -- Фоззі для договора Id = 4440485 + доп страничка
+                                                     , 9081123 -- 402Р для ФОЗЗІ КОММЕРЦ ТОВ с. Зимна Вода вул. Яворівська буд.30
+                                                      )
                       THEN TRUE
                   ELSE FALSE
              END :: Boolean AS isFozzyPage5
