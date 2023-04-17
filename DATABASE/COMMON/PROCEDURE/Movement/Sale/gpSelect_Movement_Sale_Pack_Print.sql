@@ -255,7 +255,26 @@ BEGIN
                            WHERE MovementDate.MovementId IN (SELECT tmpMovementParent.Id FROM tmpMovementParent)
                             AND MovementDate.DescId = zc_MovementDate_OperDatePartner()
                            )                     
-                         
+
+
+     , tmpMLO_From_To AS (SELECT *
+                          FROM MovementLinkObject
+                          WHERE MovementLinkObject.DescId IN (zc_MovementLinkObject_From(), zc_MovementLinkObject_To())
+                            AND MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovementData.MovementId FROM tmpMovementData)
+                           )
+
+     , tmpMLO_Contract AS (SELECT *
+                           FROM MovementLinkObject
+                           WHERE MovementLinkObject.DescId IN (zc_MovementLinkObject_Contract())
+                             AND MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovementData.ParentId_Movement FROM tmpMovementData)
+                           )
+ 
+     , tmpMS_InvNumberAll AS (SELECT *
+                              FROM MovementString
+                              WHERE MovementString.DescId IN (zc_MovementString_InvNumberPartner(), zc_MovementString_InvNumberOrder())
+                                AND MovementString.MovementId IN (SELECT DISTINCT tmpMovementData.ParentId_Movement FROM tmpMovementData)
+                               )
+                                               
      , tmpMovementParam AS (SELECT tmpMovement.MovementId
                                  , Movement_Sale.OperDate				                      AS OperDate
                                  , COALESCE (MovementDate_OperDatePartner.ValueData, Movement_Sale.OperDate)  AS OperDatePartner
@@ -278,18 +297,18 @@ BEGIN
                                  , ObjectDate_Signing.ValueData                                           AS ContractSigningDate
                                  , ObjectLink_Juridical_Retail.ChildObjectId                              AS RetailId
                             FROM (SELECT DISTINCT tmpMovementData.MovementId, tmpMovementData.ParentId_Movement FROM tmpMovementData) AS tmpMovement
-                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                              ON MovementLinkObject_From.MovementId = tmpMovement.MovementId
-                                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-
+                                 LEFT JOIN tmpMLO_From_To AS MovementLinkObject_From
+                                                          ON MovementLinkObject_From.MovementId = tmpMovement.MovementId
+                                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                  LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
                                  LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                                       ON ObjectLink_Unit_Juridical.ObjectId = Object_From.Id
                                                      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                      
-                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                              ON MovementLinkObject_To.MovementId = tmpMovement.MovementId
-                                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                 LEFT JOIN tmpMLO_From_To AS MovementLinkObject_To
+                                                          ON MovementLinkObject_To.MovementId = tmpMovement.MovementId
+                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                  LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
                      
                                  LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -304,14 +323,14 @@ BEGIN
                                  LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
                                                            ON MovementDate_OperDatePartner.MovementId = tmpMovement.ParentId_Movement --Movement_Sale.Id
 
-                                 LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                                          ON MovementString_InvNumberPartner.MovementId = Movement_Sale.Id
-                                                         AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-                                 LEFT JOIN MovementString AS MovementString_InvNumberOrder
-                                                          ON MovementString_InvNumberOrder.MovementId = Movement_Sale.Id
-                                                         AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+                                 LEFT JOIN tmpMS_InvNumberAll AS MovementString_InvNumberPartner
+                                                              ON MovementString_InvNumberPartner.MovementId = Movement_Sale.Id
+                                                             AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                                 LEFT JOIN tmpMS_InvNumberAll AS MovementString_InvNumberOrder
+                                                              ON MovementString_InvNumberOrder.MovementId = Movement_Sale.Id
+                                                             AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
-                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                 LEFT JOIN tmpMLO_Contract AS MovementLinkObject_Contract
                                                               ON MovementLinkObject_Contract.MovementId = Movement_Sale.Id
                                                              AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
                                  LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
@@ -608,3 +627,4 @@ $BODY$
 -- SELECT * FROM gpSelect_Movement_Sale_Pack_Print (inMovementId := 130359, inMovementId_by:=0, inSession:= zfCalc_UserAdmin());; -- FETCH ALL "<unnamed portal 1>";
 --SELECT * FROM gpSelect_Movement_Sale_Pack_Print (inMovementId := 8604341, inMovementId_by:=0, inSession:= zfCalc_UserAdmin());
 --FETCH ALL "<unnamed portal 3>";
+--select * from gpSelect_Movement_Sale_Pack_Print(inMovementId := 25014201 , inMovementId_by := 0 ,  inSession := '5');
