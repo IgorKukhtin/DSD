@@ -1022,6 +1022,8 @@ type
     actGoodsSP408_1303Journal: TdsdOpenForm;
     N4081: TMenuItem;
     N4082: TMenuItem;
+    actCommentCheck: TdsdOpenForm;
+    N378: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

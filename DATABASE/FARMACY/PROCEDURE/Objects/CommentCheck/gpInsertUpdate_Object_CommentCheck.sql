@@ -1,13 +1,12 @@
 -- Function: gpInsertUpdate_Object_CommentCheck()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CommentCheck(Integer, Integer, TVarChar, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CommentCheck(Integer, Integer, TVarChar, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CommentCheck(
  INOUT ioId                 Integer   ,     -- ключ объекта <Покупатель> 
     IN inCode               Integer   ,     -- Код объекта  
     IN inName               TVarChar  ,     -- Название
     IN inCommentTRId        Integer   ,     -- Комментарий строк технического переучета
-    IN inisPromo            Boolean   ,     -- Контроль количества по плану
     IN inisSendPartionDate  Boolean   ,     -- Контроль пересорта
     IN inisLostPositions    Boolean   ,     -- Утерянные позиции
     IN inSession            TVarChar        -- Формировать заявку на изменения срока
@@ -44,8 +43,6 @@ BEGIN
    -- сохранили связь с <Комментарий строк технического переучета>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_CommentCheck_CommentTR(), ioId, inCommentTRId);
    
-   -- сохранили Контроль количества по плану
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentSun_Promo(), ioId, inisPromo);
    -- сохранили Формировать заявку на изменения срока
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentSun_SendPartionDate(), ioId, inisSendPartionDate);
    -- сохранили Формировать заявку на изменения срока

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_CommentCheck(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CommentTRId Integer, CommentTRCode Integer, CommentTRName TVarChar
-             , isPromo boolean, isSendPartionDate boolean, isLostPositions boolean
+             , isSendPartionDate boolean, isLostPositions boolean
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -26,7 +26,6 @@ BEGIN
            , CAST (0 AS Integer)                          AS CommentTRId
            , CAST (0 AS Integer)                          AS CommentTRCode
            , CAST ('' AS TVarChar)                        AS CommentTRName
-           , CAST (FALSE AS Boolean)                      AS isPromo
            , CAST (FALSE AS Boolean)                      AS isSendPartionDate 
            , CAST (FALSE AS Boolean)                      AS isLostPositions 
            , CAST (FALSE AS Boolean)                      AS isErased;
@@ -38,7 +37,6 @@ BEGIN
         , Object_CommentTR.Id                               AS CommentTRId 
         , Object_CommentTR.ObjectCode                       AS CommentTRCode
         , Object_CommentTR.ValueData                        AS CommentTRName
-        , COALESCE(ObjectBoolean_CommentSun_Promo.ValueData, FALSE)             AS isPromo
         , COALESCE(ObjectBoolean_CommentSun_SendPartionDate.ValueData, FALSE)   AS isSendPartionDate
         , COALESCE(ObjectBoolean_CommentSun_LostPositions.ValueData, FALSE)     AS isLostPositions
         , Object_CommentCheck.isErased                       AS isErased
@@ -48,10 +46,6 @@ BEGIN
                              ON ObjectLink_CommentCheck_CommentTR.ObjectId = Object_CommentCheck.Id
                             AND ObjectLink_CommentCheck_CommentTR.DescId = zc_ObjectLink_CommentCheck_CommentTR()
         LEFT JOIN Object AS Object_CommentTR ON Object_CommentTR.Id = ObjectLink_CommentCheck_CommentTR.ChildObjectId
-
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentSun_Promo
-                                ON ObjectBoolean_CommentSun_Promo.ObjectId = Object_CommentCheck.Id 
-                               AND ObjectBoolean_CommentSun_Promo.DescId = zc_ObjectBoolean_CommentSun_Promo()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentSun_SendPartionDate
                                 ON ObjectBoolean_CommentSun_SendPartionDate.ObjectId = Object_CommentCheck.Id 

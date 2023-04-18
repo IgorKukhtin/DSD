@@ -492,6 +492,11 @@ end;
 
 procedure TLoadFormTest.LoadCheckFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommentCheckForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentCheckEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommentCheckEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckErrorInsertDateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckErrorInsertDateForm');
 
