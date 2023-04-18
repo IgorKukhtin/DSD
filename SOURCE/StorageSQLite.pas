@@ -29,7 +29,9 @@ procedure SQLite_TableDelete(ATableName: String);
 // Выполнить скрипт
 function SQLite_ExecSQL(ASQL: String) : boolean;
 // Добаить запись в таблицу
-function SQLite_Insert(ATableName: String; AParams : TdsdParams = Nil) : Boolean;
+function SQLite_Insert(ATableName: String; AParams : TdsdParams) : Boolean;
+// Считать строку с таблицы
+function SQLite_Get(ASQL: String; AParams : TdsdParams) : Boolean;
 
 implementation
 
@@ -38,7 +40,7 @@ uses MessagesUnit;
 var ZSQLiteConnection: TZConnection;
     MutexSQLite: THandle;
 
-procedure Add_SQLiteLog(AMessage: String);
+procedure Add_SQLiteLog(AMessage: String; AShowError : Boolean = False);
   var F: TextFile;
 begin
   try
@@ -55,6 +57,7 @@ begin
     end;
   except
   end;
+  if AShowError then ShowMessage(AMessage);
 end;
 
 procedure SQLiteChechAndArc;
@@ -436,7 +439,7 @@ begin
       Add_SQLiteLog('End MutexSQLite');
     end;
   Except on E: Exception do
-     Add_SQLiteLog('Ошибка проверки наличия таблицы '+ ATableName + ' - ' + E.Message);
+     Add_SQLiteLog('Ошибка проверки наличия таблицы '+ ATableName + ' - ' + E.Message, True);
   end;
 end;
 
@@ -466,7 +469,7 @@ begin
       Add_SQLiteLog('End MutexSQLite');
     end;
   Except on E: Exception do
-     Add_SQLiteLog('Ошибка удаления таблицы '+ ATableName + ' - ' + E.Message);
+     Add_SQLiteLog('Ошибка удаления таблицы '+ ATableName + ' - ' + E.Message, True);
   end;
 end;
 
@@ -498,11 +501,11 @@ begin
       Add_SQLiteLog('End MutexSQLite');
     end;
   Except on E: Exception do
-    Add_SQLiteLog('Ошибка выполнения скрипта: ' + ASQL + ' - ' + E.Message);
+    Add_SQLiteLog('Ошибка выполнения скрипта: ' + ASQL + ' - ' + E.Message, True);
   end;
 end;
 
-function SQLite_Insert(ATableName: String; AParams : TdsdParams = Nil) : Boolean;
+function SQLite_Insert(ATableName: String; AParams : TdsdParams) : Boolean;
   var  ZQuery: TZQuery; I : Integer;
        cMessages : String;
 begin
@@ -555,9 +558,65 @@ begin
       Add_SQLiteLog('End MutexSQLite');
     end;
   Except on E: Exception do
-     Add_SQLiteLog('Ошибка вставки данных '+ ATableName + ' - ' + E.Message);
+     Add_SQLiteLog('Ошибка вставки данных '+ ATableName + ' - ' + E.Message, True);
   end;
 end;
+
+function SQLite_Get(ASQL: String; AParams : TdsdParams) : Boolean;
+  var  ZQuery: TZQuery; I : Integer;
+       cMessages : String;
+begin
+  Result := False;
+
+  try
+    Add_SQLiteLog('Start MutexSQLite SQL');
+    WaitForSingleObject(MutexSQLite, INFINITE);
+    try
+      ZSQLiteConnection.Database := SQLiteFile;
+      ZSQLiteConnection.Connect;
+      ZQuery := TZQuery.Create(Nil);
+      ZQuery.Connection := ZSQLiteConnection;
+      try
+
+        if gc_isDebugMode then
+        begin
+          cMessages :=  ASQL;
+          if Assigned(AParams) then
+            for I := 0 to AParams.Count - 1 do if AParams[I].ParamType in [ptInput, ptInputOutput] then
+              cMessages :=  cMessages + #13#10 + AParams[I].Name + ' = ' + AParams[I].AsString;
+          TMessagesForm.Create(nil).Execute(cMessages, cMessages, true);
+        end;
+
+          // Вставка записи
+        ZQuery.SQL.Text := ASQL;
+
+        if Assigned(AParams) then
+          for I := 0 to AParams.Count - 1 do if AParams[I].ParamType in [ptInput, ptInputOutput] then
+            if Assigned(ZQuery.Params.FindParam(AParams[I].Name)) then
+              ZQuery.ParamByName(AParams[I].Name).Value := AParams[I].Value;
+
+        ZQuery.Open;
+
+        if Assigned(AParams) then
+          for I := 0 to AParams.Count - 1 do if AParams[I].ParamType in [ptOutput, ptInputOutput] then
+            if Assigned(ZQuery.FindField(AParams[I].Name)) then
+              AParams[I].Value := ZQuery.FieldByName(AParams[I].Name).Value;
+
+        Result := True;
+
+      finally
+        ZQuery.Free;
+        ZSQLiteConnection.Disconnect;
+      end;
+    finally
+      ReleaseMutex(MutexSQLite);
+      Add_SQLiteLog('End MutexSQLite');
+    end;
+  Except on E: Exception do
+     Add_SQLiteLog('Ошибка получения данных '+ ASQL + ' - ' + E.Message, True);
+  end;
+end;
+
 
 initialization
 

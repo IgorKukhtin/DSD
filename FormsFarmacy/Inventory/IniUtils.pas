@@ -10,11 +10,31 @@ procedure SaveUserUnit;
 procedure SaveGoods;
 procedure SaveGoodsBarCode;
 
+function Inventory_Table: String;
+function InventoryChild_Table: String;
 
-function ChechActiveInv(var ADate : TDateTime; var AUnitName : String; var AisSave : Boolean) : boolean;
+function ChechActiveInv(var AOperDate : TDateTime; var AUnitName : String; var AisSave : Boolean) : boolean;
 function CreateInventoryTable : boolean;
 
 var gUserCode : Integer;
+
+const
+    InventoryGetActiveSQL: String =
+      'SELECT i.Id, i.OperDate, u.Id AS UnitId, u.Name AS UnitName'#13#10 +
+      'FROM Inventory AS i'#13#10 +
+      '     LEFT JOIN Unit AS u ON u.id = i.UnitId';
+
+    GetGoodsBarCodeSQL: String =
+      'SELECT G.Id, G.Code, G.Name'#13#10 +
+      'FROM GoodsBarCode AS gbc'#13#10 +
+      '     LEFT JOIN Goods AS G ON G.GoodsMainId = gbc.GoodsMainId'#13#10 +
+      'WHERE gbc.barcode LIKE ''%s''';
+
+    GetGoodsIdSQL: String =
+      'SELECT G.Id, G.Code, G.Name'#13#10 +
+      'FROM Goods AS G'#13#10 +
+      'WHERE G.GoodsMainId = %s';
+
 
 implementation
 
@@ -29,42 +49,40 @@ const
       'CREATE TABLE IF NOT EXISTS Inventory ('#13#10 +
       'ID           integer PRIMARY KEY AUTOINCREMENT NOT NULL,'#13#10 +
 
-      'Date         date           not null,'#13#10 +
+      'OperDate     date           not null,'#13#10 +
 
-      'Unit         int,'#13#10 +
+      'UnitId       integer,'#13#10 +
 
       'DateInput    datetime,'#13#10 +
-      'UserInput    int,'#13#10 +
+      'UserInputId  integer,'#13#10 +
 
-      'FOREIGN KEY (Unit) REFERENCES Unit)';
+      'FOREIGN KEY (UnitId) REFERENCES Unit)';
 
 
   InventoryChildCreateSQL: String =
       'CREATE TABLE IF NOT EXISTS InventoryChild ('#13#10 +
       'ID            integer PRIMARY KEY AUTOINCREMENT NOT NULL,'#13#10 +
-      'Inventory     int            not null,'#13#10 +
+      'Inventory     integer            not null,'#13#10 +
 
-      'Goods         int,'#13#10 +
+      'GoodsId       integer,'#13#10 +
 
       'Amount        numeric(16, 4) not null default 0.0,'#13#10 +
 
       'DateInput     datetime,'#13#10 +
-      'UserInput     int,'#13#10 +
+      'UserInputId   integer,'#13#10 +
 
       'IsSend        Boolean        not null default False,'#13#10 +
 
-      'FOREIGN KEY (Goods) REFERENCES Goods)';
+      'FOREIGN KEY (GoodsId) REFERENCES Goods)';
 
     InventoryCheckSQL: String =
-      'SELECT i.Date, us.name, CAST((COALESCE (ic.CountNoSend, 0) > 0) AS Boolean) AS isActive'#13#10 +
+      'SELECT i.OperDate, u.Name, COALESCE (ic.CountNoSend, 0) AS CountNoSend'#13#10 +
       'FROM Inventory AS i'#13#10 +
-      '     LEFT JOIN UserSettings AS us ON us.id = i.UserInput'#13#10 +
+      '     LEFT JOIN Unit AS u ON u.id = i.UnitId'#13#10 +
       '     LEFT JOIN (SELECT ic.Inventory, COUNT(*) AS CountNoSend'#13#10 +
       '                FROM InventoryChild AS ic'#13#10 +
       '                WHERE ic.IsSend = False'#13#10 +
-      '                GROUP BY ic.Inventory) AS ic ON ic.Inventory = i.Id'#13#10 +
-      'WHERE COALESCE (ic.CountNoSend, 0) > 0';
-
+      '                GROUP BY ic.Inventory) AS ic ON ic.Inventory = i.Id';
 
 function iniLocalDataBaseSQLite: String;
 begin
@@ -257,7 +275,7 @@ begin
   end;
 end;
 
-function ChechActiveInv(var ADate : TDateTime; var AUnitName : String; var AisSave : Boolean) : boolean;
+function ChechActiveInv(var AOperDate : TDateTime; var AUnitName : String; var AisSave : Boolean) : boolean;
   var ACDS: TClientDataSet;
 begin
   Result := False;
@@ -268,7 +286,10 @@ begin
     LoadSQLiteSQL(ACDS, InventoryCheckSQL);
     if ACDS.Active and (ACDS.RecordCount = 1) then
     begin
-
+      AOperDate := ACDS.FieldByName('OperDate').AsDateTime;
+      AUnitName := ACDS.FieldByName('Name').AsString;
+      AisSave := ACDS.FieldByName('CountNoSend').AsInteger = 0;
+      Exit;
     end;
     Result := True;
   finally

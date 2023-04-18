@@ -19,12 +19,11 @@ uses
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
   cxImageComboBox, cxNavigator, dxDateRanges, Data.Bind.Components,
   Data.Bind.ObjectScope, System.Actions, dsdDB, Datasnap.DBClient, dsdAction,
-  AncestorBase, cxPropertiesStore, dsdAddOn;
+  AncestorBase, cxPropertiesStore, dsdAddOn, dxBarBuiltInMenu, cxDateUtils;
 
 type
   TMainInventoryForm = class(TAncestorBaseForm)
     Panel3: TPanel;
-    spSelectUnloadMovement: TdsdStoredProc;
     MasterCDS: TClientDataSet;
     MasterDS: TDataSource;
     actDoLoadData: TAction;
@@ -40,16 +39,53 @@ type
     N3: TMenuItem;
     N4: TMenuItem;
     actReCreteInventDate: TAction;
+    actDoCreateInventory: TAction;
+    actContinueInvent: TAction;
+    N5: TMenuItem;
+    N6: TMenuItem;
+    N7: TMenuItem;
+    PageControl: TcxPageControl;
+    tsStart: TcxTabSheet;
+    tsInventory: TcxTabSheet;
+    cxGridChild: TcxGrid;
+    cxGridChildDBTableView: TcxGridDBTableView;
+    isLast: TcxGridDBColumn;
+    Num: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    chAmount: TcxGridDBColumn;
+    UserName: TcxGridDBColumn;
+    Date_Insert: TcxGridDBColumn;
+    cxGridChildLevel: TcxGridLevel;
+    Panel1: TPanel;
+    edBarCode: TcxTextEdit;
+    ceAmount: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    cxLabel5: TcxLabel;
+    ceAmountAdd: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    edGoodsCode: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    edGoodsName: TcxTextEdit;
+    spSelectChilg: TdsdStoredProcSQLite;
+    cxLabel1: TcxLabel;
+    edOperDate: TcxDateEdit;
+    edUnitName: TcxTextEdit;
+    IsSend: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);
     procedure actReCreteInventDateExecute(Sender: TObject);
+    procedure actDoCreateInventoryExecute(Sender: TObject);
+    procedure actContinueInventExecute(Sender: TObject);
+    procedure edBarCodeKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
 
     APIUser: String;
     APIPassword: String;
-
+    procedure InsertBarCode;
   public
     { Public declarations }
     procedure Add_Log(AMessage:String);
@@ -62,7 +98,65 @@ implementation
 
 {$R *.dfm}
 
-uses UnilWin, CommonData, IniUtils, Splash;
+uses UnilWin, CommonData, IniUtils, Splash, StorageSQLite;
+
+procedure TMainInventoryForm.actContinueInventExecute(Sender: TObject);
+ var OperDate: TDateTime; UnitName : String; isSave: boolean;
+     Params : TdsdParams;
+begin
+
+  if not ChechActiveInv(OperDate, UnitName, isSave) then
+  begin
+    if not isSave and (OperDate < IncDay(Date, - 3)) then
+    begin
+      ShowMessage('Инвентаризация не создана. С начало создайте ее.');
+      Exit;
+    end;
+  end else
+  begin
+    ShowMessage('Инвентаризация не создана. С начало создайте ее.');
+    Exit;
+  end;
+
+  Params := TdsdParams.Create(Self, TdsdParam);
+  try
+    Params.AddParam('Id', TFieldType.ftInteger, ptOutput, 0);
+    Params.AddParam('OperDate', TFieldType.ftDateTime, ptOutput, FormParams.ParamByName('OperDate').Value);
+    Params.AddParam('UnitId', TFieldType.ftInteger, ptOutput, FormParams.ParamByName('UnitId').Value);
+    Params.AddParam('UnitName', TFieldType.ftString, ptOutput, '');
+    if not SQLite_Get(InventoryGetActiveSQL, Params) then Exit;
+    FormParams.ParamByName('Id').Value := Params.ParamByName('Id').Value;
+    FormParams.ParamByName('OperDate').Value := Params.ParamByName('OperDate').Value;
+    FormParams.ParamByName('UnitId').Value := Params.ParamByName('UnitId').Value;
+    FormParams.ParamByName('UnitName').Value := Params.ParamByName('UnitName').Value;
+  finally
+    FreeAndNil(Params);
+  end;
+
+  PageControl.ActivePage := tsInventory;
+  spSelectChilg.Execute;
+end;
+
+procedure TMainInventoryForm.actDoCreateInventoryExecute(Sender: TObject);
+  var Params : TdsdParams;
+begin
+
+  Params := TdsdParams.Create(Self, TdsdParam);
+  try
+    Params.AddParam('Id', TFieldType.ftInteger, ptOutput, 0);
+    Params.AddParam('OperDate', TFieldType.ftDateTime, ptInput, FormParams.ParamByName('OperDate').Value);
+    Params.AddParam('UnitId', TFieldType.ftInteger, ptInput, FormParams.ParamByName('UnitId').Value);
+    Params.AddParam('DateInput', TFieldType.ftDateTime, ptInput, Now);
+    Params.AddParam('UserInputId', TFieldType.ftInteger, ptInput, StrToInt(gc_User.Session));
+    if not SQLite_Insert(Inventory_Table, Params) then Exit;
+    FormParams.ParamByName('Id').Value := Params.ParamByName('Id').Value;
+  finally
+    FreeAndNil(Params);
+  end;
+
+  PageControl.ActivePage := tsInventory;
+  spSelectChilg.Execute;
+end;
 
 procedure TMainInventoryForm.actDoLoadDataExecute(Sender: TObject);
 begin
@@ -95,12 +189,26 @@ begin
 
   if not ChechActiveInv(OperDate, UnitName, isSave) then
   begin
+    if not isSave then
+    begin
+      if MessageDlg('Активна инвентаризация по ' + UnitName + ' от ' +
+        FormatDateTime('dd.mm.yyyy', OperDate) + #13#10'Пересоздание инвентаризации преведет к потере введенных данных.' +
+        #13#10#13#10'Вы дейсвительно хотите пересоздать инвентаризацию?', mtInformation, mbOKCancel, 0) = mrOk then
+      begin
+        if MessageDlg('Дейсвительно удалить активную инвентаризацию?', mtInformation, mbOKCancel, 0) <> mrOk then
+          raise Exception.Create ('Прервано сотрудником...');
+      end else Exit;
 
-    raise Exception.Create ('Прервано сотрудником...');
+    end else if OperDate >= IncDay(Date, - 7) then
+    begin
+      if MessageDlg('Создана инвентаризация по ' + UnitName + ' от ' +
+        FormatDateTime('dd.mm.yyyy', OperDate) + #13#10#13#10 +
+        'Пересоздать инвентаризацию заново?', mtInformation, mbOKCancel, 0) <> mrOk then
+          raise Exception.Create ('Прервано сотрудником...');
+    end;
   end;
 
-  if not CreateInventoryTable then Exit;
-
+  CreateInventoryTable;
 
 end;
 
@@ -125,10 +233,22 @@ begin
   end;
 end;
 
+procedure TMainInventoryForm.edBarCodeKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  inherited;
+  if (Shift = []) then
+    case Key of
+      VK_RETURN: InsertBarCode;
+    end;
+end;
 
 procedure TMainInventoryForm.FormCreate(Sender: TObject);
+  var i : Integer;
 begin
   FormClassName := Self.ClassName;
+  for i:=0 to PageControl.PageCount-1 do PageControl.Pages[I].TabVisible := False;
+  PageControl.ActivePage := tsStart;
   Self.Caption := 'Проведение инвентаризации (' + GetFileVersionString(ParamStr(0)) + ')' +  ' - <' + gc_User.Login + '>';
   UserSettingsStorageAddOn.LoadUserSettings;
 end;
@@ -137,6 +257,69 @@ procedure TMainInventoryForm.ParentFormDestroy(Sender: TObject);
 begin
   inherited;
   if not gc_User.Local then UserSettingsStorageAddOn.SaveUserSettings;
+end;
+
+procedure TMainInventoryForm.InsertBarCode;
+  var ds: TClientDataSet;
+      BarCode: String;
+      Params: TdsdParams;
+      MainId : Integer;
+begin
+  BarCode := Trim(edBarCode.Text);
+  if BarCode = '' then Exit;
+  ds := TClientDataSet.Create(nil);
+  try
+    if BarCode[1] = '2' then
+    begin
+      if TryStrToInt(Copy(BarCode, 4, Length(BarCode) - 4), MainId) then
+      begin
+        LoadSQLiteSQL(ds, Format(GetGoodsIdSQL, [IntToStr(MainId)]));
+      end else
+      begin
+        ShowMessage('Ошибка получения ID товара из штрихкода <' + BarCode + '>.');
+        Exit;
+      end;
+    end else
+    begin
+      LoadSQLiteSQL(ds, Format(GetGoodsBarCodeSQL, ['%'+ BarCode + '%']));
+    end;
+
+    if ds.IsEmpty then
+    begin
+      ShowMessage('Товар по штрихкоду <' + BarCode + '> не найден.');
+      Exit;
+    end;
+    if ds.RecordCount > 1 then
+    begin
+      ShowMessage('Штрихкод <' + BarCode + '> прикреплен к более чем одному товару.');
+      Exit;
+    end;
+
+    Params := TdsdParams.Create(Self, TdsdParam);
+    try
+      Params.AddParam('Id', TFieldType.ftInteger, ptOutput, 0);
+      Params.AddParam('Inventory', TFieldType.ftInteger, ptInput, FormParams.ParamByName('Id').Value);
+      Params.AddParam('GoodsId', TFieldType.ftInteger, ptInput, ds.FieldByName('Id').AsString);
+      Params.AddParam('Amount', TFieldType.ftFloat, ptInput, ceAmount.Value);
+      Params.AddParam('DateInput', TFieldType.ftDateTime, ptInput, Now);
+      Params.AddParam('UserInputId', TFieldType.ftInteger, ptInput, StrToInt(gc_User.Session));
+      Params.AddParam('IsSend', TFieldType.ftBoolean, ptInput, False);
+      if not SQLite_Insert(InventoryChild_Table, Params) then Exit;
+    finally
+      FreeAndNil(Params);
+    end;
+
+    edGoodsCode.Text := ds.FieldByName('Code').AsString;
+    edGoodsName.Text := ds.FieldByName('Name').AsString;
+    ceAmountAdd.Value := ceAmount.Value;
+
+    spSelectChilg.Execute;
+    MasterCDS.First;
+
+  finally
+    freeAndNil(ds);
+    ceAmount.Value := 1;
+  end;
 end;
 
 end.

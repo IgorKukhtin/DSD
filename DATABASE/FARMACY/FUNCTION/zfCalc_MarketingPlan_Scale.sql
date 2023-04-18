@@ -38,10 +38,10 @@ BEGIN
   IF  date_trunc('month', inOperDate) >= '01.11.2022'
   THEN
   
-    IF  date_trunc('month', inOperDate) >= '01.04.2023' AND inBonusAmountTab > 0 AND Round(inTotalExecutionFixed, 2) < 45
+    /*IF  date_trunc('month', inOperDate) >= '01.04.2023' AND inBonusAmountTab > 0 AND Round(inTotalExecutionFixed, 2) < 45
     THEN
       inBonusAmountTab := ROUND(inBonusAmountTab * 0.7, 2);
-    END IF;  
+    END IF;  */
   
     SELECT Object_Unit.ValueData ILIKE 'Апт. пункт %'
          , Object_UnitCategory.ObjectCode 
@@ -60,31 +60,32 @@ BEGIN
                       WHEN ROUND(inTotalExecutionLine, 2) < 55 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 3  
                       WHEN ROUND(inTotalExecutionLine, 2) < 85 + vbPrizeThreshold 
                       THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
-                      ELSE inBonusAmountTab END;      
+                      ELSE ROUND(inBonusAmountTab * CASE WHEN date_trunc('month', inOperDate) >= '01.04.2023' AND Round(inTotalExecutionFixed, 2) < 45 THEN 0.7 ELSE 1.0 END, 2) END;
     ELSEIF vbUnitCategoryCode = 3 -- B
     THEN
       vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 35 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 2  
                       WHEN ROUND(inTotalExecutionLine, 2) < 50 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 3  
                       WHEN ROUND(inTotalExecutionLine, 2) < 80 + vbPrizeThreshold  
                       THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
-                      ELSE inBonusAmountTab END;          
+                      ELSE ROUND(inBonusAmountTab * CASE WHEN date_trunc('month', inOperDate) >= '01.04.2023' AND Round(inTotalExecutionFixed, 2) < 45 THEN 0.7 ELSE 1.0 END, 2) END;
     ELSEIF vbUnitCategoryCode = 5 -- C
     THEN
       vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 30 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 2  
                       WHEN ROUND(inTotalExecutionLine, 2) < 42 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 3  
                       WHEN ROUND(inTotalExecutionLine, 2) < 75 + vbPrizeThreshold  
                       THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
-                      ELSE inBonusAmountTab END;              
+                      ELSE ROUND(inBonusAmountTab * CASE WHEN date_trunc('month', inOperDate) >= '01.04.2023' AND Round(inTotalExecutionFixed, 2) < 45 THEN 0.7 ELSE 1.0 END, 2) END;
     ELSEIF vbUnitCategoryCode = 8 -- D
     THEN
       vbTotal := CASE WHEN ROUND(inTotalExecutionLine, 2) < 25 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 2  
                       WHEN ROUND(inTotalExecutionLine, 2) < 37 + vbMarkPlanThreshol THEN - inAmountTheFineTab / 3  
                       WHEN ROUND(inTotalExecutionLine, 2) < 60 + vbPrizeThreshold  
                       THEN (inBonusAmountTab - inAmountTheFineTab) / CASE WHEN (inBonusAmountTab - inAmountTheFineTab) < 0 THEN 2 ELSE 1 END
-                      ELSE inBonusAmountTab END;              
+                      ELSE ROUND(inBonusAmountTab * CASE WHEN date_trunc('month', inOperDate) >= '01.04.2023' AND Round(inTotalExecutionFixed, 2) < 45 THEN 0.7 ELSE 1.0 END, 2) END;              
     END IF;
     
     IF vbTotal < 0 AND vbisAP = TRUE THEN vbTotal := 0; END IF;
+    
                                            
   ELSEIF  date_trunc('month', inOperDate) >= '01.04.2022' and date_trunc('month', inOperDate) <= '01.05.2022'
   THEN
@@ -172,4 +173,6 @@ ALTER FUNCTION zfCalc_MarketingPlan_Scale (Integer, TDateTime, Integer, TFloat, 
 */
 
 -- тест 
-SELECT * FROM zfCalc_MarketingPlan_Scale (zc_Enum_ScaleCalcMarketingPlan_CC1(), '01.04.2023', 10779386, 76.96, 10, 607.45, 99.44)
+
+SELECT * FROM zfCalc_MarketingPlan_Scale (zc_enum_scalecalcmarketingplan_cc1(), '01.04.2023', 13711869, 77.25, 12.21, 4412.88, 1095.48)
+

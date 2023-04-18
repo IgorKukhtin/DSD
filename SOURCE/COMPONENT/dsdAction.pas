@@ -1896,52 +1896,6 @@ begin
 
 end;
 
-function EncodeBase64(const Input: TBytes): string;
-const
-  Base64: array[0..63] of Char =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-
-  function Encode3Bytes(const Byte1, Byte2, Byte3: Byte): string;
-  begin
-    Result := Base64[Byte1 shr 2]
-      + Base64[((Byte1 shl 4) or (Byte2 shr 4)) and $3F]
-      + Base64[((Byte2 shl 2) or (Byte3 shr 6)) and $3F]
-      + Base64[Byte3 and $3F];
-  end;
-
-  function EncodeLast2Bytes(const Byte1, Byte2: Byte): string;
-  begin
-    Result := Base64[Byte1 shr 2]
-      + Base64[((Byte1 shl 4) or (Byte2 shr 4)) and $3F]
-      + Base64[(Byte2 shl 2) and $3F] + '=';
-  end;
-
-  function EncodeLast1Byte(const Byte1: Byte): string;
-  begin
-    Result := Base64[Byte1 shr 2]
-      + Base64[(Byte1 shl 4) and $3F] + '==';
-  end;
-
-var
-  i, iLength: Integer;
-begin
-  Result := '';
-  iLength := Length(Input);
-  i := 0;
-  while i < iLength do
-  begin
-    case iLength - i of
-      3..MaxInt:
-        Result := Result + Encode3Bytes(Input[i], Input[i+1], Input[i+2]);
-      2:
-        Result := Result + EncodeLast2Bytes(Input[i], Input[i+1]);
-      1:
-        Result := Result + EncodeLast1Byte(Input[i]);
-    end;
-    Inc(i, 3);
-  end;
-end;
-
 { TdsdCustomDataSetAction }
 
 constructor TdsdCustomDataSetAction.Create(AOwner: TComponent);
