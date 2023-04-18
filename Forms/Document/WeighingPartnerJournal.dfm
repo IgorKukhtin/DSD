@@ -25,9 +25,9 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 102
       Top = 5
-      EditValue = 43466d
+      EditValue = 44927d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -37,7 +37,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 43466d
+      EditValue = 44927d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -110,6 +110,16 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = diffBegin_sec
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCountKg
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCountSh
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -156,6 +166,16 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = diffBegin_sec
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCountKg
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalCountSh
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -463,6 +483,26 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
       object TotalCountPartner: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
         DataBinding.FieldName = 'TotalCountPartner'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object TotalCountKg: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1050#1086#1083'-'#1074#1086' '#1074#1077#1089
+        DataBinding.FieldName = 'TotalCountKg'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object TotalCountSh: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1050#1086#1083'-'#1074#1086' '#1096#1090'.'
+        DataBinding.FieldName = 'TotalCountSh'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'

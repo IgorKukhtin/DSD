@@ -128,6 +128,8 @@ type
     bbUpdatePersonalComlete: TdxBarButton;
     UnitName_PersonalGroup: TcxGridDBColumn;
     IP: TcxGridDBColumn;
+    TotalCountKg: TcxGridDBColumn;
+    TotalCountSh: TcxGridDBColumn;
   private
   public
   end;

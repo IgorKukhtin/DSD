@@ -597,6 +597,9 @@
         object NPP_ch1: TcxGridDBColumn
           Caption = '***'#8470' '#1087'/'#1087
           DataBinding.FieldName = 'NPP'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #8470' '#1087'/'#1087' '#1074' '#1079#1072#1075#1088#1091#1079#1082#1077' '#1080#1079' '#1101#1082#1089#1077#1083#1103
@@ -1034,6 +1037,9 @@
         object NPP_ch2: TcxGridDBColumn
           Caption = '***'#8470' '#1087'/'#1087
           DataBinding.FieldName = 'NPP'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #8470' '#1087'/'#1087' '#1074' '#1079#1072#1075#1088#1091#1079#1082#1077' '#1080#1079' '#1101#1082#1089#1077#1083#1103
@@ -1121,6 +1127,9 @@
         end
         object Value_ch2: TcxGridDBColumn
           DataBinding.FieldName = 'Value'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1047#1085#1072#1095#1077#1085#1080#1077
@@ -3090,6 +3099,9 @@
         end
         item
           StoredProc = spSelect_child1
+        end
+        item
+          StoredProc = spSelect_child2
         end>
       Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1072
       Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1072
@@ -3303,6 +3315,12 @@
         Component = Child1CDS
         ComponentItem = 'Comment'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNPP'
+        Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -3653,6 +3671,12 @@
         Component = Child2CDS
         ComponentItem = 'Comment'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNPP'
+        Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
