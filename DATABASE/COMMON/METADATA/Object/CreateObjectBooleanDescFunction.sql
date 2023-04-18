@@ -851,7 +851,6 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CommentSun_Promo() RETURNS Integer A
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_CommentSend(), 'zc_ObjectBoolean_CommentSun_Promo', 'Контроль количества по плану' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CommentSun_Promo');
 
-
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CommentSun_SendPartionDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CommentSun_SendPartionDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_CommentSend(), 'zc_ObjectBoolean_CommentSun_SendPartionDate', 'Формировать заявку на изменения срока' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CommentSun_SendPartionDate');
@@ -1404,11 +1403,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_MedicalProgramSP(), 'zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript', 'Электронные рецепты' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CommentCheck_SendPartionDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CommentCheck_SendPartionDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CommentCheck(), 'zc_ObjectBoolean_CommentCheck_SendPartionDate', 'Формировать заявку на изменения срока' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CommentCheck_SendPartionDate');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CommentCheck_LostPositions() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CommentCheck_LostPositions'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CommentCheck(), 'zc_ObjectBoolean_CommentCheck_LostPositions', 'Утерянные позиции' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CommentCheck_LostPositions');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 18.04.23                                                                                                          * zc_ObjectBoolean_CommentCheck_SendPartionDate, zc_ObjectBoolean_CommentCheck_LostPositions
  06.04.23                                                                                                          * zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript
  18.03.23                                                                                                          * zc_ObjectBoolean_CashSettings_CancelBansSUN
  14.03.23         * zc_ObjectBoolean_PersonalServiceList_AvanceNot

@@ -2888,10 +2888,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PartionDateWages_PartionDateKind() RETU
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_PartionDateWages_PartionDateKind', 'Типы срок/не срок', zc_Object_PartionDateWages(), zc_Object_PartionDateKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartionDateWages_PartionDateKind');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_CommentCheck_CommentTR() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommentCheck_CommentTR'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_CommentCheck_CommentTR', 'Связь с Комментарием строк технического переучета', zc_Object_CommentCheck(), zc_Object_CommentTR() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommentCheck_CommentTR');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.04.23                                                                                      * zc_ObjectLink_CommentCheck_CommentTR
  18.01.23                                                                                      * zc_ObjectLink_PartionDateWages_PartionDateKind
  20.12.22         * zc_ObjectLink_GoodsByGoodsKind_GoodsKindNew
  14.11.22         * zc_ObjectLink_MemberReport_From
