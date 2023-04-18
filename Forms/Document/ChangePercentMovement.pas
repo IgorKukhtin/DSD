@@ -154,6 +154,20 @@ type
     Sum_Diff1: TcxGridDBColumn;
     Sum_Diff1_tax: TcxGridDBColumn;
     Sum_Diff1_tax_plus: TcxGridDBColumn;
+    cxTabSheet1: TcxTabSheet;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    LineNum_ch3: TcxGridDBColumn;
+    GoodsCode_ch3: TcxGridDBColumn;
+    GoodsName_ch3: TcxGridDBColumn;
+    GoodsKindName_ch3: TcxGridDBColumn;
+    MeasureName_ch3: TcxGridDBColumn;
+    Amount_ch3: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    spSelect_child: TdsdStoredProc;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    dsdDBViewAddOnChild: TdsdDBViewAddOn;
   private
     { Private declarations }
   public
