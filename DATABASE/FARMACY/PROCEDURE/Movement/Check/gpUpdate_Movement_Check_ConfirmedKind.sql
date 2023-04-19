@@ -36,6 +36,18 @@ BEGIN
         vbConfirmedKindId:= 0;
         RAISE EXCEPTION 'Ошибка. Изменять статус ВИП чек для резерва под продажи запрещено.';    
     END IF;
+    
+    IF EXISTS (SELECT 1 FROM MovementBoolean AS MovementBoolean_isAuto
+               WHERE MovementBoolean_isAuto.MovementId = inMovementId
+                 AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+                 AND MovementBoolean_isAuto.ValueData = TRUE)
+    THEN
+      ouConfirmedKindName:= COALESCE ((SELECT Object.ValueData FROM MovementLinkObject AS MLO JOIN Object ON Object.Id = MLO.ObjectId WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_ConfirmedKind()), '');    
+      -- сохранили отметку <Автоматически подтвержден>
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), inMovementId, False);
+      IF vbConfirmedKindId = zc_Enum_ConfirmedKind_Complete() THEN RETURN; END IF;
+    END IF;
+    
 
     -- Проверка - ?разрешается менять только за последние 7 дней? + если кто-то другое НЕ подтвердил
     IF NOT EXISTS (SELECT 1
