@@ -382,6 +382,11 @@ object ReceiptProdModelForm: TReceiptProdModelForm
             Format = ',0.00##'
             Kind = skSum
             Column = EKPriceWVAT_summ_ch2
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = Value_ch2
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -398,6 +403,11 @@ object ReceiptProdModelForm: TReceiptProdModelForm
             Format = ',0.00##'
             Kind = skSum
             Column = EKPriceWVAT_summ_ch2
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = Value_ch2
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
