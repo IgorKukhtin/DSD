@@ -1815,24 +1815,44 @@ $BODY$
 
 /*     
 заполнение первого проведения для раннего периода
+
 SELECT   lpInsertUpdate_MovementDate (zc_MovementDate_StatusInsert(), tmp.MovementId, tmp.OperDate)
              -- сохранили свойство <Пользователь (создание)>
         , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_StatusInsert(),tmp.MovementId, tmp.UserId)
 
 FROM
 (
-SELECT Movement.Id AS MovementId
-    , MovementProtocol.OperDate
-    , MovementProtocol.UserId
-, ROW_NUMBER() OVER (PARTITION BY Movement.Id ORDER BY MovementProtocol.id) AS ord
-FROM Movement
-INNER JOIN MovementProtocol ON MovementProtocol.MovementId = Movement.Id
+WITH
+tmpMov AS (SELECT Movement.Id
+           FROM Movement
+           WHERE Movement.Operdate BETWEEN  '18.04.2023' and '25.04.2023' 
+             AND Movement.DescId = zc_Movement_Send()
+           )
 
-where Movement.Operdate BETWEEN  '01.04.2023' and '30.04.2023' 
- AND Movement.DescId = zc_Movement_Send()
-and  ProtocolData ilike '%FieldValue = "Проведен"%'
+, tmpProtocol AS (SELECT tmp.OperDate
+                       , tmp.UserId
+                       , tmp.MovementId
+                       , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId ORDER BY tmp.Id) AS ord
+                  FROM
+                 (SELECT * from MovementProtocol
+                  WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
+                    AND MovementProtocol.ProtocolData ilike '%FieldValue = "Проведен"%'
+                union
+                  SELECT * from MovementProtocol_arc
+                  WHERE MovementProtocol_arc.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
+                    AND MovementProtocol_arc.ProtocolData ilike '%FieldValue = "Проведен"%'
+                  ) AS tmp
+                 )
 
+SELECT tmpProtocol.MovementId
+    , tmpProtocol.OperDate
+    , tmpProtocol.UserId
+FROM tmpProtocol
+WHERE tmpProtocol.Ord = 1
 ) AS tmp
-WHERE tmp.Ord = 1
+
+
+
+
 
 */
