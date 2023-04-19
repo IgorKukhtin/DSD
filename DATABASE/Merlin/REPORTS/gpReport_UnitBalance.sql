@@ -189,7 +189,7 @@ BEGIN
                             LEFT JOIN MovementLinkObject AS MLO_Insert
                                                          ON MLO_Insert.MovementId = MovementItem.MovementId
                                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-                            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId*
+                            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
                             LEFT JOIN MovementDate AS MovementDate_Update
                                                    ON MovementDate_Update.MovementId = MovementItem.MovementId
