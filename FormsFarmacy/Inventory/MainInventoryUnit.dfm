@@ -358,9 +358,6 @@ inherited MainInventoryForm: TMainInventoryForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actUnitChoice
-        end
-        item
           Action = actDoLoadData
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080

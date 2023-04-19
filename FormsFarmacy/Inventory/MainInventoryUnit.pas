@@ -192,6 +192,8 @@ begin
     SaveGoods;
     ChangeStatus('Получение "Штрих кодов товаров"');
     SaveGoodsBarCode;
+    ChangeStatus('Получение "Остатков по подразделениям"');
+    SaveRemains;
   finally
     EndSplash;
   end;

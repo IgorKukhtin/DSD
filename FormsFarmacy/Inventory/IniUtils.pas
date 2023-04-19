@@ -9,6 +9,7 @@ procedure SaveFormData;
 procedure SaveUserUnit;
 procedure SaveGoods;
 procedure SaveGoodsBarCode;
+procedure SaveRemains;
 
 function Inventory_Table: String;
 function InventoryChild_Table: String;
@@ -97,6 +98,11 @@ End;
 function GoodsBarCode_Table: String;
 Begin
   Result := 'GoodsBarCode';
+End;
+
+function Remains_Table: String;
+Begin
+  Result := 'Remains';
 End;
 
 function Inventory_Table: String;
@@ -274,6 +280,40 @@ begin
     freeAndNil(sp);
   end;
 end;
+
+procedure SaveRemains;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      ds := TClientDataSet.Create(nil);
+      try
+        sp.OutputType := otDataSet;
+        sp.DataSet := ds;
+
+        sp.StoredProcName := 'gpSelect_Inventory_Remains';
+        sp.Params.Clear;
+        sp.Execute;
+        SaveLocalData(ds, Remains_Table);
+
+      finally
+        ds.free;
+      end;
+    except
+      on E: Exception do
+      begin
+        ShowMessage('SaveGoods Exception: ' + E.Message);
+        Exit;
+      end;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
 
 function ChechActiveInv(var AOperDate : TDateTime; var AUnitName : String; var AisSave : Boolean) : boolean;
   var ACDS: TClientDataSet;
