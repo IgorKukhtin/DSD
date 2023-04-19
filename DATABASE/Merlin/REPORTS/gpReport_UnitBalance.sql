@@ -166,7 +166,11 @@ BEGIN
                            , MovementDate_Insert.ValueData        AS InsertDate
                            , Object_Update.ValueData              AS UpdateName
                            , MovementDate_Update.ValueData        AS UpdateDate
-                      FROM (SELECT DISTINCT tmpMIContainer.MovementItemId FROM tmpMIContainer) AS tmp
+                             -- ¹ ï/ï
+                           , ROW_NUMBER() OVER (PARTITION BY tmp.ContainerId ORDER BY tmp.MovementItemId DESC) AS Ord
+
+                      FROM (SELECT DISTINCT tmpMIContainer.MovementItemId, tmpMIContainer.ContainerId FROM tmpMIContainer
+                           ) AS tmp
                             LEFT JOIN MovementItem ON MovementItem.Id = tmp.MovementItemId
 
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoneyDetail
@@ -185,7 +189,7 @@ BEGIN
                             LEFT JOIN MovementLinkObject AS MLO_Insert
                                                          ON MLO_Insert.MovementId = MovementItem.MovementId
                                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-                            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+                            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId*
 
                             LEFT JOIN MovementDate AS MovementDate_Update
                                                    ON MovementDate_Update.MovementId = MovementItem.MovementId
@@ -230,7 +234,10 @@ BEGIN
             , tmpMov_Param.CommentInfoMoneyCode
             , tmpMov_Param.CommentInfoMoneyName
             , tmpMov_Param.InsertName
-            , tmpMov_Param.InsertDate
+            , CASE WHEN tmpMov_Param.InsertDate = DATE_TRUNC ('DAY', tmpMov_Param.InsertDate)
+                        THEN tmpMov_Param.InsertDate + ((tmpMov_Param.ORD :: TVarChar) || 'SEC') :: INTERVAL
+                   ELSE tmpMov_Param.InsertDate
+              END :: TDateTime AS InsertDate
             , tmpMov_Param.UpdateName
             , tmpMov_Param.UpdateDate
 
