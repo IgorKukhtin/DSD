@@ -144,7 +144,6 @@ contains
   ComDocXML in '..\SOURCE\EDI\ComDocXML.pas',
   DeclarXML in '..\SOURCE\EDI\DeclarXML.pas',
   DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
-  EDI in '..\SOURCE\EDI\EDI.pas',
   OrderXML in '..\SOURCE\EDI\OrderXML.pas',
   MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
   cxGridAddOn in '..\SOURCE\DevAddOn\cxGridAddOn.pas',
@@ -197,6 +196,8 @@ contains
   GoogleOTP in '..\SOURCE\GoogleOTP.pas',
   GoogleOTPDialogPsw in '..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
   PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
-  StorageSQLite in '..\SOURCE\StorageSQLite.pas';
+  StorageSQLite in '..\SOURCE\StorageSQLite.pas',
+  EDI in '..\SOURCE\EDI\EDI.pas',
+  DeclarETTNXML in '..\SOURCE\EDI\DeclarETTNXML.pas';
 
 end.
