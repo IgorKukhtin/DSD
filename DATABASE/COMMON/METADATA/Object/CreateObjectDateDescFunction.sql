@@ -27,6 +27,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Personal_Out() RETURNS Integer AS $BODY
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Personal(), 'zc_ObjectDate_Personal_Out', 'Дата увольнения у сотрудника' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Personal_Out');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Personal_Send() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Personal_Send'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Personal(), 'zc_ObjectDate_Personal_Send', 'Дата перевода сотрудника' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Personal_Send');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectDate_PartionGoods_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PartionGoods_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_PartionGoods(), 'zc_ObjectDate_PartionGoods_Value', 'Дата партии товара' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PartionGoods_Value');
@@ -675,6 +680,7 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 19.04.23         * zc_ObjectDate_Personal_Send
  29.03.23         * zc_ObjectDate_GoodsGroup_UKTZED_new
  18.01.23                                                                                     * zc_ObjectDate_PartionDateWages_DateStart
  26.09.22                                                                                     * zc_ObjectDate_User_InternshipConfirmation, zc_ObjectDate_User_InternshipCompleted

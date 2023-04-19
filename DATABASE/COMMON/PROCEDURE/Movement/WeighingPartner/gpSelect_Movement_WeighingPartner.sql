@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , isList Boolean
              , PriceWithVAT Boolean
              , VATPercent TFloat, ChangePercent TFloat
-             , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat
+             , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat, TotalCountKg TFloat, TotalCountSh TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar
@@ -140,6 +140,8 @@ BEGIN
              , MovementFloat_TotalCount.ValueData             AS TotalCount
              , MovementFloat_TotalCountPartner.ValueData      AS TotalCountPartner
              , MovementFloat_TotalCountTare.ValueData         AS TotalCountTare
+             , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
+             , MovementFloat_TotalCountSh.ValueData           AS TotalCountSh
              , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
              , MovementFloat_TotalSummMVAT.ValueData          AS TotalSummMVAT
              , MovementFloat_TotalSummPVAT.ValueData          AS TotalSummPVAT
@@ -268,6 +270,12 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountTare
                                     ON MovementFloat_TotalCountTare.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountTare.DescId = zc_MovementFloat_TotalCountTare()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId = Movement.Id
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
+                                    ON MovementFloat_TotalCountSh.MovementId = Movement.Id
+                                   AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
@@ -484,4 +492,4 @@ where Movement.Id = tmp.Id
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.06.2022', inEndDate:= '01.06.2022', inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.06.2023', inEndDate:= '01.06.2023', inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

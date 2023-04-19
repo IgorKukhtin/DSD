@@ -17,7 +17,8 @@ RETURNS TABLE (MemberId Integer, MemberCode Integer, MemberName TVarChar,
                PersonalServiceListCardSecondId Integer, PersonalServiceListCardSecondName TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                StorageLineId Integer, StorageLineName TVarChar,
-               DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean
+               DateIn TDateTime, DateOut TDateTime, DateSend TDateTime
+             , isDateOut Boolean, isDateSend Boolean, isMain Boolean
              , Member_ReferId Integer
              , Member_ReferCode Integer
              , Member_ReferName TVarChar
@@ -72,8 +73,10 @@ BEGIN
          , Object_Personal_View.DateIn
          -- , Object_Personal_View.DateOut
          , CASE WHEN Object_Personal_View.DateOut_user IS NULL THEN CURRENT_DATE ELSE Object_Personal_View.DateOut_user END :: TDateTime AS DateOut
-
+         , Object_Personal_View.DateSend  ::TDateTime
+         
          , Object_Personal_View.isDateOut
+         , Object_Personal_View.isDateSend ::Boolean
          -- , Object_Personal_View.isMain
          , FALSE :: Boolean AS isMain
 
@@ -148,7 +151,10 @@ BEGIN
 
            , CURRENT_DATE :: TDateTime AS DateIn
            , CURRENT_DATE :: TDateTime AS DateOut
+           , CAST (NULL as TDateTime) AS DateSend
+           
            , FALSE AS isDateOut
+           , FALSE AS isDateSend
            -- , TRUE  AS isMain
            , FALSE  AS isMain
            , 0                        AS Member_ReferId
@@ -202,8 +208,10 @@ BEGIN
          , Object_Personal_View.DateIn
          -- , Object_Personal_View.DateOut
          , CASE WHEN Object_Personal_View.DateOut_user IS NULL THEN CURRENT_DATE ELSE Object_Personal_View.DateOut_user END :: TDateTime AS DateOut
+         , Object_Personal_View.DateSend ::TDateTime
 
          , Object_Personal_View.isDateOut
+         , Object_Personal_View.isDateSend
          , Object_Personal_View.isMain
 
          , Object_Personal_View.Member_ReferId
@@ -250,6 +258,7 @@ ALTER FUNCTION gpGet_Object_Personal (Integer, Integer, TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 29.04.23         * DateSend
  06.08.21         * 
  13.07.17         * add PersonalServiceListCardSecond
  25.05.17         * add StorageLine

@@ -1072,10 +1072,11 @@ end;
 
 procedure TLoadFormTest.LoadSendFormTest;
 begin
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
   exit;
@@ -4297,13 +4298,13 @@ begin
    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
-  exit;
+  //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ObjectForm');
-
+ exit;
   //  Установить пароль для подтверждения в Scale
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPswDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberPswDialogForm');

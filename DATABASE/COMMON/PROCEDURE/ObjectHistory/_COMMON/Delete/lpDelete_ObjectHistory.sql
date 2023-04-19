@@ -37,7 +37,7 @@ BEGIN
 
 
    -- сохранили протокол - "удаление"
-   PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, ObjectHistory.StartDate, ObjectHistory.EndDate, ObjectHistoryFloat_Value.ValueData, TRUE, TRUE)
+   PERFORM lpInsert_ObjectHistoryProtocol (ObjectHistory.ObjectId, inUserId, ObjectHistory.StartDate, ObjectHistory.EndDate, ObjectHistoryFloat_Value.ValueData, '', TRUE, TRUE)
    FROM ObjectHistory
         LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Value
                                      ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory.Id

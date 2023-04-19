@@ -358,6 +358,9 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_CarInfo', 'Информация по отгрузке' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CarInfo');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_StatusInsert() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_StatusInsert'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_StatusInsert', 'Пользователь первого проведения' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_StatusInsert');
 
 
 --!!!!!!!!!!!  Аптека
@@ -572,6 +575,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 19.04.23         * zc_MovementLinkObject_StatusInsert
  20.02.23                                                                                     * zc_MovementLinkObject_UserKeyId
  14.06.22         * zc_MovementLinkObject_CarInfo
  29.04.22         * zc_MovementLinkObject_Manager

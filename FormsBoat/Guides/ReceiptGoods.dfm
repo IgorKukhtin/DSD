@@ -525,12 +525,12 @@
         DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Summary.DefaultGroupSummaryItems = <
           item
-            Format = ',0.00##;-,0.00##; ;'
+            Format = ',0.########'
             Kind = skSum
             Column = Value_ch1
           end
           item
-            Format = ',0.00##;-,0.00##; ;'
+            Format = ',0.########'
             Kind = skSum
             Column = Value_service_ch1
           end
@@ -551,12 +551,12 @@
             Column = ObjectName_ch1
           end
           item
-            Format = ',0.00##;-,0.00##; ;'
+            Format = ',0.########'
             Kind = skSum
             Column = Value_ch1
           end
           item
-            Format = ',0.00##;-,0.00##; ;'
+            Format = ',0.########'
             Kind = skSum
             Column = Value_service_ch1
           end
@@ -970,7 +970,7 @@
             Column = EKPriceWVAT_summ_ch2
           end
           item
-            Format = ',0.00##;-,0.00##; ;'
+            Format = ',0.########'
             Kind = skSum
             Column = Value_ch2
           end>
@@ -999,7 +999,7 @@
             Kind = skSum
           end
           item
-            Format = ',0.00##;-,0.00##; ;'
+            Format = ',0.########'
             Kind = skSum
             Column = Value_ch2
           end>
