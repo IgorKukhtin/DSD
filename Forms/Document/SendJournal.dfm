@@ -304,6 +304,22 @@ inherited SendJournalForm: TSendJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 98
           end
+          object StatusInsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088'. 1-'#1075#1086' '#1087#1088#1086#1074#1077#1076'.'
+            DataBinding.FieldName = 'StatusInsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' / '#1074#1088'. '#1087#1077#1088#1074#1086#1075#1086' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103
+            Width = 90
+          end
+          object StatusInsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' 1-'#1075#1086' '#1087#1088#1086#1074#1077#1076'.'
+            DataBinding.FieldName = 'StatusInsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1087#1077#1088#1074#1086#1075#1086' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103
+            Width = 98
+          end
           object InvNumber_SendFull: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'InvNumber_SendFull'

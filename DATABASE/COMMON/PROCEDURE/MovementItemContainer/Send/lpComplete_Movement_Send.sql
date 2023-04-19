@@ -1779,6 +1779,20 @@ END IF;
                                                 , inUserId     := inUserId
                                                  );
      END IF;
+     
+     
+     --если первое проведение нужно заполнить данные
+     IF NOT EXISTS (SELECT 1 FROM MovementLinkObject
+                    WHERE MovementLinkObject.MovementId = inMovementId
+                      AND MovementLinkObject.DescId = zc_MovementLinkObject_StatusInsert()
+                    )
+     THEN
+         -- сохранили свойство <Дата первого проведения>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StatusInsert(), inMovementId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <Пользователь первого проведения>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_StatusInsert(), inMovementId, inUserId);
+     END IF;
+
 
 END;
 $BODY$
@@ -1797,3 +1811,28 @@ $BODY$
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 579, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpComplete_Movement_Send (inMovementId:= 5854348, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 579, inSession:= zfCalc_UserAdmin())
+
+
+/*     
+заполнение первого проведения для раннего периода
+SELECT   lpInsertUpdate_MovementDate (zc_MovementDate_StatusInsert(), tmp.MovementId, tmp.OperDate)
+             -- сохранили свойство <Пользователь (создание)>
+        , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_StatusInsert(),tmp.MovementId, tmp.UserId)
+
+FROM
+(
+SELECT Movement.Id AS MovementId
+    , MovementProtocol.OperDate
+    , MovementProtocol.UserId
+, ROW_NUMBER() OVER (PARTITION BY Movement.Id ORDER BY MovementProtocol.id) AS ord
+FROM Movement
+INNER JOIN MovementProtocol ON MovementProtocol.MovementId = Movement.Id
+
+where Movement.Operdate BETWEEN  '01.04.2023' and '30.04.2023' 
+ AND Movement.DescId = zc_Movement_Send()
+and  ProtocolData ilike '%FieldValue = "Проведен"%'
+
+) AS tmp
+WHERE tmp.Ord = 1
+
+*/
