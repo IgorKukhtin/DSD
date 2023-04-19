@@ -19,7 +19,8 @@ uses
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
   cxImageComboBox, cxNavigator, dxDateRanges, Data.Bind.Components,
   Data.Bind.ObjectScope, System.Actions, dsdDB, Datasnap.DBClient, dsdAction,
-  AncestorBase, cxPropertiesStore, dsdAddOn, dxBarBuiltInMenu, cxDateUtils;
+  AncestorBase, cxPropertiesStore, dsdAddOn, dxBarBuiltInMenu, cxDateUtils,
+  Vcl.StdActns;
 
 type
   TMainInventoryForm = class(TAncestorBaseForm)
@@ -72,6 +73,11 @@ type
     edOperDate: TcxDateEdit;
     edUnitName: TcxTextEdit;
     IsSend: TcxGridDBColumn;
+    actCloseAll: TAction;
+    N8: TMenuItem;
+    N9: TMenuItem;
+    N10: TMenuItem;
+    actExit: TAction;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);
@@ -80,6 +86,8 @@ type
     procedure actContinueInventExecute(Sender: TObject);
     procedure edBarCodeKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure actCloseAllExecute(Sender: TObject);
+    procedure actExitExecute(Sender: TObject);
   private
     { Private declarations }
 
@@ -99,6 +107,12 @@ implementation
 {$R *.dfm}
 
 uses UnilWin, CommonData, IniUtils, Splash, StorageSQLite;
+
+procedure TMainInventoryForm.actCloseAllExecute(Sender: TObject);
+begin
+  PageControl.ActivePage := tsStart;
+  MasterCDS.Close;
+end;
 
 procedure TMainInventoryForm.actContinueInventExecute(Sender: TObject);
  var OperDate: TDateTime; UnitName : String; isSave: boolean;
@@ -181,6 +195,11 @@ begin
   finally
     EndSplash;
   end;
+end;
+
+procedure TMainInventoryForm.actExitExecute(Sender: TObject);
+begin
+  if MessageDlg('Закрыть приложение?', mtInformation, mbOKCancel, 0) = mrOk then Close;
 end;
 
 procedure TMainInventoryForm.actReCreteInventDateExecute(Sender: TObject);

@@ -5698,6 +5698,16 @@ begin
     NodeValue := 'побутова техніка'
   end;
 
+  with DeclarETTN.SIGN_ENVELOPE.DECLARBODY.T1RXXXXG15.Add do
+  begin
+    ROWNUM := 1;
+    NodeValue := '1.00'
+  end;
+
+  // Усього
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R001G10 := 12.00;
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R001G12 := 1440.00;
+
   DeclarETTN.OwnerDocument.SaveToXML(AXML);
   DeclarETTN.OwnerDocument.SaveToFile('111.xml');
 end;

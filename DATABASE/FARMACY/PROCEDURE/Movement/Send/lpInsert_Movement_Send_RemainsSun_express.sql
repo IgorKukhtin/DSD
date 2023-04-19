@@ -822,7 +822,7 @@ raise notice 'Value 9: %', CLOCK_TIMESTAMP();
                                                        AND MB_SUN_v3.ValueData  = TRUE
                          WHERE Movement.OperDate = inOperDate
                            AND Movement.DescId   = zc_Movement_Send()
-                           AND Movement.StatusId = zc_Enum_Status_Erased()
+                           AND Movement.StatusId in (zc_Enum_Status_Erased(), zc_Enum_Status_UnComplete())
                            AND MB_SUN_v3.MovementId IS NULL
                          GROUP BY MovementLinkObject_From.ObjectId
                                 , MovementItem.ObjectId  

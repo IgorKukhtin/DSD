@@ -1,8 +1,10 @@
 inherited MainInventoryForm: TMainInventoryForm
-  Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
+  Action = actExit
+  Caption = #1042#1099#1093#1086#1076
   ClientHeight = 397
   ClientWidth = 842
   Menu = MainMenu
+  OnClick = actExitExecute
   OnCreate = FormCreate
   OnDestroy = ParentFormDestroy
   ExplicitWidth = 858
@@ -27,10 +29,8 @@ inherited MainInventoryForm: TMainInventoryForm
       BiDiMode = bdLeftToRight
       ParentBiDiMode = False
       TabOrder = 0
-      Properties.ActivePage = tsInventory
+      Properties.ActivePage = tsStart
       Properties.CustomButtons.Buttons = <>
-      ExplicitLeft = 2
-      ExplicitTop = 2
       ClientRectBottom = 391
       ClientRectLeft = 4
       ClientRectRight = 836
@@ -49,7 +49,6 @@ inherited MainInventoryForm: TMainInventoryForm
           Height = 302
           Align = alClient
           TabOrder = 0
-          ExplicitTop = 67
           object cxGridChildDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -359,6 +358,9 @@ inherited MainInventoryForm: TMainInventoryForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actUnitChoice
+        end
+        item
           Action = actDoLoadData
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
@@ -415,6 +417,16 @@ inherited MainInventoryForm: TMainInventoryForm
       Caption = #1055#1088#1086#1076#1086#1083#1078#1080#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1077' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
       OnExecute = actContinueInventExecute
     end
+    object actCloseAll: TAction
+      Category = 'DSDLib'
+      Caption = #1047#1072#1082#1088#1099#1090#1100' '#1074#1089#1077' '#1074#1082#1083#1072#1076#1082#1080
+      OnExecute = actCloseAllExecute
+    end
+    object actExit: TAction
+      Category = 'DSDLib'
+      Caption = #1042#1099#1093#1086#1076
+      OnExecute = actExitExecute
+    end
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -441,6 +453,12 @@ inherited MainInventoryForm: TMainInventoryForm
       object N5: TMenuItem
         Action = actContinueInvent
       end
+      object N8: TMenuItem
+        Caption = '-'
+      end
+      object N9: TMenuItem
+        Action = actCloseAll
+      end
     end
     object N1: TMenuItem
       Caption = #1054#1073#1084#1077#1085' '#1076#1072#1085#1085#1099#1084#1080
@@ -450,6 +468,10 @@ inherited MainInventoryForm: TMainInventoryForm
       object N7: TMenuItem
         Caption = '-'
       end
+    end
+    object N10: TMenuItem
+      Caption = #1042#1099#1093#1086#1076
+      OnClick = actExitExecute
     end
   end
   object FormParams: TdsdFormParams

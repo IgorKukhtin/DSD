@@ -42,6 +42,8 @@ RETURNS TABLE (Id Integer, ParentId integer
              , UKTZED TVarChar
              , JuridicalId Integer
              , JuridicalName TVarChar
+             , CommentCheckId Integer
+             , CommentCheckName TVarChar
               )
 AS
 $BODY$
@@ -207,6 +209,9 @@ BEGIN
            , MILinkObject_Juridical.ObjectId                                     AS JuridicalId 
            , Object_Juridical.ValueData                                          AS JuridicalName
 
+           , Object_CommentCheck.Id                                              AS CommentCheckId
+           , Object_CommentCheck.ValueData                                       AS CommentCheckName
+
            /*, MIFloat_ContainerId.ContainerId  ::TFloat                         AS ContainerId
            , COALESCE (tmpContainer.ExpirationDate, NULL)      :: TDateTime      AS ExpirationDate
            , COALESCE (tmpPartion.BranchDate, NULL)            :: TDateTime      AS OperDate_Income
@@ -261,6 +266,11 @@ BEGIN
                                              ON MILinkObject_Juridical.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Juridical.DescId         = zc_MILinkObject_Juridical()
             LEFT JOIN tmpObject AS Object_Juridical ON Object_Juridical.Id = MILinkObject_Juridical.ObjectId
+
+            LEFT JOIN tmpMILinkObject AS MILinkObject_CommentCheck
+                                             ON MILinkObject_CommentCheck.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_CommentCheck.DescId         = zc_MILinkObject_CommentCheck()
+            LEFT JOIN Object AS Object_CommentCheck ON Object_CommentCheck.Id = MILinkObject_CommentCheck.ObjectId
       ;
 END;
 $BODY$

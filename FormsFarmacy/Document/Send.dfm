@@ -3,27 +3,27 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 1002
   AddOnFormData.SetFocusedAction = actSetFocused
-  ExplicitWidth = 1018
-  ExplicitHeight = 656
+  ExplicitWidth = 1020
+  ExplicitHeight = 664
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 155
+    Top = 159
     Width = 1002
-    Height = 462
-    ExplicitTop = 155
+    Height = 458
+    ExplicitTop = 159
     ExplicitWidth = 1002
-    ExplicitHeight = 462
-    ClientRectBottom = 462
+    ExplicitHeight = 458
+    ClientRectBottom = 458
     ClientRectRight = 1002
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1002
-      ExplicitHeight = 438
+      ExplicitHeight = 434
       inherited cxGrid: TcxGrid
         Width = 1002
-        Height = 318
+        Height = 314
         ExplicitWidth = 1002
-        ExplicitHeight = 318
+        ExplicitHeight = 314
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -331,7 +331,6 @@ inherited SendForm: TSendForm
               end
               item
                 Action = actClearCommentSend
-                Hint = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1095#1080#1085#1072' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
                 Kind = bkGlyph
               end>
             Properties.Images = dmMain.ImageList
@@ -545,7 +544,7 @@ inherited SendForm: TSendForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 318
+        Top = 314
         Width = 1002
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -554,7 +553,7 @@ inherited SendForm: TSendForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 326
+        Top = 322
         Width = 1002
         Height = 112
         Align = alBottom
@@ -1769,6 +1768,7 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1095#1080#1085#1072' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+      Hint = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1095#1080#1085#1072' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
       ImageIndex = 52
       DefaultParams = <
         item
@@ -2188,7 +2188,7 @@ inherited SendForm: TSendForm
     DockControlHeights = (
       0
       0
-      26
+      30
       0)
     inherited Bar: TdxBar
       ItemLinks = <

@@ -1501,7 +1501,7 @@ raise notice 'Value 1: % %', CLOCK_TIMESTAMP(), vbSumm_limit;
                                                        AND MB_SUN_v4.ValueData  = TRUE
                          WHERE Movement.OperDate = inOperDate
                            AND Movement.DescId   = zc_Movement_Send()
-                           AND Movement.StatusId = zc_Enum_Status_Erased()
+                           AND Movement.StatusId in (zc_Enum_Status_Erased(), zc_Enum_Status_UnComplete())
                            -- т.е. - ТОЛЬКО СУН - там срок и без продаж 100дн.
                            AND MB_SUN_v2.MovementId IS NULL
                            AND MB_SUN_v3.MovementId IS NULL

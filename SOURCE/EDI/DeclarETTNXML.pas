@@ -149,8 +149,8 @@ type
     function Get_T1RXXXXG13S: IXMLT1RXXXXG13STypeList;
     function Get_T1RXXXXG14S: IXMLT1RXXXXG14STypeList;
     function Get_T1RXXXXG15: IXMLT1RXXXXG15TypeList;
-    function Get_R001G10: UnicodeString;
-    function Get_R001G12: UnicodeString;
+    function Get_R001G10: Double;
+    function Get_R001G12: Double;
     function Get_R08G2: UnicodeString;
     function Get_DATE_ARRIVAL_LOAD: UnicodeString;
     function Get_R08G31: Integer;
@@ -206,8 +206,8 @@ type
     procedure Set_R014G1S(Value: UnicodeString);
     procedure Set_SEAL_NO(Value: UnicodeString);
     procedure Set_TEMPERATURE(Value: UnicodeString);
-    procedure Set_R001G10(Value: UnicodeString);
-    procedure Set_R001G12(Value: UnicodeString);
+    procedure Set_R001G10(Value: Double);
+    procedure Set_R001G12(Value: Double);
     procedure Set_R08G2(Value: UnicodeString);
     procedure Set_DATE_ARRIVAL_LOAD(Value: UnicodeString);
     procedure Set_R08G31(Value: Integer);
@@ -272,8 +272,8 @@ type
     property T1RXXXXG13S: IXMLT1RXXXXG13STypeList read Get_T1RXXXXG13S;
     property T1RXXXXG14S: IXMLT1RXXXXG14STypeList read Get_T1RXXXXG14S;
     property T1RXXXXG15: IXMLT1RXXXXG15TypeList read Get_T1RXXXXG15;
-    property R001G10: UnicodeString read Get_R001G10 write Set_R001G10;
-    property R001G12: UnicodeString read Get_R001G12 write Set_R001G12;
+    property R001G10: Double read Get_R001G10 write Set_R001G10;
+    property R001G12: Double read Get_R001G12 write Set_R001G12;
     property R08G2: UnicodeString read Get_R08G2 write Set_R08G2;
     property DATE_ARRIVAL_LOAD: UnicodeString read Get_DATE_ARRIVAL_LOAD write Set_DATE_ARRIVAL_LOAD;
     property R08G31: Integer read Get_R08G31 write Set_R08G31;
@@ -707,8 +707,8 @@ type
     function Get_T1RXXXXG13S: IXMLT1RXXXXG13STypeList;
     function Get_T1RXXXXG14S: IXMLT1RXXXXG14STypeList;
     function Get_T1RXXXXG15: IXMLT1RXXXXG15TypeList;
-    function Get_R001G10: UnicodeString;
-    function Get_R001G12: UnicodeString;
+    function Get_R001G10: Double;
+    function Get_R001G12: Double;
     function Get_R08G2: UnicodeString;
     function Get_DATE_ARRIVAL_LOAD: UnicodeString;
     function Get_R08G31: Integer;
@@ -764,8 +764,8 @@ type
     procedure Set_R014G1S(Value: UnicodeString);
     procedure Set_SEAL_NO(Value: UnicodeString);
     procedure Set_TEMPERATURE(Value: UnicodeString);
-    procedure Set_R001G10(Value: UnicodeString);
-    procedure Set_R001G12(Value: UnicodeString);
+    procedure Set_R001G10(Value: Double);
+    procedure Set_R001G12(Value: Double);
     procedure Set_R08G2(Value: UnicodeString);
     procedure Set_DATE_ARRIVAL_LOAD(Value: UnicodeString);
     procedure Set_R08G31(Value: Integer);
@@ -1637,22 +1637,22 @@ begin
   Result := FT1RXXXXG15;
 end;
 
-function TXMLDECLARBODYType.Get_R001G10: UnicodeString;
+function TXMLDECLARBODYType.Get_R001G10: Double;
 begin
-  Result := ChildNodes['R001G10'].Text;
+  Result := ChildNodes['R001G10'].NodeValue;
 end;
 
-procedure TXMLDECLARBODYType.Set_R001G10(Value: UnicodeString);
+procedure TXMLDECLARBODYType.Set_R001G10(Value: Double);
 begin
   ChildNodes['R001G10'].NodeValue := Value;
 end;
 
-function TXMLDECLARBODYType.Get_R001G12: UnicodeString;
+function TXMLDECLARBODYType.Get_R001G12: Double;
 begin
-  Result := ChildNodes['R001G12'].Text;
+  Result := ChildNodes['R001G12'].NodeValue;
 end;
 
-procedure TXMLDECLARBODYType.Set_R001G12(Value: UnicodeString);
+procedure TXMLDECLARBODYType.Set_R001G12(Value: Double);
 begin
   ChildNodes['R001G12'].NodeValue := Value;
 end;

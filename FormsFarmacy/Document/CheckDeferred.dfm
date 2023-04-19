@@ -1,22 +1,22 @@
 inherited CheckDeferredForm: TCheckDeferredForm
   Caption = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1077' '#1095#1077#1082#1080'     '
   ClientHeight = 459
-  ClientWidth = 736
+  ClientWidth = 743
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 754
+  ExplicitWidth = 761
   ExplicitHeight = 506
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 26
-    Width = 736
+    Width = 743
     Height = 433
-    ExplicitWidth = 736
+    ExplicitWidth = 743
     ExplicitHeight = 433
     ClientRectBottom = 433
-    ClientRectRight = 736
+    ClientRectRight = 743
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 736
+      ExplicitWidth = 743
       ExplicitHeight = 433
       inherited cxGrid: TcxGrid
         Width = 273
@@ -271,7 +271,7 @@ inherited CheckDeferredForm: TCheckDeferredForm
       object Panel1: TPanel
         Left = 281
         Top = 0
-        Width = 455
+        Width = 462
         Height = 433
         Align = alClient
         BevelOuter = bvNone
@@ -280,7 +280,7 @@ inherited CheckDeferredForm: TCheckDeferredForm
         object cxGrid1: TcxGrid
           Left = 0
           Top = 0
-          Width = 455
+          Width = 462
           Height = 376
           Align = alClient
           PopupMenu = PopupMenu
@@ -410,6 +410,26 @@ inherited CheckDeferredForm: TCheckDeferredForm
               Options.Editing = False
               Width = 87
             end
+            object CommentCheckName: TcxGridDBColumn
+              Caption = #1055#1088#1080#1095#1080#1085#1072' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+              DataBinding.FieldName = 'CommentCheckName'
+              PropertiesClassName = 'TcxButtonEditProperties'
+              Properties.Buttons = <
+                item
+                  Action = actChoiceCommentCheck
+                  Default = True
+                  Kind = bkEllipsis
+                end
+                item
+                  Action = actClearCommentCheck
+                  Kind = bkGlyph
+                end>
+              Properties.Images = dmMain.ImageList
+              Properties.ReadOnly = True
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 103
+            end
             object Color_Calc: TcxGridDBColumn
               DataBinding.FieldName = 'Color_Calc'
               Visible = False
@@ -439,7 +459,7 @@ inherited CheckDeferredForm: TCheckDeferredForm
           Style.IsFontAssigned = True
           TabOrder = 1
           Height = 57
-          Width = 455
+          Width = 462
         end
       end
     end
@@ -1006,6 +1026,56 @@ inherited CheckDeferredForm: TCheckDeferredForm
       SendParam.MultiSelectSeparator = ','
       Caption = 'acteSputnikSendSMS'
     end
+    object actChoiceCommentCheck: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceCommentCheck'
+      FormName = 'TCommentCheckForm'
+      FormNameParam.Value = 'TCommentCheckForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet1
+          ComponentItem = 'CommentCheckId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet1
+          ComponentItem = 'CommentCheckName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actClearCommentCheck: TdsdSetDefaultParams
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1095#1080#1085#1091' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+      Hint = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1095#1080#1085#1072' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+      ImageIndex = 52
+      DefaultParams = <
+        item
+          Param.Value = Null
+          Param.Component = ClientDataSet1
+          Param.ComponentItem = 'CommentCheckId'
+          Param.MultiSelectSeparator = ','
+          Value = Null
+        end
+        item
+          Param.Value = Null
+          Param.Component = ClientDataSet1
+          Param.ComponentItem = 'CommentCheckName'
+          Param.DataType = ftString
+          Param.MultiSelectSeparator = ','
+          Value = Null
+        end>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -1380,6 +1450,14 @@ inherited CheckDeferredForm: TCheckDeferredForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCommentCheckId'
+        Value = 'inCommentCheckId'
+        Component = ClientDataSet1
+        ComponentItem = 'CommentCheckId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outTotalSumm'
         Value = Null
         Component = MasterCDS
@@ -1390,8 +1468,8 @@ inherited CheckDeferredForm: TCheckDeferredForm
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inId'
-    Left = 440
-    Top = 112
+    Left = 400
+    Top = 120
   end
   object spSmashCheck: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_SmashCheck'

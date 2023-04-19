@@ -1683,7 +1683,7 @@ BEGIN
                                                            AND MovementItem.Amount     > 0
                                WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '2 DAY' AND CURRENT_DATE - INTERVAL '1 DAY'
                                  AND Movement.DescId   = zc_Movement_Send()
-                                 AND Movement.StatusId = zc_Enum_Status_Erased()
+                                 AND Movement.StatusId in (zc_Enum_Status_Erased(), zc_Enum_Status_UnComplete())
                               )
                  -- DefSUN - 2 дн€ подр€д
                , tmpResult AS (SELECT tmpDefSUN.UnitId_from, tmpDefSUN.UnitId_to, tmpDefSUN.GoodsId
@@ -2022,7 +2022,7 @@ WHERE Movement.OperDate  >= '01.01.2019'
   AND Movement.StatusId in (  zc_Enum_Status_Erased())
 */
 -- тест
-
+/*
      -- все ѕодразделени€ дл€ схемы SUN
      CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, isColdOutSUN Boolean) ON COMMIT DROP;
      -- баланс по јптекам - если не соответствует, соотв приход или расход блокируетс€
@@ -2054,5 +2054,5 @@ WHERE Movement.OperDate  >= '01.01.2019'
 
      -- 7.1. распредел€ем перемещени€ - по парти€м со сроками
      CREATE TEMP TABLE _tmpResult_child (MovementId Integer, UnitId_from Integer, UnitId_to Integer, ParentId Integer, ContainerId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
-
+*/
 -- SELECT * FROM lpInsert_Movement_Send_RemainsSun_over_old (inOperDate:= CURRENT_DATE - INTERVAL '0 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
