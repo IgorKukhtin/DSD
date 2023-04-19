@@ -40,16 +40,17 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Изменение цен в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
     END IF;
     
-    PERFORM lpInsertUpdate_MovementItem_PromoUnit(ioId              :=   MI_PromoUnit.Id
-                                                , inMovementId      :=   inMovementId
-                                                , inGoodsId         :=   MI_PromoUnit.ObjectId 
-                                                , inAmount          :=   MI_PromoUnit.Amount
-                                                , inAmountPlanMax   :=   COALESCE(MIFloat_AmountPlanMax.ValueData,0) 
-                                                , inPrice           :=   COALESCE(tmpPrice.Price,0)
-                                                , inComment         :=   MIString_Comment.ValueData 
-                                                , inisFixedPercent  :=   COALESCE (MIBoolean_FixedPercent.ValueData, FALSE)
-                                                , inAddBonusPercent :=   COALESCE (MIFloat_AddBonusPercent.ValueData , 0)
-                                                , inUserId          :=   vbUserId    -- сессия пользователя
+    PERFORM lpInsertUpdate_MovementItem_PromoUnit(ioId                :=   MI_PromoUnit.Id
+                                                , inMovementId        :=   inMovementId
+                                                , inGoodsId           :=   MI_PromoUnit.ObjectId 
+                                                , inAmount            :=   MI_PromoUnit.Amount
+                                                , inAmountPlanMax     :=   COALESCE(MIFloat_AmountPlanMax.ValueData,0) 
+                                                , inPrice             :=   COALESCE(tmpPrice.Price,0)
+                                                , inComment           :=   MIString_Comment.ValueData 
+                                                , inisFixedPercent    :=   COALESCE (MIBoolean_FixedPercent.ValueData, FALSE)
+                                                , inAddBonusPercent   :=   COALESCE (MIFloat_AddBonusPercent.ValueData , 0)
+                                                , inPercPositionCheck :=   COALESCE (MIFloat_PercPositionCheck.ValueData , 0)
+                                                , inUserId            :=   vbUserId    -- сессия пользователя
                                                   )
     FROM MovementItem AS MI_PromoUnit
 
@@ -94,6 +95,9 @@ BEGIN
          LEFT JOIN MovementItemFloat AS MIFloat_AddBonusPercent
                                      ON MIFloat_AddBonusPercent.MovementItemId = MI_PromoUnit.Id
                                     AND MIFloat_AddBonusPercent.DescId = zc_MIFloat_AddBonusPercent()
+         LEFT JOIN MovementItemFloat AS MIFloat_PercPositionCheck
+                                     ON MIFloat_PercPositionCheck.MovementItemId = MI_PromoUnit.Id
+                                    AND MIFloat_PercPositionCheck.DescId = zc_MIFloat_PercPositionCheck()
 
          LEFT JOIN MovementItemBoolean AS MIBoolean_FixedPercent
                                        ON MIBoolean_FixedPercent.MovementItemId = MI_PromoUnit.Id

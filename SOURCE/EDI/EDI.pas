@@ -11,7 +11,7 @@ type
 
   TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave,
     ediReceipt, ediReturnComDoc, ediDeclarReturn, ediOrdrsp, ediInvoice, ediError,
-    ediRecadv);
+    ediRecadv, ediTTN);
   TSignType = (stDeclar, stComDoc);
 
   TConnectionParams = class(TPersistent)
@@ -222,6 +222,46 @@ type
 
   end;
 
+  TdsdEDINAction = class(TdsdCustomAction)
+  private
+    FHostParam: TdsdParam;
+    FLoginParam: TdsdParam;
+    FPasswordParam: TdsdParam;
+    FTokenParam: TdsdParam;
+
+    FHeaderDataSet: TDataSet;
+    FListDataSet: TDataSet;
+    FEDIDocType: TEDIDocType;
+
+  protected
+    function GetToken: Boolean;
+    function PostTTN(AGLN, AXML : String; VAR ADoc_Uuid : String): Boolean;
+    procedure DeclarETTNEDI(var AXML: String);
+
+    function TTNSave: Boolean;
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
+    property Host: TdsdParam read FHostParam write FHostParam;
+    property Login: TdsdParam read FLoginParam write FLoginParam;
+    property Password: TdsdParam read FPasswordParam write FPasswordParam;
+    property Token: TdsdParam read FTokenParam write FTokenParam;
+
+    property EDIDocType: TEDIDocType read FEDIDocType write FEDIDocType;
+    property HeaderDataSet: TDataSet read FHeaderDataSet write FHeaderDataSet;
+    property ListDataSet: TDataSet read FListDataSet write FListDataSet;
+  end;
+
+
 procedure Register;
 function lpStrToDateTime(DateTimeString: string): TDateTime;
 
@@ -236,18 +276,19 @@ implementation
 
 uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   Variants, UtilConvert, ComObj, DeclarXML, InvoiceXML, DateUtils,
-  FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML, RecadvXML
-  , DesadvFozzXML, OrderSpFozzXML, IftminFozzXML
-  , DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML
-  , Vcl.Forms, System.IOUtils, System.RegularExpressions, ZLib, Math
-  , IdHTTP, IdSSLOpenSSL, IdURI, IdCTypes, IdSSLOpenSSLHeaders
-  , IdMultipartFormData, Xml.XMLDoc;
+  FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML, RecadvXML,
+  DesadvFozzXML, OrderSpFozzXML, IftminFozzXML,
+  DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML, DeclarETTNXML,
+  Vcl.Forms, System.IOUtils, System.RegularExpressions, ZLib, Math,
+  IdHTTP, IdSSLOpenSSL, IdURI, IdCTypes, IdSSLOpenSSLHeaders,
+  IdMultipartFormData, Xml.XMLDoc;
 
 procedure Register;
 begin
   RegisterComponents('DSDComponent', [TEDI]);
   RegisterActions('EDI', [TEDIAction], TEDIAction);
-  RegisterActions('DSDLib', [TdsdVchasnoEDIAction], TdsdVchasnoEDIAction);
+  RegisterActions('EDI', [TdsdVchasnoEDIAction], TdsdVchasnoEDIAction);
+  RegisterActions('EDI', [TdsdEDINAction], TdsdEDINAction);
 end;
 
 { TEDI }
@@ -5433,11 +5474,267 @@ begin
 
 end;
 
+  { TdsdEDINAction }
+
+constructor TdsdEDINAction.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  FHostParam := TdsdParam.Create;
+  FHostParam.DataType := ftString;
+  FHostParam.Value := '';
+
+  FTokenParam := TdsdParam.Create(nil);
+  FTokenParam.DataType := ftString;
+  FTokenParam.Value := '';
+
+  FLoginParam := TdsdParam.Create(nil);
+  FLoginParam.DataType := ftString;
+  FLoginParam.Value := '';
+
+  FPasswordParam := TdsdParam.Create(nil);
+  FPasswordParam.DataType := ftString;
+  FPasswordParam.Value := '';
+
+  FEDIDocType:= ediOrder;
+end;
+
+destructor TdsdEDINAction.Destroy;
+begin
+  FreeAndNil(FPasswordParam);
+  FreeAndNil(FLoginParam);
+  FreeAndNil(FHostParam);
+  FreeAndNil(FTokenParam);
+  inherited;
+end;
+
+function TdsdEDINAction.GetToken: Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      S: String;
+      SL: TStringList;
+      jsonObj: TJSONObject;
+begin
+  inherited;
+  Result := False;
+  FTokenParam.Value := '';
+
+  if (FPasswordParam.Value = '') or
+     (FLoginParam.Value = '') or
+     (FHostParam.Value = '') then
+  begin
+    ShowMessage('Не заполнены Host, логин или пароль.');
+    Exit;
+  end;
+
+  // Непосредственно отправка
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  try
+
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.ContentType := 'application/x-www-form-urlencoded';
+    IdHTTP.Request.ContentEncoding := 'utf-8';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    SL := TStringList.Create;
+    try
+      try
+        SL.Add('email=' + FLoginParam.Value);
+        SL.Add('password=' + FPasswordParam.Value);
+        S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + '/api/authorization/hash'), SL);
+      except on E:EIdHTTPProtocolException  do
+                  ShowMessage(e.ErrorMessage);
+      end;
+    finally
+      SL.Free;
+    end;
+
+    if IdHTTP.ResponseCode = 200 then
+    begin
+      jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
+      try
+        if jsonObj.Get('SID') <> nil then
+        begin
+          FTokenParam.Value := jsonObj.Get('SID').JsonValue.Value;
+          Result := True;
+        end;
+      finally
+        FreeAndNil(jsonObj);
+      end;
+    end;
+  finally
+    IdHTTP.Free;
+  end;
+end;
+
+function TdsdEDINAction.PostTTN(AGLN, AXML : String; VAR ADoc_Uuid : String): Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      S, Params: String;
+      Steam: TStringStream;
+      jsonObj: TJSONObject;
+begin
+  inherited;
+  Result := False;
+
+  if FTokenParam.Value = '' then
+  begin
+    ShowMessage('Не получен токе. Отправка заказа невозможна.');
+    Exit;
+  end;
+
+  // Непосредственно отправка
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  try
+
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.ContentType := 'application/xml';
+    IdHTTP.Request.ContentEncoding := 'utf-8';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    Params := '?gln=' + AGLN;
+    if ADoc_Uuid <> '' then Params := Params + '&doc_uuid=' + ADoc_Uuid;
+
+    Steam := TStringStream.Create(AXML, TEncoding.UTF8);
+    try
+      try
+        S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + '/api/eds/doc/ettn/ttn' + Params), Steam);
+      except on E:EIdHTTPProtocolException  do
+                  ShowMessage(e.ErrorMessage);
+      end;
+    finally
+      Steam.Free;
+    end;
+
+    if IdHTTP.ResponseCode = 200 then
+    begin
+      jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
+      try
+        if jsonObj.Get('SID') <> nil then
+        begin
+          FTokenParam.Value := jsonObj.Get('SID').JsonValue.Value;
+          Result := True;
+        end;
+      finally
+        FreeAndNil(jsonObj);
+      end;
+    end;
+  finally
+    IdHTTP.Free;
+  end;
+end;
+
+procedure TdsdEDINAction.DeclarETTNEDI(var AXML: String);
+var DeclarETTN: IXMLDECLARETTNType;
+    i: integer;
+begin
+
+  // Создать XML
+  DeclarETTN := DeclarETTNXML.NewDECLARETTN;
+  //
+  DeclarETTN.SIGN_ENVELOPE.STATE := 'ORIGINATOR_SIGNED';
+
+  DeclarETTN.SIGN_ENVELOPE.DECLARHEAD.C_DOC := 'T01';
+  DeclarETTN.SIGN_ENVELOPE.DECLARHEAD.C_DOC_SUB := '001';
+  DeclarETTN.SIGN_ENVELOPE.DECLARHEAD.C_DOC_VER := '02';
+
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.TYPE_ := 'CORE';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.STAKE := 'ORIGINATOR';
+
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.HFILL := FormatDateTime('YYYY-MM-DD', Date);
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.HNUM := '1234';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.DOCUMENT_PLACE := 'м.Київ';
+
+  // Автомобиль
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R01G1S := 'DAF';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R01G2S := 'АН6754ЕА';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R01G3S := 'авто';
+
+  // Перевозчик
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R01G10S := 'вантажні перевезення';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G11S := '11223344';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G1S := 'Перевізник 1';
+
+  // Заказчик
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G21S := '34554362';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G2S := 'Замовник Тестовий платник 3';
+
+  // Данные водителя
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G3S := 'Шевченко';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G31S := 'Тарас';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G32S := 'Григорович';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G4S := 'АА123456';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.DRIVER_ID := 1234567890;
+
+  // Данные Вантажовідправника
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.HTIN := '32132132';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.HNAME := 'ТОВ "Вантажовідправник_v3"';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.HLOC := 'УКРАЇНА, 88745, ЧЕРКАСЬКА ОБЛАСТЬ, ЖАШКIВСЬКИЙ РАЙОН Р-Н, М.ЖАШКІВ, ВУЛ. ЛЕНІНА, БУД. 22, КВ. (ОФІС) 3';
+
+  // Данные Вантажоодержувача
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R04G1S := '33445566';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R04G2S := 'Тестовий платник 4';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R04G3S := 'КРАЇНА, 88745, М. КИЇВ, ВУЛ. ЛЕНІНА, БУД. 22, КВ. (ОФІС) 3';
+
+  // Данные о вантаже
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R05G21 := '8000000000';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R05G2S := 'Київ, пр. Тараса Шевченко';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R05G41 := '8000000000';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R05G4S := 'Київ, Хрещатик';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R012G3S := 'дванадцять';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R013G1 := 200.00;
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R013G2S := 'двісті';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R010G3S := 'сто тисяч';
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R011G1 := 16666.67;
+  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R014G1S := 'сертифікат якості';
+
+  // Товар
+  with DeclarETTN.SIGN_ENVELOPE.DECLARBODY.T1RXXXXG81S.Add do
+  begin
+    ROWNUM := 1;
+    NodeValue := 'побутова техніка'
+  end;
+
+  DeclarETTN.OwnerDocument.SaveToXML(AXML);
+  DeclarETTN.OwnerDocument.SaveToFile('111.xml');
+end;
+
+
+function TdsdEDINAction.TTNSave: Boolean;
+  var Doc_Uuid, cXML : String;
+begin
+  Result := False;
+  if not GetToken then Exit;
+
+  DeclarETTNEDI(cXML);
+  //FOrderParam.Value := HeaderDataSet.FieldByName('DealId').AsString;
+
+  Doc_Uuid := '';
+  PostTTN('9864065749080', cXML, Doc_Uuid)
+
+end;
+
+function TdsdEDINAction.LocalExecute: Boolean;
+  var DataSetCDS: TClientDataSet;
+begin
+  Result := False;
+
+  case FEDIDocType of
+    ediTTN : Result := TTNSave;
+
+  else raise Exception.Create('Не описано метод обработки типа документов.');
+  end;
+
+end;
 
 initialization
   Classes.RegisterClass(TEDI);
   Classes.RegisterClass(TEDIAction);
   Classes.RegisterClass(TdsdVchasnoEDIAction);
+  Classes.RegisterClass(TdsdEDINAction);
 
 end.
 

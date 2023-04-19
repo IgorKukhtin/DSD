@@ -41,6 +41,8 @@ $BODY$
    DECLARE vbLen8  Integer;
    DECLARE vbLen9  Integer;
    DECLARE vbLen10 Integer;
+   DECLARE vbLen11 Integer;
+   DECLARE vbLen12 Integer;
    DECLARE vbTmp   Integer;
    
 BEGIN
@@ -72,9 +74,19 @@ BEGIN
             , CASE WHEN ObjectFloat_Width9.ValueData > 0  THEN ObjectFloat_Width9.ValueData  :: Integer ELSE 1000 END
             + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
               AS Width9
+
             , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer ELSE 1000 END
             + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
               AS Width10
+              -- 11
+            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer + 0 ELSE 1000 END
+            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
+              AS Width11
+              -- 12
+            , CASE WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer + 0 ELSE 1000 END
+            + CASE WHEN inIs70_70 = TRUE THEN 10 ELSE 0 END
+              AS Width12
+
               INTO vbLen1
                  , vbLen2
                  , vbLen3
@@ -85,6 +97,10 @@ BEGIN
                  , vbLen8
                  , vbLen9
                  , vbLen10
+
+                 , vbLen11
+                 , vbLen12
+
        FROM Object AS Object_StickerFile
             LEFT JOIN ObjectFloat AS ObjectFloat_Width1
                                   ON ObjectFloat_Width1.ObjectId = Object_StickerFile.Id 
@@ -253,6 +269,8 @@ BEGIN
                     WHEN 8  THEN vbLen8
                     WHEN 9  THEN vbLen9
                     WHEN 10 THEN vbLen10
+                    WHEN 11 THEN vbLen11
+                    WHEN 12 THEN vbLen12
                             ELSE 10000
                END;
                

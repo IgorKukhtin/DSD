@@ -123,7 +123,7 @@ BEGIN
                                                                                                                                      ON MovementFloat_WeighingNumber.MovementId = Movement.Id
                                                                                                                                     AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
                                                                                                        WHERE Movement.DescId = zc_Movement_WeighingPartner()
-                                                                                                         AND Movement.OperDate = inOperDate
+                                                                                                         AND Movement.OperDate BETWEEN inOperDate - INTERVAL '2 DAY' AND inOperDate
                                                                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
                                                                                                          AND COALESCE (MLM_Order.MovementChildId, 0) = COALESCE (inMovementId_Order, 0)
                                                                                                       ), 0)
