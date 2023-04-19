@@ -151,7 +151,8 @@ BEGIN
                          , ContainerId_ProfitLoss_10300, AccountId_To, ContainerId_To
                          , GoodsId, GoodsKindId
                          , OperCount, Price_original, OperSumm_Partner_noDiscount, OperSumm_Partner_Discount, OperSumm_Partner
-                         , BusinessId, InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
+                         , BusinessId, BranchId
+                         , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                           )
         SELECT tmpMI.MovementItemId
              , 0 AS ContainerId_ProfitLoss_10300    -- сформируем позже
@@ -173,6 +174,8 @@ BEGIN
               
               -- Бизнес из Товара
             , tmpMI.BusinessId
+              -- 
+            , tmpMI.BranchId
 
               -- Статьи назначения
             , tmpMI.InfoMoneyGroupId
@@ -200,18 +203,22 @@ BEGIN
 
                     -- Бизнес из Товара
                    , COALESCE (ObjectLink_Goods_Business.ChildObjectId, 8370) AS BusinessId -- АЛАН
+                     --
+                   , tmpMI.BranchId
                      -- Статьи назначения
                    , View_InfoMoney_From.InfoMoneyGroupId
                    , View_InfoMoney_From.InfoMoneyDestinationId
                    , View_InfoMoney_From.InfoMoneyId
 
-              FROM (SELECT MovementItem.Id                               AS MovementItemId
-                         , MovementItem.ObjectId                         AS GoodsId
-                         , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+              FROM (SELECT MovementItem.Id                                        AS MovementItemId
+                         , COALESCE (MI_Child.ObjectId, MovementItem.ObjectId)    AS GoodsId
+                         , COALESCE (MILinkObject_GoodsKind_child.ObjectId, MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                         
+                         , COALESCE (ObjectLink_UnitFrom_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId
       
-                         , MovementItem.Amount                           AS OperCount
-                         , COALESCE (MIFloat_Price.ValueData, 0)         AS Price_original
-                         , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
+                         , MovementItem.Amount                                    AS OperCount
+                         , COALESCE (MIFloat_Price.ValueData, 0)                  AS Price_original
+                         , COALESCE (MIFloat_CountForPrice.ValueData, 0)          AS CountForPrice
 
                            -- цена БЕЗ СКИДКИ и БЕЗ НДС - с округлением до 2-х знаков
                          , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent > 0
@@ -234,10 +241,24 @@ BEGIN
       
                     FROM Movement
                          JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
+                         LEFT JOIN MovementItem AS MI_Child
+                                                ON MI_Child.MovementId = Movement.Id
+                                               AND MI_Child.DescId     = zc_MI_Child()
+                                               AND MI_Child.ParentId   = MovementItem.Id
+                                               AND MI_Child.isErased   = FALSE
       
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                         AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                         AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_child
+                                                          ON MILinkObject_GoodsKind_child.MovementItemId = MI_Child.Id
+                                                         AND MILinkObject_GoodsKind_child.DescId         = zc_MILinkObject_GoodsKind()
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit_child
+                                                          ON MILinkObject_Unit_child.MovementItemId = MI_Child.Id
+                                                         AND MILinkObject_Unit_child.DescId         = zc_MILinkObject_Unit()
+                         LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_Branch
+                                              ON ObjectLink_UnitFrom_Branch.ObjectId = MILinkObject_Unit_child.ObjectId
+                                             AND ObjectLink_UnitFrom_Branch.DescId   = zc_ObjectLink_Unit_Branch()
       
                          LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -258,6 +279,12 @@ BEGIN
                                        AND ObjectLink_Goods_Business.DescId   = zc_ObjectLink_Goods_Business()
              ) AS tmpMI
         ;
+
+     -- сохранили связь
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), _tmpItem.MovementItemId, _tmpItem.BranchId)
+     FROM _tmpItem
+    ;
+     
 
      -- Расчет Итоговой суммы по Контрагенту
      vbOperSumm_Partner:= (SELECT CAST ((1 + vbVATPercent / 100) * tmpOperSumm_Partner AS NUMERIC (16, 2))
@@ -297,7 +324,7 @@ BEGIN
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId
                                         , inDescId_2          := zc_ContainerLinkObject_Branch()
-                                        , inObjectId_2        := vbBranchId_Juridical
+                                        , inObjectId_2        := _tmpItem_byProfitLoss.BranchId
                                          ) AS ContainerId_ProfitLoss_10300
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
                 , _tmpItem_byProfitLoss.BusinessId
@@ -325,6 +352,7 @@ BEGIN
 
                       , _tmpItem_group.InfoMoneyDestinationId
                       , _tmpItem_group.BusinessId
+                      , _tmpItem_group.BranchId
 
                  FROM (SELECT DISTINCT
                               -- 10000; "Результат основной деятельности"
@@ -334,10 +362,12 @@ BEGIN
                               --
                             , _tmpItem.InfoMoneyDestinationId
                             , _tmpItem.BusinessId
+                            , _tmpItem.BranchId
 
                        FROM (SELECT DISTINCT
                                     _tmpItem.InfoMoneyDestinationId
                                   , _tmpItem.BusinessId
+                                  , _tmpItem.BranchId
                              FROM _tmpItem
                              -- !!!нельзя ограничивать, т.к. проводки для отчета будем делать всегда!!!
                              -- WHERE _tmpItem.OperSumm_Partner <> 0

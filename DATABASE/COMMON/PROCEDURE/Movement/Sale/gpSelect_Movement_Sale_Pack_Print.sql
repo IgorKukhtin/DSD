@@ -1,4 +1,4 @@
- -- Function: gpSelect_Movement_Sale_Pack_Print()
+-- Function: gpSelect_Movement_Sale_Pack_Print()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Pack_Print21 (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Pack_Print (Integer, TVarChar);

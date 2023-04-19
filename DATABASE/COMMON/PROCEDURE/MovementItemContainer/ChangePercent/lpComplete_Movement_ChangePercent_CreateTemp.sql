@@ -15,7 +15,7 @@ BEGIN
                                , ContainerId_ProfitLoss_10300 Integer, AccountId_To Integer, ContainerId_To Integer
                                , GoodsId Integer, GoodsKindId Integer
                                , OperCount TFloat, Price_original TFloat, OperSumm_Partner_noDiscount TFloat, OperSumm_Partner_Discount TFloat, OperSumm_Partner TFloat
-                               , BusinessId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId Integer, BranchId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                 ) ON COMMIT DROP;
 
 END;$BODY$
