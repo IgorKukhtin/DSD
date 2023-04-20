@@ -924,7 +924,8 @@ BEGIN
                                      FROM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                 := COALESCE (vbReceiptGoodsChildId,0) ::Integer
                                                                                  , inComment            := COALESCE ((SELECT OC.ValueData FROM Object AS OC
                                                                                                                       WHERE OC.Id = COALESCE (vbReceiptGoodsChildId, 0)
-                                                                                                                        AND OC.DescId = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()), '') ::TVarChar
+                                                                                                                        AND OC.DescId = zc_Object_ReceiptGoodsChild()), '') ::TVarChar
+                                                                                 , inNPP                := inNPP                ::Integer
                                                                                  , inReceiptGoodsId     := vbReceiptGoodsId     ::Integer
                                                                                  , inObjectId           := vbGoodsId_child      ::Integer
                                                                                  , inProdColorPatternId := vbProdColorPatternId ::Integer
@@ -940,7 +941,7 @@ BEGIN
                                                                                   ) AS tmp);
 
            -- еще это св-во
-           PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptGoodsChild_NPP(), vbReceiptGoodsChildId, inNPP :: Integer);
+           -- PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptGoodsChild_NPP(), vbReceiptGoodsChildId, inNPP :: Integer);
 
        END IF;
      END IF;

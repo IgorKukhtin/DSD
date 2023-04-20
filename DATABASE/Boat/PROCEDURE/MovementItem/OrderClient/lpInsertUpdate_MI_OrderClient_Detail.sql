@@ -58,7 +58,7 @@ BEGIN
                   AND COALESCE (MILinkObject_GoodsBasis.ObjectId, 0)       = inGoodsId_basis
                   AND COALESCE (MILinkObject_ReceiptLevel.ObjectId, 0)     = inReceiptLevelId
                )
-      --AND 1=0
+       AND 1=0
      THEN
          RAISE EXCEPTION 'ќшибка.Ёлемент —борки узла уже существует %<%> %<%> %<%> %<%> %<%>.'
              , CHR (13)
