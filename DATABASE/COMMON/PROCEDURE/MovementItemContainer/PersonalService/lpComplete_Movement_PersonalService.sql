@@ -53,6 +53,30 @@ BEGIN
      AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbPersonalServiceListId AND OL.DescId = zc_ObjectLink_PersonalServiceList_PaidKind() AND OL.ChildObjectId = zc_Enum_PaidKind_FirstForm())
      THEN
          PERFORM lpUpdate_MI_PersonalService_SummAuditAdd (inMovementId, vbPersonalServiceListId, inUserId);
+     ELSE
+         -- обнулили
+         PERFORM -- Сумма доплата за ревизию - Ведомость охрана 
+                 lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAuditAdd(), MovementItem.Id, 0)
+                 -- Сумма доплата за прогул
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummSkip(), MovementItem.Id, 0)
+                 -- Сумма доплата за санобработка
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMedicdayAdd(), MovementItem.Id, 0)
+         FROM MovementItem
+              LEFT JOIN MovementItemFloat AS MIF_SummAuditAdd
+                                          ON MIF_SummAuditAdd.MovementItemId = MovementItem.Id
+                                         AND MIF_SummAuditAdd.DescId         = zc_MIFloat_SummAuditAdd()
+              LEFT JOIN MovementItemFloat AS MIF_SummSkip
+                                          ON MIF_SummSkip.MovementItemId = MovementItem.Id
+                                         AND MIF_SummSkip.DescId         = zc_MIFloat_SummSkip()
+              LEFT JOIN MovementItemFloat AS MIF_SummMedicdayAdd
+                                          ON MIF_SummMedicdayAdd.MovementItemId = MovementItem.Id
+                                         AND MIF_SummMedicdayAdd.DescId         = zc_MIFloat_SummMedicdayAdd()
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId = zc_MI_Master()
+           AND MovementItem.isErased = FALSE
+           AND (MIF_SummAuditAdd.ValueData <> 0 OR MIF_SummSkip.ValueData <> 0 OR MIF_SummMedicdayAdd.ValueData <> 0)
+        ;
+     
      END IF;
 
 
