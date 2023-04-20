@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, Name TVarChar
              , isSP Boolean
              , MorionCode Integer
              , isResolution_224  boolean
+             , BarCode TVarChar
 
              , Color_calc Integer
               ) AS
@@ -82,7 +83,9 @@ BEGIN
 
            , Object_Goods_Main.MorionCode
 
-           , Object_Goods_Main.isResolution_224                                  AS isResolution_224
+           , Object_Goods_Main.isResolution_224                                       AS isResolution_224
+           
+           , ('2020'||TRIM(to_char(Object_Goods_Main.ObjectCode, '000000000')))::TVarChar   AS BarCode
 
            , CASE WHEN COALESCE (tmpGoodsSP.isSP, False) = TRUE THEN zc_Color_Yelow()
                   WHEN Object_Goods_Retail.isSecond = TRUE THEN 16440317

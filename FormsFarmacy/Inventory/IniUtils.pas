@@ -36,6 +36,10 @@ const
       'FROM Goods AS G'#13#10 +
       'WHERE G.GoodsMainId = %s';
 
+    GetGoodsCodeSQL: String =
+      'SELECT G.Id, G.Code, G.Name'#13#10 +
+      'FROM Goods AS G'#13#10 +
+      'WHERE G.Code = %s';
 
 implementation
 

@@ -26,7 +26,7 @@ BEGIN
         INNER JOIN ObjectBLOB AS ObjectBLOB_FormData 
                               ON ObjectBLOB_FormData.ObjectId = Object.Id
                              AND ObjectBLOB_FormData.DescId   = zc_ObjectBlob_Form_Data() 
-   WHERE Object.ValueData IN ('TUnitLocalForm', 'TDataDialogForm')
+   WHERE Object.ValueData IN ('TUnitLocalForm', 'TDataDialogForm', 'TGoodsInventoryForm')
      AND Object.DescId = zc_Object_Form()
     ;
     
@@ -44,4 +44,4 @@ $BODY$
 -- тест
 -- 
 
-select * from gpSelect_Inventory_Object_Form( inSession := '3');    
+select * from gpSelect_Inventory_Object_Form( inSession := '3');

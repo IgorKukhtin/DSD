@@ -2837,6 +2837,9 @@ procedure TLoadFormTest.LoadInventoryLocalFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitLocalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitLocalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsInventoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsInventoryForm');
 end;
 
 procedure TLoadFormTest.LoadInvoiceFormTest;

@@ -1291,7 +1291,8 @@ uses
   GoodsSP408_1303 in '..\..\FormsFarmacy\Document\GoodsSP408_1303.pas' {GoodsSP408_1303Form: TParentForm},
   UnitLocal in '..\..\FormsFarmacy\Inventory\UnitLocal.pas' {UnitLocalForm: TParentForm},
   CommentCheck in '..\..\FormsFarmacy\Guides\CommentCheck.pas' {CommentCheckForm: TParentForm},
-  CommentCheckEdit in '..\..\FormsFarmacy\Guides\CommentCheckEdit.pas' {CommentCheckEditForm: TParentForm};
+  CommentCheckEdit in '..\..\FormsFarmacy\Guides\CommentCheckEdit.pas' {CommentCheckEditForm: TParentForm},
+  GoodsInventory in '..\..\FormsFarmacy\Inventory\GoodsInventory.pas' {GoodsInventoryForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

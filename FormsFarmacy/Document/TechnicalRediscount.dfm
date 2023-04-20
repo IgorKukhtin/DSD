@@ -3,27 +3,27 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
   ClientHeight = 479
   ClientWidth = 915
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 931
-  ExplicitHeight = 518
+  ExplicitWidth = 933
+  ExplicitHeight = 526
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 115
+    Top = 116
     Width = 915
-    Height = 364
-    ExplicitTop = 115
+    Height = 363
+    ExplicitTop = 116
     ExplicitWidth = 915
-    ExplicitHeight = 364
-    ClientRectBottom = 364
+    ExplicitHeight = 363
+    ClientRectBottom = 363
     ClientRectRight = 915
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 915
-      ExplicitHeight = 340
+      ExplicitHeight = 339
       inherited cxGrid: TcxGrid
         Width = 915
-        Height = 332
+        Height = 331
         ExplicitWidth = 915
-        ExplicitHeight = 332
+        ExplicitHeight = 331
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -308,7 +308,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 332
+        Top = 331
         Width = 915
         Height = 8
         Touch.ParentTabletOptions = False
@@ -531,8 +531,9 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
       Hint = #1054#1090#1082#1088#1099#1090#1100' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
       ImageIndex = 1
-      FormName = 'TSendForm'
       FormNameParam.Value = ''
+      FormNameParam.Component = MasterCDS
+      FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -660,7 +661,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
