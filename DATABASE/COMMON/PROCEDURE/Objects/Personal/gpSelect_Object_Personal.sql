@@ -22,7 +22,8 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, INN TVarChar
              , ServiceListCardSecondId Integer, ServiceListCardSecondName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , SheetWorkTimeId Integer, SheetWorkTimeName TVarChar
-             , DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean
+             , DateIn TDateTime, DateOut TDateTime, DateSend TDateTime
+             , isDateOut Boolean, isDateSend Boolean, isMain Boolean, isOfficial Boolean
              , MemberId Integer, ScalePSW TVarChar, ScalePSW_forPrint TFloat
              , isErased Boolean
              , isPastMain Boolean
@@ -160,7 +161,9 @@ BEGIN
 
          , Object_Personal_View.DateIn
          , Object_Personal_View.DateOut_user AS DateOut
+         , Object_Personal_View.DateSend  ::TDateTime
          , Object_Personal_View.isDateOut
+         , Object_Personal_View.isDateSend
          , Object_Personal_View.isMain
          , Object_Personal_View.isOfficial
          
@@ -335,7 +338,9 @@ BEGIN
          , CAST ('' as TVarChar)    AS SheetWorkTimeName
          , CAST (NULL as TDateTime) AS DateIn
          , CAST (NULL as TDateTime) AS DateOut
+         , CAST (NULL as TDateTime) AS DateSend
          , FALSE                    AS isDateOut
+         , FALSE                    AS isDateSend
          , FALSE                    AS isMain
          , FALSE                    AS isOfficial
          , 0                        AS MemberId
@@ -366,6 +371,7 @@ ALTER FUNCTION gpSelect_Object_Personal (TDateTime, TDateTime, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.04.23         *
  04.05.22         *
  27.04.22         *
  22.10.17         *

@@ -144,6 +144,24 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
+      object DateSend: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1074#1086#1076#1072
+        DataBinding.FieldName = 'DateSend'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object IsDateSend: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1077#1076#1077#1085
+        DataBinding.FieldName = 'isDateSend'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object IsMain: TcxGridDBColumn
         Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.'
         DataBinding.FieldName = 'isMain'
@@ -710,7 +728,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       end
       item
         Name = 'inIsPeriod'
-        Value = 'False'
+        Value = False
         Component = cbPeriod
         DataType = ftBoolean
         ParamType = ptInput
@@ -751,10 +769,13 @@ object Personal_ObjectForm: TPersonal_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 328
     Top = 264
   end

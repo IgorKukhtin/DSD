@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Object_Personal()
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
  INOUT ioId                                Integer   , -- ключ объекта <Сотрудники>
@@ -21,8 +22,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
     IN inReasonOutId                       Integer   , -- Причина увольнения 	
     
     IN inDateIn                            TDateTime , -- Дата принятия
-    IN inDateOut                           TDateTime , -- Дата увольнения
+    IN inDateOut                           TDateTime , -- Дата увольнения 
+    IN inDateSEnd                          TDateTime , -- Дата перевода
     IN inIsDateOut                         Boolean   , -- Уволен
+    IN inIsDateSend                        Boolean   , -- переведен
     IN inIsMain                            Boolean   , -- Основное место работы
     IN inComment                           TVarChar  ,
     IN inSession                           TVarChar    -- сессия пользователя
@@ -135,7 +138,16 @@ BEGIN
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Out(), ioId, inDateOut);
    ELSE
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Out(), ioId, zc_DateEnd());
+   END IF;  
+   
+   IF inIsDateSend = TRUE
+   THEN
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Send(), ioId, inDateSEnd);
+   ELSE
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Send(), ioId, Null);
    END IF;
+
+
    -- сохранили свойство <Основное место работы>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Personal_Main(), ioId, inIsMain);
 
@@ -157,6 +169,7 @@ $BODY$
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.04.23         *
  06.08.21         *
  13.07.17         * add PersonalServiceListCardSecond
  25.05.16         * add StorageLine

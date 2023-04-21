@@ -1779,6 +1779,20 @@ END IF;
                                                 , inUserId     := inUserId
                                                  );
      END IF;
+     
+     
+     --если первое проведение нужно заполнить данные
+     IF NOT EXISTS (SELECT 1 FROM MovementLinkObject
+                    WHERE MovementLinkObject.MovementId = inMovementId
+                      AND MovementLinkObject.DescId = zc_MovementLinkObject_StatusInsert()
+                    )
+     THEN
+         -- сохранили свойство <Дата первого проведения>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StatusInsert(), inMovementId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <Пользователь первого проведения>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_StatusInsert(), inMovementId, inUserId);
+     END IF;
+
 
 END;
 $BODY$
@@ -1797,3 +1811,48 @@ $BODY$
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 579, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpComplete_Movement_Send (inMovementId:= 5854348, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 579, inSession:= zfCalc_UserAdmin())
+
+
+/*     
+заполнение первого проведения для раннего периода
+
+SELECT   lpInsertUpdate_MovementDate (zc_MovementDate_StatusInsert(), tmp.MovementId, tmp.OperDate)
+             -- сохранили свойство <Пользователь (создание)>
+        , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_StatusInsert(),tmp.MovementId, tmp.UserId)
+
+FROM
+(
+WITH
+tmpMov AS (SELECT Movement.Id
+           FROM Movement
+           WHERE Movement.Operdate BETWEEN  '18.04.2023' and '25.04.2023' 
+             AND Movement.DescId = zc_Movement_Send()
+           )
+
+, tmpProtocol AS (SELECT tmp.OperDate
+                       , tmp.UserId
+                       , tmp.MovementId
+                       , ROW_NUMBER() OVER (PARTITION BY tmp.MovementId ORDER BY tmp.Id) AS ord
+                  FROM
+                 (SELECT * from MovementProtocol
+                  WHERE MovementProtocol.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
+                    AND MovementProtocol.ProtocolData ilike '%FieldValue = "Проведен"%'
+                union
+                  SELECT * from MovementProtocol_arc
+                  WHERE MovementProtocol_arc.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
+                    AND MovementProtocol_arc.ProtocolData ilike '%FieldValue = "Проведен"%'
+                  ) AS tmp
+                 )
+
+SELECT tmpProtocol.MovementId
+    , tmpProtocol.OperDate
+    , tmpProtocol.UserId
+FROM tmpProtocol
+WHERE tmpProtocol.Ord = 1
+) AS tmp
+
+
+
+
+
+*/

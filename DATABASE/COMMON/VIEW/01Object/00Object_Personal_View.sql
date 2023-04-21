@@ -32,6 +32,7 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
 
        , ObjectDate_DateIn.ValueData   AS DateIn
        , ObjectDate_DateOut.ValueData  AS DateOut
+       
        , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_DateOut.ValueData END :: TDateTime AS DateOut_user
        , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateOut
        , COALESCE (ObjectBoolean_Main.ValueData, FALSE)           AS isMain
@@ -52,7 +53,9 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
        , Object_ReasonOut.ValueData                       AS ReasonOutName
        
        , ObjectString_Comment.ValueData                   AS Comment
-         
+
+       , ObjectDate_Send.ValueData     AS DateSend
+       , CASE WHEN COALESCE (ObjectDate_Send.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateSend  
    FROM Object AS Object_Personal
        LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                             ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
@@ -109,6 +112,10 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
        LEFT JOIN ObjectDate AS ObjectDate_DateOut
                             ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
                            AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_Out()          
+
+       LEFT JOIN ObjectDate AS ObjectDate_Send
+                            ON ObjectDate_Send.ObjectId = Object_Personal.Id
+                           AND ObjectDate_Send.DescId = zc_ObjectDate_Personal_Send()
 
        LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
                                ON ObjectBoolean_Main.ObjectId = Object_Personal.Id

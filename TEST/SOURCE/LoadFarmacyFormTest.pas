@@ -492,6 +492,11 @@ end;
 
 procedure TLoadFormTest.LoadCheckFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommentCheckForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentCheckEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommentCheckEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckErrorInsertDateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckErrorInsertDateForm');
 
@@ -2832,6 +2837,9 @@ procedure TLoadFormTest.LoadInventoryLocalFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitLocalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitLocalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsInventoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsInventoryForm');
 end;
 
 procedure TLoadFormTest.LoadInvoiceFormTest;

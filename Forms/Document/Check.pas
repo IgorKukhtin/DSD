@@ -232,6 +232,7 @@ type
     dxBarButton20: TdxBarButton;
     dxBarButton21: TdxBarButton;
     cbConfirmByPhone: TcxCheckBox;
+    CommentCheckName: TcxGridDBColumn;
   private
     { Private declarations }
   public

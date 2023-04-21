@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <C'#1086#1090#1088#1091#1076#1085#1080#1082'>'
-  ClientHeight = 574
-  ClientWidth = 373
+  ClientHeight = 600
+  ClientWidth = 363
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,7 +18,7 @@
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 82
-    Top = 539
+    Top = 564
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -28,7 +28,7 @@
   end
   object cxButton2: TcxButton
     Left = 186
-    Top = 539
+    Top = 564
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -40,13 +40,13 @@
   object cxPageControl1: TcxPageControl
     Left = 8
     Top = 8
-    Width = 337
-    Height = 513
+    Width = 349
+    Height = 537
     TabOrder = 0
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 513
-    ClientRectRight = 337
+    ClientRectBottom = 537
+    ClientRectRight = 349
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1054#1073#1097#1072#1103
@@ -67,12 +67,12 @@
       end
       object cxLabel3: TcxLabel
         Left = 16
-        Top = 211
+        Top = 212
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
       end
       object cxLabel2: TcxLabel
-        Left = 130
-        Top = 211
+        Left = 124
+        Top = 212
         Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
       end
       object cxLabel5: TcxLabel
@@ -131,16 +131,16 @@
         Top = 231
         Properties.SaveTime = False
         Properties.ShowTime = False
-        TabOrder = 4
+        TabOrder = 12
         Width = 92
       end
       object edDateOut: TcxDateEdit
-        Left = 130
+        Left = 124
         Top = 231
         EditValue = 42929d
         Properties.SaveTime = False
         Properties.ShowTime = False
-        TabOrder = 5
+        TabOrder = 14
         Width = 92
       end
       object cePersonalGroup: TcxButtonEdit
@@ -178,29 +178,50 @@
         Width = 305
       end
       object cbDateOut: TcxCheckBox
-        Left = 233
-        Top = 231
+        Left = 161
+        Top = 258
         Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         Caption = #1059#1074#1086#1083#1077#1085
         TabOrder = 16
-        Width = 79
+        Width = 62
+      end
+      object cxLabel17: TcxLabel
+        Left = 237
+        Top = 212
+        Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1074#1086#1076#1072
+      end
+      object edDateSend: TcxDateEdit
+        Left = 237
+        Top = 231
+        EditValue = 42929d
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        TabOrder = 4
+        Width = 92
+      end
+      object cbDateSend: TcxCheckBox
+        Left = 249
+        Top = 258
+        Caption = #1055#1077#1088#1077#1074#1077#1076#1077#1085
+        TabOrder = 5
+        Width = 80
       end
       object cbMain: TcxCheckBox
-        Left = 18
-        Top = 256
+        Left = 3
+        Top = 258
         Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088#1072#1073#1086#1090#1099
         TabOrder = 18
-        Width = 186
+        Width = 146
       end
       object cxLabel8: TcxLabel
         Left = 16
-        Top = 276
+        Top = 286
         Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1075#1083#1072#1074#1085#1072#1103')'
       end
       object cePersonalServiceList: TcxButtonEdit
         Left = 16
-        Top = 295
+        Top = 304
         Properties.Buttons = <
           item
             Default = True
@@ -212,12 +233,12 @@
       end
       object cxLabel9: TcxLabel
         Left = 16
-        Top = 322
+        Top = 331
         Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1041#1053')'
       end
       object cePersonalServiceListOfficial: TcxButtonEdit
         Left = 16
-        Top = 339
+        Top = 348
         Properties.Buttons = <
           item
             Default = True
@@ -229,12 +250,12 @@
       end
       object cxLabel10: TcxLabel
         Left = 16
-        Top = 405
+        Top = 414
         Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
       end
       object ceSheetWorkTime: TcxButtonEdit
         Left = 16
-        Top = 423
+        Top = 432
         Properties.Buttons = <
           item
             Default = True
@@ -246,12 +267,12 @@
       end
       object cxLabel11: TcxLabel
         Left = 16
-        Top = 448
+        Top = 457
         Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
       end
       object ceStorageLine: TcxButtonEdit
         Left = 16
-        Top = 465
+        Top = 474
         Properties.Buttons = <
           item
             Default = True
@@ -263,12 +284,12 @@
       end
       object cxLabel12: TcxLabel
         Left = 16
-        Top = 363
+        Top = 372
         Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1050#1072#1088#1090#1072' '#1060'2)'
       end
       object cePersonalServiceListCardSecond: TcxButtonEdit
         Left = 16
-        Top = 380
+        Top = 389
         Properties.Buttons = <
           item
             Default = True
@@ -347,8 +368,8 @@
     end
   end
   object ActionList: TActionList
-    Left = 200
-    Top = 232
+    Left = 184
+    Top = 16
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -514,9 +535,25 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDateSend'
+        Value = Null
+        Component = edDateSend
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsDateOut'
         Value = False
         Component = cbDateOut
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDateSend'
+        Value = Null
+        Component = cbDateSend
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -814,6 +851,20 @@
         Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateSend'
+        Value = Null
+        Component = edDateSend
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDateSend'
+        Value = Null
+        Component = cbDateSend
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -831,12 +882,12 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 264
-    Top = 240
+    Left = 256
+    Top = 192
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 304
-    Top = 232
+    Left = 216
+    Top = 72
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -1022,8 +1073,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 239
-    Top = 289
+    Left = 279
+    Top = 369
   end
   object PersonalServiceListOfficialGuides: TdsdGuides
     KeyField = 'Id'
@@ -1052,8 +1103,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 167
-    Top = 273
+    Left = 151
+    Top = 345
   end
   object SheetWorkTimeGuides: TdsdGuides
     KeyField = 'Id'
@@ -1082,8 +1133,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 39
-    Top = 267
+    Left = 71
+    Top = 331
   end
   object StorageLineGuides: TdsdGuides
     KeyField = 'Id'

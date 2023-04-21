@@ -114,6 +114,9 @@ type
     actExeceSputnikSMSParams: TdsdExecStoredProc;
     acteSputnikSendSMS: TdsdeSputnikSendSMS;
     speSputnikSMSParams: TdsdStoredProc;
+    CommentCheckName: TcxGridDBColumn;
+    actChoiceCommentCheck: TOpenChoiceForm;
+    actClearCommentCheck: TdsdSetDefaultParams;
   private
     { Private declarations }
   public

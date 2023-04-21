@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnionName TVarChar
              , UnionDate TDateTime
              , InsertDate TDateTime, InsertName TVarChar
+             , StatusInsertDate TDateTime, StatusInsertName TVarChar
              , MovementId_Send Integer, InvNumber_SendFull TVarChar
              , MovementId_Order Integer, OperDate_Order TDateTime, InvNumberOrder TVarChar
              , PartnerName_Order TVarChar
@@ -116,6 +117,9 @@ BEGIN
            
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Insert.ValueData                AS InsertName
+
+           , MovementDate_StatusInsert.ValueData    AS StatusInsertDate
+           , Object_StatusInsert.ValueData          AS StatusInsertName
 
            , COALESCE(Movement_Send.Id, -1)                         AS MovementId_Send
            , COALESCE(CASE WHEN Movement_Send.StatusId = zc_Enum_Status_Erased()
@@ -221,6 +225,14 @@ BEGIN
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
+            LEFT JOIN MovementDate AS MovementDate_StatusInsert
+                                   ON MovementDate_StatusInsert.MovementId = Movement.Id
+                                  AND MovementDate_StatusInsert.DescId = zc_MovementDate_StatusInsert()
+            LEFT JOIN MovementLinkObject AS MLO_StatusInsert
+                                         ON MLO_StatusInsert.MovementId = Movement.Id
+                                        AND MLO_StatusInsert.DescId = zc_MovementLinkObject_StatusInsert()
+            LEFT JOIN Object AS Object_StatusInsert ON Object_StatusInsert.Id = MLO_StatusInsert.ObjectId
+
             LEFT JOIN tmpMLM AS MovementLinkMovement_Send
                              ON MovementLinkMovement_Send.MovementId = Movement.Id
                             AND MovementLinkMovement_Send.DescId     = zc_MovementLinkMovement_Send()
@@ -258,6 +270,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 19.04.23         * StatusInsert....
  09.12.22         * add MovementId_Production
  04.10.19         *
  27.02.19         * 

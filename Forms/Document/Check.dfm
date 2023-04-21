@@ -281,6 +281,14 @@ inherited CheckForm: TCheckForm
             Visible = False
             VisibleForCustomization = False
           end
+          object CommentCheckName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1103' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072
+            DataBinding.FieldName = 'CommentCheckName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
         end
       end
     end

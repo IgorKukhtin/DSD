@@ -236,7 +236,7 @@ type
   protected
     function GetToken: Boolean;
     function PostTTN(AGLN, AXML : String; VAR ADoc_Uuid : String): Boolean;
-    procedure DeclarETTNEDI(var AXML: String);
+    procedure UAECMREDI(var AXML: String);
 
     function TTNSave: Boolean;
     function LocalExecute: Boolean; override;
@@ -278,7 +278,7 @@ uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   Variants, UtilConvert, ComObj, DeclarXML, InvoiceXML, DateUtils,
   FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML, RecadvXML,
   DesadvFozzXML, OrderSpFozzXML, IftminFozzXML,
-  DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML, DeclarETTNXML,
+  DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML, UAECMRXML,
   Vcl.Forms, System.IOUtils, System.RegularExpressions, ZLib, Math,
   IdHTTP, IdSSLOpenSSL, IdURI, IdCTypes, IdSSLOpenSSLHeaders,
   IdMultipartFormData, Xml.XMLDoc;
@@ -5627,79 +5627,89 @@ begin
   end;
 end;
 
-procedure TdsdEDINAction.DeclarETTNEDI(var AXML: String);
-var DeclarETTN: IXMLDECLARETTNType;
+procedure TdsdEDINAction.UAECMREDI(var AXML: String);
+var UAECMR: IXMLUAECMRType;
     i: integer;
 begin
 
   // Создать XML
-  DeclarETTN := DeclarETTNXML.NewDECLARETTN;
+  UAECMR := UAECMRXML.NewUAECMR;
   //
-  DeclarETTN.SIGN_ENVELOPE.STATE := 'ORIGINATOR_SIGNED';
+//  UAECMR.SIGN_ENVELOPE.STATE := 'ORIGINATOR_SIGNED';
+//
+//  UAECMR.SIGN_ENVELOPE.DECLARHEAD.C_DOC := 'T01';
+//  UAECMR.SIGN_ENVELOPE.DECLARHEAD.C_DOC_SUB := '001';
+//  UAECMR.SIGN_ENVELOPE.DECLARHEAD.C_DOC_VER := '02';
+//
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.TYPE_ := 'CORE';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.STAKE := 'ORIGINATOR';
+//
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.HFILL := FormatDateTime('YYYY-MM-DD', Date);
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.HNUM := '1234';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.DOCUMENT_PLACE := 'м.Київ';
+//
+//  // Автомобиль
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R01G1S := 'DAF';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R01G2S := 'АН6754ЕА';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R01G3S := 'авто';
+//
+//  // Перевозчик
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R01G10S := 'вантажні перевезення';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R02G11S := '11223344';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R02G1S := 'Перевізник 1';
+//
+//  // Заказчик
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R02G21S := '34554362';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R02G2S := 'Замовник Тестовий платник 3';
+//
+//  // Данные водителя
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R02G3S := 'Шевченко';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R02G31S := 'Тарас';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R02G32S := 'Григорович';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R02G4S := 'АА123456';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.DRIVER_ID := 1234567890;
+//
+//  // Данные Вантажовідправника
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.HTIN := '32132132';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.HNAME := 'ТОВ "Вантажовідправник_v3"';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.HLOC := 'УКРАЇНА, 88745, ЧЕРКАСЬКА ОБЛАСТЬ, ЖАШКIВСЬКИЙ РАЙОН Р-Н, М.ЖАШКІВ, ВУЛ. ЛЕНІНА, БУД. 22, КВ. (ОФІС) 3';
+//
+//  // Данные Вантажоодержувача
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R04G1S := '33445566';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R04G2S := 'Тестовий платник 4';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R04G3S := 'КРАЇНА, 88745, М. КИЇВ, ВУЛ. ЛЕНІНА, БУД. 22, КВ. (ОФІС) 3';
+//
+//  // Данные о вантаже
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R05G21 := '8000000000';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R05G2S := 'Київ, пр. Тараса Шевченко';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R05G41 := '8000000000';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R05G4S := 'Київ, Хрещатик';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R012G3S := 'дванадцять';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R013G1 := 200.00;
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R013G2S := 'двісті';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R010G3S := 'сто тисяч';
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R011G1 := 16666.67;
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R014G1S := 'сертифікат якості';
+//
+//  // Товар
+//  with UAECMR.SIGN_ENVELOPE.DECLARBODY.T1RXXXXG81S.Add do
+//  begin
+//    ROWNUM := 1;
+//    NodeValue := 'побутова техніка'
+//  end;
+//
+//  with UAECMR.SIGN_ENVELOPE.DECLARBODY.T1RXXXXG15.Add do
+//  begin
+//    ROWNUM := 1;
+//    NodeValue := '1.00'
+//  end;
+//
+//  // Усього
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R001G10 := 12.00;
+//  UAECMR.SIGN_ENVELOPE.DECLARBODY.R001G12 := 1440.00;
 
-  DeclarETTN.SIGN_ENVELOPE.DECLARHEAD.C_DOC := 'T01';
-  DeclarETTN.SIGN_ENVELOPE.DECLARHEAD.C_DOC_SUB := '001';
-  DeclarETTN.SIGN_ENVELOPE.DECLARHEAD.C_DOC_VER := '02';
-
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.TYPE_ := 'CORE';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.STAKE := 'ORIGINATOR';
-
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.HFILL := FormatDateTime('YYYY-MM-DD', Date);
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.HNUM := '1234';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.DOCUMENT_PLACE := 'м.Київ';
-
-  // Автомобиль
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R01G1S := 'DAF';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R01G2S := 'АН6754ЕА';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R01G3S := 'авто';
-
-  // Перевозчик
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R01G10S := 'вантажні перевезення';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G11S := '11223344';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G1S := 'Перевізник 1';
-
-  // Заказчик
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G21S := '34554362';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G2S := 'Замовник Тестовий платник 3';
-
-  // Данные водителя
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G3S := 'Шевченко';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G31S := 'Тарас';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G32S := 'Григорович';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R02G4S := 'АА123456';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.DRIVER_ID := 1234567890;
-
-  // Данные Вантажовідправника
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.HTIN := '32132132';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.HNAME := 'ТОВ "Вантажовідправник_v3"';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.HLOC := 'УКРАЇНА, 88745, ЧЕРКАСЬКА ОБЛАСТЬ, ЖАШКIВСЬКИЙ РАЙОН Р-Н, М.ЖАШКІВ, ВУЛ. ЛЕНІНА, БУД. 22, КВ. (ОФІС) 3';
-
-  // Данные Вантажоодержувача
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R04G1S := '33445566';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R04G2S := 'Тестовий платник 4';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R04G3S := 'КРАЇНА, 88745, М. КИЇВ, ВУЛ. ЛЕНІНА, БУД. 22, КВ. (ОФІС) 3';
-
-  // Данные о вантаже
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R05G21 := '8000000000';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R05G2S := 'Київ, пр. Тараса Шевченко';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R05G41 := '8000000000';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R05G4S := 'Київ, Хрещатик';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R012G3S := 'дванадцять';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R013G1 := 200.00;
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R013G2S := 'двісті';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R010G3S := 'сто тисяч';
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R011G1 := 16666.67;
-  DeclarETTN.SIGN_ENVELOPE.DECLARBODY.R014G1S := 'сертифікат якості';
-
-  // Товар
-  with DeclarETTN.SIGN_ENVELOPE.DECLARBODY.T1RXXXXG81S.Add do
-  begin
-    ROWNUM := 1;
-    NodeValue := 'побутова техніка'
-  end;
-
-  DeclarETTN.OwnerDocument.SaveToXML(AXML);
-  DeclarETTN.OwnerDocument.SaveToFile('111.xml');
+  UAECMR.OwnerDocument.SaveToXML(AXML);
+  UAECMR.OwnerDocument.SaveToFile('111.xml');
 end;
 
 
@@ -5709,7 +5719,7 @@ begin
   Result := False;
   if not GetToken then Exit;
 
-  DeclarETTNEDI(cXML);
+  UAECMREDI(cXML);
   //FOrderParam.Value := HeaderDataSet.FieldByName('DealId').AsString;
 
   Doc_Uuid := '';

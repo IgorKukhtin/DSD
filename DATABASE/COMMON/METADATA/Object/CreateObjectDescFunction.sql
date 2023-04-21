@@ -1632,6 +1632,10 @@ CREATE OR REPLACE FUNCTION zc_Object_AccountSalesDE() RETURNS Integer AS $BODY$B
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_AccountSalesDE', 'Счета с суммами для продаж по дисконтным проектам' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_AccountSalesDE');    
 
+CREATE OR REPLACE FUNCTION zc_Object_CommentCheck() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_CommentCheck'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_CommentCheck', 'Комментарий строк в заказах' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CommentCheck');    
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1652,6 +1656,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 18.04.23                                                                                        * zc_Object_CommentCheck
  21.03.23                                                                                        * zc_Object_AccountSalesDE
  14.11.22         * zc_Object_MemberReport
  02.11.22         * zc_Object_Section

@@ -778,6 +778,8 @@ BEGIN
            , COALESCE (MILinkObject_GoodsPresent.ObjectId, 0)                    AS GoodsPresentID
            , COALESCE (MIBoolean_GoodsPresent.ValueData, False)                  AS isGoodsPresent
            , MovementItem.PriceLoad
+           , Object_CommentCheck.Id                                              AS CommentCheckId
+           , Object_CommentCheck.ValueData                                       AS CommentCheckName
 
        FROM tmpMI_Sum AS MovementItem
 
@@ -844,6 +846,11 @@ BEGIN
           LEFT JOIN tmpMIBoolean AS MIBoolean_GoodsPresent
                                         ON MIBoolean_GoodsPresent.MovementItemId = MovementItem.Id
                                        AND MIBoolean_GoodsPresent.DescId         = zc_MIBoolean_GoodsPresent()
+
+          LEFT JOIN tmpMILinkObject AS MILinkObject_CommentCheck
+                                           ON MILinkObject_CommentCheck.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_CommentCheck.DescId         = zc_MILinkObject_CommentCheck()
+          LEFT JOIN Object AS Object_CommentCheck ON Object_CommentCheck.Id = MILinkObject_CommentCheck.ObjectId
 
        WHERE Movement.isDeferred = True
          AND (inType = 0 OR inType = 1 AND Movement.isShowVIP = TRUE OR inType = 2 AND Movement.isShowTabletki = TRUE OR inType = 3 AND Movement.isShowLiki24 = TRUE)

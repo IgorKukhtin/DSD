@@ -88,6 +88,9 @@ type
     GuidesReasonOut: TdsdGuides;
     edComment: TcxTextEdit;
     cxLabel16: TcxLabel;
+    cxLabel17: TcxLabel;
+    edDateSend: TcxDateEdit;
+    cbDateSend: TcxCheckBox;
   private
     { Private declarations }
   public

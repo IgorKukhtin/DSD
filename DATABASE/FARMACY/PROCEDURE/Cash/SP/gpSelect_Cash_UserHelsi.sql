@@ -70,7 +70,13 @@ BEGIN
                 ON ObjectString_KeyPassword.DescId = zc_ObjectString_User_Helsi_KeyPassword() 
                AND ObjectString_KeyPassword.ObjectId = Object_User.Id
                
- WHERE Object_User.DescId = zc_Object_User();
+ WHERE Object_User.DescId = zc_Object_User()
+   AND Object_User.isErased = False
+   AND COALESCE(ObjectString_UserPassword.ValueData, '') <> ''
+   AND COALESCE(ObjectString_KeyPassword.ValueData, '') <> ''
+   AND COALESCE(ObjectBlob_Key.ValueData, '') <> ''
+   AND COALESCE(ObjectString_UserName.ValueData, '') <> ''
+   AND COALESCE(ObjectString_UserPassword.ValueData, '') <> '';
 
 END;
 $BODY$

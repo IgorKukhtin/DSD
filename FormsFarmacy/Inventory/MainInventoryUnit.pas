@@ -19,7 +19,8 @@ uses
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
   cxImageComboBox, cxNavigator, dxDateRanges, Data.Bind.Components,
   Data.Bind.ObjectScope, System.Actions, dsdDB, Datasnap.DBClient, dsdAction,
-  AncestorBase, cxPropertiesStore, dsdAddOn, dxBarBuiltInMenu, cxDateUtils;
+  AncestorBase, cxPropertiesStore, dsdAddOn, dxBarBuiltInMenu, cxDateUtils,
+  Vcl.StdActns, Vcl.Buttons, cxButtons;
 
 type
   TMainInventoryForm = class(TAncestorBaseForm)
@@ -49,13 +50,13 @@ type
     tsInventory: TcxTabSheet;
     cxGridChild: TcxGrid;
     cxGridChildDBTableView: TcxGridDBTableView;
-    isLast: TcxGridDBColumn;
-    Num: TcxGridDBColumn;
-    GoodsCode: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
-    chAmount: TcxGridDBColumn;
-    UserName: TcxGridDBColumn;
-    Date_Insert: TcxGridDBColumn;
+    ChildisLast: TcxGridDBColumn;
+    ChildNum: TcxGridDBColumn;
+    ChildGoodsCode: TcxGridDBColumn;
+    ChildGoodsName: TcxGridDBColumn;
+    ChildAmount: TcxGridDBColumn;
+    ChildUserName: TcxGridDBColumn;
+    ChildDate_Insert: TcxGridDBColumn;
     cxGridChildLevel: TcxGridLevel;
     Panel1: TPanel;
     edBarCode: TcxTextEdit;
@@ -71,7 +72,32 @@ type
     cxLabel1: TcxLabel;
     edOperDate: TcxDateEdit;
     edUnitName: TcxTextEdit;
-    IsSend: TcxGridDBColumn;
+    ChildIsSend: TcxGridDBColumn;
+    actCloseAll: TAction;
+    N8: TMenuItem;
+    N9: TMenuItem;
+    N10: TMenuItem;
+    actExit: TAction;
+    tsInfo: TcxTabSheet;
+    Panel2: TPanel;
+    cxLabel10: TcxLabel;
+    edOperDateInfo: TcxDateEdit;
+    edUnitNameInfo: TcxTextEdit;
+    actInfoInvent: TAction;
+    N11: TMenuItem;
+    InfoDS: TDataSource;
+    InfoCDS: TClientDataSet;
+    spSelectInfo: TdsdStoredProcSQLite;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    InfoGoodsCode: TcxGridDBColumn;
+    InfoGoodsName: TcxGridDBColumn;
+    InfoAmount: TcxGridDBColumn;
+    InfoRemains: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    actGoodsInventory: TOpenChoiceForm;
+    cxButton1: TcxButton;
+    actSetFocusededBarCode: TdsdSetFocusedAction;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);
@@ -80,6 +106,10 @@ type
     procedure actContinueInventExecute(Sender: TObject);
     procedure edBarCodeKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure actCloseAllExecute(Sender: TObject);
+    procedure actExitExecute(Sender: TObject);
+    procedure actInfoInventExecute(Sender: TObject);
+    procedure edBarCodeDblClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -99,6 +129,13 @@ implementation
 {$R *.dfm}
 
 uses UnilWin, CommonData, IniUtils, Splash, StorageSQLite;
+
+procedure TMainInventoryForm.actCloseAllExecute(Sender: TObject);
+begin
+  PageControl.ActivePage := tsStart;
+  InfoCDS.Close;
+  MasterCDS.Close;
+end;
 
 procedure TMainInventoryForm.actContinueInventExecute(Sender: TObject);
  var OperDate: TDateTime; UnitName : String; isSave: boolean;
@@ -135,6 +172,8 @@ begin
 
   PageControl.ActivePage := tsInventory;
   spSelectChilg.Execute;
+  InfoCDS.Close;
+  edBarCode.SetFocus;
 end;
 
 procedure TMainInventoryForm.actDoCreateInventoryExecute(Sender: TObject);
@@ -156,6 +195,7 @@ begin
 
   PageControl.ActivePage := tsInventory;
   spSelectChilg.Execute;
+  edBarCode.SetFocus;
 end;
 
 procedure TMainInventoryForm.actDoLoadDataExecute(Sender: TObject);
@@ -178,14 +218,66 @@ begin
     SaveGoods;
     ChangeStatus('Получение "Штрих кодов товаров"');
     SaveGoodsBarCode;
+    ChangeStatus('Получение "Остатков по подразделениям"');
+    SaveRemains;
   finally
     EndSplash;
   end;
 end;
 
+procedure TMainInventoryForm.actExitExecute(Sender: TObject);
+begin
+  if MessageDlg('Закрыть приложение?', mtInformation, mbOKCancel, 0) = mrOk then Close;
+end;
+
+procedure TMainInventoryForm.actInfoInventExecute(Sender: TObject);
+ var OperDate: TDateTime; UnitName : String; isSave: boolean;
+     Params : TdsdParams;
+begin
+
+  if not ChechActiveInv(OperDate, UnitName, isSave) then
+  begin
+    if not isSave and (OperDate < IncDay(Date, - 3)) then
+    begin
+      ShowMessage('Инвентаризация не создана. С начало создайте ее.');
+      Exit;
+    end;
+  end else
+  begin
+    ShowMessage('Инвентаризация не создана. С начало создайте ее.');
+    Exit;
+  end;
+
+  Params := TdsdParams.Create(Self, TdsdParam);
+  try
+    Params.AddParam('Id', TFieldType.ftInteger, ptOutput, 0);
+    Params.AddParam('OperDate', TFieldType.ftDateTime, ptOutput, FormParams.ParamByName('OperDate').Value);
+    Params.AddParam('UnitId', TFieldType.ftInteger, ptOutput, FormParams.ParamByName('UnitId').Value);
+    Params.AddParam('UnitName', TFieldType.ftString, ptOutput, '');
+    if not SQLite_Get(InventoryGetActiveSQL, Params) then Exit;
+    FormParams.ParamByName('Id').Value := Params.ParamByName('Id').Value;
+    FormParams.ParamByName('OperDate').Value := Params.ParamByName('OperDate').Value;
+    FormParams.ParamByName('UnitId').Value := Params.ParamByName('UnitId').Value;
+    FormParams.ParamByName('UnitName').Value := Params.ParamByName('UnitName').Value;
+  finally
+    FreeAndNil(Params);
+  end;
+
+  edOperDateInfo.Date := FormParams.ParamByName('OperDate').Value;
+  edUnitNameInfo.Text := FormParams.ParamByName('UnitName').Value;
+
+  PageControl.ActivePage := tsInfo;
+  spSelectInfo.Execute;
+  MasterCDS.Close;
+end;
+
 procedure TMainInventoryForm.actReCreteInventDateExecute(Sender: TObject);
  var OperDate: TDateTime; UnitName : String; isSave: boolean;
 begin
+
+  PageControl.ActivePage := tsStart;
+  InfoCDS.Close;
+  MasterCDS.Close;
 
   if not ChechActiveInv(OperDate, UnitName, isSave) then
   begin
@@ -233,6 +325,11 @@ begin
   end;
 end;
 
+procedure TMainInventoryForm.edBarCodeDblClick(Sender: TObject);
+begin
+  actGoodsInventory.Execute;
+end;
+
 procedure TMainInventoryForm.edBarCodeKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -250,6 +347,7 @@ begin
   for i:=0 to PageControl.PageCount-1 do PageControl.Pages[I].TabVisible := False;
   PageControl.ActivePage := tsStart;
   Self.Caption := 'Проведение инвентаризации (' + GetFileVersionString(ParamStr(0)) + ')' +  ' - <' + gc_User.Login + '>';
+  SQLiteChechAndArc;
   UserSettingsStorageAddOn.LoadUserSettings;
 end;
 
@@ -269,11 +367,21 @@ begin
   if BarCode = '' then Exit;
   ds := TClientDataSet.Create(nil);
   try
-    if BarCode[1] = '2' then
+    if Copy(BarCode, 1, 3) = '201' then
     begin
       if TryStrToInt(Copy(BarCode, 4, Length(BarCode) - 4), MainId) then
       begin
         LoadSQLiteSQL(ds, Format(GetGoodsIdSQL, [IntToStr(MainId)]));
+      end else
+      begin
+        ShowMessage('Ошибка получения ID товара из штрихкода <' + BarCode + '>.');
+        Exit;
+      end;
+    end else if Copy(BarCode, 1, 3) = '202' then
+    begin
+      if TryStrToInt(Copy(BarCode, 4, Length(BarCode) - 4), MainId) then
+      begin
+        LoadSQLiteSQL(ds, Format(GetGoodsCodeSQL, [IntToStr(MainId)]));
       end else
       begin
         ShowMessage('Ошибка получения ID товара из штрихкода <' + BarCode + '>.');

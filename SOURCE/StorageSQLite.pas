@@ -73,8 +73,8 @@ begin
         ZSQLiteConnection.Database := SQLiteFile;
         ZSQLiteConnection.Connect;
 
-        ZQuery.SQL.Text := 'SELECT name FROM sqlite_master WHERE type = ''table''';
-        ZQuery.Open;
+        ZQuery.SQL.Text := 'VACUUM;';
+        ZQuery.ExecSQL;
 
         ZQuery.Close;
         ZSQLiteConnection.Disconnect;
