@@ -92,7 +92,7 @@ BEGIN
                                                                                                         ELSE zc_MovementLinkObject_Contract()
                                                                                                    END
                     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-                      AND Movement.DescId IN (zc_Movement_PriceCorrective(), zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn())
+                      AND Movement.DescId IN (zc_Movement_PriceCorrective(), zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn(), zc_Movement_ChangePercent())
                       AND Movement.StatusId = zc_Enum_Status_Complete() 
                       AND (MovementLinkObject_PaidKind.ObjectId   = inPaidKindId OR inPaidKindId = 0)
                    UNION
@@ -182,23 +182,35 @@ BEGIN
                          LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate
                                 ON ObjectHistory_JuridicalDetails_ViewByDate.JuridicalId = CASE WHEN Movement.DescId = zc_Movement_PriceCorrective()
                                                                                                      THEN MovementLinkObject_From.ObjectId
+
                                                                                                 WHEN Movement.DescId = zc_Movement_TransferDebtOut()
                                                                                                      THEN MovementLinkObject_To.ObjectId
+
                                                                                                 WHEN Movement.DescId = zc_Movement_TransferDebtIn()
                                                                                                      THEN MovementLinkObject_From.ObjectId
+
+                                                                                                WHEN Movement.DescId = zc_Movement_ChangePercent()
+                                                                                                     THEN MovementLinkObject_To.ObjectId
+
                                                                                                 ELSE ObjectLink_Partner_Juridical.ChildObjectId
                                                                                            END
                                AND Movement.OperDate >= ObjectHistory_JuridicalDetails_ViewByDate.StartDate AND Movement.OperDate < ObjectHistory_JuridicalDetails_ViewByDate.EndDate 
                          
                          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                               ON ObjectLink_Juridical_Retail.ObjectId = CASE WHEN Movement.DescId = zc_Movement_PriceCorrective()
-                                                                                                     THEN MovementLinkObject_From.ObjectId
-                                                                                                WHEN Movement.DescId = zc_Movement_TransferDebtOut()
-                                                                                                     THEN MovementLinkObject_To.ObjectId
-                                                                                                WHEN Movement.DescId = zc_Movement_TransferDebtIn()
-                                                                                                     THEN MovementLinkObject_From.ObjectId
-                                                                                                ELSE ObjectLink_Partner_Juridical.ChildObjectId
-                                                                                           END
+                                                                                                  THEN MovementLinkObject_From.ObjectId
+
+                                                                                             WHEN Movement.DescId = zc_Movement_TransferDebtOut()
+                                                                                                  THEN MovementLinkObject_To.ObjectId
+
+                                                                                             WHEN Movement.DescId = zc_Movement_TransferDebtIn()
+                                                                                                  THEN MovementLinkObject_From.ObjectId
+
+                                                                                             WHEN Movement.DescId = zc_Movement_ChangePercent()
+                                                                                                  THEN MovementLinkObject_To.ObjectId
+
+                                                                                             ELSE ObjectLink_Partner_Juridical.ChildObjectId
+                                                                                        END
                                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                     WHERE ObjectLink_Juridical_Retail.ChildObjectId = inRetailId
                        OR COALESCE (inRetailId, 0) = 0
@@ -226,7 +238,7 @@ BEGIN
                           )
      -- Ðåçóëüòàò
      SELECT '0' :: TVarChar                                           AS UnitId
-           , CASE WHEN Movement.DescId IN (zc_Movement_PriceCorrective())
+           , CASE WHEN Movement.DescId IN (zc_Movement_PriceCorrective(), zc_Movement_ChangePercent())
                        THEN 123
                   WHEN Movement.TotalSumm < 0
                        THEN 123
@@ -269,7 +281,10 @@ BEGIN
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
              END :: TVarChar                                           AS OperCount
-           , (CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+           , (CASE WHEN Movement.DescId = zc_Movement_ChangePercent()
+                        THEN CAST (MIFloat_Price.ValueData * (Movement.ChangePercent / 100) AS NUMERIC (16, 2))
+
+                   WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                         THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
                                                  , inChangePercent:= MIFloat_ChangePercent.ValueData
                                                  , inPrice        := MIFloat_Price.ValueData
@@ -284,7 +299,7 @@ BEGIN
                                                   )
                    ELSE COALESCE (MIFloat_Price.ValueData, 0)
               END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-            * CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
+            * CASE WHEN Movement.DescId IN (zc_Movement_PriceCorrective(), zc_Movement_ChangePercent()) THEN -1 ELSE 1 END
              ) :: TVarChar                                             AS OperPrice
 
            , '0' :: TVarChar                                           AS Tax
@@ -299,7 +314,10 @@ BEGIN
                        -- åñëè öåíû c ÍÄÑ
                        THEN 1 / (1 + Movement.VATPercent / 100)
              END
-           * CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+           * CASE WHEN Movement.DescId = zc_Movement_ChangePercent()
+                        THEN CAST (MIFloat_Price.ValueData * (Movement.ChangePercent / 100) AS NUMERIC (16, 2))
+
+                   WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                        THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
                                                 , inChangePercent:= MIFloat_ChangePercent.ValueData
                                                 , inPrice        := MIFloat_Price.ValueData
@@ -322,7 +340,12 @@ BEGIN
              ) :: TVarChar                       AS Summa
 
              -- Ñóììà ÍÄÑ
-           , (
+           , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective()
+                  THEN CAST (CAST (MIMaster.Amount * CAST (MIFloat_Price.ValueData * (Movement.ChangePercent / 100) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                           * Movement.VATPercent / 100
+                            AS NUMERIC (16, 2))
+             ELSE
+             (
              -- ***Ñóììà ñ ÍÄÑ
              CAST ((
              CAST (
@@ -386,12 +409,19 @@ BEGIN
                   ELSE MIMaster.Amount
              END AS NUMERIC (16, 2)
              )
-           * CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
+           * CASE WHEN Movement.DescId IN (zc_Movement_PriceCorrective(), zc_Movement_ChangePercent()) THEN -1 ELSE 1 END
              )
-             ) :: TVarChar                                             AS PDV
+             )
+             END :: TVarChar                                             AS PDV
 
              -- Ñóììà ñ ÍÄÑ
-           , CAST ((
+           , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective()
+                  THEN CAST (MIMaster.Amount * CAST (MIFloat_Price.ValueData * (Movement.ChangePercent / 100) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                     + CAST (CAST (MIMaster.Amount * CAST (MIFloat_Price.ValueData * (Movement.ChangePercent / 100) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                           * Movement.VATPercent / 100
+                            AS NUMERIC (16, 2))
+             ELSE
+             CAST ((
              CAST (
              CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                        THEN zfCalc_PriceTruncate (inOperDate     := Movement.OperDatePartner
@@ -419,8 +449,9 @@ BEGIN
                        THEN (1 + Movement.VATPercent / 100)
              END
              )
-           * CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
-             AS NUMERIC (16, 4)) :: TVarChar                           AS SummaPDV
+           * CASE WHEN Movement.DescId IN (zc_Movement_PriceCorrective(), zc_Movement_ChangePercent()) THEN -1 ELSE 1 END
+             AS NUMERIC (16, 4))
+             END :: TVarChar                           AS SummaPDV
 
            , Movement.ClientINN
            , Movement.ClientOKPO
