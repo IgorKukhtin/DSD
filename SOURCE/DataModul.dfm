@@ -8,7 +8,7 @@ object dmMain: TdmMain
     Left = 102
     Top = 60
     Bitmap = {
-      494C01015600940B080010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01015600940BBC0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000006001000001002000000000000060
       0100000000000000000000000000000000000000000000000000000000000006
       060600444848009FA8A800D8E4E400F3FFFF00F3FFFF00D8E4E4009FA8A80044
@@ -2925,7 +2925,7 @@ object dmMain: TdmMain
     Left = 170
     Top = 58
     Bitmap = {
-      494C01011700040B080020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01011700040BA40020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000080000000C000000001002000000000000080
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -6104,7 +6104,7 @@ object dmMain: TdmMain
     Left = 94
     Top = 140
     Bitmap = {
-      494C01010300280B080010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010300280BA40010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -6295,12 +6295,12 @@ object dmMain: TdmMain
   object cxStyleRepository: TcxStyleRepository
     Left = 232
     Top = 64
-    PixelsPerInch = 120
+    PixelsPerInch = 96
     object cxHeaderStyle: TcxStyle
       AssignedValues = [svFont, svTextColor]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clNavy
-      Font.Height = -9
+      Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = [fsBold]
       TextColor = clNavy
@@ -6309,7 +6309,7 @@ object dmMain: TdmMain
       AssignedValues = [svFont]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clNavy
-      Font.Height = -9
+      Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
     end
@@ -6322,7 +6322,7 @@ object dmMain: TdmMain
       AssignedValues = [svFont]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -9
+      Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
     end
@@ -6331,7 +6331,7 @@ object dmMain: TdmMain
       Color = clMoneyGreen
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -9
+      Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
     end
@@ -6340,7 +6340,7 @@ object dmMain: TdmMain
       Color = 16777181
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clDefault
-      Font.Height = -9
+      Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
       TextColor = clGreen
@@ -6349,7 +6349,7 @@ object dmMain: TdmMain
       AssignedValues = [svFont, svTextColor]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -9
+      Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = [fsBold]
       TextColor = clBlue
@@ -6358,7 +6358,7 @@ object dmMain: TdmMain
       AssignedValues = [svFont, svTextColor]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -9
+      Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = [fsBold]
       TextColor = 12303104
@@ -6367,7 +6367,7 @@ object dmMain: TdmMain
       AssignedValues = [svFont, svTextColor]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -9
+      Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = [fsBold]
       TextColor = clRed
@@ -6377,7 +6377,7 @@ object dmMain: TdmMain
       Color = 15585400
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -10
+      Font.Height = -13
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
     end
@@ -6385,7 +6385,7 @@ object dmMain: TdmMain
       AssignedValues = [svFont, svTextColor]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -9
+      Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       TextColor = clGreen
@@ -6422,7 +6422,7 @@ object dmMain: TdmMain
     Left = 94
     Top = 188
     Bitmap = {
-      494C010116004009080010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010116004009A40010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000006000000001002000000000000060
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
