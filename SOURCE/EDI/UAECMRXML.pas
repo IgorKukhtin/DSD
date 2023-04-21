@@ -102,12 +102,12 @@ type
   IXMLExchangedDocumentContextType = interface(IXMLNode)
     ['{C58FEC8F-13EC-4CD1-891D-08E03D6EBDF9}']
     { Property Accessors }
-    function Get_SpecifiedTransactionID: Integer;
+    function Get_SpecifiedTransactionID: UnicodeString;
     function Get_BusinessProcessSpecifiedDocumentContextParameter: IXMLBusinessProcessSpecifiedDocumentContextParameterType;
     function Get_GuidelineSpecifiedDocumentContextParameter: IXMLGuidelineSpecifiedDocumentContextParameterType;
-    procedure Set_SpecifiedTransactionID(Value: Integer);
+    procedure Set_SpecifiedTransactionID(Value: UnicodeString);
     { Methods & Properties }
-    property SpecifiedTransactionID: Integer read Get_SpecifiedTransactionID write Set_SpecifiedTransactionID;
+    property SpecifiedTransactionID: UnicodeString read Get_SpecifiedTransactionID write Set_SpecifiedTransactionID;
     property BusinessProcessSpecifiedDocumentContextParameter: IXMLBusinessProcessSpecifiedDocumentContextParameterType read Get_BusinessProcessSpecifiedDocumentContextParameter;
     property GuidelineSpecifiedDocumentContextParameter: IXMLGuidelineSpecifiedDocumentContextParameterType read Get_GuidelineSpecifiedDocumentContextParameter;
   end;
@@ -941,10 +941,10 @@ type
   TXMLExchangedDocumentContextType = class(TXMLNode, IXMLExchangedDocumentContextType)
   protected
     { IXMLExchangedDocumentContextType }
-    function Get_SpecifiedTransactionID: Integer;
+    function Get_SpecifiedTransactionID: UnicodeString;
     function Get_BusinessProcessSpecifiedDocumentContextParameter: IXMLBusinessProcessSpecifiedDocumentContextParameterType;
     function Get_GuidelineSpecifiedDocumentContextParameter: IXMLGuidelineSpecifiedDocumentContextParameterType;
-    procedure Set_SpecifiedTransactionID(Value: Integer);
+    procedure Set_SpecifiedTransactionID(Value: UnicodeString);
   public
     procedure AfterConstruction; override;
   end;
@@ -1639,12 +1639,12 @@ begin
   inherited;
 end;
 
-function TXMLExchangedDocumentContextType.Get_SpecifiedTransactionID: Integer;
+function TXMLExchangedDocumentContextType.Get_SpecifiedTransactionID: UnicodeString;
 begin
-  Result := ChildNodes['SpecifiedTransactionID'].NodeValue;
+  Result := ChildNodes['SpecifiedTransactionID'].Text;
 end;
 
-procedure TXMLExchangedDocumentContextType.Set_SpecifiedTransactionID(Value: Integer);
+procedure TXMLExchangedDocumentContextType.Set_SpecifiedTransactionID(Value: UnicodeString);
 begin
   ChildNodes['SpecifiedTransactionID'].NodeValue := Value;
 end;

@@ -198,6 +198,6 @@ contains
   PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
   StorageSQLite in '..\SOURCE\StorageSQLite.pas',
   EDI in '..\SOURCE\EDI\EDI.pas',
-  DeclarETTNXML in '..\SOURCE\EDI\DeclarETTNXML.pas';
+  UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas';
 
 end.

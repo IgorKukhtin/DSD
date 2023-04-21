@@ -1415,7 +1415,7 @@ BEGIN
                   WHEN tmpMI.JuridicalName ILIKE '%А+%' AND tmpMI.JuridicalId = 410822
                     OR (tmpMI.JuridicalName ILIKE '%ANC%' OR tmpMI.JuridicalName ILIKE '%PL/%') AND tmpMI.JuridicalId = 59612
                     OR tmpMI.JuridicalName ILIKE '%АйВи%' OR tmpMI.JuridicalName ILIKE '%АЙВІ%'
-                    OR tmpMI.JuridicalName ILIKE '%БДЗ%' THEN zc_Color_Red()    --красный заказывать нельзя
+                    OR tmpMI.JuridicalName ILIKE '%БДЗ%' THEN zfCalc_Color (147, 112, 219)    --красный заказывать нельзя
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) > 0.10 THEN 12319924    --светло - салатовая- цена подешевела
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) < - 0.10 THEN 14211071 --11315967--15781886 --16296444  ----светло красная -- светло-розовая - подорожала
                   WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
@@ -1469,7 +1469,7 @@ BEGIN
                             WHEN tmpMI.JuridicalName ILIKE '%А+%' AND tmpMI.JuridicalId = 410822
                               OR (tmpMI.JuridicalName ILIKE '%ANC%' OR tmpMI.JuridicalName ILIKE '%PL/%') AND tmpMI.JuridicalId = 59612
                               OR tmpMI.JuridicalName ILIKE '%АйВи%' OR tmpMI.JuridicalName ILIKE '%АЙВІ%'
-                              OR tmpMI.GoodsName ILIKE '%БДЗ%'  THEN zc_Color_Red()    --красный заказывать нельзя
+                              OR tmpMI.GoodsName ILIKE '%БДЗ%'  THEN zfCalc_Color (147, 112, 219)     --красный заказывать нельзя
                             WHEN ((AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) > 0.10 THEN 12319924    --светло - салатовая- цена подешевела
                             WHEN ((AVGIncome.AVGIncomePrice - COALESCE (MIFloat_Price.ValueData,0)) / NULLIF(MIFloat_Price.ValueData,0)) < - 0.10 THEN 14211071 --11315967--15781886 --16296444  ----светло красная -- светло-розовая - подорожала
                             WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
@@ -3001,7 +3001,7 @@ BEGIN
                   WHEN tmpMI.JuridicalName ILIKE '%А+%' AND tmpMI.JuridicalId = 410822
                     OR (tmpMI.JuridicalName ILIKE '%ANC%' OR tmpMI.JuridicalName ILIKE '%PL/%') AND tmpMI.JuridicalId = 59612
                     OR tmpMI.JuridicalName ILIKE '%АйВи%' OR tmpMI.JuridicalName ILIKE '%АЙВІ%'
-                    OR tmpMI.GoodsName ILIKE '%БДЗ%'  THEN zc_Color_Red()    --красный заказывать нельзя
+                    OR tmpMI.GoodsName ILIKE '%БДЗ%'  THEN zfCalc_Color (147, 112, 219)     --красный заказывать нельзя
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10 THEN 12319924    --светло - салатовая- цена подешевела
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) < - 0.10 THEN 14211071 --11315967--15781886 --16296444  --светло красная -- светло-розовая - подорожала
                   WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
@@ -3040,7 +3040,7 @@ BEGIN
                             WHEN tmpMI.JuridicalName ILIKE '%А+%' AND tmpMI.JuridicalId = 410822
                               OR (tmpMI.JuridicalName ILIKE '%ANC%' OR tmpMI.JuridicalName ILIKE '%PL/%') AND tmpMI.JuridicalId = 59612
                               OR tmpMI.JuridicalName ILIKE '%АйВи%' OR tmpMI.JuridicalName ILIKE '%АЙВІ%'
-                              OR tmpMI.GoodsName ILIKE '%БДЗ%'  THEN zc_Color_Red()    --красный заказывать нельзя
+                              OR tmpMI.GoodsName ILIKE '%БДЗ%'  THEN zfCalc_Color (147, 112, 219)     --красный заказывать нельзя
                             WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10 THEN 12319924    --светло - салатовая- цена подешевела
                             WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) < - 0.10 THEN 14211071 --11315967--15781886 --16296444  --светло красная -- светло-розовая - подорожала
                             WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
@@ -4431,7 +4431,7 @@ BEGIN
                   WHEN tmpMI.JuridicalName ILIKE '%А+%' AND tmpMI.JuridicalId = 410822
                     OR (tmpMI.JuridicalName ILIKE '%ANC%' OR tmpMI.JuridicalName ILIKE '%PL/%') AND tmpMI.JuridicalId = 59612
                     OR tmpMI.JuridicalName ILIKE '%АйВи%' OR tmpMI.JuridicalName ILIKE '%АЙВІ%'
-                    OR tmpMI.GoodsName ILIKE '%БДЗ%' THEN zc_Color_Red()    --красный заказывать нельзя
+                    OR tmpMI.GoodsName ILIKE '%БДЗ%' THEN zfCalc_Color (147, 112, 219)     --красный заказывать нельзя
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10 THEN 12319924    --светло - салатовая- цена подешевела
                   WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) < - 0.10 THEN 14211071 --11315967--15781886 --16296444  --светло красная -- светло-розовая - подорожала
                   WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый
@@ -4470,7 +4470,7 @@ BEGIN
                         WHEN tmpMI.JuridicalName ILIKE '%А+%' AND tmpMI.JuridicalId = 410822
                           OR (tmpMI.JuridicalName ILIKE '%ANC%' OR tmpMI.JuridicalName ILIKE '%PL/%') AND tmpMI.JuridicalId = 59612
                           OR tmpMI.JuridicalName ILIKE '%АйВи%' OR tmpMI.JuridicalName ILIKE '%АЙВІ%'
-                          OR tmpMI.GoodsName ILIKE '%БДЗ%' THEN zc_Color_Red()    --красный заказывать нельзя
+                          OR tmpMI.GoodsName ILIKE '%БДЗ%' THEN zfCalc_Color (147, 112, 219)     --красный заказывать нельзя
                         WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) > 0.10 THEN 12319924    --светло - салатовая- цена подешевела
                         WHEN ((AVGIncome.AVGIncomePrice - COALESCE (tmpMI.Price,0)) / NULLIF(tmpMI.Price,0)) < - 0.10 THEN 14211071 --11315967--15781886 --16296444  --светло красная -- светло-розовая - подорожала
                         WHEN COALESCE(OrderSheduleListToday.DOW,  0) <> 0 THEN 12910591      -- бледно желтый

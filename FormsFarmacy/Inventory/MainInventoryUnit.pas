@@ -73,9 +73,6 @@ type
     edOperDate: TcxDateEdit;
     edUnitName: TcxTextEdit;
     ChildIsSend: TcxGridDBColumn;
-    actCloseAll: TAction;
-    N8: TMenuItem;
-    N9: TMenuItem;
     N10: TMenuItem;
     actExit: TAction;
     tsInfo: TcxTabSheet;
@@ -92,12 +89,14 @@ type
     cxGridDBTableView1: TcxGridDBTableView;
     InfoGoodsCode: TcxGridDBColumn;
     InfoGoodsName: TcxGridDBColumn;
-    InfoAmount: TcxGridDBColumn;
     InfoRemains: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     actGoodsInventory: TOpenChoiceForm;
     cxButton1: TcxButton;
     actSetFocusededBarCode: TdsdSetFocusedAction;
+    DBViewAddOnInfo: TdsdDBViewAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
+    InfoAmount: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);
@@ -110,6 +109,8 @@ type
     procedure actExitExecute(Sender: TObject);
     procedure actInfoInventExecute(Sender: TObject);
     procedure edBarCodeDblClick(Sender: TObject);
+  protected
+    procedure FormClose(Sender: TObject; var Action: TCloseAction); override;
   private
     { Private declarations }
 
@@ -129,6 +130,20 @@ implementation
 {$R *.dfm}
 
 uses UnilWin, CommonData, IniUtils, Splash, StorageSQLite;
+
+procedure TMainInventoryForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  if  PageControl.ActivePage = tsStart then
+  begin
+    if MessageDlg('Закрыть приложение?', mtInformation, mbOKCancel, 0) <> mrOk then Action := caNone;
+  end else
+  begin
+    Action := caNone;
+    PageControl.ActivePage := tsStart;
+  end;
+
+  if Action <> caNone then inherited;
+end;
 
 procedure TMainInventoryForm.actCloseAllExecute(Sender: TObject);
 begin
@@ -227,7 +242,7 @@ end;
 
 procedure TMainInventoryForm.actExitExecute(Sender: TObject);
 begin
-  if MessageDlg('Закрыть приложение?', mtInformation, mbOKCancel, 0) = mrOk then Close;
+  Close;
 end;
 
 procedure TMainInventoryForm.actInfoInventExecute(Sender: TObject);

@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Proficit TFloat, ProficitSumm TFloat
              , ExpirationDate TDateTime, Comment TVarChar
              , IDSend Integer, InvNumberSend TVarChar, OperDateSend TDateTime
+             , FormName TVarChar
              , Color_calc Integer
              )
 AS
@@ -134,6 +135,10 @@ BEGIN
                                              , MovementSend.ID                                                     AS IDSend
                                              , MovementSend.InvNumber                                              AS InvNumberSend
                                              , MovementSend.OperDate                                               AS OperDateSend
+                                             , CASE WHEN MovementSend.DescId = zc_Movement_Check()
+                                                    THEN 'TCheckForm'
+                                                    ELSE 'TSendForm' END::TVarChar                                 AS  FormName
+
                                         FROM tmpMovementItem AS  MovementItem
 
                                              LEFT JOIN REMAINS  ON REMAINS.GoodsId = MovementItem.GoodsId
@@ -205,9 +210,9 @@ BEGIN
               , MovementItem.IDSend                                                 AS IDSend
               , MovementItem.InvNumberSend                                          AS InvNumberSend
               , MovementItem.OperDateSend                                           AS OperDateSend
-
+              , MovementItem.FormName                                               AS FormName
+              
               , CASE WHEN COALESCE (MovementItem.IDSend , 0) = 0 THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_calc
-
 
            FROM tmpMovementItemAll AS MovementItem
 
@@ -325,6 +330,10 @@ BEGIN
                                              , MovementSend.ID                                                     AS IDSend
                                              , MovementSend.InvNumber                                              AS InvNumberSend
                                              , MovementSend.OperDate                                               AS OperDateSend
+                                             , CASE WHEN MovementSend.DescId = zc_Movement_Check()
+                                                    THEN 'TCheckForm'
+                                                    ELSE 'TSendForm' END::TVarChar                                 AS  FormName
+
                                         FROM tmpMovementItem AS  MovementItem
 
                                              LEFT JOIN MovementItemString AS MIString_Comment
@@ -401,6 +410,7 @@ BEGIN
               , MovementItem.IDSend                                                 AS IDSend
               , MovementItem.InvNumberSend                                          AS InvNumberSend
               , MovementItem.OperDateSend                                           AS OperDateSend
+              , MovementItem.FormName                                               AS FormName
 
               , CASE WHEN COALESCE (MovementItem.IDSend , 0) = 0 THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_calc
 
@@ -528,6 +538,10 @@ BEGIN
                                              , MovementSend.ID                                                     AS IDSend
                                              , MovementSend.InvNumber                                              AS InvNumberSend
                                              , MovementSend.OperDate                                               AS OperDateSend
+                                             , CASE WHEN MovementSend.DescId = zc_Movement_Check()
+                                                    THEN 'TCheckForm'
+                                                    ELSE 'TSendForm' END::TVarChar                                 AS  FormName
+
                                         FROM tmpMovementItem AS  MovementItem
 
                                              LEFT JOIN REMAINS  ON REMAINS.GoodsId = MovementItem.GoodsId
@@ -602,6 +616,7 @@ BEGIN
               , MovementItem.IDSend                                                 AS IDSend
               , MovementItem.InvNumberSend                                          AS InvNumberSend
               , MovementItem.OperDateSend                                           AS OperDateSend
+              , MovementItem.FormName                                               AS FormName
 
               , CASE WHEN COALESCE (MovementItem.IDSend , 0) = 0 THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_calc
 
@@ -641,4 +656,5 @@ ALTER FUNCTION gpSelect_MovementItem_TechnicalRediscount (Integer, Boolean, Bool
 -- тест
 -- select * from gpSelect_MovementItem_TechnicalRediscount(inMovementId := 17974020     , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
 
-select * from gpSelect_MovementItem_TechnicalRediscount(inMovementId := 19936463 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+
+select * from gpSelect_MovementItem_TechnicalRediscount(inMovementId := 31682519 , inShowAll := 'False' , inIsErased := 'True' ,  inSession := '3');

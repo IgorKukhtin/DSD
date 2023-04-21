@@ -5634,8 +5634,10 @@ begin
 
   // Создать XML
   UAECMR := UAECMRXML.NewUAECMR;
-  //
-//  UAECMR.SIGN_ENVELOPE.STATE := 'ORIGINATOR_SIGNED';
+  // Технічні дані
+  UAECMR.ECMR.ExchangedDocumentContext.SpecifiedTransactionID := '0';
+  UAECMR.ECMR.ExchangedDocumentContext.BusinessProcessSpecifiedDocumentContextParameter.ID := 'urn:ua:e-transport.gov.ua:ettn:01';
+  UAECMR.ECMR.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameter.ID := 'urn:ua:e-transport.gov.ua:ettn:01:generic:001';
 //
 //  UAECMR.SIGN_ENVELOPE.DECLARHEAD.C_DOC := 'T01';
 //  UAECMR.SIGN_ENVELOPE.DECLARHEAD.C_DOC_SUB := '001';
@@ -5723,7 +5725,7 @@ begin
   //FOrderParam.Value := HeaderDataSet.FieldByName('DealId').AsString;
 
   Doc_Uuid := '';
-  PostTTN('9864065749080', cXML, Doc_Uuid)
+//  PostTTN('9864065749080', cXML, Doc_Uuid)
 
 end;
 

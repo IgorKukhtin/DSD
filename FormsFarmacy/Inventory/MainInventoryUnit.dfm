@@ -2,19 +2,20 @@ inherited MainInventoryForm: TMainInventoryForm
   Action = actExit
   Caption = #1042#1099#1093#1086#1076
   ClientHeight = 397
-  ClientWidth = 842
+  ClientWidth = 841
   Menu = MainMenu
   OnClick = actExitExecute
+  OnClose = nil
   OnCreate = FormCreate
   OnDestroy = ParentFormDestroy
-  ExplicitWidth = 858
+  ExplicitWidth = 857
   ExplicitHeight = 456
   PixelsPerInch = 96
   TextHeight = 13
   object Panel3: TPanel [0]
     Left = 0
     Top = 0
-    Width = 842
+    Width = 841
     Height = 397
     Align = alClient
     Caption = 'Panel3'
@@ -23,7 +24,7 @@ inherited MainInventoryForm: TMainInventoryForm
     object PageControl: TcxPageControl
       Left = 1
       Top = 1
-      Width = 840
+      Width = 839
       Height = 395
       Align = alClient
       BiDiMode = bdLeftToRight
@@ -33,13 +34,11 @@ inherited MainInventoryForm: TMainInventoryForm
       Properties.CustomButtons.Buttons = <>
       ClientRectBottom = 391
       ClientRectLeft = 4
-      ClientRectRight = 836
+      ClientRectRight = 835
       ClientRectTop = 24
       object tsStart: TcxTabSheet
         Caption = #1057#1090#1072#1088#1090#1086#1074#1072#1103' '#1089#1090#1088#1072#1085#1080#1094#1072
         ImageIndex = 0
-        ExplicitLeft = 3
-        ExplicitTop = 25
       end
       object tsInventory: TcxTabSheet
         Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -47,7 +46,7 @@ inherited MainInventoryForm: TMainInventoryForm
         object cxGridChild: TcxGrid
           Left = 0
           Top = 65
-          Width = 832
+          Width = 831
           Height = 302
           Align = alClient
           TabOrder = 0
@@ -55,66 +54,8 @@ inherited MainInventoryForm: TMainInventoryForm
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
             DataController.Filter.Options = [fcoCaseInsensitive]
-            DataController.Summary.DefaultGroupSummaryItems = <
-              item
-                Kind = skSum
-                Position = spFooter
-              end
-              item
-                Kind = skSum
-                Position = spFooter
-              end
-              item
-                Kind = skSum
-                Position = spFooter
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-                Column = ChildAmount
-              end>
+            DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <
-              item
-                Kind = skSum
-              end
-              item
-                Kind = skSum
-              end
-              item
-                Kind = skSum
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
               item
                 Format = #1057#1090#1088#1086#1082': ,0'
                 Kind = skCount
@@ -139,6 +80,10 @@ inherited MainInventoryForm: TMainInventoryForm
             OptionsView.GroupByBox = False
             OptionsView.HeaderAutoHeight = True
             OptionsView.Indicator = True
+            Styles.Content = dmMain.cxContentStyle
+            Styles.Footer = dmMain.cxFooterStyle
+            Styles.Header = dmMain.cxHeaderStyle
+            Styles.Inactive = dmMain.cxSelection
             object ChildIsSend: TcxGridDBColumn
               Caption = #1054#1090#1087#1088'.'
               DataBinding.FieldName = 'IsSend'
@@ -210,7 +155,7 @@ inherited MainInventoryForm: TMainInventoryForm
         object Panel1: TPanel
           Left = 0
           Top = 0
-          Width = 832
+          Width = 831
           Height = 65
           Align = alTop
           ShowCaption = False
@@ -321,7 +266,7 @@ inherited MainInventoryForm: TMainInventoryForm
         object Panel2: TPanel
           Left = 0
           Top = 0
-          Width = 832
+          Width = 831
           Height = 41
           Align = alTop
           ShowCaption = False
@@ -352,7 +297,7 @@ inherited MainInventoryForm: TMainInventoryForm
         object cxGrid1: TcxGrid
           Left = 0
           Top = 41
-          Width = 832
+          Width = 831
           Height = 326
           Align = alClient
           TabOrder = 1
@@ -360,80 +305,22 @@ inherited MainInventoryForm: TMainInventoryForm
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = InfoDS
             DataController.Filter.Options = [fcoCaseInsensitive]
-            DataController.Summary.DefaultGroupSummaryItems = <
-              item
-                Kind = skSum
-                Position = spFooter
-              end
-              item
-                Kind = skSum
-                Position = spFooter
-              end
-              item
-                Kind = skSum
-                Position = spFooter
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-                Column = InfoAmount
-              end>
+            DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <
-              item
-                Kind = skSum
-              end
-              item
-                Kind = skSum
-              end
-              item
-                Kind = skSum
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
-              item
-                Format = ',0.00'
-                Kind = skSum
-              end
               item
                 Format = #1057#1090#1088#1086#1082': ,0'
                 Kind = skCount
                 Column = InfoGoodsName
               end
               item
-                Format = ',0.####'
+                Format = ',0.####;-,0.####; ;'
                 Kind = skSum
-                Column = InfoAmount
+                Column = InfoRemains
               end
               item
                 Format = ',0.####;-,0.####; ;'
                 Kind = skSum
-                Column = InfoRemains
+                Column = InfoAmount
               end>
             DataController.Summary.SummaryGroups = <>
             OptionsBehavior.GoToNextCellOnEnter = True
@@ -449,6 +336,10 @@ inherited MainInventoryForm: TMainInventoryForm
             OptionsView.GroupByBox = False
             OptionsView.HeaderAutoHeight = True
             OptionsView.Indicator = True
+            Styles.Content = dmMain.cxContentStyle
+            Styles.Footer = dmMain.cxFooterStyle
+            Styles.Header = dmMain.cxHeaderStyle
+            Styles.Inactive = dmMain.cxSelection
             object InfoGoodsCode: TcxGridDBColumn
               Caption = #1050#1086#1076
               DataBinding.FieldName = 'GoodsCode'
@@ -474,14 +365,14 @@ inherited MainInventoryForm: TMainInventoryForm
               Width = 140
             end
             object InfoAmount: TcxGridDBColumn
-              Caption = #1050#1086#1083'-'#1074#1086
+              Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
               DataBinding.FieldName = 'Amount'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 142
+              Width = 140
             end
           end
           object cxGridLevel1: TcxGridLevel
@@ -604,11 +495,6 @@ inherited MainInventoryForm: TMainInventoryForm
       Caption = #1055#1088#1086#1076#1086#1083#1078#1080#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1077' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
       OnExecute = actContinueInventExecute
     end
-    object actCloseAll: TAction
-      Category = 'DSDLib'
-      Caption = #1047#1072#1082#1088#1099#1090#1100' '#1074#1089#1077' '#1074#1082#1083#1072#1076#1082#1080
-      OnExecute = actCloseAllExecute
-    end
     object actExit: TAction
       Category = 'DSDLib'
       Caption = #1042#1099#1093#1086#1076
@@ -685,12 +571,6 @@ inherited MainInventoryForm: TMainInventoryForm
       end
       object N11: TMenuItem
         Action = actInfoInvent
-      end
-      object N8: TMenuItem
-        Caption = '-'
-      end
-      object N9: TMenuItem
-        Action = actCloseAll
       end
     end
     object N1: TMenuItem
@@ -813,10 +693,18 @@ inherited MainInventoryForm: TMainInventoryForm
       end>
     Params = <
       item
-        Name = 'inId'
+        Name = 'inInventory'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -828,13 +716,15 @@ inherited MainInventoryForm: TMainInventoryForm
           '     , G.Code           AS GoodsCode'
           '     , G.Name           AS GoodsName'
           '     , R.Remains        AS Remains'
-          '     , SUM(IC.Amount)   AS Amount'
-          'FROM Inventory AS I'
-          '     LEFT JOIN InventoryChild AS IC ON IC.Inventory = I.Id'
-          '     LEFT JOIN Goods AS G ON G.Id = IC.GoodsId'
-          '     LEFT JOIN Remains AS R ON R.GoodsId = IC.GoodsId'
-          '                           AND R.UnitId = I.UnitId '
-          'WHERE I.Id = :inId'
+          '     , CAST(COALESCE (SUM(IC.Amount), 0.0) as Float)  AS Amount'
+          'FROM  Goods AS G'
+          
+            '     LEFT JOIN InventoryChild AS IC ON IC.Inventory = :inInvento' +
+            'ry'
+          '                                   AND IC.GoodsId = G.Id '
+          '     LEFT JOIN Remains AS R ON R.GoodsId = G.id'
+          '                           AND R.UnitId =  :inUnitId '
+          'WHERE COALESCE  (R.Remains, IC.Amount) <> 0'
           'GROUP BY G.Id'
           '       , G.Code'
           '       , G.Name '
@@ -843,5 +733,37 @@ inherited MainInventoryForm: TMainInventoryForm
       end>
     Left = 461
     Top = 113
+  end
+  object DBViewAddOnInfo: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 701
+    Top = 241
+  end
+  object DBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridChildDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 549
+    Top = 241
   end
 end

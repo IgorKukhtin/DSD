@@ -24,7 +24,6 @@ type
     FNoHelpFile: Boolean;
     FcxEditRepository: TcxEditRepository;
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure SetSender(const Value: TComponent);
     property FormSender: TComponent read FSender write SetSender;
@@ -40,6 +39,7 @@ type
       Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
       var AProperties: TcxCustomEditProperties);
   protected
+    procedure FormClose(Sender: TObject; var Action: TCloseAction); virtual;
     procedure Loaded; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure Activate; override;
