@@ -8,7 +8,18 @@ uses
   ExtCtrls, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus,
   dxSkinsCore, dxSkinsDefaultPainters, cxControls, cxContainer, cxEdit,
   cxTextEdit, cxCurrencyEdit, dsdDB, Vcl.ActnList, dsdAction, cxPropertiesStore,
-  dsdAddOn, cxButtons;
+  dsdAddOn, cxButtons, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, Vcl.ComCtrls, dxCore, cxDateUtils, cxMaskEdit,
+  cxDropDownEdit, cxCalendar;
 
 type
   TDialogPrintForm = class(TAncestorDialogScaleForm)
@@ -26,6 +37,9 @@ type
     cbPrintPreview: TCheckBox;
     cbPrintPackGross: TCheckBox;
     cbPrintDiffOrder: TCheckBox;
+    PanelDateValue: TPanel;
+    LabelDateValue: TLabel;
+    DateValueEdit: TcxDateEdit;
     procedure cbPrintTransportClick(Sender: TObject);
     procedure cbPrintQualityClick(Sender: TObject);
     procedure cbPrintTaxClick(Sender: TObject);
@@ -43,7 +57,7 @@ var
 
 implementation
 {$R *.dfm}
-uses UtilScale;
+uses UtilScale, DMMainScale;
 {------------------------------------------------------------------------------}
 function TDialogPrintForm.Execute(MovementDescId:Integer;CountMovement:Integer; isMovement, isAccount, isTransport, isQuality, isPack, isPackGross, isSpec, isTax : Boolean): Boolean; //Проверка корректного ввода в Edit
 begin
@@ -75,6 +89,9 @@ begin
      then PrintCountEdit.Text:=IntToStr(CountMovement)
      else PrintCountEdit.Text:=GetArrayList_Value_byName(Default_Array,'PrintCount');
      //
+     ParamsMovement.ParamByName('isOperDatePartner').AsBoolean:= DMMainScaleForm.gpGet_Scale_Movement_OperDatePartner(ParamsMovement);
+     DateValueEdit.Text:= DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime);
+     //
      ActiveControl:=PrintCountEdit;
      //
      Result:=(ShowModal=mrOk);
@@ -82,11 +99,44 @@ end;
 {------------------------------------------------------------------------------}
 function TDialogPrintForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
+     Result:=false;
+     //
+     try ParamsMovement.ParamByName('OperDatePartner').AsDateTime:= StrToDate(DateValueEdit.Text)
+     except if ParamsMovement.ParamByName('isOperDatePartner').AsBoolean = true
+            then begin
+                 ShowMessage('Ошибка.Дата у покупателя сформирована неверно.');
+                 exit;
+            end
+            // еще раз
+            else ParamsMovement.ParamByName('isOperDatePartner').AsBoolean:= DMMainScaleForm.gpGet_Scale_Movement_OperDatePartner(ParamsMovement);
+     end;
+     //
+     if (ParamsMovement.ParamByName('OperDatePartner').AsDateTime < ParamsMovement.ParamByName('OperDate').AsDateTime)
+        and (ParamsMovement.ParamByName('MovementId_find').AsInteger = 0)
+     then begin
+                 ShowMessage('Ошибка.Дата у покупателя = <'+DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime)+'> не может быть раньше даты документа = <'+DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime)+'>.');
+                 exit;
+     end;
+     if ParamsMovement.ParamByName('OperDatePartner').AsDateTime > 14 + ParamsMovement.ParamByName('OperDate').AsDateTime
+     then begin
+                 ShowMessage('Ошибка.Дата у покупателя = <'+DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime)+'> не может быть позже даты документа = <'+DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime)+'> более чем на 14 дней.');
+                 exit;
+     end;
+     //
      try Result:=(StrToInt(PrintCountEdit.Text)>0) and (StrToInt(PrintCountEdit.Text)<11);
      except Result:=false;
      end;
      //
-     if not Result then ShowMessage('Ошибка.Значение <Кол-во копий> не попадает в диапазон от <1> до <10>.')
+     if not Result then ShowMessage('Ошибка.Значение <Кол-во копий> не попадает в диапазон от <1> до <10>.');
+     //
+     //
+     if ParamsMovement.ParamByName('isOperDatePartner').AsBoolean = true
+     then
+         if MessageDlg('Документ будет сформирован'+#10+#13+'с Датой покупателя =  <'+DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime)+'>.'+#10+#13+'Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
+         then begin
+            Result:=false;
+            exit;
+          end;
 end;
 {------------------------------------------------------------------------------}
 procedure TDialogPrintForm.cbPrintTransportClick(Sender: TObject);

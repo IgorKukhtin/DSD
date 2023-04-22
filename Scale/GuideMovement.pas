@@ -446,6 +446,10 @@ end;
 procedure TGuideMovementForm.actChangeOperDatePartnerExecute(Sender: TObject);
 var execParams:TParams;
 begin
+    ShowMessage('Ошибка.Нет прав.');
+    exit;
+    //
+    //
     execParams:=nil;
     ParamAddValue(execParams,'inMovementId',ftInteger,CDS.FieldByName('MovementId_parent').AsInteger);
     ParamAddValue(execParams,'inDescCode',ftString,'zc_MovementDate_OperDatePartner');

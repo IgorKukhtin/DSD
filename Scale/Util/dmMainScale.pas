@@ -37,6 +37,7 @@ type
     function gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
     // Scale
     function gpGet_Scale_Movement_findOldPeriod(var execParamsMovement:TParams): Boolean;
+    function gpGet_Scale_Movement_OperDatePartner(var execParamsMovement:TParams): Boolean;
     // !!!Scale + ScaleCeh!!!
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
     function gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
@@ -300,6 +301,35 @@ begin
        end;}
     end;
 end;
+
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_Movement_OperDatePartner(var execParamsMovement:TParams): Boolean;
+begin
+    Result:=false;
+    //
+    if execParamsMovement.ParamByName('MovementId').AsInteger<>0 then
+    with spSelect do begin
+       StoredProcName:='gpGet_Scale_OperDatePartner';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+       Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
+       Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
+       Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inIsDocInsert', ftBoolean, ptInput, execParamsMovement.ParamByName('isDocInsert').AsBoolean);
+       Params.AddParam('inIsOldPeriod', ftBoolean, ptInput, execParamsMovement.ParamByName('isOldPeriod').AsBoolean);
+       //try
+         Execute;
+         Result:=DataSet.FieldByName('isDialog').asBoolean;
+         execParamsMovement.ParamByName('OperDatePartner').AsDateTime:=DataSet.FieldByName('OperDatePartner').AsDateTime;
+         execParamsMovement.ParamByName('MovementId_find').AsInteger:=DataSet.FieldByName('MovementId_find').AsInteger;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpGet_Scale_Movement_checkId');
+       end;}
+    end;
+end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
 begin
@@ -506,6 +536,7 @@ begin
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inOperDatePartner', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDatePartner').AsDateTime);
        Params.AddParam('inIsDocInsert', ftBoolean, ptInput, execParamsMovement.ParamByName('isDocInsert').AsBoolean);
        Params.AddParam('inIsOldPeriod', ftBoolean, ptInput, execParamsMovement.ParamByName('isOldPeriod').AsBoolean);
        Params.AddParam('inIP', ftString, ptInput, SettingMain.IP_str);

@@ -1,15 +1,15 @@
 inherited DialogPrintForm: TDialogPrintForm
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1077#1095#1072#1090#1080
-  ClientHeight = 170
+  ClientHeight = 233
   ClientWidth = 301
   OldCreateOrder = True
   Position = poScreenCenter
   ExplicitWidth = 317
-  ExplicitHeight = 205
+  ExplicitHeight = 272
   PixelsPerInch = 96
   TextHeight = 14
   inherited bbPanel: TPanel
-    Top = 129
+    Top = 192
     Width = 301
     ExplicitTop = 129
     ExplicitWidth = 301
@@ -28,12 +28,13 @@ inherited DialogPrintForm: TDialogPrintForm
   end
   object PrintPanel: TPanel
     Left = 0
-    Top = 100
+    Top = 113
     Width = 301
     Height = 29
-    Align = alBottom
+    Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 189
     object PrintCountLabel: TLabel
       Left = 160
       Top = 5
@@ -77,8 +78,8 @@ inherited DialogPrintForm: TDialogPrintForm
     Left = 0
     Top = 0
     Width = 301
-    Height = 100
-    Align = alClient
+    Height = 113
+    Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
     object cbPrintMovement: TCheckBox
@@ -212,6 +213,44 @@ inherited DialogPrintForm: TDialogPrintForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 8
+    end
+  end
+  object PanelDateValue: TPanel
+    Left = 0
+    Top = 142
+    Width = 301
+    Height = 50
+    Align = alClient
+    BevelOuter = bvNone
+    TabOrder = 3
+    ExplicitLeft = 8
+    ExplicitTop = 8
+    ExplicitWidth = 237
+    ExplicitHeight = 49
+    object LabelDateValue: TLabel
+      Left = 0
+      Top = 0
+      Width = 101
+      Height = 14
+      Align = alTop
+      Alignment = taCenter
+      Caption = #1044#1072#1090#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clNavy
+      Font.Height = -11
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object DateValueEdit: TcxDateEdit
+      Left = 102
+      Top = 20
+      EditValue = 41640d
+      Properties.DateButtons = [btnToday]
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 0
+      Width = 95
     end
   end
 end
