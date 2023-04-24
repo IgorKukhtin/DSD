@@ -233,6 +233,15 @@ BEGIN
        AND COALESCE (tmpMI.SummAvanceRecalc,0) = 0     
      ;
      
+     --
+     -- сохранили свойство <Протокол Дата/время начало>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartBegin(), inMovementId, inStartDate);
+     -- сохранили свойство <Протокол Дата/время окончание>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), inMovementId, inEndDate);
+     
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+     
      if (vbUserId = 5 OR vbUserId = 9457) AND 1=1
 then
     RAISE EXCEPTION 'Admin - Errr _end - <%>', (SELECT COUNT(*) FROM tmpData WHERE tmpData.SumAmount >= vbHourAvance);

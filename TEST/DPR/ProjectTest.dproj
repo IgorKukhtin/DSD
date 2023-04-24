@@ -1450,10 +1450,6 @@
 				<Form>SaveDocumentTo1CForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\PersonalServiceJournal.pas">
-				<Form>PersonalServiceJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PersonalServiceList.pas">
 				<Form>PersonalServiceListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -4965,8 +4961,11 @@
 				<Form>Report_JuridicalSold_BranchForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\SOURCE\EDI\DeclarETTNXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\UAECMRXML.pas"/>
+			<DCCReference Include="..\..\Forms\Document\PersonalServiceJournal.pas">
+				<Form>PersonalServiceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
