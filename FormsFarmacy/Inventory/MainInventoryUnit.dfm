@@ -30,7 +30,7 @@ inherited MainInventoryForm: TMainInventoryForm
       BiDiMode = bdLeftToRight
       ParentBiDiMode = False
       TabOrder = 0
-      Properties.ActivePage = tsStart
+      Properties.ActivePage = tsInfo
       Properties.CustomButtons.Buttons = <>
       ClientRectBottom = 391
       ClientRectLeft = 4
@@ -67,6 +67,7 @@ inherited MainInventoryForm: TMainInventoryForm
                 Column = ChildAmount
               end>
             DataController.Summary.SummaryGroups = <>
+            Images = dmMain.SortImageList
             OptionsBehavior.GoToNextCellOnEnter = True
             OptionsBehavior.FocusCellOnCycle = True
             OptionsCustomize.ColumnHiding = True
@@ -323,6 +324,7 @@ inherited MainInventoryForm: TMainInventoryForm
                 Column = InfoAmount
               end>
             DataController.Summary.SummaryGroups = <>
+            Images = dmMain.SortImageList
             OptionsBehavior.GoToNextCellOnEnter = True
             OptionsBehavior.FocusCellOnCycle = True
             OptionsCustomize.ColumnHiding = True
@@ -739,6 +741,7 @@ inherited MainInventoryForm: TMainInventoryForm
     View = cxGridDBTableView1
     OnDblClickActionList = <>
     ActionItemList = <>
+    SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
     ColorRuleList = <>
@@ -748,13 +751,14 @@ inherited MainInventoryForm: TMainInventoryForm
     ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 701
-    Top = 241
+    Top = 249
   end
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridChildDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
+    SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
     ColorRuleList = <>

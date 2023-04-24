@@ -48,7 +48,7 @@ BEGIN
       RETURN;
     END IF;
 
-    IF vbStatusId = zc_Enum_Status_Complete()
+    IF vbStatusId <> zc_Enum_Status_UnComplete()
     THEN
       vbisAddTR := True;
     ELSE

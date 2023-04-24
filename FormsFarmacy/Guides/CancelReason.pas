@@ -65,6 +65,7 @@ type
     N4: TMenuItem;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

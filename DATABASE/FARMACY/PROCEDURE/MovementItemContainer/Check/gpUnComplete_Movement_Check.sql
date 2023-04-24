@@ -173,6 +173,15 @@ BEGIN
       PERFORM gpInsertUpdate_MovementItem_WagesIlliquidAssetsRepayment (inMovementID := inMovementId, inSession:= zfCalc_UserAdmin());
     END IF;
 
+    -- Пропишем в ТП для таблеток               
+    IF EXISTS(SELECT * FROM MovementLinkObject AS MovementLinkObject_CheckSourceKind
+              WHERE MovementLinkObject_CheckSourceKind.MovementId =  inMovementId
+                AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
+                AND MovementLinkObject_CheckSourceKind.ObjectId = zc_Enum_CheckSourceKind_Tabletki())
+    THEN
+      PERFORM gpSelect_MovementCheck_TechnicalRediscount (inMovementId, inSession);
+    END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

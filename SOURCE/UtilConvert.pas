@@ -2,7 +2,7 @@ unit UtilConvert;
 
 interface
 
-uses SysUtils, DB;
+uses System.SysUtils, Winapi.Windows, DB;
 
    {функции конвертации числа в строку}
    function gfIntToStr(const inInt: integer): string; //tested
@@ -48,6 +48,8 @@ uses SysUtils, DB;
    function gfStringToDataType(inType: String): TFieldType;  //tested
    // Конвертируем строку в дату
    function gfStrFormatToDate (DateStr, Format: string): TDateTime;
+   // Конвертируем дату в строку с часовым поясом
+   function gfFormatToDateTime (ADateTime: TDateTime): string;
    // Конвертация в Base64
    function EncodeBase64(const Input: TBytes): string;
 const
@@ -486,6 +488,15 @@ begin
      //  E.FunctionStack:=cProcName; raise;
  //   end;{on}
   end{except}
+end;
+{--------------------------------------------------------------------------------------------------}
+function gfFormatToDateTime (ADateTime: TDateTime): string;
+var lp: TTimeZoneInformation;
+begin
+  GetTimeZoneInformation(lp);
+  Result := FormatDateTime('yyyy-mm-dd"T"hh:nn:ss', ADateTime) +
+            FormatFloat('+00', - Round(lp.Bias / 60)) + ':' +
+            FormatFloat('00', Round(Abs(lp.Bias) / 60 * 100) mod 100);
 end;
 {--------------------------------------------------------------------------------------------------}
 function EncodeBase64(const Input: TBytes): string;

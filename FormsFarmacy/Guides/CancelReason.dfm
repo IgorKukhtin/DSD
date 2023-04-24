@@ -14,13 +14,14 @@ object CancelReasonForm: TCancelReasonForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 27
     Width = 544
-    Height = 318
+    Height = 317
     Align = alClient
     PopupMenu = pmGrid
     TabOrder = 0
@@ -104,7 +105,7 @@ object CancelReasonForm: TCancelReasonForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -15
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -123,7 +124,7 @@ object CancelReasonForm: TCancelReasonForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -404,7 +405,15 @@ object CancelReasonForm: TCancelReasonForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 144
     Top = 152
@@ -451,10 +460,12 @@ object CancelReasonForm: TCancelReasonForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 48
     Top = 216
@@ -478,5 +489,15 @@ object CancelReasonForm: TCancelReasonForm
     object N4: TMenuItem
       Action = dsdSetUnErased
     end
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'MovementId'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end>
+    Left = 40
+    Top = 288
   end
 end

@@ -282,15 +282,20 @@ BEGIN
         PERFORM gpSetErased_Movement_Check (inMovementId, inSession);
       END IF;
       
-/*    ELSE
+    ELSEIF vbSourceKindId = zc_Enum_CheckSourceKind_Tabletki()
+    THEN
+    
       -- сохранили связь
       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKind(), inMovementId, zc_Enum_ConfirmedKind_Complete());
 
       -- сохранили свойство <Дата создания>
       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_UserConfirmedKind(), inMovementId, CURRENT_TIMESTAMP);
 
+      -- сохранили отметку <Автоматически подтвержден>
+      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), inMovementId, True);
+
       -- сохранили протокол
-      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE); */
+      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE); 
     END IF;
 
 END;
