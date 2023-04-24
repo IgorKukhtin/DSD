@@ -6785,7 +6785,7 @@ BEGIN
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 2, 
                                                                 inName          := 'inGoodsCode', 
-                                                                inParamType     := 'Integer', 
+                                                                inParamType     := 'ftInteger', 
                                                                 inUserParamName := 'Код товара',
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := lfGet_User_Session (vbUserId));
@@ -6797,7 +6797,6 @@ BEGIN
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := lfGet_User_Session (vbUserId));
-
 
     -- 3 должность
     vbImportTypeItemId := 0;

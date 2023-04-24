@@ -1425,7 +1425,8 @@ uses
   Report_Goods_byMovementSaleReturnDialog in '..\..\Forms\Report\Report_Goods_byMovementSaleReturnDialog.pas' {Report_Goods_byMovementSaleReturnDialogForm: TParentForm},
   StoreReal in '..\..\Forms\Document\StoreReal.pas' {StoreRealForm: TParentForm},
   Report_JuridicalSold_Branch in '..\..\Forms\Report\Report_JuridicalSold_Branch.pas' {Report_JuridicalSold_BranchForm: TParentForm},
-  DeclarETTNXML in '..\..\SOURCE\EDI\DeclarETTNXML.pas';
+  DeclarETTNXML in '..\..\SOURCE\EDI\DeclarETTNXML.pas',
+  UAECMRXML in '..\..\SOURCE\EDI\UAECMRXML.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}
