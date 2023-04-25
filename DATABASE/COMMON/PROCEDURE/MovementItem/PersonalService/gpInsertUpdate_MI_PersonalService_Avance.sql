@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_MI_PersonalService_Avance()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Avance (Integer, TDateTime, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Avance (Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Avance (Integer, TDateTime, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_Avance(
     IN inMovementId       Integer   , -- Ключ объекта <Документ>
     IN inStartDate        TDateTime , --
-    IN inEndDate          TDateTime , -- 
+    IN inEndDate          TDateTime , --                        
+    IN inServiceDate      TDateTime , -- Месяц начислений
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -237,8 +239,14 @@ BEGIN
      -- сохранили свойство <Протокол Дата/время начало>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartBegin(), inMovementId, inStartDate);
      -- сохранили свойство <Протокол Дата/время окончание>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), inMovementId, inEndDate);
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndBegin(), inMovementId, inEndDate); 
      
+     -- расчет - 1-ое число месяца
+     inServiceDate:= DATE_TRUNC ('MONTH', inServiceDate);
+     -- сохранили свойство <Месяц начислений>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), inMovementId, inServiceDate);
+
+
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
      
