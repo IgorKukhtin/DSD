@@ -167,9 +167,10 @@ BEGIN
                            , Object_Update.ValueData              AS UpdateName
                            , MovementDate_Update.ValueData        AS UpdateDate
                              -- ¹ ï/ï
-                           , ROW_NUMBER() OVER (PARTITION BY tmp.ContainerId ORDER BY tmp.MovementItemId DESC) AS Ord
+                         --, ROW_NUMBER() OVER (PARTITION BY tmp.ContainerId ORDER BY tmp.MovementItemId DESC) AS Ord
+                           , ROW_NUMBER() OVER (PARTITION BY Object_InfoMoneyDetail.ObjectCode ORDER BY tmp.MovementItemId DESC) AS Ord
 
-                      FROM (SELECT DISTINCT tmpMIContainer.MovementItemId, tmpMIContainer.ContainerId FROM tmpMIContainer
+                      FROM (SELECT DISTINCT tmpMIContainer.MovementItemId FROM tmpMIContainer
                            ) AS tmp
                             LEFT JOIN MovementItem ON MovementItem.Id = tmp.MovementItemId
 
