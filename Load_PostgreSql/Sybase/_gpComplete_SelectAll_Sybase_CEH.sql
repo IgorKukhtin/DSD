@@ -13,7 +13,7 @@ AS
 $BODY$
 BEGIN
 
-if EXTRACT (MONTH FROM inStartDate) IN (2) then return; end if;
+if EXTRACT (MONTH FROM inStartDate) IN (2, 3) then return; end if;
 
      RETURN QUERY 
      WITH tmpUnit AS (SELECT tmp.UnitId,       TRUE AS isMain FROM lfSelect_Object_Unit_byGroup (8446) AS tmp -- ЦЕХ колбаса+дел-сы
