@@ -343,7 +343,7 @@ object StaffListDataForm: TStaffListDataForm
     Top = 106
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 10
+    TabOrder = 9
     Width = 60
   end
   object cxLabel1: TcxLabel
@@ -410,6 +410,10 @@ object StaffListDataForm: TStaffListDataForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertSL'
+        end
         item
           Visible = True
           ItemName = 'bbEdit'

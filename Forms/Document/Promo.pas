@@ -544,6 +544,9 @@ type
     actInsUpPromoPlan_Child_calc: TdsdExecStoredProc;
     macInsUpPromoPlan_Child_calc: TMultiAction;
     bbInsUpPromoPlan_Child_calc: TdxBarButton;
+    cxGridDBTableViewCalcColumn1: TcxGridDBColumn;
+    calcChangePrice: TcxGridDBColumn;
+    ccChangePrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

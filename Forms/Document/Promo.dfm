@@ -4,7 +4,7 @@
   ClientHeight = 707
   ClientWidth = 1362
   ExplicitWidth = 1378
-  ExplicitHeight = 745
+  ExplicitHeight = 746
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -847,6 +847,9 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1367,6 +1370,18 @@
             HeaderAlignmentVert = vaCenter
             Width = 81
           end
+          object calcChangePrice: TcxGridDBColumn
+            Caption = #1057#1077#1073'-'#1090#1100' '#1088#1072#1089#1093#1086#1076#1099
+            DataBinding.FieldName = 'ChangePrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1077#1073'-'#1090#1100' '#1088#1072#1089#1093#1086#1076#1099', '#1075#1088#1085'/'#1082#1075
+            Options.Editing = False
+            Width = 70
+          end
           object calcTaxRetIn: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1075#1088#1085'/'#1082#1075
             DataBinding.FieldName = 'TaxRetIn'
@@ -1430,6 +1445,8 @@
             HeaderHint = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' '#1089' '#1053#1044#1057', '#1075#1088#1085
             Options.Editing = False
             Width = 108
+          end
+          object cxGridDBTableViewCalcColumn1: TcxGridDBColumn
           end
           object calcPrice_sh: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' '#1089' '#1053#1044#1057', '#1075#1088#1085' /'#1096#1090
@@ -1695,6 +1712,18 @@
             HeaderAlignmentVert = vaCenter
             Width = 81
           end
+          object ccChangePrice: TcxGridDBColumn
+            Caption = #1057#1077#1073'-'#1090#1100' '#1088#1072#1089#1093#1086#1076#1099
+            DataBinding.FieldName = 'ChangePrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1077#1073'-'#1090#1100' '#1088#1072#1089#1093#1086#1076#1099', '#1075#1088#1085'/'#1082#1075
+            Options.Editing = False
+            Width = 70
+          end
           object ссTaxRetIn: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1075#1088#1085'/'#1082#1075
             DataBinding.FieldName = 'TaxRetIn'
@@ -1899,6 +1928,9 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1992,6 +2024,9 @@
     object cxTabSheetMessage: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 6
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2141,6 +2176,9 @@
     object cxTabSheetPromoInvoice: TcxTabSheet
       Caption = '4.'#1057#1095#1077#1090#1072' '#1076#1083#1103' '#1072#1082#1094#1080#1080
       ImageIndex = 6
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GridPromoInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -2334,6 +2372,9 @@
     object cxTabSheetStat: TcxTabSheet
       Caption = '5.1.'#1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1087#1088#1086#1076#1072#1078
       ImageIndex = 5
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -2915,6 +2956,9 @@
     object cxTabSheetPlanSale: TcxTabSheet
       Caption = '5.2.'#1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1040#1082#1094#1080#1103
       ImageIndex = 7
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlanMaster: TcxGrid
         Left = 0
         Top = 0
@@ -3113,6 +3157,9 @@
     object cxTabSheetPlanProd: TcxTabSheet
       Caption = '5.3.'#1055#1083#1072#1085' '#1087#1088'-'#1074#1072' '#1076#1083#1103' '#1040#1082#1094#1080#1080
       ImageIndex = 8
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridPlanChild: TcxGrid
         Left = 0
         Top = 0
