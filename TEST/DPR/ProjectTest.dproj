@@ -4961,7 +4961,6 @@
 				<Form>Report_JuridicalSold_BranchForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\SOURCE\EDI\DeclarETTNXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\UAECMRXML.pas"/>
 			<DCCReference Include="..\..\Forms\Document\PersonalServiceJournal.pas">
 				<Form>PersonalServiceJournalForm</Form>

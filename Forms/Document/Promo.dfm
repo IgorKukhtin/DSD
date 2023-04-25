@@ -3,6 +3,8 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 707
   ClientWidth = 1362
+  ExplicitLeft = -485
+  ExplicitTop = -219
   ExplicitWidth = 1378
   ExplicitHeight = 746
   PixelsPerInch = 96
@@ -11,6 +13,7 @@
     Top = 139
     Width = 1362
     Height = 568
+    Properties.ActivePage = cxTabSheetCalc
     ExplicitTop = 139
     ExplicitWidth = 1362
     ExplicitHeight = 568
@@ -1446,8 +1449,6 @@
             Options.Editing = False
             Width = 108
           end
-          object cxGridDBTableViewCalcColumn1: TcxGridDBColumn
-          end
           object calcPrice_sh: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' '#1089' '#1053#1044#1057', '#1075#1088#1085' /'#1096#1090
             DataBinding.FieldName = 'Price_sh'
@@ -1602,6 +1603,9 @@
     object cxTabSheetCalc2: TcxTabSheet
       Caption = '2.2.'#1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
@@ -4303,6 +4307,9 @@
         end>
       Caption = 'actUpdateDataSetMessage'
       DataSource = MessageDS
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
     end
     object InsertRecord: TInsertRecord [23]
       Category = 'Goods'
