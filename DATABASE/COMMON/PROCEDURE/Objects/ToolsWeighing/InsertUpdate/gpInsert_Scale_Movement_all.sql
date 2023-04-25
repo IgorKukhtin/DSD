@@ -6,12 +6,14 @@
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_Movement_all (Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_Movement_all(
     IN inBranchCode          Integer   , --
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
+    IN inOperDatePartner     TDateTime , -- Дата документа
     IN inIsDocInsert         Boolean   , -- 
     IN inIsOldPeriod         Boolean   , -- 
     IN inIP                  TVarChar,
@@ -44,8 +46,6 @@ $BODY$
    DECLARE vbAmountDoc_err   TFloat;
 
    DECLARE vbOperDate_scale TDateTime;
-   DECLARE vbOperDatePartner_order TDateTime;
-   DECLARE vbOperDate_order TDateTime;
    DECLARE vbId_tmp Integer;
    DECLARE vbGoodsId_ReWork Integer;
 
@@ -373,20 +373,7 @@ BEGIN
 
      -- !!!запомнили!!
      vbOperDate_scale:= inOperDate;
-     -- !!!определяется OperDate заявки, !!!иначе inOperDate!!!
-     vbOperDate_order:= COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.DescId = zc_Movement_OrderExternal() AND Movement.Id = (SELECT MLM_Order.MovementChildId FROM MovementLinkMovement AS MLM_Order WHERE MLM_Order.MovementId = inMovementId AND MLM_Order.DescId = zc_MovementLinkMovement_Order()))
-                                , inOperDate);
-     -- !!!определяется OperDatePartner заявки, !!!иначе inOperDate!!!
-     vbOperDatePartner_order:= COALESCE ((SELECT MovementDate.ValueData
-                                          FROM MovementDate JOIN Movement ON Movement.Id = MovementDate.MovementId AND Movement.DescId = zc_Movement_OrderExternal()
-                                          WHERE MovementDate.DescId = zc_MovementDate_OperDatePartner()
-                                            AND MovementDate.MovementId = (SELECT MLM_Order.MovementChildId
-                                                                           FROM MovementLinkMovement AS MLM_Order
-                                                                           WHERE MLM_Order.MovementId = inMovementId
-                                                                             AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
-                                                                          )
-                                         )
-                                       , inOperDate);
+
      -- !!!если по заявке, тогда берется из неё OperDatePartner, вообще - надо только для филиалов!!!
      inOperDate:= CASE WHEN vbBranchId   = zc_Branch_Basis()
                          -- AND inSession <> '5'
@@ -404,14 +391,26 @@ BEGIN
                                     )
                             THEN inOperDate - INTERVAL '1 DAY' -- !!!сдвигаем на 1 день, т.к. НЕ успели закрыть до 8:00!!!
 
+                       -- так для Киев и Днепр - т.е. ничего не меняется, дата по факту
                        WHEN vbBranchId   = zc_Branch_Basis()
                          OR inBranchCode = 2 -- филиал Киев
                             THEN inOperDate
 
-                     --WHEN inIsOldPeriod = FALSE
-                     --     THEN inOperDate
+                     -- WHEN inIsOldPeriod = FALSE
+                     --      THEN inOperDate
 
-                       ELSE vbOperDatePartner_order
+                       ELSE -- !!!определяется расчетная дата склад из заявки, !!!иначе inOperDate!!!
+                            COALESCE ((SELECT MovementDate.ValueData
+                                       FROM MovementDate JOIN Movement ON Movement.Id = MovementDate.MovementId AND Movement.DescId = zc_Movement_OrderExternal()
+                                       WHERE MovementDate.DescId = zc_MovementDate_OperDatePartner()
+                                         AND MovementDate.MovementId = -- нашли заявку
+                                                                       (SELECT MLM_Order.MovementChildId
+                                                                        FROM MovementLinkMovement AS MLM_Order
+                                                                        WHERE MLM_Order.MovementId = inMovementId
+                                                                          AND MLM_Order.DescId     = zc_MovementLinkMovement_Order()
+                                                                       )
+                                      )
+                                    , inOperDate)
                   END;
 
      -- таблица - "некоторые филиалы"
@@ -489,6 +488,7 @@ BEGIN
      -- поиск
      IF vbMovementDescId = zc_Movement_Sale() AND inIsDocInsert = FALSE
      THEN
+          -- проверка для 
           IF vbIsDocMany = FALSE
              AND 1 < (SELECT COUNT(*) FROM MovementLinkMovement
                                      INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
@@ -794,10 +794,7 @@ BEGIN
                                                   , inInvNumberPartner      := ''
                                                   , inInvNumberOrder        := InvNumberOrder
                                                   , inOperDate              := inOperDate
-                                                  , inOperDatePartner       := -- !!!если по заявке, тогда расчет OperDatePartner от OperDate заявки - надо только для inBranchCode = 201 + 2
-                                                                              (CASE WHEN inBranchCode = 2 OR inBranchCode BETWEEN 201 AND 210 THEN vbOperDate_order ELSE inOperDate END
-                                                                             + (CASE WHEN inBranchCode = 2 OR inBranchCode BETWEEN 201 AND 210 THEN COALESCE (ObjectFloat_PrepareDayCount.ValueData, 0) ELSE 0 END :: TVarChar || ' DAY') :: INTERVAL
-                                                                             + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime
+                                                  , inOperDatePartner       := inOperDatePartner
                                                   , inChecked               := NULL
                                                   , inChangePercent         := ChangePercent
                                                   , inFromId                := FromId
@@ -924,12 +921,6 @@ BEGIN
                                          LEFT JOIN MovementLinkMovement AS MLM_ReturnIn
                                                                         ON MLM_ReturnIn.MovementId = inMovementId
                                                                        AND MLM_ReturnIn.DescId     = zc_MovementLinkMovement_ReturnIn()
-                                         LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount
-                                                               ON ObjectFloat_PrepareDayCount.ObjectId = tmp.ToId
-                                                              AND ObjectFloat_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()
-                                         LEFT JOIN ObjectFloat AS ObjectFloat_Partner_DocumentDayCount
-                                                               ON ObjectFloat_Partner_DocumentDayCount.ObjectId = tmp.ToId
-                                                              AND ObjectFloat_Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()
 
                                  );
          -- Проверка
@@ -1005,6 +996,29 @@ BEGIN
         -- Распроводим Документ !!!существующий!!!
         PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_begin
                                      , inUserId     := vbUserId);
+                                     
+
+        -- исправили дату
+        IF vbMovementDescId = zc_Movement_Sale() AND inOperDatePartner <> (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_begin AND MD.DescId = zc_MovementDate_OperDatePartner())
+        THEN
+            -- сохранили
+            PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), vbMovementId_begin, inOperDatePartner);
+            -- сохранили протокол
+            PERFORM lpInsert_MovementProtocol (vbMovementId_begin, vbUserId, FALSE);
+
+            -- сохранили для налоговой
+            UPDATE Movement SET OperDate = inOperDatePartner
+            WHERE Movement.Id = (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = vbMovementId_begin AND MLM.DescId = zc_MovementLinkMovement_Master())
+              AND Movement.DescId = zc_Movement_Tax();
+   
+            -- сохранили протокол для налоговой
+            PERFORM lpInsert_MovementProtocol ((SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = vbMovementId_begin AND MLM.DescId = zc_MovementLinkMovement_Master())
+                                             , vbUserId
+                                             , FALSE
+                                              );
+
+        END IF;
+
 
         -- для !!!существующий!!! zc_Movement_SendOnPrice меняется <Дата прихода> + <Кому (в документе)> (если это первый раз)
         IF vbMovementDescId = zc_Movement_SendOnPrice() -- AND vbIsSendOnPriceIn = TRUE
@@ -1030,6 +1044,7 @@ BEGIN
                 WHERE Movement.Id = vbMovementId_begin;
             END IF;
         END IF;
+        
 
     END IF;
 
@@ -1949,7 +1964,7 @@ BEGIN
 end if;*/
 
 -- !!! ВРЕМЕННО !!!
- IF vbUserId = 5 AND 1=1 THEN
+ IF vbUserId = 5 AND 1=0 THEN
 -- IF inSession = '1162887' AND 1=1 THEN
     RAISE EXCEPTION 'Admin - Test = OK : %  %  %  %  % % % % %  % %'
   , vbIsSendOnPriceIn -- inBranchCode -- 'Повторите действие через 3 мин.'

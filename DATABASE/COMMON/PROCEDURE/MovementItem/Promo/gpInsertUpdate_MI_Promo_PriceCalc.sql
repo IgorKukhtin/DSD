@@ -357,6 +357,7 @@ BEGIN
 
 
     IF (1=0 AND vbUserId = 5) OR EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+       AND vbUserId <> 5
     THEN
         RAISE EXCEPTION 'Ошибка.Документ в статусе <%>. Проверка: <%> <%>.'
           , lfGet_Object_ValueData_sh (zc_Enum_Status_Complete())
@@ -403,9 +404,8 @@ BEGIN
      vbStartDate := DATE_TRUNC ('MONTH', vbEndDate) :: TDateTime;
 
 
-     CREATE TEMP TABLE _tmpData (GoodsId Integer, Price3_cost TFloat, PriceSale_cost TFloat, Price_cost TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpData (GoodsId Integer, Price3_cost TFloat, PriceSale_cost TFloat, Price_cost TFloat, Price_cost_tax TFloat) ON COMMIT DROP;
 
-     INSERT INTO _tmpData (GoodsId, Price3_cost, PriceSale_cost, Price_cost)
      WITH tmpAnalyzer AS (SELECT AnalyzerId, isSale, isCost, isSumm, FALSE AS isLoss
                           FROM Constant_ProfitLoss_AnalyzerId_View
                           WHERE DescId = zc_Object_AnalyzerId()
@@ -586,11 +586,19 @@ BEGIN
                             , tmpMI.GoodsId
                             , tmpMI.GoodsKindId
                     )
-
+     INSERT INTO _tmpData (GoodsId, Price3_cost, PriceSale_cost, Price_cost, Price_cost_tax)
        SELECT tmp.GoodsId
-            , tmp.Price3_cost   -- цена затраты
-            , CASE WHEN tmp.OperCount_sale <> 0 THEN CAST ( tmp.SummIn_sale / tmp.OperCount_sale AS NUMERIC (16, 2)) ELSE 0 END AS PriceSale_cost
+              -- цена затраты - старая схема
+            , tmp.Price3_cost
+              -- цена с/с
+            , CASE WHEN tmp.OperCount_sale <> 0 THEN CAST (tmp.SummIn_sale / tmp.OperCount_sale AS NUMERIC (16, 2)) ELSE 0 END AS PriceSale_cost
+              -- цена с/с + затраты - старая схема
             , COALESCE (tmp.Price3_cost,0) + COALESCE (CASE WHEN tmp.OperCount_sale <> 0 THEN CAST ( tmp.SummIn_sale / tmp.OperCount_sale AS NUMERIC (16, 2)) ELSE 0 END,0) AS Price_cost
+              -- цена затраты - новая схема
+            , CASE WHEN tmp.OperCount_sale <> 0 THEN CAST (tmp.SummIn_sale / tmp.OperCount_sale AS NUMERIC (16, 2)) ELSE 0 END
+            * CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30102() THEN 0.3 ELSE 0.6 END
+              AS Price_cost_tax
+
        FROM (SELECT tmpAll.GoodsId
                   , SUM (tmpAll.OperCount_sale) AS OperCount_sale
                   , SUM (tmpAll.SummIn_sale)    AS SummIn_sale
@@ -601,14 +609,31 @@ BEGIN
                                          ON ObjectFloat_Value.ObjectId = tmpAll.ReceiptId
                                         AND ObjectFloat_Value.DescId   = zc_ObjectFloat_Receipt_Value()
              GROUP BY tmpAll.GoodsId
-             ) AS tmp;
+             ) AS tmp
+             --
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmp.GoodsId
+                                 AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+      ;
 
         -- сохраняем полученную с/с
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn2(), MovementItem.Id, COALESCE (_tmpData.Price_cost,0) ::TFloat ) -- факт
-              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn1(), MovementItem.Id, (CAST (COALESCE (_tmpData.Price_cost,0) * 1.1 AS NUMERIC (16, 2))) ::TFloat) -- план   = факт + 10 %
+      --PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn2(), MovementItem.Id, COALESCE (_tmpData.Price_cost,0) ::TFloat ) -- факт
+      --      , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn1(), MovementItem.Id, (CAST (COALESCE (_tmpData.Price_cost,0) * 1.1 AS NUMERIC (16, 2))) ::TFloat) -- план   = факт + 10 %
+
+        PERFORM -- факт
+                lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn2(), MovementItem.Id
+                                                , COALESCE (_tmpData.Price_cost_tax, 0) + COALESCE (_tmpData.PriceSale_cost, 0)
+                                                 )
+                -- план  = факт + 10 %
+              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn1(), MovementItem.Id
+                                                , COALESCE (_tmpData.Price_cost_tax, 0)
+                                                + CAST (COALESCE (_tmpData.PriceSale_cost,0) * 1.1 AS NUMERIC (16, 2))
+                                                 )
+                -- затраты - новая схема
+              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePrice(), MovementItem.Id, COALESCE (_tmpData.Price_cost_tax, 0))
         FROM MovementItem
              LEFT JOIN _tmpData ON _tmpData.GoodsId = MovementItem.ObjectId
-        WHERE MovementItem.MovementId = inMovementId
+      WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.DescId = zc_MI_Master()
           AND MovementItem.isErased = FALSE
        ;
@@ -625,7 +650,8 @@ BEGIN
 
     IF vbUserId = 5
     THEN
-        RAISE EXCEPTION 'Ошибка.Admin <%> <%> <%>   <%> <%>   <%> <%> <%>'
+        RAISE EXCEPTION 'Ошибка.Admin <%>   <%> <%> <%>   <%> <%>   <%> <%> <%>'
+            -- условие %
           , (SELECT DISTINCT MIF.ValueData
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIF
@@ -634,8 +660,9 @@ BEGIN
              WHERE MovementItem.MovementId = inMovementId
                AND MovementItem.DescId = zc_MI_Master()
                AND MovementItem.isErased = FALSE
-          -- ORDER BY MovementItem.Id LIMIT 1
+             --ORDER BY MovementItem.Id LIMIT 1
             )
+            -- факт
           , (SELECT STRING_AGG (zfConvert_FloatToString (MIF.ValueData), ' ; ')
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIF
@@ -645,8 +672,9 @@ BEGIN
                AND MovementItem.DescId = zc_MI_Master()
                AND MovementItem.isErased = FALSE
              --ORDER BY MovementItem.Id
-           --LIMIT 1
+             --LIMIT 1
             )
+            -- план
           , (SELECT STRING_AGG (zfConvert_FloatToString (MIF.ValueData), ' ; ')
              FROM MovementItem
                   LEFT JOIN MovementItemFloat AS MIF
@@ -656,7 +684,17 @@ BEGIN
                AND MovementItem.DescId = zc_MI_Master()
                AND MovementItem.isErased = FALSE
              -- ORDER BY MovementItem.Id
-           --LIMIT 1
+             --LIMIT 1
+            )
+            -- затраты - новая схема
+          , (SELECT STRING_AGG (zfConvert_FloatToString (MIF.ValueData), ' ; ')
+             FROM MovementItem
+                  LEFT JOIN MovementItemFloat AS MIF
+                                              ON MIF.MovementItemId = MovementItem.Id
+                                             AND MIF.DescId         = zc_MIFloat_ChangePrice()
+             WHERE MovementItem.MovementId = inMovementId
+               AND MovementItem.DescId = zc_MI_Master()
+               AND MovementItem.isErased = FALSE
             )
 
           , zfConvert_DateToString (vbStartDate)

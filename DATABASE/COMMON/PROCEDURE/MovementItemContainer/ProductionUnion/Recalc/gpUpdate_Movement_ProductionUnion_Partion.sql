@@ -18,10 +18,10 @@ BEGIN
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_ProductionUnion_Partion());
 
     --
-    IF EXTRACT (MONTH FROM inStartDate) IN (2) THEN RETURN; END IF;
+    IF EXTRACT (MONTH FROM inStartDate) IN (2, 3) THEN RETURN; END IF;
 
     --
-    IF EXTRACT (MONTH FROM inStartDate) IN (2)
+    IF 1=1 -- EXTRACT (MONTH FROM inStartDate) IN (2)
     THEN
         -- пересчет Рецептур, временно захардкодил
         PERFORM lpUpdate_Object_Receipt_Total (Object.Id, zfCalc_UserAdmin() :: Integer) FROM Object WHERE DescId = zc_Object_Receipt();

@@ -19,7 +19,7 @@ RETURNS TABLE (UnitId TVarChar,  VidDoc TVarChar, InvNumber TVarChar, OperDate T
                InvNalog TVarChar, BillId TVarChar, EKSPCODE TVarChar, EXPName TVarChar,
                GoodsId TVarChar, PackId TVarChar, PackName TVarChar,
                Doc1Date TVarChar, Doc1Number TVarChar, Doc2Date TVarChar, Doc2Number TVarChar,
-               Contract TVarChar)
+               Contract TVarChar, MovementDescId TVarChar)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -94,7 +94,7 @@ BEGIN
                     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                       AND Movement.DescId IN (zc_Movement_PriceCorrective(), zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn(), zc_Movement_ChangePercent())
                       AND Movement.StatusId = zc_Enum_Status_Complete() 
-                      AND (MovementLinkObject_PaidKind.ObjectId   = inPaidKindId OR inPaidKindId = 0)
+                      AND (MovementLinkObject_PaidKind.ObjectId   = inPaidKindId OR inPaidKindId = 0 OR Movement.DescId = zc_Movement_ChangePercent())
                    UNION
                     SELECT Movement.*, MovementDate_OperDatePartner.ValueData AS OperDatePartner
                          , MovementLinkObject_Contract.ObjectId AS ContractId
@@ -336,14 +336,15 @@ BEGIN
                   ELSE MIMaster.Amount
              END AS NUMERIC (16, 2)
              )
-           * CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
+           * CASE WHEN Movement.DescId IN (zc_Movement_PriceCorrective(), zc_Movement_ChangePercent()) THEN -1 ELSE 1 END
              ) :: TVarChar                       AS Summa
 
              -- Ñóììà ÍÄÑ
-           , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective()
+           , CASE WHEN Movement.DescId = zc_Movement_ChangePercent()
                   THEN CAST (CAST (MIMaster.Amount * CAST (MIFloat_Price.ValueData * (Movement.ChangePercent / 100) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
                            * Movement.VATPercent / 100
                             AS NUMERIC (16, 2))
+                     * -1
              ELSE
              (
              -- ***Ñóììà ñ ÍÄÑ
@@ -375,7 +376,7 @@ BEGIN
                        THEN (1 + Movement.VATPercent / 100)
              END
              )
-           * CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
+           * CASE WHEN Movement.DescId IN (zc_Movement_PriceCorrective()) THEN -1 ELSE 1 END
              AS NUMERIC (16, 4))
 
              -- ***ìèíóñ
@@ -409,17 +410,18 @@ BEGIN
                   ELSE MIMaster.Amount
              END AS NUMERIC (16, 2)
              )
-           * CASE WHEN Movement.DescId IN (zc_Movement_PriceCorrective(), zc_Movement_ChangePercent()) THEN -1 ELSE 1 END
+           * CASE WHEN Movement.DescId IN (zc_Movement_PriceCorrective()) THEN -1 ELSE 1 END
              )
              )
              END :: TVarChar                                             AS PDV
 
              -- Ñóììà ñ ÍÄÑ
-           , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective()
-                  THEN CAST (MIMaster.Amount * CAST (MIFloat_Price.ValueData * (Movement.ChangePercent / 100) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                     + CAST (CAST (MIMaster.Amount * CAST (MIFloat_Price.ValueData * (Movement.ChangePercent / 100) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                           * Movement.VATPercent / 100
-                            AS NUMERIC (16, 2))
+           , CASE WHEN Movement.DescId = zc_Movement_ChangePercent()
+                  THEN (CAST (MIMaster.Amount * CAST (MIFloat_Price.ValueData * (Movement.ChangePercent / 100) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                      + CAST (CAST (MIMaster.Amount * CAST (MIFloat_Price.ValueData * (Movement.ChangePercent / 100) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                            * Movement.VATPercent / 100
+                             AS NUMERIC (16, 2))
+                       ) * -1
              ELSE
              CAST ((
              CAST (
@@ -449,7 +451,7 @@ BEGIN
                        THEN (1 + Movement.VATPercent / 100)
              END
              )
-           * CASE WHEN Movement.DescId IN (zc_Movement_PriceCorrective(), zc_Movement_ChangePercent()) THEN -1 ELSE 1 END
+           * CASE WHEN Movement.DescId IN (zc_Movement_PriceCorrective()) THEN -1 ELSE 1 END
              AS NUMERIC (16, 4))
              END :: TVarChar                           AS SummaPDV
 
@@ -478,6 +480,7 @@ BEGIN
            , '' :: TVarChar                                            AS Doc2Number
 
            , Movement.ContractCode                        :: TVarChar  AS ContractCode
+           , Movement.DescId                              :: TVarChar  AS MovementDescId
      FROM tmpMov AS Movement
             LEFT JOIN tmpMI AS MIMaster ON MIMaster.MovementId = Movement.Id
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MIMaster.ObjectId
@@ -530,4 +533,4 @@ $BODY$
 -- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '01.11.2016', inEndDate:= '11.11.2016', inInfoMoneyId:= 8911, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '30.11.2017', inEndDate:= '30.11.2017', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= zfCalc_UserAdmin()) AS a--  WHERE InvNumber = '400883'
 -- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '14.09.2022', inEndDate:= '14.09.2022', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inSession:= zfCalc_UserAdmin()) AS a limit 10 -- WHERE InvNumber = '400883'
--- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '14.09.2022', inEndDate:= '14.09.2022', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inRetailId := 0, inSession:= zfCalc_UserAdmin()) AS a limit 10 -- WHERE InvNumber = '400883'
+-- SELECT * FROM gpSelect_Movement_1C_Load (inStartDate:= '31.03.2023', inEndDate:= '31.03.2023', inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inRetailId := 0, inSession:= zfCalc_UserAdmin()) AS a limit 10 -- WHERE MovementDescId = zc_Movement_ChangePercent() :: TVarChar

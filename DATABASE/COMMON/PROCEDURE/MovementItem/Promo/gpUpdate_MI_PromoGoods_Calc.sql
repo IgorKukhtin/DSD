@@ -60,7 +60,13 @@ BEGIN
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.ObjectId = vbGoodsId;
           
-          
+        -- сохранили протокол
+        PERFORM lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)
+        FROM MovementItem
+        WHERE MovementItem.MovementId = inMovementId
+          AND MovementItem.ObjectId   = vbGoodsId
+         ;
+        
               
         --свойство документа - какая схема
         /*IF COALESCE (inisTaxPromo, FALSE) = TRUE
@@ -80,11 +86,19 @@ BEGIN
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn2(), inId, inPriceIn);
         -- сохраняем Кол-во отгрузка
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSale(), inId, inAmountSale);        
+
+        -- сохранили протокол
+        PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
+
     END IF;
     IF inNum = 4
     THEN
         -- сохраняем Себ-ть - 1 прод, грн/кг
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn1(), inId, inPriceIn);
+
+        -- сохранили протокол
+        PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
+
     END IF;
     
     

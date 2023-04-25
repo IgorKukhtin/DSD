@@ -301,7 +301,7 @@ BEGIN
 
 
      -- проверка: ОСТАТОК должен быть
-     IF vbUserId <> zc_User_Sybase()
+     IF vbUserId <> zc_User_Sybase() AND vbUserId <> 2
         AND ioAmount > COALESCE ((SELECT Container.Amount
                                   FROM Container
                                        LEFT JOIN ContainerLinkObject AS CLO_Client
@@ -355,6 +355,18 @@ BEGIN
                         OR ObjectFloat_PeriodYear.ValueData > 2020
                           )
                    )
+                AND NOT EXISTS (WITH tmp AS (SELECT gpSelect.*
+                                                  , ROW_NUMBER() OVER (ORDER BY COALESCE (gpSelect.StartDate, zc_DateStart()) DESC) AS Ord
+                                                  , ROW_NUMBER() OVER (ORDER BY COALESCE (gpSelect.StartDate, zc_DateStart()) ASC)  AS Ord_old
+                                             FROM gpSelect_ObjectHistory_PriceListGoodsItem (vbPriceListId, ioGoodsId, '-1') AS gpSelect
+                                             WHERE gpSelect.ValuePrice > 0
+                                            )
+                                SELECT *
+                                FROM tmp AS tmp_last
+                                     JOIN tmp AS tmp_old ON tmp_old.Ord_old           = 1
+                                                        AND tmp_old.ValuePrice * 0.90 >= tmp_last.ValuePrice
+                                WHERE tmp_last.Ord = 1
+                               )
         AND vbIsDiscount_pl = FALSE
      THEN
          SELECT tmp.ChangePercent, tmp.ChangePercentNext, tmp.DiscountSaleKindId INTO ioChangePercent, ioChangePercentNext, ioDiscountSaleKindId

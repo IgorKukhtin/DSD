@@ -12,10 +12,10 @@ RETURNS TABLE (Id Integer
               ) 
 AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
-
       -- проверка прав пользователя на вызов процедуры
-      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ReportExternal());
+      vbUserId:= lpGetUserBySession (inSession);
 
       RETURN QUERY
         SELECT Object.Id
@@ -26,6 +26,9 @@ BEGIN
         WHERE Object.DescId     = zc_Object_ReportExternal()
           AND Object.isErased   = FALSE
           AND Object.ValueData <> ''
+          AND (Object.ValueData NOT ILIKE 'gpReport_GoodsMI_byMovement'
+            OR vbUserId <> 5
+              )
         ORDER BY 3
        ;
 

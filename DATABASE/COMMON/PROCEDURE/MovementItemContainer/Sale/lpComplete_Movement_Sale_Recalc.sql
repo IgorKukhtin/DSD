@@ -12,10 +12,11 @@ AS
 $BODY$
    DECLARE vbMovementId_Peresort Integer;
    DECLARE vbOperDate TDateTime;
+   DECLARE vbMovementDescId Integer;
    DECLARE vbIsNotRealGoods Boolean;
 BEGIN
      -- нашли дату
-     vbOperDate:= (SELECT OperDate FROM Movement WHERE Id = inMovementId);
+     SELECT Movement.OperDate, Movement.DescId INTO vbOperDate, vbMovementDescId FROM Movement WHERE Movement.Id = inMovementId;
 
      -- if inUserId = 5 then return; end if;
 
@@ -243,11 +244,13 @@ END IF;
                                  AND ObjectLink_GoodsByGoodsKind_GoodsReal.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsReal()
                                  AND vbIsNotRealGoods = FALSE
                                  AND vbOperDate >= '23.12.2022'
+                                 AND vbMovementDescId = zc_Movement_Sale()
              LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindReal
                                   ON ObjectLink_GoodsByGoodsKind_GoodsKindReal.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                  AND ObjectLink_GoodsByGoodsKind_GoodsKindReal.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKindReal()
                                  AND vbIsNotRealGoods = FALSE
                                  AND vbOperDate >= '23.12.2022'
+                                 AND vbMovementDescId = zc_Movement_Sale()
 
              LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Receipt
                                   ON ObjectLink_GoodsByGoodsKind_Receipt.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
@@ -499,9 +502,10 @@ END IF;
 
 IF inUserId = 5 AND 1=0
 THEN
-    RAISE EXCEPTION 'Ошибка.<%>   <%>   <%> ', vbMovementId_Peresort
-    , (select SUM (_tmpItemPeresort_new.Amount_to) from _tmpItemPeresort_new)
-    , (select SUM (_tmpItemPeresort_new.Amount_Remains) from _tmpItemPeresort_new)
+    RAISE EXCEPTION 'Ошибка.<%>   <%>   <%>   <%>', vbMovementId_Peresort
+    , (select SUM (_tmpItemPeresort_new.Amount_to) from _tmpItemPeresort_new where GoodsId_to = 5563941)
+    , (select SUM (_tmpItemPeresort_new.Amount_Remains) from _tmpItemPeresort_new where GoodsId_to = 5563941)
+    , (select COUNT(*) from _tmpItemPeresort_new where GoodsId_to = 5563941)
     ;
 END IF;
 

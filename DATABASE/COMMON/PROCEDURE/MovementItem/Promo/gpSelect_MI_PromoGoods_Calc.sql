@@ -20,6 +20,7 @@ RETURNS TABLE (NUM Integer , GroupNum Integer --
       , MeasureName             TVarChar -- ед.изм
 
       , PriceIn                 TFloat --Себ-ть прод, грн/кг
+      , ChangePrice             TFloat --Себ-ть расходы, грн/кг
       --, AmountRetIn             TFloat --Кол-во возврат грн/кг
       , ContractCondition       TFloat --TVarChar --бонус сети грн/кг
       , TaxRetIn                TFloat --TVarChar --
@@ -104,6 +105,7 @@ BEGIN
                           
                           , MIFloat_PriceIn1.ValueData             AS PriceIn1               --Себ-ть - 1 прод, грн/кг
                           , MIFloat_PriceIn2.ValueData             AS PriceIn2               --Себ-ть - 2 прод, грн/кг
+                          , MIFloat_ChangePrice.ValueData          AS ChangePrice            --
                           --, (MIFloat_Price.ValueData)                AS Price                  --Цена в прайсе
                             -- Цена в прайсе c НДС
                           , ROUND (MIFloat_Price.ValueData * ((100+vbVAT)/100)  / CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END, 2) :: TFloat AS Price
@@ -139,6 +141,10 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_PriceIn2
                                                       ON MIFloat_PriceIn2.MovementItemId = MovementItem.Id
                                                      AND MIFloat_PriceIn2.DescId = zc_MIFloat_PriceIn2()
+                          LEFT JOIN MovementItemFloat AS MIFloat_ChangePrice
+                                                      ON MIFloat_ChangePrice.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_ChangePrice.DescId = zc_MIFloat_ChangePrice()
+                                                     
                   
                           LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                                       ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
@@ -196,6 +202,7 @@ BEGIN
                      , tmpData_Full.Amount                 --% скидки на товар
                      , tmpData_Full.PriceIn1               --Себ-ть - 1 прод, грн/кг
                      , tmpData_Full.PriceIn2               --Себ-ть - 2 прод, грн/кг
+                     , tmpData_Full.ChangePrice
                           
                      , tmpData_Full.AmountSale             --Максимум планируемого объема продаж на акционный период (в кг)
                      , tmpData_Full.SummaSale              --сумма плана продаж
@@ -236,6 +243,7 @@ BEGIN
                          , tmpData.GoodsKindCompleteName
 
                          , 0                         AS PriceIn  
+                         , 0                         AS ChangePrice
                          --, tmpData.RetIn_Percent     AS AmountRetIn           
                          /*, (CAST (tmpData.ContractCondition AS NUMERIC (16,2)) ||' %') ::TVarChar AS ContractCondition
                          , (CAST (tmpData.TaxRetIn          AS NUMERIC (16,2)) ||' %') ::TVarChar AS TaxRetIn
@@ -278,6 +286,8 @@ BEGIN
                          , tmpData.GoodsKindCompleteName
 
                          , tmpData.PriceIn2            AS PriceIn  
+                         , tmpData.ChangePrice
+
                          --, CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.RetIn_Percent /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2)) AS AmountRetIn           
                          /*, (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))) ::TVarChar AS ContractCondition   -- бонус сети
                          , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)))          ::TVarChar AS TaxRetIn
@@ -334,6 +344,7 @@ BEGIN
                          , tmpData.GoodsKindCompleteName
                    
                          , 0                         AS PriceIn  
+                         , 0                         AS ChangePrice
                          --, tmpData.RetIn_Percent     AS AmountRetIn           
                          /*, (CAST (tmpData.ContractCondition AS NUMERIC (16,2))  ||' %') ::TVarChar AS ContractCondition   -- бонус сети
                          , (CAST (tmpData.TaxRetIn          AS NUMERIC (16,2))  ||' %') ::TVarChar AS TaxRetIn
@@ -379,6 +390,7 @@ BEGIN
                          , tmpData.GoodsKindCompleteName
 
                          , tmpData.PriceIn1            AS PriceIn  
+                         , tmpData.ChangePrice
                          --, CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.RetIn_Percent /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2)) AS AmountRetIn           
                          /*, (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))) ::TVarChar AS ContractCondition   -- бонус сети
                          , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)))          ::TVarChar AS TaxRetIn   -- 
@@ -437,6 +449,7 @@ BEGIN
                          , ''
                          , ''
                          , 0                AS PriceIn  
+                         , 0                AS ChangePrice
                          --, 0                AS AmountRetIn           
                          , 0                AS ContractCondition   -- бонус сети
                          , 0                AS TaxRetIn   -- бонус сети
@@ -482,6 +495,7 @@ BEGIN
          , Object_Measure.ValueData            ::TVarChar AS MeasureName             --Единица измерения
 
          , tmpData_All.PriceIn                 :: TFloat
+         , tmpData_All.ChangePrice             :: TFloat
         -- , tmpData_All.AmountRetIn             :: TFloat
          , tmpData_All.ContractCondition       :: TFloat --TVarChar
          , tmpData_All.TaxRetIn                :: TFloat --TVarChar

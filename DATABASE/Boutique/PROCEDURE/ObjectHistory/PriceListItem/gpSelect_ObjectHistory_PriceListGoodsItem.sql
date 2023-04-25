@@ -19,7 +19,7 @@ $BODY$
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
-    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_OH_PriceListGoodsItem());
+    IF inSession <> '-1' THEN vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_OH_PriceListGoodsItem()); END IF;
     --vbUserId:= lpGetUserBySession (inSession);
 
      -- Выбираем данные

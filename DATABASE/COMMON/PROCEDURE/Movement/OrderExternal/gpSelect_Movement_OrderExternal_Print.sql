@@ -461,8 +461,10 @@ BEGIN
      , tmpObject_GoodsPropertyValueGroup_GoodsBoxName_short AS
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
              , tmpObject_GoodsPropertyValue.GoodsBoxName_short
-        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId
+              FROM tmpObject_GoodsPropertyValue
               WHERE GoodsBoxName_short <> ''
+                AND tmpObject_GoodsPropertyValue.GoodsKindId IN (0, zc_GoodsKind_Basis())
               GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
@@ -470,8 +472,11 @@ BEGIN
      , tmpObject_GoodsPropertyValueGroup_BoxCount AS
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
              , tmpObject_GoodsPropertyValue.BoxCount
-        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId
+              FROM tmpObject_GoodsPropertyValue
               WHERE BoxCount <> 0
+                AND tmpObject_GoodsPropertyValue.GoodsKindId IN (0, zc_GoodsKind_Basis())
+                AND 1=0
               GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId

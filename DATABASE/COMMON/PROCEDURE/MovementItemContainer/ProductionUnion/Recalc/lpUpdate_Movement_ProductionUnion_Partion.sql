@@ -522,3 +522,4 @@ END;$BODY$
 
 -- where ContainerId = 628180
 -- select * from MovementItemContainer where ContainerId = 568111
+
