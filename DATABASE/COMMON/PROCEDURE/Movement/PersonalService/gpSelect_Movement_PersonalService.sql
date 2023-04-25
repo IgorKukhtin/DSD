@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
+             , StartBeginDate TDateTime, EndBeginDate TDateTime
              , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat
              , TotalSummCard TFloat, TotalSummCardSecond TFloat, TotalSummCardSecondCash TFloat
              , TotalSummNalog TFloat, TotalSummMinus TFloat
@@ -195,7 +196,10 @@ BEGIN
            , Movement.OperDate                          AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
-           , MovementDate_ServiceDate.ValueData         AS ServiceDate 
+           , MovementDate_ServiceDate.ValueData         AS ServiceDate
+           , MovementDate_StartBegin.ValueData          AS StartBeginDate
+           , MovementDate_EndBegin.ValueData            AS EndBeginDate
+
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
            , MovementFloat_TotalSummToPay.ValueData     AS TotalSummToPay
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0)
@@ -281,6 +285,13 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_ServiceDate
                                    ON MovementDate_ServiceDate.MovementId = Movement.Id
                                   AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+
+            LEFT JOIN MovementDate AS MovementDate_StartBegin
+                                   ON MovementDate_StartBegin.MovementId = Movement.Id
+                                  AND MovementDate_StartBegin.DescId = zc_MovementDate_StartBegin()
+            LEFT JOIN MovementDate AS MovementDate_EndBegin
+                                   ON MovementDate_EndBegin.MovementId = Movement.Id
+                                  AND MovementDate_EndBegin.DescId = zc_MovementDate_EndBegin()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement.Id
@@ -473,6 +484,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 24.04.23         *
  27.03.23         *
  17.11.23         *
  18.11.21         * TotalSummHouseAdd

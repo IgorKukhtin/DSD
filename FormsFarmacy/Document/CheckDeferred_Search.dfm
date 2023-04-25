@@ -827,6 +827,13 @@ inherited CheckDeferred_SearchForm: TCheckDeferred_SearchForm
           Component = FormParams
           ComponentItem = 'CancelReasonId'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end

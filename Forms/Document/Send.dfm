@@ -476,6 +476,9 @@ inherited SendForm: TSendForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -701,6 +704,9 @@ inherited SendForm: TSendForm
     object cxTabSheetChild: TcxTabSheet
       Caption = #1056#1072#1089#1093#1086#1076' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -1153,7 +1159,37 @@ inherited SendForm: TSendForm
         end>
       RefreshOnTabSetChanges = True
     end
-    object actMISetErasedDetail: TdsdUpdateErased [2]
+    object actGetImportSetting2: TdsdExecStoredProc [1]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting2
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting2
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object macLoadExcel2: TMultiAction [3]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting2
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072' Excel ('#1040'/B/C/D)?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072' Excel ('#1040'/B/C/D)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel ('#1040'/B/C/D)'
+      ImageIndex = 41
+    end
+    object actMISetErasedDetail: TdsdUpdateErased [4]
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -1177,7 +1213,7 @@ inherited SendForm: TSendForm
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
     end
-    object actMISetUnErasedDetail: TdsdUpdateErased [4]
+    object actMISetUnErasedDetail: TdsdUpdateErased [6]
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -1210,7 +1246,7 @@ inherited SendForm: TSendForm
           StoredProc = spInsertUpdateMovement_order
         end>
     end
-    object actShowErasedDetail: TBooleanStoredProcAction [7]
+    object actShowErasedDetail: TBooleanStoredProcAction [9]
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -1234,7 +1270,7 @@ inherited SendForm: TSendForm
     inherited actShowErased: TBooleanStoredProcAction
       TabSheet = tsMain
     end
-    object actShowAllDetail: TBooleanStoredProcAction [9]
+    object actShowAllDetail: TBooleanStoredProcAction [11]
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -1258,7 +1294,7 @@ inherited SendForm: TSendForm
     inherited actShowAll: TBooleanStoredProcAction
       TabSheet = tsMain
     end
-    object actUpdateDetailDS: TdsdUpdateDataSet [11]
+    object actUpdateDetailDS: TdsdUpdateDataSet [13]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1273,7 +1309,7 @@ inherited SendForm: TSendForm
       Caption = 'actUpdateDetailDS'
       DataSource = DetailDS
     end
-    object actPrintNoGroup: TdsdPrintAction [13]
+    object actPrintNoGroup: TdsdPrintAction [15]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintNoGroup
@@ -1355,7 +1391,7 @@ inherited SendForm: TSendForm
     inherited actMovementItemContainer: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actReturnKindOpenForm: TOpenChoiceForm [19]
+    object actReturnKindOpenForm: TOpenChoiceForm [21]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1382,7 +1418,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actSubjectDocOpenForm: TOpenChoiceForm [20]
+    object actSubjectDocOpenForm: TOpenChoiceForm [22]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1409,7 +1445,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actAssetChoiceForm: TOpenChoiceForm [21]
+    object actAssetChoiceForm: TOpenChoiceForm [23]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1436,7 +1472,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoice: TOpenChoiceForm [22]
+    object actGoodsKindChoice: TOpenChoiceForm [24]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1463,7 +1499,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actAsset_twoChoiceForm: TOpenChoiceForm [23]
+    object actAsset_twoChoiceForm: TOpenChoiceForm [25]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1493,7 +1529,7 @@ inherited SendForm: TSendForm
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actAddMaskDetail: TdsdExecStoredProc [27]
+    object actAddMaskDetail: TdsdExecStoredProc [29]
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -2281,10 +2317,10 @@ inherited SendForm: TSendForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072' Excel?'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072' Excel (B/C/D/F) ?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072' Excel'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1092#1072#1081#1083#1072' Excel (B/C/D/F)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel (B/C/D/F)'
       ImageIndex = 41
     end
   end
@@ -2447,6 +2483,10 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbLoadExcel2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2596,6 +2636,10 @@ inherited SendForm: TSendForm
     end
     object bbLoadExcel: TdxBarButton
       Action = macLoadExcel
+      Category = 0
+    end
+    object bbLoadExcel2: TdxBarButton
+      Action = macLoadExcel2
       Category = 0
     end
   end
@@ -4270,5 +4314,37 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 968
     Top = 264
+  end
+  object spGetImportSetting2: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TSendForm;zc_Object_ImportSetting_Send2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1088
+    Top = 240
   end
 end

@@ -15,8 +15,6 @@ inherited GoodsInventoryForm: TGoodsInventoryForm
     Height = 451
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 633
-    ExplicitHeight = 390
     object GoodsInventoryGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GoodsInventoryDS
@@ -92,16 +90,11 @@ inherited GoodsInventoryForm: TGoodsInventoryForm
     Height = 25
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 633
     object TextEdit: TcxTextEdit
       Left = 1
       Top = 1
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = 232
-      ExplicitTop = 8
-      ExplicitWidth = 121
-      ExplicitHeight = 21
       DesignSize = (
         612
         23)
@@ -113,6 +106,15 @@ inherited GoodsInventoryForm: TGoodsInventoryForm
     Top = 304
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     Left = 280
     Top = 304
   end
@@ -330,6 +332,13 @@ inherited GoodsInventoryForm: TGoodsInventoryForm
     TextEdit = TextEdit
     DataSet = GoodsInventoryCDS
     Column = colGoodsName
+    ColumnList = <
+      item
+        Column = colGoodsName
+      end
+      item
+        Column = colGoodsCode
+      end>
     CheckBoxList = <>
     Left = 432
     Top = 216

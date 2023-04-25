@@ -226,7 +226,8 @@ BEGIN
             , Object_SPKind.ValueData     AS SPKindName
             , ObjectFloat_SPTax.ValueData AS SPTax
 
-            , CASE WHEN COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False) = TRUE THEN zfCalc_Color (0, 255, 255)
+            , CASE WHEN COALESCE(MovementBoolean_isAuto.ValueData, False) = TRUE THEN zfCalc_Color (173, 255, 47)
+                   WHEN COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False) = TRUE THEN zfCalc_Color (0, 255, 255)
                    WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId > 0 AND 
                         COALESCE(MovementFloat_TotalCount.ValueData, 0) > 0 THEN 16440317 -- бледно крассный / розовый
                    WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId IS NULL AND 
@@ -409,6 +410,9 @@ BEGIN
    	        LEFT JOIN tmpMovementBoolean AS MovementBoolean_Site
 		                               ON MovementBoolean_Site.MovementId = Movement.Id
 		                              AND MovementBoolean_Site.DescId = zc_MovementBoolean_Site()
+   	        LEFT JOIN tmpMovementBoolean AS MovementBoolean_isAuto
+		                               ON MovementBoolean_isAuto.MovementId = Movement.Id
+		                              AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
             LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_PartionDateKind
                                          ON MovementLinkObject_PartionDateKind.MovementId = Movement.Id

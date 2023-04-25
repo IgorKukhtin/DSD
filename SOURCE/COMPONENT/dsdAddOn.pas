@@ -1231,6 +1231,8 @@ type
     FTextEdit: TcxTextEdit;
     FDataSet: TDataSet;
     FColumn: TcxGridColumn;
+    FColumnList: TCollection;
+
     FCheckColumn: TcxGridColumn;
 
     FTimer: TTimer;
@@ -1255,6 +1257,7 @@ type
     procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState); virtual;
     procedure SetTextEdit(const Value: TcxTextEdit);
     procedure SetDataSet(const Value: TDataSet);
+    function GetColumn: TcxGridColumn;
     procedure SetColumn(const Value: TcxGridColumn);
     procedure TimerTimer(Sender: TObject);
   protected
@@ -1268,7 +1271,9 @@ type
     // Edit - для ввода текста фильтра
     property TextEdit: TcxTextEdit read FTextEdit write SetTextEdit;
     property DataSet: TDataSet read FDataSet write SetDataSet;
-    property Column: TcxGridColumn read FColumn write SetColumn;
+    property Column: TcxGridColumn read GetColumn write SetColumn;
+    // Коллекция столюбиков для фильтра
+    property ColumnList: TCollection read FColumnList write FColumnList;
     property CheckColumn: TcxGridColumn read FCheckColumn write FCheckColumn;
     // Если под фильтром 1 запись
     property ActionNumber1: TCustomAction read FActionNumber1 write FActionNumber1;
@@ -5985,6 +5990,7 @@ begin
   inherited;
   FTimer := TTimer.Create(Self);
   FCheckBoxList := TOwnedCollection.Create(Self, TCheckBoxItem);
+  FColumnList := TCollection.Create(TColumnCollectionItem);
   FTimer.Enabled:=False;
   FTimer.OnTimer := TimerTimer;
   FProgressBar := TProgressBar.Create(Self);
@@ -5997,14 +6003,44 @@ begin
   FOnEditExit := Nil;
   FOnKeyDown := Nil;
   FFilterRecord := Nil;
+  FColumn := Nil;
   FFiltered := False;
 end;
 
 destructor TdsdFieldFilter.Destroy;
 begin
+  FreeAndNil(FColumnList);
   FreeAndNil(FCheckBoxList);
   FreeAndNil(FTimer);
   inherited;
+end;
+
+function TdsdFieldFilter.GetColumn: TcxGridColumn;
+begin
+  if FColumnList.Count > 0 then
+     result := TColumnCollectionItem(FColumnList.Items[0]).Column
+  else
+     result := FColumn
+end;
+
+procedure TdsdFieldFilter.SetColumn(const Value: TcxGridColumn);
+begin
+  if (Value is TcxGridDBBandedColumn) or (Value is TcxGridDBColumn) then
+  begin
+    // Если устанавливается или
+    if Value <> nil then
+    begin
+       if FColumnList.Count > 0 then
+          TColumnCollectionItem(FColumnList.Items[0]).Column := Value
+       else
+          TColumnCollectionItem(FColumnList.Add).Column := Value;
+    end
+    else begin
+      //если ставится в NIL
+      if FColumnList.Count > 0 then
+         FColumnList.Delete(0);
+    end;
+  end else raise Exception.Create(Value.ClassName + ' не поддерживаеться');
 end;
 
 procedure TdsdFieldFilter.Notification(AComponent: TComponent;
@@ -6064,17 +6100,10 @@ begin
   end;
 end;
 
-procedure TdsdFieldFilter.SetColumn(const Value: TcxGridColumn);
-begin
-  if (Value is TcxGridDBBandedColumn) or (Value is TcxGridDBColumn) then
-    FColumn := Value
-  else raise Exception.Create(Value.ClassName + ' не поддерживаеться');
-end;
-
 procedure TdsdFieldFilter.OnEditChange(Sender: TObject);
 begin
   if not Assigned(FDataSet) then Exit;
-  if not Assigned(FColumn) and not Assigned(FCheckColumn) then Exit;
+  if not Assigned(Column) and not Assigned(FCheckColumn) then Exit;
   if Sender is TcxTextEdit then
   begin
     if Trim(TcxTextEdit(Sender).Text)=FOldStr then exit;
@@ -6103,7 +6132,7 @@ begin
   FProgressBar.Visible:=False;
   if not Assigned(FDataSet) then Exit;
   if not FDataSet.Active then Exit;
-  if not Assigned(FColumn) and not Assigned(FCheckColumn) then Exit;
+  if not Assigned(Column) and not Assigned(FCheckColumn) then Exit;
   FDataSet.DisableControls;
   try
     FDataSet.OnFilterRecord := FFilterRecord;
@@ -6143,7 +6172,7 @@ begin
 end;
 
 procedure TdsdFieldFilter.FilterRecord(DataSet: TDataSet; var Accept: Boolean);
-  Var S,S1,Name:String; k:integer; F:Boolean;
+  Var S,S1,Name:String; k,i:integer; F:Boolean;
       Item : TCollectionItem;
 begin
   if Assigned(FFilterRecord) then
@@ -6169,27 +6198,35 @@ begin
     end;
   end;
 
+  if Trim(FOldStr) = '' then exit;
 
-  S1 := Trim(FOldStr);
-  if not Assigned(FColumn) then Exit;
+  for I := 0 to  FColumnList.Count - 1 do if Assigned(FColumnList.Items[I]) then
 
-  if FColumn is TcxGridDBBandedColumn then Name:= TcxGridDBBandedColumn(FColumn).DataBinding.FieldName
-  else if FColumn is TcxGridDBColumn then Name:= TcxGridDBColumn(FColumn).DataBinding.FieldName
-  else Name := '';
+  begin
 
-  if (S1 = '') or (Name = '') then exit;
-  Accept:=true;
+    S1 := Trim(FOldStr);
+    Accept:=true;
 
-  repeat
-    k:=pos(' ',S1);
-    if K = 0 then k:=length(S1)+1;
-    s := Trim(copy(S1,1,k-1));
-    S1 := Trim(copy(S1,k,Length(S1)));
+    if TColumnCollectionItem(FColumnList.Items[I]).Column is TcxGridDBBandedColumn then
+      Name:= TcxGridDBBandedColumn(TColumnCollectionItem(FColumnList.Items[I]).Column).DataBinding.FieldName
+    else if TColumnCollectionItem(FColumnList.Items[I]).Column is TcxGridDBColumn then
+      Name:= TcxGridDBColumn(TColumnCollectionItem(FColumnList.Items[I]).Column).DataBinding.FieldName
+    else Continue;
 
-    F := Pos(AnsiUpperCase(s), AnsiUpperCase(DataSet.FieldByName(Name).AsString)) > 0;
+    repeat
+      k:=pos(' ',S1);
+      if K = 0 then k:=length(S1)+1;
+      s := Trim(copy(S1,1,k-1));
+      S1 := Trim(copy(S1,k,Length(S1)));
 
-    Accept:=Accept AND F;
-  until (S1='') or (Accept = False);
+      F := Pos(AnsiUpperCase(s), AnsiUpperCase(DataSet.FieldByName(Name).AsString)) > 0;
+
+      Accept:=Accept AND F;
+    until (S1='') or (Accept = False);
+
+    if Accept then Break;
+
+  end;
 end;
 
 procedure TdsdFieldFilter.TimerTimer(Sender: TObject);

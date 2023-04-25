@@ -137,7 +137,7 @@ BEGIN
                                                     AND tmpRemains.UnitId     = tmpMI_all.UnitId
                          )
              , tmpMovementLinkObject AS (SELECT * FROM MovementLinkObject
-                                          WHERE MovementLinkObject.MovementId in (select tmpMov.ID from tmpMov))
+                                          WHERE MovementLinkObject.MovementId in (select tmpMov_all.ID from tmpMov_all))
              , tmpMovTabletki AS (SELECT Movement.Id
                                        , Movement.InvNumber
                                        , Movement.OperDate
@@ -167,7 +167,11 @@ BEGIN
          , Min(tmpMICount.CountMI)::Integer
          , Min(gpUpdate_Movement_Check_DateMessage (Movement.Id, MovementLinkObject_CheckSourceKind.ObjectId, inSession))
     INTO outMovementId_list, outIsVIP, outIsSite, outIsTabletki, outIsLiki24, outIsOrderTabletki, outExpressVIPConfirm
-    FROM tmpMov AS Movement
+    FROM tmpMov_all AS Movement
+
+         INNER JOIN tmpMLO_ConfirmedKind AS MovementLinkObject_ConfirmedKind
+                                         ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
+
          LEFT JOIN tmpErr ON tmpErr.MovementId = Movement.Id
          
          LEFT JOIN tmpMICount ON tmpMICount.MovementId = Movement.Id
@@ -176,13 +180,18 @@ BEGIN
                                          ON MovementLinkObject_CheckSourceKind.MovementId =  Movement.Id
                                         AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
 
+         LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                   ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                  AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+
          LEFT JOIN ObjectBoolean AS ObjectBoolean_CheckSourceKind_Site
                                  ON ObjectBoolean_CheckSourceKind_Site.ObjectId = MovementLinkObject_CheckSourceKind.ObjectId
                                 AND ObjectBoolean_CheckSourceKind_Site.DescId = zc_ObjectBoolean_CheckSourceKind_Site()
                                 
          LEFT JOIN tmpMovTabletki ON 1 = 1
                                 
-    WHERE tmpErr.MovementId IS NULL;
+    WHERE tmpErr.MovementId IS NULL AND MovementLinkObject_ConfirmedKind.ObjectId = zc_Enum_ConfirmedKind_UnComplete()
+       OR COALESCE(MovementBoolean_isAuto.ValueData, False) = TRUE;
     
     outMovementId_list := COALESCE (outMovementId_list, '');
     outIsVIP := COALESCE (outIsVIP, False); 
@@ -212,4 +221,3 @@ $BODY$
 -- SELECT * FROM gpGet_Movement_Check_ConfirmedKind (inSession:= zfCalc_UserAdmin())
 
 select * from gpGet_Movement_Check_ConfirmedKind( inSession := '3');
-

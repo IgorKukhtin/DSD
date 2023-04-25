@@ -950,6 +950,13 @@ inherited CheckDeferredForm: TCheckDeferredForm
           Component = FormParams
           ComponentItem = 'CancelReasonId'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end

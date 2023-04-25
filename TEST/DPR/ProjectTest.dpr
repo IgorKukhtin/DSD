@@ -499,7 +499,6 @@ uses
   Report_BankAccount in '..\..\Forms\Report\Report_BankAccount.pas' {Report_BankAccountForm: TParentForm},
   Report_Member in '..\..\Forms\Report\Report_Member.pas' {Report_MemberForm: TParentForm},
   SaveDocumentTo1C in '..\..\Forms\Export\SaveDocumentTo1C.pas' {SaveDocumentTo1CForm: TParentForm},
-  PersonalServiceJournal in '..\..\Forms\Document\PersonalServiceJournal.pas' {PersonalServiceJournalForm: TParentForm},
   PersonalServiceList in '..\..\Forms\Guides\PersonalServiceList.pas' {PersonalServiceListForm: TParentForm},
   PersonalServiceListEdit in '..\..\Forms\Guides\PersonalServiceListEdit.pas' {PersonalServiceListEditForm: TParentForm},
   InfoMoneyGroup in '..\..\Forms\Guides\InfoMoneyGroup.pas' {InfoMoneyGroupForm: TParentForm},
@@ -1426,7 +1425,8 @@ uses
   StoreReal in '..\..\Forms\Document\StoreReal.pas' {StoreRealForm: TParentForm},
   Report_JuridicalSold_Branch in '..\..\Forms\Report\Report_JuridicalSold_Branch.pas' {Report_JuridicalSold_BranchForm: TParentForm},
   DeclarETTNXML in '..\..\SOURCE\EDI\DeclarETTNXML.pas',
-  UAECMRXML in '..\..\SOURCE\EDI\UAECMRXML.pas';
+  UAECMRXML in '..\..\SOURCE\EDI\UAECMRXML.pas',
+  PersonalServiceJournal in '..\..\Forms\Document\PersonalServiceJournal.pas'; {PersonalServiceJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

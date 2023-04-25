@@ -180,6 +180,10 @@ type
     actGetImportSetting: TdsdExecStoredProc;
     macLoadExcel: TMultiAction;
     bbLoadExcel: TdxBarButton;
+    spGetImportSetting2: TdsdStoredProc;
+    actGetImportSetting2: TdsdExecStoredProc;
+    macLoadExcel2: TMultiAction;
+    bbLoadExcel2: TdxBarButton;
   private
     { Private declarations }
   public

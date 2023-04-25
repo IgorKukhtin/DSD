@@ -4,7 +4,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -87
   ExplicitWidth = 1237
   ExplicitHeight = 720
   PixelsPerInch = 96
@@ -14,17 +13,17 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Height = 624
     TabOrder = 3
     ExplicitWidth = 1221
-    ExplicitHeight = 648
+    ExplicitHeight = 624
     ClientRectBottom = 624
     ClientRectRight = 1221
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1221
-      ExplicitHeight = 648
+      ExplicitHeight = 624
       inherited cxGrid: TcxGrid
         Width = 1221
         Height = 539
         ExplicitWidth = 1221
-        ExplicitHeight = 563
+        ExplicitHeight = 539
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -1069,6 +1068,32 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Options.Editing = False
             Width = 100
           end
+          object StartBeginDate: TcxGridDBColumn
+            Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1085#1072#1095'.'
+            DataBinding.FieldName = 'StartBeginDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd mm yyyy'
+            Properties.SaveTime = False
+            Properties.ShowTime = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1090#1086#1082#1086#1083' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1086
+            Options.Editing = False
+            Width = 80
+          end
+          object EndBeginDate: TcxGridDBColumn
+            Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1082#1086#1085#1095'.'
+            DataBinding.FieldName = 'EndBeginDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'dd mm yyyy'
+            Properties.SaveTime = False
+            Properties.ShowTime = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1090#1086#1082#1086#1083' '#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1086#1082#1086#1085#1095#1072#1085#1080#1077
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
       object ExportXmlGrid: TcxGrid
@@ -1079,7 +1104,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         Align = alBottom
         TabOrder = 1
         Visible = False
-        ExplicitTop = 563
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS

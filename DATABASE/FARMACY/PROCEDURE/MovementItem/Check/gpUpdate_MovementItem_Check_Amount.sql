@@ -18,6 +18,7 @@ $BODY$
    DECLARE vbAmount TFloat;
    DECLARE vbAmountOrder TFloat;
    DECLARE vbCheckSourceKind Integer;
+   DECLARE vbTotalCount TFloat;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -105,6 +106,27 @@ BEGIN
 
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, False);
+    
+
+    -- Удаляем если все занулили
+    IF  vbCheckSourceKind = zc_Enum_CheckSourceKind_Tabletki()
+    THEN
+
+      --определяем
+      SELECT COALESCE (MovementFloat_TotalCount.ValueData, 0)
+      INTO vbTotalCount
+      FROM Movement
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                    ON MovementFloat_TotalCount.MovementId = Movement.Id
+                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+
+      WHERE Movement.Id = inMovementId;
+
+      IF COALESCE (vbTotalCount, 0) = 0
+      THEN
+        PERFORM  gpSetErased_Movement_CheckVIP(inMovementId, 15016705, inSession);
+      END IF;
+    END IF;    
   
 END;
 $BODY$
