@@ -21,7 +21,8 @@ uses
   dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit,
-  cxCurrencyEdit, ExternalLoad;
+  cxCurrencyEdit, ExternalLoad, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
+  cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar;
 
 type
   TGoodsForm = class(TParentForm)
@@ -105,7 +106,7 @@ type
     bbUpdate_WeightTareList: TdxBarButton;
     actGetImportSetting_Goods_Price: TdsdExecStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
-    actStartLoad: TMultiAction;
+    macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     spGetImportSettingId: TdsdStoredProc;
     Name_BUH: TcxGridDBColumn;
@@ -128,6 +129,14 @@ type
     macUpdate_isIrna_list: TMultiAction;
     macUpdate_isIrna: TMultiAction;
     bbUpdate_isIrna: TdxBarButton;
+    edDate_BUH: TcxDateEdit;
+    cxLabel2: TcxLabel;
+    bbDateBuh_text: TdxBarControlContainerItem;
+    bbDateBuh: TdxBarControlContainerItem;
+    spGetImportSettingId_buh: TdsdStoredProc;
+    actGetImportSetting_Goods_BUH: TdsdExecStoredProc;
+    macStartLoad_BUH: TMultiAction;
+    bbcStartLoad_BUH: TdxBarButton;
   private
     { Private declarations }
   public

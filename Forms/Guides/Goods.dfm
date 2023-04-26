@@ -26,6 +26,7 @@ object GoodsForm: TGoodsForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -408,6 +409,20 @@ object GoodsForm: TGoodsForm
       GridView = cxGridDBTableView
     end
   end
+  object edDate_BUH: TcxDateEdit
+    Left = 712
+    Top = 106
+    EditValue = 43831d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 5
+    Width = 81
+  end
+  object cxLabel2: TcxLabel
+    Left = 591
+    Top = 107
+    Caption = #1044#1072#1090#1072' '#1076#1086' ('#1053#1072#1079#1074'. '#1090#1086#1074'. '#1041#1091#1093#1075'.):'
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 40
@@ -585,6 +600,26 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDateBuh_text'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDateBuh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbcStartLoad_BUH'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -664,7 +699,7 @@ object GoodsForm: TGoodsForm
       Category = 0
     end
     object bbStartLoad: TdxBarButton
-      Action = actStartLoad
+      Action = macStartLoad
       Category = 0
     end
     object bbUpdate_Name_BUH: TdxBarButton
@@ -679,11 +714,40 @@ object GoodsForm: TGoodsForm
       Action = macUpdate_isIrna
       Category = 0
     end
+    object bbDateBuh_text: TdxBarControlContainerItem
+      Caption = 'bbDateBuh_text'
+      Category = 0
+      Hint = 'bbDateBuh_text'
+      Visible = ivAlways
+      Control = cxLabel2
+    end
+    object bbDateBuh: TdxBarControlContainerItem
+      Caption = 'bbDateBuh'
+      Category = 0
+      Hint = 'bbDateBuh'
+      Visible = ivAlways
+      Control = edDate_BUH
+    end
+    object bbcStartLoad_BUH: TdxBarButton
+      Action = macStartLoad_BUH
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 136
     Top = 96
+    object actGetImportSetting_Goods_BUH: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_buh
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_buh
+        end>
+      Caption = 'actGetImportSetting_Goods_Price'
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -712,6 +776,25 @@ object GoodsForm: TGoodsForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
+    end
+    object macStartLoad_BUH: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Goods_BUH
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1053#1072#1079#1074#1072#1085#1080#1077' ('#1073#1091#1093#1075'.)  '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1073#1091#1093#1075'.) '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1053#1072#1079#1074#1072#1085#1080#1077' ('#1073#1091#1093#1075'.) '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1069#1082#1089#1077#1083#1103' '#1053#1072#1079#1074#1072#1085#1080#1077' ('#1073#1091#1093#1075'.)'
+      ImageIndex = 74
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -1276,9 +1359,16 @@ object GoodsForm: TGoodsForm
       ImportSettingsId.Component = FormParams
       ImportSettingsId.ComponentItem = 'ImportSettingId'
       ImportSettingsId.MultiSelectSeparator = ','
-      ExternalParams = <>
+      ExternalParams = <
+        item
+          Name = 'inDate_BUH'
+          Value = Null
+          Component = edDate_BUH
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
     end
-    object actStartLoad: TMultiAction
+    object macStartLoad: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
@@ -1685,5 +1775,37 @@ object GoodsForm: TGoodsForm
     PackSize = 1
     Left = 416
     Top = 152
+  end
+  object spGetImportSettingId_buh: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsForm;zc_Object_ImportSetting_Goods_BUH'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
+    Top = 184
   end
 end

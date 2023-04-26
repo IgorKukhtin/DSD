@@ -191,23 +191,16 @@ BEGIN
                                                  )
                ) 
 
-
- 
-                             LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
-                                                          ON MovementLinkObject_CurrencyDocument.MovementId = MIContainer.MovementId
-                                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
-                                                         
-                                                         
                                                          
     , tmpListContainerSumm AS
-                      (SELECT ContainerLO_Juridical.ObjectId         AS JuridicalId
-                            , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
-                            , MIContainer.ObjectExtId_analyzer       AS PartnerId
-                            , MIContainer.WhereObjectId_analyzer     AS UnitId
+                      (SELECT MIContainer.JuridicalId
+                            , MIContainer.InfoMoneyId
+                            , MIContainer.PartnerId
+                            , MIContainer.UnitId
                             , MIContainer.MovementItemId
                             , MIContainer.MovementId
-                            , MIContainer.ObjectId_analyzer          AS GoodsId
-                            , MIContainer.ObjectIntId_analyzer       AS GoodsKindId
+                            , MIContainer.GoodsId
+                            , MIContainer.GoodsKindId
                                -- 1.3. Сумма, без AnalyzerId (на самом деле для OperCount_Partner)
                             , (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale()     AND MIContainer.DescId = zc_MIContainer_Summ() THEN  1 * MIContainer.Amount -- знак наоборот т.к. это проводка покупателя
                                     WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.DescId = zc_MIContainer_Summ() THEN -1 * MIContainer.Amount -- знак наоборот т.к. это проводка покупателя
@@ -219,7 +212,7 @@ BEGIN
                                    ELSE 0
                               END) AS SummPartner_10100
                              -- 5.3.2. Сумма у покупателя Разница с оптовыми ценами + Скидка Акция
-                           , (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleSumm_10200()) THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
+                           , (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SaleSumm_10200())  THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
                                    WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10200() THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
                                    ELSE 0
                               END) AS SummPartner_10200
@@ -277,63 +270,37 @@ BEGIN
                             , MovementBoolean_PriceWithVAT.ValueData               AS PriceWithVAT
                             , COALESCE (MovementFloat_VATPercent.ValueData, 0)     AS VATPercent
                             , COALESCE (MovementFloat_ChangePercent.ValueData, 0)  AS ChangePercent
-                            , _tmpGoods.MeasureId
-                            , _tmpGoods.Weight 
+                            , MIContainer.MeasureId
+                            , MIContainer.Weight 
 
-                       FROM (SELECT AnalyzerId, isSale, isCost, isSumm, FALSE AS isLoss
-                             FROM Constant_ProfitLoss_AnalyzerId_View
-                             WHERE (isSale = TRUE  AND isCost = FALSE AND inDescId = zc_Movement_Sale())
-                                OR (isSale = FALSE AND isCost = FALSE AND inDescId = zc_Movement_ReturnIn())
-                             ) AS tmpAnalyzer
-                             INNER JOIN MovementItemContainer AS MIContainer
-                                                              ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
-                                                             AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                             LEFT JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
-
-                             LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical
-                                                           ON ContainerLO_Juridical.ContainerId = MIContainer.ContainerId_analyzer
-                                                          AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                             LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
-                                                           ON ContainerLinkObject_InfoMoney.ContainerId = MIContainer.ContainerId_analyzer
-                                                          AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                             LEFT JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
-                                                           ON ContainerLinkObject_PaidKind.ContainerId = MIContainer.ContainerId_analyzer
-                                                          AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-
-                             LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                       FROM tmpContainerSumm AS MIContainer
            
-                             LEFT JOIN MovementItemFloat AS MIFloat_Price
+                             LEFT JOIN tmpMIFloat AS MIFloat_Price
                                                          ON MIFloat_Price.MovementItemId = MIContainer.MovementItemId
                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                             LEFT JOIN tmpMIFloat AS MIFloat_CountForPrice
                                                          ON MIFloat_CountForPrice.MovementItemId = MIContainer.MovementItemId
                                                         AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
-                             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                             LEFT JOIN tmpMovementBoolean AS MovementBoolean_PriceWithVAT
                                                        ON MovementBoolean_PriceWithVAT.MovementId =  MIContainer.MovementId
                                                       AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-                             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                             LEFT JOIN tmpMovementFloat AS MovementFloat_VATPercent
                                                      ON MovementFloat_VATPercent.MovementId =  MIContainer.MovementId
                                                     AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-                             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                             LEFT JOIN tmpMovementFloat AS MovementFloat_ChangePercent
                                                      ON MovementFloat_ChangePercent.MovementId = MIContainer.MovementId
                                                     AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
-                             LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                             LEFT JOIN tmpMovementFloat AS MovementFloat_CurrencyValue
                                                      ON MovementFloat_CurrencyValue.MovementId =  MIContainer.MovementId
                                                     AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
-                             LEFT JOIN MovementFloat AS MovementFloat_ParValue
+                             LEFT JOIN tmpMovementFloat AS MovementFloat_ParValue
                                                      ON MovementFloat_ParValue.MovementId = MIContainer.MovementId
                                                     AND MovementFloat_ParValue.DescId = zc_MovementFloat_ParValue()
-                             LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+                             LEFT JOIN tmpMLO AS MovementLinkObject_CurrencyDocument
                                                           ON MovementLinkObject_CurrencyDocument.MovementId = MIContainer.MovementId
                                                          AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
-
-                       WHERE (_tmpUnit.UnitId   > 0 OR vbIsUnit = FALSE)
-                         AND (_tmpGoods.GoodsId > 0 OR vbIsGoods = FALSE)
-                         AND (ContainerLinkObject_PaidKind.ObjectId  = inPaidKindId  OR COALESCE (inPaidKindId, 0)  = 0)
-                         AND (ContainerLinkObject_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
-                         AND (ContainerLO_Juridical.ObjectId         = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                       )
 
        , tmpMIBoolean_BarCode AS (SELECT MIBoolean_BarCode.*
@@ -458,7 +425,8 @@ BEGIN
                                    FROM MovementFloat
                                    WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpOperationGroup_all.MovementId FROM tmpOperationGroup_all)
                                      AND MovementFloat.DescId = zc_MovementFloat_ChangePercent()
-                                  )
+                                  ) 
+                                 
 
        , tmpOperationGroup AS
                 (SELECT MovementDesc.ItemName
@@ -534,6 +502,9 @@ BEGIN
                         , tmpListContainerSumm.isBarCode
                         , tmpListContainerSumm.ChangePercentAmount
                 )      
+ , tmpGoodsByGoodsKind_View AS (SELECT * FROM Object_GoodsByGoodsKind_View)
+
+-- lfSelect_ObjectHistory_PriceListItem   -- тоже попробовать выбрать 
 
 
     -- Результат
@@ -628,7 +599,7 @@ BEGIN
 
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
           
-          -- Товар и Вид товара
+          -- Товар и Вид товара   --tmpGoodsByGoodsKind_View
           LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpOperationGroup.GoodsId
                                                 AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpOperationGroup.GoodsKindId
           -- вес в упаковке: "чистый" вес + вес 1-ого пакета
@@ -673,4 +644,5 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_GoodsMI_byMovement_copy (inStartDate := ('01.03.2023')::TDateTime , inEndDate := ('31.03.2023')::TDateTime , inPriceDate := ('01.03.2023')::TDateTime , inDescId := 5 , inUnitId := 0 , inJuridicalId := 0 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 1832 , inGoodsId := 0 ,  inSession := '5');
+-- 
+select * from gpReport_GoodsMI_byMovement_copy (inStartDate := ('01.03.2023')::TDateTime , inEndDate := ('31.03.2023')::TDateTime , inPriceDate := ('01.03.2023')::TDateTime , inDescId := 5 , inUnitId := 0 , inJuridicalId := 0 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 1832 , inGoodsId := 0 ,  inSession := '5');
