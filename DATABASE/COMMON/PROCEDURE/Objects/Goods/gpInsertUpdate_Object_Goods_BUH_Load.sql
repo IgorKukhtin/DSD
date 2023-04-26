@@ -58,7 +58,7 @@ BEGIN
      -- сохранили свойство <Название БУХГ>
      PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_BUH(), vbGoodsId, vbGoodsName);
      -- сохранили свойство <Дата до которой действует Название товара(бухг.)>
-     PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_BUH(), vbGoodsId,inDate_BUH);
+     PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_BUH(), vbGoodsId, inDate_BUH);
 
 
 
