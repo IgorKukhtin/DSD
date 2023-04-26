@@ -27,6 +27,8 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
     vbUserId := lpGetUserBySession (inSession);
 
+    inPrice := Round(inPrice, 2);
+    inPriceSale := Round(inPriceSale, 2);
 
 
     -- !!!только так - определяется <Торговая сеть>!!!

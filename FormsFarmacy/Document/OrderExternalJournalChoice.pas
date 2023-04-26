@@ -36,6 +36,8 @@ type
     cxLabel4: TcxLabel;
     edUnit: TcxButtonEdit;
     UnitGuides: TdsdGuides;
+    Comment: TcxGridDBColumn;
+    isDifferent: TcxGridDBColumn;
   private
     { Private declarations }
   public

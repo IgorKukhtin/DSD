@@ -113,6 +113,7 @@
         <Icon_MainIcon>FarmacyInventory.ico</Icon_MainIcon>
         <UWP_DelphiLogo44>..\FormsFarmacy\Inventory\FarmacyInventory_150.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>..\FormsFarmacy\Inventory\FarmacyInventory_40.png</UWP_DelphiLogo150>
+        <Debugger_RunParams>/skipcheckconnect</Debugger_RunParams>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

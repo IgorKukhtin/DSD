@@ -307,16 +307,16 @@ type
   IXMLPostalTradeAddressType = interface(IXMLNode)
     ['{C0C679C2-85EE-4EE5-930A-4E7B5F3D4861}']
     { Property Accessors }
-    function Get_PostcodeCode: Integer;
+    function Get_PostcodeCode: UnicodeString;
     function Get_StreetName: UnicodeString;
     function Get_CityName: UnicodeString;
     function Get_CountryID: UnicodeString;
-    procedure Set_PostcodeCode(Value: Integer);
+    procedure Set_PostcodeCode(Value: UnicodeString);
     procedure Set_StreetName(Value: UnicodeString);
     procedure Set_CityName(Value: UnicodeString);
     procedure Set_CountryID(Value: UnicodeString);
     { Methods & Properties }
-    property PostcodeCode: Integer read Get_PostcodeCode write Set_PostcodeCode;
+    property PostcodeCode: UnicodeString read Get_PostcodeCode write Set_PostcodeCode;
     property StreetName: UnicodeString read Get_StreetName write Set_StreetName;
     property CityName: UnicodeString read Get_CityName write Set_CityName;
     property CountryID: UnicodeString read Get_CountryID write Set_CountryID;
@@ -347,10 +347,10 @@ type
   IXMLSpecifiedGovernmentRegistrationType = interface(IXMLNode)
     ['{BF3FE8FC-0F8C-44D3-B417-6080F918DB7F}']
     { Property Accessors }
-    function Get_ID: Integer;
-    procedure Set_ID(Value: Integer);
+    function Get_ID: UnicodeString;
+    procedure Set_ID(Value: UnicodeString);
     { Methods & Properties }
-    property ID: Integer read Get_ID write Set_ID;
+    property ID: UnicodeString read Get_ID write Set_ID;
   end;
 
 { IXMLCarrierTradePartyType }
@@ -749,12 +749,12 @@ type
     ['{81832F41-183D-4ADD-B05E-0594646532B0}']
     { Property Accessors }
     function Get_ContentCode: UnicodeString;
-    function Get_Content: Integer;
+    function Get_Content: UnicodeString;
     procedure Set_ContentCode(Value: UnicodeString);
-    procedure Set_Content(Value: Integer);
+    procedure Set_Content(Value: UnicodeString);
     { Methods & Properties }
     property ContentCode: UnicodeString read Get_ContentCode write Set_ContentCode;
-    property Content: Integer read Get_Content write Set_Content;
+    property Content: UnicodeString read Get_Content write Set_Content;
   end;
 
 { IXMLApplicableNoteTypeList }
@@ -807,10 +807,10 @@ type
   IXMLAffixedLogisticsSealType = interface(IXMLNode)
     ['{FB94B9C4-5EFA-4DAA-B9B1-C9DAAF7211CF}']
     { Property Accessors }
-    function Get_ID: Integer;
-    procedure Set_ID(Value: Integer);
+    function Get_ID: UnicodeString;
+    procedure Set_ID(Value: UnicodeString);
     { Methods & Properties }
-    property ID: Integer read Get_ID write Set_ID;
+    property ID: UnicodeString read Get_ID write Set_ID;
   end;
 
 { IXMLMainCarriageLogisticsTransportMovementType }
@@ -1110,11 +1110,11 @@ type
   TXMLPostalTradeAddressType = class(TXMLNode, IXMLPostalTradeAddressType)
   protected
     { IXMLPostalTradeAddressType }
-    function Get_PostcodeCode: Integer;
+    function Get_PostcodeCode: UnicodeString;
     function Get_StreetName: UnicodeString;
     function Get_CityName: UnicodeString;
     function Get_CountryID: UnicodeString;
-    procedure Set_PostcodeCode(Value: Integer);
+    procedure Set_PostcodeCode(Value: UnicodeString);
     procedure Set_StreetName(Value: UnicodeString);
     procedure Set_CityName(Value: UnicodeString);
     procedure Set_CountryID(Value: UnicodeString);
@@ -1141,8 +1141,8 @@ type
   TXMLSpecifiedGovernmentRegistrationType = class(TXMLNode, IXMLSpecifiedGovernmentRegistrationType)
   protected
     { IXMLSpecifiedGovernmentRegistrationType }
-    function Get_ID: Integer;
-    procedure Set_ID(Value: Integer);
+    function Get_ID: UnicodeString;
+    procedure Set_ID(Value: UnicodeString);
   end;
 
 { TXMLCarrierTradePartyType }
@@ -1470,9 +1470,9 @@ type
   protected
     { IXMLApplicableNoteType }
     function Get_ContentCode: UnicodeString;
-    function Get_Content: Integer;
+    function Get_Content: UnicodeString;
     procedure Set_ContentCode(Value: UnicodeString);
-    procedure Set_Content(Value: Integer);
+    procedure Set_Content(Value: UnicodeString);
   end;
 
 { TXMLApplicableNoteTypeList }
@@ -1521,8 +1521,8 @@ type
   TXMLAffixedLogisticsSealType = class(TXMLNode, IXMLAffixedLogisticsSealType)
   protected
     { IXMLAffixedLogisticsSealType }
-    function Get_ID: Integer;
-    procedure Set_ID(Value: Integer);
+    function Get_ID: UnicodeString;
+    procedure Set_ID(Value: UnicodeString);
   end;
 
 { TXMLMainCarriageLogisticsTransportMovementType }
@@ -1590,6 +1590,10 @@ end;
 function NewUAECMR: IXMLUAECMRType;
 begin
   Result := NewXMLDocument.GetDocBinding('UAECMR', TXMLUAECMRType, TargetNamespace) as IXMLUAECMRType;
+  Result.SetAttributeNS('xmlns:qdt', '', 'urn:un:unece:uncefact:data:standard:QualifiedDataType:103');
+  Result.SetAttributeNS('xmlns:ram', '', 'urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:103');
+  Result.SetAttributeNS('xmlns:uas', '', 'urn:ua:signatures:SignaturesExtensions:1');
+  Result.SetAttributeNS('xmlns:udt', '', 'urn:un:unece:uncefact:data:standard:UnqualifiedDataType:27');
 end;
 
 { TXMLUAECMRType }
@@ -1641,72 +1645,72 @@ end;
 
 function TXMLExchangedDocumentContextType.Get_SpecifiedTransactionID: UnicodeString;
 begin
-  Result := ChildNodes['SpecifiedTransactionID'].Text;
+  Result := ChildNodes['ram:SpecifiedTransactionID'].Text;
 end;
 
 procedure TXMLExchangedDocumentContextType.Set_SpecifiedTransactionID(Value: UnicodeString);
 begin
-  ChildNodes['SpecifiedTransactionID'].NodeValue := Value;
+  ChildNodes['ram:SpecifiedTransactionID'].NodeValue := Value;
 end;
 
 function TXMLExchangedDocumentContextType.Get_BusinessProcessSpecifiedDocumentContextParameter: IXMLBusinessProcessSpecifiedDocumentContextParameterType;
 begin
-  Result := ChildNodes['BusinessProcessSpecifiedDocumentContextParameter'] as IXMLBusinessProcessSpecifiedDocumentContextParameterType;
+  Result := ChildNodes['ram:BusinessProcessSpecifiedDocumentContextParameter'] as IXMLBusinessProcessSpecifiedDocumentContextParameterType;
 end;
 
 function TXMLExchangedDocumentContextType.Get_GuidelineSpecifiedDocumentContextParameter: IXMLGuidelineSpecifiedDocumentContextParameterType;
 begin
-  Result := ChildNodes['GuidelineSpecifiedDocumentContextParameter'] as IXMLGuidelineSpecifiedDocumentContextParameterType;
+  Result := ChildNodes['ram:GuidelineSpecifiedDocumentContextParameter'] as IXMLGuidelineSpecifiedDocumentContextParameterType;
 end;
 
 { TXMLBusinessProcessSpecifiedDocumentContextParameterType }
 
 function TXMLBusinessProcessSpecifiedDocumentContextParameterType.Get_ID: UnicodeString;
 begin
-  Result := ChildNodes['ID'].Text;
+  Result := ChildNodes['ram:ID'].Text;
 end;
 
 procedure TXMLBusinessProcessSpecifiedDocumentContextParameterType.Set_ID(Value: UnicodeString);
 begin
-  ChildNodes['ID'].NodeValue := Value;
+  ChildNodes['ram:ID'].NodeValue := Value;
 end;
 
 { TXMLGuidelineSpecifiedDocumentContextParameterType }
 
 function TXMLGuidelineSpecifiedDocumentContextParameterType.Get_ID: UnicodeString;
 begin
-  Result := ChildNodes['ID'].Text;
+  Result := ChildNodes['ram:ID'].Text;
 end;
 
 procedure TXMLGuidelineSpecifiedDocumentContextParameterType.Set_ID(Value: UnicodeString);
 begin
-  ChildNodes['ID'].NodeValue := Value;
+  ChildNodes['ram:ID'].NodeValue := Value;
 end;
 
 { TXMLExchangedDocumentType }
 
 procedure TXMLExchangedDocumentType.AfterConstruction;
 begin
-  RegisterChildNode('IssueDateTime', TXMLIssueDateTimeType);
-  RegisterChildNode('IncludedNote', TXMLIncludedNoteType);
-  RegisterChildNode('IssueLogisticsLocation', TXMLIssueLogisticsLocationType);
-  FIncludedNote := CreateCollection(TXMLIncludedNoteTypeList, IXMLIncludedNoteType, 'IncludedNote') as IXMLIncludedNoteTypeList;
+  RegisterChildNode('ram:IssueDateTime', TXMLIssueDateTimeType);
+  RegisterChildNode('ram:IncludedNote', TXMLIncludedNoteType);
+  RegisterChildNode('ram:IssueLogisticsLocation', TXMLIssueLogisticsLocationType);
+  FIncludedNote := CreateCollection(TXMLIncludedNoteTypeList, IXMLIncludedNoteType, 'ram:IncludedNote') as IXMLIncludedNoteTypeList;
   inherited;
 end;
 
 function TXMLExchangedDocumentType.Get_ID: UnicodeString;
 begin
-  Result := ChildNodes['ID'].Text;
+  Result := ChildNodes['ram:ID'].Text;
 end;
 
 procedure TXMLExchangedDocumentType.Set_ID(Value: UnicodeString);
 begin
-  ChildNodes['ID'].NodeValue := Value;
+  ChildNodes['ram:ID'].NodeValue := Value;
 end;
 
 function TXMLExchangedDocumentType.Get_IssueDateTime: IXMLIssueDateTimeType;
 begin
-  Result := ChildNodes['IssueDateTime'] as IXMLIssueDateTimeType;
+  Result := ChildNodes['ram:IssueDateTime'] as IXMLIssueDateTimeType;
 end;
 
 function TXMLExchangedDocumentType.Get_IncludedNote: IXMLIncludedNoteTypeList;
@@ -1716,19 +1720,19 @@ end;
 
 function TXMLExchangedDocumentType.Get_IssueLogisticsLocation: IXMLIssueLogisticsLocationType;
 begin
-  Result := ChildNodes['IssueLogisticsLocation'] as IXMLIssueLogisticsLocationType;
+  Result := ChildNodes['ram:IssueLogisticsLocation'] as IXMLIssueLogisticsLocationType;
 end;
 
 { TXMLIssueDateTimeType }
 
 function TXMLIssueDateTimeType.Get_DateTime: UnicodeString;
 begin
-  Result := ChildNodes['DateTime'].Text;
+  Result := ChildNodes['udt:DateTime'].Text;
 end;
 
 procedure TXMLIssueDateTimeType.Set_DateTime(Value: UnicodeString);
 begin
-  ChildNodes['DateTime'].NodeValue := Value;
+  ChildNodes['udt:DateTime'].NodeValue := Value;
 end;
 
 { TXMLIncludedNoteType }
@@ -1741,17 +1745,17 @@ end;
 
 function TXMLIncludedNoteType.Get_ContentCode: IXMLContentCodeType;
 begin
-  Result := ChildNodes['ContentCode'] as IXMLContentCodeType;
+  Result := ChildNodes['ram:ContentCode'] as IXMLContentCodeType;
 end;
 
 function TXMLIncludedNoteType.Get_Content: UnicodeString;
 begin
-  Result := ChildNodes['Content'].Text;
+  Result := ChildNodes['ram:Content'].Text;
 end;
 
 procedure TXMLIncludedNoteType.Set_Content(Value: UnicodeString);
 begin
-  ChildNodes['Content'].NodeValue := Value;
+  ChildNodes['ram:Content'].NodeValue := Value;
 end;
 
 { TXMLIncludedNoteTypeList }
@@ -1787,22 +1791,22 @@ end;
 
 function TXMLIssueLogisticsLocationType.Get_Name: UnicodeString;
 begin
-  Result := ChildNodes['Name'].Text;
+  Result := ChildNodes['ram:Name'].Text;
 end;
 
 procedure TXMLIssueLogisticsLocationType.Set_Name(Value: UnicodeString);
 begin
-  ChildNodes['Name'].NodeValue := Value;
+  ChildNodes['ram:Name'].NodeValue := Value;
 end;
 
 function TXMLIssueLogisticsLocationType.Get_Description: UnicodeString;
 begin
-  Result := ChildNodes['Description'].Text;
+  Result := ChildNodes['ram:Description'].Text;
 end;
 
 procedure TXMLIssueLogisticsLocationType.Set_Description(Value: UnicodeString);
 begin
-  ChildNodes['Description'].NodeValue := Value;
+  ChildNodes['ram:Description'].NodeValue := Value;
 end;
 
 { TXMLSpecifiedSupplyChainConsignmentType }
@@ -1830,62 +1834,62 @@ end;
 
 function TXMLSpecifiedSupplyChainConsignmentType.Get_GrossWeightMeasure: IXMLGrossWeightMeasureType;
 begin
-  Result := ChildNodes['GrossWeightMeasure'] as IXMLGrossWeightMeasureType;
+  Result := ChildNodes['ram:GrossWeightMeasure'] as IXMLGrossWeightMeasureType;
 end;
 
 function TXMLSpecifiedSupplyChainConsignmentType.Get_AssociatedInvoiceAmount: IXMLAssociatedInvoiceAmountType;
 begin
-  Result := ChildNodes['AssociatedInvoiceAmount'] as IXMLAssociatedInvoiceAmountType;
+  Result := ChildNodes['ram:AssociatedInvoiceAmount'] as IXMLAssociatedInvoiceAmountType;
 end;
 
 function TXMLSpecifiedSupplyChainConsignmentType.Get_ConsignmentItemQuantity: Integer;
 begin
-  Result := ChildNodes['ConsignmentItemQuantity'].NodeValue;
+  Result := ChildNodes['ram:ConsignmentItemQuantity'].NodeValue;
 end;
 
 procedure TXMLSpecifiedSupplyChainConsignmentType.Set_ConsignmentItemQuantity(Value: Integer);
 begin
-  ChildNodes['ConsignmentItemQuantity'].NodeValue := Value;
+  ChildNodes['ram:ConsignmentItemQuantity'].NodeValue := Value;
 end;
 
 function TXMLSpecifiedSupplyChainConsignmentType.Get_ConsignorTradeParty: IXMLConsignorTradePartyType;
 begin
-  Result := ChildNodes['ConsignorTradeParty'] as IXMLConsignorTradePartyType;
+  Result := ChildNodes['ram:ConsignorTradeParty'] as IXMLConsignorTradePartyType;
 end;
 
 function TXMLSpecifiedSupplyChainConsignmentType.Get_ConsigneeTradeParty: IXMLConsigneeTradePartyType;
 begin
-  Result := ChildNodes['ConsigneeTradeParty'] as IXMLConsigneeTradePartyType;
+  Result := ChildNodes['ram:ConsigneeTradeParty'] as IXMLConsigneeTradePartyType;
 end;
 
 function TXMLSpecifiedSupplyChainConsignmentType.Get_CarrierTradeParty: IXMLCarrierTradePartyType;
 begin
-  Result := ChildNodes['CarrierTradeParty'] as IXMLCarrierTradePartyType;
+  Result := ChildNodes['ram:CarrierTradeParty'] as IXMLCarrierTradePartyType;
 end;
 
 function TXMLSpecifiedSupplyChainConsignmentType.Get_NotifiedTradeParty: IXMLNotifiedTradePartyType;
 begin
-  Result := ChildNodes['NotifiedTradeParty'] as IXMLNotifiedTradePartyType;
+  Result := ChildNodes['ram:NotifiedTradeParty'] as IXMLNotifiedTradePartyType;
 end;
 
 function TXMLSpecifiedSupplyChainConsignmentType.Get_CarrierAcceptanceLogisticsLocation: IXMLCarrierAcceptanceLogisticsLocationType;
 begin
-  Result := ChildNodes['CarrierAcceptanceLogisticsLocation'] as IXMLCarrierAcceptanceLogisticsLocationType;
+  Result := ChildNodes['ram:CarrierAcceptanceLogisticsLocation'] as IXMLCarrierAcceptanceLogisticsLocationType;
 end;
 
 function TXMLSpecifiedSupplyChainConsignmentType.Get_ConsigneeReceiptLogisticsLocation: IXMLConsigneeReceiptLogisticsLocationType;
 begin
-  Result := ChildNodes['ConsigneeReceiptLogisticsLocation'] as IXMLConsigneeReceiptLogisticsLocationType;
+  Result := ChildNodes['ram:ConsigneeReceiptLogisticsLocation'] as IXMLConsigneeReceiptLogisticsLocationType;
 end;
 
 function TXMLSpecifiedSupplyChainConsignmentType.Get_DeliveryTransportEvent: IXMLDeliveryTransportEventType;
 begin
-  Result := ChildNodes['DeliveryTransportEvent'] as IXMLDeliveryTransportEventType;
+  Result := ChildNodes['ram:DeliveryTransportEvent'] as IXMLDeliveryTransportEventType;
 end;
 
 function TXMLSpecifiedSupplyChainConsignmentType.Get_PickUpTransportEvent: IXMLPickUpTransportEventType;
 begin
-  Result := ChildNodes['PickUpTransportEvent'] as IXMLPickUpTransportEventType;
+  Result := ChildNodes['ram:PickUpTransportEvent'] as IXMLPickUpTransportEventType;
 end;
 
 function TXMLSpecifiedSupplyChainConsignmentType.Get_IncludedSupplyChainConsignmentItem: IXMLIncludedSupplyChainConsignmentItemTypeList;
@@ -1900,12 +1904,12 @@ end;
 
 function TXMLSpecifiedSupplyChainConsignmentType.Get_MainCarriageLogisticsTransportMovement: IXMLMainCarriageLogisticsTransportMovementType;
 begin
-  Result := ChildNodes['MainCarriageLogisticsTransportMovement'] as IXMLMainCarriageLogisticsTransportMovementType;
+  Result := ChildNodes['ram:MainCarriageLogisticsTransportMovement'] as IXMLMainCarriageLogisticsTransportMovementType;
 end;
 
 function TXMLSpecifiedSupplyChainConsignmentType.Get_DeliveryInstructions: IXMLDeliveryInstructionsType;
 begin
-  Result := ChildNodes['DeliveryInstructions'] as IXMLDeliveryInstructionsType;
+  Result := ChildNodes['ram:DeliveryInstructions'] as IXMLDeliveryInstructionsType;
 end;
 
 { TXMLGrossWeightMeasureType }
@@ -1943,32 +1947,32 @@ end;
 
 function TXMLConsignorTradePartyType.Get_ID: IXMLIDType;
 begin
-  Result := ChildNodes['ID'] as IXMLIDType;
+  Result := ChildNodes['ram:ID'] as IXMLIDType;
 end;
 
 function TXMLConsignorTradePartyType.Get_Name: UnicodeString;
 begin
-  Result := ChildNodes['Name'].Text;
+  Result := ChildNodes['ram:Name'].Text;
 end;
 
 procedure TXMLConsignorTradePartyType.Set_Name(Value: UnicodeString);
 begin
-  ChildNodes['Name'].NodeValue := Value;
+  ChildNodes['ram:Name'].NodeValue := Value;
 end;
 
 function TXMLConsignorTradePartyType.Get_RoleCode: UnicodeString;
 begin
-  Result := ChildNodes['RoleCode'].Text;
+  Result := ChildNodes['ram:RoleCode'].Text;
 end;
 
 procedure TXMLConsignorTradePartyType.Set_RoleCode(Value: UnicodeString);
 begin
-  ChildNodes['RoleCode'].NodeValue := Value;
+  ChildNodes['ram:RoleCode'].NodeValue := Value;
 end;
 
 function TXMLConsignorTradePartyType.Get_PostalTradeAddress: IXMLPostalTradeAddressType;
 begin
-  Result := ChildNodes['PostalTradeAddress'] as IXMLPostalTradeAddressType;
+  Result := ChildNodes['ram:PostalTradeAddress'] as IXMLPostalTradeAddressType;
 end;
 
 { TXMLIDType }
@@ -1985,44 +1989,44 @@ end;
 
 { TXMLPostalTradeAddressType }
 
-function TXMLPostalTradeAddressType.Get_PostcodeCode: Integer;
+function TXMLPostalTradeAddressType.Get_PostcodeCode: UnicodeString;
 begin
-  Result := ChildNodes['PostcodeCode'].NodeValue;
+  Result := ChildNodes['ram:PostcodeCode'].Text;
 end;
 
-procedure TXMLPostalTradeAddressType.Set_PostcodeCode(Value: Integer);
+procedure TXMLPostalTradeAddressType.Set_PostcodeCode(Value: UnicodeString);
 begin
-  ChildNodes['PostcodeCode'].NodeValue := Value;
+  ChildNodes['ram:PostcodeCode'].NodeValue := Value;
 end;
 
 function TXMLPostalTradeAddressType.Get_StreetName: UnicodeString;
 begin
-  Result := ChildNodes['StreetName'].Text;
+  Result := ChildNodes['ram:StreetName'].Text;
 end;
 
 procedure TXMLPostalTradeAddressType.Set_StreetName(Value: UnicodeString);
 begin
-  ChildNodes['StreetName'].NodeValue := Value;
+  ChildNodes['ram:StreetName'].NodeValue := Value;
 end;
 
 function TXMLPostalTradeAddressType.Get_CityName: UnicodeString;
 begin
-  Result := ChildNodes['CityName'].Text;
+  Result := ChildNodes['ram:CityName'].Text;
 end;
 
 procedure TXMLPostalTradeAddressType.Set_CityName(Value: UnicodeString);
 begin
-  ChildNodes['CityName'].NodeValue := Value;
+  ChildNodes['ram:CityName'].NodeValue := Value;
 end;
 
 function TXMLPostalTradeAddressType.Get_CountryID: UnicodeString;
 begin
-  Result := ChildNodes['CountryID'].Text;
+  Result := ChildNodes['ram:CountryID'].Text;
 end;
 
 procedure TXMLPostalTradeAddressType.Set_CountryID(Value: UnicodeString);
 begin
-  ChildNodes['CountryID'].NodeValue := Value;
+  ChildNodes['ram:CountryID'].NodeValue := Value;
 end;
 
 { TXMLConsigneeTradePartyType }
@@ -2037,49 +2041,49 @@ end;
 
 function TXMLConsigneeTradePartyType.Get_ID: IXMLIDType;
 begin
-  Result := ChildNodes['ID'] as IXMLIDType;
+  Result := ChildNodes['ram:ID'] as IXMLIDType;
 end;
 
 function TXMLConsigneeTradePartyType.Get_Name: UnicodeString;
 begin
-  Result := ChildNodes['Name'].Text;
+  Result := ChildNodes['ram:Name'].Text;
 end;
 
 procedure TXMLConsigneeTradePartyType.Set_Name(Value: UnicodeString);
 begin
-  ChildNodes['Name'].NodeValue := Value;
+  ChildNodes['ram:Name'].NodeValue := Value;
 end;
 
 function TXMLConsigneeTradePartyType.Get_RoleCode: UnicodeString;
 begin
-  Result := ChildNodes['RoleCode'].Text;
+  Result := ChildNodes['ram:RoleCode'].Text;
 end;
 
 procedure TXMLConsigneeTradePartyType.Set_RoleCode(Value: UnicodeString);
 begin
-  ChildNodes['RoleCode'].NodeValue := Value;
+  ChildNodes['ram:RoleCode'].NodeValue := Value;
 end;
 
 function TXMLConsigneeTradePartyType.Get_PostalTradeAddress: IXMLPostalTradeAddressType;
 begin
-  Result := ChildNodes['PostalTradeAddress'] as IXMLPostalTradeAddressType;
+  Result := ChildNodes['ram:PostalTradeAddress'] as IXMLPostalTradeAddressType;
 end;
 
 function TXMLConsigneeTradePartyType.Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
 begin
-  Result := ChildNodes['SpecifiedGovernmentRegistration'] as IXMLSpecifiedGovernmentRegistrationType;
+  Result := ChildNodes['ram:SpecifiedGovernmentRegistration'] as IXMLSpecifiedGovernmentRegistrationType;
 end;
 
 { TXMLSpecifiedGovernmentRegistrationType }
 
-function TXMLSpecifiedGovernmentRegistrationType.Get_ID: Integer;
+function TXMLSpecifiedGovernmentRegistrationType.Get_ID: UnicodeString;
 begin
-  Result := ChildNodes['ID'].NodeValue;
+  Result := ChildNodes['ram:ID'].Text;
 end;
 
-procedure TXMLSpecifiedGovernmentRegistrationType.Set_ID(Value: Integer);
+procedure TXMLSpecifiedGovernmentRegistrationType.Set_ID(Value: UnicodeString);
 begin
-  ChildNodes['ID'].NodeValue := Value;
+  ChildNodes['ram:ID'].NodeValue := Value;
 end;
 
 { TXMLCarrierTradePartyType }
@@ -2095,42 +2099,42 @@ end;
 
 function TXMLCarrierTradePartyType.Get_ID: IXMLIDType;
 begin
-  Result := ChildNodes['ID'] as IXMLIDType;
+  Result := ChildNodes['ram:ID'] as IXMLIDType;
 end;
 
 function TXMLCarrierTradePartyType.Get_Name: UnicodeString;
 begin
-  Result := ChildNodes['Name'].Text;
+  Result := ChildNodes['ram:Name'].Text;
 end;
 
 procedure TXMLCarrierTradePartyType.Set_Name(Value: UnicodeString);
 begin
-  ChildNodes['Name'].NodeValue := Value;
+  ChildNodes['ram:Name'].NodeValue := Value;
 end;
 
 function TXMLCarrierTradePartyType.Get_RoleCode: UnicodeString;
 begin
-  Result := ChildNodes['RoleCode'].Text;
+  Result := ChildNodes['ram:RoleCode'].Text;
 end;
 
 procedure TXMLCarrierTradePartyType.Set_RoleCode(Value: UnicodeString);
 begin
-  ChildNodes['RoleCode'].NodeValue := Value;
+  ChildNodes['ram:RoleCode'].NodeValue := Value;
 end;
 
 function TXMLCarrierTradePartyType.Get_DefinedTradeContact: IXMLDefinedTradeContactType;
 begin
-  Result := ChildNodes['DefinedTradeContact'] as IXMLDefinedTradeContactType;
+  Result := ChildNodes['ram:DefinedTradeContact'] as IXMLDefinedTradeContactType;
 end;
 
 function TXMLCarrierTradePartyType.Get_PostalTradeAddress: IXMLPostalTradeAddressType;
 begin
-  Result := ChildNodes['PostalTradeAddress'] as IXMLPostalTradeAddressType;
+  Result := ChildNodes['ram:PostalTradeAddress'] as IXMLPostalTradeAddressType;
 end;
 
 function TXMLCarrierTradePartyType.Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
 begin
-  Result := ChildNodes['SpecifiedGovernmentRegistration'] as IXMLSpecifiedGovernmentRegistrationType;
+  Result := ChildNodes['ram:SpecifiedGovernmentRegistration'] as IXMLSpecifiedGovernmentRegistrationType;
 end;
 
 { TXMLDefinedTradeContactType }
@@ -2145,63 +2149,63 @@ end;
 
 function TXMLDefinedTradeContactType.Get_PersonName: UnicodeString;
 begin
-  Result := ChildNodes['PersonName'].Text;
+  Result := ChildNodes['ram:PersonName'].Text;
 end;
 
 procedure TXMLDefinedTradeContactType.Set_PersonName(Value: UnicodeString);
 begin
-  ChildNodes['PersonName'].NodeValue := Value;
+  ChildNodes['ram:PersonName'].NodeValue := Value;
 end;
 
 function TXMLDefinedTradeContactType.Get_TelephoneUniversalCommunication: IXMLTelephoneUniversalCommunicationType;
 begin
-  Result := ChildNodes['TelephoneUniversalCommunication'] as IXMLTelephoneUniversalCommunicationType;
+  Result := ChildNodes['ram:TelephoneUniversalCommunication'] as IXMLTelephoneUniversalCommunicationType;
 end;
 
 function TXMLDefinedTradeContactType.Get_EmailURIUniversalCommunication: IXMLEmailURIUniversalCommunicationType;
 begin
-  Result := ChildNodes['EmailURIUniversalCommunication'] as IXMLEmailURIUniversalCommunicationType;
+  Result := ChildNodes['ram:EmailURIUniversalCommunication'] as IXMLEmailURIUniversalCommunicationType;
 end;
 
 function TXMLDefinedTradeContactType.Get_MobileTelephoneUniversalCommunication: IXMLMobileTelephoneUniversalCommunicationType;
 begin
-  Result := ChildNodes['MobileTelephoneUniversalCommunication'] as IXMLMobileTelephoneUniversalCommunicationType;
+  Result := ChildNodes['ram:MobileTelephoneUniversalCommunication'] as IXMLMobileTelephoneUniversalCommunicationType;
 end;
 
 { TXMLTelephoneUniversalCommunicationType }
 
 function TXMLTelephoneUniversalCommunicationType.Get_CompleteNumber: Integer;
 begin
-  Result := ChildNodes['CompleteNumber'].NodeValue;
+  Result := ChildNodes['ram:CompleteNumber'].NodeValue;
 end;
 
 procedure TXMLTelephoneUniversalCommunicationType.Set_CompleteNumber(Value: Integer);
 begin
-  ChildNodes['CompleteNumber'].NodeValue := Value;
+  ChildNodes['ram:CompleteNumber'].NodeValue := Value;
 end;
 
 { TXMLEmailURIUniversalCommunicationType }
 
 function TXMLEmailURIUniversalCommunicationType.Get_CompleteNumber: UnicodeString;
 begin
-  Result := ChildNodes['CompleteNumber'].Text;
+  Result := ChildNodes['ram:CompleteNumber'].Text;
 end;
 
 procedure TXMLEmailURIUniversalCommunicationType.Set_CompleteNumber(Value: UnicodeString);
 begin
-  ChildNodes['CompleteNumber'].NodeValue := Value;
+  ChildNodes['ram:CompleteNumber'].NodeValue := Value;
 end;
 
 { TXMLMobileTelephoneUniversalCommunicationType }
 
 function TXMLMobileTelephoneUniversalCommunicationType.Get_CompleteNumber: Integer;
 begin
-  Result := ChildNodes['CompleteNumber'].NodeValue;
+  Result := ChildNodes['ram:CompleteNumber'].NodeValue;
 end;
 
 procedure TXMLMobileTelephoneUniversalCommunicationType.Set_CompleteNumber(Value: Integer);
 begin
-  ChildNodes['CompleteNumber'].NodeValue := Value;
+  ChildNodes['ram:CompleteNumber'].NodeValue := Value;
 end;
 
 { TXMLNotifiedTradePartyType }
@@ -2216,37 +2220,37 @@ end;
 
 function TXMLNotifiedTradePartyType.Get_ID: IXMLIDType;
 begin
-  Result := ChildNodes['ID'] as IXMLIDType;
+  Result := ChildNodes['ram:ID'] as IXMLIDType;
 end;
 
 function TXMLNotifiedTradePartyType.Get_Name: UnicodeString;
 begin
-  Result := ChildNodes['Name'].Text;
+  Result := ChildNodes['ram:Name'].Text;
 end;
 
 procedure TXMLNotifiedTradePartyType.Set_Name(Value: UnicodeString);
 begin
-  ChildNodes['Name'].NodeValue := Value;
+  ChildNodes['ram:Name'].NodeValue := Value;
 end;
 
 function TXMLNotifiedTradePartyType.Get_RoleCode: UnicodeString;
 begin
-  Result := ChildNodes['RoleCode'].Text;
+  Result := ChildNodes['ram:RoleCode'].Text;
 end;
 
 procedure TXMLNotifiedTradePartyType.Set_RoleCode(Value: UnicodeString);
 begin
-  ChildNodes['RoleCode'].NodeValue := Value;
+  ChildNodes['ram:RoleCode'].NodeValue := Value;
 end;
 
 function TXMLNotifiedTradePartyType.Get_PostalTradeAddress: IXMLPostalTradeAddressType;
 begin
-  Result := ChildNodes['PostalTradeAddress'] as IXMLPostalTradeAddressType;
+  Result := ChildNodes['ram:PostalTradeAddress'] as IXMLPostalTradeAddressType;
 end;
 
 function TXMLNotifiedTradePartyType.Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
 begin
-  Result := ChildNodes['SpecifiedGovernmentRegistration'] as IXMLSpecifiedGovernmentRegistrationType;
+  Result := ChildNodes['ram:SpecifiedGovernmentRegistration'] as IXMLSpecifiedGovernmentRegistrationType;
 end;
 
 { TXMLCarrierAcceptanceLogisticsLocationType }
@@ -2259,37 +2263,37 @@ end;
 
 function TXMLCarrierAcceptanceLogisticsLocationType.Get_ID: IXMLIDType;
 begin
-  Result := ChildNodes['ID'] as IXMLIDType;
+  Result := ChildNodes['ram:ID'] as IXMLIDType;
 end;
 
 function TXMLCarrierAcceptanceLogisticsLocationType.Get_Name: UnicodeString;
 begin
-  Result := ChildNodes['Name'].Text;
+  Result := ChildNodes['ram:Name'].Text;
 end;
 
 procedure TXMLCarrierAcceptanceLogisticsLocationType.Set_Name(Value: UnicodeString);
 begin
-  ChildNodes['Name'].NodeValue := Value;
+  ChildNodes['ram:Name'].NodeValue := Value;
 end;
 
 function TXMLCarrierAcceptanceLogisticsLocationType.Get_TypeCode: Integer;
 begin
-  Result := ChildNodes['TypeCode'].NodeValue;
+  Result := ChildNodes['ram:TypeCode'].NodeValue;
 end;
 
 procedure TXMLCarrierAcceptanceLogisticsLocationType.Set_TypeCode(Value: Integer);
 begin
-  ChildNodes['TypeCode'].NodeValue := Value;
+  ChildNodes['ram:TypeCode'].NodeValue := Value;
 end;
 
 function TXMLCarrierAcceptanceLogisticsLocationType.Get_Description: UnicodeString;
 begin
-  Result := ChildNodes['Description'].Text;
+  Result := ChildNodes['ram:Description'].Text;
 end;
 
 procedure TXMLCarrierAcceptanceLogisticsLocationType.Set_Description(Value: UnicodeString);
 begin
-  ChildNodes['Description'].NodeValue := Value;
+  ChildNodes['ram:Description'].NodeValue := Value;
 end;
 
 { TXMLConsigneeReceiptLogisticsLocationType }
@@ -2303,42 +2307,42 @@ end;
 
 function TXMLConsigneeReceiptLogisticsLocationType.Get_ID: IXMLIDType;
 begin
-  Result := ChildNodes['ID'] as IXMLIDType;
+  Result := ChildNodes['ram:ID'] as IXMLIDType;
 end;
 
 function TXMLConsigneeReceiptLogisticsLocationType.Get_Name: UnicodeString;
 begin
-  Result := ChildNodes['Name'].Text;
+  Result := ChildNodes['ram:Name'].Text;
 end;
 
 procedure TXMLConsigneeReceiptLogisticsLocationType.Set_Name(Value: UnicodeString);
 begin
-  ChildNodes['Name'].NodeValue := Value;
+  ChildNodes['ram:Name'].NodeValue := Value;
 end;
 
 function TXMLConsigneeReceiptLogisticsLocationType.Get_TypeCode: Integer;
 begin
-  Result := ChildNodes['TypeCode'].NodeValue;
+  Result := ChildNodes['ram:TypeCode'].NodeValue;
 end;
 
 procedure TXMLConsigneeReceiptLogisticsLocationType.Set_TypeCode(Value: Integer);
 begin
-  ChildNodes['TypeCode'].NodeValue := Value;
+  ChildNodes['ram:TypeCode'].NodeValue := Value;
 end;
 
 function TXMLConsigneeReceiptLogisticsLocationType.Get_Description: UnicodeString;
 begin
-  Result := ChildNodes['Description'].Text;
+  Result := ChildNodes['ram:Description'].Text;
 end;
 
 procedure TXMLConsigneeReceiptLogisticsLocationType.Set_Description(Value: UnicodeString);
 begin
-  ChildNodes['Description'].NodeValue := Value;
+  ChildNodes['ram:Description'].NodeValue := Value;
 end;
 
 function TXMLConsigneeReceiptLogisticsLocationType.Get_PhysicalGeographicalCoordinate: IXMLPhysicalGeographicalCoordinateType;
 begin
-  Result := ChildNodes['PhysicalGeographicalCoordinate'] as IXMLPhysicalGeographicalCoordinateType;
+  Result := ChildNodes['ram:PhysicalGeographicalCoordinate'] as IXMLPhysicalGeographicalCoordinateType;
 end;
 
 { TXMLPhysicalGeographicalCoordinateType }
@@ -2351,27 +2355,27 @@ end;
 
 function TXMLPhysicalGeographicalCoordinateType.Get_LatitudeMeasure: UnicodeString;
 begin
-  Result := ChildNodes['LatitudeMeasure'].Text;
+  Result := ChildNodes['ram:LatitudeMeasure'].Text;
 end;
 
 procedure TXMLPhysicalGeographicalCoordinateType.Set_LatitudeMeasure(Value: UnicodeString);
 begin
-  ChildNodes['LatitudeMeasure'].NodeValue := Value;
+  ChildNodes['ram:LatitudeMeasure'].NodeValue := Value;
 end;
 
 function TXMLPhysicalGeographicalCoordinateType.Get_LongitudeMeasure: UnicodeString;
 begin
-  Result := ChildNodes['LongitudeMeasure'].Text;
+  Result := ChildNodes['ram:LongitudeMeasure'].Text;
 end;
 
 procedure TXMLPhysicalGeographicalCoordinateType.Set_LongitudeMeasure(Value: UnicodeString);
 begin
-  ChildNodes['LongitudeMeasure'].NodeValue := Value;
+  ChildNodes['ram:LongitudeMeasure'].NodeValue := Value;
 end;
 
 function TXMLPhysicalGeographicalCoordinateType.Get_SystemID: IXMLSystemIDType;
 begin
-  Result := ChildNodes['SystemID'] as IXMLSystemIDType;
+  Result := ChildNodes['ram:SystemID'] as IXMLSystemIDType;
 end;
 
 { TXMLSystemIDType }
@@ -2398,51 +2402,51 @@ end;
 
 function TXMLDeliveryTransportEventType.Get_Description: UnicodeString;
 begin
-  Result := ChildNodes['Description'].Text;
+  Result := ChildNodes['ram:Description'].Text;
 end;
 
 procedure TXMLDeliveryTransportEventType.Set_Description(Value: UnicodeString);
 begin
-  ChildNodes['Description'].NodeValue := Value;
+  ChildNodes['ram:Description'].NodeValue := Value;
 end;
 
 function TXMLDeliveryTransportEventType.Get_ActualOccurrenceDateTime: IXMLActualOccurrenceDateTimeType;
 begin
-  Result := ChildNodes['ActualOccurrenceDateTime'] as IXMLActualOccurrenceDateTimeType;
+  Result := ChildNodes['ram:ActualOccurrenceDateTime'] as IXMLActualOccurrenceDateTimeType;
 end;
 
 function TXMLDeliveryTransportEventType.Get_ScheduledOccurrenceDateTime: IXMLScheduledOccurrenceDateTimeType;
 begin
-  Result := ChildNodes['ScheduledOccurrenceDateTime'] as IXMLScheduledOccurrenceDateTimeType;
+  Result := ChildNodes['ram:ScheduledOccurrenceDateTime'] as IXMLScheduledOccurrenceDateTimeType;
 end;
 
 function TXMLDeliveryTransportEventType.Get_CertifyingTradeParty: IXMLCertifyingTradePartyType;
 begin
-  Result := ChildNodes['CertifyingTradeParty'] as IXMLCertifyingTradePartyType;
+  Result := ChildNodes['ram:CertifyingTradeParty'] as IXMLCertifyingTradePartyType;
 end;
 
 { TXMLActualOccurrenceDateTimeType }
 
 function TXMLActualOccurrenceDateTimeType.Get_DateTime: UnicodeString;
 begin
-  Result := ChildNodes['DateTime'].Text;
+  Result := ChildNodes['udt:DateTime'].Text;
 end;
 
 procedure TXMLActualOccurrenceDateTimeType.Set_DateTime(Value: UnicodeString);
 begin
-  ChildNodes['DateTime'].NodeValue := Value;
+  ChildNodes['udt:DateTime'].NodeValue := Value;
 end;
 
 { TXMLScheduledOccurrenceDateTimeType }
 
 function TXMLScheduledOccurrenceDateTimeType.Get_DateTime: UnicodeString;
 begin
-  Result := ChildNodes['DateTime'].Text;
+  Result := ChildNodes['udt:DateTime'].Text;
 end;
 
 procedure TXMLScheduledOccurrenceDateTimeType.Set_DateTime(Value: UnicodeString);
 begin
-  ChildNodes['DateTime'].NodeValue := Value;
+  ChildNodes['udt:DateTime'].NodeValue := Value;
 end;
 
 { TXMLCertifyingTradePartyType }
@@ -2458,42 +2462,42 @@ end;
 
 function TXMLCertifyingTradePartyType.Get_Name: UnicodeString;
 begin
-  Result := ChildNodes['Name'].Text;
+  Result := ChildNodes['ram:Name'].Text;
 end;
 
 procedure TXMLCertifyingTradePartyType.Set_Name(Value: UnicodeString);
 begin
-  ChildNodes['Name'].NodeValue := Value;
+  ChildNodes['ram:Name'].NodeValue := Value;
 end;
 
 function TXMLCertifyingTradePartyType.Get_RoleCode: UnicodeString;
 begin
-  Result := ChildNodes['RoleCode'].Text;
+  Result := ChildNodes['ram:RoleCode'].Text;
 end;
 
 procedure TXMLCertifyingTradePartyType.Set_RoleCode(Value: UnicodeString);
 begin
-  ChildNodes['RoleCode'].NodeValue := Value;
+  ChildNodes['ram:RoleCode'].NodeValue := Value;
 end;
 
 function TXMLCertifyingTradePartyType.Get_DefinedTradeContact: IXMLDefinedTradeContactType;
 begin
-  Result := ChildNodes['DefinedTradeContact'] as IXMLDefinedTradeContactType;
+  Result := ChildNodes['ram:DefinedTradeContact'] as IXMLDefinedTradeContactType;
 end;
 
 function TXMLCertifyingTradePartyType.Get_PostalTradeAddress: IXMLPostalTradeAddressType;
 begin
-  Result := ChildNodes['PostalTradeAddress'] as IXMLPostalTradeAddressType;
+  Result := ChildNodes['ram:PostalTradeAddress'] as IXMLPostalTradeAddressType;
 end;
 
 function TXMLCertifyingTradePartyType.Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
 begin
-  Result := ChildNodes['SpecifiedGovernmentRegistration'] as IXMLSpecifiedGovernmentRegistrationType;
+  Result := ChildNodes['ram:SpecifiedGovernmentRegistration'] as IXMLSpecifiedGovernmentRegistrationType;
 end;
 
 function TXMLCertifyingTradePartyType.Get_ID: IXMLIDType;
 begin
-  Result := ChildNodes['ID'] as IXMLIDType;
+  Result := ChildNodes['ram:ID'] as IXMLIDType;
 end;
 
 { TXMLPickUpTransportEventType }
@@ -2508,27 +2512,27 @@ end;
 
 function TXMLPickUpTransportEventType.Get_Description: UnicodeString;
 begin
-  Result := ChildNodes['Description'].Text;
+  Result := ChildNodes['ram:Description'].Text;
 end;
 
 procedure TXMLPickUpTransportEventType.Set_Description(Value: UnicodeString);
 begin
-  ChildNodes['Description'].NodeValue := Value;
+  ChildNodes['ram:Description'].NodeValue := Value;
 end;
 
 function TXMLPickUpTransportEventType.Get_ActualOccurrenceDateTime: IXMLActualOccurrenceDateTimeType;
 begin
-  Result := ChildNodes['ActualOccurrenceDateTime'] as IXMLActualOccurrenceDateTimeType;
+  Result := ChildNodes['ram:ActualOccurrenceDateTime'] as IXMLActualOccurrenceDateTimeType;
 end;
 
 function TXMLPickUpTransportEventType.Get_ScheduledOccurrenceDateTime: IXMLScheduledOccurrenceDateTimeType;
 begin
-  Result := ChildNodes['ScheduledOccurrenceDateTime'] as IXMLScheduledOccurrenceDateTimeType;
+  Result := ChildNodes['ram:ScheduledOccurrenceDateTime'] as IXMLScheduledOccurrenceDateTimeType;
 end;
 
 function TXMLPickUpTransportEventType.Get_CertifyingTradeParty: IXMLCertifyingTradePartyType;
 begin
-  Result := ChildNodes['CertifyingTradeParty'] as IXMLCertifyingTradePartyType;
+  Result := ChildNodes['ram:CertifyingTradeParty'] as IXMLCertifyingTradePartyType;
 end;
 
 { TXMLIncludedSupplyChainConsignmentItemType }
@@ -2550,52 +2554,52 @@ end;
 
 function TXMLIncludedSupplyChainConsignmentItemType.Get_SequenceNumeric: Integer;
 begin
-  Result := ChildNodes['SequenceNumeric'].NodeValue;
+  Result := ChildNodes['ram:SequenceNumeric'].NodeValue;
 end;
 
 procedure TXMLIncludedSupplyChainConsignmentItemType.Set_SequenceNumeric(Value: Integer);
 begin
-  ChildNodes['SequenceNumeric'].NodeValue := Value;
+  ChildNodes['ram:SequenceNumeric'].NodeValue := Value;
 end;
 
 function TXMLIncludedSupplyChainConsignmentItemType.Get_InvoiceAmount: IXMLInvoiceAmountType;
 begin
-  Result := ChildNodes['InvoiceAmount'] as IXMLInvoiceAmountType;
+  Result := ChildNodes['ram:InvoiceAmount'] as IXMLInvoiceAmountType;
 end;
 
 function TXMLIncludedSupplyChainConsignmentItemType.Get_GrossWeightMeasure: IXMLGrossWeightMeasureType;
 begin
-  Result := ChildNodes['GrossWeightMeasure'] as IXMLGrossWeightMeasureType;
+  Result := ChildNodes['ram:GrossWeightMeasure'] as IXMLGrossWeightMeasureType;
 end;
 
 function TXMLIncludedSupplyChainConsignmentItemType.Get_TariffQuantity: IXMLTariffQuantityType;
 begin
-  Result := ChildNodes['TariffQuantity'] as IXMLTariffQuantityType;
+  Result := ChildNodes['ram:TariffQuantity'] as IXMLTariffQuantityType;
 end;
 
 function TXMLIncludedSupplyChainConsignmentItemType.Get_GlobalID: IXMLGlobalIDType;
 begin
-  Result := ChildNodes['GlobalID'] as IXMLGlobalIDType;
+  Result := ChildNodes['ram:GlobalID'] as IXMLGlobalIDType;
 end;
 
 function TXMLIncludedSupplyChainConsignmentItemType.Get_NatureIdentificationTransportCargo: IXMLNatureIdentificationTransportCargoType;
 begin
-  Result := ChildNodes['NatureIdentificationTransportCargo'] as IXMLNatureIdentificationTransportCargoType;
+  Result := ChildNodes['ram:NatureIdentificationTransportCargo'] as IXMLNatureIdentificationTransportCargoType;
 end;
 
 function TXMLIncludedSupplyChainConsignmentItemType.Get_ApplicableTransportDangerousGoods: IXMLApplicableTransportDangerousGoodsType;
 begin
-  Result := ChildNodes['ApplicableTransportDangerousGoods'] as IXMLApplicableTransportDangerousGoodsType;
+  Result := ChildNodes['ram:ApplicableTransportDangerousGoods'] as IXMLApplicableTransportDangerousGoodsType;
 end;
 
 function TXMLIncludedSupplyChainConsignmentItemType.Get_AssociatedReferencedLogisticsTransportEquipment: IXMLAssociatedReferencedLogisticsTransportEquipmentType;
 begin
-  Result := ChildNodes['AssociatedReferencedLogisticsTransportEquipment'] as IXMLAssociatedReferencedLogisticsTransportEquipmentType;
+  Result := ChildNodes['ram:AssociatedReferencedLogisticsTransportEquipment'] as IXMLAssociatedReferencedLogisticsTransportEquipmentType;
 end;
 
 function TXMLIncludedSupplyChainConsignmentItemType.Get_TransportLogisticsPackage: IXMLTransportLogisticsPackageType;
 begin
-  Result := ChildNodes['TransportLogisticsPackage'] as IXMLTransportLogisticsPackageType;
+  Result := ChildNodes['ram:TransportLogisticsPackage'] as IXMLTransportLogisticsPackageType;
 end;
 
 function TXMLIncludedSupplyChainConsignmentItemType.Get_ApplicableNote: IXMLApplicableNoteTypeList;
@@ -2660,46 +2664,46 @@ end;
 
 function TXMLNatureIdentificationTransportCargoType.Get_Identification: UnicodeString;
 begin
-  Result := ChildNodes['Identification'].Text;
+  Result := ChildNodes['ram:Identification'].Text;
 end;
 
 procedure TXMLNatureIdentificationTransportCargoType.Set_Identification(Value: UnicodeString);
 begin
-  ChildNodes['Identification'].NodeValue := Value;
+  ChildNodes['ram:Identification'].NodeValue := Value;
 end;
 
 { TXMLApplicableTransportDangerousGoodsType }
 
 function TXMLApplicableTransportDangerousGoodsType.Get_UNDGIdentificationCode: Integer;
 begin
-  Result := ChildNodes['UNDGIdentificationCode'].NodeValue;
+  Result := ChildNodes['ram:UNDGIdentificationCode'].NodeValue;
 end;
 
 procedure TXMLApplicableTransportDangerousGoodsType.Set_UNDGIdentificationCode(Value: Integer);
 begin
-  ChildNodes['UNDGIdentificationCode'].NodeValue := Value;
+  ChildNodes['ram:UNDGIdentificationCode'].NodeValue := Value;
 end;
 
 function TXMLApplicableTransportDangerousGoodsType.Get_PackagingDangerLevelCode: Integer;
 begin
-  Result := ChildNodes['PackagingDangerLevelCode'].NodeValue;
+  Result := ChildNodes['ram:PackagingDangerLevelCode'].NodeValue;
 end;
 
 procedure TXMLApplicableTransportDangerousGoodsType.Set_PackagingDangerLevelCode(Value: Integer);
 begin
-  ChildNodes['PackagingDangerLevelCode'].NodeValue := Value;
+  ChildNodes['ram:PackagingDangerLevelCode'].NodeValue := Value;
 end;
 
 { TXMLAssociatedReferencedLogisticsTransportEquipmentType }
 
 function TXMLAssociatedReferencedLogisticsTransportEquipmentType.Get_ID: UnicodeString;
 begin
-  Result := ChildNodes['ID'].Text;
+  Result := ChildNodes['ram:ID'].Text;
 end;
 
 procedure TXMLAssociatedReferencedLogisticsTransportEquipmentType.Set_ID(Value: UnicodeString);
 begin
-  ChildNodes['ID'].NodeValue := Value;
+  ChildNodes['ram:ID'].NodeValue := Value;
 end;
 
 { TXMLTransportLogisticsPackageType }
@@ -2712,37 +2716,37 @@ end;
 
 function TXMLTransportLogisticsPackageType.Get_ItemQuantity: Integer;
 begin
-  Result := ChildNodes['ItemQuantity'].NodeValue;
+  Result := ChildNodes['ram:ItemQuantity'].NodeValue;
 end;
 
 procedure TXMLTransportLogisticsPackageType.Set_ItemQuantity(Value: Integer);
 begin
-  ChildNodes['ItemQuantity'].NodeValue := Value;
+  ChildNodes['ram:ItemQuantity'].NodeValue := Value;
 end;
 
 function TXMLTransportLogisticsPackageType.Get_TypeCode: UnicodeString;
 begin
-  Result := ChildNodes['TypeCode'].Text;
+  Result := ChildNodes['ram:TypeCode'].Text;
 end;
 
 procedure TXMLTransportLogisticsPackageType.Set_TypeCode(Value: UnicodeString);
 begin
-  ChildNodes['TypeCode'].NodeValue := Value;
+  ChildNodes['ram:TypeCode'].NodeValue := Value;
 end;
 
 function TXMLTransportLogisticsPackageType.Get_Type_: UnicodeString;
 begin
-  Result := ChildNodes['Type'].Text;
+  Result := ChildNodes['ram:Type'].Text;
 end;
 
 procedure TXMLTransportLogisticsPackageType.Set_Type_(Value: UnicodeString);
 begin
-  ChildNodes['Type'].NodeValue := Value;
+  ChildNodes['ram:Type'].NodeValue := Value;
 end;
 
 function TXMLTransportLogisticsPackageType.Get_PhysicalLogisticsShippingMarks: IXMLPhysicalLogisticsShippingMarksType;
 begin
-  Result := ChildNodes['PhysicalLogisticsShippingMarks'] as IXMLPhysicalLogisticsShippingMarksType;
+  Result := ChildNodes['ram:PhysicalLogisticsShippingMarks'] as IXMLPhysicalLogisticsShippingMarksType;
 end;
 
 { TXMLPhysicalLogisticsShippingMarksType }
@@ -2755,51 +2759,51 @@ end;
 
 function TXMLPhysicalLogisticsShippingMarksType.Get_Marking: UnicodeString;
 begin
-  Result := ChildNodes['Marking'].Text;
+  Result := ChildNodes['ram:Marking'].Text;
 end;
 
 procedure TXMLPhysicalLogisticsShippingMarksType.Set_Marking(Value: UnicodeString);
 begin
-  ChildNodes['Marking'].NodeValue := Value;
+  ChildNodes['ram:Marking'].NodeValue := Value;
 end;
 
 function TXMLPhysicalLogisticsShippingMarksType.Get_BarcodeLogisticsLabel: IXMLBarcodeLogisticsLabelType;
 begin
-  Result := ChildNodes['BarcodeLogisticsLabel'] as IXMLBarcodeLogisticsLabelType;
+  Result := ChildNodes['ram:BarcodeLogisticsLabel'] as IXMLBarcodeLogisticsLabelType;
 end;
 
 { TXMLBarcodeLogisticsLabelType }
 
 function TXMLBarcodeLogisticsLabelType.Get_ID: UnicodeString;
 begin
-  Result := ChildNodes['ID'].Text;
+  Result := ChildNodes['ram:ID'].Text;
 end;
 
 procedure TXMLBarcodeLogisticsLabelType.Set_ID(Value: UnicodeString);
 begin
-  ChildNodes['ID'].NodeValue := Value;
+  ChildNodes['ram:ID'].NodeValue := Value;
 end;
 
 { TXMLApplicableNoteType }
 
 function TXMLApplicableNoteType.Get_ContentCode: UnicodeString;
 begin
-  Result := ChildNodes['ContentCode'].Text;
+  Result := ChildNodes['ram:ContentCode'].Text;
 end;
 
 procedure TXMLApplicableNoteType.Set_ContentCode(Value: UnicodeString);
 begin
-  ChildNodes['ContentCode'].NodeValue := Value;
+  ChildNodes['ram:ContentCode'].NodeValue := Value;
 end;
 
-function TXMLApplicableNoteType.Get_Content: Integer;
+function TXMLApplicableNoteType.Get_Content: UnicodeString;
 begin
-  Result := ChildNodes['Content'].NodeValue;
+  Result := ChildNodes['ram:Content'].Text;
 end;
 
-procedure TXMLApplicableNoteType.Set_Content(Value: Integer);
+procedure TXMLApplicableNoteType.Set_Content(Value: UnicodeString);
 begin
-  ChildNodes['Content'].NodeValue := Value;
+  ChildNodes['ram:Content'].NodeValue := Value;
 end;
 
 { TXMLApplicableNoteTypeList }
@@ -2831,12 +2835,12 @@ end;
 
 function TXMLUtilizedLogisticsTransportEquipmentType.Get_ID: UnicodeString;
 begin
-  Result := ChildNodes['ID'].Text;
+  Result := ChildNodes['ram:ID'].Text;
 end;
 
 procedure TXMLUtilizedLogisticsTransportEquipmentType.Set_ID(Value: UnicodeString);
 begin
-  ChildNodes['ID'].NodeValue := Value;
+  ChildNodes['ram:ID'].NodeValue := Value;
 end;
 
 function TXMLUtilizedLogisticsTransportEquipmentType.Get_ApplicableNote: IXMLApplicableNoteTypeList;
@@ -2846,27 +2850,27 @@ end;
 
 function TXMLUtilizedLogisticsTransportEquipmentType.Get_CategoryCode: UnicodeString;
 begin
-  Result := ChildNodes['CategoryCode'].Text;
+  Result := ChildNodes['ram:CategoryCode'].Text;
 end;
 
 procedure TXMLUtilizedLogisticsTransportEquipmentType.Set_CategoryCode(Value: UnicodeString);
 begin
-  ChildNodes['CategoryCode'].NodeValue := Value;
+  ChildNodes['ram:CategoryCode'].NodeValue := Value;
 end;
 
 function TXMLUtilizedLogisticsTransportEquipmentType.Get_CharacteristicCode: Integer;
 begin
-  Result := ChildNodes['CharacteristicCode'].NodeValue;
+  Result := ChildNodes['ram:CharacteristicCode'].NodeValue;
 end;
 
 procedure TXMLUtilizedLogisticsTransportEquipmentType.Set_CharacteristicCode(Value: Integer);
 begin
-  ChildNodes['CharacteristicCode'].NodeValue := Value;
+  ChildNodes['ram:CharacteristicCode'].NodeValue := Value;
 end;
 
 function TXMLUtilizedLogisticsTransportEquipmentType.Get_AffixedLogisticsSeal: IXMLAffixedLogisticsSealType;
 begin
-  Result := ChildNodes['AffixedLogisticsSeal'] as IXMLAffixedLogisticsSealType;
+  Result := ChildNodes['ram:AffixedLogisticsSeal'] as IXMLAffixedLogisticsSealType;
 end;
 
 { TXMLUtilizedLogisticsTransportEquipmentTypeList }
@@ -2888,14 +2892,14 @@ end;
 
 { TXMLAffixedLogisticsSealType }
 
-function TXMLAffixedLogisticsSealType.Get_ID: Integer;
+function TXMLAffixedLogisticsSealType.Get_ID: UnicodeString;
 begin
-  Result := ChildNodes['ID'].NodeValue;
+  Result := ChildNodes['ram:ID'].Text;
 end;
 
-procedure TXMLAffixedLogisticsSealType.Set_ID(Value: Integer);
+procedure TXMLAffixedLogisticsSealType.Set_ID(Value: UnicodeString);
 begin
-  ChildNodes['ID'].NodeValue := Value;
+  ChildNodes['ram:ID'].NodeValue := Value;
 end;
 
 { TXMLMainCarriageLogisticsTransportMovementType }
@@ -2933,59 +2937,59 @@ end;
 
 function TXMLSpecifiedTransportEventType.Get_ID: Integer;
 begin
-  Result := ChildNodes['ID'].NodeValue;
+  Result := ChildNodes['ram:ID'].NodeValue;
 end;
 
 procedure TXMLSpecifiedTransportEventType.Set_ID(Value: Integer);
 begin
-  ChildNodes['ID'].NodeValue := Value;
+  ChildNodes['ram:ID'].NodeValue := Value;
 end;
 
 function TXMLSpecifiedTransportEventType.Get_TypeCode: Integer;
 begin
-  Result := ChildNodes['TypeCode'].NodeValue;
+  Result := ChildNodes['ram:TypeCode'].NodeValue;
 end;
 
 procedure TXMLSpecifiedTransportEventType.Set_TypeCode(Value: Integer);
 begin
-  ChildNodes['TypeCode'].NodeValue := Value;
+  ChildNodes['ram:TypeCode'].NodeValue := Value;
 end;
 
 function TXMLSpecifiedTransportEventType.Get_Description: UnicodeString;
 begin
-  Result := ChildNodes['Description'].Text;
+  Result := ChildNodes['ram:Description'].Text;
 end;
 
 procedure TXMLSpecifiedTransportEventType.Set_Description(Value: UnicodeString);
 begin
-  ChildNodes['Description'].NodeValue := Value;
+  ChildNodes['ram:Description'].NodeValue := Value;
 end;
 
 function TXMLSpecifiedTransportEventType.Get_CertifyingTradeParty: IXMLCertifyingTradePartyType;
 begin
-  Result := ChildNodes['CertifyingTradeParty'] as IXMLCertifyingTradePartyType;
+  Result := ChildNodes['ram:CertifyingTradeParty'] as IXMLCertifyingTradePartyType;
 end;
 
 { TXMLDeliveryInstructionsType }
 
 function TXMLDeliveryInstructionsType.Get_Description: UnicodeString;
 begin
-  Result := ChildNodes['Description'].Text;
+  Result := ChildNodes['ram:Description'].Text;
 end;
 
 procedure TXMLDeliveryInstructionsType.Set_Description(Value: UnicodeString);
 begin
-  ChildNodes['Description'].NodeValue := Value;
+  ChildNodes['ram:Description'].NodeValue := Value;
 end;
 
 function TXMLDeliveryInstructionsType.Get_DescriptionCode: UnicodeString;
 begin
-  Result := ChildNodes['DescriptionCode'].Text;
+  Result := ChildNodes['ram:DescriptionCode'].Text;
 end;
 
 procedure TXMLDeliveryInstructionsType.Set_DescriptionCode(Value: UnicodeString);
 begin
-  ChildNodes['DescriptionCode'].NodeValue := Value;
+  ChildNodes['ram:DescriptionCode'].NodeValue := Value;
 end;
 
 end.

@@ -284,7 +284,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
             Width = 86
           end
           object InvNumberSend: TcxGridDBColumn
-            Caption = #1053#1086#1084#1077#1088' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1057#1059#1053
+            Caption = #1053#1086#1084#1077#1088' '#1087#1077#1088#1077#1084'. '#1057#1059#1053' '#1080#1083#1080' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'InvNumberSend'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -292,7 +292,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
             Width = 94
           end
           object OperDateSend: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1057#1059#1053
+            Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1084'. '#1057#1059#1053' '#1080#1083#1080' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'OperDateSend'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

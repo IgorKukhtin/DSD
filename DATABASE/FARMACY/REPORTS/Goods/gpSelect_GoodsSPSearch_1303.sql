@@ -258,7 +258,7 @@ BEGIN
                                              AND MI_Currency.DescId = zc_MILinkObject_Currency()
              LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MI_Currency.ObjectId 
              
-        WHERE MovementItem.Ord = 1
+        --WHERE MovementItem.Ord = 1
 
         ORDER BY MovementItem.Col
 
@@ -276,4 +276,5 @@ $BODY$
 
 --ТЕСТ
 -- 
-SELECT * FROM gpSelect_GoodsSPSearch_1303 (inText:= 'Капец', inSession:= '3')
+
+select * from gpSelect_GoodsSPSearch_1303(inText := 'кап' ,  inSession := '3');
