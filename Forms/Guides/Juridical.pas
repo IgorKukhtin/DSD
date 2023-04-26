@@ -21,7 +21,9 @@ uses
   dxSkinsdxBarPainter, dsdDB, Datasnap.DBClient, dsdAddOn, dsdAction,
   Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxSplitter, cxButtonEdit, cxCurrencyEdit;
+  cxGrid, cxSplitter, cxButtonEdit, cxCurrencyEdit, cxContainer, Vcl.ComCtrls,
+  dxCore, cxDateUtils, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
+  cxLabel;
 
 type
   TJuridicalForm = class(TParentForm)
@@ -132,6 +134,10 @@ type
     macUpdate_isIrna: TMultiAction;
     bbUpdate_isIrna: TdxBarButton;
     SectionName: TcxGridDBColumn;
+    cxLabel2: TcxLabel;
+    edShowDate: TcxDateEdit;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

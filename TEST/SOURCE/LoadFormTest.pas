@@ -1794,7 +1794,7 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalEditForm');
    {

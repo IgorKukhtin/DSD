@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_Juridical()
 
 -- DROP FUNCTION IF EXISTS gpSelect_Object_Juridical (TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_Juridical (Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_Juridical (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Juridical (TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
+    IN inShowDate       TDateTime,
     IN inShowAll        Boolean,
     IN inSession        TVarChar       -- сессия пользователя
 )
@@ -23,6 +25,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
                OKPO TVarChar, INN TVarChar, InvNumberBranch TVarChar,
+               OKPO_inf TVarChar, INN_inf TVarChar, isDiff Boolean,
                PriceListId Integer, PriceListName TVarChar,
                PriceListPromoId Integer, PriceListPromoName TVarChar,
                PriceListId_Prior Integer, PriceListName_Prior TVarChar,
@@ -189,6 +192,14 @@ BEGIN
        , ObjectHistory_JuridicalDetails_View.OKPO
        , ObjectHistory_JuridicalDetails_View.INN
        , ObjectHistory_JuridicalDetails_View.InvNumberBranch
+
+       , OH_JuridicalDetails.OKPO       AS OKPO_inf
+       , OH_JuridicalDetails.INN        AS INN_inf
+       , CASE WHEN (COALESCE(OH_JuridicalDetails.OKPO,'') <> COALESCE(ObjectHistory_JuridicalDetails_View.OKPO,'')) 
+                OR (TRIM (COALESCE(OH_JuridicalDetails.INN,'')) <> TRIM (COALESCE(ObjectHistory_JuridicalDetails_View.INN,'')))
+              THEN TRUE
+              ELSE FALSE
+         END AS isDiff
 
        , Object_PriceList.Id         AS PriceListId
        , Object_PriceList.ValueData  AS PriceListName
@@ -363,7 +374,13 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Section
                              ON ObjectLink_Juridical_Section.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_Section.DescId = zc_ObjectLink_Juridical_Section()
-        LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Juridical_Section.ChildObjectId
+        LEFT JOIN Object AS Object_Section ON Object_Section.Id = ObjectLink_Juridical_Section.ChildObjectId    
+
+        LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails
+                                                            ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+                                                           AND COALESCE (inShowDate, CURRENT_DATE) >= OH_JuridicalDetails.StartDate
+                                                           AND COALESCE (inShowDate, CURRENT_DATE) <  OH_JuridicalDetails.EndDate
+
    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                               , 8359 -- 04-Услуги
                                                                )
@@ -395,6 +412,7 @@ ALTER FUNCTION gpSelect_Object_Juridical (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.04.23         * inShowDate
  02.11.22         * add Section
  30.09.22         *
  04.05.22         *
@@ -425,4 +443,4 @@ ALTER FUNCTION gpSelect_Object_Juridical (Boolean, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Juridical (FALSE, zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Object_Juridical ('01.04.2023',FALSE, zfCalc_UserAdmin())

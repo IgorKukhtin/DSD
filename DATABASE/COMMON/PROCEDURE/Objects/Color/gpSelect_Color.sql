@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_Juridical()
+-- Function: gpSelect_Color()
 
 DROP FUNCTION IF EXISTS gpSelect_Color(TVarChar);
 
