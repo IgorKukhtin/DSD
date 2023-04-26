@@ -36,7 +36,12 @@ object JuridicalForm: TJuridicalForm
       DataController.DataSource = GridDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = Name
+        end>
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
@@ -44,6 +49,7 @@ object JuridicalForm: TJuridicalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.Footer = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -97,7 +103,7 @@ object JuridicalForm: TJuridicalForm
         Width = 70
       end
       object OKPO_inf: TcxGridDBColumn
-        Caption = #1054#1050#1055#1054' ('#1080#1089#1090#1086#1088#1080#1103')'
+        Caption = #1054#1050#1055#1054' '#1085#1072' '#1076#1072#1090#1091
         DataBinding.FieldName = 'OKPO_inf'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -105,7 +111,7 @@ object JuridicalForm: TJuridicalForm
         Width = 70
       end
       object INN_inf: TcxGridDBColumn
-        Caption = #1048#1053#1053' ('#1080#1089#1090#1086#1088#1080#1103')'
+        Caption = #1048#1053#1053' '#1085#1072' '#1076#1072#1090#1091
         DataBinding.FieldName = 'INN_inf'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -113,7 +119,7 @@ object JuridicalForm: TJuridicalForm
         Width = 70
       end
       object IsDiff: TcxGridDBColumn
-        Caption = #1054#1090#1082#1083'. '#1087#1086' '#1080#1089#1090#1086#1088#1080#1080
+        Caption = #1054#1090#1082#1083'. '#1048#1053#1053' '#1080#1083#1080' '#1054#1050#1055#1054
         DataBinding.FieldName = 'IsDiff'
         Visible = False
         HeaderAlignmentHorz = taCenter
