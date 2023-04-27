@@ -23,24 +23,26 @@ BEGIN
      -- Временно захардкодил - !!!только для этого склада!!!
      IF inUnitId = 8459 -- Склад Реализации
          OR inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
-         OR inUnitId IN (8444 -- Склад ОХЛАЖДЕНКА
+         OR (inUnitId IN (8444 -- Склад ОХЛАЖДЕНКА
                         , 8445 -- Склад МИНУСОВКА
                         , 133049 -- Склад реализации мясо
                          )
+             AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Sale())
+            )
      THEN
-
-    vbIsNotRealGoods:= EXISTS (SELECT 1
-                               FROM MovementLinkObject AS MLO
-                                   INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                         ON ObjectLink_Partner_Juridical.ObjectId = MLO.ObjectId
-                                                        AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                                   INNER JOIN ObjectBoolean AS ObjectBoolean_isNotRealGoods
-                                                            ON ObjectBoolean_isNotRealGoods.ObjectId  = ObjectLink_Partner_Juridical.ChildObjectId
-                                                           AND ObjectBoolean_isNotRealGoods.DescId    = zc_ObjectBoolean_Juridical_isNotRealGoods()
-                                                           AND ObjectBoolean_isNotRealGoods.ValueData = TRUE
-                               WHERE MLO.MovementId = inMovementId
-                                 AND MLO.DescId     = zc_MovementLinkObject_To()
-                              );
+         -- для этих не надо
+         vbIsNotRealGoods:= EXISTS (SELECT 1
+                                    FROM MovementLinkObject AS MLO
+                                        INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                              ON ObjectLink_Partner_Juridical.ObjectId = MLO.ObjectId
+                                                             AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                        INNER JOIN ObjectBoolean AS ObjectBoolean_isNotRealGoods
+                                                                 ON ObjectBoolean_isNotRealGoods.ObjectId  = ObjectLink_Partner_Juridical.ChildObjectId
+                                                                AND ObjectBoolean_isNotRealGoods.DescId    = zc_ObjectBoolean_Juridical_isNotRealGoods()
+                                                                AND ObjectBoolean_isNotRealGoods.ValueData = TRUE
+                                    WHERE MLO.MovementId = inMovementId
+                                      AND MLO.DescId     = zc_MovementLinkObject_To()
+                                   );
 
      -- !!!для филиала - убрать пересорты
      IF inUnitId IN (SELECT OL.ObjectId FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Branch() AND OL.ChildObjectId <> zc_Branch_Basis() AND OL.ChildObjectId > 0)
@@ -69,6 +71,7 @@ BEGIN
                         , 133049 -- Склад реализации мясо
                          )
              AND '01.11.2016' <= vbOperDate -- Дата когда стартанула схема для этих 3-х складов
+             AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Sale())
             )
         -- AND inUserId = 5
      THEN
@@ -428,6 +431,7 @@ END IF;
          IF vbMovementId_Peresort <> 0
             -- если дата Документа раньше чем "незакрытый" период
             AND DATE_TRUNC ('MONTH', vbOperDate) < DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '5 DAY')
+            --
             AND 1=0
             --
             AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_Peresort AND Movement.StatusId = zc_Enum_Status_Complete())
