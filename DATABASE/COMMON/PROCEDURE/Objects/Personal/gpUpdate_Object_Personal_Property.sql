@@ -1,14 +1,16 @@
 -- Function: gpUpdate_Object_Personal_Property ()
 
 --DROP FUNCTION IF EXISTS gpUpdate_Object_Personal_Property (Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Object_Personal_Property (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_Object_Personal_Property (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Personal_Property (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Personal_Property(
     IN inId                                Integer   , -- ключ объекта <Сотрудники>
     IN inPositionId                        Integer   , -- ссылка на Должность
     IN inUnitId                            Integer   , -- ссылка на Подразделение
     IN inPersonalServiceListOfficialId     Integer   , -- Ведомость начисления(БН)
-    IN inPersonalServiceListCardSecondId   Integer   , -- Ведомость начисления(Карта Ф2)
+    IN inPersonalServiceListCardSecondId   Integer   , -- Ведомость начисления(Карта Ф2)  
+    IN inPersonalServiceListId_AvanceF2    Integer   , -- Ведомость начисления(аванс Карта Ф2)
     IN inStorageLineId                     Integer   , -- ссылка на линию производства
     IN inCode1C                            TVarChar  , --код 1С
     IN inIsMain                            Boolean   , -- Основное место работы
@@ -49,6 +51,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListOfficial(), inId, inPersonalServiceListOfficialId); 
    -- сохранили связь с <Ведомость начисления(карта ф2)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListCardSecond(), inId, inPersonalServiceListCardSecondId);
+   -- сохранили связь с <Ведомость начисления(аванс карта ф2)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListAvance_F2(), inId, inPersonalServiceListId_AvanceF2);
    -- сохранили связь с <линия производства>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_StorageLine(), inId, inStorageLineId); 
    
@@ -66,6 +70,7 @@ $BODY$
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
+ 27,04,23         *
  13.04.22         * add inCode1C
  13.07.17         * add inPersonalServiceListCardSecondId
  25.05.17         * add inStorageLineId

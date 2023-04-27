@@ -439,7 +439,9 @@ BEGIN
                 --, (tmpPACK.Amount_to   * CASE WHEN tmpMI_master.MeasureId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS Income_PACK_to
                 --, (tmpPACK.Amount_from * CASE WHEN tmpMI_master.MeasureId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS Income_PACK_from
                 , 0 ::TFloat AS Income_PACK_to
-                , 0 ::TFloat AS Income_PACK_from 
+                , 0 ::TFloat AS Income_PACK_from
+                --, (tmpPACK.Amount_from * CASE WHEN tmpMI_master.MeasureId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS Income_PACK_from 
+
                 
                 , (tmpPACK.Amount_to   * CASE WHEN tmpMI_master.MeasureId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS Income_PACK_toAll
                 , tmpFrom.AmountTotal  ::TFloat AS Income_PACK_fromAll

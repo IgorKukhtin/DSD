@@ -13,9 +13,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integ
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
-
-
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
@@ -31,7 +30,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
     IN inMemberBookkeeperId    Integer   ,     -- Физ лица(бухгалтер)
     IN inPersonalHeadId        Integer   ,     -- Руководитель подразделения
     IN inBankAccountId         Integer   ,     --
-    IN inPSLExportKindId       Integer   ,     --
+    IN inPSLExportKindId       Integer   ,     -- 
+    IN inPersonalServiceListId_AvanceF2 Integer , --  из какой ведомости "Аванс" формируются данные в "Карта БН (ввод) - 2ф."
     IN inCompensation          TFloat    ,     -- месяц компенсации
     IN inSummAvance            TFloat    ,     -- 
     IN inSummAvanceMax         TFloat    ,     -- 
@@ -101,6 +101,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_PersonalServiceList_OnFlowType(), ioId, inOnFlowType);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_PersonalServiceList_ContentType(), ioId, inContentType);
+
+   -- сохранили св-во 
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_Avance_F2(), ioId, inPersonalServiceListId_AvanceF2);
+
 
    -- сохранили св-во 
    --PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_Member(), ioId, inMemberId);

@@ -91,6 +91,9 @@ type
     cxLabel17: TcxLabel;
     edDateSend: TcxDateEdit;
     cbDateSend: TcxCheckBox;
+    cePersonalServiceListAvanceF2: TcxButtonEdit;
+    cxLabel18: TcxLabel;
+    GuidesPersonalServiceListAvanceF2: TdsdGuides;
   private
     { Private declarations }
   public

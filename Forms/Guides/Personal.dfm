@@ -302,6 +302,21 @@ object PersonalForm: TPersonalForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object ServiceListName_AvanceF2: TcxGridDBColumn
+        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1072#1074#1072#1085#1089' '#1050#1072#1088#1090#1072' '#1060'2)'
+        DataBinding.FieldName = 'ServiceListName_AvanceF2'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PersonalServiceListAvanceF2
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 101
+      end
       object SheetWorkTimeName: TcxGridDBColumn
         Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
         DataBinding.FieldName = 'SheetWorkTimeName'
@@ -1059,6 +1074,33 @@ object PersonalForm: TPersonalForm
         end>
       isShowModal = True
     end
+    object PersonalServiceListAvanceF2: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TPositionForm'
+      FormName = 'TPersonalServiceListForm'
+      FormNameParam.Value = 'TPersonalServiceListForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ServiceListId_AvanceF2'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ServiceListName_AvanceF2'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object PersonalServiceListCardSecondChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1441,6 +1483,14 @@ object PersonalForm: TPersonalForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'ServiceListCardSecondId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalServiceListId_AvanceF2'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ServiceListId_AvanceF2'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
