@@ -9,7 +9,6 @@ CREATE OR REPLACE FUNCTION gpSelectMobile_Object_GoodsByGoodsKind (
 )
 RETURNS TABLE (Id            Integer
              , GoodsId       Integer  -- Товар
-             , GoodsId_key   Integer  -- Товар
              , GoodsKindId   Integer  -- Вид товара
              , Remains       TFloat   -- Остаток на  складе vbUnitId
              , Forecast      TFloat   -- Прогноз прихода на vbUnitId
@@ -200,8 +199,7 @@ ELSE
                                 )
              -- Результат
              SELECT tmpGoodsOrder_all.Id
-                  , CASE WHEN vbUserId = 5 THEN tmpGoodsOrder_all.Id ELSE tmpGoodsOrder_all.GoodsId END :: Integer AS GoodsId
-                  , tmpGoodsOrder_all.GoodsId AS GoodsId_key
+                  , tmpGoodsOrder_all.GoodsId
                   , tmpGoodsOrder_all.GoodsKindId 
                   , COALESCE (tmpRemains.Amount, 0.0) :: TFloat AS Remains
                   , 0 :: TFloat                                 AS Forecast 
