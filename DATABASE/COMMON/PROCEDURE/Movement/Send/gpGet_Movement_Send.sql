@@ -205,7 +205,9 @@ BEGIN
             LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
 
        WHERE Movement.Id = inMovementId
-         AND Movement.DescId = zc_Movement_Send();
+         AND Movement.DescId = zc_Movement_Send()
+       LIMIT 1
+      ;
 
        END IF;
 
