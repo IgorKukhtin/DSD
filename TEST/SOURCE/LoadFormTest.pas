@@ -918,6 +918,9 @@ end;
 
 procedure TLoadFormTest.LoadPersonalServiceListFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceList_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceList_ObjectForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceListEditForm'));

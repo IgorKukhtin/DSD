@@ -18,7 +18,7 @@ RETURNS TABLE (GoodsId              Integer
              , GoodsName_complete      TVarChar
 
              , GoodsKindId          Integer
-             , GoodsKindName        TVarChar
+             , GoodsKindName_complete        TVarChar
 
              , MeasureName          TVarChar
              , MeasureName_complete    TVarChar
@@ -667,7 +667,8 @@ BEGIN
     FROM  tmpRez_Detail AS tmpRez
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                 ON ObjectFloat_Weight.ObjectId = tmpRez.GoodsId_child
-                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()         
+                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+    where goodscode = 190;         
     ;
 
 END;

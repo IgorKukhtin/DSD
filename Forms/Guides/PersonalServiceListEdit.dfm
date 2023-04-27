@@ -1240,10 +1240,10 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   object GuidesPersonalServiceList_AvanceF2: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalServiceList_AvanceF2
-    FormNameParam.Value = 'TPersonalServiceListForm'
+    FormNameParam.Value = 'TPersonalServiceList_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonalServiceListForm'
+    FormName = 'TPersonalServiceList_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
