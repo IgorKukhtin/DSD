@@ -1,10 +1,12 @@
 -- Function: gpSelect_Movement_OrderInternalPackRemains_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternalPackRemains_Print2 (Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternalPackRemains_Print2 (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternalPackRemains_Print2(
+--CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternalPackRemains_Print2(
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternalPackRemains_DetailsPrint (Integer, TVarChar);
+CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternalPackRemains_DetailsPrint(
     IN inMovementId    Integer  , -- ключ Документа
-    IN inIsMinus       Boolean  , -- 
+    --IN inIsMinus       Boolean  , -- 
     IN inSession       TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (GoodsId              Integer
@@ -44,6 +46,13 @@ RETURNS TABLE (GoodsId              Integer
                -- ФАКТ - Перемещение с Цеха Упаковки
              , Income_PACK_from_Child     TFloat             
  
+             , AmountPack1_all     TFloat
+             , AmountPack2_all     TFloat
+             , AmountPack3_all     TFloat
+             , AmountPack4_all     TFloat
+             , AmountPack5_all     TFloat
+             , AmountPackTotal_All TFloat
+             
              , AmountPack1     TFloat
              , AmountPack2     TFloat
              , AmountPack3     TFloat
@@ -74,12 +83,14 @@ $BODY$
     DECLARE vbStatusId Integer;
     DECLARE vbOperDate TDateTime;
     DECLARE vbMaxAmount TFloat;
+    DECLARE inIsMinus Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
 
-
+     inIsMinus:= FALSE;
+     
      -- параметры из документа
      SELECT Movement.DescId
           , Movement.StatusId
@@ -239,7 +250,7 @@ BEGIN
                 , _Result_Master.Income_PACK_from
 
                 , _Result_Child.Id                AS MovementItemId_child
-                , _Result_Child.GoodsId           AS GoodsCId_Child
+                , _Result_Child.GoodsId           AS GoodsId_Child
                 , _Result_Child.GoodsCode         AS GoodsCode_Child
                 , _Result_Child.GoodsName         AS GoodsName_Child
                 , _Result_Child.GoodsKindName     AS GoodsKindName_Child
@@ -475,6 +486,7 @@ BEGIN
                 , tmpRez.GoodsCode_Child
                 , tmpRez.GoodsName_Child
                 , tmpRez.GoodsKindName_Child
+                , tmpRez.MeasureId_Child
                 , tmpRez.MeasureName_Child
 
                   -- План+План2 для упаковки (ИТОГО, факт)
@@ -553,10 +565,12 @@ BEGIN
                   -- ПРИОРИТЕТ
                 , tmpRez.Num
                 
+                , tmpRez.GoodsId_Child
                 , tmpRez.GoodsCode_Child
                 , tmpRez.GoodsName_Child
                 , tmpRez.GoodsKindName_Child
                 , tmpRez.MeasureName_Child
+                , tmpRez.MeasureId_Child
 
                   -- План+План2 для упаковки (ИТОГО, факт)
                 , tmpRez.AmountPackAllTotal_Child   
@@ -601,14 +615,21 @@ BEGIN
                 , tmpRez.Income_PACK_to_Child    ::TFloat       --***
                   -- ФАКТ - Перемещение с Цеха Упаковки         
                 , tmpRez.Income_PACK_from_Child  ::TFloat       --***  
+
+                , SUM (COALESCE (tmpRez.AmountPack1,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS AmountPack1_all
+                , SUM (COALESCE (tmpRez.AmountPack2,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS AmountPack2_all
+                , SUM (COALESCE (tmpRez.AmountPack3,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS AmountPack3_all
+                , SUM (COALESCE (tmpRez.AmountPack4,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS AmountPack4_all
+                , SUM (COALESCE (tmpRez.AmountPack5,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS AmountPack5_all
+                , SUM (COALESCE (tmpRez.AmountPackAll,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS AmountPackTotal_All
+              
                 
-                
-                , tmpRez.AmountPackAll
-                , tmpRez.AmountPack1
-                , tmpRez.AmountPack2       
-                , tmpRez.AmountPack3
-                , tmpRez.AmountPack4
-                , tmpRez.AmountPack5
+                --, tmpRez.AmountPackAll::TFloat
+                , tmpRez.AmountPack1::TFloat
+                , tmpRez.AmountPack2 ::TFloat      
+                , tmpRez.AmountPack3::TFloat
+                , tmpRez.AmountPack4::TFloat
+                , tmpRez.AmountPack5::TFloat
                 
                 , (COALESCE (tmpRez.AmountPack1,0)
                  + COALESCE (tmpRez.AmountPack2,0)
@@ -622,7 +643,7 @@ BEGIN
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpRez.MeasureId_Child = zc_Measure_Sh() THEN (tmpRez.AmountPack4 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack4_Sh
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpRez.MeasureId_Child = zc_Measure_Sh() THEN (tmpRez.AmountPack5 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack5_Sh
 
-                , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpMI_master.MeasureId_Child = zc_Measure_Sh() THEN ((COALESCE (tmpRez.AmountPack1,0)
+                , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpRez.MeasureId_Child = zc_Measure_Sh() THEN ((COALESCE (tmpRez.AmountPack1,0)
                                                                                                                      + COALESCE (tmpRez.AmountPack2,0)
                                                                                                                      + COALESCE (tmpRez.AmountPack3,0)
                                                                                                                      + COALESCE (tmpRez.AmountPack4,0)
@@ -663,5 +684,6 @@ $BODY$
 -- тест
 -- 
 --select * from gpSelect_Movement_OrderInternalPackRemains_Print2(inMovementId := 21321161 , inIsMinus := 'False' ,  inSession := '9457');
-select * from gpSelect_Movement_OrderInternalPackRemains_Print2(inMovementId := 25083782  , inIsMinus := 'False' ,  inSession := '9457')
+--select * from gpSelect_Movement_OrderInternalPackRemains_Print2(inMovementId := 21321161 , inIsMinus := 'False' ,  inSession := '9457');
+select * from gpSelect_Movement_OrderInternalPackRemains_DetailsPrint(inMovementId := 25083782  ,  inSession := '9457')
 where goodscode = 190;

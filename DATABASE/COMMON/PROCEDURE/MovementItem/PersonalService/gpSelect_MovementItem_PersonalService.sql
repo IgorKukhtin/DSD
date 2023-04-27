@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , StaffListSummKindName TVarChar
              , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat
              , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat, SummCardSecondDiff TFloat, SummCardSecondCash TFloat
+             , SummCardSecond_Avance TFloat
              , SummNalog TFloat, SummNalogRecalc TFloat
              , SummNalogRet TFloat, SummNalogRetRecalc TFloat
              , SummMinus TFloat, SummFine TFloat, SummFineOth TFloat, SummFineOthRecalc TFloat
@@ -419,6 +420,47 @@ BEGIN
                                         , tmpContainer_pay.UnitId
                                 )
 
+      --все ведомости у которых заполнено - zc_ObjectLink_PersonalServiceList_Avance_F2
+     , tmpServiceList_wITH_AvanceF2 AS (SELECT ObjectLink_PersonalServiceList_Avance_F2.ObjectId AS PersonalServiceListId
+                                FROM ObjectLink AS ObjectLink_PersonalServiceList_Avance_F2
+                                WHERE ObjectLink_PersonalServiceList_Avance_F2.DescId = zc_ObjectLink_PersonalServiceList_Avance_F2()
+                               AND coalesce (ObjectLink_PersonalServiceList_Avance_F2.ChildObjectId ,0) <> 0
+                               )
+ 
+     -- все документы
+     , tmpMovement_Avance AS (SELECT MovementDate_ServiceDate.MovementId AS Id
+                              FROM MovementDate AS MovementDate_ServiceDate
+                                   JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
+                                                AND Movement.DescId = zc_Movement_PersonalService()
+                                                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                   INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                                 ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                                                AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                                                AND MovementLinkObject_PersonalServiceList.ObjectId IN (SELECT DISTINCT tmpServiceList_wITH_AvanceF2.PersonalServiceListId FROM tmpServiceList_wITH_AvanceF2)
+                              WHERE MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', vbServiceDate) AND (DATE_TRUNC ('MONTH', vbServiceDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+                                AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+                                AND MovementDate_ServiceDate.MovementId  <> inMovementId
+                              ) 
+     
+     -- все ведомости у которых заполнено - zc_ObjectLink_PersonalServiceList_Avance_F2
+     , tmpMI_SummCardSecondRecalc AS (SELECT MovementItem.ObjectId                                     AS PersonalId
+                                           , MILinkObject_Position.ObjectId                            AS PositionId
+                                           , SUM (COALESCE (MIFloat_SummCardSecondRecalc.ValueData,0)) AS SummCardSecondRecalc
+                                      FROM tmpMovement_Avance AS Movement
+                                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                  AND MovementItem.DescId = zc_MI_Master()
+                                                                  AND MovementItem.isErased = FALSE
+                                           INNER JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
+                                                                        ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                                       AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
+                                                                       AND COALESCE (MIFloat_SummCardSecondRecalc.ValueData,0) <> 0
+                                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
+                                                                            ON MILinkObject_Position.MovementItemId = MovementItem.Id
+                                                                           AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+                                      GROUP BY MovementItem.ObjectId, MILinkObject_Position.ObjectId                                     
+                                      )
+
+
 
        -- –езультат
        SELECT tmpAll.MovementItemId                         AS Id
@@ -482,6 +524,7 @@ BEGIN
             , MIFloat_SummCardSecondRecalc.ValueData  AS SummCardSecondRecalc
             , MIFloat_SummCardSecondDiff.ValueData    AS SummCardSecondDiff
             , MIFloat_SummCardSecondCash.ValueData    AS SummCardSecondCash
+            , tmpMI_SummCardSecondRecalc.SummCardSecondRecalc ::TFloat AS SummCardSecond_Avance
             , MIFloat_SummNalog.ValueData             AS SummNalog
             , MIFloat_SummNalogRecalc.ValueData       AS SummNalogRecalc
             , MIFloat_SummNalogRet.ValueData          AS SummNalogRet
@@ -819,7 +862,10 @@ BEGIN
             LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId    = tmpAll.MemberId_Personal
                                         AND tmpMIContainer_pay.PositionId  = tmpAll.PositionId
                                         AND tmpMIContainer_pay.UnitId      = tmpAll.UnitId
-                                        AND COALESCE (tmpMIContainer_pay.PositionLevelId, 0) = COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0)
+                                        AND COALESCE (tmpMIContainer_pay.PositionLevelId, 0) = COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0)     
+
+            LEFT JOIN tmpMI_SummCardSecondRecalc ON tmpMI_SummCardSecondRecalc.PersonalId = tmpAll.PersonalId
+                                                AND tmpMI_SummCardSecondRecalc.PositionId = tmpAll.PositionId
       ;
 
 END;
