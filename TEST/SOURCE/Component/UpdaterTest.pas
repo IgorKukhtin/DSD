@@ -18,6 +18,7 @@ type
     procedure UpdateScaleCeh;
     procedure UpdateFarmacyCash;
     procedure UpdateFarmacyCashServise;
+    procedure UpdateFarmacyInventory;
     procedure UpdateMobile;
    // procedure UpdateRecoveryFarmacy;
   end;
@@ -71,7 +72,14 @@ end;
 
 procedure TUpdaterTest.UpdateFarmacyCashServise;
 begin
-   SaveFile(ExtractFileDir(ParamStr(0)) + '\FarmacyCashServise.exe');
+  SaveFile(ExtractFileDir(ParamStr(0)) + '\FarmacyCashServise.exe');
+end;
+
+procedure TUpdaterTest.UpdateFarmacyInventory;
+begin
+  if FileExists(ExtractFileDir(ParamStr(0)) + '\sqlite3.dll')
+  then SaveFile(ExtractFileDir(ParamStr(0)) + '\sqlite3.dll');
+  SaveFile(ExtractFileDir(ParamStr(0)) + '\FarmacyInventory.exe');
 end;
 
 procedure TUpdaterTest.UpdateMainProgram;

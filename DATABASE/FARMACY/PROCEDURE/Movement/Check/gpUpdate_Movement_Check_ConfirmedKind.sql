@@ -45,6 +45,15 @@ BEGIN
       ouConfirmedKindName:= COALESCE ((SELECT Object.ValueData FROM MovementLinkObject AS MLO JOIN Object ON Object.Id = MLO.ObjectId WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_ConfirmedKind()), '');    
       -- сохранили отметку <јвтоматически подтвержден>
       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), inMovementId, False);
+
+      -- сохранили свойство <ƒата создани€>
+      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_UserConfirmedKind(), inMovementId, CURRENT_TIMESTAMP);
+      -- сохранили свойство <ѕользователь (создание)>
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UserConfirmedKind(), inMovementId, vbUserId);
+             
+      -- сохранили протокол
+      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+
       IF vbConfirmedKindId = zc_Enum_ConfirmedKind_Complete() THEN RETURN; END IF;
     END IF;
     

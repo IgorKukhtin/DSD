@@ -84,6 +84,7 @@ type
     chCancelReason: TcxGridDBColumn;
     btnCancelledOrders: TButton;
     spSetErased: TZStoredProc;
+    spSetErasetBooking: TZStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnSaveBookingsClick(Sender: TObject);
@@ -93,12 +94,14 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure btnOpenBookingClick(Sender: TObject);
     procedure btnCancelledOrdersClick(Sender: TObject);
+    procedure SetData—ancelled;
   private
     { Private declarations }
 
     APIUser: String;
     APIPassword: String;
     TabletkiAPI : TTabletkiAPI;
+    FData—ancelled : TDateTime;
 
   public
     { Public declarations }
@@ -174,8 +177,6 @@ end;
 
 
 procedure TMainForm.btnAllClick(Sender: TObject);
-var
-  Ini: TIniFile;
 begin
   Add_Log('—Ú‡Ú. ***************************');
   try
@@ -204,6 +205,23 @@ begin
     btnUpdateStausClick(Nil);
     Application.ProcessMessages;
 
+    if MinutesBetween(FData—ancelled, Now()) > 50 then
+    begin
+
+      qryUnit.First;
+      while not qryUnit.Eof do
+      begin
+
+        // œÓÎÛ˜‡ÂÏ Ë ÒÓı‡ÌˇÍÏ ÌÓ‚˚Â Á‡Í‡Á˚
+        btnCancelledOrdersClick(Nil);
+        Application.ProcessMessages;
+
+        qryUnit.Next;
+      end;
+
+      SetData—ancelled
+    end;
+
   except
     on E: Exception do
       Add_Log(E.Message);
@@ -219,9 +237,34 @@ begin
 
   if not TabletkiAPI.Load—ancelledOrders(qryUnit.FieldByName('SerialNumber').AsInteger) then
   begin
-     if TabletkiAPI.ErrorsText = '' then Add_Log('ÕÂÚ ÌÓ‚˚ı Á‡Í‡ÁÓ‚.')
+     if TabletkiAPI.ErrorsText = '' then Add_Log('ÕÂÚ ÌÓ‚˚ı ÓÚÍ‡ÁÓ‚.')
      else Add_Log(TabletkiAPI.ErrorsText);
   end;
+
+  if TabletkiAPI.BookingsHeadCDS.IsEmpty then Exit;
+  Add_Log('¿ÔÚÂÍ‡: ' + qryUnit.FieldByName('Name').AsString);
+  Add_Log('   ÓÚÍ‡ÁÓ‚: ' + IntToStr(TabletkiAPI.BookingsHeadCDS.RecordCount));
+
+  try
+    TabletkiAPI.BookingsHeadCDS.First;
+    while not TabletkiAPI.BookingsHeadCDS.Eof  do
+    begin
+      spSetErasetBooking.Params.ParamByName('inBookingId').AsString := TabletkiAPI.BookingsHeadCDS.FieldByName('bookingId').AsString;
+      spSetErasetBooking.Params.ParamByName('inComment').AsString := TabletkiAPI.BookingsHeadCDS.FieldByName('customerAdditionalInfo').AsString;
+      spSetErasetBooking.Params.ParamByName('outisOk').AsBoolean := False;
+      spSetErasetBooking.Params.ParamByName('inSession').AsString := '3';
+      spSetErasetBooking.ExecProc;
+
+      if spSetErasetBooking.Params.ParamByName('outisOk').AsBoolean then
+        Add_Log('   ÓÚÍ‡Á: ' + TabletkiAPI.BookingsHeadCDS.FieldByName('bookingId').AsString);
+
+      TabletkiAPI.BookingsHeadCDS.Next;
+    end;
+
+  except
+    on E: Exception do Add_Log(E.Message);
+  end;
+
 end;
 
 procedure TMainForm.btnLoadBookingsClick(Sender: TObject);
@@ -254,7 +297,6 @@ begin
 end;
 
 procedure TMainForm.btnSaveBookingsClick(Sender: TObject);
-  var APoint : TPoint;
 begin
   if not TabletkiAPI.BookingsHeadCDS.Active then Exit;
   if TabletkiAPI.BookingsHeadCDS.IsEmpty then Exit;
@@ -311,7 +353,6 @@ end;
 
 procedure TMainForm.btnUpdateStausClick(Sender: TObject);
 var
-  Urgently : boolean;
   Status : string;
 
   function GetJSONItems : TJSONArray;
@@ -466,6 +507,9 @@ begin
     APIPassword := Ini.ReadString('API', 'APIPassword', '');
     Ini.WriteString('API', 'APIPassword', APIPassword);
 
+    FData—ancelled := Ini.ReadDateTime('Common', 'Data—ancelled', Date);
+    Ini.WriteDateTime('Common', 'Data—ancelled', FData—ancelled);
+
   finally
     Ini.free;
   end;
@@ -524,6 +568,21 @@ begin
     Application.ShowMainForm := False;
     Timer1.Enabled := true;
     Exit;
+  end;
+end;
+
+procedure TMainForm.SetData—ancelled;
+var
+  Ini: TIniFile;
+begin
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'BookingsForTabletki.ini');
+
+  try
+
+    Ini.WriteDateTime('Common', 'Data—ancelled', Now());
+
+  finally
+    Ini.free;
   end;
 end;
 
