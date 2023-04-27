@@ -598,11 +598,11 @@ begin
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_Name_BUHDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_Name_BUHDialogForm');
-
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
    exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   exit;
@@ -1794,7 +1794,7 @@ begin
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalEditForm');
    {

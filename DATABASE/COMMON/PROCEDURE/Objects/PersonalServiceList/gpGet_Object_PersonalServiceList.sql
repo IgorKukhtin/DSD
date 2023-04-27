@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PersonalHeadId Integer, PersonalHeadName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , PSLExportKindId Integer, PSLExportKindName TVarChar
+             , ServiceListId_AvanceF2 Integer, ServiceListName_AvanceF2 TVarChar
              , ContentType TVarChar
              , OnFlowType TVarChar
              , Compensation TFloat
@@ -68,6 +69,9 @@ BEGIN
            , CAST ('' as TVarChar)  AS BankAccountName
            , 0                      AS PSLExportKindId
            , CAST ('' as TVarChar)  AS PSLExportKindName
+           , 0                      AS ServiceListId_AvanceF2
+           , CAST ('' as TVarChar)  AS ServiceListName_AvanceF2
+
            , CAST ('' as TVarChar)  AS ContentType
            , CAST ('' as TVarChar)  AS OnFlowType
                       
@@ -120,6 +124,9 @@ BEGIN
            , Object_BankAccount.ValueData      AS BankAccountName
            , Object_PSLExportKind.Id           AS PSLExportKindId
            , Object_PSLExportKind.ValueData    AS PSLExportKindName
+
+           , Object_Avance_F2.Id                  AS ServiceListId_AvanceF2
+           , Object_Avance_F2.ValueData           AS ServiceListName_AvanceF2
 
            , ObjectString_ContentType.ValueData ::TVarChar   AS ContentType
            , ObjectString_OnFlowType.ValueData  ::TVarChar   AS OnFlowType
@@ -236,6 +243,11 @@ BEGIN
                                AND ObjectLink_PersonalServiceList_PersonalHead.DescId   = zc_ObjectLink_PersonalServiceList_PersonalHead()
            LEFT JOIN Object AS Object_PersonalHead ON Object_PersonalHead.Id = ObjectLink_PersonalServiceList_PersonalHead.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Avance_F2
+                                ON ObjectLink_PersonalServiceList_Avance_F2.ObjectId = Object_PersonalServiceList.Id 
+                               AND ObjectLink_PersonalServiceList_Avance_F2.DescId = zc_ObjectLink_PersonalServiceList_Avance_F2()
+           LEFT JOIN Object AS Object_Avance_F2 ON Object_Avance_F2.Id = ObjectLink_PersonalServiceList_Avance_F2.ChildObjectId
+
            LEFT JOIN ObjectString AS ObjectString_ContentType 
                                   ON ObjectString_ContentType.ObjectId = Object_PersonalServiceList.Id 
                                  AND ObjectString_ContentType.DescId = zc_ObjectString_PersonalServiceList_ContentType()
@@ -256,6 +268,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.04.23         *
  09.03.22         *
  18.11.21         * KoeffSummCardSecond
  28.04.21         * add isDetail

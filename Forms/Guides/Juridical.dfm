@@ -36,7 +36,12 @@ object JuridicalForm: TJuridicalForm
       DataController.DataSource = GridDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = Name
+        end>
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
@@ -44,6 +49,7 @@ object JuridicalForm: TJuridicalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.Footer = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -95,6 +101,31 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object OKPO_inf: TcxGridDBColumn
+        Caption = #1054#1050#1055#1054' '#1085#1072' '#1076#1072#1090#1091
+        DataBinding.FieldName = 'OKPO_inf'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object INN_inf: TcxGridDBColumn
+        Caption = #1048#1053#1053' '#1085#1072' '#1076#1072#1090#1091
+        DataBinding.FieldName = 'INN_inf'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object IsDiff: TcxGridDBColumn
+        Caption = #1054#1090#1082#1083'. '#1048#1053#1053' '#1080#1083#1080' '#1054#1050#1055#1054
+        DataBinding.FieldName = 'IsDiff'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
       end
       object InvNumberBranch: TcxGridDBColumn
         Caption = #8470' '#1092#1080#1083#1080#1072#1083#1072
@@ -498,6 +529,20 @@ object JuridicalForm: TJuridicalForm
       GridView = cxGridDBTableView
     end
   end
+  object cxLabel2: TcxLabel
+    Left = 591
+    Top = 106
+    Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1089#1090#1086#1088#1080#1080' '#1085#1072':'
+  end
+  object edShowDate: TcxDateEdit
+    Left = 689
+    Top = 105
+    EditValue = 43831d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 7
+    Width = 88
+  end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -581,6 +626,18 @@ object JuridicalForm: TJuridicalForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem1'
         end
         item
           Visible = True
@@ -746,6 +803,20 @@ object JuridicalForm: TJuridicalForm
     object bbUpdate_isIrna: TdxBarButton
       Action = macUpdate_isIrna
       Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edShowDate
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel2
     end
   end
   object ActionList: TActionList
@@ -1410,6 +1481,14 @@ object JuridicalForm: TJuridicalForm
         DataSet = MasterCDS
       end>
     Params = <
+      item
+        Name = 'inShowDate'
+        Value = Null
+        Component = edShowDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inShowAll'
         Value = Null

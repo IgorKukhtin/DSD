@@ -185,6 +185,15 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Options.Editing = False
         Width = 80
       end
+      object ServiceListName_AvanceF2: TcxGridDBColumn
+        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1076#1083#1103'"'#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'."'
+        DataBinding.FieldName = 'ServiceListName_AvanceF2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1076#1083#1103'"'#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'."'
+        Options.Editing = False
+        Width = 138
+      end
       object isSecond: TcxGridDBColumn
         Caption = #1042#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
         DataBinding.FieldName = 'isSecond'

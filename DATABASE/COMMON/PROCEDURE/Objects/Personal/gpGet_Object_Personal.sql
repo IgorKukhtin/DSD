@@ -15,6 +15,7 @@ RETURNS TABLE (MemberId Integer, MemberCode Integer, MemberName TVarChar,
                PersonalServiceListId Integer, PersonalServiceListName TVarChar,
                PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar,
                PersonalServiceListCardSecondId Integer, PersonalServiceListCardSecondName TVarChar,
+               ServiceListId_AvanceF2 Integer, ServiceListName_AvanceF2 TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                StorageLineId Integer, StorageLineName TVarChar,
                DateIn TDateTime, DateOut TDateTime, DateSend TDateTime
@@ -64,6 +65,9 @@ BEGIN
          , COALESCE (Object_PersonalServiceListCardSecond.Id, CAST (0 as Integer))          AS PersonalServiceListCardSecondId
          , COALESCE (Object_PersonalServiceListCardSecond.ValueData, CAST ('' as TVarChar)) AS PersonalServiceListCardSecondName         
 
+         , COALESCE (Object_PersonalServiceListAvance_F2.Id, CAST (0 as Integer))           AS ServiceListId_AvanceF2
+         , COALESCE (Object_PersonalServiceListAvance_F2.ValueData, CAST ('' as TVarChar))  AS ServiceListName_AvanceF2
+
          , Object_SheetWorkTime.Id           AS SheetWorkTimeId 
          , Object_SheetWorkTime.ValueData    AS SheetWorkTimeName
 
@@ -111,6 +115,11 @@ BEGIN
                               AND ObjectLink_Personal_SheetWorkTime.DescId = zc_ObjectLink_Personal_SheetWorkTime()
           LEFT JOIN Object AS Object_SheetWorkTime ON Object_SheetWorkTime.Id = ObjectLink_Personal_SheetWorkTime.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Avance_F2
+                               ON ObjectLink_PersonalServiceList_Avance_F2.ObjectId = Object_Personal_View.PersonalId
+                              AND ObjectLink_PersonalServiceList_Avance_F2.DescId = zc_ObjectLink_Personal_PersonalServiceListAvance_F2()
+          LEFT JOIN Object AS Object_PersonalServiceListAvance_F2 ON Object_PersonalServiceListAvance_F2.Id = ObjectLink_PersonalServiceList_Avance_F2.ChildObjectId
+
     WHERE Object_Personal_View.PersonalId = inMaskId;
    END IF;
 
@@ -143,6 +152,9 @@ BEGIN
            , CAST (0 as Integer)   AS PersonalServiceListCardSecondId 
            , CAST ('' as TVarChar) AS PersonalServiceListCardSecondName
            
+           , 0                      AS ServiceListId_AvanceF2
+           , CAST ('' as TVarChar)  AS ServiceListName_AvanceF2
+
            , CAST (0 as Integer)   AS SheetWorkTimeId 
            , CAST ('' as TVarChar) AS SheetWorkTimeName
 
@@ -199,6 +211,9 @@ BEGIN
          , COALESCE (Object_PersonalServiceListCardSecond.Id, CAST (0 as Integer))          AS PersonalServiceListCardSecondId
          , COALESCE (Object_PersonalServiceListCardSecond.ValueData, CAST ('' as TVarChar)) AS PersonalServiceListCardSecondName
          
+         , COALESCE (Object_PersonalServiceListAvance_F2.Id, CAST (0 as Integer))           AS ServiceListId_AvanceF2
+         , COALESCE (Object_PersonalServiceListAvance_F2.ValueData, CAST ('' as TVarChar))  AS ServiceListName_AvanceF2 
+ 
          , Object_SheetWorkTime.Id           AS SheetWorkTimeId 
          , Object_SheetWorkTime.ValueData    AS SheetWorkTimeName
 
@@ -245,6 +260,11 @@ BEGIN
                               AND ObjectLink_Personal_SheetWorkTime.DescId = zc_ObjectLink_Personal_SheetWorkTime()
           LEFT JOIN Object AS Object_SheetWorkTime ON Object_SheetWorkTime.Id = ObjectLink_Personal_SheetWorkTime.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Avance_F2
+                               ON ObjectLink_PersonalServiceList_Avance_F2.ObjectId = Object_Personal_View.PersonalId
+                              AND ObjectLink_PersonalServiceList_Avance_F2.DescId = zc_ObjectLink_Personal_PersonalServiceListAvance_F2()
+          LEFT JOIN Object AS Object_PersonalServiceListAvance_F2 ON Object_PersonalServiceListAvance_F2.Id = ObjectLink_PersonalServiceList_Avance_F2.ChildObjectId
+
     WHERE Object_Personal_View.PersonalId = inId;
 
   END IF;
@@ -252,7 +272,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Personal (Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Object_Personal (Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

@@ -2,7 +2,9 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
  INOUT ioId                                Integer   , -- ключ объекта <Сотрудники>
@@ -13,7 +15,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
     IN inPersonalGroupId                   Integer   , -- Группировки Сотрудников
     IN inPersonalServiceListId             Integer   , -- Ведомость начисления(главная)
     IN inPersonalServiceListOfficialId     Integer   , -- Ведомость начисления(БН)
-    IN inPersonalServiceListCardSecondId   Integer   , -- Ведомость начисления(Карта Ф2)
+    IN inPersonalServiceListCardSecondId   Integer   , -- Ведомость начисления(Карта Ф2) 
+    IN inPersonalServiceListId_AvanceF2    Integer   , --  Ведомость начисления(аванс Карта Ф2)
     IN inSheetWorkTimeId                   Integer   , -- Режим работы (Шаблон табеля р.вр.)
     IN inStorageLineId                     Integer   , -- ссылка на линию производства
     
@@ -115,6 +118,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListOfficial(), ioId, inPersonalServiceListOfficialId);
    -- сохранили связь с <Ведомость начисления(карта ф2)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListCardSecond(), ioId, inPersonalServiceListCardSecondId);
+   -- сохранили связь с <Ведомость начисления(аванс Карта Ф2)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListAvance_F2(), ioId, inPersonalServiceListId_AvanceF2);
    -- сохранили связь с <Режим работы (Шаблон табеля р.вр.)>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Personal_SheetWorkTime(), ioId, inSheetWorkTimeId);
    -- сохранили связь с <линия производства>
@@ -169,6 +174,7 @@ $BODY$
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.04.23         *
  19.04.23         *
  06.08.21         *
  13.07.17         * add PersonalServiceListCardSecond

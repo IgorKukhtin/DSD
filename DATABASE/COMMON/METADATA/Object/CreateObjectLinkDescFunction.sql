@@ -676,6 +676,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Personal_StorageLine() RETURNS Integer 
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Personal_StorageLine', 'Связь Сотрудники с линией производства', zc_Object_Personal(), zc_Object_StorageLine() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_StorageLine');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Personal_PersonalServiceListAvance_F2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_PersonalServiceListAvance_F2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Personal_PersonalServiceListAvance_F2', 'Ведомость начисления(аванс Карта Ф2)', zc_Object_Personal(), zc_Object_PersonalServiceList() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Personal_PersonalServiceListAvance_F2');
+
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_AssetGroup_Parent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_AssetGroup_Parent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
@@ -1396,6 +1401,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PersonalServiceList_PSLExportKind() RET
 CREATE OR REPLACE FUNCTION zc_ObjectLink_PersonalServiceList_PersonalHead() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_PersonalHead'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_PersonalServiceList_PersonalHead', 'Руководитель подразделения', zc_Object_PersonalServiceList(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_PersonalHead');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PersonalServiceList_Avance_F2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_Avance_F2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_PersonalServiceList_Avance_F2', 'Ведомость начисления (2ф)', zc_Object_PersonalServiceList(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PersonalServiceList_Avance_F2');
 
 
 ---

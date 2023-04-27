@@ -127,6 +127,8 @@ type
     bbUpdate_PersonalServiceList: TdxBarButton;
     PositionCode: TcxGridDBColumn;
     PositionLevelCode: TcxGridDBColumn;
+    PersonalServiceListAvanceF2: TOpenChoiceForm;
+    ServiceListName_AvanceF2: TcxGridDBColumn;
   private
     { Private declarations }
   public
