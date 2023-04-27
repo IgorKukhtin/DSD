@@ -67,17 +67,17 @@
       end
       object cxLabel3: TcxLabel
         Left = 16
-        Top = 212
+        Top = 207
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
       end
       object cxLabel2: TcxLabel
         Left = 124
-        Top = 212
+        Top = 207
         Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
       end
       object cxLabel5: TcxLabel
         Left = 16
-        Top = 132
+        Top = 128
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
       end
       object cxLabel6: TcxLabel
@@ -92,7 +92,7 @@
       end
       object cePosition: TcxButtonEdit
         Left = 16
-        Top = 149
+        Top = 144
         Properties.Buttons = <
           item
             Default = True
@@ -136,7 +136,7 @@
       end
       object edDateOut: TcxDateEdit
         Left = 124
-        Top = 231
+        Top = 226
         EditValue = 42929d
         Properties.SaveTime = False
         Properties.ShowTime = False
@@ -162,12 +162,12 @@
       end
       object cxLabel4: TcxLabel
         Left = 16
-        Top = 171
+        Top = 166
         Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
       end
       object cePositionLevel: TcxButtonEdit
         Left = 16
-        Top = 188
+        Top = 183
         Properties.Buttons = <
           item
             Default = True
@@ -179,7 +179,7 @@
       end
       object cbDateOut: TcxCheckBox
         Left = 161
-        Top = 258
+        Top = 253
         Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         Caption = #1059#1074#1086#1083#1077#1085
         TabOrder = 16
@@ -187,12 +187,12 @@
       end
       object cxLabel17: TcxLabel
         Left = 237
-        Top = 212
+        Top = 207
         Caption = #1044#1072#1090#1072' '#1087#1077#1088#1077#1074#1086#1076#1072
       end
       object edDateSend: TcxDateEdit
         Left = 237
-        Top = 231
+        Top = 226
         EditValue = 42929d
         Properties.SaveTime = False
         Properties.ShowTime = False
@@ -201,14 +201,14 @@
       end
       object cbDateSend: TcxCheckBox
         Left = 249
-        Top = 258
+        Top = 253
         Caption = #1055#1077#1088#1077#1074#1077#1076#1077#1085
         TabOrder = 5
         Width = 80
       end
       object cbMain: TcxCheckBox
         Left = 3
-        Top = 258
+        Top = 253
         Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088#1072#1073#1086#1090#1099
         TabOrder = 18
@@ -216,12 +216,12 @@
       end
       object cxLabel8: TcxLabel
         Left = 16
-        Top = 286
+        Top = 278
         Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1075#1083#1072#1074#1085#1072#1103')'
       end
       object cePersonalServiceList: TcxButtonEdit
         Left = 16
-        Top = 304
+        Top = 296
         Properties.Buttons = <
           item
             Default = True
@@ -233,12 +233,12 @@
       end
       object cxLabel9: TcxLabel
         Left = 16
-        Top = 331
+        Top = 318
         Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1041#1053')'
       end
       object cePersonalServiceListOfficial: TcxButtonEdit
         Left = 16
-        Top = 348
+        Top = 335
         Properties.Buttons = <
           item
             Default = True
@@ -250,12 +250,12 @@
       end
       object cxLabel10: TcxLabel
         Left = 16
-        Top = 414
+        Top = 433
         Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
       end
       object ceSheetWorkTime: TcxButtonEdit
         Left = 16
-        Top = 432
+        Top = 450
         Properties.Buttons = <
           item
             Default = True
@@ -267,12 +267,12 @@
       end
       object cxLabel11: TcxLabel
         Left = 16
-        Top = 457
+        Top = 475
         Caption = #1051#1080#1085#1080#1103' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
       end
       object ceStorageLine: TcxButtonEdit
         Left = 16
-        Top = 474
+        Top = 492
         Properties.Buttons = <
           item
             Default = True
@@ -284,12 +284,12 @@
       end
       object cxLabel12: TcxLabel
         Left = 16
-        Top = 372
+        Top = 359
         Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1050#1072#1088#1090#1072' '#1060'2)'
       end
       object cePersonalServiceListCardSecond: TcxButtonEdit
         Left = 16
-        Top = 389
+        Top = 373
         Properties.Buttons = <
           item
             Default = True
@@ -298,6 +298,23 @@
         Properties.ReadOnly = True
         TabOrder = 27
         Width = 305
+      end
+      object cePersonalServiceListAvanceF2: TcxButtonEdit
+        Left = 16
+        Top = 411
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 31
+        Width = 305
+      end
+      object cxLabel18: TcxLabel
+        Left = 16
+        Top = 395
+        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1072#1074#1072#1085#1089' '#1050#1072#1088#1090#1072' '#1060'2)'
       end
     end
     object cxTabSheet2: TcxTabSheet
@@ -474,6 +491,14 @@
         Name = 'inPersonalServiceListCardSecondId'
         Value = Null
         Component = GuidesPersonalServiceListCardSecond
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalServiceListId_AvanceF2'
+        Value = Null
+        Component = GuidesPersonalServiceListAvanceF2
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -865,6 +890,21 @@
         Component = cbDateSend
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ServiceListId_AvanceF2'
+        Value = Null
+        Component = GuidesPersonalServiceListAvanceF2
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ServiceListName_AvanceF2'
+        Value = Null
+        Component = GuidesPersonalServiceListAvanceF2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -1133,8 +1173,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 71
-    Top = 331
+    Left = 95
+    Top = 323
   end
   object StorageLineGuides: TdsdGuides
     KeyField = 'Id'
@@ -1163,8 +1203,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 231
-    Top = 403
+    Left = 311
+    Top = 419
   end
   object GuidesPersonalServiceListCardSecond: TdsdGuides
     KeyField = 'Id'
@@ -1193,8 +1233,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 183
-    Top = 353
+    Left = 287
+    Top = 313
   end
   object GuidesMember_Refer: TdsdGuides
     KeyField = 'Id'
@@ -1306,5 +1346,35 @@
       end>
     Left = 181
     Top = 136
+  end
+  object GuidesPersonalServiceListAvanceF2: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonalServiceListAvanceF2
+    FormNameParam.Value = 'TPersonalServiceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalServiceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonalServiceListAvanceF2
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalServiceListAvanceF2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 223
+    Top = 451
   end
 end

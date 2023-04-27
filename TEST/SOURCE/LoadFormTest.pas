@@ -598,11 +598,11 @@ begin
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_Name_BUHDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_Name_BUHDialogForm');
-
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
    exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   exit;
@@ -881,10 +881,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalService_RecalcForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalService_RecalcForm');
   exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
-   }
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
   exit;
@@ -918,6 +918,9 @@ end;
 
 procedure TLoadFormTest.LoadPersonalServiceListFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceList_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceList_ObjectForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceListEditForm'));

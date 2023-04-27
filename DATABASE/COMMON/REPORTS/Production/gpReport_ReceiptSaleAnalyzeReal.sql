@@ -26,19 +26,11 @@ RETURNS SETOF refcursor
 AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE vbPriceListId_47 Integer;
   DECLARE Cursor1  refcursor;
   DECLARE Cursor2  refcursor;
-  DECLARE vbIsPriceListId_47 Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
-    
-    -- ПРАЙС - ПЛАН калькуляции (СЫРЬЕ)
-    vbPriceListId_47:= 18886; -- SELECT * FROM Object WHERE DescId = zc_Object_PriceList() AND ObjectCode = 47
-    
-    -- 
-    vbIsPriceListId_47:= vbUserId IN (5);
 
     -- !!!пересчет Рецептур, временно захардкодил!!!
     PERFORM lpUpdate_Object_Receipt_Total (Object.Id, zfCalc_UserAdmin() :: Integer) FROM Object WHERE DescId = zc_Object_Receipt();
@@ -51,9 +43,7 @@ BEGIN
 
      CREATE TEMP TABLE tmpChildReceiptTable (ReceiptId_from Integer, ReceiptId Integer, GoodsId_in Integer, GoodsKindId_in Integer, Amount_in TFloat
                                            , ReceiptChildId integer, GoodsId_out Integer, GoodsKindId_out Integer, Amount_out TFloat, isStart Boolean, isCost Boolean
-                                           , Price1 TFloat, Price2 TFloat, Price3 TFloat, Price4 TFloat
-                                           , Price1_bon TFloat, Price2_bon TFloat, Price3_bon TFloat, Price4_bon TFloat, Price5_bon TFloat, Price6_bon TFloat
-                                            ) ON COMMIT DROP;
+                                           , Price1 TFloat, Price2 TFloat, Price3 TFloat, Price4 TFloat) ON COMMIT DROP;
 
      -- Ограничения по товару
      WITH RECURSIVE tmpGroup (GoodsGroupId, GoodsGroupParentId)
@@ -67,15 +57,12 @@ BEGIN
                                       ON ObjectLink_GoodsGroup.ChildObjectId = tmpGroup.GoodsGroupId
                                      AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_GoodsGroup_Parent()
           )
-     INSERT INTO _tmpGoods (GoodsId, TradeMarkId)
-        SELECT ObjectLink_Goods_GoodsGroup.ObjectId, ObjectLink_Goods_TradeMark.ChildObjectid
+     INSERT INTO _tmpGoods (GoodsId)
+        SELECT ObjectLink_Goods_GoodsGroup.ObjectId
         FROM tmpGroup
              INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                    ON ObjectLink_Goods_GoodsGroup.ChildObjectId = tmpGroup.GoodsGroupId
                                   AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                                  ON ObjectLink_Goods_TradeMark.ChildObjectId = tmpGroup.GoodsGroupId
-                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
        ;
 
      -- группа подразделений или подразделение
@@ -88,24 +75,10 @@ BEGIN
      -- ВСЕ рецептуры
      INSERT INTO tmpChildReceiptTable (ReceiptId_from, ReceiptId, GoodsId_in, GoodsKindId_in, Amount_in
                                      , ReceiptChildId, GoodsId_out, GoodsKindId_out, Amount_out, isStart, isCost
-                                     , Price1, Price2, Price3, Price4
-                                     , Price1_bon, Price2_bon, Price3_bon, Price4_bon, Price5_bon, Price6_bon
-                                      )
+                                     , Price1, Price2, Price3, Price4)
           SELECT lpSelect.ReceiptId_from, lpSelect.ReceiptId, lpSelect.GoodsId_in, lpSelect.GoodsKindId_in, lpSelect.Amount_in
                , lpSelect.ReceiptChildId, lpSelect.GoodsId_out, lpSelect.GoodsKindId_out, lpSelect.Amount_out, lpSelect.isStart, lpSelect.isCost
-                 -- затраты цеха: Цена без НДС в прайсе по коду затрат указанных в рецептуре умножить на (цену ГП по прайсу 47 (без затрат) разделить на 1,1).
-               , CASE WHEN vbIsPriceListId_47 = TRUE AND lpSelect.isCost = TRUE THEN COALESCE (PriceList1.Price, 0) * COALESCE (PriceList_47_gk.Price, PriceList_47.Price, 0) / 1.1 ELSE COALESCE (PriceList1.Price, 0) END
-               , CASE WHEN vbIsPriceListId_47 = TRUE AND lpSelect.isCost = TRUE THEN COALESCE (PriceList2.Price, 0) * COALESCE (PriceList_47_gk.Price, PriceList_47.Price, 0) / 1.1 ELSE COALESCE (PriceList2.Price, 0) END
-               , CASE WHEN vbIsPriceListId_47 = TRUE AND lpSelect.isCost = TRUE THEN COALESCE (PriceList3.Price, 0) * COALESCE (PriceList_47_gk.Price, PriceList_47.Price, 0) / 1.1 ELSE COALESCE (PriceList3.Price, 0) END
-               , CASE WHEN vbIsPriceListId_47 = TRUE AND lpSelect.isCost = TRUE THEN COALESCE (PriceList4.Price, 0) * COALESCE (PriceList_47_gk.Price, PriceList_47.Price, 0) / 1.1 ELSE COALESCE (PriceList4.Price, 0) END
-                 -- затраты по бонусам: Цена без НДС в прайсе (по позиции или по Торговой марке) умножить на цену с НДС указанного прайс-листа продажа.
-               , CASE WHEN vbIsPriceListId_47 = TRUE AND lpSelect.isCost = TRUE THEN COALESCE (PriceList1_gp_tm.Price, PriceList1_gp_gk.Price, PriceList1_gp.Price, 0) * COALESCE (PriceList_gp_gk.Price, PriceList_gp.Price, 0) 1.2 ELSE 0 END
-               , CASE WHEN vbIsPriceListId_47 = TRUE AND lpSelect.isCost = TRUE THEN COALESCE (PriceList2_gp_tm.Price, PriceList2_gp_gk.Price, PriceList2_gp.Price, 0) * COALESCE (PriceList_gp_gk.Price, PriceList_gp.Price, 0) 1.2 ELSE 0 END
-               , CASE WHEN vbIsPriceListId_47 = TRUE AND lpSelect.isCost = TRUE THEN COALESCE (PriceList3_gp_tm.Price, PriceList3_gp_gk.Price, PriceList3_gp.Price, 0) * COALESCE (PriceList_gp_gk.Price, PriceList_gp.Price, 0) 1.2 ELSE 0 END
-               , CASE WHEN vbIsPriceListId_47 = TRUE AND lpSelect.isCost = TRUE THEN COALESCE (PriceList4_gp_tm.Price, PriceList4_gp_gk.Price, PriceList4_gp.Price, 0) * COALESCE (PriceList_gp_gk.Price, PriceList_gp.Price, 0) 1.2 ELSE 0 END
-               , CASE WHEN vbIsPriceListId_47 = TRUE AND lpSelect.isCost = TRUE THEN COALESCE (PriceList5_gp_tm.Price, PriceList5_gp_gk.Price, PriceList5_gp.Price, 0) * COALESCE (PriceList_gp_gk.Price, PriceList_gp.Price, 0) 1.2 ELSE 0 END
-               , CASE WHEN vbIsPriceListId_47 = TRUE AND lpSelect.isCost = TRUE THEN COALESCE (PriceList6_gp_tm.Price, PriceList6_gp_gk.Price, PriceList6_gp.Price, 0) * COALESCE (PriceList_gp_gk.Price, PriceList_gp.Price, 0) 1.2 ELSE 0 END
-
+               , COALESCE (PriceList1.Price, 0),  COALESCE (PriceList2.Price, 0), COALESCE(PriceList3.Price, 0), COALESCE(PriceList4.Price, 0)
           FROM lpSelect_Object_ReceiptChildDetail () AS lpSelect
                LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1 ON PriceList1.PriceListId = inPriceListId_1
                                                                        AND PriceList1.GoodsId = lpSelect.GoodsId_out
@@ -119,152 +92,6 @@ BEGIN
                LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList4 ON PriceList4.PriceListId = inPriceListId_sale
                                                                        AND PriceList4.GoodsId = lpSelect.GoodsId_out
                                                                        AND inEndDate >= PriceList4.StartDate AND inEndDate < PriceList4.EndDate
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList_47_gk ON PriceList_47_gk.PriceListId = vbPriceListId_47
-                                                                            AND PriceList_47_gk.GoodsId     = lpSelect.GoodsId_in
-                                                                            AND PriceList_47_gk.GoodsKindId = lpSelect.GoodsKindId_in
-                                                                            AND lpSelect.isCost             = TRUE
-                                                                         AND inEndDate >= PriceList_47_gk.StartDate AND inEndDate < PriceList_47_gk.EndDate
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList_47 ON PriceList_47.PriceListId = vbPriceListId_47
-                                                                         AND PriceList_47.GoodsId     = lpSelect.GoodsId_in
-                                                                         AND COALESCE (PriceList_47.GoodsKindId, zc_GoodsKind_Basis()) = zc_GoodsKind_Basis()
-                                                                         AND inEndDate >= PriceList_47.StartDate AND inEndDate < PriceList_47.EndDate
-                                                                          -- если нет в ГП + вид
-                                                                         AND PriceList_47_gk.GoodsId IS NULL
-                                                                         --
-                                                                         AND lpSelect.isCost           = TRUE
-
-                -- для ГП - продажа
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList_gp_gk ON PriceList_gp_gk.PriceListId = inPriceListId_sale
-                                                                            AND PriceList_gp_gk.GoodsId     = lpSelect.GoodsId_in
-                                                                            AND PriceList_gp_gk.GoodsKindId = lpSelect.GoodsKindId_in
-                                                                            AND inEndDate >= PriceList_gp_gk.StartDate AND inEndDate < PriceList_gp_gk.EndDate
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList_gp ON PriceList_gp.PriceListId = inPriceListId_sale
-                                                                         AND PriceList_gp.GoodsId     = lpSelect.GoodsId_in
-                                                                         AND COALESCE (PriceList_gp.GoodsKindId, zc_GoodsKind_Basis()) = zc_GoodsKind_Basis()
-                                                                         AND inEndDate >= PriceList_gp.StartDate AND inEndDate < PriceList_gp.EndDate
-                                                                         -- если нет в ГП + вид
-                                                                         AND PriceList_gp_gk.GoodsId IS NULL
-
-               LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = lpSelect.GoodsId_in
-
-               -- для ТМ
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1_gp_tm ON PriceList1_gp_tm.PriceListId = inPriceListId_1
-                                                                             AND PriceList1_gp_tm.GoodsId     = _tmpGoods.TradeMarkId
-                                                                             AND inEndDate >= PriceList1_gp_tm.StartDate AND inEndDate < PriceList1_gp_tm.EndDate
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList2_gp_tm ON PriceList2_gp_tm.PriceListId = inPriceListId_2
-                                                                             AND PriceList2_gp_tm.GoodsId     = _tmpGoods.TradeMarkId
-                                                                             AND inEndDate >= PriceList2_gp_tm.StartDate AND inEndDate < PriceList2_gp_tm.EndDate
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3_gp_tm ON PriceList3_gp_tm.PriceListId = inPriceListId_3
-                                                                             AND PriceList3_gp_tm.GoodsId     = _tmpGoods.TradeMarkId
-                                                                             AND inEndDate >= PriceList3_gp_tm.StartDate AND inEndDate < PriceList3_gp_tm.EndDate
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList4_gp_tm ON PriceList4_gp_tm.PriceListId = inPriceListId_sale
-                                                                             AND PriceList4_gp_tm.GoodsId     = _tmpGoods.TradeMarkId
-                                                                             AND inEndDate >= PriceList4_gp_tm.StartDate AND inEndDate < PriceList4_gp_tm.EndDate
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList5_gp_tm ON PriceList5_gp_tm.PriceListId = inPriceListId_5
-                                                                             AND PriceList5_gp_tm.GoodsId     = _tmpGoods.TradeMarkId
-                                                                             AND inEndDate >= PriceList5_gp_tm.StartDate AND inEndDate < PriceList5_gp_tm.EndDate
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList6_gp_tm ON PriceList6_gp_tm.PriceListId = inPriceListId_6
-                                                                             AND PriceList6_gp_tm.GoodsId     = _tmpGoods.TradeMarkId
-                                                                             AND inEndDate >= PriceList6_gp_tm.StartDate AND inEndDate < PriceList6_gp_tm.EndDate
-
-
-               -- для ГП + вид
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1_gp_gk ON PriceList1_gp_gk.PriceListId = inPriceListId_1
-                                                                             AND PriceList1_gp_gk.GoodsId     = lpSelect.GoodsId_in
-                                                                             AND PriceList1_gp_gk.GoodsKindId = lpSelect.GoodsKindId_in
-                                                                             AND inEndDate >= PriceList1_gp_gk.StartDate AND inEndDate < PriceList1_gp_gk.EndDate
-                                                                             -- если нет в ТМ
-                                                                             AND PriceList1_gp_tm.GoodsId  IS NULL
-
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList2_gp_gk ON PriceList2_gp_gk.PriceListId = inPriceListId_2
-                                                                             AND PriceList2_gp_gk.GoodsId     = lpSelect.GoodsId_in
-                                                                             AND PriceList2_gp_gk.GoodsKindId = lpSelect.GoodsKindId_in
-                                                                             AND inEndDate >= PriceList2_gp_gk.StartDate AND inEndDate < PriceList2_gp_gk.EndDate
-                                                                             -- если нет в ТМ
-                                                                             AND PriceList2_gp_tm.GoodsId  IS NULL
-
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3_gp_gk ON PriceList3_gp_gk.PriceListId = inPriceListId_3
-                                                                             AND PriceList3_gp_gk.GoodsId     = lpSelect.GoodsId_in
-                                                                             AND PriceList3_gp_gk.GoodsKindId = lpSelect.GoodsKindId_in
-                                                                             AND inEndDate >= PriceList3_gp_gk.StartDate AND inEndDate < PriceList3_gp_gk.EndDate
-                                                                             -- если нет в ТМ
-                                                                             AND PriceList3_gp_tm.GoodsId  IS NULL
-
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList4_gp_gk ON PriceList4_gp_gk.PriceListId = inPriceListId_sale
-                                                                             AND PriceList4_gp_gk.GoodsId     = lpSelect.GoodsId_in
-                                                                             AND PriceList4_gp_gk.GoodsKindId = lpSelect.GoodsKindId_in
-                                                                             AND inEndDate >= PriceList4_gp_gk.StartDate AND inEndDate < PriceList4_gp_gk.EndDate
-                                                                             -- если нет в ТМ
-                                                                             AND PriceList4_gp_tm.GoodsId     IS NULL
-
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList5_gp_gk ON PriceList5_gp_gk.PriceListId = inPriceListId_5
-                                                                             AND PriceList5_gp_gk.GoodsId     = lpSelect.GoodsId_in
-                                                                             AND PriceList5_gp_gk.GoodsKindId = lpSelect.GoodsKindId_in
-                                                                             AND inEndDate >= PriceList5_gp_gk.StartDate AND inEndDate < PriceList5_gp_gk.EndDate
-                                                                             -- если нет в ТМ
-                                                                             AND PriceList5_gp_tm.GoodsId     IS NULL
-
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList6_gp_gk ON PriceList6_gp_gk.PriceListId = inPriceListId_6
-                                                                             AND PriceList6_gp_gk.GoodsId     = lpSelect.GoodsId_in
-                                                                             AND PriceList6_gp_gk.GoodsKindId = lpSelect.GoodsKindId_in
-                                                                             AND inEndDate >= PriceList6_gp_gk.StartDate AND inEndDate < PriceList6_gp_gk.EndDate
-                                                                             -- если нет в ТМ
-                                                                             AND PriceList6_gp_tm.GoodsId     IS NULL
-
-               -- для ГП
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList1_gp ON PriceList1_gp.PriceListId = inPriceListId_1
-                                                                          AND PriceList1_gp.GoodsId     = lpSelect.GoodsId_in
-                                                                          AND COALESCE (PriceList1_gp.GoodsKindId, zc_GoodsKind_Basis()) = zc_GoodsKind_Basis()
-                                                                          AND inEndDate >= PriceList1_gp.StartDate AND inEndDate < PriceList1_gp.EndDate
-                                                                          -- если нет в ТМ
-                                                                          AND PriceList1_gp_tm.GoodsId  IS NULL
-                                                                          -- если нет в ГП + вид
-                                                                          AND PriceList1_gp_gk.GoodsId  IS NULL
-
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList2_gp ON PriceList2_gp.PriceListId = inPriceListId_2
-                                                                          AND PriceList2_gp.GoodsId     = lpSelect.GoodsId_in
-                                                                          AND COALESCE (PriceList2_gp.GoodsKindId, zc_GoodsKind_Basis()) = zc_GoodsKind_Basis()
-                                                                          AND inEndDate >= PriceList2_gp.StartDate AND inEndDate < PriceList2_gp.EndDate
-                                                                          -- если нет в ТМ
-                                                                          AND PriceList2_gp_tm.GoodsId  IS NULL
-                                                                          -- если нет в ГП + вид
-                                                                          AND PriceList2_gp_gk.GoodsId  IS NULL
-
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList3_gp ON PriceList3_gp.PriceListId = inPriceListId_3
-                                                                          AND PriceList3_gp.GoodsId     = lpSelect.GoodsId_in
-                                                                          AND COALESCE (PriceList3_gp.GoodsKindId, zc_GoodsKind_Basis()) = zc_GoodsKind_Basis()
-                                                                          AND inEndDate >= PriceList3_gp.StartDate AND inEndDate < PriceList3_gp.EndDate
-                                                                          -- если нет в ТМ
-                                                                          AND PriceList3_gp_tm.GoodsId  IS NULL
-                                                                          -- если нет в ГП + вид
-                                                                          AND PriceList3_gp_gk.GoodsId  IS NULL
-
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList4_gp ON PriceList4_gp.PriceListId = inPriceListId_sale
-                                                                          AND PriceList4_gp.GoodsId     = lpSelect.GoodsId_in
-                                                                          AND COALESCE (PriceList4_gp.GoodsKindId, zc_GoodsKind_Basis()) = zc_GoodsKind_Basis()
-                                                                          AND inEndDate >= PriceList4_gp.StartDate AND inEndDate < PriceList4_gp.EndDate
-                                                                          -- если нет в ТМ
-                                                                          AND PriceList4_gp_tm.GoodsId     IS NULL
-                                                                          -- если нет в ГП + вид
-                                                                          AND PriceList4_gp_gk.GoodsId  IS NULL
-
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList5_gp ON PriceList5_gp.PriceListId = inPriceListId_5
-                                                                          AND PriceList5_gp.GoodsId     = lpSelect.GoodsId_in
-                                                                          AND COALESCE (PriceList5_gp.GoodsKindId, zc_GoodsKind_Basis()) = zc_GoodsKind_Basis()
-                                                                          AND inEndDate >= PriceList5_gp.StartDate AND inEndDate < PriceList5_gp.EndDate
-                                                                          -- если нет в ТМ
-                                                                          AND PriceList5_gp_tm.GoodsId     IS NULL
-                                                                          -- если нет в ГП + вид
-                                                                          AND PriceList5_gp_gk.GoodsId  IS NULL
-
-               LEFT JOIN ObjectHistory_PriceListItem_View AS PriceList6_gp ON PriceList6_gp.PriceListId = inPriceListId_6
-                                                                          AND PriceList6_gp.GoodsId     = lpSelect.GoodsId_in
-                                                                          AND COALESCE (PriceList6_gp.GoodsKindId, zc_GoodsKind_Basis()) = zc_GoodsKind_Basis()
-                                                                          AND inEndDate >= PriceList6_gp.StartDate AND inEndDate < PriceList6_gp.EndDate
-                                                                          -- если нет в ТМ
-                                                                          AND PriceList6_gp_tm.GoodsId     IS NULL
-                                                                          -- если нет в ГП + вид
-                                                                          AND PriceList6_gp_gk.GoodsId  IS NULL
          ;
 
 
@@ -490,13 +317,6 @@ BEGIN
                  , 0 AS Summ3_cost
                  , 0 AS Summ4_cost  
 
-                 , 0 AS Summ1_cost_bon
-                 , 0 AS Summ2_cost_bon
-                 , 0 AS Summ3_cost_bon
-                 , 0 AS Summ4_cost_bon
-                 , 0 AS Summ5_cost_bon
-                 , 0 AS Summ6_cost_bon
-
             FROM tmpMIContainer
                  LEFT JOIN tmpReceipt ON tmpReceipt.GoodsId     = tmpMIContainer.GoodsId
                                      AND tmpReceipt.GoodsKindId = tmpMIContainer.GoodsKindId
@@ -526,30 +346,15 @@ BEGIN
                  , SUM (tmp.Summ3_cost) AS Summ3_cost
                  , SUM (tmp.Summ4_cost) AS Summ4_cost
 
-                 , SUM (tmp.Summ1_cost) AS Summ1_cost_bon
-                 , SUM (tmp.Summ2_cost) AS Summ2_cost_bon
-                 , SUM (tmp.Summ3_cost) AS Summ3_cost_bon
-                 , SUM (tmp.Summ4_cost) AS Summ4_cost_bon
-                 , SUM (tmp.Summ5_cost) AS Summ5_cost_bon
-                 , SUM (tmp.Summ5_cost) AS Summ6_cost_bon
-
             FROM (SELECT tmpChildReceiptTable.ReceiptId
                        , MAX (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.GoodsId_out ELSE 0 END) AS GoodsId_isCost
                        , SUM (tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price1) AS Summ1
                        , SUM (tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price2) AS Summ2
                        , SUM (tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price3) AS Summ3
-                         -- 
                        , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price1 ELSE 0 END) AS Summ1_cost
                        , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price2 ELSE 0 END) AS Summ2_cost
                        , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price3 ELSE 0 END) AS Summ3_cost
                        , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price4 ELSE 0 END) AS Summ4_cost
-                         -- 
-                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price1_bon ELSE 0 END) AS Summ1_cost_bon
-                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price2_bon ELSE 0 END) AS Summ2_cost_bon
-                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price3_bon ELSE 0 END) AS Summ3_cost_bon
-                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price4_bon ELSE 0 END) AS Summ4_cost_bon
-                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price5_bon ELSE 0 END) AS Summ5_cost_bon
-                       , SUM (CASE WHEN tmpChildReceiptTable.isCost = TRUE THEN tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price6_bon ELSE 0 END) AS Summ6_cost_bon
                   FROM tmpChildReceiptTable
                   WHERE tmpChildReceiptTable.ReceiptId_from = 0
                   GROUP BY  tmpChildReceiptTable.ReceiptId
@@ -582,38 +387,21 @@ BEGIN
                  , SUM (tmpAll.SummIn_return)            AS SummIn_return
                  , SUM (tmpAll.SummOut_PriceList_return) AS SummOut_PriceList_return
                  , SUM (tmpAll.SummOut_return)           AS SummOut_return
-                   --
                  , SUM (tmpAll.Summ1)      AS Summ1
                  , SUM (tmpAll.Summ2)      AS Summ2
                  , SUM (tmpAll.Summ3)      AS Summ3
-                   --
                  , SUM (tmpAll.Summ1_cost) AS Summ1_cost
                  , SUM (tmpAll.Summ2_cost) AS Summ2_cost
                  , SUM (tmpAll.Summ3_cost) AS Summ3_cost
                  , SUM (tmpAll.Summ4_cost) AS Summ4_cost
-                   --
-                 , SUM (tmpAll.Summ1_cost_bon) AS Summ1_cost_bon
-                 , SUM (tmpAll.Summ2_cost_bon) AS Summ2_cost_bon
-                 , SUM (tmpAll.Summ3_cost_bon) AS Summ3_cost_bon
-                 , SUM (tmpAll.Summ4_cost_bon) AS Summ4_cost_bon
-                 , SUM (tmpAll.Summ5_cost_bon) AS Summ5_cost_bon
-                 , SUM (tmpAll.Summ6_cost_bon) AS Summ6_cost_bon
 
                  , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ1 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm1
                  , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ2 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm2
                  , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ3 / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm3
-                   --
                  , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ1_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm1_cost
                  , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ2_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm2_cost
                  , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ3_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm3_cost
                  , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ4_cost / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm4_cost
-                   --
-                 , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ1_cost_bon / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm1_cost_bon
-                 , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ2_cost_bon / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm2_cost_bon
-                 , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ3_cost_bon / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm3_cost_bon
-                 , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ4_cost_bon / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm4_cost_bon
-                 , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ5_cost_bon / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm5_cost_bon
-                 , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ6_cost_bon / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm6_cost_bon
 
             FROM
            (SELECT tmpAll.ReceiptId
@@ -631,18 +419,10 @@ BEGIN
                  , SUM (tmpAll.Summ1)      AS Summ1
                  , SUM (tmpAll.Summ2)      AS Summ2
                  , SUM (tmpAll.Summ3)      AS Summ3
-                   --
                  , SUM (tmpAll.Summ1_cost) AS Summ1_cost
                  , SUM (tmpAll.Summ2_cost) AS Summ2_cost
                  , SUM (tmpAll.Summ3_cost) AS Summ3_cost
                  , SUM (tmpAll.Summ4_cost) AS Summ4_cost
-                   --
-                 , SUM (tmpAll.Summ1_cost_bon) AS Summ1_cost_bon
-                 , SUM (tmpAll.Summ2_cost_bon) AS Summ2_cost_bon
-                 , SUM (tmpAll.Summ3_cost_bon) AS Summ3_cost_bon
-                 , SUM (tmpAll.Summ4_cost_bon) AS Summ4_cost_bon
-                 , SUM (tmpAll.Summ5_cost_bon) AS Summ5_cost_bon
-                 , SUM (tmpAll.Summ6_cost_bon) AS Summ6_cost_bon
             FROM tmpAll
             GROUP BY tmpAll.ReceiptId
                    , tmpAll.GoodsId
@@ -663,7 +443,6 @@ BEGIN
                    , tmpAll.GoodsId
                    , tmpAll.GoodsKindId
            )
-          -- Мясо
         , tmpPrice_10100 AS
            (SELECT COALESCE (PriceList1.Price, 0) AS Price1,  COALESCE (PriceList2.Price, 0) AS Price2, COALESCE(PriceList3.Price, 0) AS Price3
             FROM Object
@@ -714,7 +493,6 @@ BEGIN
                                                                           AND PriceList3.GoodsId = Object.Id
                                                                           AND inEndDate >= PriceList3.StartDate AND inEndDate < PriceList3.EndDate
             WHERE Object.Id = 487092 -- (94133) РАСХОДІ ИРНА
-              AND vbIsPriceListId_47 = FALSE
             LIMIT 1
            )
       -- Результат
@@ -750,7 +528,6 @@ BEGIN
            , Object_GoodsKind_Parent.ValueData           AS GoodsKindName_Parent
            , Object_GoodsKindComplete_Parent.ValueData   AS GoodsKindCompleteName_Parent
 
-             -- Price1
            , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                              THEN COALESCE (tmpPrice_10100.Price1, 0)
                         WHEN /*View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
@@ -761,8 +538,6 @@ BEGIN
                              THEN tmpResult.newSumm1 / tmpResult.OperCount_sale
                         ELSE tmpResult.Summ1 / tmpResult.Value_receipt
                    END AS NUMERIC (16, 3)) AS Price1
-
-             -- Price2
            , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                              THEN COALESCE (tmpPrice_10100.Price2, 0)
                         WHEN /*View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
@@ -773,8 +548,6 @@ BEGIN
                              THEN tmpResult.newSumm2 / tmpResult.OperCount_sale
                         ELSE tmpResult.Summ2 / tmpResult.Value_receipt
                    END AS NUMERIC (16, 3)) AS Price2
-
-             -- Price3
            , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                              THEN COALESCE (tmpPrice_10100.Price3, 0)
                         WHEN /*View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
@@ -786,7 +559,6 @@ BEGIN
                         ELSE tmpResult.Summ3 / tmpResult.Value_receipt
                    END AS NUMERIC (16, 3)) AS Price3
 
-             -- Price1_cost
            , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                              THEN COALESCE (tmpPrice_10100.Price1, 0)
 
@@ -804,7 +576,6 @@ BEGIN
                         ELSE tmpResult.Summ1_cost / tmpResult.Value_receipt
                    END AS NUMERIC (16, 3)) AS Price1_cost
 
-             -- Price2_cost
            , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                              THEN COALESCE (tmpPrice_10100.Price2, 0)
 
@@ -821,7 +592,6 @@ BEGIN
                         ELSE tmpResult.Summ2_cost / tmpResult.Value_receipt
                    END AS NUMERIC (16, 3)) AS Price2_cost
 
-             -- Price3_cost
            , CAST (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                              THEN COALESCE (tmpPrice_10100.Price3, 0)
                         WHEN /*View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
@@ -832,18 +602,15 @@ BEGIN
                         ELSE tmpResult.Summ3_cost / tmpResult.Value_receipt
                    END AS NUMERIC (16, 3)) AS Price3_cost
 
-             -- Price4_cost
            , CAST (CASE WHEN tmpResult.newSumm4_cost <> 0 AND tmpResult.OperCount_sale <> 0
                              THEN tmpResult.newSumm4_cost / tmpResult.OperCount_sale
                         ELSE tmpResult.Summ4_cost / tmpResult.Value_receipt
                    END AS NUMERIC (16, 3)) AS Price4_cost
-             --
+           --
            , (COALESCE (PriceList5_gk.Price, PriceList5.Price) * 1.2) :: TFloat AS Price5_cost
            , (COALESCE (PriceList6_gk.Price, PriceList6.Price) * 1.2) :: TFloat AS Price6_cost
-             --
            , (COALESCE (PriceListSale_gk.Price, PriceListSale.Price) * 1.2) :: TFloat AS Price_sale -- !!!захардкодил временно!!!
 
-             -- с/с реализ по план1
            , CASE WHEN tmpResult.newSumm1 <> 0 AND tmpResult.OperCount_sale <> 0
                    AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_10100()/*, zc_Enum_InfoMoneyDestination_20900()*/)
                    AND tmpGoods_20900.GoodsId IS NULL
@@ -856,9 +623,7 @@ BEGIN
                                                         THEN COALESCE (PriceListSale_gk.Price, PriceListSale.Price) * 1.2 * 0.85
                                                            + COALESCE (tmpPrice_20900.Price1, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                                                    ELSE tmpResult.Summ1 / tmpResult.Value_receipt
-                                              END AS NUMERIC (16, 3)) END AS SummPrice1_sale
-
-             -- с/с реализ по план2
+                                              END AS NUMERIC (16, 3)) END AS SummPrice1_sale -- с/с реализ по план1
            , CASE WHEN tmpResult.newSumm2 <> 0 AND tmpResult.OperCount_sale <> 0
                    AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_10100()/*, zc_Enum_InfoMoneyDestination_20900()*/)
                    AND tmpGoods_20900.GoodsId IS NULL
@@ -871,9 +636,7 @@ BEGIN
                                                         THEN COALESCE (PriceListSale_gk.Price, PriceListSale.Price) * 1.2 * 0.85
                                                            + COALESCE (tmpPrice_20900.Price2, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                                                    ELSE tmpResult.Summ2 / tmpResult.Value_receipt
-                                              END AS NUMERIC (16, 3)) END AS SummPrice2_sale
-
-             -- с/с реализ по план3
+                                              END AS NUMERIC (16, 3)) END AS SummPrice2_sale -- с/с реализ по план2
            , CASE WHEN tmpResult.newSumm3 <> 0 AND tmpResult.OperCount_sale <> 0
                    AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_10100()/*, zc_Enum_InfoMoneyDestination_20900()*/)
                    AND tmpGoods_20900.GoodsId IS NULL
@@ -888,15 +651,13 @@ BEGIN
                                                    ELSE tmpResult.Summ3 / tmpResult.Value_receipt
                                               END AS NUMERIC (16, 3)) END AS SummPrice3_sale -- с/с реализ по план3
 
-             -- сумма по прайсу 5
-           , (tmpResult.OperCount_sale * COALESCE (PriceList5_gk.Price, PriceList5.Price) * 1.2) :: TFloat AS SummCost5_sale
-             -- сумма по прайсу 6
-           , (tmpResult.OperCount_sale * COALESCE (PriceList6_gk.Price, PriceList6.Price) * 1.2) :: TFloat AS SummCost6_sale
+
+           , (tmpResult.OperCount_sale * COALESCE (PriceList5_gk.Price, PriceList5.Price) * 1.2) :: TFloat AS SummCost5_sale -- сумма по прайсу 5
+           , (tmpResult.OperCount_sale * COALESCE (PriceList6_gk.Price, PriceList6.Price) * 1.2) :: TFloat AS SummCost6_sale -- сумма по прайсу 6
 
              -- сумма по прайсу расчетному
            , (tmpResult.OperCount_sale * COALESCE (PriceListSale_gk.Price, PriceListSale.Price) * 1.2) :: TFloat AS Summ_sale
 
-             -- сумма затрат на реализ по план1
            , CASE WHEN tmpResult.newSumm1_cost <> 0 AND tmpResult.OperCount_sale <> 0
                    AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_10100()/*, zc_Enum_InfoMoneyDestination_20900()*/)
                    AND tmpGoods_20900.GoodsId IS NULL
@@ -908,9 +669,7 @@ BEGIN
                                                OR*/ tmpGoods_20900.GoodsId > 0
                                                   THEN COALESCE (tmpPrice_20900.Price1, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                                              ELSE CAST (tmpResult.Summ1_cost / tmpResult.Value_receipt AS NUMERIC (16, 3))
-                                        END END AS SummCost1_sale
-
-             -- сумма затрат на реализ по план2
+                                        END END AS SummCost1_sale -- сумма затрат на реализ по план1
            , CASE WHEN tmpResult.newSumm2_cost <> 0 AND tmpResult.OperCount_sale <> 0
                    AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_10100()/*, zc_Enum_InfoMoneyDestination_20900()*/)
                    AND tmpGoods_20900.GoodsId IS NULL
@@ -922,9 +681,7 @@ BEGIN
                                                OR*/ tmpGoods_20900.GoodsId > 0
                                                   THEN COALESCE (tmpPrice_20900.Price2, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                                              ELSE CAST (tmpResult.Summ2_cost / tmpResult.Value_receipt AS NUMERIC (16, 3))
-                                        END END AS SummCost2_sale
-
-             -- сумма затрат на реализ по план3
+                                        END END AS SummCost2_sale -- сумма затрат на реализ по план2
            , CASE WHEN tmpResult.newSumm3_cost <> 0 AND tmpResult.OperCount_sale <> 0
                    AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_10100()/*, zc_Enum_InfoMoneyDestination_20900()*/)
                    AND tmpGoods_20900.GoodsId IS NULL
@@ -936,18 +693,15 @@ BEGIN
                                                OR*/ tmpGoods_20900.GoodsId > 0
                                                   THEN COALESCE (tmpPrice_20900.Price3, 0) * CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END
                                              ELSE CAST (tmpResult.Summ3_cost / tmpResult.Value_receipt AS NUMERIC (16, 3))
-                                        END END AS SummCost3_sale
+                                        END END AS SummCost3_sale -- сумма затрат на реализ по план3
 
-             -- сумма затрат на реализ по план4
            , CASE WHEN tmpResult.newSumm4_cost <> 0 AND tmpResult.OperCount_sale <> 0
                    AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) NOT IN (zc_Enum_InfoMoneyDestination_10100()/*, zc_Enum_InfoMoneyDestination_20900()*/)
                    AND tmpGoods_20900.GoodsId IS NULL
                        THEN tmpResult.newSumm4_cost
                   ELSE
-             tmpResult.OperCount_sale * CAST (tmpResult.Summ4_cost / tmpResult.Value_receipt AS NUMERIC (16, 3)) END AS SummCost4_sale
+             tmpResult.OperCount_sale * CAST (tmpResult.Summ4_cost / tmpResult.Value_receipt AS NUMERIC (16, 3)) END AS SummCost4_sale -- сумма затрат на реализ по план4
 
-
-             -- % рент. для план1 / сумма по прайсу расчетному
            , CASE WHEN /*View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
                     OR*/ tmpGoods_20900.GoodsId > 0
                        THEN 100 * 1
@@ -962,9 +716,8 @@ BEGIN
                                 / (tmpResult.OperCount_sale * CAST (tmpResult.Summ1 / tmpResult.Value_receipt AS NUMERIC (16, 3)))
                           - 100
                        ELSE 0
-             END AS Tax_Summ_sale
+             END AS Tax_Summ_sale -- % рент. для план1 / сумма по прайсу расчетному
 
-             -- % рент. для план1 / сумма реализ факт
            , CASE WHEN (/*View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
                      OR*/ tmpGoods_20900.GoodsId > 0)
                    AND tmpResult.OperCount_sale * COALESCE (PriceListSale_gk.Price, PriceListSale.Price) <> 0
@@ -980,13 +733,12 @@ BEGIN
                                 / (tmpResult.OperCount_sale * CAST (tmpResult.Summ1 / tmpResult.Value_receipt AS NUMERIC (16, 3)))
                           - 100
                        ELSE 0
-             END AS Tax_SummOut_sale
+             END AS Tax_SummOut_sale -- % рент. для план1 / сумма реализ факт
 
-             -- % возврата
            , CASE WHEN tmpResult.OperCount_sale <> 0
                        THEN 100 * tmpResult.OperCount_return / tmpResult.OperCount_sale
                        ELSE 0
-             END AS Tax_return
+             END AS Tax_return -- % возврата
 
            , tmpResult.OperCount_sale AS OperCount_sale
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpResult.OperCount_sale ELSE 0 END AS OperCount_sh_sale
@@ -1007,7 +759,7 @@ BEGIN
            , CAST (CASE WHEN tmpResult.OperCount_return <> 0 THEN tmpResult.SummOut_PriceList_return / tmpResult.OperCount_return ELSE 0 END AS NUMERIC (16, 3)) AS Price_out_pl_return
            , tmpResult.SummOut_return AS SummOut_return
            , CAST (CASE WHEN tmpResult.OperCount_return <> 0 THEN tmpResult.SummOut_return / tmpResult.OperCount_return ELSE 0 END AS NUMERIC (16, 3)) AS Price_out_return
-             -- чистая прибыль
+           -- чистая прибыль
            , CAST ((tmpResult.OperCount_sale * ((CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END)
                                                 - ( (CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummIn_sale / tmpResult.OperCount_sale ELSE 0 END)
                                                     + (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
@@ -1021,7 +773,7 @@ BEGIN
                                                        END))
                                                 )
                    - tmpResult.SummOut_return ) AS NUMERIC (16, 3) )  AS Profit
-             -- если чистая прибыль отриц. подсвечиваем красным
+           -- если  чистая прибыль отриц. подсвечиваем красным
            , CASE WHEN (tmpResult.OperCount_sale * ((CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummOut_sale / tmpResult.OperCount_sale ELSE 0 END)
                                                    - ( (CASE WHEN tmpResult.OperCount_sale <> 0 THEN tmpResult.SummIn_sale / tmpResult.OperCount_sale ELSE 0 END)
                                                        + (CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
@@ -1175,7 +927,7 @@ BEGIN
                                    , SUM (tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price1) AS Summ1
                                    , SUM (tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price2) AS Summ2
                                    , SUM (tmpChildReceiptTable.Amount_out * tmpChildReceiptTable.Price3) AS Summ3
-                              FROM (SELECT DISTINCT tmpChildReceiptTable.ReceiptId_from FROM tmpChildReceiptTable WHERE tmpChildReceiptTable.ReceiptId_from > 0
+                              FROM (SELECT tmpChildReceiptTable.ReceiptId_from FROM tmpChildReceiptTable WHERE tmpChildReceiptTable.ReceiptId_from > 0 GROUP BY tmpChildReceiptTable.ReceiptId_from
                                    ) AS tmp
                                    INNER JOIN tmpChildReceiptTable ON tmpChildReceiptTable.ReceiptId = tmp.ReceiptId_from
                                                                   AND tmpChildReceiptTable.isCost = FALSE

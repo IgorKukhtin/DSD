@@ -2,7 +2,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
-  ClientHeight = 397
+  ClientHeight = 440
   ClientWidth = 647
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 337
-    Top = 360
+    Left = 371
+    Top = 407
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 480
-    Top = 360
+    Left = 514
+    Top = 407
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -373,6 +373,23 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     TabOrder = 44
     Width = 134
   end
+  object cxLabel19: TcxLabel
+    Left = 314
+    Top = 334
+    Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'('#1072#1074#1072#1085#1089' '#1050#1072#1088#1090#1072' '#1060'2)'
+  end
+  object edPersonalServiceList_AvanceF2: TcxButtonEdit
+    Left = 314
+    Top = 353
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 46
+    Width = 274
+  end
   object ActionList: TActionList
     Left = 88
     Top = 48
@@ -509,6 +526,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Name = 'inPSLExportKindId'
         Value = Null
         Component = GuidesPSLExportKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalServiceListId_AvanceF2'
+        Value = Null
+        Component = GuidesPersonalServiceList_AvanceF2
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -883,6 +908,21 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = cbAvanceNot
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ServiceListId_AvanceF2'
+        Value = Null
+        Component = GuidesPersonalServiceList_AvanceF2
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ServiceListName_AvanceF2'
+        Value = Null
+        Component = GuidesPersonalServiceList_AvanceF2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -1196,5 +1236,58 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
       end>
     Left = 487
     Top = 195
+  end
+  object GuidesPersonalServiceList_AvanceF2: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalServiceList_AvanceF2
+    FormNameParam.Value = 'TPersonalServiceList_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalServiceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonalServiceList_AvanceF2
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalServiceList_AvanceF2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 424
+    Top = 333
   end
 end

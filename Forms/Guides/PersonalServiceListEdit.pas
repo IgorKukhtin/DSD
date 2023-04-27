@@ -87,6 +87,9 @@ type
     edHourAvance: TcxCurrencyEdit;
     cxLabel18: TcxLabel;
     cbAvanceNot: TcxCheckBox;
+    cxLabel19: TcxLabel;
+    edPersonalServiceList_AvanceF2: TcxButtonEdit;
+    GuidesPersonalServiceList_AvanceF2: TdsdGuides;
   private
     { Private declarations }
   public

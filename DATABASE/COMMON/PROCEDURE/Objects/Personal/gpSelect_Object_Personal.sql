@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, INN TVarChar
              , StorageLineId Integer, StorageLineCode Integer, StorageLineName TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar
+             , ServiceListId_AvanceF2 Integer, ServiceListName_AvanceF2 TVarChar
              , ServiceListCardSecondId Integer, ServiceListCardSecondName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , SheetWorkTimeId Integer, SheetWorkTimeName TVarChar
@@ -148,6 +149,9 @@ BEGIN
 
          , Object_PersonalServiceListOfficial.Id           AS PersonalServiceListOfficialId
          , Object_PersonalServiceListOfficial.ValueData    AS PersonalServiceListOfficialName
+
+         , Object_PersonalServiceListAvance_F2.Id                  AS ServiceListId_AvanceF2
+         , Object_PersonalServiceListAvance_F2.ValueData           AS ServiceListName_AvanceF2
          
          , COALESCE (Object_PersonalServiceListCardSecond.Id, CAST (0 as Integer))          AS PersonalServiceListCardSecondId
          , COALESCE (Object_PersonalServiceListCardSecond.ValueData, CAST ('' as TVarChar)) AS PersonalServiceListCardSecondName
@@ -257,6 +261,11 @@ BEGIN
                               AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
           LEFT JOIN Object AS Object_Unit_SheetWorkTime ON Object_Unit_SheetWorkTime.Id = ObjectLink_Unit_SheetWorkTime.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Avance_F2
+                               ON ObjectLink_PersonalServiceList_Avance_F2.ObjectId = Object_Personal_View.PersonalId
+                              AND ObjectLink_PersonalServiceList_Avance_F2.DescId = zc_ObjectLink_Personal_PersonalServiceListAvance_F2()
+          LEFT JOIN Object AS Object_PersonalServiceListAvance_F2 ON Object_PersonalServiceListAvance_F2.Id = ObjectLink_PersonalServiceList_Avance_F2.ChildObjectId
+
           LEFT JOIN ObjectFloat AS ObjectFloat_ScalePSW
                                 ON ObjectFloat_ScalePSW.ObjectId = Object_Personal_View.MemberId
                                AND ObjectFloat_ScalePSW.DescId   = zc_ObjectFloat_Member_ScalePSW()
@@ -329,6 +338,8 @@ BEGIN
          , CAST ('' as TVarChar) AS PersonalServiceListName
          , 0                     AS PersonalServiceListOfficialId
          , CAST ('' as TVarChar) AS PersonalServiceListOfficialName
+         , 0                      AS ServiceListId_AvanceF2
+         , CAST ('' as TVarChar)  AS ServiceListName_AvanceF2
          , 0                     AS PersonalServiceListCardSecondId
          , CAST ('' as TVarChar) AS PersonalServiceListCardSecondName
          , 0                     AS InfoMoneyId

@@ -16,7 +16,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MemberBookkeeperId Integer, MemberBookkeeperName TVarChar
              , PersonalHeadId Integer, PersonalHeadCode Integer, PersonalHeadName TVarChar, UnitName_Head TVarChar, BranchName_Head TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
-             , PSLExportKindId Integer, PSLExportKindName TVarChar
+             , PSLExportKindId Integer, PSLExportKindName TVarChar  
+             , ServiceListId_AvanceF2 Integer, ServiceListName_AvanceF2 TVarChar
              , ContentType TVarChar
              , OnFlowType TVarChar
              , KoeffSummCardSecond NUMERIC (16,10)
@@ -77,7 +78,10 @@ BEGIN
            , Object_BankAccount.Id                AS BankAccountId
            , Object_BankAccount.ValueData         AS BankAccountName
            , Object_PSLExportKind.Id              AS PSLExportKindId
-           , Object_PSLExportKind.ValueData       AS PSLExportKindName
+           , Object_PSLExportKind.ValueData       AS PSLExportKindName 
+           
+           , Object_Avance_F2.Id                  AS ServiceListId_AvanceF2
+           , Object_Avance_F2.ValueData           AS ServiceListName_AvanceF2
 
            , ObjectString_ContentType.ValueData ::TVarChar   AS ContentType
            , ObjectString_OnFlowType.ValueData  ::TVarChar   AS OnFlowType
@@ -211,6 +215,10 @@ BEGIN
                                AND ObjectLink_PersonalServiceList_PersonalHead.DescId   = zc_ObjectLink_PersonalServiceList_PersonalHead()
            LEFT JOIN Object_Personal_View AS Object_PersonalHead ON Object_PersonalHead.PersonalId = ObjectLink_PersonalServiceList_PersonalHead.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Avance_F2
+                                ON ObjectLink_PersonalServiceList_Avance_F2.ObjectId = Object_PersonalServiceList.Id 
+                               AND ObjectLink_PersonalServiceList_Avance_F2.DescId = zc_ObjectLink_PersonalServiceList_Avance_F2()
+           LEFT JOIN Object AS Object_Avance_F2 ON Object_Avance_F2.Id = ObjectLink_PersonalServiceList_Avance_F2.ChildObjectId
 
            LEFT JOIN ObjectString AS ObjectString_ContentType 
                                   ON ObjectString_ContentType.ObjectId = Object_PersonalServiceList.Id 
@@ -232,6 +240,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                 ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.04.23          *
  14.03.23          *
  09.03.22          *
  18.11.21          *

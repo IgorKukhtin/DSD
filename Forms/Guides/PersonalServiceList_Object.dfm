@@ -1,4 +1,4 @@
-object PersonalServiceListForm: TPersonalServiceListForm
+object PersonalServiceList_ObjectForm: TPersonalServiceList_ObjectForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
@@ -36,8 +36,10 @@ object PersonalServiceListForm: TPersonalServiceListForm
       Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.CancelOnExit = False
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -415,23 +417,6 @@ object PersonalServiceListForm: TPersonalServiceListForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -444,10 +429,6 @@ object PersonalServiceListForm: TPersonalServiceListForm
         end
         item
           BeginGroup = True
-          Visible = True
-          ItemName = 'bbUpdate_PersonalOut'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -838,10 +819,8 @@ object PersonalServiceListForm: TPersonalServiceListForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_PersonalOut
       StoredProcList = <
         item
-          StoredProc = spUpdate_PersonalOut
         end>
       Caption = 'actUpdateDataSet'
       ImageIndex = 5
@@ -973,31 +952,5 @@ object PersonalServiceListForm: TPersonalServiceListForm
     PackSize = 1
     Left = 571
     Top = 110
-  end
-  object spUpdate_PersonalOut: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_PersonalServiceList_PersonalOut'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPersonalOut'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'isPersonalOut'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 691
-    Top = 126
   end
 end

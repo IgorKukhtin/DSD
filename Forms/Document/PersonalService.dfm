@@ -299,6 +299,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = SummMedicdayAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCardSecond_Avance
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -580,6 +585,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = SummMedicdayAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummCardSecond_Avance
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -911,7 +921,18 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Options.Editing = False
             Width = 70
           end
-          object SummCardSecondRecalc: TcxGridDBColumn [33]
+          object SummCardSecond_Avance: TcxGridDBColumn [33]
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' '#1072#1074#1072#1085#1089' - 2'#1092'.'
+            DataBinding.FieldName = 'SummCardSecond_Avance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummCardSecondRecalc: TcxGridDBColumn [34]
             Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
             DataBinding.FieldName = 'SummCardSecondRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -921,7 +942,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummCardSecondDiff: TcxGridDBColumn [34]
+          object SummCardSecondDiff: TcxGridDBColumn [35]
             Caption = #1082#1086#1087'. '#1082#1086#1088#1088'. '#1082#1072#1088#1090#1072' '#1041#1053' - 2'#1092'.'
             DataBinding.FieldName = 'SummCardSecondDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -932,16 +953,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = 
               #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1085#1072' '#1082#1086#1087#1077#1081#1082#1080' '#1076#1083#1103' '#1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'., '#1090'.'#1082'. '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077' '#1076#1086' ' +
               '10-90 '#1082#1086#1087'.'
-            Width = 70
-          end
-          object SummCardSecondCash: TcxGridDBColumn [35]
-            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
-            DataBinding.FieldName = 'SummCardSecondCash'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object SummNalogRet: TcxGridDBColumn [36]
@@ -1502,6 +1513,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1076#1086#1087#1083#1072#1090#1099' '#1079#1072' '#1089#1072#1085#1086#1073#1088#1072#1073#1086#1090#1082#1091
             Options.Editing = False
+            Width = 70
+          end
+          object SummCardSecondCash: TcxGridDBColumn [88]
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
+            DataBinding.FieldName = 'SummCardSecondCash'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
         end
@@ -2085,7 +2106,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
       ExplicitTop = 0
-      ExplicitWidth = 1034
+      ExplicitWidth = 0
       ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
@@ -2095,7 +2116,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitWidth = 1034
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -2182,7 +2202,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
       ExplicitTop = 0
-      ExplicitWidth = 1034
+      ExplicitWidth = 0
       ExplicitHeight = 0
       object cxGridChild_all: TcxGrid
         Left = 0
@@ -2192,7 +2212,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitWidth = 1034
         object cxGridDBTableViewChild_all: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS_all
@@ -2593,8 +2612,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Width = 218
     end
     object cxLabel3: TcxLabel
-      Left = 292
-      Top = 5
+      Left = 288
+      Top = 0
       Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
     end
     object cxLabel4: TcxLabel

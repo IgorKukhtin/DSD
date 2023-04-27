@@ -84,6 +84,7 @@ BEGIN
                      )
 
         , tmpMLM_Production AS (SELECT MovementLinkMovement.*
+                                     , ROW_NUMBER() OVER (PARTITION BY MovementLinkMovement.MovementChildId ORDER BY MovementLinkMovement.MovementId DESC) AS Ord
                                 FROM MovementLinkMovement
                                 WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Production()
                                   AND MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
@@ -257,6 +258,7 @@ BEGIN
             LEFT JOIN tmpMLM_Production AS MovementLinkMovement_Production
                                         ON MovementLinkMovement_Production.MovementChildId = Movement.Id
                                        AND MovementLinkMovement_Production.DescId          = zc_MovementLinkMovement_Production()
+                                       AND MovementLinkMovement_Production.Ord             = 1
             LEFT JOIN Movement AS Movement_Production ON Movement_Production.Id = MovementLinkMovement_Production.MovementId
             LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
 
