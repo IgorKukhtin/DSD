@@ -15,16 +15,41 @@ $BODY$
    DECLARE vbOperDate    TDateTime;
    DECLARE vbMISendId    Integer;
    DECLARE vbAmount      TFloat;
+   DECLARE vbSaldo       TFloat;
+   DECLARE vbGoodsId     Integer;
+   DECLARE vbUnitId     Integer;
+   DECLARE vbDescId      Integer;
 BEGIN
 
-  SELECT MovementItem.MovementId, Movement.OperDate, MIFloat_MISendId.ValueData, MovementItem.Amount
-  INTO vbMovementId, vbOperDate, vbMISendId, vbAmount
+  SELECT MovementItem.MovementId, Movement.OperDate, MIFloat_MISendId.ValueData
+       , MovementItem.Amount, MovementItem.ObjectId, MovementSend.DescId
+       , MovementLinkObject_Unit.ObjectId
+  INTO vbMovementId, vbOperDate, vbMISendId, vbAmount, vbGoodsId, vbDescId, vbUnitId
   FROM MovementItem 
        INNER JOIN Movement ON Movement.ID = MovementItem.MovementId
        LEFT JOIN MovementItemFloat AS MIFloat_MISendId
                                    ON MIFloat_MISendId.MovementItemId = MovementItem.Id
                                   AND MIFloat_MISendId.DescId = zc_MIFloat_MovementItemId()
+       LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                    ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                   AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+       LEFT JOIN MovementItem AS MISend ON MISend.ID = MIFloat_MISendId.ValueData::Integer
+
+       LEFT JOIN Movement AS MovementSend ON MovementSend.ID = MISend.MovementId
   WHERE MovementItem.ID = inMovementItemId;
+  
+  vbSaldo = COALESCE((SELECT SUM(MovementItem.Amount)
+                      FROM MovementItem 
+                      WHERE MovementItem.MovementId = vbMovementId
+                        AND MovementItem.Id <> inMovementItemId
+                        AND MovementItem.ObjectId = vbGoodsId
+                        AND MovementItem.isErased = False), 0) - 
+            COALESCE((SELECT SUM(Container.Amount)
+                      FROM Container
+                      WHERE Container.DescId  = zc_Container_Count()
+                        AND Container.Amount <> 0
+                        AND Container.ObjectId = vbGoodsId
+                        AND Container.WhereObjectId = vbUnitId), 0);
 
   -- проверка прав пользовател€ на вызов процедуры
 /*  IF vbAmount = 0 AND vbMISendId IS NOT NULL
@@ -40,9 +65,15 @@ BEGIN
   END IF;
   
 
-  IF COALESCE (vbMISendId, 0) <> 0 AND COALESCE (vbAmount, 0) <> 0
+  IF COALESCE (vbMISendId, 0) <> 0 AND COALESCE (vbAmount, 0) <> 0 AND 
+   (vbDescId <> zc_Movement_Check() or vbSaldo >= vbAmount)
   THEN
+    IF vbDescId = zc_Movement_Check()
+    THEN
+      RAISE EXCEPTION 'ќшибка.Ёлемент документа создан из заказа таблеток удаление запрещено.';
+    ELSE
       RAISE EXCEPTION 'ќшибка.Ёлемент документа создан из перемещени€ —”Ќ удаление запрещено.';
+    END IF;
   END IF;
 
 
@@ -79,3 +110,5 @@ ALTER FUNCTION gpSetErased_MovementItem_TechnicalRediscount (Integer, TVarChar) 
 
 -- тест
 -- SELECT * FROM gpSetErased_MovementItem_TechnicalRediscount (inMovementItemId:= 0, inSession:= '2')
+
+select * from gpSetErased_MovementItem_TechnicalRediscount(inMovementItemId := 591658049 ,  inSession := '3');

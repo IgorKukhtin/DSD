@@ -289,6 +289,10 @@ type
     bbOpenWeighingPartner_bySale: TdxBarButton;
     bbOpenProductionUnionForm: TdxBarButton;
     actOpenProductionUnionForm: TdsdOpenForm;
+    mactSendETTN: TMultiAction;
+    actSendETTN: TdsdEDINAction;
+    actExecSelectPrint_TTN: TdsdExecStoredProc;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

@@ -30,7 +30,7 @@ inherited MainInventoryForm: TMainInventoryForm
       BiDiMode = bdLeftToRight
       ParentBiDiMode = False
       TabOrder = 0
-      Properties.ActivePage = tsInfo
+      Properties.ActivePage = tsInventory
       Properties.CustomButtons.Buttons = <>
       ClientRectBottom = 391
       ClientRectLeft = 4
@@ -89,6 +89,7 @@ inherited MainInventoryForm: TMainInventoryForm
               Caption = #1054#1090#1087#1088'.'
               DataBinding.FieldName = 'IsSend'
               HeaderAlignmentHorz = taCenter
+              Options.Editing = False
               Width = 46
             end
             object ChildisLast: TcxGridDBColumn
@@ -544,6 +545,12 @@ inherited MainInventoryForm: TMainInventoryForm
       ControlName.DataType = ftString
       ControlName.MultiSelectSeparator = ','
     end
+    object actSendInventChild: TAction
+      Category = 'DSDLib'
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
+      OnExecute = actSendInventChildExecute
+    end
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -582,6 +589,9 @@ inherited MainInventoryForm: TMainInventoryForm
       end
       object N7: TMenuItem
         Caption = '-'
+      end
+      object N8: TMenuItem
+        Action = actSendInventChild
       end
     end
     object N10: TMenuItem

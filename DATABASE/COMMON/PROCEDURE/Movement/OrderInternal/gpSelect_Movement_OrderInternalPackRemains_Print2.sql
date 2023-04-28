@@ -1,28 +1,34 @@
 -- Function: gpSelect_Movement_OrderInternalPackRemains_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternalPackRemains_Print2 (Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternalPackRemains_Print2 (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternalPackRemains_Print2(
+--CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternalPackRemains_Print2(
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternalPackRemains_DetailsPrint2 (Integer, TVarChar);
+CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternalPackRemains_DetailsPrint2(
     IN inMovementId    Integer  , -- ключ Документа
-    IN inIsMinus       Boolean  , -- 
+    --IN inIsMinus       Boolean  , -- 
     IN inSession       TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (GoodsId              Integer
+RETURNS TABLE (ParentId Integer, GoodsId              Integer
              , GoodsCode            Integer
              , GoodsName            TVarChar
-
+             , GoodsId_basis           Integer 
+             , GoodsCode_basis         Integer 
+             , GoodsName_basis         TVarChar
              , GoodsId_complete        Integer
              , GoodsCode_complete      Integer
              , GoodsName_complete      TVarChar
 
              , GoodsKindId          Integer
              , GoodsKindName        TVarChar
+             , GoodsKindName_complete        TVarChar
 
              , MeasureName          TVarChar
              , MeasureName_complete    TVarChar
              , GoodsGroupNameFull   TVarChar
 
              , Weight               TFloat
+             , Weight_Child         TFloat
 
                -- ПРИОРИТЕТ
              , Num                  Integer
@@ -42,8 +48,17 @@ RETURNS TABLE (GoodsId              Integer
                -- ФАКТ - Перемещение на Цех Упаковки
              , Income_PACK_to_Child       TFloat
                -- ФАКТ - Перемещение с Цеха Упаковки
-             , Income_PACK_from_Child     TFloat             
+             , Income_PACK_from_Child     TFloat
+             , Income_PACK_to_Child_all   TFloat
+             , Income_PACK_from_Child_all TFloat             
  
+             , AmountPack1_all     TFloat
+             , AmountPack2_all     TFloat
+             , AmountPack3_all     TFloat
+             , AmountPack4_all     TFloat
+             , AmountPack5_all     TFloat
+             , AmountPackTotal_All TFloat
+             
              , AmountPack1     TFloat
              , AmountPack2     TFloat
              , AmountPack3     TFloat
@@ -74,12 +89,14 @@ $BODY$
     DECLARE vbStatusId Integer;
     DECLARE vbOperDate TDateTime;
     DECLARE vbMaxAmount TFloat;
+    DECLARE inIsMinus Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
 
-
+     inIsMinus:= false;
+     
      -- параметры из документа
      SELECT Movement.DescId
           , Movement.StatusId
@@ -239,7 +256,7 @@ BEGIN
                 , _Result_Master.Income_PACK_from
 
                 , _Result_Child.Id                AS MovementItemId_child
-                , _Result_Child.GoodsId           AS GoodsCId_Child
+                , _Result_Child.GoodsId           AS GoodsId_Child
                 , _Result_Child.GoodsCode         AS GoodsCode_Child
                 , _Result_Child.GoodsName         AS GoodsName_Child
                 , _Result_Child.GoodsKindName     AS GoodsKindName_Child
@@ -384,7 +401,13 @@ BEGIN
               AND tmpFind.KeyId  IS NOT NULL
               AND inIsMinus = TRUE)
           )
- 
+
+    , tmpMI_Complete AS (SELECT *
+                         FROM MovementItemLinkObject
+                         WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpRez.Id FROM tmpRez)
+                           AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Goods(), zc_MILinkObject_GoodsKindComplete())
+                         )
+
     , tmpMI_detailList AS (SELECT MovementItem.Id                   AS MovementItemId
                            , MovementItem.ParentId             AS ParentId
                            , MovementItem.ObjectId             AS Insertd
@@ -455,19 +478,22 @@ BEGIN
 
          
     , tmpRez_Detail AS (
-           SELECT
-                  tmpRez.GoodsId
+           SELECT tmpMI_detail.ParentId
+                 , tmpRez.GoodsId
                 , tmpRez.GoodsCode
                 , tmpRez.GoodsName
                 , tmpRez.GoodsId_basis
                 , tmpRez.GoodsCode_basis
-                , tmpRez.GoodsName_basis
+                , tmpRez.GoodsName_basis 
+                , COALESCE (MILinkObject_GoodsComplete.ObjectId, 0)     AS GoodsId_complete
+                , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0) AS GoodsKindId_complete
                 , tmpRez.GoodsKindId
                 , tmpRez.GoodsKindName
                 , tmpRez.MeasureName
                 , tmpRez.MeasureName_basis
                 , tmpRez.GoodsGroupNameFull
                 , tmpRez.Weight
+                , tmpRez.Weight_Child
                   -- ПРИОРИТЕТ
                 , tmpRez.Num
                 
@@ -475,6 +501,7 @@ BEGIN
                 , tmpRez.GoodsCode_Child
                 , tmpRez.GoodsName_Child
                 , tmpRez.GoodsKindName_Child
+                , tmpRez.MeasureId_Child
                 , tmpRez.MeasureName_Child
 
                   -- План+План2 для упаковки (ИТОГО, факт)
@@ -501,15 +528,15 @@ BEGIN
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-3 THEN tmpMI_detail.AmountPackAllTotal_diff  
                             ELSE 0
                        END) ::TFloat AS AmountPack2       
-                , SUM (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 2 THEN tmpMI_detail.AmountPackAllTotal_diff
+                , SUM (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 3 THEN tmpMI_detail.AmountPackAllTotal_diff
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-2 THEN tmpMI_detail.AmountPackAllTotal_diff  
                             ELSE 0
                        END) ::TFloat AS AmountPack3
-                , SUM (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 3 THEN tmpMI_detail.AmountPackAllTotal_diff
+                , SUM (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 4 THEN tmpMI_detail.AmountPackAllTotal_diff
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-1 THEN tmpMI_detail.AmountPackAllTotal_diff  
                             ELSE 0
                        END) ::TFloat AS AmountPack4
-                , SUM (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 4 THEN tmpMI_detail.AmountPackAllTotal_diff
+                , SUM (CASE WHEN vbMaxAmount <= 5 AND tmpMI_detail.Amount = 5 THEN tmpMI_detail.AmountPackAllTotal_diff
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount THEN tmpMI_detail.AmountPackAllTotal_diff  
                             ELSE 0
                        END) ::TFloat AS AmountPack5
@@ -522,15 +549,15 @@ BEGIN
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-3 THEN tmpMI_detail.InsertDate  
                             ELSE NULL
                        END) :: TDateTime AS InsertDate2       
-                , MIN (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 2 THEN tmpMI_detail.InsertDate
+                , MIN (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 3 THEN tmpMI_detail.InsertDate
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-2 THEN tmpMI_detail.InsertDate  
                             ELSE NULL
                        END) :: TDateTime AS InsertDate3
-                , MIN (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 3 THEN tmpMI_detail.InsertDate
+                , MIN (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 4 THEN tmpMI_detail.InsertDate
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-1 THEN tmpMI_detail.InsertDate 
                             ELSE NULL
                        END) :: TDateTime AS InsertDate4
-                , MIN (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 4 THEN tmpMI_detail.InsertDate
+                , MIN (CASE WHEN vbMaxAmount <= 5 AND tmpMI_detail.Amount = 5 THEN tmpMI_detail.InsertDate
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount THEN tmpMI_detail.InsertDate  
                             ELSE NULL
                        END) :: TDateTime AS InsertDate5 
@@ -538,6 +565,14 @@ BEGIN
 
            FROM tmpRez
                 LEFT JOIN tmpMI_detail ON tmpMI_detail.ParentId = tmpRez.MovementItemId_child
+  
+                LEFT JOIN tmpMI_Complete AS MILinkObject_GoodsComplete
+                                         ON MILinkObject_GoodsComplete.MovementItemId = tmpRez.Id
+                                        AND MILinkObject_GoodsComplete.DescId         = zc_MILinkObject_Goods()
+
+                LEFT JOIN tmpMI_Complete AS MILinkObject_GoodsKindComplete
+                                         ON MILinkObject_GoodsKindComplete.MovementItemId = tmpRez.Id
+                                        AND MILinkObject_GoodsKindComplete.DescId         = zc_MILinkObject_GoodsKindComplete()
            GROUP BY tmpRez.GoodsId
                 , tmpRez.GoodsCode
                 , tmpRez.GoodsName
@@ -549,14 +584,17 @@ BEGIN
                 , tmpRez.MeasureName
                 , tmpRez.MeasureName_basis
                 , tmpRez.GoodsGroupNameFull
-                , tmpRez.Weight
+                , tmpRez.Weight 
+                , tmpRez.Weight_Child
                   -- ПРИОРИТЕТ
                 , tmpRez.Num
                 
+                , tmpRez.GoodsId_Child
                 , tmpRez.GoodsCode_Child
                 , tmpRez.GoodsName_Child
                 , tmpRez.GoodsKindName_Child
                 , tmpRez.MeasureName_Child
+                , tmpRez.MeasureId_Child
 
                   -- План+План2 для упаковки (ИТОГО, факт)
                 , tmpRez.AmountPackAllTotal_Child   
@@ -570,21 +608,31 @@ BEGIN
                   -- ФАКТ - Перемещение на Цех Упаковки
                 , tmpRez.Income_PACK_to_Child
                   -- ФАКТ - Перемещение с Цеха Упаковки
-                , tmpRez.Income_PACK_from_Child
+                , tmpRez.Income_PACK_from_Child 
+                , COALESCE (MILinkObject_GoodsComplete.ObjectId, 0)
+                , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0)
+, tmpMI_detail.ParentId
+
     )      
     
-    SELECT tmpRez.GoodsId
+    SELECT tmpRez.ParentId
+      ,tmpRez.GoodsId
                 , tmpRez.GoodsCode
                 , tmpRez.GoodsName
                 , tmpRez.GoodsId_basis
                 , tmpRez.GoodsCode_basis
                 , tmpRez.GoodsName_basis
+                , Object_Goods_complete.Id            AS GoodsId_complete
+                , Object_Goods_complete.ObjectCode    AS GoodsCode_complete
+                , Object_Goods_complete.ValueData     AS GoodsName_complete
                 , tmpRez.GoodsKindId
-                , tmpRez.GoodsKindName
+                , tmpRez.GoodsKindName 
+                , Object_GoodsKind_complete.ValueData AS GoodsKindName_complete 
                 , tmpRez.MeasureName
-                , tmpRez.MeasureName_basis
+                , Object_Measure_complete.ValueData   AS MeasureName_complete
                 , tmpRez.GoodsGroupNameFull
                 , tmpRez.Weight
+                , tmpRez.Weight_Child
                   -- ПРИОРИТЕТ
                 , tmpRez.Num
                 
@@ -592,6 +640,7 @@ BEGIN
                 , tmpRez.GoodsName_Child
                 , tmpRez.GoodsKindName_Child
                 , tmpRez.MeasureName_Child
+                
 
                   -- План+План2 для упаковки (ИТОГО, факт)
                 , tmpRez.AmountPackAllTotal_Child      ::TFloat
@@ -602,13 +651,23 @@ BEGIN
                   -- ФАКТ - Перемещение с Цеха Упаковки         
                 , tmpRez.Income_PACK_from_Child  ::TFloat       --***  
                 
+                , SUM (COALESCE (tmpRez.Income_PACK_to_Child,0)) OVER (PARTITION BY tmpRez.GoodsId)   ::TFloat  AS Income_PACK_to_Child_all
+                , SUM (COALESCE (tmpRez.Income_PACK_from_Child,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS Income_PACK_from_Child_all
+
+                , SUM (COALESCE (tmpRez.AmountPack1,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack1_all
+                , SUM (COALESCE (tmpRez.AmountPack2,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack2_all
+                , SUM (COALESCE (tmpRez.AmountPack3,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack3_all
+                , SUM (COALESCE (tmpRez.AmountPack4,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack4_all
+                , SUM (COALESCE (tmpRez.AmountPack5,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack5_all
+                , SUM (COALESCE (tmpRez.AmountPackAll,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPackTotal_All
+              
                 
-                , tmpRez.AmountPackAll
-                , tmpRez.AmountPack1
-                , tmpRez.AmountPack2       
-                , tmpRez.AmountPack3
-                , tmpRez.AmountPack4
-                , tmpRez.AmountPack5
+                --, tmpRez.AmountPackAll::TFloat
+                , tmpRez.AmountPack1::TFloat
+                , tmpRez.AmountPack2 ::TFloat      
+                , tmpRez.AmountPack3::TFloat
+                , tmpRez.AmountPack4::TFloat
+                , tmpRez.AmountPack5::TFloat
                 
                 , (COALESCE (tmpRez.AmountPack1,0)
                  + COALESCE (tmpRez.AmountPack2,0)
@@ -622,7 +681,7 @@ BEGIN
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpRez.MeasureId_Child = zc_Measure_Sh() THEN (tmpRez.AmountPack4 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack4_Sh
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpRez.MeasureId_Child = zc_Measure_Sh() THEN (tmpRez.AmountPack5 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack5_Sh
 
-                , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpMI_master.MeasureId_Child = zc_Measure_Sh() THEN ((COALESCE (tmpRez.AmountPack1,0)
+                , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpRez.MeasureId_Child = zc_Measure_Sh() THEN ((COALESCE (tmpRez.AmountPack1,0)
                                                                                                                      + COALESCE (tmpRez.AmountPack2,0)
                                                                                                                      + COALESCE (tmpRez.AmountPack3,0)
                                                                                                                      + COALESCE (tmpRez.AmountPack4,0)
@@ -646,8 +705,26 @@ BEGIN
     FROM  tmpRez_Detail AS tmpRez
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                 ON ObjectFloat_Weight.ObjectId = tmpRez.GoodsId_child
-                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()         
-    ;
+                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
+            LEFT JOIN Object AS Object_Goods_complete ON Object_Goods_complete.Id = tmpRez.GoodsId_complete
+            LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = tmpRez.GoodsKindId_complete     
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_complete
+                                 ON ObjectLink_Goods_Measure_complete.ObjectId = tmpRez.GoodsId_complete
+                                AND ObjectLink_Goods_Measure_complete.DescId   = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure_complete ON Object_Measure_complete.Id = ObjectLink_Goods_Measure_complete.ChildObjectId            
+    WHERE (COALESCE (tmpRez.AmountPack1, 0) <> 0
+       OR COALESCE (tmpRez.AmountPack2, 0) <> 0
+       OR COALESCE (tmpRez.AmountPack3, 0) <> 0
+       OR COALESCE (tmpRez.AmountPack4, 0) <> 0
+       OR COALESCE (tmpRez.AmountPack5, 0) <> 0
+       OR COALESCE (tmpRez.Income_PACK_to_Child, 0) <> 0
+       OR COALESCE (tmpRez.Income_PACK_from_Child, 0) <> 0 )
+       --AND tmpRez.GoodsId = 5244
+       
+    ;         
+   
 
 END;
 $BODY$
@@ -663,5 +740,6 @@ $BODY$
 -- тест
 -- 
 --select * from gpSelect_Movement_OrderInternalPackRemains_Print2(inMovementId := 21321161 , inIsMinus := 'False' ,  inSession := '9457');
-select * from gpSelect_Movement_OrderInternalPackRemains_Print2(inMovementId := 25083782  , inIsMinus := 'False' ,  inSession := '9457')
-where goodscode = 190;
+--select * from gpSelect_Movement_OrderInternalPackRemains_Print2(inMovementId := 21321161 , inIsMinus := 'False' ,  inSession := '9457');
+--select * from gpSelect_Movement_OrderInternalPackRemains_DetailsPrint2(inMovementId := 25104454   ,  inSession := '9457')
+--where goodscode = 190;

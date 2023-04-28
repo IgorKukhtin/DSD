@@ -26,7 +26,8 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
     vbUserId := lpGetUserBySession (inSession);
     vbSiteDiscount := COALESCE (gpGet_GlobalConst_SiteDiscount(inSession), 0);
-
+    
+    inPrice := Round(inPrice, 2);
 
     -- !!!только так - определяется <Торговая сеть>!!!
     vbObjectId:= (SELECT ObjectLink_Juridical_Retail.ChildObjectId

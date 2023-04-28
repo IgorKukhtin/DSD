@@ -124,7 +124,10 @@ BEGIN
 
       IF COALESCE (vbTotalCount, 0) = 0
       THEN
-        PERFORM  gpSetErased_Movement_CheckVIP(inMovementId, 15016705, inSession);
+        PERFORM  gpSetErased_Movement_CheckVIP(inMovementId, 15016706, inSession);
+      ELSEIF vbAmount <> inAmount
+      THEN
+        PERFORM lpInsertUpdate_MovementString (zc_MovementString_BookingStatus(), inMovementId, '2.0');    
       END IF;
     END IF;    
   

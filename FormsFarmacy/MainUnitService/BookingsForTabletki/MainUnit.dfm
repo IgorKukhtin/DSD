@@ -111,6 +111,7 @@ object MainForm: TMainForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
+      ExplicitLeft = 5
       object cxGridDBTableView2: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = BookingsHeadDS
@@ -189,7 +190,7 @@ object MainForm: TMainForm
     end
     object btnSaveBookings: TButton
       Left = 479
-      Top = 2
+      Top = 3
       Width = 106
       Height = 25
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1079#1072#1082#1072#1079
@@ -198,7 +199,7 @@ object MainForm: TMainForm
     end
     object btnAll: TButton
       Left = 16
-      Top = 2
+      Top = 3
       Width = 97
       Height = 25
       Caption = #1042#1089#1077' '#1076#1077#1081#1089#1090#1074#1080#1103'!'
@@ -224,11 +225,11 @@ object MainForm: TMainForm
       OnClick = btnOpenBookingClick
     end
     object btnCancelledOrders: TButton
-      Left = 136
+      Left = 119
       Top = 2
-      Width = 65
+      Width = 113
       Height = 25
-      Caption = #1054#1090#1082#1072#1079#1099
+      Caption = #1054#1073#1088#1072#1073#1086#1090#1072#1090#1100' '#1086#1090#1082#1072#1079#1099
       TabOrder = 5
       OnClick = btnCancelledOrdersClick
     end
@@ -431,8 +432,6 @@ object MainForm: TMainForm
       Height = 263
       Align = alClient
       TabOrder = 1
-      ExplicitLeft = -4
-      ExplicitTop = 187
       object cxGridDBTableView3: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = dsCheckHead
@@ -774,6 +773,8 @@ object MainForm: TMainForm
   object ZConnection1: TZConnection
     ControlsCodePage = cCP_UTF16
     Catalog = ''
+    Properties.Strings = (
+      'controls_cp=CP_UTF16')
     HostName = ''
     Port = 5432
     Database = ''
@@ -1097,6 +1098,54 @@ object MainForm: TMainForm
         DataType = ftInteger
         Name = 'inMovementId'
         ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inSession'
+        ParamType = ptInput
+      end>
+  end
+  object spSetErasetBooking: TZStoredProc
+    Connection = ZConnection1
+    Params = <
+      item
+        DataType = ftString
+        Name = 'inBookingId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inComment'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftBoolean
+        Name = 'outisOk'
+        ParamType = ptOutput
+      end
+      item
+        DataType = ftString
+        Name = 'inSession'
+        ParamType = ptInput
+      end>
+    StoredProcName = 'gpSetErased_Movement_Tabletki_CheckBooking'
+    Left = 416
+    Top = 320
+    ParamData = <
+      item
+        DataType = ftString
+        Name = 'inBookingId'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'inComment'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftBoolean
+        Name = 'outisOk'
+        ParamType = ptOutput
       end
       item
         DataType = ftString

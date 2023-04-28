@@ -20,6 +20,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , isDeferred Boolean
              , OrderKindId Integer, OrderKindName TVarChar
              , UpdateDate TDateTime
+             , Comment TVarChar
+             , isDifferent Boolean
               )
 
 AS
@@ -59,7 +61,8 @@ BEGIN
            , Object_OrderKind.Id           AS OrderKindId
            , Object_OrderKind.ValueData    AS OrderKindName
            , MovementDate_Update.ValueData AS UpdateDate
-
+           , Movement_OrderExternal_View.Comment
+           , COALESCE (MovementBoolean_Different.ValueData, FALSE) :: Boolean  AS isDifferent
        FROM Movement_OrderExternal_View 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_OrderExternal_View.StatusId
 
@@ -71,6 +74,11 @@ BEGIN
              LEFT JOIN MovementDate AS MovementDate_Update
                                     ON MovementDate_Update.MovementId = Movement_OrderExternal_View.Id
                                    AND MovementDate_Update.DescId = zc_MovementDate_Update()
+
+             -- точка другого юр.лица
+             LEFT JOIN MovementBoolean AS MovementBoolean_Different
+                                       ON MovementBoolean_Different.MovementId = Movement_OrderExternal_View.Id
+                                      AND MovementBoolean_Different.DescId = zc_MovementBoolean_Different()
 
        WHERE Movement_OrderExternal_View.OperDate BETWEEN inStartDate AND inEndDate
          AND (Movement_OrderExternal_View.FromId = inJuridicalId OR inJuridicalId = 0)
