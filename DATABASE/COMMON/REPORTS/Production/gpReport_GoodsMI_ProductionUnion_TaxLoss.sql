@@ -123,8 +123,8 @@ BEGIN
        , tmpMI_GP_send AS
                      (SELECT MIContainer.ObjectId_Analyzer           AS GoodsId
                            , MIContainer.ObjectIntId_Analyzer        AS GoodsKindId
-                           , SUM (CASE WHEN MIContainer.isActive = TRUE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_out   -- !!!не ошибка, т.е. расход в цех по перемещению!!!
-                           , SUM (CASE WHEN MIContainer.isActive = FALSE  THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_In  -- !!!не ошибка, т.е. расход из цеха по перемещению!!!
+                           , SUM (CASE WHEN MIContainer.isActive = TRUE  THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_out   -- !!!не ошибка, т.е. расход в цех по перемещению!!!
+                           , SUM (CASE WHEN MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_In    -- !!!не ошибка, т.е. расход из цеха по перемещению!!!
                       FROM MovementItemContainer AS MIContainer
                            /*INNER JOIN MovementLinkObject AS MLO_From
                                                          ON MLO_From.MovementId = MIContainer.MovementId
