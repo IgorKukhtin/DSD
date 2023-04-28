@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternalPackRemains_DetailsPri
     --IN inIsMinus       Boolean  , -- 
     IN inSession       TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (GoodsId              Integer
+RETURNS TABLE (ParentId Integer, GoodsId              Integer
              , GoodsCode            Integer
              , GoodsName            TVarChar
              , GoodsId_basis           Integer 
@@ -95,7 +95,7 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
 
-     inIsMinus:= FALSE;
+     inIsMinus:= false;
      
      -- параметры из документа
      SELECT Movement.DescId
@@ -478,8 +478,8 @@ BEGIN
 
          
     , tmpRez_Detail AS (
-           SELECT
-                  tmpRez.GoodsId
+           SELECT tmpMI_detail.ParentId
+                 , tmpRez.GoodsId
                 , tmpRez.GoodsCode
                 , tmpRez.GoodsName
                 , tmpRez.GoodsId_basis
@@ -528,15 +528,15 @@ BEGIN
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-3 THEN tmpMI_detail.AmountPackAllTotal_diff  
                             ELSE 0
                        END) ::TFloat AS AmountPack2       
-                , SUM (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 2 THEN tmpMI_detail.AmountPackAllTotal_diff
+                , SUM (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 3 THEN tmpMI_detail.AmountPackAllTotal_diff
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-2 THEN tmpMI_detail.AmountPackAllTotal_diff  
                             ELSE 0
                        END) ::TFloat AS AmountPack3
-                , SUM (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 3 THEN tmpMI_detail.AmountPackAllTotal_diff
+                , SUM (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 4 THEN tmpMI_detail.AmountPackAllTotal_diff
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-1 THEN tmpMI_detail.AmountPackAllTotal_diff  
                             ELSE 0
                        END) ::TFloat AS AmountPack4
-                , SUM (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 4 THEN tmpMI_detail.AmountPackAllTotal_diff
+                , SUM (CASE WHEN vbMaxAmount <= 5 AND tmpMI_detail.Amount = 5 THEN tmpMI_detail.AmountPackAllTotal_diff
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount THEN tmpMI_detail.AmountPackAllTotal_diff  
                             ELSE 0
                        END) ::TFloat AS AmountPack5
@@ -549,15 +549,15 @@ BEGIN
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-3 THEN tmpMI_detail.InsertDate  
                             ELSE NULL
                        END) :: TDateTime AS InsertDate2       
-                , MIN (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 2 THEN tmpMI_detail.InsertDate
+                , MIN (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 3 THEN tmpMI_detail.InsertDate
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-2 THEN tmpMI_detail.InsertDate  
                             ELSE NULL
                        END) :: TDateTime AS InsertDate3
-                , MIN (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 3 THEN tmpMI_detail.InsertDate
+                , MIN (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 4 THEN tmpMI_detail.InsertDate
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-1 THEN tmpMI_detail.InsertDate 
                             ELSE NULL
                        END) :: TDateTime AS InsertDate4
-                , MIN (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 4 THEN tmpMI_detail.InsertDate
+                , MIN (CASE WHEN vbMaxAmount <= 5 AND tmpMI_detail.Amount = 5 THEN tmpMI_detail.InsertDate
                             WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount THEN tmpMI_detail.InsertDate  
                             ELSE NULL
                        END) :: TDateTime AS InsertDate5 
@@ -611,10 +611,12 @@ BEGIN
                 , tmpRez.Income_PACK_from_Child 
                 , COALESCE (MILinkObject_GoodsComplete.ObjectId, 0)
                 , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0)
+, tmpMI_detail.ParentId
 
     )      
     
-    SELECT tmpRez.GoodsId
+    SELECT tmpRez.ParentId
+      ,tmpRez.GoodsId
                 , tmpRez.GoodsCode
                 , tmpRez.GoodsName
                 , tmpRez.GoodsId_basis
@@ -649,15 +651,15 @@ BEGIN
                   -- ФАКТ - Перемещение с Цеха Упаковки         
                 , tmpRez.Income_PACK_from_Child  ::TFloat       --***  
                 
-                , SUM (COALESCE (tmpRez.Income_PACK_to_Child,0)) OVER (PARTITION BY tmpRez.GoodsId_basis)   ::TFloat  AS Income_PACK_to_Child_all
-                , SUM (COALESCE (tmpRez.Income_PACK_from_Child,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS Income_PACK_from_Child_all
+                , SUM (COALESCE (tmpRez.Income_PACK_to_Child,0)) OVER (PARTITION BY tmpRez.GoodsId)   ::TFloat  AS Income_PACK_to_Child_all
+                , SUM (COALESCE (tmpRez.Income_PACK_from_Child,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS Income_PACK_from_Child_all
 
-                , SUM (COALESCE (tmpRez.AmountPack1,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS AmountPack1_all
-                , SUM (COALESCE (tmpRez.AmountPack2,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS AmountPack2_all
-                , SUM (COALESCE (tmpRez.AmountPack3,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS AmountPack3_all
-                , SUM (COALESCE (tmpRez.AmountPack4,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS AmountPack4_all
-                , SUM (COALESCE (tmpRez.AmountPack5,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS AmountPack5_all
-                , SUM (COALESCE (tmpRez.AmountPackAll,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS AmountPackTotal_All
+                , SUM (COALESCE (tmpRez.AmountPack1,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack1_all
+                , SUM (COALESCE (tmpRez.AmountPack2,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack2_all
+                , SUM (COALESCE (tmpRez.AmountPack3,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack3_all
+                , SUM (COALESCE (tmpRez.AmountPack4,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack4_all
+                , SUM (COALESCE (tmpRez.AmountPack5,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack5_all
+                , SUM (COALESCE (tmpRez.AmountPackAll,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPackTotal_All
               
                 
                 --, tmpRez.AmountPackAll::TFloat
@@ -719,7 +721,7 @@ BEGIN
        OR COALESCE (tmpRez.AmountPack5, 0) <> 0
        OR COALESCE (tmpRez.Income_PACK_to_Child, 0) <> 0
        OR COALESCE (tmpRez.Income_PACK_from_Child, 0) <> 0 )
-       AND tmpRez.GoodsCode = 41 
+       --AND tmpRez.GoodsId = 5244
        
     ;         
    
@@ -739,5 +741,5 @@ $BODY$
 -- 
 --select * from gpSelect_Movement_OrderInternalPackRemains_Print2(inMovementId := 21321161 , inIsMinus := 'False' ,  inSession := '9457');
 --select * from gpSelect_Movement_OrderInternalPackRemains_Print2(inMovementId := 21321161 , inIsMinus := 'False' ,  inSession := '9457');
-select * from gpSelect_Movement_OrderInternalPackRemains_DetailsPrint2(inMovementId := 25083782  ,  inSession := '9457')
-where goodscode = 190;
+--select * from gpSelect_Movement_OrderInternalPackRemains_DetailsPrint2(inMovementId := 25104454   ,  inSession := '9457')
+--where goodscode = 190;
