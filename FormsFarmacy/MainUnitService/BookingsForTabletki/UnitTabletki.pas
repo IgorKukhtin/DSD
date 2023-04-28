@@ -452,39 +452,12 @@ begin
           FBookingsHeadCDS.Last;
           FBookingsHeadCDS.Append;
           FBookingsHeadCDS.FieldByName('bookingId').AsString := bookingId;
-          FBookingsHeadCDS.FieldByName('code').AsInteger := jValue.GetValue<TJSONNumber>('code').AsInt;
-          FBookingsHeadCDS.FieldByName('statusID').AsString := DelDoubleQuote(jValue.FindValue('statusID'));
-          FBookingsHeadCDS.FieldByName('dateTimeCreated').AsDateTime := JSONStrToDate(jValue.FindValue('dateTimeCreated'));
-          FBookingsHeadCDS.FieldByName('customer').AsString := DelDoubleQuote(jValue.FindValue('customer'));
-          FBookingsHeadCDS.FieldByName('customerPhone').AsString := DelDoubleQuote(jValue.FindValue('customerPhone'));
-          FBookingsHeadCDS.FieldByName('customerEmail').AsString := DelDoubleQuote(jValue.FindValue('customerEmail'));
-          FBookingsHeadCDS.FieldByName('branchID').AsString := DelDoubleQuote(jValue.FindValue('branchID'));
-          FBookingsHeadCDS.FieldByName('externalNmb').AsString := DelDoubleQuote(jValue.FindValue('externalNmb'));
-          FBookingsHeadCDS.FieldByName('docAdditionalInfo').AsString := DelDoubleQuote(jValue.FindValue('docAdditionalInfo'));
-          FBookingsHeadCDS.FieldByName('customerAdditionalInfo').AsString := DelDoubleQuote(jValue.FindValue('customerAdditionalInfo'));
-          FBookingsHeadCDS.FieldByName('reserveSource').AsString := DelDoubleQuote(jValue.FindValue('reserveSource'));
-          FBookingsHeadCDS.FieldByName('cancelReason').AsString := DelDoubleQuote(jValue.FindValue('cancelReason'));
+          FBookingsHeadCDS.FieldByName('code').AsString := DelDoubleQuote(jValue.FindValue('branchID'));
+          FBookingsHeadCDS.FieldByName('customerAdditionalInfo').AsString := DelDoubleQuote(jValue.FindValue('cancelReason'));
+          FBookingsHeadCDS.FieldByName('dateTimeCreated').AsDateTime := JSONStrToDate(jValue.FindValue('cancelDateTime'));
 
           FBookingsHeadCDS.Post;
 
-          JSONAI := jValue.GetValue<TJSONArray>('rows');
-          for J := 0 to JSONAI.Count - 1 do
-          begin
-            jValue := JSONAI.Items[J];
-
-            FBookingsBodyCDS.Last;
-            FBookingsBodyCDS.Append;
-            FBookingsBodyCDS.FieldByName('bookingId').AsString := bookingId;
-            FBookingsBodyCDS.FieldByName('goodsCode').AsInteger := StrToInt(DelDoubleQuote(jValue.FindValue('goodsCode')));
-            FBookingsBodyCDS.FieldByName('goodsName').AsString := DelDoubleQuote(jValue.FindValue('goodsName'));
-            FBookingsBodyCDS.FieldByName('goodsProducer').AsString := DelDoubleQuote(jValue.FindValue('goodsProducer'));
-            FBookingsBodyCDS.FieldByName('qty').AsCurrency := jValue.GetValue<TJSONNumber>('qty').AsDouble;
-            FBookingsBodyCDS.FieldByName('price').AsCurrency := jValue.GetValue<TJSONNumber>('price').AsDouble;
-            FBookingsBodyCDS.FieldByName('qtyShip').AsCurrency := jValue.GetValue<TJSONNumber>('qtyShip').AsDouble;
-            FBookingsBodyCDS.FieldByName('priceShip').AsCurrency := jValue.GetValue<TJSONNumber>('priceShip').AsDouble;
-            FBookingsBodyCDS.FieldByName('needOrder').AsInteger := jValue.GetValue<TJSONNumber>('needOrder').AsInt;
-            FBookingsBodyCDS.Post;
-          end;
         end;
         Result := True;
       end;
@@ -495,12 +468,12 @@ begin
                      DelDoubleQuote(jValue.FindValue('details'));
     end else
     begin
-      FErrorsText := 'Ошибка получения заказов.'#13#10 + jValue.ToString;
+      FErrorsText := 'Ошибка получения отказов.'#13#10 + jValue.ToString;
     end;
 
   end else
   begin
-    FErrorsText := 'Ошибка получения заказов.'#13#10 + FRESTResponse.Content;
+    FErrorsText := 'Ошибка получения отказов.'#13#10 + FRESTResponse.Content;
   end;
 
 end;

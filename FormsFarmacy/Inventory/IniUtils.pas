@@ -86,7 +86,7 @@ const
       '     LEFT JOIN Unit AS u ON u.id = i.UnitId'#13#10 +
       '     LEFT JOIN (SELECT ic.Inventory, COUNT(*) AS CountNoSend'#13#10 +
       '                FROM InventoryChild AS ic'#13#10 +
-      '                WHERE ic.IsSend = False'#13#10 +
+      '                WHERE ic.IsSend = ''N'''#13#10 +
       '                GROUP BY ic.Inventory) AS ic ON ic.Inventory = i.Id';
 
 function iniLocalDataBaseSQLite: String;
@@ -333,9 +333,9 @@ begin
       AOperDate := ACDS.FieldByName('OperDate').AsDateTime;
       AUnitName := ACDS.FieldByName('Name').AsString;
       AisSave := ACDS.FieldByName('CountNoSend').AsInteger = 0;
+      Result := True;
       Exit;
     end;
-    Result := True;
   finally
     ACDS.Free;
   end;

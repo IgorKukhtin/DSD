@@ -1,29 +1,29 @@
 inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 658
-  ClientWidth = 1362
+  ClientWidth = 1360
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1378
-  ExplicitHeight = 697
+  ExplicitHeight = 705
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 167
-    Width = 1362
-    Height = 491
-    ExplicitTop = 167
+    Top = 168
+    Width = 1360
+    Height = 490
+    ExplicitTop = 168
     ExplicitWidth = 1362
-    ExplicitHeight = 491
-    ClientRectBottom = 491
-    ClientRectRight = 1362
+    ExplicitHeight = 490
+    ClientRectBottom = 490
+    ClientRectRight = 1360
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1362
-      ExplicitHeight = 467
+      ExplicitHeight = 466
       inherited cxGrid: TcxGrid
-        Width = 1362
-        Height = 467
+        Width = 1360
+        Height = 466
         ExplicitWidth = 1362
-        ExplicitHeight = 467
+        ExplicitHeight = 466
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -580,7 +580,7 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1362
+    Width = 1360
     Height = 141
     TabOrder = 3
     ExplicitWidth = 1362
@@ -2913,6 +2913,7 @@ inherited SaleForm: TSaleForm
       FileNamePrefixParam.Value = ''
       FileNamePrefixParam.DataType = ftString
       FileNamePrefixParam.MultiSelectSeparator = ','
+      FieldDefs = <>
       Left = 1272
       Top = 344
     end
@@ -2978,6 +2979,57 @@ inherited SaleForm: TSaleForm
         end>
       isShowModal = False
     end
+    object mactSendETTN: TMultiAction
+      Category = 'Send_ETTN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDialog_TTN
+        end
+        item
+          Action = actSPPrintTTNProcName
+        end
+        item
+          Action = actExecSelectPrint_TTN
+        end
+        item
+          Action = actSendETTN
+        end>
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' e-'#1058#1058#1053
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' e-'#1058#1058#1053
+      ImageIndex = 85
+    end
+    object actSendETTN: TdsdEDINAction
+      Category = 'Send_ETTN'
+      MoveParams = <>
+      Caption = 'actSendETTN'
+      Host.Value = 'https://ettn-demo.edin.ua'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Login.Value = 'uatestuser_v3'
+      Login.DataType = ftString
+      Login.MultiSelectSeparator = ','
+      Password.Value = 'yk4PlIZU'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Token.Value = ''
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      EDIDocType = ediTTN
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object actExecSelectPrint_TTN: TdsdExecStoredProc
+      Category = 'Send_ETTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectPrint_TTN
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_TTN
+        end>
+      Caption = 'actExecSelectPrint_TTN'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -3039,7 +3091,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -3270,6 +3322,10 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -3316,7 +3372,6 @@ inherited SaleForm: TSaleForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-      Visible = True
     end
     inherited dxBarStatic: TdxBarStatic
       Caption = '   '
@@ -3479,6 +3534,10 @@ inherited SaleForm: TSaleForm
     end
     object bbOpenProductionUnionForm: TdxBarButton
       Action = actOpenProductionUnionForm
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = mactSendETTN
       Category = 0
     end
   end

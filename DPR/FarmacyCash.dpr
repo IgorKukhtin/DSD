@@ -201,7 +201,8 @@ begin
         IniUtils.AutomaticUpdateProgramTest;
         IniUtils.AutomaticUpdateProgram;
         IniUtils.AutomaticUpdateFarmacyCashServise;
-        if not FindCmdLineSwitch('skipcheckconnect') then TUpdater.AutomaticCheckConnect;
+        if not FindCmdLineSwitch('skipcheckconnect') and
+          (Pos(AnsiUpperCase('https://f.neboley.dp.ua'), AnsiUpperCase(TStorageFactory.GetStorage.Connection)) = 0) then TUpdater.AutomaticCheckConnect;
       End;
 
       //

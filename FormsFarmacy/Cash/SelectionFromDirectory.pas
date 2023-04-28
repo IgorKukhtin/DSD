@@ -14,7 +14,7 @@ uses
   Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGrid, cxCurrencyEdit,
   Vcl.ComCtrls, cxCheckBox, cxBlobEdit, dxSkinsdxBarPainter, dxBarExtItems,
   dxBar, cxNavigator, cxDataControllerConditionalFormattingRulesManagerDialog,
-  DataModul, System.Actions;
+  DataModul, System.Actions, dxDateRanges;
 
 type
   TSelectionFromDirectoryForm = class(TAncestorBaseForm)

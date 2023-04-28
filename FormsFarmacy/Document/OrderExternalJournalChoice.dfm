@@ -4,8 +4,8 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
   ClientWidth = 1334
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1350
-  ExplicitHeight = 573
+  ExplicitWidth = 1352
+  ExplicitHeight = 582
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,6 +22,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
       inherited cxGrid: TcxGrid
         Width = 1334
         Height = 478
+        ExplicitLeft = 144
         ExplicitWidth = 1334
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -176,13 +177,13 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 55
+            Width = 53
           end
           inherited colOperDate: TcxGridDBColumn [1]
             Caption = #1044#1072#1090#1072' '#1079#1072#1103#1074#1082#1080
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 51
+            Width = 50
           end
           object OrderKindName: TcxGridDBColumn [2]
             Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072' ('#1074#1085#1091#1090#1088#1077#1085#1085#1080#1081')'
@@ -190,7 +191,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 94
+            Width = 92
           end
           object UpdateDate: TcxGridDBColumn [3]
             Caption = #1044#1072#1090#1072' ('#1086#1090#1087#1088#1072#1074#1082#1080')'
@@ -198,13 +199,13 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 77
           end
           inherited colInvNumber: TcxGridDBColumn [4]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 84
+            Width = 83
           end
           object FromName: TcxGridDBColumn
             Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
@@ -212,7 +213,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 163
+            Width = 158
           end
           object ToName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -220,7 +221,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 160
+            Width = 155
           end
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -231,7 +232,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 67
+            Width = 65
           end
           object TotalSumm: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
@@ -242,7 +243,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 89
+            Width = 87
           end
           object ContractName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072' '
@@ -250,7 +251,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 187
+            Width = 181
           end
           object JuridicalName: TcxGridDBColumn
             Caption = #1063#1055
@@ -258,7 +259,7 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 105
+            Width = 103
           end
           object isDeferred: TcxGridDBColumn
             Caption = #1054#1090#1083#1086#1078#1077#1085
@@ -266,7 +267,23 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 50
+            Width = 48
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 93
+          end
+          object isDifferent: TcxGridDBColumn
+            Caption = #1058#1086#1095#1082#1072' '#1076#1088'. '#1102#1088'.'#1083#1080#1094#1072
+            DataBinding.FieldName = 'isDifferent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
           end
         end
       end
@@ -332,10 +349,10 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
       FormName = 'actUpdate'
       FormNameParam.Value = 'actUpdate'
     end
-    inherited actUnComplete: TdsdChangeMovementStatus
+    inherited actComplete: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actComplete: TdsdChangeMovementStatus
+    inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
     end
     inherited actSetErased: TdsdChangeMovementStatus

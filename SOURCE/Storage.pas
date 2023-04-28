@@ -66,7 +66,7 @@ uses Xml.XMLDoc, XMLIntf, ZLibEx, idGlobal, UtilConst, System.Variants,
      UtilConvert, MessagesUnit, Dialogs, StrUtils, SimpleGauge,
      Forms, Log, IdStack, IdExceptionCore, SyncObjS, CommonData, System.AnsiStrings,
      Datasnap.DBClient, System.Contnrs, Vcl.Controls, PriorityPause,
-     System.DateUtils;
+     System.DateUtils, IdCTypes, IdSSLOpenSSLHeaders;
 
 const
 
@@ -160,19 +160,50 @@ type
     procedure IdHTTPWorkBegin(ASender: TObject; AWorkMode: TWorkMode; AWorkCountMax: Int64);
   end;
 
+  TCustomIdHTTP = class(TIdHTTP)
+  public
+    constructor Create(AOwner: TComponent);
+    destructor Destroy; override;
+  private
+    procedure OnStatusInfoEx(ASender: TObject; const AsslSocket: PSSL; const AWhere, Aret: TIdC_INT; const AType, AMsg: String);
+  end;
+
   var
     IdHTTPWork: TIdHTTPWork;
     CheckConnectThread: TCheckConnectThread;
+
+{ TCustomIdHTTP }
+
+constructor TCustomIdHTTP.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+  with IOHandler as TIdSSLIOHandlerSocketOpenSSL do begin
+    OnStatusInfoEx := Self.OnStatusInfoEx;
+    SSLOptions.Method := sslvSSLv23;
+    SSLOptions.SSLVersions := [sslvSSLv2, sslvSSLv23, sslvSSLv3, sslvTLSv1];
+  end;
+end;
+
+destructor TCustomIdHTTP.Destroy;
+begin
+  IOHandler.Free;
+  inherited Destroy;
+end;
+
+procedure TCustomIdHTTP.OnStatusInfoEx(ASender: TObject; const AsslSocket: PSSL; const AWhere, Aret: TIdC_INT;
+  const AType, AMsg: String);
+begin
+  SSL_set_tlsext_host_name(AsslSocket, Request.Host);
+end;
 
 { TCheckConnectThread }
 
 procedure TCheckConnectThread.Execute;
 begin
-  while True do
+  while not Terminated and not Application.Terminated do
   begin
-    if Terminated then Exit;
     Sleep(1000);
-    if Terminated then Exit;
     if TStorageFactory.GetStorage.IdHTTP.Connected then
     begin
       if MinutesBetween(Now, FDataStart) >= FTimeuutMin then
@@ -450,7 +481,10 @@ begin
     if Instance.FConnectionList.Count = 0 then
       Instance.FConnectionList.Add(TConnection.Create('http://localhost/dsd/index.php', ctMain));
 
-    Instance.IdHTTP := TIdHTTP.Create(nil);
+    if dsdProject = prFarmacy then Instance.IdHTTP := TCustomIdHTTP.Create(nil)
+    else Instance.IdHTTP := TIdHTTP.Create(nil);
+
+
 //    Instance.IdHTTP.ConnectTimeout := 5000;
     if dsdProject = prBoat then
       Instance.IdHTTP.Response.CharSet := 'utf-8'// 'Content-Type: text/xml; charset=utf-8'
@@ -459,11 +493,14 @@ begin
     Instance.IdHTTP.Request.Connection:='keep-alive';
     Instance.IdHTTP.OnWorkBegin := IdHTTPWork.IdHTTPWorkBegin;
     Instance.IdHTTP.OnWork := IdHTTPWork.IdHTTPWork;
-    Instance.IdHTTP.IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(Instance.IdHTTP);
-    Instance.IdHTTP.IOHandler.MaxLineAction := maException;
-    TIdSSLIOHandlerSocketOpenSSL(Instance.IdHTTP.IOHandler).SSLOptions.Method := sslvSSLv23;
-//    TIdSSLIOHandlerSocketOpenSSL(Instance.IdHTTP.IOHandler).SSLOptions.Mode := sslmUnassigned;
-//    TIdSSLIOHandlerSocketOpenSSL(Instance.IdHTTP.IOHandler).SSLOptions.VerifyDepth := 0;
+    if dsdProject <> prFarmacy then
+    begin
+      Instance.IdHTTP.IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(Instance.IdHTTP);
+      Instance.IdHTTP.IOHandler.MaxLineAction := maException;
+      TIdSSLIOHandlerSocketOpenSSL(Instance.IdHTTP.IOHandler).SSLOptions.Method := sslvSSLv23;
+      // TIdSSLIOHandlerSocketOpenSSL(Instance.IdHTTP.IOHandler).SSLOptions.Mode := sslmUnassigned;
+      // TIdSSLIOHandlerSocketOpenSSL(Instance.IdHTTP.IOHandler).SSLOptions.VerifyDepth := 0;
+    end;
 
     Instance.FSendList := TStringList.Create;
     Instance.FReceiveStream := TStringStream.Create('');
@@ -1199,7 +1236,6 @@ initialization
   CheckConnectThread := Nil;
 
 finalization
-  if Assigned(CheckConnectThread) then CheckConnectThread.Terminate;
 
   IdHTTPWork.Free;
 

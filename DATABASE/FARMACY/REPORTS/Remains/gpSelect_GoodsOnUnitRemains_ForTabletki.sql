@@ -468,6 +468,22 @@ BEGIN
                               FROM gpSelect_PromoBonus_MarginPercent(inUnitId := 0,  inSession := inSession) AS PromoBonus 
                               WHERE PromoBonus.BonusInetOrder > 0)
           , tmpAsinoPharmaSP AS (SELECT * FROM gpSelect_AsinoPharmaSP_PresentGoods(inUnitId, inSession))
+          , tmpCommentCheck AS (SELECT MovementItem.ObjectId             AS GoodsId
+                                FROM tmpMovementChek
+
+                                     INNER JOIN MovementLinkObject ON MovementLinkObject.MovementID = tmpMovementChek.ID
+                                                                  AND MovementLinkObject.DescId = zc_MovementLinkObject_CheckSourceKind()
+                                                                  AND MovementLinkObject.ObjectId = zc_Enum_CheckSourceKind_Tabletki()
+
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementChek.Id
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
+                                     INNER JOIN MovementItemLinkObject AS MILinkObject_CommentCheck
+                                                                       ON MILinkObject_CommentCheck.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_CommentCheck.DescId         = zc_MILinkObject_CommentCheck()
+                                                                      AND COALESCE (MILinkObject_CommentCheck.ObjectId, 0) <> 0
+                                GROUP BY MovementItem.ObjectId
+                                )
                            
        , tmpResult AS (
                       --Шапка
@@ -531,6 +547,8 @@ BEGIN
                              
                              LEFT JOIN tmpMovementTP AS Reserve_TP ON Reserve_TP.GoodsId = Remains.ObjectId
 
+                             LEFT JOIN tmpCommentCheck AS CommentCheck ON CommentCheck.GoodsId = Remains.ObjectId
+
                              LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = Object_Goods_Main.Id
                              LEFT JOIN tmpGoodsDiscount AS GoodsDiscount ON GoodsDiscount.GoodsMainId = Object_Goods_Main.Id
                              LEFT JOIN tmpRemainsDiscount AS RemainsDiscount ON RemainsDiscount.GoodsId = Object_Goods_Retail.Id
@@ -549,6 +567,7 @@ BEGIN
                           AND Object_Goods_Main.Name NOT ILIKE '%Спеццена%'
                           AND Object_Goods_Main.ObjectCode NOT IN (3274, 17789)  
                           AND COALESCE (tmpAsinoPharmaSP.GoodsId, 0) = 0
+                          AND COALESCE (CommentCheck.GoodsId, 0) = 0
                       UNION ALL
                       -- подва
                       SELECT '</Offers>')
@@ -619,4 +638,4 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletki (Integer, TVarChar) OWNER
 -- тест
 -- 
 
-Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(375627   ,'3') --  where RowData ILIKE '%Гептрал%';
+Select * from gpSelect_GoodsOnUnitRemains_ForTabletki(13711869 ,'3') --  where RowData ILIKE '%Гептрал%';

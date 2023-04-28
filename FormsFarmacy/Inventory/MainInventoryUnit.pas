@@ -97,6 +97,8 @@ type
     DBViewAddOnInfo: TdsdDBViewAddOn;
     DBViewAddOn: TdsdDBViewAddOn;
     InfoAmount: TcxGridDBColumn;
+    actSendInventChild: TAction;
+    N8: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);
@@ -109,6 +111,7 @@ type
     procedure actExitExecute(Sender: TObject);
     procedure actInfoInventExecute(Sender: TObject);
     procedure edBarCodeDblClick(Sender: TObject);
+    procedure actSendInventChildExecute(Sender: TObject);
   protected
     procedure FormClose(Sender: TObject; var Action: TCloseAction); override;
   private
@@ -139,6 +142,8 @@ begin
   end else
   begin
     Action := caNone;
+    InfoCDS.Close;
+    MasterCDS.Close;
     PageControl.ActivePage := tsStart;
   end;
 
@@ -157,9 +162,9 @@ procedure TMainInventoryForm.actContinueInventExecute(Sender: TObject);
      Params : TdsdParams;
 begin
 
-  if not ChechActiveInv(OperDate, UnitName, isSave) then
+  if ChechActiveInv(OperDate, UnitName, isSave) then
   begin
-    if not isSave and (OperDate < IncDay(Date, - 3)) then
+    if isSave and (OperDate < IncDay(Date, - 3)) then
     begin
       ShowMessage('Инвентаризация не создана. С начало создайте ее.');
       Exit;
@@ -250,9 +255,9 @@ procedure TMainInventoryForm.actInfoInventExecute(Sender: TObject);
      Params : TdsdParams;
 begin
 
-  if not ChechActiveInv(OperDate, UnitName, isSave) then
+  if ChechActiveInv(OperDate, UnitName, isSave) then
   begin
-    if not isSave and (OperDate < IncDay(Date, - 3)) then
+    if isSave and (OperDate < IncDay(Date, - 3)) then
     begin
       ShowMessage('Инвентаризация не создана. С начало создайте ее.');
       Exit;
@@ -294,17 +299,17 @@ begin
   InfoCDS.Close;
   MasterCDS.Close;
 
-  if not ChechActiveInv(OperDate, UnitName, isSave) then
+  if ChechActiveInv(OperDate, UnitName, isSave) then
   begin
     if not isSave then
     begin
-      if MessageDlg('Активна инвентаризация по ' + UnitName + ' от ' +
+      if MessageDlg('Активна инвентаризация по' + #13#10 + UnitName + #13#10 + 'от ' +
         FormatDateTime('dd.mm.yyyy', OperDate) + #13#10'Пересоздание инвентаризации преведет к потере введенных данных.' +
         #13#10#13#10'Вы дейсвительно хотите пересоздать инвентаризацию?', mtInformation, mbOKCancel, 0) = mrOk then
       begin
         if MessageDlg('Дейсвительно удалить активную инвентаризацию?', mtInformation, mbOKCancel, 0) <> mrOk then
           raise Exception.Create ('Прервано сотрудником...');
-      end else Exit;
+      end else raise Exception.Create ('Прервано сотрудником...');
 
     end else if OperDate >= IncDay(Date, - 7) then
     begin
@@ -316,6 +321,43 @@ begin
   end;
 
   CreateInventoryTable;
+
+end;
+
+procedure TMainInventoryForm.actSendInventChildExecute(Sender: TObject);
+var OperDate: TDateTime; UnitName : String; isSave: boolean;
+begin
+  try
+    spGet_User_IsAdmin.Execute;
+  except
+  end;
+
+  if gc_User.Local then
+  begin
+    ShowMessage('В локальном режим не работает.');
+    Exit;
+  end;
+
+  if ChechActiveInv(OperDate, UnitName, isSave) then
+  begin
+    if isSave then
+    begin
+      ShowMessage('Все даные отправлены.');
+      Exit;
+    end;
+  end else
+  begin
+    ShowMessage('Нет данных для отпраки.');
+    Exit;
+  end;
+
+  if MessageDlg('Активна инвентаризация по' + #13#10 + UnitName + #13#10 + 'от ' +
+    FormatDateTime('dd.mm.yyyy', OperDate) +
+    #13#10#13#10'Отправлять результаты инвентаризации?', mtInformation, mbOKCancel, 0) <> mrOk then Exit;
+
+  InfoCDS.Close;
+  MasterCDS.Close;
+  PageControl.ActivePage := tsStart;
 
 end;
 
