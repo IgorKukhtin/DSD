@@ -291,6 +291,49 @@ else*/
                                   FROM _tmpMI_master
                                   GROUP BY _tmpMI_master.GoodsId, _tmpMI_master.GoodsKindId
                                  )
+             --
+           , tmpMI_Detail_all AS (SELECT MovementItem.ParentId
+                                       , MovementItem.Amount AS NPP
+                                         -- ¬ÓÚ ÓÌ, ¡”ƒ≈“ –≈«”À‹“¿“ + !!!«ƒ≈—‹ ”∆≈ ¬≈—!!!
+                                       , COALESCE (MIFloat_AmountPack.ValueData, 0)           AS AmountResult
+                                       , COALESCE (MIFloat_AmountPackSecond.ValueData, 0)     AS AmountSecondResult
+                                       , COALESCE (MIFloat_AmountPackNext.ValueData, 0)       AS AmountNextResult_two
+                                       , COALESCE (MIFloat_AmountPackNextSecond.ValueData, 0) AS AmountNextSecondResult_two
+                                  FROM MovementItem
+                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsComplete
+                                                                        ON MILinkObject_GoodsComplete.MovementItemId = MovementItem.Id
+                                                                       AND MILinkObject_GoodsComplete.DescId         = zc_MILinkObject_Goods()
+                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                       AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+
+                                        LEFT JOIN MovementItemFloat AS MIFloat_AmountPack
+                                                                    ON MIFloat_AmountPack.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_AmountPack.DescId         = CASE WHEN inIsByDay = TRUE THEN zc_MIFloat_AmountPack() ELSE zc_MIFloat_AmountPack_calc() END
+                                        LEFT JOIN MovementItemFloat AS MIFloat_AmountPackSecond
+                                                                    ON MIFloat_AmountPackSecond.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_AmountPackSecond.DescId         = CASE WHEN inIsByDay = TRUE THEN zc_MIFloat_AmountPackSecond() ELSE zc_MIFloat_AmountPackSecond_calc() END
+                                        LEFT JOIN MovementItemFloat AS MIFloat_AmountPackNext
+                                                                    ON MIFloat_AmountPackNext.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_AmountPackNext.DescId         = CASE WHEN inIsByDay = TRUE THEN zc_MIFloat_AmountPackNext() ELSE zc_MIFloat_AmountPackNext_calc() END
+                                        LEFT JOIN MovementItemFloat AS MIFloat_AmountPackNextSecond
+                                                                    ON MIFloat_AmountPackNextSecond.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_AmountPackNextSecond.DescId         = CASE WHEN inIsByDay = TRUE THEN zc_MIFloat_AmountPackNextSecond() ELSE zc_MIFloat_AmountPackNextSecond_calc() END
+
+                                  WHERE MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_Detail()
+                                    AND MovementItem.isErased   = FALSE
+                                  --AND vbUserId = 5
+                                 )
+             --
+           , tmpMI_Detail AS (SELECT tmpMI_Detail_all.ParentId
+                                   , tmpMI_Detail_all.AmountResult
+                                   , tmpMI_Detail_all.AmountSecondResult
+                                   , tmpMI_Detail_all.AmountNextResult_two
+                                   , tmpMI_Detail_all.AmountNextSecondResult_two
+                              FROM (SELECT MAX (tmpMI_Detail_all.NPP) AS NPP FROM tmpMI_Detail_all) AS tmp_max
+                                   JOIN tmpMI_Detail_all ON tmpMI_Detail_all.NPP = tmp_max.NPP - CASE WHEN inIsByDay = TRUE THEN 1 ELSE 0 END
+                             )
            -- –ÂÁÛÎ¸Ú‡Ú
            SELECT tmpMI.MovementItemId
                 , tmpMI.GoodsId_complete
@@ -351,10 +394,10 @@ else*/
                 , CASE WHEN vbWeekCount <> 0 THEN tmpMI.Plan7 / vbWeekCount ELSE 0 END AS Plan7
 
                   -- ¬ÓÚ ÓÌ, ¡”ƒ≈“ –≈«”À‹“¿“
-                , CASE WHEN inIsPack       = TRUE THEN 0 ELSE tmpMI.AmountResult                  END AS AmountResult
-                , CASE WHEN inIsPackSecond = TRUE THEN 0 ELSE tmpMI.AmountSecondResult            END AS AmountSecondResult
-                , CASE WHEN inIsPack       = TRUE THEN 0 WHEN tmpMI.isCalculated = FALSE THEN tmpMI.AmountNextResult_two       ELSE 0 /*tmpMI.AmountNextResult*/        END AS AmountNextResult
-                , CASE WHEN inIsPackSecond = TRUE THEN 0 WHEN tmpMI.isCalculated = FALSE THEN tmpMI.AmountNextSecondResult_two ELSE 0 /*tmpMI.AmountNextSecondResult*/  END AS AmountNextSecondResult
+                , CASE WHEN inIsPack       = TRUE THEN COALESCE (tmpMI_Detail.AmountResult, 0)       ELSE tmpMI.AmountResult                  END AS AmountResult
+                , CASE WHEN inIsPackSecond = TRUE THEN COALESCE (tmpMI_Detail.AmountSecondResult, 0) ELSE tmpMI.AmountSecondResult            END AS AmountSecondResult
+                , CASE WHEN inIsPack       = TRUE THEN COALESCE (tmpMI_Detail.AmountNextResult_two, 0)       WHEN tmpMI.isCalculated = FALSE THEN tmpMI.AmountNextResult_two       ELSE COALESCE (tmpMI_Detail.AmountNextResult_two, 0)       /*tmpMI.AmountNextResult*/        END AS AmountNextResult
+                , CASE WHEN inIsPackSecond = TRUE THEN COALESCE (tmpMI_Detail.AmountNextSecondResult_two, 0) WHEN tmpMI.isCalculated = FALSE THEN tmpMI.AmountNextSecondResult_two ELSE COALESCE (tmpMI_Detail.AmountNextSecondResult_two, 0) /*tmpMI.AmountNextSecondResult*/  END AS AmountNextSecondResult
 
                 , tmpMI.isCalculated
 
@@ -640,10 +683,78 @@ else*/
                   -- AND MIBoolean_Calculated.MovementItemId IS NULL
 
                 ) AS tmpMI
+                LEFT JOIN tmpMI_Detail ON tmpMI_Detail.ParentId = tmpMI.MovementItemId
+
            WHERE tmpMI.Ord = 1
           ;
 
 
+IF vbUserId = 5 AND inIsByDay = TRUE
+AND 1=0
+THEN
+    RAISE EXCEPTION 'Œ¯Ë·Í‡. <%>  <%>'
+    , (select _tmpMI_Child.AmountResult from _tmpMI_Child where _tmpMI_Child.MovementItemId = 224364726 )
+
+, ( with tmpMI_Detail_all AS (SELECT MovementItem.ParentId
+                                       , MovementItem.Amount AS NPP
+                                         -- ¬ÓÚ ÓÌ, ¡”ƒ≈“ –≈«”À‹“¿“ + !!!«ƒ≈—‹ ”∆≈ ¬≈—!!!
+                                       , COALESCE (MIFloat_AmountPack.ValueData, 0)           AS AmountResult
+                                       , COALESCE (MIFloat_AmountPackSecond.ValueData, 0)     AS AmountSecondResult
+                                       , COALESCE (MIFloat_AmountPackNext.ValueData, 0)       AS AmountNextResult_two
+                                       , COALESCE (MIFloat_AmountPackNextSecond.ValueData, 0) AS AmountNextSecondResult_two
+                                  FROM MovementItem
+                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsComplete
+                                                                        ON MILinkObject_GoodsComplete.MovementItemId = MovementItem.Id
+                                                                       AND MILinkObject_GoodsComplete.DescId         = zc_MILinkObject_Goods()
+                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                       AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+
+                                        LEFT JOIN MovementItemFloat AS MIFloat_AmountPack
+                                                                    ON MIFloat_AmountPack.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_AmountPack.DescId         = CASE WHEN inIsByDay = TRUE THEN zc_MIFloat_AmountPack() ELSE zc_MIFloat_AmountPack_calc() END
+                                        LEFT JOIN MovementItemFloat AS MIFloat_AmountPackSecond
+                                                                    ON MIFloat_AmountPackSecond.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_AmountPackSecond.DescId         = CASE WHEN inIsByDay = TRUE THEN zc_MIFloat_AmountPackSecond() ELSE zc_MIFloat_AmountPackSecond_calc() END
+                                        LEFT JOIN MovementItemFloat AS MIFloat_AmountPackNext
+                                                                    ON MIFloat_AmountPackNext.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_AmountPackNext.DescId         = CASE WHEN inIsByDay = TRUE THEN zc_MIFloat_AmountPackNext() ELSE zc_MIFloat_AmountPackNext_calc() END
+                                        LEFT JOIN MovementItemFloat AS MIFloat_AmountPackNextSecond
+                                                                    ON MIFloat_AmountPackNextSecond.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_AmountPackNextSecond.DescId         = CASE WHEN inIsByDay = TRUE THEN zc_MIFloat_AmountPackNextSecond() ELSE zc_MIFloat_AmountPackNextSecond_calc() END
+
+                                  WHERE MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_Detail()
+                                    AND MovementItem.isErased   = FALSE
+                                    AND vbUserId = 5
+                                 )
+             --
+           , tmpMI_Detail AS (SELECT tmpMI_Detail_all.ParentId
+                                   , tmpMI_Detail_all.AmountResult
+                                   , tmpMI_Detail_all.AmountSecondResult
+                                   , tmpMI_Detail_all.AmountNextResult_two
+                                   , tmpMI_Detail_all.AmountNextSecondResult_two
+                              FROM (SELECT MAX (tmpMI_Detail_all.NPP) AS NPP FROM tmpMI_Detail_all) AS tmp_max
+                                   JOIN tmpMI_Detail_all ON tmpMI_Detail_all.NPP = tmp_max.NPP
+                             )
+select tmpMI_Detail.AmountResult from tmpMI_Detail where tmpMI_Detail.ParentId = 224364726 
+)
+
+/*
+        INSERT INTO _tmpMI_Child (MovementItemId, GoodsId_complete, GoodsKindId_complete, GoodsId, GoodsKindId
+                                , RemainsStart
+                                , AmountPartnerNext, AmountPartnerNextPromo
+                                , CountForecast
+                                , Plan1, Plan2, Plan3, Plan4, Plan5, Plan6, Plan7
+                                , AmountResult
+                                , AmountSecondResult
+                                , AmountNextResult
+                                , AmountNextSecondResult
+                                , isCalculated
+                                 )
+*/
+    ;
+end if;
 
 
          -- œÂ‚˚È
@@ -1499,13 +1610,14 @@ else*/
 IF vbUserId = 5 AND inIsByDay = TRUE
    AND 1=0
 THEN
-    RAISE EXCEPTION 'Œ¯Ë·Í‡.test ok <%>  <%>  <%> <%>    <%>   <%>'
-             , (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 253294614   AND MIB.DescId = zc_MIBoolean_Calculated())
-             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 253294614   AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
-             , (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 253294614  AND MIB.DescId = zc_MIBoolean_Calculated())
-             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 253294614  AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
-             , (SELECT _tmpMI_Child.AmountNextSecondResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 253294614 )
-             , (SELECT _tmpMI_Child.AmountNextSecondResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 253294614 )
+    RAISE EXCEPTION 'Œ¯Ë·Í‡.test ok <%>  <%>  <%> <%> <%>    <%>   <%>'
+             , (SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = 224364726    AND MIB.DescId = zc_MIBoolean_Calculated())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 224364726   AND MIF.DescId = zc_MIFloat_AmountPack())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 224364726    AND MIF.DescId = zc_MIFloat_AmountPackSecond())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 224364726    AND MIF.DescId = zc_MIFloat_AmountPackNext())
+             , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = 224364726    AND MIF.DescId = zc_MIFloat_AmountPackNextSecond())
+             , (SELECT _tmpMI_Child.AmountResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 224364726)
+             , (SELECT _tmpMI_Child.AmountNextSecondResult FROM _tmpMI_Child WHERE _tmpMI_Child.MovementItemId = 224364726)
               ;
 END IF;
 

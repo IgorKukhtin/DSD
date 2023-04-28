@@ -12,6 +12,8 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbServiceDateId Integer;
    DECLARE vbPersonalServiceListId Integer;
+   DECLARE vbPersonalServiceListId_avance Integer;
+   DECLARE vbMovementId_avance Integer;
    DECLARE vbMemberId_check Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -35,40 +37,83 @@ END IF;
      vbPersonalServiceListId := (SELECT MLO_PersonalServiceList.ObjectId 
                                  FROM MovementLinkObject AS MLO_PersonalServiceList
                                  WHERE MLO_PersonalServiceList.MovementId = inMovementId
-                                   AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList());
+                                   AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                );
+     -- определяем <Ведомость> - Аванс, из неё может быть заполнение данных 
+     vbPersonalServiceListId_avance:= (SELECT OL_PersonalServiceList_Avance_F2.ChildObjectId 
+                                       FROM ObjectLink AS OL_PersonalServiceList_Avance_F2
+                                       WHERE OL_PersonalServiceList_Avance_F2.ObjectId = vbPersonalServiceListId
+                                         AND OL_PersonalServiceList_Avance_F2.DescId     = zc_ObjectLink_PersonalServiceList_Avance_F2()
+                                      );
+     -- определяем документ - Аванс, из него может быть заполнение данных 
+     vbMovementId_avance:= (SELECT Movement.Id
+                            FROM Movement
+                                 INNER JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                                               ON MLO_PersonalServiceList.MovementId = Movement.Id
+                                                              AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                                              AND MLO_PersonalServiceList.ObjectId   = vbPersonalServiceListId_avance
+                                 INNER JOIN MovementDate AS MovementDate_ServiceDate
+                                                               ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                                              AND MovementDate_ServiceDate.DescId     = zc_MIDate_ServiceDate()
+                                                              AND MovementDate_ServiceDate.ValueData  = (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MIDate_ServiceDate())
+                            WHERE Movement.DescId   = zc_Movement_PersonalService()
+                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                            LIMIT 1
+                           );
+
+
+     -- если найдена Ведомость - Аванс
+     IF vbPersonalServiceListId_avance > 0
+     THEN
+         -- удаляем текущие данные
+         PERFORM lpSetErased_MovementItem (MovementItem.Id, vbUserId)
+         FROM MovementItem
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId     = zc_MI_Master()
+           AND MovementItem.isErased   = FALSE;
+         
+     END IF;
 
 
      -- Проверка, у каждого сотрудника с zc_ObjectLink_Personal_PersonalServiceListCardSecond должен быть isMain
      vbMemberId_check:=
           (WITH -- Сотрудники ВСЕ
-                tmpPersonal_all AS (SELECT ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId AS PersonalId
+                tmpPersonal_all AS (SELECT Object_Personal.Id                                         AS PersonalId
                                          , ObjectLink_Personal_Unit.ChildObjectId                     AS UnitId
                                          , ObjectLink_Personal_Member.ChildObjectId                   AS MemberId
                                          , ObjectLink_Personal_Position.ChildObjectId                 AS PositionId
                                          , zc_Enum_InfoMoney_60101()                                  AS InfoMoneyId  -- 60101 Заработная плата
                                          , ObjectLink_Personal_PersonalServiceList.ChildObjectId      AS PersonalServiceListId
-                                         , ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId AS PersonalServiceListId_CardSecond
+                                         , CASE WHEN vbPersonalServiceListId_avance > 0
+                                                THEN ObjectLink_Personal_PersonalServiceListAvance_F2.ChildObjectId
+                                                ELSE ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId
+                                           END AS PersonalServiceListId_CardSecond
                                          , ObjectBoolean_isMain.ValueData                             AS isMain
-                                    FROM ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
-                                         INNER JOIN Object AS Object_Personal ON Object_Personal.Id       = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                    FROM ObjectLink AS ObjectLink_Personal_PersonalServiceList
+
+                                         INNER JOIN Object AS Object_Personal ON Object_Personal.Id       = ObjectLink_Personal_PersonalServiceList.ObjectId
                                                                              AND Object_Personal.isErased = FALSE
                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Member
-                                                               ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                                               ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
                                                               AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
                                          INNER JOIN Object AS Object_Member ON Object_Member.Id       = ObjectLink_Personal_Member.ChildObjectId
                                                                            AND Object_Member.isErased = FALSE
                                          LEFT JOIN ObjectBoolean AS ObjectBoolean_isMain
-                                                                 ON ObjectBoolean_isMain.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                                                 ON ObjectBoolean_isMain.ObjectId = Object_Personal.Id
                                                                 AND ObjectBoolean_isMain.DescId   = zc_ObjectBoolean_Personal_Main()
                                          LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                                                              ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                                              ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
                                                              AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
                                          LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                                              ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                                              ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                                                              AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                                         LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
-                                                              ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
-                                                             AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+
+                                         LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
+                                                              ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId = ObjectLink_Personal_PersonalServiceList.ObjectId
+                                                             AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId   = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+                                         LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListAvance_F2
+                                                              ON ObjectLink_Personal_PersonalServiceListAvance_F2.ObjectId = Object_Personal.Id
+                                                             AND ObjectLink_Personal_PersonalServiceListAvance_F2.DescId   = zc_ObjectLink_Personal_PersonalServiceListAvance_F2()
 
                                          --  только строки, которые содержат в графе "№ карт. ЗП (Ф2)" признак "UA".
                                          INNER JOIN ObjectString AS ObjectString_CardSecond
@@ -76,8 +121,10 @@ END IF;
                                                                 AND ObjectString_CardSecond.DescId    = zc_ObjectString_Member_CardSecond()
                                                                 AND ObjectString_CardSecond.ValueData ILIKE '%UA%'
 
-                                    WHERE ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId > 0
-                                      AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId        = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+                                    WHERE ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+                                      AND (ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId > 0
+                                        OR ObjectLink_Personal_PersonalServiceListAvance_F2.ChildObjectId > 0
+                                          )
                                    )
            SELECT tmp.MemberId
            FROM (SELECT DISTINCT tmpPersonal_all.MemberId FROM tmpPersonal_all WHERE tmpPersonal_all.PersonalServiceListId_CardSecond = vbPersonalServiceListId) AS tmp
@@ -98,34 +145,41 @@ END IF;
      --
      INSERT INTO _tmpMI (MovementItemId, MemberId, PersonalId, UnitId, PositionId, InfoMoneyId, PersonalServiceListId, FineSubjectId, UnitId_FineSubject, SummCardSecondRecalc)
            WITH -- Сотрудники ВСЕ
-                tmpPersonal_all AS (SELECT ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId AS PersonalId
+                tmpPersonal_all AS (SELECT Object_Personal.Id                                         AS PersonalId
                                          , ObjectLink_Personal_Unit.ChildObjectId                     AS UnitId
                                          , ObjectLink_Personal_Member.ChildObjectId                   AS MemberId
                                          , ObjectLink_Personal_Position.ChildObjectId                 AS PositionId
                                          , zc_Enum_InfoMoney_60101()                                  AS InfoMoneyId  -- 60101 Заработная плата
                                          , ObjectLink_Personal_PersonalServiceList.ChildObjectId      AS PersonalServiceListId
-                                         , ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId AS PersonalServiceListId_CardSecond
+                                         , CASE WHEN vbPersonalServiceListId_avance > 0
+                                                THEN ObjectLink_Personal_PersonalServiceListAvance_F2.ChildObjectId
+                                                ELSE ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId
+                                           END AS PersonalServiceListId_CardSecond
                                          , ObjectBoolean_isMain.ValueData                             AS isMain
-                                    FROM ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
-                                         INNER JOIN Object AS Object_Personal ON Object_Personal.Id       = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                    FROM ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                         INNER JOIN Object AS Object_Personal ON Object_Personal.Id       = ObjectLink_Personal_PersonalServiceList.ObjectId
                                                                              AND Object_Personal.isErased = FALSE
                                          INNER JOIN ObjectLink AS ObjectLink_Personal_Member
-                                                               ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                                               ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
                                                               AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
                                          INNER JOIN Object AS Object_Member ON Object_Member.Id       = ObjectLink_Personal_Member.ChildObjectId
                                                                            AND Object_Member.isErased = FALSE
                                          LEFT JOIN ObjectBoolean AS ObjectBoolean_isMain
-                                                                 ON ObjectBoolean_isMain.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                                                 ON ObjectBoolean_isMain.ObjectId = Object_Personal.Id
                                                                 AND ObjectBoolean_isMain.DescId   = zc_ObjectBoolean_Personal_Main()
                                          LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                                                              ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                                              ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
                                                              AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
                                          LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                                                              ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                                              ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                                                              AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                                         LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
-                                                              ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
-                                                             AND ObjectLink_Personal_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
+
+                                         LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
+                                                              ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId = ObjectLink_Personal_PersonalServiceList.ObjectId
+                                                             AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId   = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+                                         LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListAvance_F2
+                                                              ON ObjectLink_Personal_PersonalServiceListAvance_F2.ObjectId = Object_Personal.Id
+                                                             AND ObjectLink_Personal_PersonalServiceListAvance_F2.DescId   = zc_ObjectLink_Personal_PersonalServiceListAvance_F2()
 
                                          --  только строки, которые содержат в графе "№ карт. ЗП (Ф2)" признак "UA".
                                          INNER JOIN ObjectString AS ObjectString_CardSecond
@@ -133,11 +187,13 @@ END IF;
                                                                 AND ObjectString_CardSecond.DescId    = zc_ObjectString_Member_CardSecond()
                                                                 AND ObjectString_CardSecond.ValueData ILIKE '%UA%'
 
-                                    WHERE ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId > 0
-                                      AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId        = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+                                    WHERE ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+                                      AND (ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId > 0
+                                        OR ObjectLink_Personal_PersonalServiceListAvance_F2.ChildObjectId > 0
+                                          )
                                    )
                 -- все Физ лица - по ним все варианты Personal возьмем из Container
-              , tmpMember AS (SELECT DISTINCT tmpPersonal_all.MemberId, tmpPersonal_all.InfoMoneyId
+              , tmpMember AS (SELECT DISTINCT tmpPersonal_all.MemberId, tmpPersonal_all.InfoMoneyId, tmpPersonal_all.PersonalServiceListId
                               FROM tmpPersonal_all
                               WHERE tmpPersonal_all.PersonalServiceListId_CardSecond = vbPersonalServiceListId
                                 AND tmpPersonal_all.isMain                = TRUE
@@ -188,6 +244,8 @@ END IF;
                                 WHERE CLO_ServiceDate.ObjectId    = vbServiceDateId
                                   AND CLO_ServiceDate.DescId      = zc_ContainerLinkObject_ServiceDate()
                                   AND ObjectLink_PersonalServiceList_PaidKind.ObjectId IS NULL
+                                  -- если это не Аванс
+                                  AND COALESCE (vbPersonalServiceListId_avance, 0) = 0
                                )                                   
              , tmpPersonal AS (SELECT DISTINCT
                                       tmpContainer_all.PersonalId
@@ -213,6 +271,8 @@ END IF;
                                     , tmpPersonal_only.PersonalServiceListId
                                     , tmpPersonal_only.MemberId
                                FROM tmpPersonal_only
+                               -- если это не Аванс
+                               WHERE COALESCE (vbPersonalServiceListId_avance, 0) = 0
                               )
                 -- текущие элементы
               , tmpMI AS (SELECT MovementItem.Id                                        AS MovementItemId
@@ -242,6 +302,8 @@ END IF;
                           WHERE MovementItem.MovementId = inMovementId
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
+                            -- если это не Аванс
+                            AND COALESCE (vbPersonalServiceListId_avance, 0) = 0
                          )
          -- нашли Сотрудникам - существующие MovementItemId, причем ТОЛЬКО ОДИН
        , tmpListPersonal AS (SELECT tmpMI.MovementItemId                                  AS MovementItemId
@@ -373,6 +435,48 @@ END IF;
                                       AND tmpSummCard.UnitId_FineSubject     = tmpListPersonal.UnitId_FineSubject
             WHERE tmpListPersonal.MovementItemId > 0 
                OR -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0) > 0 -- !!! т.е. если есть долг по ЗП
+
+           UNION
+            SELECT 0 AS MovementItemId
+                 , ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                 , MovementItem.ObjectId                    AS PersonalId
+                 , MILinkObject_Unit.ObjectId               AS UnitId
+                 , MILinkObject_Position.ObjectId           AS PositionId
+                 , tmpMember.InfoMoneyId                    AS InfoMoneyId
+                 , tmpMember.PersonalServiceListId          AS PersonalServiceListId
+                 , MILinkObject_FineSubject.ObjectId        AS FineSubjectId
+                 , MILinkObject_UnitFineSubject.ObjectId    AS UnitId_FineSubject
+                 , MIF_SummAvanceRecalc.ValueData           AS SummCardSecondRecalc
+            FROM MovementItem
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                  ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                 AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
+                                                  ON MILinkObject_Position.MovementItemId = MovementItem.Id
+                                                 AND MILinkObject_Position.DescId         = zc_MILinkObject_Position()
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
+                                                  ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
+                                                 AND MILinkObject_PersonalServiceList.DescId         = zc_MILinkObject_PersonalServiceList()
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_FineSubject
+                                                  ON MILinkObject_FineSubject.MovementItemId = MovementItem.Id
+                                                 AND MILinkObject_FineSubject.DescId = zc_MILinkObject_FineSubject()
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_UnitFineSubject
+                                                  ON MILinkObject_UnitFineSubject.MovementItemId = MovementItem.Id
+                                                 AND MILinkObject_UnitFineSubject.DescId = zc_MILinkObject_UnitFineSubject()
+                 LEFT JOIN MovementItemFloat AS MIF_SummAvanceRecalc
+                                             ON MIF_SummAvanceRecalc.MovementItemId = MovementItem.Id
+                                            AND MIF_SummAvanceRecalc.DescId         = zc_MIFloat_SummAvanceRecalc()
+
+                 INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                       ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
+                                      AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
+                -- все Физ лица - по ним все варианты Personal возьмем из Container
+                 INNER JOIN tmpMember ON tmpMember.MemberId = ObjectLink_Personal_Member.ChildObjectId
+
+            WHERE MovementItem.MovementId = vbMovementId_avance
+              AND MovementItem.isErased   = FALSE
+              AND MovementItem.DescId     = zc_MI_Master()
+              AND MIF_SummAvanceRecalc.ValueData > 0
           ;
  
 -- RAISE EXCEPTION '<%>', (select count(*) from _tmpMI where _tmpMI.MemberId = 239655);
@@ -438,7 +542,7 @@ END IF;
                 --AND MovementItem.Amount     > 0
                )
      THEN
-         RAISE EXCEPTION 'Ошибка. В распределнии БН найдена ведомость <%>.'
+         RAISE EXCEPTION 'Ошибка. В распределении БН найдена ведомость <%>.'
                        , lfGet_Object_ValueData_sh ((SELECT MILO_PersonalServiceList.ObjectId
                                                      FROM MovementItem
                                                           JOIN MovementItemLinkObject AS MILO_PersonalServiceList
