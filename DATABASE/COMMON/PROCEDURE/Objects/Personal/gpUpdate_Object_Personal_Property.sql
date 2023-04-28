@@ -52,7 +52,7 @@ BEGIN
    -- сохранили связь с <Ведомость начисления(карта ф2)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListCardSecond(), inId, inPersonalServiceListCardSecondId);
    -- сохранили связь с <Ведомость начисления(аванс карта ф2)>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListAvance_F2(), inId, inPersonalServiceListId_AvanceF2);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListAvance_F2(), inId, CASE WHEN EXISTS (SELECT 1 FROM Object WHERE Object.Id = inPersonalServiceListId_AvanceF2 AND TRIM (Object.ValueData) = '' ) THEN 0 ELSE inPersonalServiceListId_AvanceF2 END);
    -- сохранили связь с <линия производства>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_StorageLine(), inId, inStorageLineId); 
    

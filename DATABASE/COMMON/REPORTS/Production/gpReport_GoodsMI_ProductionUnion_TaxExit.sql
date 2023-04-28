@@ -1,6 +1,5 @@
 -- Function: gpReport_GoodsMI_ProductionUnion_TaxExit () - <Производство и процент выхода (итоги) or (детально)>
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion_TaxExit (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionUnion_TaxExit (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion_TaxExit (
@@ -31,7 +30,11 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
+
 
     -- Результат
     RETURN QUERY
@@ -198,43 +201,23 @@ BEGIN
 
                      )
          -- результат - группируется
-       , tmpResult AS
-                     (SELECT tmp.GoodsId
-                           , tmp.PartionGoodsId
-                           , tmp.GoodsKindId_Complete
-                           , SUM (tmp.Amount_WorkProgress_in) AS Amount_WorkProgress_in
-                           , SUM (tmp.CuterCount)             AS CuterCount
-                           , SUM (tmp.RealWeight)             AS RealWeight
-                           , SUM (tmp.RealWeightMsg)          AS RealWeightMsg
-                           , SUM (tmp.Amount_GP_in_calc)      AS Amount_GP_in_calc
-                           , SUM (tmp.Amount_GP_in)           AS Amount_GP_in
-                           , SUM (tmp.AmountReceipt_out)      AS AmountReceipt_out
-                           , SUM (tmp.calcIn)                 AS calcIn
-                           , SUM (tmp.calcOut)                AS calcOut
-                           , MAX (tmp.TaxExit)                AS TaxExit
-                           , MAX (tmp.Comment)                AS Comment
-                      FROM
-                     (-- Производство п/ф ГП
-                      SELECT tmpMI_WorkProgress_in.GoodsId
+       , tmpMI_WorkProgress_in_gr AS
+                     (SELECT tmpMI_WorkProgress_in.ContainerId
+                           , tmpMI_WorkProgress_in.GoodsId
                            , tmpMI_WorkProgress_in.PartionGoodsId
-                           , COALESCE (MILO_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis())      AS GoodsKindId_Complete
-                           , SUM (tmpMI_WorkProgress_in.Amount)                 AS Amount_WorkProgress_in
+                           , COALESCE (MILO_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_Complete
+
+                           , COALESCE (ObjectFloat_TaxExit.ValueData, 0)        AS TaxExit
+                           , COALESCE (ObjectFloat_TotalWeight.ValueData, 0)    AS TotalWeight
+
+                           , SUM (tmpMI_WorkProgress_in.Amount)                 AS Amount
                            , SUM (COALESCE (MIFloat_CuterCount.ValueData, 0))   AS CuterCount
                            , SUM (COALESCE (MIFloat_RealWeight.ValueData, 0))   AS RealWeight
                            , SUM (COALESCE (MIFloat_RealWeightMsg.ValueData,0)) AS RealWeightMsg
-                           , SUM (CASE WHEN ObjectFloat_TotalWeight.ValueData <> 0
-                                            THEN (tmpMI_WorkProgress_in.Amount - COALESCE (tmpMI_WorkProgress_oth.Amount, 0)) * COALESCE (ObjectFloat_TaxExit.ValueData, 0) / ObjectFloat_TotalWeight.ValueData
-                                       ELSE 0
-                                  END)                                          AS Amount_GP_in_calc
-                           , AVG (COALESCE (ObjectFloat_TaxExit.ValueData, 0))  AS TaxExit
-                           , SUM (COALESCE (MIFloat_CuterCount.ValueData, 0) * COALESCE (ObjectFloat_TaxExit.ValueData, 0))     AS calcIn
-                           , SUM (COALESCE (MIFloat_CuterCount.ValueData, 0) * COALESCE (ObjectFloat_TotalWeight.ValueData, 0)) AS calcOut
-                           , MAX (COALESCE (MIString_Comment.ValueData, ''))    AS Comment
-                           , 0                                                  AS Amount_GP_in
-                           , 0                                                  AS AmountReceipt_out
-                      FROM tmpMI_WorkProgress_in
-                           LEFT JOIN tmpMI_WorkProgress_oth ON tmpMI_WorkProgress_oth.ContainerId = tmpMI_WorkProgress_in.ContainerId
 
+                           , MAX (COALESCE (MIString_Comment.ValueData, ''))    AS Comment
+
+                      FROM tmpMI_WorkProgress_in
                            LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                                        ON MIFloat_CuterCount.MovementItemId = tmpMI_WorkProgress_in.MovementItemId
                                                       AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
@@ -261,6 +244,51 @@ BEGIN
                            LEFT JOIN ObjectFloat AS ObjectFloat_TotalWeight
                                                  ON ObjectFloat_TotalWeight.ObjectId = MILO_Receipt.ObjectId
                                                 AND ObjectFloat_TotalWeight.DescId = zc_ObjectFloat_Receipt_TotalWeight()
+                      GROUP BY tmpMI_WorkProgress_in.ContainerId
+                             , tmpMI_WorkProgress_in.GoodsId
+                             , tmpMI_WorkProgress_in.PartionGoodsId
+                             , COALESCE (MILO_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis())
+                             , COALESCE (ObjectFloat_TaxExit.ValueData, 0)
+                             , COALESCE (ObjectFloat_TotalWeight.ValueData, 0)
+                     )
+
+         -- результат - группируется
+       , tmpResult AS
+                     (SELECT tmp.GoodsId
+                           , tmp.PartionGoodsId
+                           , tmp.GoodsKindId_Complete
+                           , SUM (tmp.Amount_WorkProgress_in) AS Amount_WorkProgress_in
+                           , SUM (tmp.CuterCount)             AS CuterCount
+                           , SUM (tmp.RealWeight)             AS RealWeight
+                           , SUM (tmp.RealWeightMsg)          AS RealWeightMsg
+                           , SUM (tmp.Amount_GP_in_calc)      AS Amount_GP_in_calc
+                           , SUM (tmp.Amount_GP_in)           AS Amount_GP_in
+                           , SUM (tmp.AmountReceipt_out)      AS AmountReceipt_out
+                           , SUM (tmp.calcIn)                 AS calcIn
+                           , SUM (tmp.calcOut)                AS calcOut
+                           , MAX (tmp.TaxExit)                AS TaxExit
+                           , MAX (tmp.Comment)                AS Comment
+                      FROM
+                     (-- Производство п/ф ГП
+                      SELECT tmpMI_WorkProgress_in.GoodsId
+                           , tmpMI_WorkProgress_in.PartionGoodsId
+                           , tmpMI_WorkProgress_in.GoodsKindId_Complete
+                           , SUM (tmpMI_WorkProgress_in.Amount)        AS Amount_WorkProgress_in
+                           , SUM (tmpMI_WorkProgress_in.CuterCount)    AS CuterCount
+                           , SUM (tmpMI_WorkProgress_in.RealWeight)    AS RealWeight
+                           , SUM (tmpMI_WorkProgress_in.RealWeightMsg) AS RealWeightMsg
+                           , SUM (CASE WHEN tmpMI_WorkProgress_in.TotalWeight <> 0
+                                            THEN (tmpMI_WorkProgress_in.Amount - COALESCE (tmpMI_WorkProgress_oth.Amount, 0)) * tmpMI_WorkProgress_in.TaxExit / tmpMI_WorkProgress_in.TotalWeight
+                                       ELSE 0
+                                  END)                                          AS Amount_GP_in_calc
+                           , AVG (tmpMI_WorkProgress_in.TaxExit)  AS TaxExit
+                           , SUM (tmpMI_WorkProgress_in.CuterCount * tmpMI_WorkProgress_in.TaxExit)     AS calcIn
+                           , SUM (tmpMI_WorkProgress_in.CuterCount * tmpMI_WorkProgress_in.TotalWeight) AS calcOut
+                           , MAX (tmpMI_WorkProgress_in.Comment)  AS Comment
+                           , 0                                    AS Amount_GP_in
+                           , 0                                    AS AmountReceipt_out
+                      FROM tmpMI_WorkProgress_in_gr AS tmpMI_WorkProgress_in
+                           LEFT JOIN tmpMI_WorkProgress_oth ON tmpMI_WorkProgress_oth.ContainerId = tmpMI_WorkProgress_in.ContainerId
 
                            /*LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMI_WorkProgress_in.GoodsId
                                                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -270,7 +298,7 @@ BEGIN
 
                       GROUP BY tmpMI_WorkProgress_in.GoodsId
                              , tmpMI_WorkProgress_in.PartionGoodsId
-                             , MILO_GoodsKindComplete.ObjectId
+                             , tmpMI_WorkProgress_in.GoodsKindId_Complete
                      UNION ALL
                       -- Приход ГП
                       SELECT tmpMI_GP_in.GoodsId
@@ -382,7 +410,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_ProductionUnion_TaxExit (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
