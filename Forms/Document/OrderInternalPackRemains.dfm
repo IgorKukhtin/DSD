@@ -2,7 +2,6 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080' )>'
   ClientHeight = 639
   ClientWidth = 1140
-  ExplicitLeft = 5
   ExplicitWidth = 1156
   ExplicitHeight = 678
   PixelsPerInch = 96
@@ -3470,9 +3469,6 @@
     object tsTotal: TcxTabSheet
       Caption = #1042#1089#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChildTotal: TcxGrid
         Left = 0
         Top = 0
@@ -5187,9 +5183,6 @@
     object tsAll: TcxTabSheet
       Caption = #1055#1083#1072#1085' ('#1074#1089#1077')'
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -7460,7 +7453,70 @@
   inherited ActionList: TActionList
     Left = 23
     Top = 287
-    object macUpdate_MI_IsCalculated_No_list: TMultiAction [0]
+    object actPrintRemains_fact2: TdsdPrintAction [0]
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrintRemains_fact2
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintRemains_fact2
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1072' ('#1044#1077#1090#1072#1083#1100#1085#1086' '#1088#1072#1089#1095'.'#1092#1072#1082#1090')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1072' ('#1044#1077#1090#1072#1083#1100#1085#1086' '#1088#1072#1089#1095'.'#1092#1072#1082#1090')'
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;Num;'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = edInvNumber
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080' '#1076#1077#1090#1072#1083#1100#1085#1086')2'
+      ReportNameParam.Value = #1047#1072#1103#1074#1082#1072' '#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1091' ('#1086#1089#1090#1072#1090#1082#1080' '#1076#1077#1090#1072#1083#1100#1085#1086')2'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macUpdate_MI_IsCalculated_No_list: TMultiAction [1]
       Category = 'Calc'
       MoveParams = <>
       ActionList = <
@@ -7470,7 +7526,7 @@
       View = cxGridDBTableViewChild
       Caption = 'macUpdate_MI_IsCalculated_No_list'
     end
-    object actRefreshMI: TdsdDataSetRefresh [1]
+    object actRefreshMI: TdsdDataSetRefresh [2]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -7484,7 +7540,7 @@
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object macUpdate_MI_IsCalculated_Yes_list: TMultiAction [2]
+    object macUpdate_MI_IsCalculated_Yes_list: TMultiAction [3]
       Category = 'Calc'
       MoveParams = <>
       ActionList = <
@@ -7494,7 +7550,7 @@
       View = cxGridDBTableViewChild
       Caption = 'macUpdate_MI_IsCalculated_Yes_list'
     end
-    object actUpdate_MI_IsCalculated_Yes: TdsdExecStoredProc [3]
+    object actUpdate_MI_IsCalculated_Yes: TdsdExecStoredProc [4]
       Category = 'Calc'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -7522,7 +7578,7 @@
         end>
       RefreshOnTabSetChanges = True
     end
-    object macUpdate_MI_IsCalculated_Yes: TMultiAction [5]
+    object macUpdate_MI_IsCalculated_Yes: TMultiAction [6]
       Category = 'Calc'
       MoveParams = <>
       ActionList = <
@@ -7541,7 +7597,7 @@
       ImageIndex = 79
       WithoutNext = True
     end
-    object actGridChildToExcel: TdsdGridToExcel [7]
+    object actGridChildToExcel: TdsdGridToExcel [8]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -7551,7 +7607,7 @@
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actGridTotalToExcel: TdsdGridToExcel [8]
+    object actGridTotalToExcel: TdsdGridToExcel [9]
       Category = 'DSDLib'
       TabSheet = tsTotal
       MoveParams = <>
@@ -7562,7 +7618,7 @@
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actGridPlanToExcel: TdsdGridToExcel [9]
+    object actGridPlanToExcel: TdsdGridToExcel [10]
       Category = 'DSDLib'
       TabSheet = tsAll
       MoveParams = <>
@@ -7582,7 +7638,7 @@
     inherited actUpdateMainDS: TdsdUpdateDataSet
       TabSheet = tsMain
     end
-    object actUpdateChildDS: TdsdUpdateDataSet [16]
+    object actUpdateChildDS: TdsdUpdateDataSet [17]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -7598,7 +7654,7 @@
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
     end
-    object actUpdateChildTotalDS: TdsdUpdateDataSet [17]
+    object actUpdateChildTotalDS: TdsdUpdateDataSet [18]
       Category = 'DSDLib'
       TabSheet = tsTotal
       MoveParams = <>
@@ -7608,8 +7664,8 @@
       Caption = 'actUpdateChildTotalDS'
       DataSource = ChildTotalDS
     end
-    object actPrintRemains_fact: TdsdPrintAction [18]
-      Category = 'DSDLib'
+    object actPrintRemains_fact: TdsdPrintAction [19]
+      Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrintRemains_fact
       StoredProcList = <
@@ -7673,7 +7729,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintDiff: TdsdPrintAction [19]
+    object actPrintDiff: TdsdPrintAction [20]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemains
@@ -7757,7 +7813,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintDetail: TdsdPrintAction [20]
+    object actPrintDetail: TdsdPrintAction [21]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemains
@@ -7841,7 +7897,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintRemainsLessUpak: TdsdPrintAction [21]
+    object actPrintRemainsLessUpak: TdsdPrintAction [22]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemainsLess
@@ -7910,7 +7966,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintRemainsLess: TdsdPrintAction [22]
+    object actPrintRemainsLess: TdsdPrintAction [23]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemainsLess
@@ -7979,7 +8035,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintRemains: TdsdPrintAction [23]
+    object actPrintRemains: TdsdPrintAction [24]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintRemains
@@ -8099,7 +8155,7 @@
         item
         end>
     end
-    object actProtocolDetail: TdsdOpenForm [26]
+    object actProtocolDetail: TdsdOpenForm [27]
       Category = 'DSDLib'
       TabSheet = tsDetail
       MoveParams = <>
@@ -8139,7 +8195,7 @@
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [30]
+    object actGoodsKindChoice: TOpenChoiceForm [31]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -8166,7 +8222,7 @@
         end>
       isShowModal = True
     end
-    object actProtocolChild: TdsdOpenForm [31]
+    object actProtocolChild: TdsdOpenForm [32]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -8197,7 +8253,7 @@
         end>
       isShowModal = False
     end
-    object actProtocolTotal: TdsdOpenForm [32]
+    object actProtocolTotal: TdsdOpenForm [33]
       Category = 'DSDLib'
       TabSheet = tsTotal
       MoveParams = <>
@@ -8922,6 +8978,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbPrintRemains_fact2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -9162,6 +9222,11 @@
     end
     object bbPrintRemains_fact: TdxBarButton
       Action = actPrintRemains_fact
+      Category = 0
+    end
+    object bbPrintRemains_fact2: TdxBarButton
+      Action = actPrintRemains_fact2
+      Caption = #1058#1045#1057#1058' '#1055#1077#1095#1072#1090#1100' '#1047#1072#1103#1074#1082#1072' ('#1044#1077#1090#1072#1083#1100#1085#1086' '#1088#1072#1089#1095'.'#1092#1072#1082#1090')'
       Category = 0
     end
   end
@@ -10833,7 +10898,27 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 639
-    Top = 144
+    Left = 663
+    Top = 136
+  end
+  object spSelectPrintRemains_fact2: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_OrderInternalPackRemains_DetailsPrint2'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 719
+    Top = 160
   end
 end

@@ -3,8 +3,8 @@
 --DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternalPackRemains_Print2 (Integer, Boolean, TVarChar);
 
 --CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternalPackRemains_Print2(
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternalPackRemains_DetailsPrint (Integer, TVarChar);
-CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternalPackRemains_DetailsPrint(
+DROP FUNCTION IF EXISTS gpSelect_Movement_OrderInternalPackRemains_DetailsPrint2 (Integer, TVarChar);
+CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternalPackRemains_DetailsPrint2(
     IN inMovementId    Integer  , -- ключ Документа
     --IN inIsMinus       Boolean  , -- 
     IN inSession       TVarChar   -- сессия пользователя
@@ -12,12 +12,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderInternalPackRemains_DetailsPri
 RETURNS TABLE (GoodsId              Integer
              , GoodsCode            Integer
              , GoodsName            TVarChar
-
+             , GoodsId_basis           Integer 
+             , GoodsCode_basis         Integer 
+             , GoodsName_basis         TVarChar
              , GoodsId_complete        Integer
              , GoodsCode_complete      Integer
              , GoodsName_complete      TVarChar
 
              , GoodsKindId          Integer
+             , GoodsKindName        TVarChar
              , GoodsKindName_complete        TVarChar
 
              , MeasureName          TVarChar
@@ -25,6 +28,7 @@ RETURNS TABLE (GoodsId              Integer
              , GoodsGroupNameFull   TVarChar
 
              , Weight               TFloat
+             , Weight_Child         TFloat
 
                -- ПРИОРИТЕТ
              , Num                  Integer
@@ -44,7 +48,9 @@ RETURNS TABLE (GoodsId              Integer
                -- ФАКТ - Перемещение на Цех Упаковки
              , Income_PACK_to_Child       TFloat
                -- ФАКТ - Перемещение с Цеха Упаковки
-             , Income_PACK_from_Child     TFloat             
+             , Income_PACK_from_Child     TFloat
+             , Income_PACK_to_Child_all   TFloat
+             , Income_PACK_from_Child_all TFloat             
  
              , AmountPack1_all     TFloat
              , AmountPack2_all     TFloat
@@ -395,7 +401,13 @@ BEGIN
               AND tmpFind.KeyId  IS NOT NULL
               AND inIsMinus = TRUE)
           )
- 
+
+    , tmpMI_Complete AS (SELECT *
+                         FROM MovementItemLinkObject
+                         WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpRez.Id FROM tmpRez)
+                           AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Goods(), zc_MILinkObject_GoodsKindComplete())
+                         )
+
     , tmpMI_detailList AS (SELECT MovementItem.Id                   AS MovementItemId
                            , MovementItem.ParentId             AS ParentId
                            , MovementItem.ObjectId             AS Insertd
@@ -472,13 +484,16 @@ BEGIN
                 , tmpRez.GoodsName
                 , tmpRez.GoodsId_basis
                 , tmpRez.GoodsCode_basis
-                , tmpRez.GoodsName_basis
+                , tmpRez.GoodsName_basis 
+                , COALESCE (MILinkObject_GoodsComplete.ObjectId, 0)     AS GoodsId_complete
+                , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0) AS GoodsKindId_complete
                 , tmpRez.GoodsKindId
                 , tmpRez.GoodsKindName
                 , tmpRez.MeasureName
                 , tmpRez.MeasureName_basis
                 , tmpRez.GoodsGroupNameFull
                 , tmpRez.Weight
+                , tmpRez.Weight_Child
                   -- ПРИОРИТЕТ
                 , tmpRez.Num
                 
@@ -550,6 +565,14 @@ BEGIN
 
            FROM tmpRez
                 LEFT JOIN tmpMI_detail ON tmpMI_detail.ParentId = tmpRez.MovementItemId_child
+  
+                LEFT JOIN tmpMI_Complete AS MILinkObject_GoodsComplete
+                                         ON MILinkObject_GoodsComplete.MovementItemId = tmpRez.Id
+                                        AND MILinkObject_GoodsComplete.DescId         = zc_MILinkObject_Goods()
+
+                LEFT JOIN tmpMI_Complete AS MILinkObject_GoodsKindComplete
+                                         ON MILinkObject_GoodsKindComplete.MovementItemId = tmpRez.Id
+                                        AND MILinkObject_GoodsKindComplete.DescId         = zc_MILinkObject_GoodsKindComplete()
            GROUP BY tmpRez.GoodsId
                 , tmpRez.GoodsCode
                 , tmpRez.GoodsName
@@ -561,7 +584,8 @@ BEGIN
                 , tmpRez.MeasureName
                 , tmpRez.MeasureName_basis
                 , tmpRez.GoodsGroupNameFull
-                , tmpRez.Weight
+                , tmpRez.Weight 
+                , tmpRez.Weight_Child
                   -- ПРИОРИТЕТ
                 , tmpRez.Num
                 
@@ -584,7 +608,10 @@ BEGIN
                   -- ФАКТ - Перемещение на Цех Упаковки
                 , tmpRez.Income_PACK_to_Child
                   -- ФАКТ - Перемещение с Цеха Упаковки
-                , tmpRez.Income_PACK_from_Child
+                , tmpRez.Income_PACK_from_Child 
+                , COALESCE (MILinkObject_GoodsComplete.ObjectId, 0)
+                , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0)
+
     )      
     
     SELECT tmpRez.GoodsId
@@ -593,12 +620,17 @@ BEGIN
                 , tmpRez.GoodsId_basis
                 , tmpRez.GoodsCode_basis
                 , tmpRez.GoodsName_basis
+                , Object_Goods_complete.Id            AS GoodsId_complete
+                , Object_Goods_complete.ObjectCode    AS GoodsCode_complete
+                , Object_Goods_complete.ValueData     AS GoodsName_complete
                 , tmpRez.GoodsKindId
-                , tmpRez.GoodsKindName
+                , tmpRez.GoodsKindName 
+                , Object_GoodsKind_complete.ValueData AS GoodsKindName_complete 
                 , tmpRez.MeasureName
-                , tmpRez.MeasureName_basis
+                , Object_Measure_complete.ValueData   AS MeasureName_complete
                 , tmpRez.GoodsGroupNameFull
                 , tmpRez.Weight
+                , tmpRez.Weight_Child
                   -- ПРИОРИТЕТ
                 , tmpRez.Num
                 
@@ -606,6 +638,7 @@ BEGIN
                 , tmpRez.GoodsName_Child
                 , tmpRez.GoodsKindName_Child
                 , tmpRez.MeasureName_Child
+                
 
                   -- План+План2 для упаковки (ИТОГО, факт)
                 , tmpRez.AmountPackAllTotal_Child      ::TFloat
@@ -615,6 +648,9 @@ BEGIN
                 , tmpRez.Income_PACK_to_Child    ::TFloat       --***
                   -- ФАКТ - Перемещение с Цеха Упаковки         
                 , tmpRez.Income_PACK_from_Child  ::TFloat       --***  
+                
+                , SUM (COALESCE (tmpRez.Income_PACK_to_Child,0)) OVER (PARTITION BY tmpRez.GoodsId_basis)   ::TFloat  AS Income_PACK_to_Child_all
+                , SUM (COALESCE (tmpRez.Income_PACK_from_Child,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS Income_PACK_from_Child_all
 
                 , SUM (COALESCE (tmpRez.AmountPack1,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS AmountPack1_all
                 , SUM (COALESCE (tmpRez.AmountPack2,0)) OVER (PARTITION BY tmpRez.GoodsId_basis) ::TFloat  AS AmountPack2_all
@@ -668,8 +704,25 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                 ON ObjectFloat_Weight.ObjectId = tmpRez.GoodsId_child
                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-    where goodscode = 190;         
-    ;
+
+            LEFT JOIN Object AS Object_Goods_complete ON Object_Goods_complete.Id = tmpRez.GoodsId_complete
+            LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = tmpRez.GoodsKindId_complete     
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_complete
+                                 ON ObjectLink_Goods_Measure_complete.ObjectId = tmpRez.GoodsId_complete
+                                AND ObjectLink_Goods_Measure_complete.DescId   = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure_complete ON Object_Measure_complete.Id = ObjectLink_Goods_Measure_complete.ChildObjectId            
+    WHERE (COALESCE (tmpRez.AmountPack1, 0) <> 0
+       OR COALESCE (tmpRez.AmountPack2, 0) <> 0
+       OR COALESCE (tmpRez.AmountPack3, 0) <> 0
+       OR COALESCE (tmpRez.AmountPack4, 0) <> 0
+       OR COALESCE (tmpRez.AmountPack5, 0) <> 0
+       OR COALESCE (tmpRez.Income_PACK_to_Child, 0) <> 0
+       OR COALESCE (tmpRez.Income_PACK_from_Child, 0) <> 0 )
+       AND tmpRez.GoodsCode = 41 
+       
+    ;         
+   
 
 END;
 $BODY$
@@ -686,5 +739,5 @@ $BODY$
 -- 
 --select * from gpSelect_Movement_OrderInternalPackRemains_Print2(inMovementId := 21321161 , inIsMinus := 'False' ,  inSession := '9457');
 --select * from gpSelect_Movement_OrderInternalPackRemains_Print2(inMovementId := 21321161 , inIsMinus := 'False' ,  inSession := '9457');
-select * from gpSelect_Movement_OrderInternalPackRemains_DetailsPrint(inMovementId := 25083782  ,  inSession := '9457')
+select * from gpSelect_Movement_OrderInternalPackRemains_DetailsPrint2(inMovementId := 25083782  ,  inSession := '9457')
 where goodscode = 190;
