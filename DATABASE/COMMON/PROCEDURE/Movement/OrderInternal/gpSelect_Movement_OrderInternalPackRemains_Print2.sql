@@ -57,6 +57,9 @@ RETURNS TABLE (ParentId Integer, GoodsId              Integer
              , AmountPack3_all     TFloat
              , AmountPack4_all     TFloat
              , AmountPack5_all     TFloat
+             , AmountPack6_all     TFloat
+             , AmountPack7_all     TFloat
+             , AmountPack8_all     TFloat
              , AmountPackTotal_All TFloat
              
              , AmountPack1     TFloat
@@ -64,6 +67,9 @@ RETURNS TABLE (ParentId Integer, GoodsId              Integer
              , AmountPack3     TFloat
              , AmountPack4     TFloat
              , AmountPack5     TFloat
+             , AmountPack6     TFloat
+             , AmountPack7     TFloat
+             , AmountPack8     TFloat
              , AmountPackTotal TFloat
 
              , AmountPack1_Sh  TFloat
@@ -71,13 +77,19 @@ RETURNS TABLE (ParentId Integer, GoodsId              Integer
              , AmountPack3_Sh  TFloat
              , AmountPack4_Sh  TFloat
              , AmountPack5_Sh  TFloat
+             , AmountPack6_Sh  TFloat
+             , AmountPack7_Sh  TFloat
+             , AmountPack8_Sh  TFloat
              , AmountPackTotal_Sh TFloat
 
              , InsertDate1 TVarChar
              , InsertDate2 TVarChar
              , InsertDate3 TVarChar
              , InsertDate4 TVarChar
-             , InsertDate5 TVarChar  
+             , InsertDate5 TVarChar
+             , InsertDate6 TVarChar
+             , InsertDate7 TVarChar
+             , InsertDate8 TVarChar  
              
              
               )
@@ -520,47 +532,75 @@ BEGIN
                 
                -- ,  (tmpMI_detail.AmountPackAllTotal) AS AmountPackAllTotal
                 , SUM (tmpMI_detail.AmountPackAllTotal_diff) AS AmountPackAll
-                , SUM (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 1 THEN tmpMI_detail.AmountPackAllTotal
-                            WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount <= vbMaxAmount-4 THEN tmpMI_detail.AmountPackAllTotal_diff  
+                , SUM (CASE WHEN vbMaxAmount < 8 AND tmpMI_detail.Amount = 1 THEN tmpMI_detail.AmountPackAllTotal
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount <= vbMaxAmount-7 THEN tmpMI_detail.AmountPackAllTotal_diff  
                             ELSE 0
                        END) ::TFloat AS AmountPack1
-                , SUM (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 2 THEN tmpMI_detail.AmountPackAllTotal_diff
-                            WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-3 THEN tmpMI_detail.AmountPackAllTotal_diff  
+
+                , SUM (CASE WHEN vbMaxAmount < 8 AND tmpMI_detail.Amount = 2 THEN tmpMI_detail.AmountPackAllTotal_diff
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount = vbMaxAmount-6 THEN tmpMI_detail.AmountPackAllTotal_diff  
                             ELSE 0
-                       END) ::TFloat AS AmountPack2       
-                , SUM (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 3 THEN tmpMI_detail.AmountPackAllTotal_diff
-                            WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-2 THEN tmpMI_detail.AmountPackAllTotal_diff  
+                       END) ::TFloat AS AmountPack2 
+
+                , SUM (CASE WHEN vbMaxAmount < 8 AND tmpMI_detail.Amount = 3 THEN tmpMI_detail.AmountPackAllTotal_diff
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount = vbMaxAmount-5 THEN tmpMI_detail.AmountPackAllTotal_diff  
                             ELSE 0
-                       END) ::TFloat AS AmountPack3
-                , SUM (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 4 THEN tmpMI_detail.AmountPackAllTotal_diff
-                            WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-1 THEN tmpMI_detail.AmountPackAllTotal_diff  
+                       END) ::TFloat AS AmountPack3 
+
+                 , SUM (CASE WHEN vbMaxAmount < 8 AND tmpMI_detail.Amount = 4 THEN tmpMI_detail.AmountPackAllTotal_diff
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount = vbMaxAmount-4 THEN tmpMI_detail.AmountPackAllTotal_diff  
                             ELSE 0
-                       END) ::TFloat AS AmountPack4
-                , SUM (CASE WHEN vbMaxAmount <= 5 AND tmpMI_detail.Amount = 5 THEN tmpMI_detail.AmountPackAllTotal_diff
-                            WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount THEN tmpMI_detail.AmountPackAllTotal_diff  
+                       END) ::TFloat AS AmountPack4 
+
+                , SUM (CASE WHEN vbMaxAmount < 8 AND tmpMI_detail.Amount = 5 THEN tmpMI_detail.AmountPackAllTotal_diff
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount = vbMaxAmount-3 THEN tmpMI_detail.AmountPackAllTotal_diff  
                             ELSE 0
-                       END) ::TFloat AS AmountPack5
+                       END) ::TFloat AS AmountPack5       
+                , SUM (CASE WHEN vbMaxAmount < 8 AND tmpMI_detail.Amount = 6 THEN tmpMI_detail.AmountPackAllTotal_diff
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount = vbMaxAmount-2 THEN tmpMI_detail.AmountPackAllTotal_diff  
+                            ELSE 0
+                       END) ::TFloat AS AmountPack6
+                , SUM (CASE WHEN vbMaxAmount < 8 AND tmpMI_detail.Amount = 7 THEN tmpMI_detail.AmountPackAllTotal_diff
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount = vbMaxAmount-1 THEN tmpMI_detail.AmountPackAllTotal_diff  
+                            ELSE 0
+                       END) ::TFloat AS AmountPack7
+                , SUM (CASE WHEN vbMaxAmount <= 8 AND tmpMI_detail.Amount = 8 THEN tmpMI_detail.AmountPackAllTotal_diff
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount = vbMaxAmount THEN tmpMI_detail.AmountPackAllTotal_diff  
+                            ELSE 0
+                       END) ::TFloat AS AmountPack8
                  ----
-                , MIN (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 1 THEN tmpMI_detail.InsertDate
-                            WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount <= vbMaxAmount-4 THEN tmpMI_detail.InsertDate 
+                , MIN (CASE WHEN vbMaxAmount < 8 AND tmpMI_detail.Amount = 1 THEN tmpMI_detail.InsertDate
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount <= vbMaxAmount-7 THEN tmpMI_detail.InsertDate 
                             ELSE NULL
-                       END) :: TDateTime AS InsertDate1
-                , MIN (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 2 THEN tmpMI_detail.InsertDate
-                            WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-3 THEN tmpMI_detail.InsertDate  
+                       END) :: TDateTime AS InsertDate1 
+                , MIN (CASE WHEN vbMaxAmount < 8 AND tmpMI_detail.Amount = 2 THEN tmpMI_detail.InsertDate
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount = vbMaxAmount-6 THEN tmpMI_detail.InsertDate  
                             ELSE NULL
-                       END) :: TDateTime AS InsertDate2       
-                , MIN (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 3 THEN tmpMI_detail.InsertDate
-                            WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-2 THEN tmpMI_detail.InsertDate  
+                       END) :: TDateTime AS InsertDate2
+                , MIN (CASE WHEN vbMaxAmount < 8 AND tmpMI_detail.Amount = 3 THEN tmpMI_detail.InsertDate
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount = vbMaxAmount-5 THEN tmpMI_detail.InsertDate  
                             ELSE NULL
                        END) :: TDateTime AS InsertDate3
-                , MIN (CASE WHEN vbMaxAmount < 5 AND tmpMI_detail.Amount = 4 THEN tmpMI_detail.InsertDate
-                            WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount-1 THEN tmpMI_detail.InsertDate 
+                , MIN (CASE WHEN vbMaxAmount < 8 AND tmpMI_detail.Amount = 4 THEN tmpMI_detail.InsertDate
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount = vbMaxAmount-4 THEN tmpMI_detail.InsertDate  
                             ELSE NULL
                        END) :: TDateTime AS InsertDate4
-                , MIN (CASE WHEN vbMaxAmount <= 5 AND tmpMI_detail.Amount = 5 THEN tmpMI_detail.InsertDate
-                            WHEN vbMaxAmount >= 5 AND tmpMI_detail.Amount = vbMaxAmount THEN tmpMI_detail.InsertDate  
+                , MIN (CASE WHEN vbMaxAmount < 8 AND tmpMI_detail.Amount = 5 THEN tmpMI_detail.InsertDate
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount = vbMaxAmount-3 THEN tmpMI_detail.InsertDate  
                             ELSE NULL
-                       END) :: TDateTime AS InsertDate5 
+                       END) :: TDateTime AS InsertDate5       
+                , MIN (CASE WHEN vbMaxAmount < 8 AND tmpMI_detail.Amount = 6 THEN tmpMI_detail.InsertDate
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount = vbMaxAmount-2 THEN tmpMI_detail.InsertDate  
+                            ELSE NULL
+                       END) :: TDateTime AS InsertDate6
+                , MIN (CASE WHEN vbMaxAmount < 8 AND tmpMI_detail.Amount = 7 THEN tmpMI_detail.InsertDate
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount = vbMaxAmount-1 THEN tmpMI_detail.InsertDate 
+                            ELSE NULL
+                       END) :: TDateTime AS InsertDate7
+                , MIN (CASE WHEN vbMaxAmount <= 8 AND tmpMI_detail.Amount = 8 THEN tmpMI_detail.InsertDate
+                            WHEN vbMaxAmount >= 8 AND tmpMI_detail.Amount = vbMaxAmount THEN tmpMI_detail.InsertDate  
+                            ELSE NULL
+                       END) :: TDateTime AS InsertDate8 
 
 
            FROM tmpRez
@@ -659,6 +699,9 @@ BEGIN
                 , SUM (COALESCE (tmpRez.AmountPack3,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack3_all
                 , SUM (COALESCE (tmpRez.AmountPack4,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack4_all
                 , SUM (COALESCE (tmpRez.AmountPack5,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack5_all
+                , SUM (COALESCE (tmpRez.AmountPack6,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack6_all
+                , SUM (COALESCE (tmpRez.AmountPack7,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack7_all
+                , SUM (COALESCE (tmpRez.AmountPack8,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPack8_all
                 , SUM (COALESCE (tmpRez.AmountPackAll,0)) OVER (PARTITION BY tmpRez.GoodsId) ::TFloat  AS AmountPackTotal_All
               
                 
@@ -668,39 +711,55 @@ BEGIN
                 , tmpRez.AmountPack3::TFloat
                 , tmpRez.AmountPack4::TFloat
                 , tmpRez.AmountPack5::TFloat
+                , tmpRez.AmountPack6::TFloat
+                , tmpRez.AmountPack7::TFloat
+                , tmpRez.AmountPack8::TFloat
                 
                 , (COALESCE (tmpRez.AmountPack1,0)
                  + COALESCE (tmpRez.AmountPack2,0)
                  + COALESCE (tmpRez.AmountPack3,0)
                  + COALESCE (tmpRez.AmountPack4,0)
-                 + COALESCE (tmpRez.AmountPack5,0))  ::TFloat AS AmountPackTotal 
+                 + COALESCE (tmpRez.AmountPack5,0)
+                 + COALESCE (tmpRez.AmountPack6,0)
+                 + COALESCE (tmpRez.AmountPack7,0)
+                 + COALESCE (tmpRez.AmountPack8,0))  ::TFloat AS AmountPackTotal 
                  
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpRez.MeasureId_Child = zc_Measure_Sh() THEN (tmpRez.AmountPack1 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack1_Sh
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpRez.MeasureId_Child = zc_Measure_Sh() THEN (tmpRez.AmountPack2 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack2_Sh
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpRez.MeasureId_Child = zc_Measure_Sh() THEN (tmpRez.AmountPack3 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack3_Sh
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpRez.MeasureId_Child = zc_Measure_Sh() THEN (tmpRez.AmountPack4 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack4_Sh
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpRez.MeasureId_Child = zc_Measure_Sh() THEN (tmpRez.AmountPack5 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack5_Sh
+                , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpRez.MeasureId_Child = zc_Measure_Sh() THEN (tmpRez.AmountPack6 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack6_Sh
+                , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpRez.MeasureId_Child = zc_Measure_Sh() THEN (tmpRez.AmountPack7 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack7_Sh
+                , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpRez.MeasureId_Child = zc_Measure_Sh() THEN (tmpRez.AmountPack8 / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPack8_Sh
 
                 , CASE WHEN ObjectFloat_Weight.ValueData > 0 AND tmpRez.MeasureId_Child = zc_Measure_Sh() THEN ((COALESCE (tmpRez.AmountPack1,0)
                                                                                                                      + COALESCE (tmpRez.AmountPack2,0)
                                                                                                                      + COALESCE (tmpRez.AmountPack3,0)
                                                                                                                      + COALESCE (tmpRez.AmountPack4,0)
-                                                                                                                     + COALESCE (tmpRez.AmountPack5,0)) / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPackTotal_Sh
+                                                                                                                     + COALESCE (tmpRez.AmountPack5,0)
+                                                                                                                     + COALESCE (tmpRez.AmountPack6,0)
+                                                                                                                     + COALESCE (tmpRez.AmountPack7,0)
+                                                                                                                     + COALESCE (tmpRez.AmountPack8,0)) / ObjectFloat_Weight.ValueData) :: Integer ELSE 0 END :: TFloat AS AmountPackTotal_Sh
 
                  ----
                 
                 , (zfConvert_TimeShortToString ( MAX (tmpRez.InsertDate1) OVER (ORDER BY tmpRez.AmountPack1 DESC)) ::TVarChar 
-                  ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '1)' WHEN vbMaxAmount > 5 THEN '1-'|| (vbMaxAmount - 4)::integer ||')' ELSE ')' END) ::TVarChar AS InsertDate1
+                  ||' (' ||CASE WHEN vbMaxAmount <= 8 THEN '1)' WHEN vbMaxAmount > 8 THEN '1-'|| (vbMaxAmount - 7)::integer ||')' ELSE ')' END) ::TVarChar AS InsertDate1
                 , (zfConvert_TimeShortToString ( MAX (tmpRez.InsertDate2) OVER (ORDER BY tmpRez.AmountPack1 DESC)) ::TVarChar
-                  ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '2)' WHEN vbMaxAmount > 5 THEN ''|| (vbMaxAmount - 3)::integer ||')' ELSE ')' END)  ::TVarChar  AS InsertDate2
+                  ||' (' ||CASE WHEN vbMaxAmount <= 8 THEN '2)' WHEN vbMaxAmount > 8 THEN ''|| (vbMaxAmount - 6)::integer ||')' ELSE ')' END)  ::TVarChar  AS InsertDate2
                 , (zfConvert_TimeShortToString ( MAX (tmpRez.InsertDate3) OVER (ORDER BY tmpRez.AmountPack1 DESC)) ::TVarChar                  
-                  ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '3)' WHEN vbMaxAmount > 5 THEN ''|| (vbMaxAmount - 2)::integer ||')' ELSE ')' END)  ::TVarChar  AS InsertDate3
+                  ||' (' ||CASE WHEN vbMaxAmount <= 8 THEN '3)' WHEN vbMaxAmount > 8 THEN ''|| (vbMaxAmount - 5)::integer ||')' ELSE ')' END)  ::TVarChar  AS InsertDate3
                 , (zfConvert_TimeShortToString ( MAX (tmpRez.InsertDate4) OVER (ORDER BY tmpRez.AmountPack1 DESC)) ::TVarChar                  
-                  ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '4)' WHEN vbMaxAmount > 5 THEN ''|| (vbMaxAmount - 1)::integer ||')' ELSE ')' END)  ::TVarChar  AS InsertDate4
-                , (zfConvert_TimeShortToString ( MAX (tmpRez.InsertDate5) OVER (ORDER BY tmpRez.AmountPack1 DESC)) ::TVarChar                 
-                  ||' (' ||CASE WHEN vbMaxAmount <= 5 THEN '5)' WHEN vbMaxAmount > 5 THEN ''|| (vbMaxAmount)::integer ||')' ELSE ')' END)      ::TVarChar  AS InsertDate5 
-               
-                
+                  ||' (' ||CASE WHEN vbMaxAmount <= 8 THEN '4)' WHEN vbMaxAmount > 8 THEN ''|| (vbMaxAmount - 4)::integer ||')' ELSE ')' END)  ::TVarChar  AS InsertDate4  
+                , (zfConvert_TimeShortToString ( MAX (tmpRez.InsertDate5) OVER (ORDER BY tmpRez.AmountPack1 DESC)) ::TVarChar                  
+                  ||' (' ||CASE WHEN vbMaxAmount <= 8 THEN '5)' WHEN vbMaxAmount > 8 THEN ''|| (vbMaxAmount - 3)::integer ||')' ELSE ')' END)  ::TVarChar  AS InsertDate5
+                , (zfConvert_TimeShortToString ( MAX (tmpRez.InsertDate6) OVER (ORDER BY tmpRez.AmountPack1 DESC)) ::TVarChar                  
+                  ||' (' ||CASE WHEN vbMaxAmount <= 8 THEN '6)' WHEN vbMaxAmount > 8 THEN ''|| (vbMaxAmount - 2)::integer ||')' ELSE ')' END)  ::TVarChar  AS InsertDate6
+                , (zfConvert_TimeShortToString ( MAX (tmpRez.InsertDate7) OVER (ORDER BY tmpRez.AmountPack1 DESC)) ::TVarChar                  
+                  ||' (' ||CASE WHEN vbMaxAmount <= 8 THEN '7)' WHEN vbMaxAmount > 8 THEN ''|| (vbMaxAmount - 1)::integer ||')' ELSE ')' END)  ::TVarChar  AS InsertDate7
+                , (zfConvert_TimeShortToString ( MAX (tmpRez.InsertDate8) OVER (ORDER BY tmpRez.AmountPack1 DESC)) ::TVarChar                 
+                  ||' (' ||CASE WHEN vbMaxAmount <= 8 THEN '8)' WHEN vbMaxAmount > 8 THEN ''|| (vbMaxAmount)::integer ||')' ELSE ')' END)      ::TVarChar  AS InsertDate8 
                 
     FROM  tmpRez_Detail AS tmpRez
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
@@ -719,6 +778,9 @@ BEGIN
        OR COALESCE (tmpRez.AmountPack3, 0) <> 0
        OR COALESCE (tmpRez.AmountPack4, 0) <> 0
        OR COALESCE (tmpRez.AmountPack5, 0) <> 0
+       OR COALESCE (tmpRez.AmountPack6, 0) <> 0
+       OR COALESCE (tmpRez.AmountPack7, 0) <> 0
+       OR COALESCE (tmpRez.AmountPack8, 0) <> 0
        OR COALESCE (tmpRez.Income_PACK_to_Child, 0) <> 0
        OR COALESCE (tmpRez.Income_PACK_from_Child, 0) <> 0 )
        --AND tmpRez.GoodsId = 5244
