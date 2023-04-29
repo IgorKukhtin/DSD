@@ -99,6 +99,14 @@ type
     InfoAmount: TcxGridDBColumn;
     actSendInventChild: TAction;
     N8: TMenuItem;
+    mactSendInvent: TMultiAction;
+    SendInventDS: TDataSource;
+    SendInventCDS: TClientDataSet;
+    spSendInvent: TdsdStoredProcSQLite;
+    spInsert_MI_Inventory: TdsdStoredProc;
+    actInsert_MI_Inventory: TdsdExecStoredProc;
+    actUpdateSend: TAction;
+    chAmountGoods: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);
@@ -112,6 +120,7 @@ type
     procedure actInfoInventExecute(Sender: TObject);
     procedure edBarCodeDblClick(Sender: TObject);
     procedure actSendInventChildExecute(Sender: TObject);
+    procedure actUpdateSendExecute(Sender: TObject);
   protected
     procedure FormClose(Sender: TObject; var Action: TCloseAction); override;
   private
@@ -359,12 +368,30 @@ begin
   MasterCDS.Close;
   PageControl.ActivePage := tsStart;
 
+  try
+    spSendInvent.Execute;
+    if SendInventCDS.RecordCount > 0 then mactSendInvent.Execute;
+  finally
+    SendInventCDS.Close;
+  end;
+end;
+
+procedure TMainInventoryForm.actUpdateSendExecute(Sender: TObject);
+ var Params : TdsdParams;
+begin
+
+  Params := TdsdParams.Create(Self, TdsdParam);
+  try
+    Params.AddParam('IsSend', TFieldType.ftBoolean, ptInput, True);
+    if not SQLite_Update(InventoryChild_Table, SendInventCDS.FieldByName('Id').AsInteger, Params) then Exit;
+  finally
+    FreeAndNil(Params);
+  end;
 end;
 
 procedure TMainInventoryForm.Add_Log(AMessage: String);
 var
   F: TextFile;
-
 begin
   try
     AssignFile(F,ChangeFileExt(Application.ExeName,'.log'));

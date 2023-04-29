@@ -30,6 +30,8 @@ procedure SQLite_TableDelete(ATableName: String);
 function SQLite_ExecSQL(ASQL: String) : boolean;
 // Добаить запись в таблицу
 function SQLite_Insert(ATableName: String; AParams : TdsdParams) : Boolean;
+// Изменить запись в таблице
+function SQLite_Update(ATableName: String; AId : Integer; AParams : TdsdParams) : Boolean;
 // Считать строку с таблицы
 function SQLite_Get(ASQL: String; AParams : TdsdParams) : Boolean;
 
@@ -561,6 +563,66 @@ begin
      Add_SQLiteLog('Ошибка вставки данных '+ ATableName + ' - ' + E.Message, True);
   end;
 end;
+
+// Изменить запись в таблице
+function SQLite_Update(ATableName: String; AId : Integer; AParams : TdsdParams) : Boolean;
+  var  ZQuery: TZQuery; I : Integer;
+       cMessages : String;
+begin
+  Result := False;
+
+  try
+    Add_SQLiteLog('Start MutexSQLite SQL');
+    WaitForSingleObject(MutexSQLite, INFINITE);
+    try
+      ZSQLiteConnection.Database := SQLiteFile;
+      ZSQLiteConnection.Connect;
+      ZQuery := TZQuery.Create(Nil);
+      ZQuery.Connection := ZSQLiteConnection;
+      try
+
+        if gc_isDebugMode then
+        begin
+          cMessages :=  'UPDATE ' + ATableName + ' SET ';
+          if Assigned(AParams) then
+            for I := 0 to AParams.Count - 1 do if AParams[I].ParamType in [ptInput, ptInputOutput] then
+              cMessages :=  cMessages + #13#10 + AParams[I].Name + ' = ' + AParams[I].AsString;
+          cMessages :=  cMessages + #13#10 + 'WHERE Id = ' + IntToStr(AId);
+          TMessagesForm.Create(nil).Execute(cMessages, cMessages, true);
+        end;
+
+          // Вставка записи
+        ZQuery.SQL.Text := 'SELECT * FROM ' + ATableName + ' WHERE Id = ' + IntToStr(AId);
+        ZQuery.Open;
+        ZQuery.Edit;
+
+        if Assigned(AParams) then
+          for I := 0 to AParams.Count - 1 do if AParams[I].ParamType in [ptInput, ptInputOutput] then
+            if Assigned(ZQuery.FindField(AParams[I].Name)) then
+              ZQuery.FieldByName(AParams[I].Name).Value := AParams[I].Value;
+
+        ZQuery.Post;
+
+        if Assigned(AParams) then
+          for I := 0 to AParams.Count - 1 do if AParams[I].ParamType in [ptOutput, ptInputOutput] then
+            if Assigned(ZQuery.FindField(AParams[I].Name)) then
+              AParams[I].Value := ZQuery.FieldByName(AParams[I].Name).Value;
+
+        Result := True;
+
+      finally
+        ZQuery.Free;
+        ZSQLiteConnection.Disconnect;
+      end;
+    finally
+      ReleaseMutex(MutexSQLite);
+      Add_SQLiteLog('End MutexSQLite');
+    end;
+  Except on E: Exception do
+     Add_SQLiteLog('Ошибка вставки данных '+ ATableName + ' - ' + E.Message, True);
+  end;
+end;
+
 
 function SQLite_Get(ASQL: String; AParams : TdsdParams) : Boolean;
   var  ZQuery: TZQuery; I : Integer;
