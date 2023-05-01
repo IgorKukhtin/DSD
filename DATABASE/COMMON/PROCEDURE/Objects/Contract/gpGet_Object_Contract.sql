@@ -250,7 +250,7 @@ BEGIN
            , COALESCE (ObjectBoolean_Personal.ValueData, False)  AS isPersonal
            , COALESCE (ObjectBoolean_Unique.ValueData, False)    AS isUnique
            , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
-           , COALESCE (ObjectBoolean_NotVat, False)           :: Boolean AS isNotVat
+           , COALESCE (ObjectBoolean_NotVat.ValueData, False)           :: Boolean AS isNotVat
            
            , Object_PriceList.Id         AS PriceListId 
            , Object_PriceList.ValueData  AS PriceListName 
