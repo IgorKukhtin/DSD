@@ -57,7 +57,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , isStandart Boolean
              , isPersonal Boolean
              , isUnique Boolean
-             , isVat Boolean
+             , isVat Boolean, isNotVat Boolean
              , isWMS Boolean
              , isRealEx Boolean
              , isIrna Boolean             
@@ -266,6 +266,7 @@ BEGIN
        , COALESCE (ObjectBoolean_Personal.ValueData, False) AS isPersonal
        , COALESCE (ObjectBoolean_Unique.ValueData, False)   AS isUnique
        , COALESCE (ObjectBoolean_Vat.ValueData, False)      AS isVat
+       , COALESCE (ObjectBoolean_NotVat.ValueData, False)   AS isNotVat
        , COALESCE (ObjectBoolean_isWMS.ValueData, FALSE) ::Boolean AS isWMS
        , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
        , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
@@ -354,6 +355,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Vat
                                 ON ObjectBoolean_Vat.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Vat.DescId = zc_ObjectBoolean_Contract_Vat()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_NotVat
+                                ON ObjectBoolean_NotVat.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_NotVat.DescId = zc_ObjectBoolean_Contract_NotVat()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isWMS
                                 ON ObjectBoolean_isWMS.ObjectId = Object_Contract_View.ContractId
@@ -519,12 +523,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 01.05.23         * NotVat
  04.05.22         *
  21.03.22         * isRealEx
  03.11.21         * add BranchId

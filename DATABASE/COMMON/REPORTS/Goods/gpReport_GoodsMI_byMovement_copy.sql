@@ -644,7 +644,11 @@ $BODY$
 */
 
 -- тест
---  select * from gpReport_GoodsMI_byMovement_copy (inStartDate := ('01.03.2023')::TDateTime , inEndDate := ('31.03.2023')::TDateTime , inPriceDate := ('01.03.2023')::TDateTime , inDescId := 5 , inUnitId := 0 , inJuridicalId := 0 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 1832 , inGoodsId := 0 ,  inSession := '5');
+--  select * from gpReport_GoodsMI_byMovement_copy 
+(inStartDate := ('01.03.2023')::TDateTime , inEndDate := ('02.03.2023')::TDateTime ,
+ inPriceDate := ('01.03.2023')::TDateTime , inDescId := 5 , inUnitId := 0 , 
+ inJuridicalId := 0 , inInfoMoneyId := 0 , inPaidKindId := 0 ,
+  inGoodsGroupId := 1832 , inGoodsId := 0 ,  inSession := '5');
 
 
 /*
