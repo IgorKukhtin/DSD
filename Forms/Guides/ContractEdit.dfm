@@ -3,7 +3,7 @@
   ClientHeight = 711
   ClientWidth = 934
   ExplicitWidth = 940
-  ExplicitHeight = 739
+  ExplicitHeight = 740
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -984,7 +984,7 @@
     Hint = 
       #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103') - '#1076#1083#1103' '#1086#1073#1088#1072#1073#1086#1090#1082#1080' '#1087#1083#1072#1090#1077#1078#1072' '#1074' '#1073#1072#1085#1082'.'#1074#1099#1087#1080#1089 +
       #1082#1077
-    TabOrder = 85
+    TabOrder = 84
     Width = 161
   end
   object cbisRealEx: TcxCheckBox [82]
@@ -995,6 +995,16 @@
     ParentShowHint = False
     ShowHint = True
     TabOrder = 86
+    Width = 92
+  end
+  object cbNotVat: TcxCheckBox [83]
+    Left = 275
+    Top = 46
+    Hint = #1082#1083#1080#1077#1085#1090' '#1073#1077#1079' '#1053#1044#1057' ('#1089#1090#1072#1074#1082#1072' 0%)'
+    Caption = #1073#1077#1079' '#1053#1044#1057' (0%)'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 87
     Width = 92
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

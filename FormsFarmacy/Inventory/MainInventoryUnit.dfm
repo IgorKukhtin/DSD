@@ -39,6 +39,8 @@ inherited MainInventoryForm: TMainInventoryForm
       object tsStart: TcxTabSheet
         Caption = #1057#1090#1072#1088#1090#1086#1074#1072#1103' '#1089#1090#1088#1072#1085#1080#1094#1072
         ImageIndex = 0
+        ExplicitLeft = 5
+        ExplicitTop = 25
       end
       object tsInventory: TcxTabSheet
         Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -65,6 +67,11 @@ inherited MainInventoryForm: TMainInventoryForm
                 Format = ',0.####'
                 Kind = skSum
                 Column = ChildAmount
+              end
+              item
+                Format = ',0.####'
+                Kind = skSum
+                Column = chAmountGoods
               end>
             DataController.Summary.SummaryGroups = <>
             Images = dmMain.SortImageList
@@ -90,7 +97,7 @@ inherited MainInventoryForm: TMainInventoryForm
               DataBinding.FieldName = 'IsSend'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 46
+              Width = 43
             end
             object ChildisLast: TcxGridDBColumn
               Caption = #1055#1086#1089#1083#1077#1076#1085#1080#1081
@@ -102,52 +109,62 @@ inherited MainInventoryForm: TMainInventoryForm
               Properties.ValueUnchecked = '0'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 64
+              Width = 59
             end
             object ChildNum: TcxGridDBColumn
               Caption = #8470' '#1087'.'#1087'.'
               DataBinding.FieldName = 'Num'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 44
+              Width = 41
             end
             object ChildGoodsCode: TcxGridDBColumn
               Caption = #1050#1086#1076
               DataBinding.FieldName = 'GoodsCode'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 63
+              Width = 58
             end
             object ChildGoodsName: TcxGridDBColumn
               Caption = #1058#1086#1074#1072#1088
               DataBinding.FieldName = 'GoodsName'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 158
+              Width = 210
+            end
+            object chAmountGoods: TcxGridDBColumn
+              Caption = #1050#1086#1083'-'#1074#1086' '#1090#1086#1074#1072#1088#1072
+              DataBinding.FieldName = 'AmountGoods'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 65
             end
             object ChildAmount: TcxGridDBColumn
-              Caption = #1050#1086#1083'-'#1074#1086
+              Caption = #1050#1086#1083'-'#1074#1086' '#1089#1082#1072#1085'.'
               DataBinding.FieldName = 'Amount'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 134
+              Width = 61
             end
             object ChildUserName: TcxGridDBColumn
               Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
               DataBinding.FieldName = 'UserName'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 205
+              Width = 129
             end
             object ChildDate_Insert: TcxGridDBColumn
               Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
               DataBinding.FieldName = 'Date_Insert'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 104
+              Width = 151
             end
           end
           object cxGridChildLevel: TcxGridLevel
@@ -551,6 +568,36 @@ inherited MainInventoryForm: TMainInventoryForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
       OnExecute = actSendInventChildExecute
     end
+    object mactSendInvent: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_MI_Inventory
+        end
+        item
+          Action = actUpdateSend
+        end>
+      DataSource = SendInventDS
+      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1086#1074' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
+      Hint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1086#1074' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
+    end
+    object actInsert_MI_Inventory: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_Inventory
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_Inventory
+        end>
+      Caption = 'actInsert_MI_Inventory'
+    end
+    object actUpdateSend: TAction
+      Category = 'DSDLib'
+      Caption = 'actUpdateSend'
+      OnExecute = actUpdateSendExecute
+    end
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -667,19 +714,24 @@ inherited MainInventoryForm: TMainInventoryForm
           '     , G.Code           AS GoodsCode'
           '     , G.Name           AS GoodsName'
           '     , IC.Amount        AS Amount'
+          '     , ICS.AmountGoods  AS AmountGoods'
           '     , IC.DateInput     AS Date_Insert'
           '     , us.Name          AS UserName'
-          '     , IC.IsSend       AS IsSend'
+          '     , IC.IsSend        AS IsSend'
           
             '     , CAST (ROW_NUMBER() OVER (PARTITION BY IC.UserInputId ORDE' +
             'R BY IC.Id) AS Integer) AS Num'
           
-            '    , CASE WHEN CAST (ROW_NUMBER() OVER (PARTITION BY IC.GoodsId' +
-            ' ORDER BY IC.GoodsId, IC.Id DESC) AS Integer) = 1 THEN 1 ELSE 0 ' +
-            'END  AS isLast'
+            '     , CASE WHEN CAST (ROW_NUMBER() OVER (PARTITION BY IC.GoodsI' +
+            'd ORDER BY IC.GoodsId, IC.Id DESC) AS Integer) = 1 THEN 1 ELSE 0' +
+            ' END  AS isLast'
           'FROM InventoryChild AS IC'
           '     LEFT JOIN Goods AS G ON G.Id = IC.GoodsId'
           '     LEFT JOIN UserSettings AS us ON us.Id = IC.UserInputId'
+          
+            '     LEFT JOIN (SELECT MAX(IC.Id) AS ID, SUM(IC.Amount) AS Amoun' +
+            'tGoods FROM InventoryChild AS IC GROUP BY IC.Inventory, IC.Goods' +
+            'Id) AS ICS ON ICS.Id = IC.Id  '
           'WHERE IC.Inventory = :inId'
           'ORDER BY IC.DateInput DESC')
       end>
@@ -760,8 +812,8 @@ inherited MainInventoryForm: TMainInventoryForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 701
-    Top = 249
+    Left = 733
+    Top = 185
   end
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -779,5 +831,114 @@ inherited MainInventoryForm: TMainInventoryForm
     PropertiesCellList = <>
     Left = 549
     Top = 241
+  end
+  object SendInventDS: TDataSource
+    DataSet = SendInventCDS
+    Left = 632
+    Top = 241
+  end
+  object SendInventCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 632
+    Top = 177
+  end
+  object spSendInvent: TdsdStoredProcSQLite
+    DataSet = SendInventCDS
+    DataSets = <
+      item
+        DataSet = SendInventCDS
+      end>
+    Params = <
+      item
+        Name = 'inInventory'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    SQLList = <
+      item
+        SQL.Strings = (
+          
+            'SELECT i.UnitId, i.OperDate, ic.Id, ic.GoodsId, ic.Amount, CAST(' +
+            'ic.DateInput AS TVarChar) AS DateInput, ic.UserInputId '
+          'FROM InventoryChild AS ic'
+          '     INNER JOIN Inventory AS i ON i.ID = ic.Inventory'
+          'WHERE ic.IsSend = '#39'N'#39
+          'ORDER BY ic.DateInput')
+      end>
+    Left = 629
+    Top = 121
+  end
+  object spInsert_MI_Inventory: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_FarmacyInventory'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = SendInventCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = SendInventCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = ''
+        Component = SendInventCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        Component = SendInventCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateInput'
+        Value = ''
+        Component = SendInventCDS
+        ComponentItem = 'DateInput'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserInputId'
+        Value = 0.000000000000000000
+        Component = SendInventCDS
+        ComponentItem = 'UserInputId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 736
+    Top = 123
   end
 end
