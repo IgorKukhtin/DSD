@@ -29,7 +29,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , OperDateStart    TDateTime   --Дата начала расч. продаж до акции
              , OperDateEnd      TDateTime   --Дата окончания расч. продаж до акции
              , MonthPromo       TDateTime   --Месяц акции
-             , CheckDate        TDateTime   --Дата Согласования
+             , CheckDate        TDateTime   --Дата Согласования  
+             , ServiceDate      TDateTime   --Месяц расчета с/с
              , CostPromo        TFloat      --Стоимость участия в акции
              , ChangePercent    TFloat      --(-)% Скидки (+)% Наценки по договору
 
@@ -106,8 +107,9 @@ BEGIN
           , NULL::TDateTime                                   AS EndReturn           --Дата окончания возвратов по акционной цене
           , NULL::TDateTime                                   AS OperDateStart       --Дата начала расч. продаж до акции
           , NULL::TDateTime                                   AS OperDateEnd         --Дата окончания расч. продаж до акции
-          , NULL::TDateTime                                   AS MonthPromo          --Месяц акции
+          , NULL::TDateTime                                   AS MonthPromo          --Месяц акции 
           , inOperDate                                        AS CheckDate           --Дата Согласования
+          , NULL:: TDateTime                                  AS ServiceDate
           , NULL::TFloat                                      AS CostPromo           --Стоимость участия в акции
           , NULL::TFloat                                      AS ChangePercent       --(-)% Скидки (+)% Наценки по договору
           , NULL::TVarChar                                    AS Comment             --Примечание
@@ -155,7 +157,8 @@ BEGIN
           , Movement_Promo.OperDateStart      --Дата начала расч. продаж до акции
           , Movement_Promo.OperDateEnd        --Дата окончания расч. продаж до акции
           , Movement_Promo.MonthPromo         -- месяц акции
-          , Movement_Promo.CheckDate          --Дата Согласования
+          , Movement_Promo.CheckDate          --Дата Согласования    
+          , Movement_Promo.ServiceDate        --Месяц расчета с/с
           , Movement_Promo.CostPromo          --Стоимость участия в акции
           , Movement_Promo.ChangePercent      --(-)% Скидки (+)% Наценки по договору
           , Movement_Promo.Comment            --Примечание
@@ -191,6 +194,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 01.05.23         *
  07.05.21         * add inMask
  13.07.20         * ChangePercent
  01.04.20         *

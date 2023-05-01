@@ -118,6 +118,14 @@ inherited PromoJournalForm: TPromoJournalForm
             Options.Editing = False
             Width = 79
           end
+          object ServiceDate: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1088#1072#1089#1095#1077#1090#1072' '#1089'/'#1089
+            DataBinding.FieldName = 'ServiceDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object isPromo: TcxGridDBColumn
             Caption = #1040#1082#1094#1080#1103
             DataBinding.FieldName = 'isPromo'

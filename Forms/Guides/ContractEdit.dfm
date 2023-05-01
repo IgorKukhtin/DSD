@@ -1742,6 +1742,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisNotVat'
+        Value = Null
+        Component = cbNotVat
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPriceListPromoId'
         Value = Null
         Component = GuidesPriceListPromo
@@ -2258,6 +2266,13 @@
         Name = 'isRealEx'
         Value = Null
         Component = cbisRealEx
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotVat'
+        Value = Null
+        Component = cbNotVat
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
