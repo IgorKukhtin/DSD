@@ -145,7 +145,7 @@ BEGIN
            , CAST (false as Boolean)   AS isPersonal 
            , CAST (false as Boolean)   AS isUnique
            , CAST (false as Boolean)   AS isRealEx
-           , CASR (FALSE AS Boolean)   AS isNotVat
+           , CAST (FALSE AS Boolean)   AS isNotVat
 
            , CAST (0 as Integer)       AS PriceListId 
            , CAST ('' as TVarChar)     AS PriceListName 
@@ -250,7 +250,7 @@ BEGIN
            , COALESCE (ObjectBoolean_Personal.ValueData, False)  AS isPersonal
            , COALESCE (ObjectBoolean_Unique.ValueData, False)    AS isUnique
            , COALESCE (ObjectBoolean_RealEx.ValueData, False) :: Boolean AS isRealEx
-           , COALESCE (ObjectBoolean_NotVat
+           , COALESCE (ObjectBoolean_NotVat, False)           :: Boolean AS isNotVat
            
            , Object_PriceList.Id         AS PriceListId 
            , Object_PriceList.ValueData  AS PriceListName 
@@ -446,6 +446,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 01.05.23         * isNotVat
  21.03.22         * isRealEx
  03.11.21         * add Branch
  04.02.19         * add BankAccountIn

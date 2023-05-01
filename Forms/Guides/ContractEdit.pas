@@ -199,6 +199,7 @@ type
     edBranch: TcxButtonEdit;
     GuidesBranch: TdsdGuides;
     cbisRealEx: TcxCheckBox;
+    cbNotVat: TcxCheckBox;
   private
     { Private declarations }
   public
