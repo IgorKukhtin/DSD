@@ -381,11 +381,11 @@ BEGIN
      -- дальше считаем с/с
 
      -- нашли мес€ц
-     vbMonthPromo := (SELECT CASE WHEN MovementDate_Insert.ValueData >= '01.04.2022'
-                                       THEN DATE_TRUNC ('MONTH', MovementDate_Insert.ValueData)
-                                  WHEN EXTRACT (DAY FROM MovementDate_Insert.ValueData) BETWEEN 1 AND 9
+     vbMonthPromo := (SELECT CASE /*WHEN MovementDate_Insert.ValueData >= '01.04.2022'
+                                       THEN DATE_TRUNC ('MONTH', MovementDate_Insert.ValueData)*/
+                                  WHEN EXTRACT (DAY FROM MovementDate_Insert.ValueData) BETWEEN 1 AND 10
                                        THEN DATE_TRUNC ('MONTH', (MovementDate_Insert.ValueData - INTERVAL '1 MONTH'))
-                                  WHEN EXTRACT (DAY FROM MovementDate_Insert.ValueData) BETWEEN 10 AND 31
+                                  WHEN EXTRACT (DAY FROM MovementDate_Insert.ValueData) BETWEEN 11 AND 31
                                        THEN DATE_TRUNC ('MONTH', MovementDate_Insert.ValueData)
                                   ELSE DATE_TRUNC ('MONTH', MovementDate_Month.ValueData)
                         END :: TDateTime
@@ -402,6 +402,10 @@ BEGIN
      -- расчет цен за предыдущий мес€ц от проведени€ акции
      vbEndDate   := (vbMonthPromo - INTERVAL '1 DAY') :: TDateTime;
      vbStartDate := DATE_TRUNC ('MONTH', vbEndDate) :: TDateTime;
+     
+     
+     -- сохранили расчет с/с за какой мес€ц
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), inMovementId, vbStartDate);
 
 
      CREATE TEMP TABLE _tmpData (GoodsId Integer, Price3_cost TFloat, PriceSale_cost TFloat, Price_cost TFloat, Price_cost_tax TFloat) ON COMMIT DROP;
@@ -620,23 +624,23 @@ BEGIN
       --PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn2(), MovementItem.Id, COALESCE (_tmpData.Price_cost,0) ::TFloat ) -- факт
       --      , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn1(), MovementItem.Id, (CAST (COALESCE (_tmpData.Price_cost,0) * 1.1 AS NUMERIC (16, 2))) ::TFloat) -- план   = факт + 10 %
 
-        PERFORM -- факт
-                lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn2(), MovementItem.Id
-                                                , COALESCE (_tmpData.Price_cost_tax, 0) + COALESCE (_tmpData.PriceSale_cost, 0)
-                                                 )
-                -- план  = факт + 10 %
-              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn1(), MovementItem.Id
-                                                , COALESCE (_tmpData.Price_cost_tax, 0)
-                                                + CAST (COALESCE (_tmpData.PriceSale_cost,0) * 1.1 AS NUMERIC (16, 2))
-                                                 )
-                -- затраты - нова€ схема
-              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePrice(), MovementItem.Id, COALESCE (_tmpData.Price_cost_tax, 0))
-        FROM MovementItem
-             LEFT JOIN _tmpData ON _tmpData.GoodsId = MovementItem.ObjectId
-      WHERE MovementItem.MovementId = inMovementId
-          AND MovementItem.DescId = zc_MI_Master()
-          AND MovementItem.isErased = FALSE
-       ;
+     PERFORM -- факт
+             lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn2(), MovementItem.Id
+                                             , COALESCE (_tmpData.Price_cost_tax, 0) + COALESCE (_tmpData.PriceSale_cost, 0)
+                                              )
+             -- план  = факт + 10 %
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn1(), MovementItem.Id
+                                             , COALESCE (_tmpData.Price_cost_tax, 0)
+                                             + CAST (COALESCE (_tmpData.PriceSale_cost,0) * 1.1 AS NUMERIC (16, 2))
+                                              )
+             -- затраты - нова€ схема
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePrice(), MovementItem.Id, COALESCE (_tmpData.Price_cost_tax, 0))
+     FROM MovementItem
+          LEFT JOIN _tmpData ON _tmpData.GoodsId = MovementItem.ObjectId
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId = zc_MI_Master()
+       AND MovementItem.isErased = FALSE
+    ;
 
 
        -- сохранили протокол

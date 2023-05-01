@@ -86,5 +86,22 @@ $BODY$
  24.10.197         *
 */
 
+/*
+-- update Object set ValueData = tmp.ValueData from (
+
+SELECT OS.*
+-- ObjectDate.ObjectId = vbGoodsId 
+
+     -- , lpInsertUpdate_ObjectString (zc_ObjectString_Goods_BUH(), ObjectDate.ObjectId, '')
+     -- , lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_BUH(), ObjectDate.ObjectId, null)
+
+
+ FROM ObjectDate 
+      join ObjectString AS OS on OS.DescId = zc_ObjectString_Goods_BUH() and OS.ObjectId = ObjectDate.ObjectId 
+
+WHERE ObjectDate.DescId = zc_ObjectDate_Goods_BUH() AND ObjectDate.ValueData = '01.05.2023'
+
+ -- ) as tmp where tmp.ObjectId = Id 
+*/
 -- тест
 --
