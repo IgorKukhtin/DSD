@@ -365,6 +365,10 @@ inherited ServiceJournalForm: TServiceJournalForm
           MultiSelectSeparator = ','
         end>
     end
+    inherited actUnComplete: TdsdChangeMovementStatus
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <

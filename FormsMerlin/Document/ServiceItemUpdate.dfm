@@ -681,8 +681,8 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
     object actInsertAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 0
       FormName = 'TServiceItemMovementForm'
       FormNameParam.Value = 'TServiceItemMovementForm'
@@ -716,8 +716,8 @@ inherited ServiceItemUpdateForm: TServiceItemUpdateForm
     object actUpdateAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ImageIndex = 1
       FormName = 'TServiceItemMovementForm'
       FormNameParam.Value = 'TServiceItemMovementForm'

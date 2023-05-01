@@ -26,7 +26,6 @@ object CashChildJournalForm: TCashChildJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 809
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
@@ -90,7 +89,6 @@ object CashChildJournalForm: TCashChildJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 809
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -416,7 +414,6 @@ object CashChildJournalForm: TCashChildJournalForm
     Height = 5
     AlignSplitter = salBottom
     Control = cxGridChild
-    ExplicitWidth = 809
   end
   object cxGridChild: TcxGrid
     Left = 0
@@ -427,7 +424,6 @@ object CashChildJournalForm: TCashChildJournalForm
     PopupMenu = PopupMenu
     TabOrder = 7
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 809
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSourceChild
@@ -1031,7 +1027,8 @@ object CashChildJournalForm: TCashChildJournalForm
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TCashChildMovementForm'
@@ -1172,7 +1169,8 @@ object CashChildJournalForm: TCashChildJournalForm
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TCashChildMovementForm'
@@ -1272,8 +1270,8 @@ object CashChildJournalForm: TCashChildJournalForm
         item
           StoredProc = spMovementSetErased
         end>
-      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 13
       Status = mtDelete
       DataSource = DataSource
@@ -1683,8 +1681,8 @@ object CashChildJournalForm: TCashChildJournalForm
         item
           StoredProc = spUnErasedMIMaster
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1091
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'

@@ -70,9 +70,9 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<VerInfo_Build>74</VerInfo_Build>
+			<VerInfo_Build>75</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.1.74;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.1.75;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<VerInfo_Release>1</VerInfo_Release>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -230,6 +230,18 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\FormsFarmacy\Cash\IniUtils.pas"/>
+			<DCCReference Include="..\SOURCE\StorageSQLite.pas"/>
+			<DCCReference Include="..\SOURCE\GoogleOTP.pas"/>
+			<DCCReference Include="..\SOURCE\GoogleOTPDialogPsw.pas">
+				<Form>GoogleOTPDialogPswForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\GoogleOTPRegistration.pas">
+				<Form>GoogleOTPRegistrationForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\EDI\UAECMRXML.pas"/>
+			<DCCReference Include="..\SOURCE\PriorityPause.pas">
+				<Form>PriorityPauseForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
