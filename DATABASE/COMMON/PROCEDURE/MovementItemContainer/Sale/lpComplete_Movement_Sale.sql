@@ -587,7 +587,7 @@ END IF;*/
      SELECT lfGet.PriceWithVAT, lfGet.VATPercent INTO vbPriceWithVAT_PriceListJur, vbVATPercent_PriceListJur FROM lfGet_Object_PriceList (vbPriceListId_Jur) AS lfGet;
 
      -- !!! Коротких О.Л. - Касян С.А.
-     vbIsPriceList_begin_recalc:= inUserId IN (/*zfCalc_UserMain(),*/ 7015095 /*, 2030723, 5*/) AND vbOperDate >= '01.04.2021'
+     vbIsPriceList_begin_recalc:= inUserId IN (zfCalc_UserMain(), 7015095 /*, 2030723, 5*/) AND vbOperDate >= '01.04.2021'
                             --AND EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
                                  ;
 
@@ -747,6 +747,11 @@ END IF;*/
          WHERE _tmpItem_Promo_recalc.MovementItemId = _tmpItem_Promo_recalc_find.MovementItemId
         ;
 
+IF inUserId = 5 AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.<%>', (select _tmpItem_Promo_recalc.MovementId_promo from _tmpItem_Promo_recalc where _tmpItem_Promo_recalc.MovementItemId = 256809205 );
+end if;
+
 
          -- Сохранили протокол
          PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, inUserId, FALSE)
@@ -795,6 +800,7 @@ END IF;*/
                                            ELSE 1
                                       END AS CountForPrice
                                     , tmpMI.ChangePercent
+                                    , FALSE AS isDelete
                                FROM tmpMI
                                     LEFT JOIN tmpPrice AS tmpPrice_1 ON tmpPrice_1.GoodsId     = tmpMI.GoodsId
                                                                     AND tmpPrice_1.GoodsKindId = tmpMI.GoodsKindId
@@ -806,15 +812,27 @@ END IF;*/
                                                              END
                                    OR tmpMI.MovementId_promo > 0
                                      )
+                              /*UNION ALL
+                                SELECT tmpMI.MovementItemId
+                                     , 0 AS MovementId_promo
+                                     , 0 AS OperPrice
+                                     , 1 AS CountForPrice
+                                     , 0 AS ChangePercent
+                                     , TRUE AS isDelete
+
+                                FROM _tmpItem
+                                     LEFT JOIN tmpMI ON tmpMI.MovementItemId = _tmpItem.MovementItemId
+                                                    AND tmpMI.MovementId_promo > 0
+                                WHERE tmpMI.MovementItemId IS NULL*/
                               )
                -- Сохранили Цены
-               SELECT lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), tmpAll.MovementItemId, tmpAll.OperPrice)
+               SELECT CASE WHEN tmpAll.isDelete = FALSE THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), tmpAll.MovementItemId, tmpAll.OperPrice) END
                       -- сохранили свойство <MovementId-Акция>
                     , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), tmpAll.MovementItemId, COALESCE (tmpAll.MovementId_promo, 0))
                        -- сохранили свойство <(-)% Скидки (+)% Наценки>
-                    , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), tmpAll.MovementItemId, tmpAll.ChangePercent)
+                    , CASE WHEN tmpAll.isDelete = FALSE THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), tmpAll.MovementItemId, tmpAll.ChangePercent) END
                       -- сохранили свойство <Цена за количество>
-                    , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), tmpAll.MovementItemId, tmpAll.CountForPrice)
+                    , CASE WHEN tmpAll.isDelete = FALSE THEN lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), tmpAll.MovementItemId, tmpAll.CountForPrice) END
                       --
                     , tmpAll.MovementItemId
                FROM tmpAll

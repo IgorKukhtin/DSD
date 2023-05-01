@@ -99,9 +99,36 @@ BEGIN
        AND COALESCE (MIFloat_PromoMovement.ValueData, 0) = 0
      ;
 
-if vbUserId = 5
+if vbUserId = 5 AND 1=0
 then
-    RAISE EXCEPTION 'Ошибка.<%>', vbOperDate;
+    RAISE EXCEPTION 'Ошибка.<%>   %', vbOperDate
+    , (select COALESCE (lfObjectHistory_PriceListItem_kind.ValuePrice, lfObjectHistory_PriceListItem.ValuePrice, 0)
+    
+         FROM MovementItem
+          LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                      ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                     AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+          -- вид товара
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+          -- привязываем 2 раза по виду товара и с пустым видом
+          LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate)
+                 AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId
+                                                 AND lfObjectHistory_PriceListItem.GoodsKindId IS NULL
+                                                 
+          LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate)
+                 AS lfObjectHistory_PriceListItem_kind 
+                 ON lfObjectHistory_PriceListItem_kind.GoodsId = MovementItem.ObjectId
+                AND COALESCE (lfObjectHistory_PriceListItem_kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+     WHERE MovementItem.MovementId = inMovementId
+       -- !!! без акций !!!
+       AND COALESCE (MIFloat_PromoMovement.ValueData, 0) = 0
+       and MovementItem.Id = 256809205 
+       )
+
+;
 end if;
 
      -- сохранили протокол

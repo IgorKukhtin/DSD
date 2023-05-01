@@ -346,7 +346,8 @@ uses
   GoogleOTP in '..\..\SOURCE\GoogleOTP.pas',
   GoogleOTPDialogPsw in '..\..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
   GoogleOTPRegistration in '..\..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
-  PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm};
+  PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
+  UAECMRXML in '..\..\SOURCE\EDI\UAECMRXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

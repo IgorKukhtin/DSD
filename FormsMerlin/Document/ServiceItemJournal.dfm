@@ -93,9 +93,6 @@ object ServiceItemJournalForm: TServiceItemJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 57
-    ExplicitWidth = 879
-    ExplicitHeight = 382
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -797,6 +794,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       Caption = #1076#1083#1103' '#1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103'/'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       Hint = #1076#1083#1103' '#1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103'/'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefresh: TdsdDataSetRefresh
@@ -874,6 +872,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TServiceItemMovementForm'
@@ -939,6 +938,7 @@ object ServiceItemJournalForm: TServiceItemJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TServiceItemMovementForm'

@@ -101,6 +101,8 @@ type
     CurrencyName_pl: TcxGridDBColumn;
     CurrencyValue_pl: TcxGridDBColumn;
     OperPriceList_disc: TcxGridDBColumn;
+    OperPriceListStart: TcxGridDBColumn;
+    OperPriceListStart_grn: TcxGridDBColumn;
   private
     { Private declarations }
   public

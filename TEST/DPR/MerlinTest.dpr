@@ -195,7 +195,8 @@ uses
   GoogleOTPDialogPsw in '..\..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
   GoogleOTPRegistration in '..\..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
   StorageSQLite in '..\..\SOURCE\StorageSQLite.pas',
-  PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm};
+  PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
+  UAECMRXML in '..\..\SOURCE\EDI\UAECMRXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -490,7 +490,7 @@ BEGIN
                                                                            ) AS lfSelect
                          WHERE Object.DescId = zc_Object_Currency()
                            AND Object.Id     <> zc_Currency_Basis()
-                           AND vbIsOperPrice = TRUE
+                         --AND vbIsOperPrice = TRUE
                         )
 
        , tmpData AS (SELECT tmpData_All.UnitId

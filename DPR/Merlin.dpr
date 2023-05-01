@@ -94,7 +94,13 @@ uses
   AncestorDBGrid in '..\FormsMerlin\Ancestor\AncestorDBGrid.pas' {AncestorDBGridForm: TParentForm},
   AncestorData in '..\FormsMerlin\Ancestor\AncestorData.pas' {AncestorDataForm: TParentForm},
   AncestorBase in '..\FormsMerlin\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
-  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas';
+  IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
+  StorageSQLite in '..\SOURCE\StorageSQLite.pas',
+  GoogleOTP in '..\SOURCE\GoogleOTP.pas',
+  GoogleOTPDialogPsw in '..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
+  GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
+  UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas',
+  PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm};
 
 {$R *.res}
 

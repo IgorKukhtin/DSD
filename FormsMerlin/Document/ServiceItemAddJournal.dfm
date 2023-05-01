@@ -739,6 +739,7 @@ object ServiceItemAddJournalForm: TServiceItemAddJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TServiceItemAddMovementForm'

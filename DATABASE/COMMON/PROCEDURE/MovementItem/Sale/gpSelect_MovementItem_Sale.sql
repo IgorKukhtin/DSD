@@ -1215,7 +1215,7 @@ BEGIN
            , tmpResult.InfoMoneyCode
            , tmpResult.InfoMoneyGroupName
            , tmpResult.InfoMoneyDestinationName
-           , tmpResult.InfoMoneyName
+           , (tmpResult.InfoMoneyName || ' ' || CASE WHEN tmpResult.MovementId_Promo > 0 THEN tmpResult.MovementId_Promo :: TVarChar ELSE '' END ) :: TVarChar AS InfoMoneyName
            , tmpResult.InfoMoneyName_all
 
            , tmpResult.isErased

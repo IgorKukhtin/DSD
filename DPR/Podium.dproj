@@ -70,9 +70,9 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<VerInfo_Build>31</VerInfo_Build>
+			<VerInfo_Build>32</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.1.31;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.1.32;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<VerInfo_Release>1</VerInfo_Release>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -211,6 +211,21 @@
 			<DCCReference Include="..\SOURCE\DialogPswSms.pas">
 				<Form>DialogPswSmsForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\StorageSQLite.pas"/>
+			<DCCReference Include="..\SOURCE\GoogleOTP.pas"/>
+			<DCCReference Include="..\SOURCE\GoogleOTPDialogPsw.pas">
+				<Form>GoogleOTPDialogPswForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\GoogleOTPRegistration.pas">
+				<Form>GoogleOTPRegistrationForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\PriorityPause.pas">
+				<Form>PriorityPauseForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\UAECMRXML.pas"/>
+			<DCCReference Include="..\FormsFarmacy\Cash\IniUtils.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
@@ -259,9 +274,9 @@
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
 					</Excluded_Packages>
 				</Delphi.Personality>
 				<Deployment/>
