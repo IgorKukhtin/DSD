@@ -67,7 +67,9 @@ $BODY$
   DECLARE vbTotalSummCompensationRecalc TFloat;
   DECLARE vbTotalSummAvance            TFloat;
   DECLARE vbTotalSummAvanceRecalc      TFloat;
-  
+  DECLARE vbTotalSummAvCardSecond            TFloat;
+  DECLARE vbTotalSummAvCardSecondRecalc      TFloat;
+    
   DECLARE vbTotalSummMedicdayAdd    TFloat;
   DECLARE vbTotalDayMedicday        TFloat;
   DECLARE vbTotalSummSkip           TFloat;
@@ -390,6 +392,7 @@ BEGIN
                , vbTotalSummChild, vbTotalSummChildRecalc, vbTotalSummMinusExt, vbTotalSummMinusExtRecalc
                , vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong, vbTotalSummTransportTaxi, vbTotalSummPhone, vbTotalSummHouseAdd
                , vbTotalSummNalogRet, vbTotalSummNalogRetRecalc, vbTotalSummAvance, vbTotalSummAvanceRecalc
+               , vbTotalSummAvCardSecond, vbTotalSummAvCardSecondRecalc
                , vbTotalSummAddOth, vbTotalSummAddOthRecalc
                , vbTotalSummFine, vbTotalSummHosp, vbTotalSummFineOth, vbTotalSummHospOth, vbTotalSummFineOthRecalc, vbTotalSummHospOthRecalc
                , vbTotalSummCompensation, vbTotalSummCompensationRecalc
@@ -513,7 +516,9 @@ BEGIN
                                
                                , SUM (COALESCE (MIFloat_SummAvance.ValueData, 0))             AS OperSumm_Avance
                                , SUM (COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0))       AS OperSumm_AvanceRecalc
-
+                               , SUM (COALESCE (MIFloat_SummAvCardSecond.ValueData, 0))       AS OperSumm_AvCardSecond
+                               , SUM (COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)) AS OperSumm_AvCardSecondRecalc
+                               
                                , SUM (COALESCE (MIFloat_AmountTax_calc.ValueData, 0))         AS AmountTax_calc
                                , SUM (COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0))       AS SummTaxDiff_calc
                                , SUM (COALESCE (MIFloat_PriceTax_calc.ValueData, 0))          AS PriceTax_calc
@@ -703,6 +708,15 @@ BEGIN
                                                           AND MIFloat_SummAvanceRecalc.DescId = zc_MIFloat_SummAvanceRecalc()
                                                           AND Movement.DescId = zc_Movement_PersonalService()
 
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecond
+                                                           ON MIFloat_SummAvCardSecond.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummAvCardSecond.DescId = zc_MIFloat_SummAvCardSecond()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecondRecalc
+                                                           ON MIFloat_SummAvCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummAvCardSecondRecalc.DescId = zc_MIFloat_SummAvCardSecondRecalc()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                                                          
                                LEFT JOIN MovementItemFloat AS MIFloat_SummAddOth
                                                            ON MIFloat_SummAddOth.MovementItemId = MovementItem.Id
                                                           AND MIFloat_SummAddOth.DescId = zc_MIFloat_SummAddOth()
@@ -1038,6 +1052,8 @@ BEGIN
                 , OperSumm_NalogRetRecalc  
                 , OperSumm_Avance
                 , OperSumm_AvanceRecalc
+                , OperSumm_AvCardSecond
+                , OperSumm_AvCardSecondRecalc
                 , OperSumm_AddOth
                 , OperSumm_AddOthRecalc
                 , OperSumm_Fine
@@ -1208,7 +1224,9 @@ BEGIN
                       , SUM (tmpMI.OperSumm_NalogRet)         AS OperSumm_NalogRet
                       , SUM (tmpMI.OperSumm_NalogRetRecalc)   AS OperSumm_NalogRetRecalc
                       , SUM (tmpMI.OperSumm_Avance)           AS OperSumm_Avance
-                      , SUM (tmpMI.OperSumm_AvanceRecalc)     AS OperSumm_AvanceRecalc
+                      , SUM (tmpMI.OperSumm_AvanceRecalc)     AS OperSumm_AvanceRecalc 
+                      , SUM (tmpMI.OperSumm_AvCardSecond)           AS OperSumm_AvCardSecond
+                      , SUM (tmpMI.OperSumm_AvCardSecondRecalc)     AS OperSumm_AvCardSecondRecalc
                       , SUM (tmpMI.OperSumm_AddOth)           AS OperSumm_AddOth
                       , SUM (tmpMI.OperSumm_AddOthRecalc)     AS OperSumm_AddOthRecalc
                       , SUM (tmpMI.OperSumm_Fine)             AS OperSumm_Fine
@@ -1352,6 +1370,8 @@ BEGIN
                             , tmpMI.OperSumm_NalogRetRecalc
                             , tmpMI.OperSumm_Avance
                             , tmpMI.OperSumm_AvanceRecalc
+                            , tmpMI.OperSumm_AvCardSecond
+                            , tmpMI.OperSumm_AvCardSecondRecalc
 
                             , tmpMI.OperSumm_AddOth
                             , tmpMI.OperSumm_AddOthRecalc
@@ -1472,6 +1492,9 @@ BEGIN
 
                                    , tmpMI.OperSumm_Avance
                                    , tmpMI.OperSumm_AvanceRecalc
+
+                                   , tmpMI.OperSumm_AvCardSecond
+                                   , tmpMI.OperSumm_AvCardSecondRecalc
 
                                    , tmpMI.OperSumm_AddOth
                                    , tmpMI.OperSumm_AddOthRecalc
@@ -1637,6 +1660,9 @@ BEGIN
                                    , tmpMI.OperSumm_Avance
                                    , tmpMI.OperSumm_AvanceRecalc
 
+                                   , tmpMI.OperSumm_AvCardSecond
+                                   , tmpMI.OperSumm_AvCardSecondRecalc
+
                                    , tmpMI.OperSumm_AddOth
                                    , tmpMI.OperSumm_AddOthRecalc
 
@@ -1733,7 +1759,9 @@ BEGIN
 
                                    , tmpMI.OperSumm_Avance
                                    , tmpMI.OperSumm_AvanceRecalc
-
+                                   , tmpMI.OperSumm_AvCardSecond
+                                   , tmpMI.OperSumm_AvCardSecondRecalc
+                                   
                                    , tmpMI.OperSumm_AddOth
                                    , tmpMI.OperSumm_AddOthRecalc
 
@@ -1881,6 +1909,11 @@ BEGIN
          -- Сохранили свойство <Аванс (ввод)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalAvanceRecalc(), inMovementId, vbTotalSummAvanceRecalc);
 
+         -- Сохранили свойство <Карта БН - 2ф. Аванс>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAvCardSecond(), inMovementId, vbTotalSummAvCardSecond);
+         -- Сохранили свойство <Карта БН (ввод) - 2ф. Аванс>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAvCardSecondRecalc(), inMovementId, vbTotalSummAvCardSecondRecalc);
+
          -- Сохранили свойство <Премия (распределено)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAddOth(), inMovementId, vbTotalSummAddOth);
          -- Сохранили свойство <Премия (ввод для распределения)>
@@ -1990,6 +2023,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.05.23         * 
  27.03.23         *
  17.01.22         * zc_MIFloat_SummAvance, zc_MIFloat_SummAvanceRecalc
  25.04.22         * zc_MovementFloat_TotalSummTare
