@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummCompensation TFloat, TotalSummCompensationRecalc TFloat
              , TotalSummHouseAdd TFloat
              , TotalSummAvance TFloat, TotalSummAvanceRecalc TFloat
+             , TotalSummAvCardSecond TFloat, TotalSummAvCardSecondRecalc TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -261,6 +262,9 @@ BEGIN
            , MovementFloat_TotalAvance.ValueData        :: TFloat AS TotalSummAvance
            , MovementFloat_TotalAvanceRecalc.ValueData  :: TFloat AS TotalSummAvanceRecalc
 
+           , MovementFloat_TotalSummAvCardSecond.ValueData        :: TFloat AS TotalSummAvCardSecond
+           , MovementFloat_TotalSummAvCardSecondRecalc.ValueData  :: TFloat AS TotalSummAvCardSecondRecalc
+
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
@@ -444,6 +448,13 @@ BEGIN
                                     ON MovementFloat_TotalAvanceRecalc.MovementId = Movement.Id
                                    AND MovementFloat_TotalAvanceRecalc.DescId = zc_MovementFloat_TotalAvanceRecalc()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummAvCardSecond
+                                    ON MovementFloat_TotalSummAvCardSecond.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummAvCardSecond.DescId = zc_MovementFloat_TotalSummAvCardSecond()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummAvCardSecondRecalc
+                                    ON MovementFloat_TotalSummAvCardSecondRecalc.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummAvCardSecondRecalc.DescId = zc_MovementFloat_TotalSummAvCardSecondRecalc()
 
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -484,6 +495,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 02.05.23         *
  24.04.23         *
  27.03.23         *
  17.11.23         *

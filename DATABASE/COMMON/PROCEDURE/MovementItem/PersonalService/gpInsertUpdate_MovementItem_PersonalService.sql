@@ -44,12 +44,17 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, In
                                                                    , TVarChar
                                                                    , Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
   */
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar
-                                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+                                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);*/
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar
+                                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -68,7 +73,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inSummService           TFloat    , -- Сумма начислено
     IN inSummCardRecalc        TFloat    , -- Карта БН (ввод) - 1ф.
     IN inSummCardSecondRecalc  TFloat    , -- Карта БН (ввод) - 2ф.
-    IN inSummCardSecondCash    TFloat    , -- Карта БН (касса) - 2ф.
+    IN inSummCardSecondCash    TFloat    , -- Карта БН (касса) - 2ф.  
+    IN inSummAvCardSecondRecalc  TFloat    , -- Карта БН (ввод) - 2ф. аванс
     IN inSummNalogRecalc       TFloat    , -- Налоги - удержания (ввод)
     IN inSummNalogRet          TFloat    , -- Налоги - возмещение к ЗП !!!НЕ ввод!!!
     IN inSummMinus             TFloat    , -- Сумма удержания
@@ -164,6 +170,7 @@ BEGIN
                                                      , inSummCardRecalc        := inSummCardRecalc
                                                      , inSummCardSecondRecalc  := inSummCardSecondRecalc
                                                      , inSummCardSecondCash    := inSummCardSecondCash
+                                                     , inSummAvCardSecondRecalc  := inSummAvCardSecondRecalc
                                                      , inSummNalogRecalc       := inSummNalogRecalc
                                                      , inSummNalogRetRecalc    := 0
                                                      , inSummMinus             := inSummMinus
@@ -240,6 +247,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.05.23         *
  17.01.23         *
  23.12.21         * add inNumber
  17.11.21         * inSummHouseAdd

@@ -443,6 +443,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_SummAvanceRecalc() RETURNS Integer AS $BOD
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_SummAvanceRecalc', 'Аванс (ввод для распределения)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummAvanceRecalc');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummAvCardSecond() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummAvCardSecond'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummAvCardSecond', ' 	Карта БН - 2ф. Аванс' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummAvCardSecond');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummAvCardSecondRecalc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummAvCardSecondRecalc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummAvCardSecondRecalc', 'Карта БН (ввод) - 2ф. Аванс' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummAvCardSecondRecalc');
+
+
  
 
 CREATE OR REPLACE FUNCTION zc_MIFloat_StartOdometre() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_StartOdometre'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1633,6 +1642,8 @@ INSERT INTO MovementItemFloatDesc(Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 02.05.23         * zc_MIFloat_SummAvCardSecond
+                    zc_MIFloat_SummAvCardSecondRecalc
  10.04.23                                                                                                     * zc_MIFloat_PercPositionCheck
  01.04.23                                                                                                     * zc_MIFloat_PriceMargSP
  27.03.23         * zc_MIFloat_SummMedicdayAdd
