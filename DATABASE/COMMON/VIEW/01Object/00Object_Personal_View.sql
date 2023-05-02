@@ -33,7 +33,7 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
        , ObjectDate_DateIn.ValueData   AS DateIn
        , ObjectDate_DateOut.ValueData  AS DateOut
        
-       , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_DateOut.ValueData END :: TDateTime AS DateOut_user
+       , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() OR Object_Personal.isErased = TRUE THEN NULL ELSE ObjectDate_DateOut.ValueData END :: TDateTime AS DateOut_user
        , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateOut
        , COALESCE (ObjectBoolean_Main.ValueData, FALSE)           AS isMain
        , COALESCE (ObjectBoolean_Official.ValueData, FALSE)       AS isOfficial
