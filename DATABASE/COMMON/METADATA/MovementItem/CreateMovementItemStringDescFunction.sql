@@ -34,7 +34,12 @@ CREATE OR REPLACE FUNCTION zc_MIString_Number() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_Number', '№ исполнительного листа' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Number');
 
+CREATE OR REPLACE FUNCTION zc_MIString_PartNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_PartNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_PartNumber', '№ по тех паспорту ' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_PartNumber');
 
+
+   
 
 ----!!!!!!Farmacy
 CREATE OR REPLACE FUNCTION zc_MIString_SertificatNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_SertificatNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -203,6 +208,7 @@ INSERT INTO MovementItemStringDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 02.05.23         * zc_MIString_PartNumber
  01.04.23                                                                                      * zc_MIString_Referral
  11.08.22                                                                                      * zc_MIString_Name
  09.12.21                                                                                      * zc_MIString_FileName
