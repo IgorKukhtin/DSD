@@ -1,4 +1,4 @@
--- Function: gpReport_GoodsGroup ()
+ -- Function: gpReport_GoodsGroup ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsGroup (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsGroup (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
@@ -61,6 +61,7 @@ BEGIN
                                                                           , inIsGoods      := FALSE
                                                                           , inIsGoodsKind  := FALSE
                                                                           , inIsMovement   := FALSE
+                                                                          , inIsSubjectDoc := FALSE
                                                                           , inSession      := ''
                                                                            ) AS gpReport)
         , tmpSendOnPrice_in AS (SELECT * FROM gpReport_GoodsMI_SendOnPrice (inStartDate    := inStartDate
@@ -72,6 +73,7 @@ BEGIN
                                                                           , inIsGoods      := FALSE
                                                                           , inIsGoodsKind  := FALSE
                                                                           , inIsMovement   := FALSE
+                                                                          , inIsSubjectDoc := FALSE
                                                                           , inSession      := ''
                                                                            ) AS gpReport)
                   , tmpLoss AS (SELECT * FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
@@ -140,6 +142,7 @@ BEGIN
                                                                        , inIsGoods           := FALSE
                                                                        , inIsGoodsKind       := FALSE
                                                                        , inIsPartionGoods    := FALSE
+                                                                       , inIsDate            := FALSE
                                                                        , inSession           := ''
                                                                         ) AS gpReport)
                        , tmpReturnIn AS (SELECT * FROM gpReport_GoodsMI (inStartDate         := inStartDate
@@ -156,6 +159,7 @@ BEGIN
                                                                        , inIsGoods           := FALSE
                                                                        , inIsGoodsKind       := FALSE
                                                                        , inIsPartionGoods    := FALSE
+                                                                       , inIsDate            := FALSE
                                                                        , inSession           := ''
                                                                         ) AS gpReport)
          , tmpIncome AS (SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate         := inStartDate

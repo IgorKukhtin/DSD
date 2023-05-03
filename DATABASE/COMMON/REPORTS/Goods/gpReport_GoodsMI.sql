@@ -1,4 +1,4 @@
- -- Function: gpReport_GoodsMI ()
+-- Function: gpReport_GoodsMI ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
