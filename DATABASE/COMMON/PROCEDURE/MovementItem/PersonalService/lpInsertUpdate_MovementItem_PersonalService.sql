@@ -31,9 +31,14 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, In
                                                                    , TVarChar, TVarChar
                                                                    , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);*/
 
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, TVarChar
+                                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);  */
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, TVarChar
                                                                    , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
@@ -54,6 +59,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
     IN inSummCardRecalc         TFloat    , -- Карта БН (ввод) - 1ф.
     IN inSummCardSecondRecalc   TFloat    , -- Карта БН (ввод) - 2ф.
     IN inSummCardSecondCash     TFloat    , -- Карта БН (касса) - 2ф.
+    IN inSummAvCardSecondRecalc TFloat    , -- Карта БН (ввод) - 2ф. аванс
     IN inSummNalogRecalc        TFloat    , -- Налоги - удержания с ЗП (ввод)
     IN inSummNalogRetRecalc     TFloat    , -- Налоги - возмещение к ЗП (ввод)
     IN inSummMinus              TFloat    , -- Сумма удержания
@@ -327,6 +333,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondDiff(), ioId, inSummCardSecondRecalc - ROUND (inSummCardSecondRecalc, 1));
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondCash(), ioId, inSummCardSecondCash);
+     -- сохранили свойство <Карта БН (ввод) - 2ф.> аванс
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAvCardSecondRecalc(), ioId, inSummAvCardSecondRecalc);
+
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalogRecalc(), ioId, inSummNalogRecalc);
      -- сохранили свойство <>

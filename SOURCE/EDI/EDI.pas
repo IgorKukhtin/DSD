@@ -234,9 +234,11 @@ type
     FListDataSet: TDataSet;
     FEDIDocType: TEDIDocType;
 
+    FUpdateUuid: TdsdStoredProc;
+
   protected
     function GetToken: Boolean;
-    function PostTTN(AGLN, AXML : String; VAR ADoc_Uuid : String): Boolean;
+    function PostTTN(AGLN, AXML : String): Boolean;
     procedure UAECMREDI(var AXML: String);
 
     function TTNSave: Boolean;
@@ -261,6 +263,8 @@ type
     property EDIDocType: TEDIDocType read FEDIDocType write FEDIDocType;
     property HeaderDataSet: TDataSet read FHeaderDataSet write FHeaderDataSet;
     property ListDataSet: TDataSet read FListDataSet write FListDataSet;
+
+    property UpdateUuid: TdsdStoredProc read FUpdateUuid write FUpdateUuid;
   end;
 
 
@@ -5576,7 +5580,7 @@ begin
   end;
 end;
 
-function TdsdEDINAction.PostTTN(AGLN, AXML : String; VAR ADoc_Uuid : String): Boolean;
+function TdsdEDINAction.PostTTN(AGLN, AXML : String): Boolean;
   var IdHTTP: TCustomIdHTTP;
       S, Params: String;
       Steam: TStringStream;
@@ -5604,7 +5608,7 @@ begin
     IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
 
     Params := '?gln=' + AGLN;
-    if ADoc_Uuid <> '' then Params := Params + '&doc_uuid=' + ADoc_Uuid;
+    if FResultParam.Value <> '' then Params := Params + '&doc_uuid=' + FResultParam.Value;
 
     Steam := TStringStream.Create(AXML, TEncoding.UTF8);
     try
@@ -5651,30 +5655,40 @@ begin
   // порядковий номер (серія) документа ТТН
   UAECMR.ECMR.ExchangedDocument.ID := HeaderDataSet.FieldByName('InvNumber').asString;
   // Дата і час складання документа (виписування ТТН)
-  UAECMR.ECMR.ExchangedDocument.IssueDateTime.DateTime := gfFormatToDateTime (HeaderDataSet.FieldByName('OperDate').AsDateTime);
+  UAECMR.ECMR.ExchangedDocument.IssueDateTime.DateTime := gfFormatToDateTime (Now {HeaderDataSet.FieldByName('OperDate').AsDateTime});
   // Додані записи
+  // CA - Перевізник
   with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
   begin
     ContentCode.ListAgencyID := 'GLN';
-    ContentCode.NodeValue := HeaderDataSet.FieldByName('GLN_car').asString;
+    ContentCode.NodeValue := '9864232596110'; //HeaderDataSet.FieldByName('GLN_car').asString;
     Content := 'CA';
   end;
+  // OB - Замовник
   with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
   begin
     ContentCode.ListAgencyID := 'GLN';
-    ContentCode.NodeValue := HeaderDataSet.FieldByName('GLN_from').asString;
+    ContentCode.NodeValue := '9864232596127'; //HeaderDataSet.FieldByName('GLN_from').asString;
+    Content := 'OB';
+  end;
+  // CZ - Вантажовідправник
+  with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
+  begin
+    ContentCode.ListAgencyID := 'GLN';
+    ContentCode.NodeValue := '9864065749080'; //HeaderDataSet.FieldByName('GLN_from').asString;
     Content := 'CZ';
   end;
+  // CN - Вантажоодержувач
   with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
   begin
     ContentCode.ListAgencyID := 'GLN';
-    ContentCode.NodeValue := HeaderDataSet.FieldByName('GLN_to').asString;
+    ContentCode.NodeValue := '9864232596127'; //HeaderDataSet.FieldByName('GLN_to').asString;
     Content := 'CN';
   end;
 
   // Місце складання документа
-  UAECMR.ECMR.ExchangedDocument.IssueLogisticsLocation.Name := 'Місце складання документу';
-  UAECMR.ECMR.ExchangedDocument.IssueLogisticsLocation.Description := HeaderDataSet.FieldByName('PlaceOf').asString;
+  UAECMR.ECMR.ExchangedDocument.IssueLogisticsLocation.Name := HeaderDataSet.FieldByName('PlaceOf').asString;
+  //UAECMR.ECMR.ExchangedDocument.IssueLogisticsLocation.Description := HeaderDataSet.FieldByName('PlaceOf').asString;
 
   // Інформація про перевезення
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.GrossWeightMeasure.UnitCode := 'KGM';
@@ -5682,71 +5696,73 @@ begin
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.GrossWeightMeasure;
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.AssociatedInvoiceAmount.CurrencyID := 'UAH';
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.AssociatedInvoiceAmount.NodeValue := RoundTo(HeaderDataSet.FieldByName('TotalSumm').AsCurrency, -2);
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignmentItemQuantity := HeaderDataSet.FieldByName('TotalCountKg').AsInteger;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignmentItemQuantity := HeaderDataSet.FieldByName('TotalCountKg').AsFloat;
 
   // Вантажовідправник
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.Id.SchemeAgencyID := 'ЄДРПОУ';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.Id.NodeValue := HeaderDataSet.FieldByName('OKPO_From').asString;
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.Name := HeaderDataSet.FieldByName('JuridicalName_From').asString;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.Id.NodeValue := 32132132; //HeaderDataSet.FieldByName('OKPO_From').asString;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.Name := 'ТОВ "Вантажовідправник_v3"'; //HeaderDataSet.FieldByName('JuridicalName_From').asString;
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.RoleCode := 'CZ';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.PostalTradeAddress.PostcodeCode := '01001';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.PostalTradeAddress.StreetName := 'вул.Хрещатик, 22';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.PostalTradeAddress.CityName := 'Київ';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.PostalTradeAddress.PostcodeCode := '1233122';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.PostalTradeAddress.StreetName := 'Качури 99';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.PostalTradeAddress.CityName := 'м. Полтава, Полтавський р-н';
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsignorTradeParty.PostalTradeAddress.CountryID := 'UA';
 
   // Вантажоодержувач
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.Id.SchemeAgencyID := 'ЄДРПОУ';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.Id.NodeValue :=  HeaderDataSet.FieldByName('OKPO_To').asString;
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.Id.NodeValue := '32135483'; //HeaderDataSet.FieldByName('OKPO_To').asString;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.Name := 'ТОВ "Вантажоодержувач_v3" (прод)'; //HeaderDataSet.FieldByName('JuridicalName_To').asString;
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.RoleCode := 'CN';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.PostalTradeAddress.PostcodeCode := '01001';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.PostalTradeAddress.StreetName := 'вул.Хрещатик, 22';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.PostalTradeAddress.CityName := 'Київ';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.PostalTradeAddress.PostcodeCode := '12351';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.PostalTradeAddress.StreetName := 'вул. Київська, 1';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.PostalTradeAddress.CityName := 'м. Суми, Сумський р-н';
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.PostalTradeAddress.CountryID := 'UA';
-    // * Ідентифікаційний код відповідальної особи
-  //UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeTradeParty.SpecifiedGovernmentRegistration.ID := '101010141';
 
   // Перевізник
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.Id.SchemeAgencyID := 'ЄДРПОУ';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.Id.NodeValue := HeaderDataSet.FieldByName('OKPO_car').asString;
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.Name := HeaderDataSet.FieldByName('JuridicalName_car').asString;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.Id.NodeValue := '32131212'; // HeaderDataSet.FieldByName('OKPO_car').asString;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.Name := 'ТОВ "Перевізник_v3" (прод)'; // HeaderDataSet.FieldByName('JuridicalName_car').asString;
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.RoleCode := 'CA';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.PostalTradeAddress.PostcodeCode := '01001';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.PostalTradeAddress.StreetName := 'вул.Хрещатик, 22';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.DefinedTradeContact.PersonName := 'Тестовий Водій Водійович';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.DefinedTradeContact.TelephoneUniversalCommunication.CompleteNumber := '380966757657';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.PostalTradeAddress.PostcodeCode := '24522';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.PostalTradeAddress.StreetName := 'вул. Вінницька, 1';
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.PostalTradeAddress.CityName := 'Київ';
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.PostalTradeAddress.CountryID := 'UA';
     // Посвідчення Водія
-  //UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.SpecifiedGovernmentRegistration.ID := 'ZZZ324232';
+  //UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.SpecifiedGovernmentRegistration.ID := 'XYZ000012';
 
   // Замовник
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.ID.SchemeAgencyID := 'ЄДРПОУ';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.ID.NodeValue := HeaderDataSet.FieldByName('OKPO_From').asString;
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.Name := HeaderDataSet.FieldByName('JuridicalName_From').asString;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.ID.NodeValue := '32135483'; // HeaderDataSet.FieldByName('OKPO_From').asString;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.Name := 'ТОВ "Вантажоодержувач_v3" (прод)'; // HeaderDataSet.FieldByName('JuridicalName_From').asString;
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.RoleCode := 'OB';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.PostalTradeAddress.PostcodeCode := '01001';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.PostalTradeAddress.StreetName := 'вул.Хрещатик, 22';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.PostalTradeAddress.CityName := 'Київ';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.PostalTradeAddress.PostcodeCode := '12351';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.PostalTradeAddress.StreetName := 'вул. Київська, 1';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.PostalTradeAddress.CityName := 'м. Суми, Сумський р-н';
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.PostalTradeAddress.CountryID := 'UA';
     // * Ідентифікаційний код відповідальної особи
-  //UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.SpecifiedGovernmentRegistration.ID := '101010142';
+  //UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.SpecifiedGovernmentRegistration.ID := 'XYZ000012';
 
   // Пункт навантаження
   //UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.ID.SchemeAgencyID := 'КАТОТТГ';
-  //UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.ID.NodeValue := 'UA460602500100';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.Name := HeaderDataSet.FieldByName('JuridicalName_From').asString;
+  //UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.ID.NodeValue := 'UA53080370010073240';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.Name := 'ТОВ "Вантажовідправник_v3"'; //HeaderDataSet.FieldByName('JuridicalName_From').asString;
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.TypeCode := 5;
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.Description := HeaderDataSet.FieldByName('JuridicalAddress_From').asString;;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.Description := 'Україна, 1233122, Полтавська обл,  Полтавський р-н, м. Полтава, Качури 99'; // HeaderDataSet.FieldByName('JuridicalAddress_From').asString;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.PhysicalGeographicalCoordinate.SystemID.SchemeAgencyID := 'GLN';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.PhysicalGeographicalCoordinate.SystemID.NodeValue := 9864065749080; //HeaderDataSet.FieldByName('GLN_from').asString;
 
   // Пункт розвантаження
   //UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.ID.SchemeAgencyID := 'КАТОТТГ';
-  //UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.ID.NodeValue := 'UA800000000000';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.Name := HeaderDataSet.FieldByName('ToName').asString;
+  //UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.ID.NodeValue := 'UA59080270010036634';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.Name := 'ТОВ "Вантажоодержувач_v3" (прод)'; HeaderDataSet.FieldByName('ToName').asString;
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.TypeCode := 10;
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.Description := HeaderDataSet.FieldByName('PartnerAddress_To').asString;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.Description := 'Україна, 12351, Сумська обл,  Сумський р-н, м. Суми, вул. Київська, 1'; // HeaderDataSet.FieldByName('PartnerAddress_To').asString;
   //UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.PhysicalGeographicalCoordinate.LatitudeMeasure := '50.4489298';
   //UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.PhysicalGeographicalCoordinate.LatitudeMeasure := '30.5194162';
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.PhysicalGeographicalCoordinate.SystemID.SchemeAgencyID := 'GLN';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.PhysicalGeographicalCoordinate.SystemID.NodeValue := HeaderDataSet.FieldByName('GLN_to').asString;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.PhysicalGeographicalCoordinate.SystemID.NodeValue := 9864232596127; //HeaderDataSet.FieldByName('GLN_to').asString;
 
   // Розвантажувальні роботи
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.DeliveryTransportEvent.Description := 'Розвантаження';
@@ -5764,9 +5780,11 @@ begin
       InvoiceAmount.CurrencyID := 'UAH';
       InvoiceAmount.NodeValue := RoundTo(ListDataSet.FieldByName('AmountSummWVAT').AsCurrency, -2);
       GrossWeightMeasure.UnitCode := 'KGM';
-      GrossWeightMeasure.NodeValue := RoundTo(ListDataSet.FieldByName('TotalWeight_BruttoT').AsCurrency, -2);
+      GrossWeightMeasure.NodeValue := RoundTo(ListDataSet.FieldByName('TotalWeight_BruttoKg').AsCurrency, -2);
       TariffQuantity.UnitCode := 'UAH';
       TariffQuantity.NodeValue := RoundTo(ListDataSet.FieldByName('pricenovat').AsCurrency, -2);
+      TransportLogisticsPackage.ItemQuantity := ListDataSet.FieldByName('Amount').AsFloat;
+      TransportLogisticsPackage.Type_ := ListDataSet.FieldByName('MeasureName').AsString;
       //GlobalID.SchemeAgencyID := 'УКТЗЕД';
       //GlobalID.NodeValue := 500;
       NatureIdentificationTransportCargo.Identification := ListDataSet.FieldByName('goodsname').AsString;
@@ -5828,16 +5846,21 @@ end;
 
 
 function TdsdEDINAction.TTNSave: Boolean;
-  var Doc_Uuid, cXML : String;
+  var cXML : String;
 begin
   Result := False;
   if not GetToken then Exit;
 
+  // Сформируем XML
   UAECMREDI(cXML);
-  //FOrderParam.Value := HeaderDataSet.FieldByName('DealId').AsString;
 
-  Doc_Uuid := '';
-  PostTTN('9864065749080', cXML, Doc_Uuid)
+  // Отправим eTTN
+  FResultParam.Value := HeaderDataSet.FieldByName('TransportGoods_UuId').AsString;
+  PostTTN(HeaderDataSet.FieldByName('GLN_from').asString, cXML);
+
+  // Запишем в базу Uuid
+  if (FResultParam.Value <> HeaderDataSet.FieldByName('TransportGoods_UuId').AsString) and
+     Assigned(FUpdateUuid) then FUpdateUuid.Execute;
 
 end;
 

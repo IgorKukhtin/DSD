@@ -546,6 +546,8 @@ type
     bbInsUpPromoPlan_Child_calc: TdxBarButton;
     calcChangePrice: TcxGridDBColumn;
     ccChangePrice: TcxGridDBColumn;
+    cxLabel26: TcxLabel;
+    edServiceDate: TcxDateEdit;
   private
     { Private declarations }
   public

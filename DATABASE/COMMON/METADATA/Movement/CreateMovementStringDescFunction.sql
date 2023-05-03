@@ -245,9 +245,14 @@ CREATE OR REPLACE FUNCTION zc_MovementString_DealId() RETURNS Integer AS $BODY$B
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_DealId', 'Внутрішній ІД замовлення у системі' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_DealId');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_Uuid() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_Uuid'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_Uuid', 'Ідентифікатор документа, у «Електронної товарно-транспортної накладної» (е-ТТН)' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_Uuid');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 02.05.23                                                                      * zc_MovementString_Uuid
  23.03.23                                                                      * zc_MovementString_DealId
  14.03.23                                                                      * zc_MovementString_ActNumber
  04.10.22                                                                      * zc_MovementString_SiteWhoUpdate

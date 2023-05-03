@@ -259,6 +259,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalDaySkip
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAvCardSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAvCardSecondRecalc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -490,6 +500,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalDaySkip
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAvCardSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAvCardSecondRecalc
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -643,6 +663,26 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           object TotalSummCardSecondRecalc: TcxGridDBColumn
             Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
             DataBinding.FieldName = 'TotalSummCardSecondRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 95
+          end
+          object TotalSummAvCardSecond: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 2'#1092'. '#1040#1074#1072#1085#1089
+            DataBinding.FieldName = 'TotalSummAvCardSecond'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 82
+          end
+          object TotalSummAvCardSecondRecalc: TcxGridDBColumn
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. '#1040#1074#1072#1085#1089
+            DataBinding.FieldName = 'TotalSummAvCardSecondRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

@@ -41,6 +41,8 @@ inherited MainInventoryForm: TMainInventoryForm
         ImageIndex = 0
         ExplicitLeft = 5
         ExplicitTop = 25
+        ExplicitWidth = 0
+        ExplicitHeight = 0
       end
       object tsInventory: TcxTabSheet
         Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -133,7 +135,7 @@ inherited MainInventoryForm: TMainInventoryForm
               Width = 210
             end
             object chAmountGoods: TcxGridDBColumn
-              Caption = #1050#1086#1083'-'#1074#1086' '#1090#1086#1074#1072#1088#1072
+              Caption = #1050#1086#1083'-'#1074#1086' '#1080#1085#1074#1077#1085#1090'.'
               DataBinding.FieldName = 'AmountGoods'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4

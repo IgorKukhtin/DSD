@@ -1579,6 +1579,15 @@
           Options.Editing = False
           Width = 30
         end
+        object isNotVat: TcxGridDBColumn
+          Caption = 'C'#1090#1072#1074#1082#1072' 0%'
+          DataBinding.FieldName = 'isNotVat'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1082#1083#1080#1077#1085#1090' '#1073#1077#1079' '#1053#1044#1057' ('#1089#1090#1072#1074#1082#1072' 0%)'
+          Options.Editing = False
+          Width = 30
+        end
         object isRealEx: TcxGridDBColumn
           Caption = #1060#1080#1079'. '#1086#1073#1084#1077#1085
           DataBinding.FieldName = 'isRealEx'
@@ -2756,6 +2765,7 @@
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072')'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072')'
       ImageIndex = 6
+      ShortCut = 16472
     end
     object dsdSetErasedGoods: TdsdUpdateErased
       Category = 'DSDLib'

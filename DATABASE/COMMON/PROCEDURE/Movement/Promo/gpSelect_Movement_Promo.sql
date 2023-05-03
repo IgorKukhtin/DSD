@@ -35,6 +35,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , MonthPromo       TDateTime   --Месяц акции
              , CheckDate        TDateTime   --Дата Согласования 
              , MessageDate      TDateTime   --Дата/время сообщения Телеграм
+             , ServiceDate      TDateTime   -- 	Месяц расчета с/с
              , CostPromo        TFloat      --Стоимость участия в акции
              , ChangePercent    TFloat      --(-)% Скидки (+)% Наценки по договору
 
@@ -193,7 +194,8 @@ BEGIN
              , MovementDate_OperDateEnd.ValueData          AS OperDateEnd        --Дата окончания расч. продаж до акции
              , MovementDate_Month.ValueData                AS MonthPromo         -- месяц акции
              , MovementDate_CheckDate.ValueData            AS CheckDate          --Дата согласования
-             , MovementDate_MessageDate.ValueData          AS MessageDate        --Дата/время сообщения Телеграм
+             , MovementDate_MessageDate.ValueData          AS MessageDate        --Дата/время сообщения Телеграм 
+             , MovementDate_ServiceDate.ValueData          AS ServiceDate        --Месяц расчета с/с
              , MovementFloat_CostPromo.ValueData           AS CostPromo          --Стоимость участия в акции
              , MovementFloat_ChangePercent.ValueData       AS ChangePercent      --(-)% Скидки (+)% Наценки по договору
 
@@ -327,6 +329,10 @@ BEGIN
              LEFT JOIN MovementDate AS MovementDate_MessageDate
                                     ON MovementDate_MessageDate.MovementId = Movement_Promo.Id
                                    AND MovementDate_MessageDate.DescId = zc_MovementDate_Message()
+
+             LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                    ON MovementDate_ServiceDate.MovementId = Movement_Promo.Id
+                                   AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
 
              LEFT JOIN MovementFloat AS MovementFloat_CostPromo
                                      ON MovementFloat_CostPromo.MovementId = Movement_Promo.Id

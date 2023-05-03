@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
     IN inCount                 TFloat    , -- Количество батонов или упаковок
     IN inHeadCount             TFloat    , -- Количество голов
  INOUT ioPartionGoods          TVarChar  , -- Партия товара/Инвентарный номер
+ INOUT ioPartNumber            TVarChar  , -- № по тех паспорту 
     IN inGoodsKindId           Integer   , -- Виды товаров
     IN inGoodsKindCompleteId   Integer   , -- Виды товаров  ГП
     IN inAssetId               Integer   , -- Основные средства 1(для которых закупается ТМЦ)
@@ -42,6 +44,7 @@ BEGIN
                                           , inCount               := inCount
                                           , inHeadCount           := inHeadCount
                                           , ioPartionGoods        := ioPartionGoods
+                                          , ioPartNumber          := ioPartNumber
                                           , inGoodsKindId         := inGoodsKindId
                                           , inGoodsKindCompleteId := inGoodsKindCompleteId
                                           , inAssetId             := inAssetId

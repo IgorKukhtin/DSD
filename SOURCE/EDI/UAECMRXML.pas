@@ -219,7 +219,7 @@ type
     { Property Accessors }
     function Get_GrossWeightMeasure: IXMLGrossWeightMeasureType;
     function Get_AssociatedInvoiceAmount: IXMLAssociatedInvoiceAmountType;
-    function Get_ConsignmentItemQuantity: Integer;
+    function Get_ConsignmentItemQuantity: Double;
     function Get_ConsignorTradeParty: IXMLConsignorTradePartyType;
     function Get_ConsigneeTradeParty: IXMLConsigneeTradePartyType;
     function Get_CarrierTradeParty: IXMLCarrierTradePartyType;
@@ -232,11 +232,11 @@ type
     function Get_UtilizedLogisticsTransportEquipment: IXMLUtilizedLogisticsTransportEquipmentTypeList;
     function Get_MainCarriageLogisticsTransportMovement: IXMLMainCarriageLogisticsTransportMovementType;
     function Get_DeliveryInstructions: IXMLDeliveryInstructionsType;
-    procedure Set_ConsignmentItemQuantity(Value: Integer);
+    procedure Set_ConsignmentItemQuantity(Value: Double);
     { Methods & Properties }
     property GrossWeightMeasure: IXMLGrossWeightMeasureType read Get_GrossWeightMeasure;
     property AssociatedInvoiceAmount: IXMLAssociatedInvoiceAmountType read Get_AssociatedInvoiceAmount;
-    property ConsignmentItemQuantity: Integer read Get_ConsignmentItemQuantity write Set_ConsignmentItemQuantity;
+    property ConsignmentItemQuantity: Double read Get_ConsignmentItemQuantity write Set_ConsignmentItemQuantity;
     property ConsignorTradeParty: IXMLConsignorTradePartyType read Get_ConsignorTradeParty;
     property ConsigneeTradeParty: IXMLConsigneeTradePartyType read Get_ConsigneeTradeParty;
     property CarrierTradeParty: IXMLCarrierTradePartyType read Get_CarrierTradeParty;
@@ -397,10 +397,10 @@ type
   IXMLTelephoneUniversalCommunicationType = interface(IXMLNode)
     ['{6D6CCBA5-9BA1-43C4-931F-8F545E739111}']
     { Property Accessors }
-    function Get_CompleteNumber: Integer;
-    procedure Set_CompleteNumber(Value: Integer);
+    function Get_CompleteNumber: UnicodeString;
+    procedure Set_CompleteNumber(Value: UnicodeString);
     { Methods & Properties }
-    property CompleteNumber: Integer read Get_CompleteNumber write Set_CompleteNumber;
+    property CompleteNumber: UnicodeString read Get_CompleteNumber write Set_CompleteNumber;
   end;
 
 { IXMLEmailURIUniversalCommunicationType }
@@ -419,10 +419,10 @@ type
   IXMLMobileTelephoneUniversalCommunicationType = interface(IXMLNode)
     ['{DC65C260-1334-4AB2-B042-2BE80C90D3A0}']
     { Property Accessors }
-    function Get_CompleteNumber: Integer;
-    procedure Set_CompleteNumber(Value: Integer);
+    function Get_CompleteNumber: UnicodeString;
+    procedure Set_CompleteNumber(Value: UnicodeString);
     { Methods & Properties }
-    property CompleteNumber: Integer read Get_CompleteNumber write Set_CompleteNumber;
+    property CompleteNumber: UnicodeString read Get_CompleteNumber write Set_CompleteNumber;
   end;
 
 { IXMLNotifiedTradePartyType }
@@ -454,6 +454,7 @@ type
     function Get_Name: UnicodeString;
     function Get_TypeCode: Integer;
     function Get_Description: UnicodeString;
+    function Get_PhysicalGeographicalCoordinate: IXMLPhysicalGeographicalCoordinateType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_TypeCode(Value: Integer);
     procedure Set_Description(Value: UnicodeString);
@@ -462,6 +463,7 @@ type
     property Name: UnicodeString read Get_Name write Set_Name;
     property TypeCode: Integer read Get_TypeCode write Set_TypeCode;
     property Description: UnicodeString read Get_Description write Set_Description;
+    property PhysicalGeographicalCoordinate: IXMLPhysicalGeographicalCoordinateType read Get_PhysicalGeographicalCoordinate;
   end;
 
 { IXMLConsigneeReceiptLogisticsLocationType }
@@ -705,15 +707,15 @@ type
   IXMLTransportLogisticsPackageType = interface(IXMLNode)
     ['{F4527417-16CC-4FEE-9684-A4D9E6420E7A}']
     { Property Accessors }
-    function Get_ItemQuantity: Integer;
+    function Get_ItemQuantity: Double;
     function Get_TypeCode: UnicodeString;
     function Get_Type_: UnicodeString;
     function Get_PhysicalLogisticsShippingMarks: IXMLPhysicalLogisticsShippingMarksType;
-    procedure Set_ItemQuantity(Value: Integer);
+    procedure Set_ItemQuantity(Value: Double);
     procedure Set_TypeCode(Value: UnicodeString);
     procedure Set_Type_(Value: UnicodeString);
     { Methods & Properties }
-    property ItemQuantity: Integer read Get_ItemQuantity write Set_ItemQuantity;
+    property ItemQuantity: Double read Get_ItemQuantity write Set_ItemQuantity;
     property TypeCode: UnicodeString read Get_TypeCode write Set_TypeCode;
     property Type_: UnicodeString read Get_Type_ write Set_Type_;
     property PhysicalLogisticsShippingMarks: IXMLPhysicalLogisticsShippingMarksType read Get_PhysicalLogisticsShippingMarks;
@@ -1045,7 +1047,7 @@ type
     { IXMLSpecifiedSupplyChainConsignmentType }
     function Get_GrossWeightMeasure: IXMLGrossWeightMeasureType;
     function Get_AssociatedInvoiceAmount: IXMLAssociatedInvoiceAmountType;
-    function Get_ConsignmentItemQuantity: Integer;
+    function Get_ConsignmentItemQuantity: Double;
     function Get_ConsignorTradeParty: IXMLConsignorTradePartyType;
     function Get_ConsigneeTradeParty: IXMLConsigneeTradePartyType;
     function Get_CarrierTradeParty: IXMLCarrierTradePartyType;
@@ -1058,7 +1060,7 @@ type
     function Get_UtilizedLogisticsTransportEquipment: IXMLUtilizedLogisticsTransportEquipmentTypeList;
     function Get_MainCarriageLogisticsTransportMovement: IXMLMainCarriageLogisticsTransportMovementType;
     function Get_DeliveryInstructions: IXMLDeliveryInstructionsType;
-    procedure Set_ConsignmentItemQuantity(Value: Integer);
+    procedure Set_ConsignmentItemQuantity(Value: Double);
   public
     procedure AfterConstruction; override;
   end;
@@ -1181,8 +1183,8 @@ type
   TXMLTelephoneUniversalCommunicationType = class(TXMLNode, IXMLTelephoneUniversalCommunicationType)
   protected
     { IXMLTelephoneUniversalCommunicationType }
-    function Get_CompleteNumber: Integer;
-    procedure Set_CompleteNumber(Value: Integer);
+    function Get_CompleteNumber: UnicodeString;
+    procedure Set_CompleteNumber(Value: UnicodeString);
   end;
 
 { TXMLEmailURIUniversalCommunicationType }
@@ -1199,8 +1201,8 @@ type
   TXMLMobileTelephoneUniversalCommunicationType = class(TXMLNode, IXMLMobileTelephoneUniversalCommunicationType)
   protected
     { IXMLMobileTelephoneUniversalCommunicationType }
-    function Get_CompleteNumber: Integer;
-    procedure Set_CompleteNumber(Value: Integer);
+    function Get_CompleteNumber: UnicodeString;
+    procedure Set_CompleteNumber(Value: UnicodeString);
   end;
 
 { TXMLNotifiedTradePartyType }
@@ -1228,6 +1230,7 @@ type
     function Get_Name: UnicodeString;
     function Get_TypeCode: Integer;
     function Get_Description: UnicodeString;
+    function Get_PhysicalGeographicalCoordinate: IXMLPhysicalGeographicalCoordinateType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_TypeCode(Value: Integer);
     procedure Set_Description(Value: UnicodeString);
@@ -1432,11 +1435,11 @@ type
   TXMLTransportLogisticsPackageType = class(TXMLNode, IXMLTransportLogisticsPackageType)
   protected
     { IXMLTransportLogisticsPackageType }
-    function Get_ItemQuantity: Integer;
+    function Get_ItemQuantity: Double;
     function Get_TypeCode: UnicodeString;
     function Get_Type_: UnicodeString;
     function Get_PhysicalLogisticsShippingMarks: IXMLPhysicalLogisticsShippingMarksType;
-    procedure Set_ItemQuantity(Value: Integer);
+    procedure Set_ItemQuantity(Value: Double);
     procedure Set_TypeCode(Value: UnicodeString);
     procedure Set_Type_(Value: UnicodeString);
   public
@@ -1823,12 +1826,12 @@ begin
   RegisterChildNode('ConsigneeReceiptLogisticsLocation', TXMLConsigneeReceiptLogisticsLocationType);
   RegisterChildNode('DeliveryTransportEvent', TXMLDeliveryTransportEventType);
   RegisterChildNode('PickUpTransportEvent', TXMLPickUpTransportEventType);
-  RegisterChildNode('IncludedSupplyChainConsignmentItem', TXMLIncludedSupplyChainConsignmentItemType);
-  RegisterChildNode('UtilizedLogisticsTransportEquipment', TXMLUtilizedLogisticsTransportEquipmentType);
+  RegisterChildNode('ram:IncludedSupplyChainConsignmentItem', TXMLIncludedSupplyChainConsignmentItemType);
+  RegisterChildNode('ram:UtilizedLogisticsTransportEquipment', TXMLUtilizedLogisticsTransportEquipmentType);
   RegisterChildNode('MainCarriageLogisticsTransportMovement', TXMLMainCarriageLogisticsTransportMovementType);
   RegisterChildNode('DeliveryInstructions', TXMLDeliveryInstructionsType);
-  FIncludedSupplyChainConsignmentItem := CreateCollection(TXMLIncludedSupplyChainConsignmentItemTypeList, IXMLIncludedSupplyChainConsignmentItemType, 'IncludedSupplyChainConsignmentItem') as IXMLIncludedSupplyChainConsignmentItemTypeList;
-  FUtilizedLogisticsTransportEquipment := CreateCollection(TXMLUtilizedLogisticsTransportEquipmentTypeList, IXMLUtilizedLogisticsTransportEquipmentType, 'UtilizedLogisticsTransportEquipment') as IXMLUtilizedLogisticsTransportEquipmentTypeList;
+  FIncludedSupplyChainConsignmentItem := CreateCollection(TXMLIncludedSupplyChainConsignmentItemTypeList, IXMLIncludedSupplyChainConsignmentItemType, 'ram:IncludedSupplyChainConsignmentItem') as IXMLIncludedSupplyChainConsignmentItemTypeList;
+  FUtilizedLogisticsTransportEquipment := CreateCollection(TXMLUtilizedLogisticsTransportEquipmentTypeList, IXMLUtilizedLogisticsTransportEquipmentType, 'ram:UtilizedLogisticsTransportEquipment') as IXMLUtilizedLogisticsTransportEquipmentTypeList;
   inherited;
 end;
 
@@ -1842,12 +1845,12 @@ begin
   Result := ChildNodes['ram:AssociatedInvoiceAmount'] as IXMLAssociatedInvoiceAmountType;
 end;
 
-function TXMLSpecifiedSupplyChainConsignmentType.Get_ConsignmentItemQuantity: Integer;
+function TXMLSpecifiedSupplyChainConsignmentType.Get_ConsignmentItemQuantity: Double;
 begin
   Result := ChildNodes['ram:ConsignmentItemQuantity'].NodeValue;
 end;
 
-procedure TXMLSpecifiedSupplyChainConsignmentType.Set_ConsignmentItemQuantity(Value: Integer);
+procedure TXMLSpecifiedSupplyChainConsignmentType.Set_ConsignmentItemQuantity(Value: Double);
 begin
   ChildNodes['ram:ConsignmentItemQuantity'].NodeValue := Value;
 end;
@@ -2174,12 +2177,12 @@ end;
 
 { TXMLTelephoneUniversalCommunicationType }
 
-function TXMLTelephoneUniversalCommunicationType.Get_CompleteNumber: Integer;
+function TXMLTelephoneUniversalCommunicationType.Get_CompleteNumber: UnicodeString;
 begin
-  Result := ChildNodes['ram:CompleteNumber'].NodeValue;
+  Result := ChildNodes['ram:CompleteNumber'].Text;
 end;
 
-procedure TXMLTelephoneUniversalCommunicationType.Set_CompleteNumber(Value: Integer);
+procedure TXMLTelephoneUniversalCommunicationType.Set_CompleteNumber(Value: UnicodeString);
 begin
   ChildNodes['ram:CompleteNumber'].NodeValue := Value;
 end;
@@ -2198,12 +2201,12 @@ end;
 
 { TXMLMobileTelephoneUniversalCommunicationType }
 
-function TXMLMobileTelephoneUniversalCommunicationType.Get_CompleteNumber: Integer;
+function TXMLMobileTelephoneUniversalCommunicationType.Get_CompleteNumber: UnicodeString;
 begin
-  Result := ChildNodes['ram:CompleteNumber'].NodeValue;
+  Result := ChildNodes['ram:CompleteNumber'].Text;
 end;
 
-procedure TXMLMobileTelephoneUniversalCommunicationType.Set_CompleteNumber(Value: Integer);
+procedure TXMLMobileTelephoneUniversalCommunicationType.Set_CompleteNumber(Value: UnicodeString);
 begin
   ChildNodes['ram:CompleteNumber'].NodeValue := Value;
 end;
@@ -2258,6 +2261,7 @@ end;
 procedure TXMLCarrierAcceptanceLogisticsLocationType.AfterConstruction;
 begin
   RegisterChildNode('ID', TXMLIDType);
+  RegisterChildNode('ram:PhysicalGeographicalCoordinate', TXMLPhysicalGeographicalCoordinateType);
   inherited;
 end;
 
@@ -2296,12 +2300,17 @@ begin
   ChildNodes['ram:Description'].NodeValue := Value;
 end;
 
+function TXMLCarrierAcceptanceLogisticsLocationType.Get_PhysicalGeographicalCoordinate: IXMLPhysicalGeographicalCoordinateType;
+begin
+  Result := ChildNodes['ram:PhysicalGeographicalCoordinate'] as IXMLPhysicalGeographicalCoordinateType;
+end;
+
 { TXMLConsigneeReceiptLogisticsLocationType }
 
 procedure TXMLConsigneeReceiptLogisticsLocationType.AfterConstruction;
 begin
   RegisterChildNode('ID', TXMLIDType);
-  RegisterChildNode('PhysicalGeographicalCoordinate', TXMLPhysicalGeographicalCoordinateType);
+  RegisterChildNode('ram:PhysicalGeographicalCoordinate', TXMLPhysicalGeographicalCoordinateType);
   inherited;
 end;
 
@@ -2714,12 +2723,12 @@ begin
   inherited;
 end;
 
-function TXMLTransportLogisticsPackageType.Get_ItemQuantity: Integer;
+function TXMLTransportLogisticsPackageType.Get_ItemQuantity: Double;
 begin
   Result := ChildNodes['ram:ItemQuantity'].NodeValue;
 end;
 
-procedure TXMLTransportLogisticsPackageType.Set_ItemQuantity(Value: Integer);
+procedure TXMLTransportLogisticsPackageType.Set_ItemQuantity(Value: Double);
 begin
   ChildNodes['ram:ItemQuantity'].NodeValue := Value;
 end;

@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat
              , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat, SummCardSecondDiff TFloat, SummCardSecondCash TFloat
              , SummCardSecond_Avance TFloat
+             , SummAvCardSecond TFloat, SummAvCardSecondRecalc TFloat
              , SummNalog TFloat, SummNalogRecalc TFloat
              , SummNalogRet TFloat, SummNalogRetRecalc TFloat
              , SummMinus TFloat, SummFine TFloat, SummFineOth TFloat, SummFineOthRecalc TFloat
@@ -524,7 +525,9 @@ BEGIN
             , MIFloat_SummCardSecondRecalc.ValueData  AS SummCardSecondRecalc
             , MIFloat_SummCardSecondDiff.ValueData    AS SummCardSecondDiff
             , MIFloat_SummCardSecondCash.ValueData    AS SummCardSecondCash
-            , tmpMI_SummCardSecondRecalc.SummCardSecondRecalc ::TFloat AS SummCardSecond_Avance
+            , tmpMI_SummCardSecondRecalc.SummCardSecondRecalc ::TFloat AS SummCardSecond_Avance    
+            , MIFloat_SummAvCardSecond.ValueData       AS SummAvCardSecond
+            , MIFloat_SummAvCardSecondRecalc.ValueData AS SummAvCardSecondRecalc
             , MIFloat_SummNalog.ValueData             AS SummNalog
             , MIFloat_SummNalogRecalc.ValueData       AS SummNalogRecalc
             , MIFloat_SummNalogRet.ValueData          AS SummNalogRet
@@ -785,6 +788,12 @@ BEGIN
                                         ON MIFloat_DaySkip.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_DaySkip.DescId = zc_MIFloat_DaySkip()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecond
+                                        ON MIFloat_SummAvCardSecond.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummAvCardSecond.DescId = zc_MIFloat_SummAvCardSecond()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecondRecalc
+                                        ON MIFloat_SummAvCardSecondRecalc.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummAvCardSecondRecalc.DescId = zc_MIFloat_SummAvCardSecondRecalc()
 
             LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = tmpAll.MovementItemId
@@ -875,6 +884,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 02.05.23         *
  27.03.23         *
  17.01.23         *
  09.06.22         *

@@ -190,8 +190,7 @@ BEGIN
                    AND MovementLinkObject.DescId IN (zc_MovementLinkObject_CurrencyDocument()
                                                  )
                ) 
-
-                                                         
+                                                        
     , tmpListContainerSumm AS
                       (SELECT MIContainer.JuridicalId
                             , MIContainer.InfoMoneyId
@@ -309,10 +308,10 @@ BEGIN
                                     AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
                                   )
        , tmpMIFloat_ChangePercentAmount AS (SELECT MovementItemFloat.*
-                                  FROM MovementItemFloat
-                                  WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpListContainerSumm.MovementItemId FROM tmpListContainerSumm)
-                                    AND MovementItemFloat.DescId = zc_MIFloat_ChangePercentAmount()
-                                  )
+                                            FROM MovementItemFloat
+                                            WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpListContainerSumm.MovementItemId FROM tmpListContainerSumm)
+                                              AND MovementItemFloat.DescId = zc_MIFloat_ChangePercentAmount()
+                                            )
 
 
        , tmpOperationGroup_all AS
@@ -428,6 +427,18 @@ BEGIN
                                   ) 
                                  
 
+       , tmpObjectBoolean_PriceWithVAT AS (SELECT ObjectBoolean.*
+                                           FROM ObjectBoolean
+                                           WHERE ObjectBoolean.ObjectId IN (SELECT DISTINCT tmpMLO_PriceList.ObjectId FROM tmpMLO_PriceList)
+                                             AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
+                                          )
+
+       , tmpObjectFloat_VATPercent AS (SELECT ObjectFloat.*
+                                       FROM ObjectFloat
+                                       WHERE ObjectFloat.ObjectId IN (SELECT DISTINCT tmpMLO_PriceList.ObjectId FROM tmpMLO_PriceList)
+                                         AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent()
+                                       )
+
        , tmpOperationGroup AS
                 (SELECT MovementDesc.ItemName
                       , Movement.Id                            AS MovementId
@@ -476,12 +487,12 @@ BEGIN
                       LEFT JOIN tmpMLO_PriceList AS MovementLinkObject_PriceList
                                                  ON MovementLinkObject_PriceList.MovementId = tmpListContainerSumm.MovementId
                                                 AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
-                      LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
-                                              ON ObjectBoolean_PriceWithVAT.ObjectId = MovementLinkObject_PriceList.ObjectId
-                                             AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
-                      LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
-                                            ON ObjectFloat_VATPercent.ObjectId =  MovementLinkObject_PriceList.ObjectId
-                                           AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
+                      LEFT JOIN tmpObjectBoolean_PriceWithVAT AS ObjectBoolean_PriceWithVAT
+                                                              ON ObjectBoolean_PriceWithVAT.ObjectId = MovementLinkObject_PriceList.ObjectId
+                                                             AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
+                      LEFT JOIN tmpObjectFloat_VATPercent AS ObjectFloat_VATPercent
+                                                          ON ObjectFloat_VATPercent.ObjectId =  MovementLinkObject_PriceList.ObjectId
+                                                         AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
                  GROUP BY MovementDesc.ItemName
                         , Movement.Id
                         , Movement.InvNumber
@@ -601,7 +612,7 @@ BEGIN
           
           -- Товар и Вид товара   --tmpGoodsByGoodsKind_View
           LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpOperationGroup.GoodsId
-                                                AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpOperationGroup.GoodsKindId
+                                            AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpOperationGroup.GoodsKindId
           -- вес в упаковке: "чистый" вес + вес 1-ого пакета
           LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
                                 ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -644,16 +655,17 @@ $BODY$
 */
 
 -- тест
---  select * from gpReport_GoodsMI_byMovement_copy 
+--
+/*  select * from gpReport_GoodsMI_byMovement_copy 
 (inStartDate := ('01.03.2023')::TDateTime , inEndDate := ('02.03.2023')::TDateTime ,
  inPriceDate := ('01.03.2023')::TDateTime , inDescId := 5 , inUnitId := 0 , 
  inJuridicalId := 0 , inInfoMoneyId := 0 , inPaidKindId := 0 ,
   inGoodsGroupId := 1832 , inGoodsId := 0 ,  inSession := '5');
-
+   */
 
 /*
 
-
+---47 секунд --данніе за 2 дня
 
 
      WITH -- Ограничения по товару
@@ -744,20 +756,7 @@ $BODY$
                       )
 
 
-,tmp1 AS(
-SELECT *
 
-                       FROM (SELECT AnalyzerId, isSale, isCost, isSumm, FALSE AS isLoss
-                             FROM Constant_ProfitLoss_AnalyzerId_View
-                             WHERE (isSale = TRUE  AND isCost = FALSE AND 5 = zc_Movement_Sale())
-                                OR (isSale = FALSE AND isCost = FALSE AND 5 = zc_Movement_ReturnIn())
-                             ) AS tmpAnalyzer
-                             INNER JOIN MovementItemContainer AS MIContainer
-                                                              ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
-                                                             AND MIContainer.OperDate BETWEEN '01.03.2023' AND '02.03.2023'
-
-
-/*
     , tmpMovementFloat AS (SELECT MovementFloat.*
                            FROM MovementFloat
                            WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpContainerSumm.MovementId FROM tmpContainerSumm)
@@ -902,6 +901,7 @@ SELECT *
                                                          AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
                       )
 
+
        , tmpMIBoolean_BarCode AS (SELECT MIBoolean_BarCode.*
                                   FROM MovementItemBoolean AS MIBoolean_BarCode 
                                   WHERE MIBoolean_BarCode.MovementItemId IN (SELECT DISTINCT tmpListContainerSumm.MovementItemId FROM tmpListContainerSumm)
@@ -924,12 +924,12 @@ SELECT *
                       -- , tmpListContainerSumm.GoodsKindId
                       -- , tmpListContainerSumm.MeasureId
                       -- , tmpListContainerSumm.Price
-                      , CASE WHEN true_show = TRUE THEN tmpListContainerSumm.GoodsId     ELSE 0 END AS GoodsId
-                      , CASE WHEN true_show = TRUE THEN tmpListContainerSumm.GoodsKindId ELSE 0 END AS GoodsKindId
-                      , CASE WHEN true_show = TRUE THEN tmpListContainerSumm.MeasureId   ELSE 0 END AS MeasureId
-                      , CASE WHEN true_show = TRUE THEN tmpListContainerSumm.Price       ELSE 0 END AS Price
-                      , CASE WHEN true_show = TRUE THEN tmpListContainerSumm.isBarCode   ELSE FALSE END AS isBarCode
-                      , CASE WHEN true_show = TRUE THEN tmpListContainerSumm.ChangePercentAmount ELSE 0 END AS ChangePercentAmount
+                      , CASE WHEN TRUE = TRUE THEN tmpListContainerSumm.GoodsId     ELSE 0 END AS GoodsId
+                      , CASE WHEN TRUE = TRUE THEN tmpListContainerSumm.GoodsKindId ELSE 0 END AS GoodsKindId
+                      , CASE WHEN TRUE = TRUE THEN tmpListContainerSumm.MeasureId   ELSE 0 END AS MeasureId
+                      , CASE WHEN TRUE = TRUE THEN tmpListContainerSumm.Price       ELSE 0 END AS Price
+                      , CASE WHEN TRUE = TRUE THEN tmpListContainerSumm.isBarCode   ELSE FALSE END AS isBarCode
+                      , CASE WHEN TRUE = TRUE THEN tmpListContainerSumm.ChangePercentAmount ELSE 0 END AS ChangePercentAmount
                       , SUM (tmpListContainerSumm.Amount)              AS Amount
                       , SUM (tmpListContainerSumm.Amount_Sh)           AS Amount_Sh
                       , SUM (tmpListContainerSumm.AmountChangePercent)    AS AmountChangePercent
@@ -998,8 +998,8 @@ SELECT *
                         , tmpListContainerSumm.GoodsKindId
                         , tmpListContainerSumm.MeasureId
                         , tmpListContainerSumm.Price
-                        , CASE WHEN true_show = TRUE THEN tmpListContainerSumm.isBarCode   ELSE FALSE END
-                        , CASE WHEN true_show = TRUE THEN tmpListContainerSumm.ChangePercentAmount ELSE 0 END
+                        , CASE WHEN TRUE = TRUE THEN tmpListContainerSumm.isBarCode   ELSE FALSE END
+                        , CASE WHEN TRUE = TRUE THEN tmpListContainerSumm.ChangePercentAmount ELSE 0 END
                 )
 
        , tmpMLO_PriceList AS (SELECT MovementLinkObject_PriceList.*
@@ -1026,6 +1026,17 @@ SELECT *
                                      AND MovementFloat.DescId = zc_MovementFloat_ChangePercent()
                                   ) 
                                  
+       , tmpObjectBoolean_PriceWithVAT AS (SELECT ObjectBoolean.*
+                                           FROM ObjectBoolean
+                                           WHERE ObjectBoolean.ObjectId IN (SELECT DISTINCT tmpMLO_PriceList.ObjectId FROM tmpMLO_PriceList)
+                                             AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
+                                          )
+
+       , tmpObjectFloat_VATPercent AS (SELECT ObjectFloat.*
+                                       FROM ObjectFloat
+                                       WHERE ObjectFloat.ObjectId IN (SELECT DISTINCT tmpMLO_PriceList.ObjectId FROM tmpMLO_PriceList)
+                                         AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent()
+                                       )
 
        , tmpOperationGroup AS
                 (SELECT MovementDesc.ItemName
@@ -1075,10 +1086,10 @@ SELECT *
                       LEFT JOIN tmpMLO_PriceList AS MovementLinkObject_PriceList
                                                  ON MovementLinkObject_PriceList.MovementId = tmpListContainerSumm.MovementId
                                                 AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
-                      LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
+                      LEFT JOIN tmpObjectBoolean_PriceWithVAT AS ObjectBoolean_PriceWithVAT
                                               ON ObjectBoolean_PriceWithVAT.ObjectId = MovementLinkObject_PriceList.ObjectId
                                              AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
-                      LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
+                      LEFT JOIN tmpObjectFloat_VATPercent AS ObjectFloat_VATPercent
                                             ON ObjectFloat_VATPercent.ObjectId =  MovementLinkObject_PriceList.ObjectId
                                            AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
                  GROUP BY MovementDesc.ItemName
@@ -1102,6 +1113,9 @@ SELECT *
                         , tmpListContainerSumm.ChangePercentAmount
                 )      
  , tmpGoodsByGoodsKind_View AS (SELECT * FROM Object_GoodsByGoodsKind_View)
+
+
+
 
 -- lfSelect_ObjectHistory_PriceListItem   -- тоже попробовать выбрать 
 
@@ -1200,37 +1214,27 @@ SELECT *
           
           -- Товар и Вид товара   --tmpGoodsByGoodsKind_View
           LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpOperationGroup.GoodsId
-                                                AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpOperationGroup.GoodsKindId   and 1=0
+                                                AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpOperationGroup.GoodsKindId--   and 1=0
           -- вес в упаковке: "чистый" вес + вес 1-ого пакета
           LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
                                 ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
                                AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
           
           LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= tmpOperationGroup.PriceListId
-                                                        , inOperDate   := inPriceDate
+                                                        , inOperDate   := ('01.03.2023')::TDateTime 
                                                          ) AS lfSelectPrice ON lfSelectPrice.GoodsId =tmpOperationGroup.GoodsId
-                                                                           AND lfSelectPrice.GoodsKindId = tmpOperationGroup.GoodsKindId   and 1=0
+                                                                           AND lfSelectPrice.GoodsKindId = tmpOperationGroup.GoodsKindId  -- and 1=0
 
           LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= tmpOperationGroup.PriceListId
-                                                        , inOperDate   := inPriceDate
+                                                        , inOperDate   := ('01.03.2023')::TDateTime 
                                                          ) AS lfSelectPrice_ ON lfSelectPrice_.GoodsId =tmpOperationGroup.GoodsId
-                                                                            AND lfSelectPrice_.GoodsKindId IS Null   and 1=0
+                                                                            AND lfSelectPrice_.GoodsKindId IS Null  -- and 1=0
 
           LEFT JOIN tmpMLO_Contract AS MovementLinkObject_Contract
                                     ON MovementLinkObject_Contract.MovementId = tmpOperationGroup.MovementId
           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
      ;
-*/
-
-
-
-
-
-
-
-
-
 
 
 
