@@ -1533,7 +1533,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_CashSettings_SendCashErrorTelId() RET
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_CashSettings_SendCashErrorTelId', zc_Object_CashSettings(), 'ID в телеграм для отправки ошибок на кассах' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashSettings_SendCashErrorTelId');
 
-
+CREATE OR REPLACE FUNCTION zc_ObjectString_PartionGoods_PartNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PartionGoods_PartNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PartionGoods(), 'zc_ObjectString_PartionGoods_PartNumber', '№ по тех паспорту ' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PartionGoods_PartNumber');
+  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
