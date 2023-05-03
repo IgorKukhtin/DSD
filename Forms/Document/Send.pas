@@ -184,6 +184,11 @@ type
     actGetImportSetting2: TdsdExecStoredProc;
     macLoadExcel2: TMultiAction;
     bbLoadExcel2: TdxBarButton;
+    actPartionGoodsAssetChoiceForm: TOpenChoiceForm;
+    actInsertRecordAsset: TInsertRecord;
+    macInsertRecordAsset: TMultiAction;
+    bbInsertRecordAsset: TdxBarButton;
+    bbPartionGoodsAssetChoiceForm: TdxBarButton;
   private
     { Private declarations }
   public
