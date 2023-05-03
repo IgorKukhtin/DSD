@@ -37,6 +37,7 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert    Boolean;
    DECLARE vbBranchId    Integer;
+   DECLARE vbIsContract_NotVAT Boolean;
 BEGIN
 
      -- Проверка/замена Валюта - Договор
@@ -54,6 +55,9 @@ BEGIN
 
      -- замена, т.к. теперь история
      ioChangePercent:= COALESCE ((SELECT Object_PercentView.ChangePercent FROM Object_ContractCondition_PercentView AS Object_PercentView WHERE Object_PercentView.ContractId = inContractId AND inOperDatePartner BETWEEN Object_PercentView.StartDate AND Object_PercentView.EndDate), 0);
+
+     -- нашли
+     vbIsContract_NotVAT:= COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = inContractId AND OB.DescId = zc_ObjectBoolean_Contract_NotVAT()), FALSE);
 
      -- нашли Филиал
      vbBranchId:= (SELECT DISTINCT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0);
@@ -115,7 +119,7 @@ BEGIN
         OR COALESCE (ioPriceListId, 0) = 0
      THEN
          -- !!!замена!!!
-         SELECT tmp.PriceListId, tmp.PriceListName, tmp.PriceWithVAT, tmp.VATPercent
+         SELECT tmp.PriceListId, tmp.PriceListName, tmp.PriceWithVAT, CASE WHEN vbIsContract_NotVAT = TRUE THEN 0 ELSE tmp.VATPercent END
                 INTO ioPriceListId, outPriceListName, outPriceWithVAT, outVATPercent
          FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := inContractId
                                                    , inPartnerId      := inToId
@@ -139,7 +143,7 @@ BEGIN
      ELSE
          SELECT Object_PriceList.ValueData                             AS PriceListName
               , COALESCE (ObjectBoolean_PriceWithVAT.ValueData, FALSE) AS PriceWithVAT
-              , ObjectFloat_VATPercent.ValueData                       AS VATPercent
+              , CASE WHEN vbIsContract_NotVAT = TRUE THEN 0 ELSE ObjectFloat_VATPercent.ValueData END AS VATPercent
                 INTO outPriceListName, outPriceWithVAT, outVATPercent
          FROM Object AS Object_PriceList
               LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
