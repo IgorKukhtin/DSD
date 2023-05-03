@@ -64,7 +64,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), vbMovementItemId, inServiceDate);
 
  
-      -- !!!протокол через свойства конкретного объекта!!!
+     -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = FALSE
      THEN
          -- сохранили свойство <Дата корректировки>
