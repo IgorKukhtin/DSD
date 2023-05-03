@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , AssetId Integer, AssetCode Integer, AssetName TVarChar
              , AssetId_two Integer, AssetCode_two Integer, AssetName_two TVarChar
              , UnitName TVarChar
-             , StorageName TVarChar
+             , StorageId Integer, StorageName TVarChar
              , Price TFloat
              , AmountRemains TFloat
              , Amount_child_sec TFloat, Amount_diff TFloat      --резерв
@@ -187,6 +187,7 @@ BEGIN
            , CAST (NULL AS Integer)     AS AssetCode_two
            , CAST (NULL AS TVarChar)    AS AssetName_two           
            , CAST (NULL AS TVarChar)    AS UnitName
+           , CAST (NULL AS Integer)     AS StorageId
            , CAST (NULL AS TVarChar)    AS StorageName
            , CAST (NULL AS TFloat)      AS Price
 
@@ -299,6 +300,7 @@ BEGIN
            , Object_Asset_two.ValueData            AS AssetName_two
 
            , Object_Unit_partion.ValueData         AS UnitName
+           , Object_Storage.Id                     AS StorageId
            , Object_Storage.ValueData              AS StorageName
            , tmpMIContainer.Price                  AS Price
 
@@ -598,6 +600,7 @@ BEGIN
            , Object_Asset_two.ValueData            AS AssetName_two
 
            , Object_Unit_partion.ValueData      AS UnitName
+           , Object_Storage.Id                  AS StorageId
            , Object_Storage.ValueData           AS StorageName
            , tmpMIContainer.Price               AS Price
 

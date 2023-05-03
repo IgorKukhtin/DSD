@@ -294,15 +294,6 @@ BEGIN
                     + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummMedicdayAdd()), 0)
                       -- "минус" <за прогул>
                     - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummSkip()), 0)
-
-                             -- плюс за санобработка
-                           , COALESCE (MIFloat_SummMedicdayAdd.ValueData, 0)  AS SummMedicdayAdd
-                             -- минус за прогул
-                           , COALESCE (MIFloat_SummSkip.ValueData, 0)         AS SummSkip
-
-                           , SUM (tmpMI_all.SummMedicdayAdd)  AS SummMedicdayAdd
-                           , SUM (tmpMI_all.SummSkip)         AS SummSkip
-
                      ;
      -- рассчитываем сумму к выплате из кассы
      outAmountCash:= outAmountToPay
