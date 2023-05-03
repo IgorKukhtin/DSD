@@ -164,7 +164,7 @@ BEGIN
          , COALESCE (Object_SheetWorkTime.ValueData, COALESCE ('* '||Object_Position_SheetWorkTime.ValueData, COALESCE ('** '||Object_Unit_SheetWorkTime.ValueData, '')) ) ::TVarChar     AS SheetWorkTimeName
 
          , Object_Personal_View.DateIn
-         , Object_Personal_View.DateOut_user AS DateOut
+         , CASE WHEN Object_Personal_View.isErased = TRUE THEN Object_Personal_View.DateOut ELSE Object_Personal_View.DateOut_user END ::TDateTime AS DateOut
          , Object_Personal_View.DateSend  ::TDateTime
          , Object_Personal_View.isDateOut
          , Object_Personal_View.isDateSend
