@@ -100,6 +100,12 @@ object DiscountServiceForm: TDiscountServiceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Token'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'isOneSupplier'
         Value = Null
         DataType = ftBoolean

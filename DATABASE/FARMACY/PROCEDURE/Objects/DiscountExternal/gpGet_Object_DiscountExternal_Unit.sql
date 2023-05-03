@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UserName           TVarChar
              , Password           TVarChar
              , ExternalUnit       TVarChar
+             , Token              TVarChar
              , isOneSupplier      Boolean 
              , isTwoPackages      Boolean
               )
@@ -44,9 +45,10 @@ BEGIN
            , ObjectString_Service.ValueData   AS Service
            , ObjectString_Port.ValueData      AS Port
 
-           , CASE WHEN COALESCE (ObjectBoolean_NotUseAPI.ValueData, False) = TRUE THEN '' ELSE ObjectString_User.ValueData END::TVarChar  AS UserName
-           , CASE WHEN COALESCE (ObjectBoolean_NotUseAPI.ValueData, False) = TRUE THEN '' ELSE ObjectString_Password.ValueData END::TVarChar         AS Password
-           , CASE WHEN COALESCE (ObjectBoolean_NotUseAPI.ValueData, False) = TRUE THEN '' ELSE ObjectString_ExternalUnit.ValueData END::TVarChar     AS ExternalUnit
+           , CASE WHEN COALESCE (ObjectBoolean_NotUseAPI.ValueData, False) = TRUE THEN '' ELSE ObjectString_User.ValueData END::TVarChar           AS UserName
+           , CASE WHEN COALESCE (ObjectBoolean_NotUseAPI.ValueData, False) = TRUE THEN '' ELSE ObjectString_Password.ValueData END::TVarChar       AS Password
+           , CASE WHEN COALESCE (ObjectBoolean_NotUseAPI.ValueData, False) = TRUE THEN '' ELSE ObjectString_ExternalUnit.ValueData END::TVarChar   AS ExternalUnit
+           , CASE WHEN COALESCE (ObjectBoolean_NotUseAPI.ValueData, False) = TRUE THEN '' ELSE ObjectString_Token.ValueData END::TVarChar          AS Token
            , COALESCE(ObjectBoolean_OneSupplier.ValueData, False)      AS isOneSupplier
            , COALESCE(ObjectBoolean_TwoPackages.ValueData, False)      AS isTwoPackages
 
@@ -77,6 +79,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_ExternalUnit
                                    ON ObjectString_ExternalUnit.ObjectId = ObjectLink_DiscountExternal.ObjectId
                                   AND ObjectString_ExternalUnit.DescId = zc_ObjectString_DiscountExternalTools_ExternalUnit()
+            LEFT JOIN ObjectString AS ObjectString_Token
+                                   ON ObjectString_Token.ObjectId = ObjectLink_DiscountExternal.ObjectId
+                                  AND ObjectString_Token.DescId = zc_ObjectString_DiscountExternalTools_Token()
             LEFT JOIN ObjectBoolean AS ObjectBoolean_NotUseAPI
                                     ON ObjectBoolean_NotUseAPI.ObjectId = ObjectLink_DiscountExternal.ObjectId
                                    AND ObjectBoolean_NotUseAPI.DescId = zc_ObjectBoolean_DiscountExternalTools_NotUseAPI()
@@ -104,4 +109,4 @@ ALTER FUNCTION gpGet_Object_DiscountExternal_Unit (Integer, TVarChar) OWNER TO p
 
 -- тест
 -- 
-SELECT * FROM gpGet_Object_DiscountExternal_Unit (15466976   , zfCalc_UserAdmin())
+select * from gpGet_Object_DiscountExternal_Unit(inId := 22264564 ,  inSession := '3');
