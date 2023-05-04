@@ -146,6 +146,8 @@ begin
       if ShowModal = mrOk then
       begin
         // TUpdater.AutomaticUpdateRecoveryFarmacy;
+        if isUserRole('Инвентаризация', True) then
+          TUpdater.AutomaticDownloadFarmacyInventory(ExtractFilePath(ParamStr(0)), False);
         TUpdater.AutomaticUpdateProgram;
         if not FindCmdLineSwitch('skipcheckconnect') then
            TUpdater.AutomaticCheckConnect;

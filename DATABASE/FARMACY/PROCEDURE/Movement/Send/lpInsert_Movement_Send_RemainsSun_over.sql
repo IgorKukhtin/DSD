@@ -1909,6 +1909,72 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
      ANALYSE _tmpRemains_Partion;
 
        raise notice 'Value 18 2: % -> % %', CLOCK_TIMESTAMP(), vbIndex, vbRowCount;
+       
+       
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpRemains_calc_Step1'))
+     THEN
+       DROP TABLE _tmpRemains_calc_Step1;
+     END IF;
+
+     CREATE TEMP TABLE _tmpRemains_calc_Step1 ON COMMIT DROP AS
+            SELECT _tmpRemains_calc.GoodsId
+                 , _tmpRemains_calc.UnitId 
+                 , _tmpRemains_calc.AmountResult 
+                 , _tmpRemains_calc.Price
+                 , COALESCE (_tmpRemains_calc_PairSun.Price , _tmpRemains_calc.Price) AS Price_PairSun
+            FROM _tmpRemains_calc
+
+                 -- отбросили !!исключения!!
+                 LEFT JOIN _tmpUnit_SunExclusion AS _tmpUnit_SunExclusion_MCS
+                                                 ON _tmpUnit_SunExclusion_MCS.UnitId_from = vbUnitId_from
+                                                AND _tmpUnit_SunExclusion_MCS.UnitId_to   = _tmpRemains_calc.UnitId
+                                                AND _tmpUnit_SunExclusion_MCS.isMCS_to    = TRUE
+                                                AND COALESCE (_tmpRemains_calc.MCS, 0)     = 0
+
+                 -- найдем цену для пары
+                 LEFT JOIN _tmpRemains_calc AS _tmpRemains_calc_PairSun
+                                            ON _tmpRemains_calc_PairSun.UnitId  = _tmpRemains_calc.UnitId
+                                           AND _tmpRemains_calc_PairSun.GoodsId = vbGoodsId_PairSun
+
+                 -- найдем дисконтній товар
+                 LEFT JOIN _tmpGoods_DiscountExternal AS _tmpGoods_DiscountExternal
+                                                      ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_calc.UnitId
+                                                     AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_calc.GoodsId
+
+                                        
+                 -- отключена Получать товар который отдавался
+                 LEFT JOIN _tmpGoods_Sun_exception AS _tmpGoods_Sun_exception
+                                                   ON _tmpGoods_Sun_exception.UnitId  = _tmpRemains_calc.UnitId
+                                                  AND _tmpGoods_Sun_exception.GoodsId = _tmpRemains_calc.GoodsId
+                     
+                 LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId  = _tmpRemains_calc.UnitId
+
+                 -- отбросили !!закрытые!!
+                 LEFT JOIN tmpPrice ON tmpPrice.UnitId  = _tmpRemains_calc.UnitId
+                                   AND tmpPrice.GoodsId = _tmpRemains_calc.GoodsId
+
+                 -- Были продажи за период
+                 LEFT JOIN tmpSalesGoods ON tmpSalesGoods.UnitId  = _tmpRemains_calc.UnitId 
+                                        AND tmpSalesGoods.GoodsId = _tmpRemains_calc.GoodsId 
+
+/*                 -- отбросили !!исключения!!
+                 LEFT JOIN _tmpUnit_SunExclusion ON _tmpUnit_SunExclusion.UnitId_from = vbUnitId_from
+                                                AND _tmpUnit_SunExclusion.UnitId_to   = _tmpRemains_calc.UnitId
+*/
+            WHERE _tmpUnit_SunExclusion_MCS.UnitId_to IS NULL
+              AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
+              AND COALESCE(_tmpGoods_Sun_exception.Amount, 0) = 0
+              AND ((COALESCE(tmpPrice.isCloseMCS, FALSE) = FALSE OR _tmpUnit_SUN.isLock_ClosePL = FALSE) AND
+                   (COALESCE(tmpPrice.isClose, FALSE) = FALSE OR _tmpUnit_SUN.isLock_CloseGd = FALSE) OR
+                    COALESCE (tmpSalesGoods.GoodsId, 0) <> 0)
+            --  AND _tmpUnit_SunExclusion.UnitId_to IS NULL
+
+            ORDER BY _tmpRemains_calc.GoodsId
+                   , _tmpRemains_calc.UnitId
+           ;
+
+       raise notice 'Value 18 3: % -> % %', CLOCK_TIMESTAMP(), vbIndex, vbRowCount;
+       
 
      -- 6.1.1. распределяем-1 остатки OVER (Сверх запас) - по всем аптекам
      -- CREATE TEMP TABLE _tmpResult_Partion (DriverId Integer, UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount_next TFloat, Summ_next TFloat, MovementId Integer, MovementItemId Integer) ON COMMIT DROP;
@@ -1979,15 +2045,14 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
          FETCH curPartion INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_save, vbKoeffSUN, vbGoodsId_PairSun;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
-
+         
          -- курсор2. - ПОТРЕБНОСТЬ МИНУС сколько уже распределили для vbGoodsId
          OPEN curResult FOR
             SELECT _tmpRemains_calc.UnitId AS UnitId_to
                  , _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) AS AmountResult
                  , _tmpRemains_calc.Price
-                 , COALESCE (_tmpRemains_calc_PairSun.Price
-                 , _tmpRemains_calc.Price) AS Price_PairSun
-            FROM _tmpRemains_calc
+                 , _tmpRemains_calc.Price_PairSun
+            FROM _tmpRemains_calc_Step1 AS _tmpRemains_calc
                  -- сколько уже пришло после распределения-1
                  LEFT JOIN (SELECT _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId, SUM (_tmpResult_Partion.Amount) AS Amount FROM _tmpResult_Partion GROUP BY _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
                            ) AS tmp ON tmp.UnitId_to = _tmpRemains_calc.UnitId
@@ -2000,52 +2065,8 @@ raise notice 'Value 18: %', CLOCK_TIMESTAMP();
                              GROUP BY _tmpSumm_limit.UnitId_to
                             ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_to = _tmpRemains_calc.UnitId
 
-                 -- отбросили !!исключения!!
-                 LEFT JOIN _tmpUnit_SunExclusion AS _tmpUnit_SunExclusion_MCS
-                                                 ON _tmpUnit_SunExclusion_MCS.UnitId_from = vbUnitId_from
-                                                AND _tmpUnit_SunExclusion_MCS.UnitId_to   = _tmpRemains_calc.UnitId
-                                                AND _tmpUnit_SunExclusion_MCS.isMCS_to    = TRUE
-                                                AND COALESCE (_tmpRemains_calc.MCS, 0)     = 0
-
-                 -- найдем цену для пары
-                 LEFT JOIN _tmpRemains_calc AS _tmpRemains_calc_PairSun
-                                            ON _tmpRemains_calc_PairSun.UnitId  = _tmpRemains_calc.UnitId
-                                           AND _tmpRemains_calc_PairSun.GoodsId = vbGoodsId_PairSun
-
-                 -- найдем дисконтній товар
-                 LEFT JOIN _tmpGoods_DiscountExternal AS _tmpGoods_DiscountExternal
-                                                      ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_calc.UnitId
-                                                     AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_calc.GoodsId
-
-                                        
-                 -- отключена Получать товар который отдавался
-                 LEFT JOIN _tmpGoods_Sun_exception AS _tmpGoods_Sun_exception
-                                                   ON _tmpGoods_Sun_exception.UnitId  = _tmpRemains_calc.UnitId
-                                                  AND _tmpGoods_Sun_exception.GoodsId = _tmpRemains_calc.GoodsId
-                     
-                 LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId  = _tmpRemains_calc.UnitId
-
-                 -- отбросили !!закрытые!!
-                 LEFT JOIN tmpPrice ON tmpPrice.UnitId  = _tmpRemains_calc.UnitId
-                                   AND tmpPrice.GoodsId = _tmpRemains_calc.GoodsId
-
-                 -- Были продажи за период
-                 LEFT JOIN tmpSalesGoods ON tmpSalesGoods.UnitId  = _tmpRemains_calc.UnitId 
-                                        AND tmpSalesGoods.GoodsId = _tmpRemains_calc.GoodsId 
-
-/*                 -- отбросили !!исключения!!
-                 LEFT JOIN _tmpUnit_SunExclusion ON _tmpUnit_SunExclusion.UnitId_from = vbUnitId_from
-                                                AND _tmpUnit_SunExclusion.UnitId_to   = _tmpRemains_calc.UnitId
-*/
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
-              AND _tmpUnit_SunExclusion_MCS.UnitId_to IS NULL
-              AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
-              AND COALESCE(_tmpGoods_Sun_exception.Amount, 0) = 0
-              AND ((COALESCE(tmpPrice.isCloseMCS, FALSE) = FALSE OR _tmpUnit_SUN.isLock_ClosePL = FALSE) AND
-                   (COALESCE(tmpPrice.isClose, FALSE) = FALSE OR _tmpUnit_SUN.isLock_CloseGd = FALSE) OR
-                    COALESCE (tmpSalesGoods.GoodsId, 0) <> 0)
-            --  AND _tmpUnit_SunExclusion.UnitId_to IS NULL
 
             ORDER BY --начинаем с аптек, где ПОТРЕБНОСТЬ - максимальным
                      _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) DESC
@@ -2501,54 +2522,6 @@ WHERE Movement.OperDate  >= '01.01.2019'
   AND Movement.StatusId in (  zc_Enum_Status_Erased())
 */
 -- тест
-/*
-     -- все Подразделения для схемы SUN-v2
-     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer, DaySendSUN Integer, DaySendSUNAll Integer, Limit_N TFloat, isLockSale Boolean, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean, isColdOutSUN Boolean) ON COMMIT DROP;
-     -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
-     CREATE TEMP TABLE _tmpUnit_SUN_balance (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
 
-     -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
-     CREATE TEMP TABLE _tmpRemains_all (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpRemains (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
-
-     -- 2.1. вся статистика продаж
-     CREATE TEMP TABLE _tmpSale_over (UnitId Integer, GoodsId Integer, Amount_t1 TFloat, Summ_t1 TFloat, Amount_t2 TFloat, Summ_t2 TFloat) ON COMMIT DROP;
-     -- 2.2. NotSold
-     CREATE TEMP TABLE _tmpSale_not (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
-
-     -- 2.3. Перемещение ВСЕ SUN-кроме текущего - Erased - за СЕГОДНЯ, что б не отправлять / не получать эти товары повторно в СУН-2
-     CREATE TEMP TABLE  _tmpSUN_oth (UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
-
-     -- 2.4. товары для Кратность
-     CREATE TEMP TABLE _tmpGoods_SUN (GoodsId Integer, KoeffSUN TFloat) ON COMMIT DROP;
-
-     -- 2.5. "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
-     CREATE TEMP TABLE _tmpGoods_SUN_PairSun (GoodsId Integer, GoodsId_PairSun Integer) ON COMMIT DROP;
-
-     -- 3.1. все остатки, СРОК
-     CREATE TEMP TABLE _tmpRemains_Partion_all (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, Amount_notSold TFloat) ON COMMIT DROP;
-     -- 3.2. остатки, СРОК - для распределения
-     CREATE TEMP TABLE _tmpRemains_Partion (ContainerDescId Integer, UnitId Integer, GoodsId Integer, MCSValue TFloat, Amount_sale TFloat, Amount TFloat, Amount_save TFloat, Amount_real TFloat) ON COMMIT DROP;
-
-
-     -- 4. Остатки по которым есть Автозаказ и срок
-     CREATE TEMP TABLE _tmpRemains_calc (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, AmountSun_real TFloat, AmountSun_summ TFloat, AmountSun_summ_save TFloat, AmountSun_unit TFloat, AmountSun_unit_save TFloat) ON COMMIT DROP;
-
-     -- 5. из каких аптек остатки со сроками "полностью" закрывают АВТОЗАКАЗ
-     CREATE TEMP TABLE _tmpSumm_limit (UnitId_from Integer, UnitId_to Integer, Summ TFloat) ON COMMIT DROP;
-
-     -- 6.1. распределяем-1 остатки со сроками - по всем аптекам - здесь только >= vbSumm_limit
-     CREATE TEMP TABLE _tmpResult_Partion (DriverId Integer, UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount_next TFloat, Summ_next TFloat, MovementId Integer, MovementItemId Integer) ON COMMIT DROP;
-     -- 6.2. !!!товары - DefSUN - если 2 дня есть в перемещении, т.к. < vbSumm_limit - тогда они участвовать не будут !!!
-     CREATE TEMP TABLE _tmpList_DefSUN (UnitId_from Integer, UnitId_to Integer, GoodsId Integer) ON COMMIT DROP;
-
-     -- 7.1. распределяем перемещения - по партиям со сроками
-     CREATE TEMP TABLE _tmpResult_child (MovementId Integer, UnitId_from Integer, UnitId_to Integer, ParentId Integer, ContainerId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
-
-     -- 8. исключаем такие перемещения
-     CREATE TEMP TABLE _tmpUnit_SunExclusion (UnitId_from Integer, UnitId_to Integer, isMCS_to Boolean) ON COMMIT DROP;
-
- SELECT * FROM lpInsert_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ*/
  
- 
- SELECT * FROM gpReport_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inSession:= '3'); -- FETCH ALL "<unnamed portal 1>";
+ SELECT * FROM gpReport_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '5 DAY', inSession:= '3'); -- FETCH ALL "<unnamed portal 1>";

@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Classes, System.IOUtils, Vcl.Forms, Vcl.Dialogs,
   Authentication, VKDBFDataSet, DB, DataSnap.DBClient, Soap.EncdDecd, Windows,
-  IniUtils, StorageSQLite, CommonData;
+  IniUtils, StorageSQLite, CommonData, dsdDB;
 
 type
   TSaveLocalMode = (slmRewrite, slmUpdate, slmAppend);
@@ -59,6 +59,8 @@ procedure LoadLocalData(ADst: TClientDataSet; AFileName: String; AShowError : Bo
 function GetFileSizeByName(AFileName: String): DWord;
 function GetBackupFileName(AFileName: String): string;
 function CreateCashAttachment(ATable : TClientDataSet): Boolean;
+
+function isUserRole(ARoleList : String; AIsAdmin : Boolean = False) : Boolean;
 
 procedure InitMutex;
 procedure CloseMutex;
@@ -488,6 +490,28 @@ Begin
     User.Free;
   end;
 End;
+
+function isUserRole(ARoleList : String; AIsAdmin : Boolean = False) : Boolean;
+var dsdProc: TdsdStoredProc;
+begin
+  Result := False;
+  try
+    dsdProc := TdsdStoredProc.Create(nil);
+    try
+      dsdProc.StoredProcName := 'gpGet_User_IsRole';
+      dsdProc.OutputType := otResult;
+      dsdProc.Params.Clear;
+      dsdProc.Params.AddParam('inisAdmin', ftBoolean, ptInput, AIsAdmin);
+      dsdProc.Params.AddParam('inUserRole', ftWideString, ptInput, ARoleList);
+      dsdProc.Params.AddParam('gpGet_User_IsRole', ftBoolean, ptOutput, False);
+      dsdProc.Execute(False,False);
+      Result := dsdProc.Params.ParamByName('gpGet_User_IsRole').Value;
+    finally
+      FreeAndNil(dsdProc);
+    end;
+  except
+  end;
+end;
 
   // создаем мутексы если не созданы
 procedure InitMutex;

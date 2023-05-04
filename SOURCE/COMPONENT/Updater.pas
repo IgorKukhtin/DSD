@@ -20,6 +20,7 @@ type
      class procedure AutomaticDownloadFarmacy(APath : string);
      class procedure AutomaticDownloadFarmacyCash(APath : string);
      class procedure AutomaticDownloadFarmacyCashServise(APath : string);
+     class procedure AutomaticDownloadFarmacyInventory(APath : string; AMessage : boolean = True);
      class function AutomaticUpdateProgramTestStart : boolean;
      class function UpdateDll(aFileName: string) : Boolean;
   end;
@@ -779,6 +780,24 @@ begin
   if not FileExists(GetSpecialFolderPath(CSIDL_DESKTOP) + '\Farmacy.exe.lnk') then
   begin
     CreateShortCut(GetSpecialFolderPath(CSIDL_DESKTOP) + '\Farmacy.exe.lnk', '', APath + 'Farmacy.exe');
+  end;
+
+end;
+
+class procedure TUpdater.AutomaticDownloadFarmacyInventory(APath : string; AMessage : boolean = True);
+begin
+
+  if not FileExists(APath + 'FarmacyInventory.exe') then
+  begin
+    FileWriteString(APath + 'FarmacyInventory.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('FarmacyInventory.exe'),
+      GetBinaryPlatfotmSuffics(APath + 'FarmacyInventory.exe', '')));
+    if AMessage then ShowMessage('Файл FarmacyInventory.exe загружен.');
+  end;
+
+  // Востановление ярлыка Farmacy.exe
+  if not FileExists(GetSpecialFolderPath(CSIDL_DESKTOP) + '\FarmacyInventory.exe.lnk') then
+  begin
+    CreateShortCut(GetSpecialFolderPath(CSIDL_DESKTOP) + '\FarmacyInventory.exe.lnk', '', APath + 'FarmacyInventory.exe');
   end;
 
 end;
