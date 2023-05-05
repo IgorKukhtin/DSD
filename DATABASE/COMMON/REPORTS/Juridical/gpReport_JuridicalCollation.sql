@@ -368,8 +368,8 @@ BEGIN
           END :: TFloat AS Kredit_Currency,
 
           Operation.OperDate,
-          Movement.InvNumber,
-          MovementString_InvNumberPartner.ValueData AS InvNumberPartner,
+          CASE WHEN Movement.DescId = zc_Movement_BankAccount() AND 1=0 THEN '' ELSE Movement.InvNumber END :: TVarChar AS InvNumber,
+          CASE WHEN Movement.DescId = zc_Movement_BankAccount() AND 1=0 THEN '' ELSE MovementString_InvNumberPartner.ValueData END :: TVarChar AS InvNumberPartner,
           MIString_Comment.ValueData          AS MovementComment,
           Object_Account_View.AccountCode,
           (CASE WHEN Operation.isNotBalance = TRUE THEN '*ç* ' ELSE '' END || Object_Account_View.AccountName_all) :: TVarChar AS AccountName,
@@ -421,7 +421,7 @@ BEGIN
       LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.AccountId
       LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
       LEFT JOIN Movement ON Movement.Id = Operation.MovementId
-      LEFT JOIN MovementDesc ON Movement.DescId = MovementDesc.Id
+      LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
       LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                ON MovementString_InvNumberPartner.MovementId = Operation.MovementId
                               AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
