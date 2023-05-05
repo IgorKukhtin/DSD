@@ -108,6 +108,7 @@ type
     ceInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
     SummAvance: TcxGridDBColumn;
+    SummAvCardSecond: TcxGridDBColumn;
   private
     { Private declarations }
   public
