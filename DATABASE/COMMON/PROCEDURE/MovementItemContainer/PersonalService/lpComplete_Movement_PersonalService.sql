@@ -33,7 +33,7 @@ BEGIN
          CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, PersonalServiceListId_from Integer
                                         , MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer
                                         , ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer
-                                        , SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummCardSecondDiff TFloat, SummNalogRecalc TFloat, SummNalogRetRecalc TFloat
+                                        , SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummAvCardSecondRecalc TFloat, SummCardSecondDiff TFloat, SummNalogRecalc TFloat, SummNalogRetRecalc TFloat
                                         , SummChildRecalc TFloat, SummMinusExtRecalc TFloat, SummAddOthRecalc TFloat, SummFineOthRecalc TFloat, SummHospOthRecalc TFloat
                                         , SummCompensationRecalc TFloat, SummAvanceRecalc TFloat
                                         , isMovementComplete Boolean) ON COMMIT DROP;

@@ -146,6 +146,10 @@ BEGIN
          THEN
              RAISE EXCEPTION 'Ошибка.Поле <Карта БН (ввод) - 2ф.> заполняется только для Ведомости БН.';
          END IF;
+         IF inSummAvCardSecondRecalc <> 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Поле <Карта БН (ввод) - 2ф. Аванс> заполняется только для Ведомости БН.';
+         END IF;
          IF inSummNalogRecalc <> 0
          THEN
              RAISE EXCEPTION 'Ошибка.Поле <Налоги - удержания (ввод)> заполняется только для Ведомости БН.';

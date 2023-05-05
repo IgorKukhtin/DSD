@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , PositionLevelId Integer, PositionLevelName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount TFloat
-             , SummService TFloat, SummToPay_cash TFloat, SummToPay TFloat, SummCard TFloat, SummCardSecond TFloat, SummCardSecondCash TFloat
+             , SummService TFloat, SummToPay_cash TFloat, SummToPay TFloat, SummCard TFloat, SummCardSecond TFloat, SummAvCardSecond TFloat, SummCardSecondCash TFloat
              , SummNalog TFloat, SummMinus TFloat, SummFine TFloat, SummAdd TFloat, SummHoliday TFloat, SummHosp TFloat
              , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat, SummMinusExt TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
@@ -124,6 +124,7 @@ BEGIN
                                           ELSE COALESCE (MIFloat_SummToPay.ValueData, 0) /*- COALESCE (tmpSummNalog.SummNalog, 0)*/ + COALESCE (MIFloat_SummNalog.ValueData, 0)
                                              - COALESCE (MIFloat_SummCard.ValueData, 0)
                                              - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
+                                             - COALESCE (MIFloat_SummAvCardSecond.ValueData, 0)
                                              - COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
                                            --- COALESCE (MIFloat_SummAvance.ValueData, 0)
                                              + COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0)
@@ -135,7 +136,8 @@ BEGIN
                                          ) AS SummToPay
                                    , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))         AS SummCard
                                    , SUM (COALESCE (MIFloat_SummCardSecond.ValueData, 0))   AS SummCardSecond
-                                   , SUM (COALESCE (MIFloat_SummCardSecondCash.ValueData, 0) + COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0)) AS SummCardSecondCash
+                                   , SUM (COALESCE (MIFloat_SummAvCardSecond.ValueData, 0)) AS SummAvCardSecond
+                                   , SUM (COALESCE (MIFloat_SummCardSecondCash.ValueData, 0) + COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)) AS SummCardSecondCash
 --                                 , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0))        AS SummNalog
 --                                 , SUM (COALESCE (tmpSummNalog.SummNalog, 0))             AS SummNalog
                                    , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))        AS SummMinus
@@ -195,6 +197,9 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
                                                                ON MIFloat_SummCardSecond.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecond
+                                                               ON MIFloat_SummAvCardSecond.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummAvCardSecond.DescId = zc_MIFloat_SummAvCardSecond()
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondCash
                                                                ON MIFloat_SummCardSecondCash.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummCardSecondCash.DescId = zc_MIFloat_SummCardSecondCash()
@@ -257,6 +262,9 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
                                                                ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecondRecalc
+                                                               ON MIFloat_SummAvCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummAvCardSecondRecalc.DescId = zc_MIFloat_SummAvCardSecondRecalc()
 
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummAvance
                                                                ON MIFloat_SummAvance.MovementItemId = MovementItem.Id
@@ -299,6 +307,7 @@ BEGIN
                                    , tmpParent_all.SummToPay - COALESCE (tmpSummNalog.SummNalog, 0) AS SummToPay
                                    , tmpParent_all.SummCard
                                    , tmpParent_all.SummCardSecond
+                                   , tmpParent_all.SummAvCardSecond
                                    , tmpParent_all.SummCardSecondCash
 --                                 , tmpParent_all.SummNalog
                                    , COALESCE (tmpSummNalog.SummNalog, 0) AS SummNalog
@@ -339,6 +348,7 @@ BEGIN
                                    , 0 AS SummToPay
                                    , 0 AS SummCard
                                    , 0 AS SummCardSecond
+                                   , 0 AS SummAvCardSecond
                                    , 0 AS SummCardSecondCash
                                    , 0 AS SummNalog
                                    , 0 AS SummMinus
@@ -473,6 +483,7 @@ BEGIN
                                    , SUM (tmpParent.SummToPay)                    AS SummToPay
                                    , SUM (tmpParent.SummCard)                     AS SummCard
                                    , SUM (tmpParent.SummCardSecond)               AS SummCardSecond
+                                   , SUM (tmpParent.SummAvCardSecond)             AS SummAvCardSecond
                                    , SUM (tmpParent.SummCardSecondCash)           AS SummCardSecondCash
                                    , SUM (tmpParent.SummNalog)                    AS SummNalog
                                    , SUM (tmpParent.SummMinus)                    AS SummMinus
@@ -521,6 +532,7 @@ BEGIN
                                    , tmpService.SummToPay
                                    , tmpService.SummCard
                                    , tmpService.SummCardSecond
+                                   , tmpService.SummAvCardSecond
                                    , tmpService.SummCardSecondCash
                                    , tmpService.SummNalog
                                    , tmpService.SummMinus
@@ -589,6 +601,7 @@ BEGIN
             , tmpData.SummToPay        :: TFloat AS SummToPay
             , tmpData.SummCard         :: TFloat AS SummCard
             , tmpData.SummCardSecond   :: TFloat AS SummCardSecond
+            , tmpData.SummAvCardSecond :: TFloat AS SummAvCardSecond
             , tmpData.SummCardSecondCAsh  :: TFloat AS SummCardSecondCash
             , tmpData.SummNalog        :: TFloat AS SummNalog
             , tmpData.SummMinus        :: TFloat AS SummMinus
@@ -621,6 +634,7 @@ BEGIN
 
             , (CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0
                     ELSE COALESCE (tmpData.SummCardSecond, 0)
+                       + COALESCE (tmpData.SummAvCardSecond, 0)
                        + COALESCE (tmpData.SummCardSecondCash, 0)
                        - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN COALESCE (tmpData.Amount, 0) ELSE 0 END
                        - COALESCE (tmpData.AmountCardSecond_avance, 0)

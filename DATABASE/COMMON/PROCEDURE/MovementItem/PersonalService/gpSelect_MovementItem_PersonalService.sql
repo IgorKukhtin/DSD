@@ -428,7 +428,7 @@ BEGIN
                                AND coalesce (ObjectLink_PersonalServiceList_Avance_F2.ChildObjectId ,0) <> 0
                                )
  
-     -- все документы
+       -- все документы
      , tmpMovement_Avance AS (SELECT MovementDate_ServiceDate.MovementId AS Id
                               FROM MovementDate AS MovementDate_ServiceDate
                                    JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
@@ -443,23 +443,23 @@ BEGIN
                                 AND MovementDate_ServiceDate.MovementId  <> inMovementId
                               ) 
      
-     -- все ведомости у которых заполнено - zc_ObjectLink_PersonalServiceList_Avance_F2
+       -- все ведомости у которых заполнено - zc_ObjectLink_PersonalServiceList_Avance_F2
      , tmpMI_SummCardSecondRecalc AS (SELECT MovementItem.ObjectId                                     AS PersonalId
                                            , MILinkObject_Position.ObjectId                            AS PositionId
-                                           , SUM (COALESCE (MIFloat_SummCardSecondRecalc.ValueData,0)) AS SummCardSecondRecalc
+                                           , SUM (COALESCE (MIFloat_SummCardSecond.ValueData,0))       AS SummCardSecondRecalc
                                       FROM tmpMovement_Avance AS Movement
                                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                                   AND MovementItem.DescId = zc_MI_Master()
                                                                   AND MovementItem.isErased = FALSE
-                                           INNER JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
-                                                                        ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
-                                                                       AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
-                                                                       AND COALESCE (MIFloat_SummCardSecondRecalc.ValueData,0) <> 0
+                                           INNER JOIN MovementItemFloat AS MIFloat_SummCardSecond
+                                                                        ON MIFloat_SummCardSecond.MovementItemId = MovementItem.Id
+                                                                       AND MIFloat_SummCardSecond.DescId         = zc_MIFloat_SummAvCardSecond()
+                                                                       AND MIFloat_SummCardSecond.ValueData      <> 0
                                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                                                             ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                                            AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
                                       GROUP BY MovementItem.ObjectId, MILinkObject_Position.ObjectId                                     
-                                      )
+                                     )
 
 
 
@@ -889,7 +889,7 @@ $BODY$
  17.01.23         *
  09.06.22         *
  13.03.22         *
- 17.11.21         *
+ 17.11.21         *16:36 04.05.2023
  04.06.20         * DayAudit
  25.03.20         * add SummAuditAdd
  05.02.20         *

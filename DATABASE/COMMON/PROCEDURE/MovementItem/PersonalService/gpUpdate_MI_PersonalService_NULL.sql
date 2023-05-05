@@ -38,6 +38,7 @@ BEGIN
      -- обнулили свойства
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardRecalc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondRecalc(), MovementItem.Id, 0)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAvCardSecondRecalc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalogRecalc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalogRetRecalc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChildRecalc(), MovementItem.Id, 0)

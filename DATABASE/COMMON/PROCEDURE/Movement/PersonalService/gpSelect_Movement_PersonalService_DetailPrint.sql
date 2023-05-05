@@ -82,7 +82,9 @@ BEGIN
              ) ::TFloat AS TotalSummMinus
            , (COALESCE (MovementFloat_TotalSummFine.ValueData, 0) + COALESCE (MovementFloat_TotalSummFineOth.ValueData, 0)) :: TFloat AS TotalSummFine
            , MovementFloat_TotalSummCard.ValueData           AS TotalSummCard
-           , (COALESCE (MovementFloat_TotalSummCardSecond.ValueData, 0) + COALESCE (MovementFloat_TotalSummCardSecondRecalc.ValueData, 0)) :: TFloat AS TotalSummCardSecond
+           , (COALESCE (MovementFloat_TotalSummCardSecond.ValueData, 0) + COALESCE (MovementFloat_TotalSummCardSecondRecalc.ValueData, 0)
+            + COALESCE (MovementFloat_TotalSummAvCardSecond.ValueData, 0) + COALESCE (MovementFloat_TotalSummAvCardSecondRecalc.ValueData, 0)
+             ) :: TFloat AS TotalSummCardSecond
            , MovementFloat_TotalSummCardSecondCash.ValueData AS TotalSummCardSecondCash
            , MovementFloat_TotalSummNalog.ValueData          AS TotalSummNalog
            , MovementFloat_TotalSummNalogRet.ValueData       AS TotalSummNalogRet
@@ -91,6 +93,7 @@ BEGIN
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0)
             - COALESCE (MovementFloat_TotalSummCard.ValueData, 0)
             - COALESCE (MovementFloat_TotalSummCardSecond.ValueData, 0)
+            - COALESCE (MovementFloat_TotalSummAvCardSecond.ValueData, 0)
             - COALESCE (MovementFloat_TotalSummCardSecondCash.ValueData, 0)
             - COALESCE (MovementFloat_TotalSummMinusExt.ValueData, 0)
              ) :: TFloat AS TotalSummCash
@@ -145,12 +148,21 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCard
                                     ON MovementFloat_TotalSummCard.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecond
                                     ON MovementFloat_TotalSummCardSecond.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummCardSecond.DescId = zc_MovementFloat_TotalSummCardSecond()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecondRecalc
                                     ON MovementFloat_TotalSummCardSecondRecalc.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummCardSecondRecalc.DescId = zc_MovementFloat_TotalSummCardSecondRecalc()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummAvCardSecond
+                                    ON MovementFloat_TotalSummAvCardSecond.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummAvCardSecond.DescId = zc_MovementFloat_TotalSummAvCardSecond()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummAvCardSecondRecalc
+                                    ON MovementFloat_TotalSummAvCardSecondRecalc.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummAvCardSecondRecalc.DescId = zc_MovementFloat_TotalSummAvCardSecondRecalc()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecondCash
                                     ON MovementFloat_TotalSummCardSecondCash.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummCardSecondCash.DescId = zc_MovementFloat_TotalSummCardSecondCash()
@@ -288,8 +300,10 @@ BEGIN
                            , COALESCE (MIFloat_SummNalog.ValueData, 0)        AS SummNalog
                            , COALESCE (MIFloat_SummNalogRet.ValueData, 0)     AS SummNalogRet
                            , COALESCE (MIFloat_SummCard.ValueData, 0)         AS SummCard
-                           , COALESCE (MIFloat_SummCardSecond.ValueData, 0) + COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0) AS SummCardSecond
-                           , COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)   AS SummCardSecondCash
+                           , COALESCE (MIFloat_SummCardSecond.ValueData, 0) + COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0)
+                           + COALESCE (MIFloat_SummAvCardSecond.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)
+                             AS SummCardSecond
+                           , COALESCE (MIFloat_SummCardSecondCash.ValueData, 0) AS SummCardSecondCash
                            , COALESCE (MIFloat_SummService.ValueData, 0)      AS SummService
                            , COALESCE (MIFloat_SummAdd.ValueData, 0)          AS SummAdd
                            , COALESCE (MIFloat_SummAddOth.ValueData, 0)       AS SummAddOth
@@ -349,12 +363,21 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_SummCard
                                                        ON MIFloat_SummCard.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+
                            LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
                                                        ON MIFloat_SummCardSecond.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()
                            LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
                                                        ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecond
+                                                       ON MIFloat_SummAvCardSecond.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummAvCardSecond.DescId = zc_MIFloat_SummAvCardSecond()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecondRecalc
+                                                       ON MIFloat_SummAvCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummAvCardSecondRecalc.DescId = zc_MIFloat_SummAvCardSecondRecalc()
+
                            LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondCash
                                                        ON MIFloat_SummCardSecondCash.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummCardSecondCash.DescId = zc_MIFloat_SummCardSecondCash()

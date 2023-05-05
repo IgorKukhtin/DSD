@@ -133,7 +133,9 @@ END IF;
            WHERE tmp_check.MemberId IS NULL
            LIMIT 1
           );
-     IF vbMemberId_check > 0 THEN
+     IF vbMemberId_check > 0
+        AND vbUserId <> 5
+     THEN
        RAISE EXCEPTION 'Ошибка.Для Соотрудника <%> с признаком <Основное место работы = ДА> не заполнено <Ведомость начисления(Карта Ф2)>.', lfGet_Object_ValueData (vbMemberId_check);
      END IF;
      
@@ -356,7 +358,7 @@ END IF;
                                                                AND MIContainer.DescId      = zc_MIContainer_Summ()
                          )
        -- только 
-     , tmpSummCard AS (SELECT SUM (COALESCE (MIFloat_SummCard.ValueData, 0))  AS Amount
+     , tmpSummCard AS (SELECT SUM (COALESCE (MIFloat_SummCard.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecond.ValueData, 0))  AS Amount
                                , tmp.PersonalId
                                , tmp.UnitId
                                , tmp.PositionId
@@ -376,9 +378,14 @@ END IF;
                                 FROM tmpMIContainer_all
                                 WHERE tmpMIContainer_all.MovementDescId = zc_Movement_PersonalService()
                                ) AS tmp
-                               INNER JOIN MovementItemFloat AS MIFloat_SummCard
-                                                            ON MIFloat_SummCard.MovementItemId = tmp.MovementItemId
-                                                           AND MIFloat_SummCard.DescId         = zc_MIFloat_SummCard()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummCard
+                                                           ON MIFloat_SummCard.MovementItemId = tmp.MovementItemId
+                                                          AND MIFloat_SummCard.DescId         = zc_MIFloat_SummCard()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecond
+                                                           ON MIFloat_SummAvCardSecond.MovementItemId = tmp.MovementItemId
+                                                          AND MIFloat_SummAvCardSecond.DescId         = zc_MIFloat_SummAvCardSecond()
+                          WHERE MIFloat_SummCard.ValueData         <> 0
+                             OR MIFloat_SummAvCardSecond.ValueData <> 0
                           GROUP BY tmp.PersonalId
                                  , tmp.UnitId
                                  , tmp.PositionId
@@ -447,6 +454,7 @@ END IF;
                  , MILinkObject_FineSubject.ObjectId        AS FineSubjectId
                  , MILinkObject_UnitFineSubject.ObjectId    AS UnitId_FineSubject
                  , MIF_SummAvanceRecalc.ValueData           AS SummCardSecondRecalc
+                 
             FROM MovementItem
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                   ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -489,8 +497,9 @@ END IF;
                                                         , inIsMain             := COALESCE (ObjectBoolean_Main.ValueData, FALSE)
                                                         , inSummService        := 0
                                                         , inSummCardRecalc     := 0
-                                                        , inSummCardSecondRecalc:= _tmpMI.SummCardSecondRecalc
+                                                        , inSummCardSecondRecalc:= CASE WHEN vbPersonalServiceListId_avance > 0 THEN 0 ELSE _tmpMI.SummCardSecondRecalc END
                                                         , inSummCardSecondCash := 0
+                                                        , inSummAvCardSecondRecalc:= CASE WHEN vbPersonalServiceListId_avance > 0 THEN _tmpMI.SummCardSecondRecalc ELSE 0 END
                                                         , inSummNalogRecalc    := 0
                                                         , inSummNalogRetRecalc := 0
                                                         , inSummMinus          := 0
@@ -577,7 +586,7 @@ from _tmpMI where _tmpMI.MemberId = 239655)
 -- !!!тест 
 -- PERFORM gpComplete_Movement_PersonalService (inMovementId:= inMovementId, inSession:= inSession);
 -- RAISE EXCEPTION 'ок' ;
-IF vbUserId = 5 and 1=1
+IF vbUserId = 5 and 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.test=ok';
 END IF;

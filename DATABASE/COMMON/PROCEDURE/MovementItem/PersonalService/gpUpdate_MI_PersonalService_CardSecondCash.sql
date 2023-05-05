@@ -36,6 +36,7 @@ BEGIN
                                      SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)
                                         - COALESCE (MIFloat_SummCard.ValueData, 0)
                                         - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
+                                        - COALESCE (MIFloat_SummAvCardSecond.ValueData, 0)
                                          ) AS SummToPay_cash
 
                                    , MovementItem.ObjectId                                  AS PersonalId
@@ -69,6 +70,9 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
                                                                ON MIFloat_SummCardSecond.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummCardSecond.DescId         = zc_MIFloat_SummCardSecond()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecond
+                                                               ON MIFloat_SummAvCardSecond.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummAvCardSecond.DescId         = zc_MIFloat_SummAvCardSecond()
                               WHERE Movement.Id       = inMovementId
                                 -- AND Movement.StatusId = zc_Enum_Status_Complete()
 

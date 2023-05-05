@@ -29,8 +29,8 @@ $BODY$
   DECLARE vbOperSumm_PVAT_original TFloat;
   DECLARE vbOperSumm_VAT_2018      TFloat;
   DECLARE vbOperSumm_Inventory     TFloat;
-  DECLARE vbOperSumm_LossAsset     TFloat; 
-  DECLARE vbOperSumm_Tare          TFloat; 
+  DECLARE vbOperSumm_LossAsset     TFloat;
+  DECLARE vbOperSumm_Tare          TFloat;
 
   DECLARE vbTotalSummToPay            TFloat;
   DECLARE vbTotalSummService          TFloat;
@@ -69,12 +69,12 @@ $BODY$
   DECLARE vbTotalSummAvanceRecalc      TFloat;
   DECLARE vbTotalSummAvCardSecond            TFloat;
   DECLARE vbTotalSummAvCardSecondRecalc      TFloat;
-    
+
   DECLARE vbTotalSummMedicdayAdd    TFloat;
   DECLARE vbTotalDayMedicday        TFloat;
   DECLARE vbTotalSummSkip           TFloat;
   DECLARE vbTotalDaySkip            TFloat;
-  
+
   DECLARE vbTotalSummTransport        TFloat;
   DECLARE vbTotalSummTransportAdd     TFloat;
   DECLARE vbTotalSummTransportAddLong TFloat;
@@ -113,11 +113,11 @@ BEGIN
      SELECT Movement.DescId
           , CASE WHEN Movement.DescId IN (zc_Movement_Income(), zc_Movement_ReturnOut(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_SendOnPrice())
                       THEN COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)
-                 ELSE Movement.OperDate        
+                 ELSE Movement.OperDate
             END AS OperDatePartner
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)
           , COALESCE(ObjectFloat_NDSKind_NDS.ValueData, COALESCE (MovementFloat_VATPercent.ValueData, 0))
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 AND Movement.DescId <> zc_Movement_ChangePercent() THEN -1 * MovementFloat_ChangePercent.ValueData 
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 AND Movement.DescId <> zc_Movement_ChangePercent() THEN -1 * MovementFloat_ChangePercent.ValueData
                  WHEN Movement.DescId = zc_Movement_ChangePercent() THEN COALESCE (MovementFloat_ChangePercent.ValueData, 0)
                  ELSE 0
             END AS DiscountPercent
@@ -316,10 +316,10 @@ BEGIN
                        THEN CASE WHEN vbCurrencyPartnerId <> vbCurrencyDocumentId THEN CASE WHEN vbParPartnerValue = 0 THEN 0 ELSE vbCurrencyPartnerValue / vbParPartnerValue END ELSE CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN 0 ELSE 1 END END
                        ELSE 1
                   END
-            AS NUMERIC (16, 2)) AS OperSumm_Currency  
-                 
-          --оборотная тара
-          , OperSumm_Tare 
+            AS NUMERIC (16, 2)) AS OperSumm_Currency
+
+            -- оборотная тара
+          , OperSumm_Tare
 
 
             -- Количество по Заготовителю
@@ -342,18 +342,22 @@ BEGIN
           , OperSumm_Minus
           , OperSumm_Add
           , OperSumm_AuditAdd
+
           , OperDayAudit
+
           , OperSumm_Holiday
           , OperSumm_CardRecalc
           , OperSumm_CardSecondRecalc
           , OperSumm_CardSecondCash
           , OperSumm_NalogRecalc
+
           , OperSumm_SocialIn
           , OperSumm_SocialAdd
           , OperSumm_Child
           , OperSumm_ChildRecalc
           , OperSumm_MinusExt
           , OperSumm_MinusExtRecalc
+
           , OperSumm_Transport
           , OperSumm_TransportAdd
           , OperSumm_TransportAddLong
@@ -364,6 +368,10 @@ BEGIN
           , OperSumm_NalogRetRecalc
           , OperSumm_Avance
           , OperSumm_AvanceRecalc
+
+          , OperSumm_AvCardSecond
+          , OperSumm_AvCardSecondRecalc
+
           , OperSumm_AddOth
           , OperSumm_AddOthRecalc
           , OperSumm_Fine
@@ -372,32 +380,59 @@ BEGIN
           , OperSumm_HospOth
           , OperSumm_FineOthRecalc
           , OperSumm_HospOthRecalc
+
           , OperSumm_Compensation
           , OperSumm_CompensationRecalc
+
           , OperHeadCount_Master
-          , OperHeadCount_Child  
-          
+          , OperHeadCount_Child
+
           , OperSumm_MedicdayAdd
           , OperDayMedicday
           , OperSumm_Skip
           , OperDaySkip
 
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg, vbOperCount_ShFrom, vbOperCount_KgFrom
-               , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_PVAT_original, vbOperSumm_VAT_2018
-               , vbOperSumm_Partner, vbOperSumm_PartnerFrom, vbOperSumm_Currency
+
+               , vbOperSumm_MVAT          -- Сумма без НДС
+               , vbOperSumm_PVAT          -- Сумма с НДС
+               , vbOperSumm_PVAT_original -- Сумма с НДС + !!!НЕ!!! учтена скидка в цене
+               , vbOperSumm_VAT_2018      -- Сумма НДС
+               , vbOperSumm_Partner       -- Сумма по Контрагенту
+               , vbOperSumm_PartnerFrom   -- Сумма по Контрагенту !!!ушло!!!
+               , vbOperSumm_Currency      -- Сумма в валюте
+
+                 -- оборотная тара
                , vbOperSumm_Tare
-               , vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory, vbOperSumm_LossAsset
-               , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummCardSecond, vbTotalSummNalog, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummAuditAdd, vbTotalDayAudit, vbTotalSummHoliday
-               , vbTotalSummCardRecalc, vbTotalSummCardSecondRecalc, vbTotalSummCardSecondCash, vbTotalSummNalogRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd
+
+               , vbOperCount_Packer       -- Количество по Заготовителю
+               , vbOperSumm_Packer        -- Сумма по Заготовителю
+               , vbOperSumm_Inventory     -- сумма ввода остатка
+               , vbOperSumm_LossAsset
+
+                 -- сумма начисления зп
+               , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummCardSecond, vbTotalSummNalog, vbTotalSummMinus
+               , vbTotalSummAdd, vbTotalSummAuditAdd, vbTotalDayAudit
+
+               , vbTotalSummHoliday
+               , vbTotalSummCardRecalc, vbTotalSummCardSecondRecalc, vbTotalSummCardSecondCash, vbTotalSummNalogRecalc
+               , vbTotalSummSocialIn, vbTotalSummSocialAdd
                , vbTotalSummChild, vbTotalSummChildRecalc, vbTotalSummMinusExt, vbTotalSummMinusExtRecalc
-               , vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong, vbTotalSummTransportTaxi, vbTotalSummPhone, vbTotalSummHouseAdd
+
+               , vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong
+               , vbTotalSummTransportTaxi, vbTotalSummPhone, vbTotalSummHouseAdd
                , vbTotalSummNalogRet, vbTotalSummNalogRetRecalc, vbTotalSummAvance, vbTotalSummAvanceRecalc
+
                , vbTotalSummAvCardSecond, vbTotalSummAvCardSecondRecalc
+
                , vbTotalSummAddOth, vbTotalSummAddOthRecalc
                , vbTotalSummFine, vbTotalSummHosp, vbTotalSummFineOth, vbTotalSummHospOth, vbTotalSummFineOthRecalc, vbTotalSummHospOthRecalc
+
                , vbTotalSummCompensation, vbTotalSummCompensationRecalc
+
                , vbTotalHeadCount_Master, vbTotalHeadCount_Child
-               , vbTotalSummMedicdayAdd, vbTotalDayMedicday, vbTotalSummSkip, vbTotalDaySkip 
+
+               , vbTotalSummMedicdayAdd, vbTotalDayMedicday, vbTotalSummSkip, vbTotalDaySkip
 
      FROM  -- Расчет Итоговых суммы
           (WITH tmpMI_child_ReturnIn AS (SELECT MovementItem.ParentId       AS ParentId
@@ -444,10 +479,10 @@ BEGIN
                                                                      )
                                       ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                  END AS Price
-                               , COALESCE (MIFloat_Price.ValueData, 0)         AS Price_original  
+                               , COALESCE (MIFloat_Price.ValueData, 0)         AS Price_original
                                , COALESCE (MIFloat_PriceTare.ValueData, 0)     AS PriceTare
                                , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
-                               
+
                                  -- округлили
                                , CASE WHEN vbMovementDescId = zc_Movement_ChangePercent()
                                            THEN CAST (MIFloat_Price.ValueData * vbDiscountPercent / 100 AS NUMERIC (16, 2))
@@ -513,12 +548,12 @@ BEGIN
 
                                , SUM (COALESCE (MIFloat_SummNalogRet.ValueData, 0))           AS OperSumm_NalogRet
                                , SUM (COALESCE (MIFloat_SummNalogRetRecalc.ValueData, 0))     AS OperSumm_NalogRetRecalc
-                               
+
                                , SUM (COALESCE (MIFloat_SummAvance.ValueData, 0))             AS OperSumm_Avance
                                , SUM (COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0))       AS OperSumm_AvanceRecalc
                                , SUM (COALESCE (MIFloat_SummAvCardSecond.ValueData, 0))       AS OperSumm_AvCardSecond
                                , SUM (COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)) AS OperSumm_AvCardSecondRecalc
-                               
+
                                , SUM (COALESCE (MIFloat_AmountTax_calc.ValueData, 0))         AS AmountTax_calc
                                , SUM (COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0))       AS SummTaxDiff_calc
                                , SUM (COALESCE (MIFloat_PriceTax_calc.ValueData, 0))          AS PriceTax_calc
@@ -555,7 +590,7 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
                                                                 ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
-   
+
 
                                LEFT JOIN tmpMI_child_ReturnIn ON tmpMI_child_ReturnIn.ParentId = MovementItem.Id
 
@@ -580,8 +615,8 @@ BEGIN
 
                                LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()     
-                               -- цена оборотной тары - zc_MovementFloat_TotalSummTare 
+                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                               -- цена оборотной тары - zc_MovementFloat_TotalSummTare
                                LEFT JOIN MovementItemFloat AS MIFloat_PriceTare
                                                            ON MIFloat_PriceTare.MovementItemId = MovementItem.Id
                                                           AND MIFloat_PriceTare.DescId = zc_MIFloat_PriceTare()
@@ -716,7 +751,7 @@ BEGIN
                                                            ON MIFloat_SummAvCardSecondRecalc.MovementItemId = MovementItem.Id
                                                           AND MIFloat_SummAvCardSecondRecalc.DescId = zc_MIFloat_SummAvCardSecondRecalc()
                                                           AND Movement.DescId = zc_Movement_PersonalService()
-                                                          
+
                                LEFT JOIN MovementItemFloat AS MIFloat_SummAddOth
                                                            ON MIFloat_SummAddOth.MovementItemId = MovementItem.Id
                                                           AND MIFloat_SummAddOth.DescId = zc_MIFloat_SummAddOth()
@@ -855,7 +890,7 @@ BEGIN
                   -- Количество вес !!!ушло!!!
                 , OperCount_KgFrom
 
- 
+
                   -- Сумма без НДС
                 , CASE WHEN vbMovementDescId = zc_Movement_ChangePercent()
                             -- для документа ChangePercent - без НДС
@@ -1049,7 +1084,7 @@ BEGIN
                 , OperSumm_Phone
                 , OperSumm_HouseAdd
                 , OperSumm_NalogRet
-                , OperSumm_NalogRetRecalc  
+                , OperSumm_NalogRetRecalc
                 , OperSumm_Avance
                 , OperSumm_AvanceRecalc
                 , OperSumm_AvCardSecond
@@ -1065,7 +1100,7 @@ BEGIN
                 , OperSumm_Compensation
                 , OperSumm_CompensationRecalc
                 , OperHeadCount_Master
-                , OperHeadCount_Child 
+                , OperHeadCount_Child
                 , OperSumm_MedicdayAdd
                 , OperDayMedicday
                 , OperSumm_Skip
@@ -1224,7 +1259,7 @@ BEGIN
                       , SUM (tmpMI.OperSumm_NalogRet)         AS OperSumm_NalogRet
                       , SUM (tmpMI.OperSumm_NalogRetRecalc)   AS OperSumm_NalogRetRecalc
                       , SUM (tmpMI.OperSumm_Avance)           AS OperSumm_Avance
-                      , SUM (tmpMI.OperSumm_AvanceRecalc)     AS OperSumm_AvanceRecalc 
+                      , SUM (tmpMI.OperSumm_AvanceRecalc)     AS OperSumm_AvanceRecalc
                       , SUM (tmpMI.OperSumm_AvCardSecond)           AS OperSumm_AvCardSecond
                       , SUM (tmpMI.OperSumm_AvCardSecondRecalc)     AS OperSumm_AvCardSecondRecalc
                       , SUM (tmpMI.OperSumm_AddOth)           AS OperSumm_AddOth
@@ -1239,7 +1274,7 @@ BEGIN
                       , SUM (tmpMI.OperSumm_CompensationRecalc) AS OperSumm_CompensationRecalc
                       , SUM (tmpMI.OperHeadCount_Master)      AS OperHeadCount_Master
                       , SUM (tmpMI.OperHeadCount_Child)       AS OperHeadCount_Child
-                      
+
                       , SUM (tmpMI.OperSumm_MedicdayAdd)    AS OperSumm_MedicdayAdd
                       , SUM (tmpMI.OperDayMedicday)         AS OperDayMedicday
                       , SUM (tmpMI.OperSumm_Skip)           AS OperSumm_Skip
@@ -1250,7 +1285,7 @@ BEGIN
 
                                -- Сумма DIFF для НН в колонке 13/1строка
                              , tmpMI.SummTaxDiff_calc
-                             
+
                                -- для документа ChangePercent - без НДС
                              , tmpMI.Sum_ChangePercent
 
@@ -1511,7 +1546,7 @@ BEGIN
 
                                    , tmpMI.OperHeadCount_Master
                                    , tmpMI.OperHeadCount_Child
-                                   
+
                                    , tmpMI.OperSumm_MedicdayAdd
                                    , tmpMI.OperDayMedicday
                                    , tmpMI.OperSumm_Skip
@@ -1550,7 +1585,7 @@ BEGIN
                                           ELSE 1 * tmpMI.Price
                                      END AS Price
 
-                                   , tmpMI.Price_original 
+                                   , tmpMI.Price_original
                                    , tmpMI.PriceTare
                                    , tmpMI.CountForPrice
 
@@ -1697,7 +1732,7 @@ BEGIN
                                      -- !!! ТРЕТЬЯ Строка !!!
                                    , tmpMI.PriceTax_calc - tmpMI.Price AS Price
 
-                                   , tmpMI.Price_original  
+                                   , tmpMI.Price_original
                                    , tmpMI.PriceTare
                                    , tmpMI.CountForPrice
 
@@ -1761,7 +1796,7 @@ BEGIN
                                    , tmpMI.OperSumm_AvanceRecalc
                                    , tmpMI.OperSumm_AvCardSecond
                                    , tmpMI.OperSumm_AvCardSecondRecalc
-                                   
+
                                    , tmpMI.OperSumm_AddOth
                                    , tmpMI.OperSumm_AddOthRecalc
 
@@ -2008,10 +2043,10 @@ BEGIN
      END IF;
      END IF;
 
-/*if  inMovementId = 1
+if  inMovementId = 25153488 and 1=0
 then
-    RAISE EXCEPTION 'Ошибка.<%>', vbOperSumm_Partner;
-end if;*/
+    RAISE EXCEPTION 'Ошибка.<%>', vbTotalSummAvCardSecondRecalc;
+end if;
 
 
 END;
@@ -2023,7 +2058,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 02.05.23         * 
+ 02.05.23         *
  27.03.23         *
  17.01.22         * zc_MIFloat_SummAvance, zc_MIFloat_SummAvanceRecalc
  25.04.22         * zc_MovementFloat_TotalSummTare

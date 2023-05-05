@@ -91,7 +91,7 @@ BEGIN
                 FROM MovementItem
                      INNER JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
                                                   ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
-                                                 AND MIFloat_SummCardSecondRecalc.DescId         = zc_MIFloat_SummCardSecondRecalc()
+                                                 AND MIFloat_SummCardSecondRecalc.DescId         IN (zc_MIFloat_SummCardSecondRecalc(), zc_MIFloat_SummAvCardSecondRecalc())
                                                  AND MIFloat_SummCardSecondRecalc.ValueData      <> 0
                      -- выбираем только строки с нужной датой (дата выгрузки)
                      INNER JOIN MovementItemDate AS MIDate_BankOut
@@ -114,7 +114,9 @@ BEGIN
 	                 -- добавили % и округлили до 2-х знаков + ПЕРЕВОДИМ в копейки
 	             --, SUM (FLOOR (100 * CAST (COALESCE (gpSelect.SummCardSecondRecalc, 0) * 1.00705 AS NUMERIC (16, 2)))) AS SummCardSecondRecalc
 	             --, SUM (FLOOR (100 * CAST (COALESCE (gpSelect.SummCardSecondRecalc, 0) * 1.00705 AS NUMERIC (16, 1)))) AS SummCardSecondRecalc
-	               , SUM (FLOOR (100 * CAST ( (COALESCE (gpSelect.SummCardSecondRecalc, 0) * vbKoeffSummCardSecond) AS NUMERIC (16, 1)))) AS SummCardSecondRecalc
+	               , SUM (FLOOR (100 * CAST ( (COALESCE (gpSelect.SummCardSecondRecalc, 0) * vbKoeffSummCardSecond
+                                                 + COALESCE (gpSelect.SummAvCardSecondRecalc, 0) * vbKoeffSummCardSecond
+                                                  ) AS NUMERIC (16, 1)))) AS SummCardSecondRecalc
 	          FROM gpSelect_MovementItem_PersonalService (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
 	          WHERE gpSelect.SummCardSecondRecalc <> 0
 	            AND gpSelect.BankOutDate = inOperDate

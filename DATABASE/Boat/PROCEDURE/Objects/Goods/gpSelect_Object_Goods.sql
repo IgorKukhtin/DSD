@@ -192,6 +192,7 @@ BEGIN
                                                       --
                                                       OR Object_Goods.ValueData ILIKE '%œ‘%'
                                                       OR Object_Goods.ValueData ILIKE '%motor%'
+                                                      OR Object_Goods.ValueData ILIKE '%RAL%'
                                                       OR Object_Goods.ValueData ILIKE '%ndige Inspektionsluke%'
                                                     --OR Object_Goods.ValueData ILIKE '%Bonding Paste%'
                                                       OR Object_Goods.ValueData ILIKE '%FAÆ-%'
