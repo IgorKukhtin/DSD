@@ -1,26 +1,26 @@
 inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
-  ClientHeight = 602
+  ClientHeight = 658
   ClientWidth = 1172
   ExplicitWidth = 1188
-  ExplicitHeight = 641
+  ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 118
     Width = 1172
-    Height = 484
+    Height = 540
     ExplicitTop = 118
     ExplicitWidth = 1172
     ExplicitHeight = 484
-    ClientRectBottom = 484
+    ClientRectBottom = 540
     ClientRectRight = 1172
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1172
       ExplicitHeight = 460
       inherited cxGrid: TcxGrid
         Width = 1172
-        Height = 460
+        Height = 516
         ExplicitWidth = 1172
         ExplicitHeight = 460
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -482,14 +482,16 @@ inherited SendForm: TSendForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitHeight = 460
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
         Width = 1172
-        Height = 460
+        Height = 516
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitHeight = 460
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -707,14 +709,16 @@ inherited SendForm: TSendForm
     object cxTabSheetChild: TcxTabSheet
       Caption = #1056#1072#1089#1093#1086#1076' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
       ImageIndex = 2
+      ExplicitHeight = 460
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
         Width = 1172
-        Height = 460
+        Height = 516
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitHeight = 460
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1598,6 +1602,108 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
+    object actPartionGoodsAssetChoiceForm: TOpenChoiceForm
+      Category = 'Asset'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      ImageIndex = 1
+      FormName = 'TPartionGoodsAssetChoiceForm'
+      FormNameParam.Value = 'TPartionGoodsAssetChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = Null
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoods'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Price'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountRemains'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actStorageChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2035,6 +2141,32 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
+    object actInsertRecordAsset: TInsertRecord
+      Category = 'Asset'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actPartionGoodsAssetChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      ImageIndex = 0
+    end
+    object macInsertRecordAsset: TMultiAction
+      Category = 'Asset'
+      TabSheet = tsMain
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertRecordAsset
+        end
+        item
+          Action = actRefreshPrice
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      ImageIndex = 0
+    end
     object mactUpdateMaskIncome: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -2431,6 +2563,18 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertRecordAsset'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartionGoodsAssetChoiceForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -2640,6 +2784,14 @@ inherited SendForm: TSendForm
     end
     object bbLoadExcel2: TdxBarButton
       Action = macLoadExcel2
+      Category = 0
+    end
+    object bbInsertRecordAsset: TdxBarButton
+      Action = macInsertRecordAsset
+      Category = 0
+    end
+    object bbPartionGoodsAssetChoiceForm: TdxBarButton
+      Action = actPartionGoodsAssetChoiceForm
       Category = 0
     end
   end
@@ -3054,7 +3206,7 @@ inherited SendForm: TSendForm
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
     Left = 800
-    Top = 328
+    Top = 280
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased'
@@ -3201,7 +3353,7 @@ inherited SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 160
+    Left = 144
     Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
@@ -3822,7 +3974,7 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 954
+    Left = 986
     Top = 384
   end
   object DetailDS: TDataSource
@@ -4010,8 +4162,8 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 624
-    Top = 496
+    Left = 640
+    Top = 480
   end
   object spInsertUpdateMIDetail: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Send_Detail'

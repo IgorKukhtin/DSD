@@ -854,7 +854,8 @@ begin
           if BarCode_find <> '' then
           begin
 
-            if CheckCDS.FieldByName('Amount').AsInteger <> CheckCDS.FieldByName('Amount').AsCurrency then
+            if (CheckCDS.FieldByName('Amount').AsInteger <> CheckCDS.FieldByName('Amount').AsCurrency) and
+                (gService <> 'Asacard') then
             begin
                 ShowMessage ('Количество должно быть целым.' + #10+ #13
                 + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
@@ -1043,16 +1044,6 @@ begin
           if BarCode_find <> '' then
           begin
 
-            if CheckCDS.FieldByName('Amount').AsInteger <> CheckCDS.FieldByName('Amount').AsCurrency then
-            begin
-                ShowMessage ('Количество должно быть целым.' + #10+ #13
-                + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
-                + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
-                 //ошибка
-                lMsg:='Error';
-                exit;
-            end;
-
             try
 
               RESTClient.BaseURL := gURL;
@@ -1070,7 +1061,8 @@ begin
               RESTRequest.AddParameter('product_id', FBarCode_find, TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('distributor_id', IntToStr(FSupplier), TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('price', IntToStr(Round(CheckCDS.FieldByName('PriceSale').AsCurrency * 100)), TRESTRequestParameterKind.pkGETorPOST);
-              RESTRequest.AddParameter('quantity', IntToStr(Round(CheckCDS.FieldByName('Amount').AsCurrency)), TRESTRequestParameterKind.pkGETorPOST);
+              RESTRequest.AddParameter('quantity', StringReplace(FormatCurr('0.000', CheckCDS.FieldByName('Amount').AsCurrency),
+                FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase]), TRESTRequestParameterKind.pkGETorPOST);
 
               try
                 RESTRequest.Execute;
@@ -1100,9 +1092,11 @@ begin
                 begin
                   lError := '';
                   if jValue.FindValue('error') <> Nil then lError := jValue.FindValue('error').Value;
-                  if (jValue.FindValue('error') <> Nil) and (jValue.FindValue('massage') <> Nil) then lError := lError + '; ';                  
+                  if (jValue.FindValue('error') <> Nil) and
+                    ((jValue.FindValue('massage') <> Nil) or (jValue.FindValue('message') <> Nil)) then lError := lError + '; ';
                   if jValue.FindValue('massage') <> Nil then lError := lError + jValue.FindValue('massage').Value;
-                  
+                  if jValue.FindValue('message') <> Nil then lError := lError + jValue.FindValue('message').Value;
+
                   ShowMessage ('Ошибка при подтверждении продажи.' + #10+ #13
                     + #10+ #13 + 'Ошибка <' + lError + '>.'
                     + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
@@ -1621,7 +1615,8 @@ begin
           BarCode_find := '';
 
       // Проверим чтоб количество было целое
-      if (BarCode_find <> '') and (CheckCDS.FieldByName('Amount').AsInteger <> CheckCDS.FieldByName('Amount').AsCurrency) then
+      if (BarCode_find <> '') and (CheckCDS.FieldByName('Amount').AsInteger <> CheckCDS.FieldByName('Amount').AsCurrency) and
+         (gService <> 'Asacard') then
       begin
           ShowMessage ('Количество должно быть целым.' + #10+ #13
           + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
@@ -2187,12 +2182,12 @@ begin
 
           if CodeRazom <> 0 then
           begin
+
             try
 
               FDiscont := 0;
               FDiscontАbsolute := 0;
               FBarCode_find := '';
-              FIdCasual := GenerateIdCasual;
 
               RESTClient.BaseURL := gURL;
               RESTClient.ContentType := 'application/xml';
@@ -2209,7 +2204,8 @@ begin
               RESTRequest.AddParameter('product_id', BarCode_find, TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('distributor_id', IntToStr(FSupplier), TRESTRequestParameterKind.pkGETorPOST);
               RESTRequest.AddParameter('price', IntToStr(Round(CheckCDS.FieldByName('PriceSale').AsCurrency * 100)), TRESTRequestParameterKind.pkGETorPOST);
-              RESTRequest.AddParameter('quantity', IntToStr(Round(CheckCDS.FieldByName('Amount').AsCurrency)), TRESTRequestParameterKind.pkGETorPOST);
+              RESTRequest.AddParameter('quantity', StringReplace(FormatCurr('0.000', CheckCDS.FieldByName('Amount').AsCurrency),
+                FormatSettings.DecimalSeparator, '.', [rfReplaceAll, rfIgnoreCase]), TRESTRequestParameterKind.pkGETorPOST);
 
               try
                 RESTRequest.Execute;
@@ -2234,11 +2230,48 @@ begin
                   if (jValue.FindValue('sell_price') <> Nil) and (TJSONNumber(jValue.FindValue('sell_price')).AsDouble > 0) then
                   begin
 
-                    FIdCasual := GenerateIdCasual;
-                    FBarCode_find := BarCode_find;
-                    FDiscontАbsolute := (TJSONNumber(jValue.FindValue('original_price')).AsDouble - TJSONNumber(jValue.FindValue('sell_price')).AsDouble) / 100.0;
+                    if (jValue.FindValue('type_gift').Value = 'percent') then
+                    begin
+                      FDiscont := TJSONNumber(jValue.FindValue('gift')).AsDouble;
+                    end else
+                    begin
+                       // Проверим чтоб количество должно быть 1
+                      if CheckCDS.FieldByName('Amount').AsInteger <> 1 then
+                      begin
+                          ShowMessage ('Количество должно быть 1 упаковка.' + #10+ #13
+                          + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                          + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+                           //ошибка
+                          lMsg:='Error';
+                          exit;
+                      end;
 
-                    if (FDiscontАbsolute > 0.009) and (FIdCasual <> '') then
+                      FDiscontАbsolute := (TJSONNumber(jValue.FindValue('original_price')).AsDouble - TJSONNumber(jValue.FindValue('sell_price')).AsDouble) / 100.0;
+                    end;
+
+                    FBarCode_find := BarCode_find;
+                    FIdCasual := GenerateIdCasual;
+
+                    if (FDiscont > 0.0001) and (FIdCasual <> '') then
+                    begin
+                       //Update
+                       CheckCDS.Edit;
+                       CheckCDS.FieldByName('Price').asCurrency   := GetPrice(CheckCDS.FieldByName('PriceSale').asCurrency, FDiscont);
+                       //Рекомендованная скидка в виде фиксированной суммы от общей цены за все кол-во товара (общая сумма скидки за все кол-во товара)
+                       CheckCDS.FieldByName('ChangePercent').asCurrency := FDiscont;
+                       CheckCDS.FieldByName('Summ').asCurrency :=
+                          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+                          CheckCDS.FieldByName('Price').asCurrency,
+                          MainCashForm.FormParams.ParamByName('RoundingDown').Value);
+                       CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+                          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+                          CheckCDS.FieldByName('PriceSale').asCurrency,
+                          MainCashForm.FormParams.ParamByName('RoundingDown').Value) -
+                          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+                          CheckCDS.FieldByName('Price').asCurrency,
+                          MainCashForm.FormParams.ParamByName('RoundingDown').Value);
+                       CheckCDS.Post;
+                    end else if (FDiscontАbsolute > 0.009) and (FIdCasual <> '') then
                     begin
                        //Update
                        CheckCDS.Edit;
@@ -2266,9 +2299,11 @@ begin
                 begin
                   lError := '';
                   if jValue.FindValue('error') <> Nil then lError := jValue.FindValue('error').Value;
-                  if (jValue.FindValue('error') <> Nil) and (jValue.FindValue('massage') <> Nil) then lError := lError + '; ';                  
+                  if (jValue.FindValue('error') <> Nil) and
+                    ((jValue.FindValue('massage') <> Nil) or (jValue.FindValue('message') <> Nil)) then lError := lError + '; ';
                   if jValue.FindValue('massage') <> Nil then lError := lError + jValue.FindValue('massage').Value;
-                  
+                  if jValue.FindValue('message') <> Nil then lError := lError + jValue.FindValue('message').Value;
+
                   ShowMessage ('Ошибка проверки возможности продажи.' + #10+ #13
                     + #10+ #13 + 'Ошибка <' + lError + '>.'
                     + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
@@ -2575,7 +2610,7 @@ end;
 
 function TDiscountServiceForm.GetPrepared : boolean;
 begin
-  if (gService = 'Medicard') then
+  if (gService = 'Medicard') or (gService =  'Asacard') then
   begin
     Result := (FIdCasual <> '');
   end else Result := False;

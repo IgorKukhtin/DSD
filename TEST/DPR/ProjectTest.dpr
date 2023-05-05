@@ -1426,7 +1426,8 @@ uses
   Report_JuridicalSold_Branch in '..\..\Forms\Report\Report_JuridicalSold_Branch.pas' {Report_JuridicalSold_BranchForm: TParentForm},
   UAECMRXML in '..\..\SOURCE\EDI\UAECMRXML.pas',
   PersonalServiceJournal in '..\..\Forms\Document\PersonalServiceJournal.pas' {PersonalServiceJournalForm: TParentForm},
-  PersonalServiceList_Object in '..\..\Forms\Guides\PersonalServiceList_Object.pas' {PersonalServiceList_ObjectForm: TParentForm};
+  PersonalServiceList_Object in '..\..\Forms\Guides\PersonalServiceList_Object.pas' {PersonalServiceList_ObjectForm: TParentForm},
+  PartionGoodsAssetChoice in '..\..\Forms\Guides\PartionGoodsAssetChoice.pas' {PartionGoodsAssetChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

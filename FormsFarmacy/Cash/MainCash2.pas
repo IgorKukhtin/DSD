@@ -3860,7 +3860,8 @@ begin
             AddDistributionPromo (RemainsCDS.FieldByName('DistributionPromoID').AsInteger, FieldByName('Amount').AsCurrency, FieldByName('Summ').AsCurrency);
           end;
 
-          if (Frac(FieldByName('Amount').AsCurrency) <> 0) and (DiscountServiceForm.gCode <> 0) then
+          if (Frac(FieldByName('Amount').AsCurrency) <> 0) and (DiscountServiceForm.gCode <> 0) and
+             (DiscountServiceForm.gService <> 'Asacard') then
           begin
             ShowMessage('Деление медикамента для дисконтных программ запрещено!');
             exit;
@@ -6441,7 +6442,8 @@ begin
            (RemainsCDS.FieldByName('GoodsDiscountName').AsString <> '') then
         begin
 
-          if (Frac(FieldByName('Amount').AsCurrency) <> 0) then
+          if (Frac(FieldByName('Amount').AsCurrency) <> 0) and
+             (DiscountServiceForm.gService <> 'Asacard') then
           begin
             ShowMessage('Деление медикамента для дисконтных программ запрещено!');
             exit;
@@ -9001,7 +9003,8 @@ begin
     exit;
   end;
 
-  if (Frac(nAmount) <> 0) and (DiscountServiceForm.gCode <> 0) then
+  if (Frac(nAmount) <> 0) and (DiscountServiceForm.gCode <> 0) and
+     (DiscountServiceForm.gService <> 'Asacard') then
   begin
     ShowMessage('Деление медикамента для дисконтных программ запрещено!');
     exit;

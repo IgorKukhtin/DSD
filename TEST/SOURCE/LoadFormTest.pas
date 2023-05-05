@@ -2280,6 +2280,9 @@ end;
 
 procedure TLoadFormTest.LoadPartionGoodsChoiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsAssetChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsAssetChoiceForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoods20202ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoods20202ChoiceForm');
   exit;
