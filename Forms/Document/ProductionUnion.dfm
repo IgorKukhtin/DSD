@@ -510,6 +510,7 @@ inherited ProductionUnionForm: TProductionUnionForm
               Kind = skSum
               Column = colChildAmount_weight
             end>
+          OptionsData.CancelOnExit = False
           Styles.Content = nil
           object colChildGroupNumber: TcxGridDBColumn [0]
             Caption = #1043#1088#1091#1087#1087#1072' '#8470
