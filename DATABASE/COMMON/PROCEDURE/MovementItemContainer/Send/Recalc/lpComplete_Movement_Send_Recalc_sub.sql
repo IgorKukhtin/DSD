@@ -246,8 +246,10 @@ BEGIN
                                                        , inCuterWeight            := 0
                                                        , inPartionGoodsDate       := NULL
                                                        , inPartionGoods           := tmp.PartionGoods
+                                                       , inPartNumber             := NULL
                                                        , inGoodsKindId            := tmp.GoodsKindId_to
                                                        , inGoodsKindId_Complete   := NULL
+                                                       , inStorageId              := NULL
                                                        , inUserId                 := inUserId
                                                         ) AS MovementItemId_new
                      FROM (-- обязательно взяли только там где нет составляющих
@@ -281,8 +283,10 @@ BEGIN
                                                  , inParentId               := _tmpItemPeresort_new.MovementItemId_to
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := _tmpItemPeresort_new.PartionGoods
+                                                 , inPartNumber             := NULL
                                                  , inGoodsKindId            := _tmpItemPeresort_new.GoodsKindId_from
                                                  , inGoodsKindCompleteId    := NULL
+                                                 , inStorageId              := NULL
                                                  , inCount_onCount          := 0
                                                  , inUserId                 := inUserId
                                                   )

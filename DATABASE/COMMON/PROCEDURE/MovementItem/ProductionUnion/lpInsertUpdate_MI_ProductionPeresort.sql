@@ -1,7 +1,8 @@
 -- Function: lpInsertUpdate_MI_ProductionPeresort
 
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionPeresort (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TDateTime, TDateTime, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionPeresort (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TDateTime, TDateTime, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionPeresort (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TDateTime, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionPeresort (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionPeresort(
     INOUT ioId Integer,
@@ -17,7 +18,11 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionPeresort(
     IN inPartionGoods TVarChar,
     IN inPartionGoods_child TVarChar,
     IN inPartionGoodsDate TDateTime,
-    IN inPartionGoodsDate_child TDateTime,
+    IN inPartionGoodsDate_child TDateTime, 
+    IN inStorageId              Integer   , -- Место хранения
+    IN inStorageId_child        Integer   , -- Место хранения
+    IN inPartNumber             TVarChar  , -- № по тех паспорту
+    IN inPartNumber_child       TVarChar  , -- № по тех паспорту
     IN inUserId Integer
 )
 RETURNS Integer
@@ -40,8 +45,10 @@ BEGIN
                                                   , inCuterWeight      := 0
                                                   , inPartionGoodsDate := inPartionGoodsDate
                                                   , inPartionGoods     := inPartionGoods
+                                                  , inPartNumber       := inPartNumber
                                                   , inGoodsKindId      := inGoodsKindId
                                                   , inGoodsKindId_Complete := inGoodsKindId_Complete
+                                                  , inStorageId        := inStorageId
                                                   , inUserId           := inUserId
                                                    );
 
@@ -53,8 +60,10 @@ BEGIN
                                                   , inParentId         := ioId
                                                   , inPartionGoodsDate := inPartionGoodsDate_child
                                                   , inPartionGoods     := inPartionGoods_child
+                                                  , inPartNumber       := inPartNumber_child
                                                   , inGoodsKindId      := inGoodsKindId_child
                                                   , inGoodsKindCompleteId := inGoodsKindId_Complete_child
+                                                  , inStorageId        := inStorageId_child
                                                   , inCount_onCount    := 0
                                                   , inUserId           := inUserId
                                                    );
@@ -67,6 +76,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.05.23         *
  17.07.15                                        * all
  29.06.15         *
 */

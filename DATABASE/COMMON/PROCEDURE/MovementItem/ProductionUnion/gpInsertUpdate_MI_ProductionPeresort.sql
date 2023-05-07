@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_MI_ProductionPeresort()
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionPeresort  (Integer, Integer, Integer, TFloat, TVarChar, TDateTime, TVarChar, Integer, Integer, TVarChar, TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionPeresort  (Integer, Integer, Integer, TFloat, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionPeresort  (Integer, Integer, Integer, TFloat, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionPeresort  (Integer, Integer, Integer, TFloat, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionPeresort(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -15,10 +16,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionPeresort(
     IN inGoodsKindId            Integer   , -- Виды товаров 
     IN inGoodsKindId_Complete   Integer   , -- Виды товаров
  INOUT ioGoodsChildId           Integer   , -- Товары
-    IN inPartionGoodsChild      TVarChar  , -- Партия товара  
+    IN inPartionGoodsChild      TVarChar  , -- Партия товара
     IN inPartionGoodsDateChild  TDateTime , -- Партия товара    
     IN inGoodsKindChildId       Integer   , -- Виды товаров
-    IN inGoodsKindId_Complete_child  Integer   , -- Виды товаров
+    IN inGoodsKindId_Complete_child  Integer   , -- Виды товаров 
+    
+    IN inStorageId              Integer   , -- Место хранения
+    IN inStorageId_child        Integer   , -- Место хранения
+ INOUT ioPartNumber             TVarChar  , -- № по тех паспорту
+ INOUT ioPartNumber_child       TVarChar  , -- № по тех паспорту
+  
    OUT outGoodsChilCode         Integer   , --
    OUT outGoodsChildName        TVarChar  , --
    OUT outAmountIn              TFloat    , -- Количество приход  - расчет такой : outAmountIn= inAmountOut * вес  ИЛИ inAmountOut / вес ИЛИ  inAmountOut
@@ -102,6 +109,10 @@ BEGIN
                                               , inPartionGoods_child     := inPartionGoodsChild
                                               , inPartionGoodsDate       := inPartionGoodsDate
                                               , inPartionGoodsDate_child := inPartionGoodsDateChild
+                                              , inStorageId              := inStorageId                                              
+                                              , inStorageId_child        := inStorageId_child
+                                              , inPartNumber             := ioPartNumber
+                                              , inPartNumber_child       := ioPartNumber_child                                              
                                               , inUserId                 := vbUserId
                                                );
 
@@ -116,6 +127,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.05.23         *
  17.07.15                                        * all
  29.06.15         *
 */

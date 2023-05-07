@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_MI_ProductionUnion_Child()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,11 +12,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Child(
     IN inParentId            Integer   , -- Главный элемент документа
     IN inPartionGoodsDate    TDateTime , -- Партия товара	
     IN inPartionGoods        TVarChar  , -- Партия товара        
+ INOUT ioPartNumber          TVarChar  , -- № по тех паспорту
     IN inGoodsKindId         Integer   , -- Виды товаров 
-    IN inGoodsKindCompleteId Integer   , -- Виды товаров ГП           
+    IN inGoodsKindCompleteId Integer   , -- Виды товаров ГП
+    IN inStorageId           Integer   , -- Место хранения           
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS RECORD
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -29,9 +33,11 @@ BEGIN
                                                  , inAmount           := inAmount
                                                  , inParentId         := inParentId
                                                  , inPartionGoodsDate := inPartionGoodsDate
-                                                 , inPartionGoods     := inPartionGoods
+                                                 , inPartionGoods     := inPartionGoods 
+                                                 , inPartNumber       := ioPartNumber
                                                  , inGoodsKindId      := inGoodsKindId
-                                                 , inGoodsKindCompleteId := inGoodsKindCompleteId
+                                                 , inGoodsKindCompleteId := inGoodsKindCompleteId  
+                                                 , inStorageId        := inStorageId
                                                  , inCount_onCount    :=  COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_Count()), 0)
                                                  , inUserId           := vbUserId
                                                  );

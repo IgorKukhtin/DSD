@@ -2,8 +2,8 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, TFloat, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, TFloat, Integer);
-
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -12,9 +12,11 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Child(
     IN inAmount              TFloat    , -- Количество
     IN inParentId            Integer   , -- Главный элемент документа
     IN inPartionGoodsDate    TDateTime , -- Партия товара	
-    IN inPartionGoods        TVarChar  , -- Партия товара        
+    IN inPartionGoods        TVarChar  , -- Партия товара
+    IN inPartNumber          TVarChar  , -- № по тех паспорту        
     IN inGoodsKindId         Integer   , -- Виды товаров 
-    IN inGoodsKindCompleteId Integer   , -- Виды товаров ГП              
+    IN inGoodsKindCompleteId Integer   , -- Виды товаров ГП 
+    IN inStorageId           Integer   , -- Место хранения             
     IN inCount_onCount       TFloat    , -- Количество батонов
     IN inUserId              Integer     -- пользователь
 )                              
@@ -98,16 +100,22 @@ BEGIN
    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
    -- сохранили свойство <Партия товара>
    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
+
+   -- сохранили свойство <№ по тех паспорту>
+   PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
    
    -- сохранили связь с <Виды товаров>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
    -- сохранили связь с <Виды товаров ГП>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
+
+   -- сохранили связь с <Место хранения> - для партии прихода на МО
+   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
    
    -- сохранили свойство <Количество батонов>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Count(), ioId, inCount_onCount);
-
+     
    -- !!!только при создании!!!
    IF vbIsInsert = TRUE AND inUserId IN (zc_Enum_Process_Auto_PartionDate(), zc_Enum_Process_Auto_PartionClose())
    THEN

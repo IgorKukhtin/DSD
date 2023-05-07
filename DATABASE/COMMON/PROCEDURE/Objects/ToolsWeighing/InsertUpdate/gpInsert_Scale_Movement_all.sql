@@ -1673,8 +1673,10 @@ BEGIN
                                                         , inParentId            := vbId_tmp
                                                         , inPartionGoodsDate    := NULL
                                                         , inPartionGoods        := NULL
+                                                        , inPartNumber          := NULL
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inGoodsKindCompleteId := NULL
+                                                        , inStorageId           := NULL
                                                         , inCount_onCount       := 0
                                                         , inUserId              := vbUserId
                                                          )

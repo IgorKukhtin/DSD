@@ -854,9 +854,11 @@ BEGIN
                                                         , inCount               := tmp.Count
                                                         , inCuterWeight         := 0
                                                         , inPartionGoodsDate    := tmp.PartionGoodsDate
-                                                        , inPartionGoods        := tmp.PartionGoods
+                                                        , inPartionGoods        := tmp.PartionGoods  
+                                                        , inPartNumber          := NULL
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inGoodsKindId_Complete   := NULL
+                                                        , inStorageId              := NULL
                                                         , inUserId              := vbUserId
                                                          )
                        WHEN vbMovementDescId = zc_Movement_ProductionSeparate() AND vbIsProductionIn = FALSE
@@ -1117,8 +1119,10 @@ BEGIN
                                                         , inParentId            := COALESCE (MI_find.ParentId, tmpMI_master.MovementItemId)
                                                         , inPartionGoodsDate    := NULL
                                                         , inPartionGoods        := NULL
+                                                        , inPartNumber          := NULL
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inGoodsKindCompleteId := NULL
+                                                        , inStorageId           := NULL
                                                         , inCount_onCount       := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = tmp.MovementItemId AND DescId = zc_MIFloat_Count()), 0)
                                                         , inUserId              := vbUserId
                                                          )
@@ -1187,8 +1191,10 @@ BEGIN
                                                         , inParentId            := vbId_tmp
                                                         , inPartionGoodsDate    := NULL
                                                         , inPartionGoods        := NULL
+                                                        , inPartNumber          := NULL
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inGoodsKindCompleteId := NULL
+                                                        , inStorageId           := NULL
                                                         , inCount_onCount       := 0
                                                         , inUserId              := vbUserId
                                                          )

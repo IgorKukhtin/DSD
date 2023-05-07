@@ -12,17 +12,17 @@ inherited SendForm: TSendForm
     Height = 540
     ExplicitTop = 118
     ExplicitWidth = 1172
-    ExplicitHeight = 484
+    ExplicitHeight = 540
     ClientRectBottom = 540
     ClientRectRight = 1172
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1172
-      ExplicitHeight = 460
+      ExplicitHeight = 516
       inherited cxGrid: TcxGrid
         Width = 1172
         Height = 516
         ExplicitWidth = 1172
-        ExplicitHeight = 460
+        ExplicitHeight = 516
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -482,7 +482,6 @@ inherited SendForm: TSendForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitHeight = 460
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -491,7 +490,6 @@ inherited SendForm: TSendForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitHeight = 460
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -709,7 +707,6 @@ inherited SendForm: TSendForm
     object cxTabSheetChild: TcxTabSheet
       Caption = #1056#1072#1089#1093#1086#1076' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
       ImageIndex = 2
-      ExplicitHeight = 460
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -718,7 +715,6 @@ inherited SendForm: TSendForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitHeight = 460
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS

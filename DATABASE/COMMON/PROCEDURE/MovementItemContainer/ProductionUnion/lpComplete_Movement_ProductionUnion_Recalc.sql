@@ -167,8 +167,10 @@ BEGIN
                                                  , inCuterWeight            := 0
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
+                                                 , inPartNumber             := NULL
                                                  , inGoodsKindId            := NULL
                                                  , inGoodsKindId_Complete   := NULL
+                                                 , inStorageId              := NULL
                                                  , inUserId                 := inUserId
                                                   ) AS MovementItemId_new
                FROM (-- обязательно взяли только там где нет составляющих
@@ -196,8 +198,10 @@ BEGIN
                                                  , inParentId               := _tmpItemPeresort_new.MovementItemId_to
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
+                                                 , inPartNumber             := NULL
                                                  , inGoodsKindId            := NULL
                                                  , inGoodsKindCompleteId    := NULL
+                                                 , inStorageId              := NULL
                                                  , inCount_onCount          := 0
                                                  , inUserId                 := inUserId
                                                   )
@@ -242,6 +246,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.05.23         *
  30.01.19                                        *
 */
 
