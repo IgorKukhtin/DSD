@@ -311,15 +311,18 @@ type
     function Get_StreetName: UnicodeString;
     function Get_CityName: UnicodeString;
     function Get_CountryID: UnicodeString;
+    function Get_CountrySubDivisionName: UnicodeString;
     procedure Set_PostcodeCode(Value: UnicodeString);
     procedure Set_StreetName(Value: UnicodeString);
     procedure Set_CityName(Value: UnicodeString);
     procedure Set_CountryID(Value: UnicodeString);
+    procedure Set_CountrySubDivisionName(Value: UnicodeString);
     { Methods & Properties }
     property PostcodeCode: UnicodeString read Get_PostcodeCode write Set_PostcodeCode;
     property StreetName: UnicodeString read Get_StreetName write Set_StreetName;
     property CityName: UnicodeString read Get_CityName write Set_CityName;
     property CountryID: UnicodeString read Get_CountryID write Set_CountryID;
+    property CountrySubDivisionName: UnicodeString read Get_CountrySubDivisionName write Set_CountrySubDivisionName;
   end;
 
 { IXMLConsigneeTradePartyType }
@@ -1116,10 +1119,12 @@ type
     function Get_StreetName: UnicodeString;
     function Get_CityName: UnicodeString;
     function Get_CountryID: UnicodeString;
+    function Get_CountrySubDivisionName: UnicodeString;
     procedure Set_PostcodeCode(Value: UnicodeString);
     procedure Set_StreetName(Value: UnicodeString);
     procedure Set_CityName(Value: UnicodeString);
     procedure Set_CountryID(Value: UnicodeString);
+    procedure Set_CountrySubDivisionName(Value: UnicodeString);
   end;
 
 { TXMLConsigneeTradePartyType }
@@ -2030,6 +2035,16 @@ end;
 procedure TXMLPostalTradeAddressType.Set_CountryID(Value: UnicodeString);
 begin
   ChildNodes['ram:CountryID'].NodeValue := Value;
+end;
+
+function TXMLPostalTradeAddressType.Get_CountrySubDivisionName: UnicodeString;
+begin
+  Result := ChildNodes['ram:CountrySubDivisionName'].Text;
+end;
+
+procedure TXMLPostalTradeAddressType.Set_CountrySubDivisionName(Value: UnicodeString);
+begin
+  ChildNodes['ram:CountrySubDivisionName'].NodeValue := Value;
 end;
 
 { TXMLConsigneeTradePartyType }

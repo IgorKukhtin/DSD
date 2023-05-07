@@ -39,10 +39,6 @@ inherited MainInventoryForm: TMainInventoryForm
       object tsStart: TcxTabSheet
         Caption = #1057#1090#1072#1088#1090#1086#1074#1072#1103' '#1089#1090#1088#1072#1085#1080#1094#1072
         ImageIndex = 0
-        ExplicitLeft = 5
-        ExplicitTop = 25
-        ExplicitWidth = 0
-        ExplicitHeight = 0
       end
       object tsInventory: TcxTabSheet
         Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -255,17 +251,8 @@ inherited MainInventoryForm: TMainInventoryForm
             Top = 5
             TabStop = False
             EditValue = 45033d
-            Properties.ReadOnly = True
             TabOrder = 10
             Width = 121
-          end
-          object edUnitName: TcxTextEdit
-            Left = 252
-            Top = 5
-            TabStop = False
-            Properties.ReadOnly = True
-            TabOrder = 11
-            Width = 565
           end
           object cxButton1: TcxButton
             Left = 181
@@ -276,8 +263,19 @@ inherited MainInventoryForm: TMainInventoryForm
             PaintStyle = bpsGlyph
             ParentShowHint = False
             ShowHint = True
-            TabOrder = 12
+            TabOrder = 11
             TabStop = False
+          end
+          object edUnitName: TcxButtonEdit
+            Left = 252
+            Top = 6
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            TabOrder = 12
+            Width = 565
           end
         end
       end
@@ -463,7 +461,7 @@ inherited MainInventoryForm: TMainInventoryForm
         item
           Action = actDoLoadData
         end>
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
     end
     object actReCreteInventDate: TAction
       Category = 'DSDLib'
@@ -658,12 +656,15 @@ inherited MainInventoryForm: TMainInventoryForm
       item
         Name = 'UnitId'
         Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = Null
-        Component = edUnitName
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -675,7 +676,7 @@ inherited MainInventoryForm: TMainInventoryForm
         MultiSelectSeparator = ','
       end>
     Left = 16
-    Top = 248
+    Top = 256
   end
   object spGet_User_IsAdmin: TdsdStoredProc
     StoredProcName = 'gpGet_User_IsAdmin'
@@ -942,5 +943,89 @@ inherited MainInventoryForm: TMainInventoryForm
     PackSize = 1
     Left = 736
     Top = 123
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitName
+    FormNameParam.Value = 'TUnitLocalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitLocalForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 640
+    Top = 24
+  end
+  object HeaderSaver: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    StoredProc = spUpdateIventory
+    ControlList = <
+      item
+        Control = edOperDate
+      end
+      item
+        Control = edUnitName
+      end>
+    Left = 136
+    Top = 201
+  end
+  object spUpdateIventory: TdsdStoredProcSQLite
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inInventory'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    SQLList = <
+      item
+        SQL.Strings = (
+          'UPDATE Inventory SET OperDate = :inOperDate, UnitId = :inUnitId'
+          'WHERE Inventory.ID = :inInventory'
+          'RETURNING *;')
+      end>
+    Left = 133
+    Top = 257
   end
 end
