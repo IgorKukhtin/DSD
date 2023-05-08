@@ -36,7 +36,7 @@
     object actReport_OrderClient_byBoat: TdsdOpenForm [2]
       Category = #1054#1090#1095#1077#1090#1099' ('#1089#1082#1083#1072#1076')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1084' '#1087#1086' '#1083#1086#1076#1082#1072#1084
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1076#1083#1103' '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
       FormName = 'TReport_OrderClient_byBoatForm'
       FormNameParam.Value = 'TReport_OrderClient_byBoatForm'
       FormNameParam.DataType = ftString
@@ -1447,6 +1447,7 @@
       end
       object miReport_OrderClient_byBoat: TMenuItem
         Action = actReport_OrderClient_byBoat
+        Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' '#1082#1083#1080#1077#1085#1090#1072
       end
     end
     object miReport_Finance: TMenuItem [7]
