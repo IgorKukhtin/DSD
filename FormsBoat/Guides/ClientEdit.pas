@@ -64,15 +64,12 @@ type
     cxLabel12: TcxLabel;
     cxLabel13: TcxLabel;
     edCodeDB: TcxTextEdit;
-    cxLabel14: TcxLabel;
-    edPLZ: TcxButtonEdit;
     cxLabel15: TcxLabel;
     edBank: TcxButtonEdit;
     cxLabel16: TcxLabel;
     edInfoMoney: TcxButtonEdit;
     cxLabel19: TcxLabel;
     edTaxKind: TcxButtonEdit;
-    GuidesPLZ: TdsdGuides;
     GuidesBank: TdsdGuides;
     GuidesInfoMoney: TdsdGuides;
     GuidesTaxKind: TdsdGuides;
@@ -86,6 +83,12 @@ type
     edName1: TcxTextEdit;
     edName2: TcxTextEdit;
     edName3: TcxTextEdit;
+    cxLabel22: TcxLabel;
+    edCity: TcxButtonEdit;
+    GuidesCity: TdsdGuides;
+    cxLabel23: TcxLabel;
+    edCountry: TcxButtonEdit;
+    GuidesCountry: TdsdGuides;
   private
     { Private declarations }
   public

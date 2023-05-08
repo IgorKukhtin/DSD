@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name1 TVarChar, Name2 TV
              , Comment TVarChar
              , BankId Integer, BankName TVarChar
              , PLZId Integer, PLZName TVarChar
+             , CityName TVarChar, CountryId Integer, CountryName TVarChar   --город страна
              , TaxKindId Integer, TaxKindName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
@@ -53,7 +54,9 @@ BEGIN
            , '' :: TVarChar           AS BankName
            , 0                        AS PLZId
            , '' :: TVarChar           AS PLZName
-
+           , '' :: TVarChar           AS CityName
+           , 0                        AS CountryId
+           , '' :: TVarChar           AS CountryName
            , 0                        AS TaxKindId
            , '' :: TVarChar           AS TaxKindName
            , 0                        AS PaidKindId
@@ -90,7 +93,9 @@ BEGIN
            , Object_PLZ.Id                   AS PLZId
            --, Object_PLZ.ValueData            AS PLZName
            , TRIM (COALESCE (Object_PLZ.ValueData,'')||' '||ObjectString_City.ValueData||' '||Object_Country.ValueData) ::TVarChar AS PLZName
-
+           , ObjectString_City.ValueData     AS CityName
+           , Object_Country.Id               AS CountryId
+           , Object_Country.ValueData        AS CountryName
            , Object_TaxKind.Id               AS TaxKindId
            , Object_TaxKind.ValueData        AS TaxKindName
            , Object_PaidKind.Id              AS PaidKindId
@@ -189,6 +194,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.05.23         *
  04.01.21         *
  22.10.20         *
 */

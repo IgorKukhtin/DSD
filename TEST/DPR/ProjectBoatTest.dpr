@@ -354,7 +354,8 @@ uses
   Report_PersonalDialog in '..\..\FormsBoat\Report\Report_PersonalDialog.pas' {Report_PersonalDialogForm: TParentForm},
   PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
   OrderClientDialog in '..\..\FormsBoat\Document\OrderClientDialog.pas' {OrderClientDialogForm: TParentForm},
-  StorageSQLite in '..\..\SOURCE\StorageSQLite.pas';
+  StorageSQLite in '..\..\SOURCE\StorageSQLite.pas',
+  UAECMRXML in '..\..\SOURCE\EDI\UAECMRXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

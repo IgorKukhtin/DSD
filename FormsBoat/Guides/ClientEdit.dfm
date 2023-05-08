@@ -212,24 +212,7 @@ object ClientEditForm: TClientEditForm
     Left = 10
     Top = 293
     TabOrder = 31
-    Width = 130
-  end
-  object cxLabel14: TcxLabel
-    Left = 10
-    Top = 321
-    Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1072#1076#1088#1077#1089
-  end
-  object edPLZ: TcxButtonEdit
-    Left = 10
-    Top = 338
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 33
-    Width = 273
+    Width = 133
   end
   object cxLabel15: TcxLabel
     Left = 295
@@ -245,7 +228,7 @@ object ClientEditForm: TClientEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 35
+    TabOrder = 33
     Width = 273
   end
   object cxLabel16: TcxLabel
@@ -262,7 +245,7 @@ object ClientEditForm: TClientEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 37
+    TabOrder = 35
     Width = 273
   end
   object cxLabel19: TcxLabel
@@ -279,7 +262,7 @@ object ClientEditForm: TClientEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 39
+    TabOrder = 37
     Width = 273
   end
   object cxLabel20: TcxLabel
@@ -290,7 +273,7 @@ object ClientEditForm: TClientEditForm
   object edTaxNumber: TcxTextEdit
     Left = 153
     Top = 293
-    TabOrder = 41
+    TabOrder = 39
     Width = 130
   end
   object cxLabel21: TcxLabel
@@ -307,7 +290,7 @@ object ClientEditForm: TClientEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 43
+    TabOrder = 41
     Width = 130
   end
   object cxButton3: TcxButton
@@ -317,25 +300,57 @@ object ClientEditForm: TClientEditForm
     Height = 25
     Action = actVATNumberValidation
     Default = True
-    TabOrder = 44
+    TabOrder = 42
   end
   object edName1: TcxTextEdit
-    Left = 10
+    Left = 8
     Top = 416
-    TabOrder = 45
+    TabOrder = 43
     Width = 183
   end
   object edName2: TcxTextEdit
     Left = 208
     Top = 416
-    TabOrder = 46
+    TabOrder = 44
     Width = 183
   end
   object edName3: TcxTextEdit
     Left = 397
     Top = 416
-    TabOrder = 47
+    TabOrder = 45
     Width = 171
+  end
+  object cxLabel22: TcxLabel
+    Left = 10
+    Top = 320
+    Caption = #1043#1086#1088#1086#1076' ('#1055#1086#1095#1090#1086#1074#1099#1081' '#1072#1076#1088#1077#1089')'
+  end
+  object edCity: TcxButtonEdit
+    Left = 10
+    Top = 338
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 47
+    Width = 133
+  end
+  object cxLabel23: TcxLabel
+    Left = 153
+    Top = 320
+    Caption = #1057#1090#1088#1072#1085#1072' ('#1055#1086#1095#1090#1086#1074#1099#1081' '#1072#1076#1088#1077#1089')'
+  end
+  object edCountry: TcxButtonEdit
+    Left = 153
+    Top = 338
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 49
+    Width = 130
   end
   object ActionList: TActionList
     Left = 176
@@ -514,6 +529,22 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCityName'
+        Value = Null
+        Component = edCity
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountryName'
+        Value = Null
+        Component = edCountry
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inDiscountTax'
         Value = Null
         Component = edDiscountTax
@@ -546,14 +577,6 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPLZId'
-        Value = Null
-        Component = GuidesPLZ
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inInfoMoneyId'
         Value = Null
         Component = GuidesInfoMoney
@@ -578,8 +601,8 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 96
-    Top = 48
+    Left = 528
+    Top = 168
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -705,17 +728,9 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PLZId'
+        Name = 'CityName'
         Value = Null
-        Component = GuidesPLZ
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PLZName'
-        Value = Null
-        Component = GuidesPLZ
-        ComponentItem = 'TextValue'
+        Component = edCity
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -812,10 +827,25 @@ object ClientEditForm: TClientEditForm
         Component = edName3
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountryId'
+        Value = Null
+        Component = GuidesCountry
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountryName'
+        Value = Null
+        Component = GuidesCountry
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 360
-    Top = 72
+    Left = 528
+    Top = 112
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -835,35 +865,6 @@ object ClientEditForm: TClientEditForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 104
     Top = 104
-  end
-  object GuidesPLZ: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPLZ
-    FormNameParam.Value = 'TPLZForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPLZForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesPLZ
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesPLZ
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 200
-    Top = 325
   end
   object GuidesBank: TdsdGuides
     KeyField = 'Id'
@@ -980,5 +981,71 @@ object ClientEditForm: TClientEditForm
       end>
     Left = 477
     Top = 57
+  end
+  object GuidesCity: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCity
+    FormNameParam.Value = 'TPLZ_CityForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPLZ_CityForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCountry
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCountry
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'City'
+        Value = ''
+        Component = edCity
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 77
+    Top = 323
+  end
+  object GuidesCountry: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCountry
+    FormNameParam.Value = 'TCountryForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCountryForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCountry
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCountry
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 212
+    Top = 322
   end
 end
