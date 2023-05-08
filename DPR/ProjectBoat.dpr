@@ -94,7 +94,8 @@ uses
   GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
   GoogleOTP in '..\SOURCE\GoogleOTP.pas',
   PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
-  StorageSQLite in '..\SOURCE\StorageSQLite.pas';
+  StorageSQLite in '..\SOURCE\StorageSQLite.pas',
+  UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas';
 
 {$R *.res}
 

@@ -267,6 +267,8 @@ type
     miProductionUnionMaster: TMenuItem;
     actReport_Personal: TdsdOpenForm;
     miReport_Personal: TMenuItem;
+    actReport_OrderClient_byBoat: TdsdOpenForm;
+    miReport_OrderClient_byBoat: TMenuItem;
   private
     { Private declarations }
   public

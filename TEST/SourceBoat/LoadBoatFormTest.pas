@@ -874,6 +874,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderClient_byBoatForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderClient_byBoatForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderClient_byBoatDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_OrderClient_byBoatDialogForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceListForm');

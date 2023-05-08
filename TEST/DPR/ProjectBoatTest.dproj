@@ -1212,6 +1212,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\StorageSQLite.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\UAECMRXML.pas"/>
+			<DCCReference Include="..\..\FormsBoat\Report\Report_OrderClient_byBoat.pas">
+				<Form>Report_OrderClient_byBoatForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Report\Report_OrderClient_byBoatDialog.pas">
+				<Form>Report_OrderClient_byBoatDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
