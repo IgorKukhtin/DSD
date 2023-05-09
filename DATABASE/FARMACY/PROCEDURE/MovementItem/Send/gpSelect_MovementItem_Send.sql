@@ -545,139 +545,99 @@ BEGIN
                or MovementItem_Send.id is not null;
     ELSE
 
-        -- Результат другой
-        RETURN QUERY
+        IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMovementItem_Send'))
+        THEN
+          DROP TABLE tmpMovementItem_Send;
+        END IF;
+    	
+        CREATE TEMP TABLE tmpMovementItem_Send ON COMMIT DROP AS 
+         SELECT MovementItem.Id
+              , MovementItem.ObjectId
+              , MovementItem.Amount
+              , MovementItem.IsErased  
+              , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId
+              , MILinkObject_PartionDateKind.ObjectId   AS PartionDateKindId
+                                                     
+              , COALESCE(MIFloat_PriceFrom.ValueData,0)      ::TFloat  AS PriceFrom
+              , COALESCE(MIFloat_PriceTo.ValueData,0)        ::TFloat  AS PriceTo        
+              , COALESCE(MIFloat_AmountManual.ValueData,0)   ::TFloat  AS AmountManual
+              , COALESCE(MIFloat_AmountStorage.ValueData,0)  ::TFloat  AS AmountStorage
+              , MIDate_Insert.ValueData                                AS DateInsert
+
+              , COALESCE(MIFloat_RemainsFrom.ValueData,0)   AS RemainsFrom
+              , COALESCE(MIFloat_RemainsTo.ValueData,0)     AS RemainsTo
+              , COALESCE(MIFloat_ValueFrom.ValueData,0)     AS ValueFrom
+              , COALESCE(MIFloat_ValueTo.ValueData,0)       AS ValueTo
+
+              , MovementTR.ID                                          AS TechnicalRediscountID
+              , MovementTR.InvNumber                                   AS TechnicalRediscountInvNumber
+              , MovementTR.OperDate                                    AS TechnicalRediscountOperDate
+         FROM MovementItem   
+             -- цена подразделений записанная при автоматическом распределении 
+             LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceFrom
+                                               ON MIFloat_PriceFrom.MovementItemId = MovementItem.Id
+                                              AND MIFloat_PriceFrom.DescId = zc_MIFloat_PriceFrom()
+             LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceTo
+                                               ON MIFloat_PriceTo.MovementItemId = MovementItem.Id
+                                              AND MIFloat_PriceTo.DescId = zc_MIFloat_PriceTo()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                         ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
+                                         ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
+
+             LEFT OUTER JOIN MovementItemFloat AS MIFloat_RemainsFrom
+                                               ON MIFloat_RemainsFrom.MovementItemId = MovementItem.Id
+                                              AND MIFloat_RemainsFrom.DescId = zc_MIFloat_RemainsFrom()
+             LEFT OUTER JOIN MovementItemFloat AS MIFloat_RemainsTo
+                                               ON MIFloat_RemainsTo.MovementItemId = MovementItem.Id
+                                              AND MIFloat_RemainsTo.DescId = zc_MIFloat_RemainsTo()
+             LEFT OUTER JOIN MovementItemFloat AS MIFloat_ValueFrom
+                                               ON MIFloat_ValueFrom.MovementItemId = MovementItem.Id
+                                              AND MIFloat_ValueFrom.DescId = zc_MIFloat_ValueFrom()
+             LEFT OUTER JOIN MovementItemFloat AS MIFloat_ValueTo
+                                               ON MIFloat_ValueTo.MovementItemId = MovementItem.Id
+                                              AND MIFloat_ValueTo.DescId = zc_MIFloat_ValueTo()
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                              ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
+                                              ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
+             LEFT JOIN MovementItemDate AS MIDate_Insert
+                                        ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                       AND MIDate_Insert.DescId = zc_MIDate_Insert()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_MITRId
+                                         ON MIFloat_MITRId.MovementItemId = MovementItem.Id
+                                        AND MIFloat_MITRId.DescId = zc_MIFloat_MITechnicalRediscountId()
+                                                                                                     
+             LEFT JOIN MovementItem AS MITR ON MITR.ID = MIFloat_MITRId.ValueData::Integer
+
+             LEFT JOIN Movement AS MovementTR ON MovementTR.ID = MITR.MovementId
+                                       
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId = zc_MI_Master()
+           AND (MovementItem.isErased = FALSE or inIsErased = TRUE);
+           
+        ANALYSE tmpMovementItem_Send;         
+        
+        IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMIContainer'))
+        THEN
+          DROP TABLE tmpMIContainer;
+        END IF;
+    	
+        CREATE TEMP TABLE tmpMIContainer ON COMMIT DROP AS 
         WITH 
-           MovementItem_Send AS (SELECT MovementItem.Id
-                                      , MovementItem.ObjectId
-                                      , MovementItem.Amount
-                                      , MovementItem.IsErased  
-                                      , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId
-                                      , MILinkObject_PartionDateKind.ObjectId   AS PartionDateKindId
-                                                   
-                                      , COALESCE(MIFloat_PriceFrom.ValueData,0)      ::TFloat  AS PriceFrom
-                                      , COALESCE(MIFloat_PriceTo.ValueData,0)        ::TFloat  AS PriceTo        
-                                      , COALESCE(MIFloat_AmountManual.ValueData,0)   ::TFloat  AS AmountManual
-                                      , COALESCE(MIFloat_AmountStorage.ValueData,0)  ::TFloat  AS AmountStorage
-                                      , MIDate_Insert.ValueData                                AS DateInsert
-
-                                      , COALESCE(MIFloat_RemainsFrom.ValueData,0)   AS RemainsFrom
-                                      , COALESCE(MIFloat_RemainsTo.ValueData,0)     AS RemainsTo
-                                      , COALESCE(MIFloat_ValueFrom.ValueData,0)     AS ValueFrom
-                                      , COALESCE(MIFloat_ValueTo.ValueData,0)       AS ValueTo
-
-                                      , MovementTR.ID                                          AS TechnicalRediscountID
-                                      , MovementTR.InvNumber                                   AS TechnicalRediscountInvNumber
-                                      , MovementTR.OperDate                                    AS TechnicalRediscountOperDate
-                                 FROM MovementItem   
-                                     -- цена подразделений записанная при автоматическом распределении 
-                                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceFrom
-                                                                       ON MIFloat_PriceFrom.MovementItemId = MovementItem.Id
-                                                                      AND MIFloat_PriceFrom.DescId = zc_MIFloat_PriceFrom()
-                                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceTo
-                                                                       ON MIFloat_PriceTo.MovementItemId = MovementItem.Id
-                                                                      AND MIFloat_PriceTo.DescId = zc_MIFloat_PriceTo()
-                                     LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
-                                                                 ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
-                                                                AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
-                                     LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
-                                                                 ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
-                                                                AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
-
-                                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_RemainsFrom
-                                                                       ON MIFloat_RemainsFrom.MovementItemId = MovementItem.Id
-                                                                      AND MIFloat_RemainsFrom.DescId = zc_MIFloat_RemainsFrom()
-                                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_RemainsTo
-                                                                       ON MIFloat_RemainsTo.MovementItemId = MovementItem.Id
-                                                                      AND MIFloat_RemainsTo.DescId = zc_MIFloat_RemainsTo()
-                                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_ValueFrom
-                                                                       ON MIFloat_ValueFrom.MovementItemId = MovementItem.Id
-                                                                      AND MIFloat_ValueFrom.DescId = zc_MIFloat_ValueFrom()
-                                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_ValueTo
-                                                                       ON MIFloat_ValueTo.MovementItemId = MovementItem.Id
-                                                                      AND MIFloat_ValueTo.DescId = zc_MIFloat_ValueTo()
-
-                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
-                                                                      ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem.Id
-                                                                     AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
-                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
-                                                                      ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
-                                                                     AND MILinkObject_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
-                                     LEFT JOIN MovementItemDate AS MIDate_Insert
-                                                                ON MIDate_Insert.MovementItemId = MovementItem.Id
-                                                               AND MIDate_Insert.DescId = zc_MIDate_Insert()
-
-                                     LEFT JOIN MovementItemFloat AS MIFloat_MITRId
-                                                                 ON MIFloat_MITRId.MovementItemId = MovementItem.Id
-                                                                AND MIFloat_MITRId.DescId = zc_MIFloat_MITechnicalRediscountId()
-                                                                                                   
-                                     LEFT JOIN MovementItem AS MITR ON MITR.ID = MIFloat_MITRId.ValueData::Integer
-
-                                     LEFT JOIN Movement AS MovementTR ON MovementTR.ID = MITR.MovementId
-                                     
-                                 WHERE MovementItem.MovementId = inMovementId
-                                   AND MovementItem.DescId = zc_MI_Master()
-                                   AND (MovementItem.isErased = FALSE or inIsErased = TRUE)
-                                )
-         , MovementItem_Send_All AS (SELECT MovementItem.Id
+           MovementItem_Send_All AS (SELECT MovementItem.Id
                                           , MovementItem.ParentId
                                      FROM MovementItem   
                                      WHERE MovementItem.MovementId = inMovementId 
                                        AND MovementItem.isErased = False
                                     )
 
-         , tmpContainer AS (SELECT Container.Id
-                                 , Container.ObjectId    AS GoodsId
-                                 , SUM(Container.Amount) AS Amount
-                                 , Object_PartionMovementItem.ObjectCode ::Integer AS MI_Id  -- AVG(MIFloat_Price.ValueData)::TFloat AS PriceIn
-                            FROM (SELECT DISTINCT MovementItem_Send.ObjectId
-                                  FROM MovementItem_Send) AS MovementItem_Send
-                                   
-                                INNER JOIN Container ON Container.ObjectId = MovementItem_Send.ObjectId
-                                                    AND Container.DescId = zc_Container_Count()
-                                                    AND Container.WhereObjectId = vbUnitFromId
-                                                    AND Container.Amount <> 0
- 
-                                INNER JOIN ContainerLinkObject AS CLI_MI 
-                                                               ON CLI_MI.ContainerId = Container.Id
-                                                              AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                                INNER JOIN OBJECT AS Object_PartionMovementItem 
-                                                  ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-                            GROUP BY Container.ObjectId
-                                   , Object_PartionMovementItem.ObjectCode, Container.Id
-                            )
-
-         , tmpMinExpirationDate AS (SELECT tmpContainer.GoodsId
-                                         , MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
-                                    FROM tmpContainer
-                                         INNER JOIN MovementItem ON MovementItem.Id = tmpContainer.MI_Id
-                                         LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
-                                                                           ON MIFloat_Price.MovementItemId = MovementItem.ID
-                                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                         -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-                                         LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                                ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
-                                               AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                                         -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                                         LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
-
-                                         LEFT JOIN MovementItemDate  AS MIDate_ExpirationDate
-                                                ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id) 
-                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-                                     GROUP BY tmpContainer.GoodsId
-                                    )
-
-         , tmpRemains AS (SELECT tmpContainer.GoodsId
-                               , SUM(tmpContainer.Amount) AS Amount
-                               , AVG(MIFloat_Price.ValueData)::TFloat AS PriceIn
-                          FROM tmpContainer
-                              LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                          ON MIFloat_Price.MovementItemId = tmpContainer.MI_Id
-                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
-                          GROUP BY tmpContainer.GoodsId
-                          )
-                          
          , tmpMIContainerSend AS (SELECT COALESCE(MISend.ParentID, MIContainer_Count.MovementItemId) AS MovementItemId
                                        , MIContainer_Count.Amount                   AS Amount
                                        , COALESCE (MI_Income_find.Id,MovementItem.Id) AS MIIncomeID
@@ -737,45 +697,117 @@ BEGIN
                                       LEFT JOIN tmpMIDate_PartionGoods  AS MIDate_ExpirationDate
                                              ON MIDate_ExpirationDate.MovementItemId = MIContainer_Count.MIIncomeID 
                                             AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-                                 )
-         , tmpMIContainer AS (SELECT COALESCE(MovementItem_Send_All.ParentId, MovementItem_Send_All.Id)           AS Id
-                                   , COALESCE(SUM(MIContainer_Count.Amount * MIContainer_Count.Price)/SUM(MIContainer_Count.Amount), 0)                              AS PriceIn
-                                   , COALESCE(ABS(SUM(MIContainer_Count.Amount * MIContainer_Count.Price)), 0)                                                       AS SumPriceIn
-                                   , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIContainer_Count.JuridicalPrice, 0))/SUM(MIContainer_Count.Amount)),0)   AS Price
-                                   , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIContainer_Count.JuridicalPrice, 0))),0)                                 AS Summa
-                                   , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIContainer_Count.PriceWithVAT, 0))/SUM(MIContainer_Count.Amount)),0)     AS PriceWithVAT
-                                   , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIContainer_Count.PriceWithVAT, 0))),0)                                   AS SummaWithVAT
-                                   , MIN(MIContainer_Count.MinExpirationDate)::TDateTime                                                                             AS MinExpirationDate -- Срок годности
-                              FROM MovementItem_Send_All
-                                    LEFT OUTER JOIN tmpMIContainerAll AS MIContainer_Count
-                                                 ON MIContainer_Count.MovementItemId = MovementItem_Send_All.Id 
-                              GROUP BY COALESCE(MovementItem_Send_All.ParentId, MovementItem_Send_All.Id)   
-                              )
+                                 )                                    
+        SELECT COALESCE(MovementItem_Send_All.ParentId, MovementItem_Send_All.Id)           AS Id
+             , COALESCE(SUM(MIContainer_Count.Amount * MIContainer_Count.Price)/SUM(MIContainer_Count.Amount), 0)                              AS PriceIn
+             , COALESCE(ABS(SUM(MIContainer_Count.Amount * MIContainer_Count.Price)), 0)                                                       AS SumPriceIn
+             , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIContainer_Count.JuridicalPrice, 0))/SUM(MIContainer_Count.Amount)),0)   AS Price
+             , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIContainer_Count.JuridicalPrice, 0))),0)                                 AS Summa
+             , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIContainer_Count.PriceWithVAT, 0))/SUM(MIContainer_Count.Amount)),0)     AS PriceWithVAT
+             , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIContainer_Count.PriceWithVAT, 0))),0)                                   AS SummaWithVAT
+             , MIN(MIContainer_Count.MinExpirationDate)::TDateTime                                                                             AS MinExpirationDate -- Срок годности
+        FROM MovementItem_Send_All
+              LEFT OUTER JOIN tmpMIContainerAll AS MIContainer_Count
+                           ON MIContainer_Count.MovementItemId = MovementItem_Send_All.Id 
+        GROUP BY COALESCE(MovementItem_Send_All.ParentId, MovementItem_Send_All.Id);   
+        
+        ANALYSE tmpMIContainer;                             
 
-         , tmpCheck AS (SELECT MI_Check.ObjectId                    AS GoodsId
-                             , SUM (MI_Check.Amount) ::TFloat  AS Amount
-                        FROM Movement AS Movement_Check
-                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
-                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                            AND MovementLinkObject_Unit.ObjectId = vbUnitFromId
-                               INNER JOIN MovementItem AS MI_Check
-                                                       ON MI_Check.MovementId = Movement_Check.Id
-                                                      AND MI_Check.DescId = zc_MI_Master()
-                                                      AND MI_Check.isErased = FALSE
-                         WHERE Movement_Check.OperDate >= vbOperDate - INTERVAL '90 DAY' AND Movement_Check.OperDate < vbOperDateEnd
-                          AND Movement_Check.DescId = zc_Movement_Check()
-                          AND Movement_Check.StatusId = zc_Enum_Status_UnComplete()
-                        GROUP BY MI_Check.ObjectId 
-                        HAVING SUM (MI_Check.Amount) <> 0 
-                        )
 
+        IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpContainer'))
+        THEN
+          DROP TABLE tmpContainer;
+        END IF;
+    	
+        CREATE TEMP TABLE tmpContainer ON COMMIT DROP AS 
+        SELECT Container.Id
+             , Container.ObjectId    AS GoodsId
+             , SUM(Container.Amount) AS Amount
+             , Object_PartionMovementItem.ObjectCode ::Integer AS MI_Id  -- AVG(MIFloat_Price.ValueData)::TFloat AS PriceIn
+        FROM (SELECT DISTINCT MovementItem_Send.ObjectId
+              FROM tmpMovementItem_Send AS MovementItem_Send) AS MovementItem_Send
+                                   
+            INNER JOIN Container ON Container.ObjectId = MovementItem_Send.ObjectId
+                                AND Container.DescId = zc_Container_Count()
+                                AND Container.WhereObjectId = vbUnitFromId
+                                AND Container.Amount <> 0
+ 
+            INNER JOIN ContainerLinkObject AS CLI_MI 
+                                           ON CLI_MI.ContainerId = Container.Id
+                                          AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+            INNER JOIN OBJECT AS Object_PartionMovementItem 
+                              ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+        GROUP BY Container.ObjectId
+               , Object_PartionMovementItem.ObjectCode, Container.Id;
+                            
+        ANALYSE tmpContainer;
+        
+        
+        IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpCheck'))
+        THEN
+          DROP TABLE tmpCheck;
+        END IF;
+    	
+        CREATE TEMP TABLE tmpCheck ON COMMIT DROP AS 
+        SELECT MI_Check.ObjectId                    AS GoodsId
+             , SUM (MI_Check.Amount) ::TFloat  AS Amount
+        FROM Movement AS Movement_Check
+               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                            AND MovementLinkObject_Unit.ObjectId = vbUnitFromId
+               INNER JOIN MovementItem AS MI_Check
+                                       ON MI_Check.MovementId = Movement_Check.Id
+                                      AND MI_Check.DescId = zc_MI_Master()
+                                      AND MI_Check.isErased = FALSE
+         WHERE Movement_Check.OperDate >= vbOperDate - INTERVAL '90 DAY' AND Movement_Check.OperDate < vbOperDateEnd
+          AND Movement_Check.DescId = zc_Movement_Check()
+          AND Movement_Check.StatusId = zc_Enum_Status_UnComplete()
+        GROUP BY MI_Check.ObjectId 
+        HAVING SUM (MI_Check.Amount) <> 0; 
+                        
+        ANALYSE tmpCheck;
+        
+                                                            
+        -- Результат другой
+        RETURN QUERY
+        WITH 
+           tmpMinExpirationDate AS (SELECT tmpContainer.GoodsId
+                                         , MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
+                                    FROM tmpContainer
+                                         INNER JOIN MovementItem ON MovementItem.Id = tmpContainer.MI_Id
+                                         LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
+                                                                           ON MIFloat_Price.MovementItemId = MovementItem.ID
+                                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                         -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                         LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
+                                               AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                         -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                         LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+
+                                         LEFT JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MovementItem.Id) 
+                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                                     GROUP BY tmpContainer.GoodsId
+                                    )
+
+         , tmpRemains AS (SELECT tmpContainer.GoodsId
+                               , SUM(tmpContainer.Amount) AS Amount
+                               , AVG(MIFloat_Price.ValueData)::TFloat AS PriceIn
+                          FROM tmpContainer
+                              LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                          ON MIFloat_Price.MovementItemId = tmpContainer.MI_Id
+                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+                          GROUP BY tmpContainer.GoodsId
+                          )                          
 
          , tmpPrice AS (SELECT MovementItem_Send.ObjectId     AS GoodsId
                              , ObjectLink_Unit.ChildObjectId  AS UnitId
                              , ROUND (ObjectFloat_Price_Value.ValueData, 2)  AS Price
                         FROM (SELECT DISTINCT MovementItem_Send.ObjectId
-                              FROM MovementItem_Send) AS MovementItem_Send
+                              FROM tmpMovementItem_Send AS MovementItem_Send) AS MovementItem_Send
                                    
                              INNER JOIN ObjectLink AS ObjectLink_Goods
                                                    ON ObjectLink_Goods.ChildObjectId = MovementItem_Send.ObjectId
@@ -797,7 +829,7 @@ BEGIN
                                   , COALESCE(ObjectBoolean_Goods_First.ValueData, False)  :: Boolean  AS isFirst
                                   , COALESCE(ObjectBoolean_Goods_Second.ValueData, False) :: Boolean  AS isSecond
                              FROM (SELECT DISTINCT MovementItem_Send.ObjectId AS GoodsId
-                                   FROM MovementItem_Send) AS tmp
+                                   FROM tmpMovementItem_Send AS MovementItem_Send) AS tmp
                       
                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                                        ON ObjectLink_Goods_GoodsGroup.ObjectId = tmp.GoodsId
@@ -937,7 +969,7 @@ BEGIN
            , MovementItem_Send.TechnicalRediscountID                             AS TechnicalRediscountID
            , MovementItem_Send.TechnicalRediscountInvNumber                      AS TechnicalRediscountInvNumber
            , MovementItem_Send.TechnicalRediscountOperDate                       AS TechnicalRediscountOperDate
-       FROM MovementItem_Send
+       FROM tmpMovementItem_Send AS MovementItem_Send
             LEFT OUTER JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem_Send.ObjectId
             LEFT JOIN tmpPrice AS Object_Price_From
@@ -1024,4 +1056,5 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- 
-select * from gpSelect_MovementItem_Send(inMovementId := 29429318 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');
+
+select * from gpSelect_MovementItem_Send(inMovementId := 31973736 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

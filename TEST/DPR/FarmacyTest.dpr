@@ -1292,7 +1292,8 @@ uses
   UnitLocal in '..\..\FormsFarmacy\Inventory\UnitLocal.pas' {UnitLocalForm: TParentForm},
   CommentCheck in '..\..\FormsFarmacy\Guides\CommentCheck.pas' {CommentCheckForm: TParentForm},
   CommentCheckEdit in '..\..\FormsFarmacy\Guides\CommentCheckEdit.pas' {CommentCheckEditForm: TParentForm},
-  GoodsInventory in '..\..\FormsFarmacy\Inventory\GoodsInventory.pas' {GoodsInventoryForm: TParentForm};
+  GoodsInventory in '..\..\FormsFarmacy\Inventory\GoodsInventory.pas' {GoodsInventoryForm: TParentForm},
+  Report_BanToTransferTimeGoods in '..\..\FormsFarmacy\Report\Report_BanToTransferTimeGoods.pas' {Report_BanToTransferTimeGoodsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
