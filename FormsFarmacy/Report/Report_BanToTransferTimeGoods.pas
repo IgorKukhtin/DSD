@@ -58,6 +58,8 @@ type
     GoodsGroupName: TcxGridDBColumn;
     actShowAllRemains: TBooleanStoredProcAction;
     dxBarButton2: TdxBarButton;
+    dsdUpdateDataSet1: TdsdUpdateDataSet;
+    spUpdate_NotTransferTime: TdsdStoredProc;
   private
   public
   end;

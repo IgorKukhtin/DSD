@@ -43,7 +43,6 @@ object Report_BanToTransferTimeGoodsForm: TReport_BanToTransferTimeGoodsForm
       OptionsData.CancelOnExit = False
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
@@ -78,6 +77,7 @@ object Report_BanToTransferTimeGoodsForm: TReport_BanToTransferTimeGoodsForm
         DataBinding.FieldName = 'GoodsGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 270
       end
       object Amount: TcxGridDBColumn
@@ -88,6 +88,7 @@ object Report_BanToTransferTimeGoodsForm: TReport_BanToTransferTimeGoodsForm
         Properties.DisplayFormat = ',0.00;-,0.00; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object Remains: TcxGridDBColumn
@@ -96,6 +97,7 @@ object Report_BanToTransferTimeGoodsForm: TReport_BanToTransferTimeGoodsForm
         Properties.DisplayFormat = ',0.00;-,0.00; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 90
       end
     end
@@ -302,6 +304,18 @@ object Report_BanToTransferTimeGoodsForm: TReport_BanToTransferTimeGoodsForm
       ImageIndexTrue = 77
       ImageIndexFalse = 80
     end
+    object dsdUpdateDataSet1: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_NotTransferTime
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_NotTransferTime
+        end>
+      Caption = 'dsdUpdateDataSet1'
+      DataSource = DataSource
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpReport_BanToTransferTimeGoods'
@@ -375,5 +389,31 @@ object Report_BanToTransferTimeGoodsForm: TReport_BanToTransferTimeGoodsForm
     Params = <>
     Left = 712
     Top = 152
+  end
+  object spUpdate_NotTransferTime: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_NotTransferTime'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioNotTransferTime'
+        Value = False
+        Component = ClientDataSet
+        ComponentItem = 'isNotTransferTime'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 296
+    Top = 288
   end
 end

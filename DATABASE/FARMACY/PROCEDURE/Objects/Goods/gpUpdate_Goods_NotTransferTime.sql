@@ -20,7 +20,7 @@ BEGIN
    END IF;
    
    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  
-                  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Spotter(), zc_Enum_Role_Admin())) 
+                  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Spotter(), zc_Enum_Role_Admin(), zc_Enum_Role_TechnicalRediscount())) 
    THEN
        RAISE EXCEPTION 'Ошибка. У васнет правв изменять признак "Не переводить в сроки".';
    END IF;
