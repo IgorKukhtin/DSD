@@ -31,7 +31,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inComment                TVarChar,
     IN inIsArc                  Boolean,
     IN inFeet                   TFloat,
-    IN inMetres                 TFloat,
+    IN                  TFloat,            inMetres
     IN inAmountMin              TFloat,
     IN inAmountRefer            TFloat,
     IN inEKPrice                TFloat,

@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter, Vcl.StdCtrls;
+  cxImageComboBox, cxSplitter, Vcl.StdCtrls, ExternalLoad;
 
 type
   TInventoryForm = class(TParentForm)
@@ -179,6 +179,11 @@ type
     bbAdd_limit: TdxBarButton;
     cbPrice: TcxCheckBox;
     Panel4: TPanel;
+    spGetImportSettingId: TdsdStoredProc;
+    actGetImportSetting: TdsdExecStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    mactStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
   private
   public
   end;
