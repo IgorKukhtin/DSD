@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer
              , Summa TFloat
              , PartNumber TVarChar
              , Comment TVarChar
-             , PartnerName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
              , OperDate_protocol TDateTime, UserName_protocol TVarChar
              , Ord Integer
              , isErased Boolean
@@ -52,6 +52,7 @@ BEGIN
                            , COALESCE (MIFloat_Price.ValueData, 0)        AS Price
                            , COALESCE (MIString_Comment.ValueData,'')     AS Comment
                            , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                           , MILinkObject_Partner.ObjectId                AS PartnerId
                            , MovementItem.isErased
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -67,6 +68,9 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
+                                                             ON MILinkObject_Partner.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_Partner.DescId         = zc_MILinkObject_Partner()
                        )
 
      , tmpRemains AS (SELECT Container.Id       AS ContainerId
@@ -146,6 +150,7 @@ BEGIN
            , tmpMI.PartNumber             ::TVarChar
            , tmpMI.Comment                ::TVarChar
 
+           , Object_Partner.Id                           AS PartnerId
            , COALESCE (Object_Partner.ValueData, '***' || tmpMIContainer.PartnerName) :: TVarChar AS PartnerName
 
            , tmpProtocol.OperDate  AS OperDate_protocol
@@ -190,8 +195,9 @@ BEGIN
                                  ON OL_Goods_Partner.ObjectId = tmpMI.GoodsId
                                 AND OL_Goods_Partner.DescId   = zc_ObjectLink_Goods_Partner()
 
-            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId  = tmpMI.Id
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (Object_PartionGoods.FromId, OL_Goods_Partner.ChildObjectId)
+            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId  = tmpMI.Id  
+            
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (tmpMI.PartnerId, Object_PartionGoods.FromId, OL_Goods_Partner.ChildObjectId)
 
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = tmpMI.Id
 

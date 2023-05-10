@@ -27,7 +27,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не выбран Поставщик';
     END IF;
    */
-   IF COALESCE (inArticle,'') <> ''
+   IF COALESCE (inArticle,'') <> '' OR COALESCE (inGoodsName,'') <> ''
    THEN
        
      -- поиск поставщика
@@ -68,18 +68,32 @@ BEGIN
                                          ) AS tmp;         
      END  IF;
      
-     -- поиск в спр. товара
-     vbGoodsId := (SELECT ObjectString_Article.ObjectId
-                   FROM ObjectString AS ObjectString_Article
-                        INNER JOIN Object ON Object.Id       = ObjectString_Article.ObjectId
-                                         AND Object.DescId   = zc_Object_Goods()
-                                         AND Object.isErased = FALSE
-                   WHERE ObjectString_Article.ValueData ILIKE inArticle
-                     AND ObjectString_Article.DescId    = zc_ObjectString_Article()
-                   LIMIT 1
-                  );
+     IF COALESCE (inArticle,'') <> ''
+     THEN
+         -- поиск в спр. товара
+         vbGoodsId := (SELECT ObjectString_Article.ObjectId
+                       FROM ObjectString AS ObjectString_Article
+                            INNER JOIN Object ON Object.Id       = ObjectString_Article.ObjectId
+                                             AND Object.DescId   = zc_Object_Goods()
+                                             AND Object.isErased = FALSE
+                       WHERE ObjectString_Article.ValueData ILIKE inArticle
+                         AND ObjectString_Article.DescId    = zc_ObjectString_Article()
+                       LIMIT 1
+                      ); 
+     END IF;
 
-
+     --пробуем найти по наименованию
+     IF COALESCE (vbGoodsId,0) = 0
+     THEN
+         vbGoodsId := (SELECT Object.Id
+                       FROM Object
+                       WHERE Object.DescId   = zc_Object_Goods()
+                         AND Object.isErased = FALSE
+                         AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inGoodsName))
+                       LIMIT 1
+                      ); 
+     END IF;
+     
           -- Всегда создаем товар
           IF COALESCE (vbGoodsId,0) = 0 --OR 1=1
           THEN
@@ -113,9 +127,19 @@ BEGIN
                                                      , inTaxKindId        := 0             :: Integer
                                                      , inEngineId         := NULL
                                                      , inSession          := inSession     :: TVarChar
-                                                      );
-
-          END IF;
+                                                      ); 
+          ELSE
+              --если у товара пустое значение поставщик - устанавливаем текущего
+              IF COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL 
+                            WHERE OL.DescId = zc_ObjectLink_Goods_Partner()
+                            AND Ol.ObjectId = vbGoodsId),0) = 0
+              THEN
+                  -- перезаписали поставщика
+                  PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Partner(), vbGoodsId, vbPartnerId);
+              END IF;
+          END IF; 
+          --
+    
 
           -- поиск элемента с таким товаром, вдруг уже загрузили, тогда обновляем
           vbMovementItemId := (SELECT MovementItem.Id
@@ -129,7 +153,8 @@ BEGIN
           -- сохранили <Элемент документа>
           PERFORM lpInsertUpdate_MovementItem_Inventory (ioId              := COALESCE (vbMovementItemId,0)
                                                        , inMovementId      := inMovementId
-                                                       , inGoodsId         := vbGoodsId
+                                                       , inGoodsId         := vbGoodsId  
+                                                       , InPartnerId       := vbPartnerId
                                                        , ioAmount          := inRemains ::TFloat
                                                        , inTotalCount      := 0         ::TFloat
                                                        , inTotalCount_old  := 0         ::TFloat
