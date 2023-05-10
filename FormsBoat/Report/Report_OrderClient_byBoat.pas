@@ -38,7 +38,7 @@ type
     actGetForm: TdsdExecStoredProc;
     bbOpenFormClient: TdxBarButton;
     FormParams: TdsdFormParams;
-    cbisProduct: TcxCheckBox;
+    cbisDetail: TcxCheckBox;
     actOpenFormClient: TdsdOpenForm;
     actOpenFormPartner: TdsdOpenForm;
     bbOpenFormPartner: TdxBarButton;
@@ -50,6 +50,12 @@ type
     FieldFilter_Article: TdsdFieldFilter;
     bbedSearchArticle: TdxBarControlContainerItem;
     bblbSearchArticle: TdxBarControlContainerItem;
+    spSelectPrint3: TdsdStoredProc;
+    actPrint3: TdsdPrintAction;
+    actPrint2: TdsdPrintAction;
+    bbPrint2: TdxBarButton;
+    bbPrint3: TdxBarButton;
+    PrintItemsCDS: TClientDataSet;
   private
     { Private declarations }
   public

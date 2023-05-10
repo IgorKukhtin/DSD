@@ -232,6 +232,25 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             Options.Editing = False
             Width = 70
           end
+          object ReceiptLevelName: TcxGridDBColumn
+            Caption = 'Level'
+            DataBinding.FieldName = 'ReceiptLevelName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 54
+          end
+          object ReceiptGoodsName: TcxGridDBColumn
+            Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080
+            DataBinding.FieldName = 'ReceiptGoodsName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1072
+            Options.Editing = False
+            Width = 100
+          end
           object GoodsName: TcxGridDBColumn
             Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
             DataBinding.FieldName = 'GoodsName'
@@ -428,7 +447,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       ExplicitLeft = 222
       ExplicitTop = 5
     end
-    object cbisProduct: TcxCheckBox
+    object cbisDetail: TcxCheckBox
       Left = 441
       Top = 4
       Action = actRefreshEmpty
@@ -471,7 +490,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
           'Date')
       end
       item
-        Component = cbisProduct
+        Component = cbisDetail
         Properties.Strings = (
           'Checked')
       end>
@@ -490,78 +509,6 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'MovementDescName_order;OperDate;ObjectByName;InvNumber'
-          GridView = cxGridDBTableView
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 41640d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitGroupName'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'LocationName'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupId'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupName'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isSumm_branch'
-          Value = Null
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
-      ReportNameParam.DataType = ftString
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -593,7 +540,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
         item
           Name = 'isProduct'
           Value = ''
-          Component = cbisProduct
+          Component = cbisDetail
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -698,6 +645,137 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       ImageIndex = 7
       DataSource = MasterDS
     end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086
+      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'ReceiptLevelName;GoodsName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isReceiptGoods'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReport_OrderClientByBoat'
+      ReportNameParam.Value = 'PrintReport_OrderClientByBoat'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint2: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1091#1079#1083#1072#1084
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1091#1079#1083#1072#1084
+      ImageIndex = 15
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'ReceiptGoodsName;ReceiptLevelName;GoodsName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 44927d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44927d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isReceiptGoods'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReport_OrderClientByBoat'
+      ReportNameParam.Value = 'PrintReport_OrderClientByBoat'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint3: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint3
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint3
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'OperDate;InvNumber;ReceiptGoodsName;ReceiptLevelName;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReport_OrderClientByBoatMov'
+      ReportNameParam.Value = 'PrintReport_OrderClientByBoatMov'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PictureFields.Strings = (
+        'photo1')
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -727,16 +805,17 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisProduct'
+        Name = 'inisDetail'
         Value = Null
-        Component = cbisProduct
+        Component = cbisDetail
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'fff'
-        Value = Null
+        Value = False
+        DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
@@ -793,6 +872,26 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -835,6 +934,14 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       Hint = 'lbSearchArticle'
       Visible = ivAlways
       Control = lbSearchArticle
+    end
+    object bbPrint2: TdxBarButton
+      Action = actPrint2
+      Category = 0
+    end
+    object bbPrint3: TdxBarButton
+      Action = actPrint3
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -995,5 +1102,52 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
     CheckBoxList = <>
     Left = 256
     Top = 136
+  end
+  object spSelectPrint3: TdsdStoredProc
+    StoredProcName = 'gpReport_OrderClient_byBoat'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 44927d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 44927d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDetail'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'fff'
+        Value = ''
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 464
+    Top = 176
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 1028
+    Top = 86
   end
 end

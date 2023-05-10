@@ -6,10 +6,14 @@ DROP FUNCTION IF EXISTS gpReport_OrderClient_byBoat (TDateTime, TDateTime, Boole
 CREATE OR REPLACE FUNCTION gpReport_OrderClient_byBoat (
     IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
-    IN inisProduct    Boolean   , -- развернуть по лодкам
+    IN inisDetail    Boolean   , -- развернуть по лодкам
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE  (ProductId Integer
+RETURNS TABLE  (MovementId Integer
+              , InvNumber TVarChar
+              , OperDate TDateTime
+              
+              , ProductId Integer
               , ProductName TVarChar
               , CIN              TVarChar
               
@@ -21,7 +25,8 @@ RETURNS TABLE  (ProductId Integer
               , GoodsGroupName TVarChar
               , GoodsGroupNameFull TVarChar
               , MeasureName TVarChar
-              
+              , ReceiptGoodsName TVarChar
+              , ReceiptLevelName TVarChar
               , Amount     TFloat
               , Amount1    TFloat
               , Amount2    TFloat
@@ -46,8 +51,6 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
     RETURN QUERY
-
-
     WITH
     --выбираем лодки по zc_ObjectDate_Product_DateBegin за период
     tmpProduct AS (SELECT ObjectDate.ObjectId AS Id 
@@ -60,6 +63,7 @@ BEGIN
     --все заказы по выбранным лодкам
   , tmpMovement AS (SELECT Movement.Id
                          , Movement.OperDate
+                         , Movement.InvNumber
                          , MovementLinkObject_Product.ObjectId AS ProductId
                     FROM Movement
                         INNER JOIN MovementLinkObject AS MovementLinkObject_Product
@@ -71,18 +75,36 @@ BEGIN
                     )
     --
   , tmpMI_Detail AS (SELECT MovementItem.Id
-                          , MovementItem.ObjectId    -- Комплектующие
+                          , MovementItem.ObjectId    -- Комплектующие 
                           , MovementItem.Amount
                           , Movement.ProductId
                           , Movement.OperDate 
+                          , Movement.InvNumber
+                          , Movement.Id AS MovementId
+                          -- только для zc_MI_Child
+                          , COALESCE (MILinkObject_ReceiptGoods.ObjectId, 0) AS ReceiptGoodsId
+                            -- только для zc_MI_Detail
+                          , COALESCE (MILinkObject_ReceiptLevel.ObjectId, 0) AS ReceiptLevelId
                      FROM tmpMovement AS Movement
                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                  AND MovementItem.DescId = zc_MI_Detail()
                                                  AND MovementItem.isErased = FALSE
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_ReceiptGoods
+                                                           ON MILinkObject_ReceiptGoods.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_ReceiptGoods.DescId         = zc_MILinkObject_ReceiptGoods()
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_ReceiptLevel
+                                                           ON MILinkObject_ReceiptLevel.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_ReceiptLevel.DescId         = zc_MILinkObject_ReceiptLevel()
+                                                          
                      )
 
-  , tmpMI_group AS (SELECT  CASE WHEN inisProduct = TRUE THEN tmp.ProductId ELSE 0 END AS ProductId
-                          , tmp.ObjectId  AS GoodsId  -- Комплектующие
+  , tmpMI_group AS (SELECT  CASE WHEN inisDetail = TRUE THEN tmp.ProductId ELSE 0 END AS ProductId
+                          , CASE WHEN inisDetail = TRUE THEN tmp.MovementId ELSE 0 END AS MovementId
+                          , CASE WHEN inisDetail = TRUE THEN tmp.InvNumber  ELSE '' END AS InvNumber
+                          , CASE WHEN inisDetail = TRUE THEN tmp.OperDate  ELSE NULL END AS OperDate
+                          , tmp.ObjectId  AS GoodsId  -- Комплектующие  
+                          , tmp.ReceiptLevelId
+                          , tmp.ReceiptGoodsId
                           , SUM (tmp.Amount) AS Amount
                           , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 1 THEN tmp.Amount ELSE 0 END) AS Amount1
                           , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 2 THEN tmp.Amount ELSE 0 END) AS Amount2
@@ -97,8 +119,13 @@ BEGIN
                           , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 11 THEN tmp.Amount ELSE 0 END) AS Amount11
                           , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 12 THEN tmp.Amount ELSE 0 END) AS Amount12
                     FROM tmpMI_Detail AS tmp
-                    GROUP BY CASE WHEN inisProduct = TRUE THEN tmp.ProductId ELSE 0 END
+                    GROUP BY CASE WHEN inisDetail = TRUE THEN tmp.ProductId ELSE 0 END
+                           , CASE WHEN inisDetail = TRUE THEN tmp.MovementId ELSE 0 END
+                           , CASE WHEN inisDetail = TRUE THEN tmp.InvNumber  ELSE '' END
+                           , CASE WHEN inisDetail = TRUE THEN tmp.OperDate  ELSE NULL END
                            , tmp.ObjectId
+                           , tmp.ReceiptLevelId
+                           , tmp.ReceiptGoodsId
                     )
 
     -- Параметры - Комплектующие
@@ -121,7 +148,7 @@ BEGIN
                             , Object_ProdColor.ValueData         AS ProdColorName
                             , Object_Engine.Id                   AS EngineId
                             , Object_Engine.ValueData            AS EngineName
-                            , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice  -- Цена вх. без НДС
+                            , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice  -- Цена вх. без НДС   
                        FROM (SELECT DISTINCT tmpMI_group.GoodsId FROM tmpMI_group) AS tmpGoods
                            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
                            LEFT JOIN ObjectString AS ObjectString_Article
@@ -176,10 +203,24 @@ BEGIN
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Engine
                                                 ON ObjectLink_Goods_Engine.ObjectId = tmpGoods.GoodsId
                                                AND ObjectLink_Goods_Engine.DescId = zc_ObjectLink_Goods_Engine()
-                           LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Goods_Engine.ChildObjectId
+                           LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Goods_Engine.ChildObjectId 
+                           
+                          /* LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
+                                                ON ObjectLink_ReceiptGoods_Object.ChildObjectId = tmpGoods.GoodsId
+                                               AND ObjectLink_ReceiptGoods_Object.DescId = zc_ObjectLink_ReceiptGoods_Object()
+                           LEFT JOIN Object AS Object_ReceiptGoods
+                                            ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods_Object.ObjectId
+                                           AND Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
+                                           AND Object_ReceiptGoods.isErased = FALSE
+                          */
                        )
+
+
       -- Результат
-      SELECT Object_Product.Id                   AS ProductId
+      SELECT tmp.MovementId ::Integer
+           , tmp.InvNumber  ::TVarChar
+           , tmp.OperDate   ::TDateTime
+           , Object_Product.Id                   AS ProductId
            , Object_Product.ValueData ::TVarChar AS ProductName
            , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) ::TVarChar AS CIN
            , tmp.GoodsId
@@ -190,6 +231,8 @@ BEGIN
            , tmpGoodsParams.GoodsGroupName        ::TVarChar
            , tmpGoodsParams.GoodsGroupNameFull    ::TVarChar
            , tmpGoodsParams.MeasureName           ::TVarChar
+           , Object_ReceiptGoods.ValueData        ::TVarChar AS ReceiptGoodsName
+           , Object_ReceiptLevel.ValueData        ::TVarChar AS ReceiptLevelName
 
            , tmp.Amount    :: TFloat
            , tmp.Amount1   :: TFloat
@@ -207,7 +250,9 @@ BEGIN
       FROM tmpMI_group AS tmp
            LEFT JOIN tmpGoodsParams ON tmpGoodsParams.GoodsId = tmp.GoodsId
 
-           LEFT JOIN Object AS Object_Product ON Object_Product.Id = tmp.ProductId 
+           LEFT JOIN Object AS Object_Product ON Object_Product.Id = tmp.ProductId
+           LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = tmp.ReceiptGoodsId
+           LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = tmp.ReceiptLevelId 
 
            LEFT JOIN ObjectString AS ObjectString_CIN
                                   ON ObjectString_CIN.ObjectId = Object_Product.Id
@@ -226,4 +271,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inisProduct := true , inSession := '5');
+--      SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inisDetail := False ,inSession := '5');
