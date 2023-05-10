@@ -3930,6 +3930,10 @@ end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberGLNDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberGLNDialogForm');
+
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberReportEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberReportEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberReportForm'));
@@ -3939,7 +3943,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ContainerByDebtForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ContainerByDebtForm');
   exit;
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGenderEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGenderEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGenderForm'));
@@ -3966,9 +3970,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPosition_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberPosition_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
   exit;
@@ -4033,8 +4038,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberExternalForm');
   //TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberExternal_ObjectForm'));
   //TdsdFormStorageFactory.GetStorage.Load('TMemberExternal_ObjectForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberExternalEditForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberExternalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberExternalEditForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadMemberSheetWorkTimeFormTest;

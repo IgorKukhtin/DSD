@@ -15,6 +15,7 @@ object MemberExternalForm: TMemberExternalForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -27,7 +28,6 @@ object MemberExternalForm: TMemberExternalForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 440
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -86,6 +86,13 @@ object MemberExternalForm: TMemberExternalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 139
+      end
+      object GLN: TcxGridDBColumn
+        DataBinding.FieldName = 'GLN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -201,6 +208,14 @@ object MemberExternalForm: TMemberExternalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_GLN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -261,6 +276,10 @@ object MemberExternalForm: TMemberExternalForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbUpdate_GLN: TdxBarButton
+      Action = macUpdate_GLN
       Category = 0
     end
   end
@@ -448,6 +467,61 @@ object MemberExternalForm: TMemberExternalForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object ExecuteDialogGLN: TExecuteDialog
+      Category = 'GLN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'GLN '
+      Hint = 'GLN'
+      ImageIndex = 77
+      FormName = 'TMemberGLNDialogForm'
+      FormNameParam.Value = 'TMemberGLNDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inGLN'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inGLN'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_GLN: TdsdExecStoredProc
+      Category = 'GLN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_GLN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_GLN
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
+      ImageIndex = 77
+    end
+    object macUpdate_GLN: TMultiAction
+      Category = 'GLN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogGLN
+        end
+        item
+          Action = actUpdate_GLN
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
+      ImageIndex = 77
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_MemberExternal'
@@ -511,12 +585,60 @@ object MemberExternalForm: TMemberExternalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 368
     Top = 128
+  end
+  object spUpdate_GLN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_MemberExternal_GLN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGLN'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inGLN'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 488
+    Top = 128
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingIsUploadId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingIsSpecConditionId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 488
+    Top = 216
   end
 end

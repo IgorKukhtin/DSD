@@ -1427,7 +1427,8 @@ uses
   UAECMRXML in '..\..\SOURCE\EDI\UAECMRXML.pas',
   PersonalServiceJournal in '..\..\Forms\Document\PersonalServiceJournal.pas' {PersonalServiceJournalForm: TParentForm},
   PersonalServiceList_Object in '..\..\Forms\Guides\PersonalServiceList_Object.pas' {PersonalServiceList_ObjectForm: TParentForm},
-  PartionGoodsAssetChoice in '..\..\Forms\Guides\PartionGoodsAssetChoice.pas' {PartionGoodsAssetChoiceForm: TParentForm};
+  PartionGoodsAssetChoice in '..\..\Forms\Guides\PartionGoodsAssetChoice.pas' {PartionGoodsAssetChoiceForm: TParentForm},
+  MemberGLNDialog in '..\..\Forms\Guides\MemberGLNDialog.pas' {MemberGLNDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MemberExternal(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DriverCertificate TVarChar
-             , INN TVarChar
+             , INN TVarChar, GLN TVarChar
              , isErased Boolean
               )
 AS
@@ -28,6 +28,7 @@ BEGIN
          , Object_MemberExternal.ValueData  AS Name
          , ObjectString_DriverCertificate.ValueData :: TVarChar AS DriverCertificate
          , ObjectString_INN.ValueData               :: TVarChar AS INN
+         , ObjectString_GLN.ValueData               :: TVarChar AS GLN
 
          , Object_MemberExternal.isErased                   AS isErased
 
@@ -39,6 +40,10 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_INN
                                   ON ObjectString_INN.ObjectId = Object_MemberExternal.Id 
                                  AND ObjectString_INN.DescId = zc_ObjectString_MemberExternal_INN()
+
+           LEFT JOIN ObjectString AS ObjectString_GLN
+                                  ON ObjectString_GLN.ObjectId = Object_MemberExternal.Id
+                                 AND ObjectString_GLN.DescId = zc_ObjectString_MemberExternal_GLN()
      WHERE Object_MemberExternal.DescId = zc_Object_MemberExternal()
        AND (Object_MemberExternal.isErased = FALSE
             OR (Object_MemberExternal.isErased = TRUE AND inIsShowAll = TRUE)
@@ -53,6 +58,7 @@ ALTER FUNCTION gpSelect_Object_MemberExternal (Boolean, TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 10.05.23         * 
  07.09.20         *
  27.01.20         * add DriverCertificate
  28.03.15                                        *
