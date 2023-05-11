@@ -56,6 +56,8 @@ type
     dxBarButton2: TdxBarButton;
     colisAdjustment: TcxGridDBColumn;
     isCorrectionSUN: TcxGridDBColumn;
+    spPUSHComplete: TdsdStoredProc;
+    actPUSHComplete: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public

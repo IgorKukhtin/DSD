@@ -72,7 +72,9 @@ BEGIN
     ANALYSE _tmpGoods;
 
     -- проверим что есть остатки
-    outMessageText:= 'Ошибка.Товара'||CASE WHEN inSPKindId = zc_Enum_SPKind_SP() THEN ' для отпуска по СП нет в наличии или на остатке является СЭМПЛОВЫМ' ELSE ' нет в наличии' END||':'||Chr(13)
+    outMessageText:= 'Ошибка.Товара'||CASE WHEN inSPKindId = zc_Enum_SPKind_SP() 
+                                           THEN ' для отпуска по СП нет в наличии или на остатке является СЭМПЛОВЫМ' 
+                                           ELSE ' нет в наличии' END||':'||Chr(13)
                                 || (WITH tmpFrom AS (SELECT _tmpGoods.GoodsId, _tmpGoods.NDSKindId, _tmpGoods.PartionDateKindId, _tmpGoods.DivisionPartiesId, SUM (_tmpGoods.Amount) AS Amount 
                                                      FROM _tmpGoods
                                                      GROUP BY _tmpGoods.GoodsId, _tmpGoods.NDSKindId, _tmpGoods.PartionDateKindId, _tmpGoods.DivisionPartiesId)
@@ -214,13 +216,19 @@ BEGIN
                                                           , tmpFrom.DivisionPartiesId
                                                           , tmpFrom.JuridicalId
                                                   )
+                                                  
                                     SELECT STRING_AGG (tmp.Value, Chr(13))
                                     FROM (SELECT '(' || COALESCE (Object.ObjectCode, 0) :: TVarChar || ')' || COALESCE (Object.ValueData, '')||
                                                      '; НДС ' || zfConvert_FloatToString(ObjectFloat_NDSKind_NDS.ValueData) ||
                                                      CASE WHEN COALESCE(Object_PartionDateKind.ID, 0) <> 0 THEN '; Тип срока : '||Object_PartionDateKind.ValueData  ELSE '' END ||
                                                      CASE WHEN COALESCE(Object_DivisionParties.ID, 0) <> 0 THEN '; Разделение партий : '||Object_DivisionParties.ValueData  ELSE '' END ||
                                                      ' в чеке : ' || zfConvert_FloatToString (AmountFrom) || COALESCE (Object_Measure.ValueData, '') ||
-                                                     '; остаток: ' || zfConvert_FloatToString (AmountTo) || COALESCE (Object_Measure.ValueData, '') AS Value
+                                                     '; остаток: ' || zfConvert_FloatToString (AmountTo) || COALESCE (Object_Measure.ValueData, '') ||
+                                                     CASE WHEN EXISTS(SELECT Container.GoodsId FROM tmpContainer AS Container  
+                                                                      WHERE Container.GoodsId = tmp.GoodsId
+                                                                      GROUP BY Container.GoodsId
+                                                                      HAVING SUM(Container.Amount) >= AmountFrom)
+                                                          THEN Chr(13)||'Есть в наличии товар с другими сроками. Замените товар в чеке с другим сроком годности.' ELSE '' END AS Value
                                           FROM (SELECT tmpFrom.GoodsId, tmpFrom.NDSKindId, tmpFrom.PartionDateKindId, tmpFrom.DivisionPartiesId, tmpFrom.Amount AS AmountFrom, COALESCE (tmpTo.Amount, 0) AS AmountTo
                                                 FROM tmpFrom
                                                      LEFT JOIN tmpTo ON tmpTo.GoodsId = tmpFrom.GoodsId
@@ -243,7 +251,12 @@ BEGIN
                                                      CASE WHEN COALESCE(Object_DivisionParties.ID, 0) <> 0 THEN '; Разделение партий : '||Object_DivisionParties.ValueData  ELSE '' END ||
                                                      CASE WHEN COALESCE(Object_Juridical.ID, 0) <> 0 THEN '; Поставщик : '||Object_Juridical.ValueData  ELSE '' END ||
                                                      ' в чеке : ' || zfConvert_FloatToString (AmountFrom) || COALESCE (Object_Measure.ValueData, '') ||
-                                                     '; остаток: ' || zfConvert_FloatToString (AmountTo) || COALESCE (Object_Measure.ValueData, '') AS Value
+                                                     '; остаток: ' || zfConvert_FloatToString (AmountTo) || COALESCE (Object_Measure.ValueData, '') ||
+                                                     CASE WHEN EXISTS(SELECT Container.GoodsId FROM tmpContainer AS Container  
+                                                                      WHERE Container.GoodsId = tmp.GoodsId
+                                                                      GROUP BY Container.GoodsId
+                                                                      HAVING SUM(Container.Amount) >= AmountFrom)
+                                                          THEN Chr(13)||'Есть в наличии товар с другими сроками. Замените товар в чеке с другим сроком годности.' ELSE '' END AS Value
                                           FROM (SELECT tmpFrom.GoodsId, tmpFrom.NDSKindId, tmpFrom.PartionDateKindId, tmpFrom.DivisionPartiesId, tmpFrom.JuridicalId, tmpFrom.Amount AS AmountFrom, COALESCE (tmpTo.Amount, 0) AS AmountTo
                                                 FROM tmpFromJuridical AS tmpFrom
                                                      LEFT JOIN tmpToJuridical AS tmpTo 
@@ -277,4 +290,5 @@ $BODY$
 
 -- тест
 
-select * from gpGet_Movement_Check_RemainsError(inSPKindId := 4823010, inJSON := '[{"goodsid":15982622,"amount":1,"partiondatekindid":null,"ndskindid":9,"divisionpartiesid":null,"juridicalid":null}]' ,  inSession := '3');
+
+select * from gpGet_Movement_Check_RemainsError(inSPKindId := 0 , inJSON := '[{"goodsid":334,"amount":7,"partiondatekindid":null,"ndskindid":9,"divisionpartiesid":null,"juridicalid":null}]' ,  inSession := '3');

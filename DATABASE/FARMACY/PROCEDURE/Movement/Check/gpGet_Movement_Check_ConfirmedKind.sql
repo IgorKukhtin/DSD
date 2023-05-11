@@ -89,9 +89,9 @@ BEGIN
                          FROM tmpMI_all
                          GROUP BY tmpMI_all.MovementId, tmpMI_all.UnitId, tmpMI_all.GoodsId
                         )
-             , tmpMICount AS (SELECT tmpMI_Full.MovementId, COUNT(*) AS CountMI
-                              FROM tmpMI_Full
-                              GROUP BY tmpMI_Full.MovementId
+             , tmpMICount AS (SELECT tmpMI_Full.Id AS MovementId, COUNT(*) AS CountMI
+                              FROM tmpMov_all AS tmpMI_Full
+                              GROUP BY tmpMI_Full.Id
                               )
              , tmpMov_Complete AS (SELECT Movement.Id
                                         , Movement.InvNumber

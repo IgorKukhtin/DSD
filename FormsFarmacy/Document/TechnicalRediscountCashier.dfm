@@ -3,27 +3,27 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
   ClientHeight = 479
   ClientWidth = 915
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 931
-  ExplicitHeight = 518
+  ExplicitWidth = 933
+  ExplicitHeight = 526
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 115
+    Top = 116
     Width = 915
-    Height = 364
-    ExplicitTop = 115
+    Height = 363
+    ExplicitTop = 116
     ExplicitWidth = 915
-    ExplicitHeight = 364
-    ClientRectBottom = 364
+    ExplicitHeight = 363
+    ClientRectBottom = 363
     ClientRectRight = 915
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 915
-      ExplicitHeight = 340
+      ExplicitHeight = 339
       inherited cxGrid: TcxGrid
         Width = 915
-        Height = 332
+        Height = 331
         ExplicitWidth = 915
-        ExplicitHeight = 332
+        ExplicitHeight = 331
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -309,7 +309,7 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 332
+        Top = 331
         Width = 915
         Height = 8
         Touch.ParentTabletOptions = False
@@ -492,6 +492,9 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
     end
+    inherited actCompleteMovement: TChangeGuidesStatus
+      BeforeAction = actPUSHComplete
+    end
     inherited actAddMask: TdsdExecStoredProc
       BeforeAction = actChoiceGoods
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1080#1079' '#1087#1086#1083#1085#1086#1075#1086' '#1087#1077#1088#1077#1095#1085#1103' '#1087#1086' '#1089#1077#1090#1080
@@ -577,6 +580,16 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
         end>
       Caption = 'actUpdate_Deferred'
     end
+    object actPUSHComplete: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHComplete
+      StoredProcList = <
+        item
+          StoredProc = spPUSHComplete
+        end>
+      Caption = 'actPUSH'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_TechnicalRediscount'
@@ -585,7 +598,7 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1351,5 +1364,39 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
     ParamKeyField = 'inMovementId'
     Left = 784
     Top = 224
+  end
+  object spPUSHComplete: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_TechnicalRediscountComplete'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 426
+    Top = 344
   end
 end

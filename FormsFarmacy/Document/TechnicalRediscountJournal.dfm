@@ -3,8 +3,8 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
   ClientHeight = 535
   ClientWidth = 937
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 953
-  ExplicitHeight = 574
+  ExplicitWidth = 955
+  ExplicitHeight = 582
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -166,6 +166,9 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+    end
+    inherited actComplete: TdsdChangeMovementStatus
+      BeforeAction = actPUSHComplete
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -377,6 +380,16 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
       Hint = #1057#1086#1079#1076#1072#1090#1100' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
       ImageIndex = 8
       QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102'? '
+    end
+    object actPUSHComplete: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHComplete
+      StoredProcList = <
+        item
+          StoredProc = spPUSHComplete
+        end>
+      Caption = 'actPUSH'
     end
   end
   inherited MasterDS: TDataSource
@@ -759,5 +772,39 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
     PackSize = 1
     Left = 696
     Top = 392
+  end
+  object spPUSHComplete: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_TechnicalRediscountComplete'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 402
+    Top = 408
   end
 end

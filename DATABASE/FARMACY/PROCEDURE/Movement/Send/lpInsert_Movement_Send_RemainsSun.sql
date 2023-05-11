@@ -2516,12 +2516,17 @@ raise notice 'Value 19: %', CLOCK_TIMESTAMP();
                  -- Были продажи за период
                  LEFT JOIN tmpSalesGoods ON tmpSalesGoods.UnitId  = _tmpRemains_calc.UnitId 
                                         AND tmpSalesGoods.GoodsId = _tmpRemains_calc.GoodsId 
-
+                                        
+                 -- отбросили !!исключения!!
+                 LEFT JOIN _tmpUnit_SunExclusion AS _tmpUnit_SunExclusion_MCS
+                                                 ON _tmpUnit_SunExclusion_MCS.UnitId_from = vbUnitId_from
+                                                AND _tmpUnit_SunExclusion_MCS.UnitId_to   = _tmpRemains_calc.UnitId
 
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
               AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
               AND COALESCE(_tmpGoods_Sun_exception.Amount, 0) = 0
+              AND COALESCE(_tmpUnit_SunExclusion_MCS.UnitId_to, 0) = 0
               AND ((COALESCE(tmpPrice.isCloseMCS, FALSE) = FALSE OR _tmpUnit_SUN.isLock_ClosePL = FALSE) AND
                    (COALESCE(tmpPrice.isClose, FALSE) = FALSE OR _tmpUnit_SUN.isLock_CloseGd = FALSE) OR
                     COALESCE (tmpSalesGoods.GoodsId, 0) <> 0)

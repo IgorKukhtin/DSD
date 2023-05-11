@@ -5646,9 +5646,13 @@ begin
 
   if (HeaderDataSet.FieldByName('GLN_car').asString = '') or
      (HeaderDataSet.FieldByName('GLN_from').asString = '') or
-     (HeaderDataSet.FieldByName('GLN_to').asString = '') then
-     raise Exception.Create(Format('Не заполнено GLN для Перевізник <%s>, Замовник <%s>, Вантажоодержувач <%s>',
-           [HeaderDataSet.FieldByName('GLN_car').asString, HeaderDataSet.FieldByName('GLN_from').asString, HeaderDataSet.FieldByName('GLN_to').asString]));
+     (HeaderDataSet.FieldByName('GLN_to').asString = '') or
+     (HeaderDataSet.FieldByName('GLN_Driver').asString = '') then
+     raise Exception.Create(Format('Не заполнено GLN для Перевізник <%s>, Замовник <%s>, Вантажоодержувач <%s>, Водій <%s>',
+           [HeaderDataSet.FieldByName('GLN_car').asString,
+            HeaderDataSet.FieldByName('GLN_from').asString,
+            HeaderDataSet.FieldByName('GLN_to').asString,
+            HeaderDataSet.FieldByName('GLN_Driver').asString]));
 
   // Создать XML
   UAECMR := UAECMRXML.NewUAECMR;
@@ -5752,7 +5756,7 @@ begin
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.Id.NodeValue := HeaderDataSet.FieldByName('OKPO_car').asString; // '32131212';
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.Name := HeaderDataSet.FieldByName('JuridicalName_car').asString; // 'ТОВ "Перевізник_v3" (прод)';
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.RoleCode := 'CA';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.DefinedTradeContact.PersonName := 'Гуменний Володимир Антонович'; //HeaderDataSet.FieldByName('PersonalDriverName').asString;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.DefinedTradeContact.PersonName := HeaderDataSet.FieldByName('PersonalDriverName').asString; // 'Гуменний Володимир Антонович'
   //UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.DefinedTradeContact.TelephoneUniversalCommunication.CompleteNumber := '380966757657';
   if HeaderDataSet.FieldByName('PostcodeCode_car').asString <> '' then
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierTradeParty.PostalTradeAddress.PostcodeCode := HeaderDataSet.FieldByName('PostcodeCode_car').asString;
@@ -5892,8 +5896,8 @@ begin
     end;
   end;
 
-  // Розвантажувальні роботи
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.DeliveryInstructions.Description := 'за відрядним тарифом';
+  // Вид перевезень
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.DeliveryInstructions.Description := 'відрядний тариф';
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.DeliveryInstructions.DescriptionCode := 'TRANSPORTATION_TYPE';
 
   UAECMR.OwnerDocument.SaveToXML(AXML);

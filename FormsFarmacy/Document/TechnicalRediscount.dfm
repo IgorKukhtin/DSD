@@ -473,6 +473,9 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
     end
+    inherited actCompleteMovement: TChangeGuidesStatus
+      BeforeAction = actPUSHComplete
+    end
     inherited actAddMask: TdsdExecStoredProc
       AfterAction = actRefresh
       BeforeAction = actChoiceGoods
@@ -615,6 +618,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     object actComplete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actPUSHComplete
       PostDataSetBeforeExecute = False
       StoredProc = spMovementComplete
       StoredProcList = <
@@ -652,6 +656,16 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
           StoredProc = spUpdate_Deferred
         end>
       Caption = 'actUpdate_Deferred'
+    end
+    object actPUSHComplete: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHComplete
+      StoredProcList = <
+        item
+          StoredProc = spPUSHComplete
+        end>
+      Caption = 'actPUSH'
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -1545,5 +1559,39 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     ParamKeyField = 'inMovementId'
     Left = 800
     Top = 240
+  end
+  object spPUSHComplete: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSH_TechnicalRediscountComplete'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 450
+    Top = 352
   end
 end

@@ -84,6 +84,8 @@ type
     msctUpdate_Deferred: TMultiAction;
     actUpdate_Deferred: TdsdExecStoredProc;
     bbUpdate_Deferred: TdxBarButton;
+    spPUSHComplete: TdsdStoredProc;
+    actPUSHComplete: TdsdShowPUSHMessage;
   private
     { Private declarations }
   public
