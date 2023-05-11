@@ -59,6 +59,10 @@ BEGIN
             , CAST (NULL AS TVarchar)               AS ReceiptCode
             , CAST (NULL AS TVarchar)               AS ReceiptName
 
+            , CAST (NULL AS Integer)                AS StorageId
+            , CAST (NULL AS TVarChar)               AS StorageName            
+            , '' ::TVarChar                         AS PartNumber
+
             , Object_InfoMoney_View.InfoMoneyCode
             , Object_InfoMoney_View.InfoMoneyGroupName
             , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -151,6 +155,10 @@ BEGIN
             , ObjectString_Receipt_Code.ValueData AS ReceiptCode
             , Object_Receipt.ValueData            AS ReceiptName
 
+            , Object_Storage.Id                         AS StorageId
+            , Object_Storage.ValueData                  AS StorageName
+            , MIString_PartNumber.ValueData :: TVarChar AS PartNumber
+
             , Object_InfoMoney_View.InfoMoneyCode
             , Object_InfoMoney_View.InfoMoneyGroupName
             , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -214,6 +222,11 @@ BEGIN
                                  AND ObjectLink_Personal_UnitKVK.DescId = zc_ObjectLink_Personal_Unit()
              LEFT JOIN Object AS Object_UnitKVK ON Object_UnitKVK.Id = ObjectLink_Personal_UnitKVK.ChildObjectId
 
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
+                                              ON MILinkObject_Storage.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Storage.DescId         = zc_MILinkObject_Storage()
+             LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = MILinkObject_Storage.ObjectId
+
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id
                                         AND MIFloat_Count.DescId = zc_MIFloat_Count()
@@ -262,6 +275,10 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_KVK
                                           ON MIString_KVK.MovementItemId = MovementItem.Id
                                          AND MIString_KVK.DescId = zc_MIString_KVK()
+
+             LEFT JOIN MovementItemString AS MIString_PartNumber
+                                          ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                         AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
 
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
@@ -331,6 +348,10 @@ BEGIN
             , ObjectString_Receipt_Code.ValueData AS ReceiptCode
             , Object_Receipt.ValueData            AS ReceiptName
 
+            , Object_Storage.Id                         AS StorageId
+            , Object_Storage.ValueData                  AS StorageName
+            , MIString_PartNumber.ValueData :: TVarChar AS PartNumber
+
             , Object_InfoMoney_View.InfoMoneyCode
             , Object_InfoMoney_View.InfoMoneyGroupName
             , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -394,6 +415,11 @@ BEGIN
                                  AND ObjectLink_Personal_UnitKVK.DescId = zc_ObjectLink_Personal_Unit()
              LEFT JOIN Object AS Object_UnitKVK ON Object_UnitKVK.Id = ObjectLink_Personal_UnitKVK.ChildObjectId
 
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
+                                              ON MILinkObject_Storage.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Storage.DescId         = zc_MILinkObject_Storage()
+             LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = MILinkObject_Storage.ObjectId
+
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id
                                         AND MIFloat_Count.DescId = zc_MIFloat_Count()
@@ -442,6 +468,10 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_KVK
                                           ON MIString_KVK.MovementItemId = MovementItem.Id
                                          AND MIString_KVK.DescId = zc_MIString_KVK()
+
+             LEFT JOIN MovementItemString AS MIString_PartNumber
+                                          ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                         AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
 
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
@@ -508,6 +538,11 @@ BEGIN
             , Object_Receipt.ObjectCode         AS ReceiptCode
             , Object_Receipt.ValueData          AS ReceiptName
 
+
+            , Object_Storage.Id                         AS StorageId
+            , Object_Storage.ValueData                  AS StorageName
+            , MIString_PartNumber.ValueData :: TVarChar AS PartNumber
+
             , zfCalc_ReceiptChild_GroupNumber (inGoodsId                := Object_Goods.Id
                                              , inGoodsKindId            := Object_GoodsKind.Id
                                              , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
@@ -565,6 +600,10 @@ BEGIN
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
 
+             LEFT JOIN MovementItemString AS MIString_PartNumber
+                                          ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                         AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -574,6 +613,11 @@ BEGIN
                                               ON MILO_GoodsKindComplete.MovementItemId = MovementItem.Id
                                              AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
              LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILO_GoodsKindComplete.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
+                                              ON MILinkObject_Storage.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Storage.DescId         = zc_MILinkObject_Storage()
+             LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = MILinkObject_Storage.ObjectId
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id

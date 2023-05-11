@@ -21,6 +21,7 @@ inherited PriceListMovementForm: TPriceListMovementForm
       inherited cxGrid: TcxGrid
         Width = 1069
         Height = 525
+        ExplicitLeft = -3
         ExplicitWidth = 1069
         ExplicitHeight = 525
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -2538,6 +2539,10 @@ inherited PriceListMovementForm: TPriceListMovementForm
     TextEdit = edSearchArticle
     DataSet = MasterCDS
     Column = Article_all
+    ColumnList = <
+      item
+        Column = Article_all
+      end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 288

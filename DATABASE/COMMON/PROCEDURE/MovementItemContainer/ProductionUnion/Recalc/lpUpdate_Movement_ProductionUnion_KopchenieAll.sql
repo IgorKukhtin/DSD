@@ -276,8 +276,10 @@ BEGIN
                                                               , inCuterWeight      := 0
                                                               , inPartionGoodsDate := NULL
                                                               , inPartionGoods     := NULL
+                                                              , inPartNumber       := NULL
                                                               , inGoodsKindId      := CLO_GoodsKind.ObjectId
                                                               , inGoodsKindId_Complete   := NULL
+                                                              , inStorageId        := NULL
                                                               , inUserId           := inUserId
                                                                ) AS MovementItemId
                     , _tmpResult.ContainerId
@@ -299,8 +301,10 @@ BEGIN
                                                        , inParentId         := _tmpResult_master.Id_calc
                                                        , inPartionGoodsDate := NULL
                                                        , inPartionGoods     := NULL
+                                                       , inPartNumber       := NULL
                                                        , inGoodsKindId      := CLO_GoodsKind.ObjectId
                                                        , inGoodsKindCompleteId := NULL
+                                                       , inStorageId        := NULL
                                                        , inCount_onCount    := 0
                                                        , inUserId           := inUserId
                                                         )
@@ -359,6 +363,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.05.23         *
  30.06.19                                        *
 */
 

@@ -1736,10 +1736,6 @@ BEGIN
                                                             ON _tmpGoods_DiscountExternal.UnitId  = _tmpRemains_all_Supplement.UnitId
                                                            AND _tmpGoods_DiscountExternal.GoodsId = _tmpRemains_all_Supplement.GoodsId
 
-            -- отбросили !!исключения!!
-            LEFT JOIN _tmpUnit_SunExclusion_Supplement ON _tmpUnit_SunExclusion_Supplement.UnitId_from = vbUnitId_from
-                                                      AND _tmpUnit_SunExclusion_Supplement.UnitId_to   = _tmpRemains_all_Supplement.UnitId
-
             -- отключена Получать товар который отдавался
             LEFT JOIN _tmpGoods_Sun_exception_Supplement AS _tmpGoods_Sun_exception_Supplement
                                                          ON _tmpGoods_Sun_exception_Supplement.UnitId  = _tmpRemains_all_Supplement.UnitId
@@ -1796,7 +1792,6 @@ BEGIN
            OR COALESCE(_tmpGoodsUnit_SUN_Supplement.UnitOutId, 0) = 0)
          AND COALESCE(_tmpGoods_DiscountExternal.GoodsId, 0) = 0
          AND COALESCE(_tmpRemains_all_Supplement.SupplementMin, 0) >= 0
-         AND _tmpUnit_SunExclusion_Supplement.UnitId_to IS NULL
          AND  COALESCE(_tmpGoods_Sun_exception_Supplement.Amount, 0) = 0
          AND NOT (_tmpGoods_SUN_Supplement.isSmudge = FALSE AND _tmpGoods_SUN_Supplement.isSupplementMarkSUN1 = TRUE
                   AND COALESCE (_tmpRemains_all_Supplement.SupplementMin, 0) > 0 
@@ -1854,10 +1849,15 @@ BEGIN
            FROM _tmpRemains_all_Supplement
 
                 LEFT JOIN _tmpUnit_SUN_Supplement ON _tmpUnit_SUN_Supplement.UnitId = _tmpRemains_all_Supplement.UnitId
+
+                -- отбросили !!исключения!!
+                LEFT JOIN _tmpUnit_SunExclusion_Supplement ON _tmpUnit_SunExclusion_Supplement.UnitId_from = vbUnitId_from
+                                                          AND _tmpUnit_SunExclusion_Supplement.UnitId_to   = _tmpRemains_all_Supplement.UnitId
                 
            WHERE _tmpRemains_all_Supplement.SurplusCalc > 0
              AND _tmpRemains_all_Supplement.UnitId <> vbUnitId_to
              AND _tmpRemains_all_Supplement.GoodsId = vbGoodsId
+            AND COALESCE(_tmpUnit_SunExclusion_Supplement.UnitId_to, 0) = 0
            ORDER BY _tmpUnit_SUN_Supplement.isSUN_Supplement_Priority DESC
                   , _tmpRemains_all_Supplement.SurplusCalc DESC
                   , _tmpRemains_all_Supplement.UnitId
@@ -2054,4 +2054,4 @@ $BODY$
 -- select * from gpReport_Movement_Send_RemainsSun_Supplement(inOperDate := ('16.11.2021')::TDateTime ,  inSession := '3');
 
 -- 
-SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inDriverId:= 0, inUserId:= 3);
+SELECT * FROM lpInsert_Movement_Send_RemainsSun_Supplement (inOperDate:= CURRENT_DATE + INTERVAL '6 DAY', inDriverId:= 0, inUserId:= 3);

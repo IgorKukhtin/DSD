@@ -67,6 +67,13 @@ object MemberForm: TMemberForm
         Options.Editing = False
         Width = 126
       end
+      object GLN: TcxGridDBColumn
+        DataBinding.FieldName = 'GLN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 50
+      end
       object Card: TcxGridDBColumn
         Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
         DataBinding.FieldName = 'Card'
@@ -669,6 +676,14 @@ object MemberForm: TMemberForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_GLN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateBank'
         end
         item
@@ -842,6 +857,10 @@ object MemberForm: TMemberForm
     end
     object bbStartLoadIBANSecond: TdxBarButton
       Action = macStartLoadIBANSecond
+      Category = 0
+    end
+    object bbUpdate_GLN: TdxBarButton
+      Action = macUpdate_GLN
       Category = 0
     end
   end
@@ -1204,6 +1223,23 @@ object MemberForm: TMemberForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object macUpdate_GLN: TMultiAction
+      Category = 'GLN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogGLN
+        end
+        item
+          Action = actUpdate_GLN
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
+      ImageIndex = 77
+    end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -1259,6 +1295,31 @@ object MemberForm: TMemberForm
         end>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1073#1072#1085#1082' '#1060'1'
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1073#1072#1085#1082' '#1060'1'
+    end
+    object ExecuteDialogGLN: TExecuteDialog
+      Category = 'GLN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'GLN '
+      Hint = 'GLN'
+      ImageIndex = 77
+      FormName = 'TMemberGLNDialogForm'
+      FormNameParam.Value = 'TMemberGLNDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inGLN'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inGLN'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
     object actUpdateBank: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1385,6 +1446,19 @@ object MemberForm: TMemberForm
           StoredProc = spGetImportSettingIdIBANSecond
         end>
       Caption = 'actGetImportSetting'
+    end
+    object actUpdate_GLN: TdsdExecStoredProc
+      Category = 'GLN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_GLN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_GLN
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
+      ImageIndex = 77
     end
   end
   object spSelect: TdsdStoredProc
@@ -1908,5 +1982,31 @@ object MemberForm: TMemberForm
     PackSize = 1
     Left = 672
     Top = 272
+  end
+  object spUpdate_GLN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Member_GLN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGLN'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inGLN'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 296
   end
 end

@@ -1344,9 +1344,11 @@ BEGIN
                                                  , inCount                  := 0
                                                  , inCuterWeight            := 0
                                                  , inPartionGoodsDate       := NULL
-                                                 , inPartionGoods           := NULL
+                                                 , inPartionGoods           := NULL 
+                                                 , inPartNumber             := NULL
                                                  , inGoodsKindId            := tmp.GoodsKindId
-                                                 , inGoodsKindId_Complete   := NULL
+                                                 , inGoodsKindId_Complete   := NULL 
+                                                 , inStorageId        := NULL
                                                  , inUserId                 := inUserId
                                                   )
      FROM (SELECT DISTINCT _tmpResult.ContainerId, CLO_GoodsKind.ObjectId AS GoodsKindId, _tmpResult.MovementItemId
@@ -1377,8 +1379,10 @@ BEGIN
                                                  , inParentId               := _tmpResult.MovementItemId
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
+                                                 , inPartNumber             := NULL
                                                  , inGoodsKindId            := CLO_GoodsKind.ObjectId
                                                  , inGoodsKindCompleteId    := NULL
+                                                 , inStorageId        := NULL
                                                  , inCount_onCount          := 0
                                                  , inUserId                 := inUserId
                                                   )
@@ -1407,8 +1411,10 @@ BEGIN
                                                  , inParentId               := _tmpResult.MovementItemId
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
+                                                 , inPartNumber             := NULL
                                                  , inGoodsKindId            := ObjectLink_ReceiptChild_GoodsKind.ChildObjectId
                                                  , inGoodsKindCompleteId    := NULL
+                                                 , inStorageId              := NULL
                                                  , inCount_onCount          := 0
                                                  , inUserId                 := inUserId
                                                   )

@@ -68,6 +68,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PSP_N TVarChar
              , PSP_W TVarChar
              , PSP_D TVarChar
+             , GLN TVarChar
               )
 AS
 $BODY$
@@ -226,6 +227,7 @@ end if;
          , ObjectString_PSP_W.ValueData                AS PSP_W
          , ObjectString_PSP_D.ValueData                AS PSP_D
 
+         , ObjectString_GLN.ValueData      :: TVarChar AS GLN
      FROM Object AS Object_Member
           LEFT JOIN (SELECT View_Personal.MemberId
                      FROM Object_Personal_View AS View_Personal
@@ -414,6 +416,10 @@ end if;
                                 ON ObjectString_PSP_D.ObjectId = Object_Member.Id
                                AND ObjectString_PSP_D.DescId = zc_ObjectString_Member_PSP_D()
 
+         LEFT JOIN ObjectString AS ObjectString_GLN
+                                ON ObjectString_GLN.ObjectId = Object_Member.Id
+                               AND ObjectString_GLN.DescId = zc_ObjectString_Member_GLN()
+
          LEFT JOIN ObjectFloat AS ObjectFloat_SummerFuel
                                ON ObjectFloat_SummerFuel.ObjectId = Object_Member.Id
                               AND ObjectFloat_SummerFuel.DescId = zc_ObjectFloat_Member_Summer()
@@ -575,7 +581,7 @@ end if;
            , CAST ('' as TVarChar) AS PSP_N
            , CAST ('' as TVarChar) AS PSP_W
            , CAST ('' as TVarChar) AS PSP_D
-
+           , CAST ('' as TVarChar) AS GLN
     ;
 
 END;
@@ -586,6 +592,7 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 10.05.23         * 
  27.09.21         * UnitMobile
  06.02.20         * add isNotCompensation
  09.09.19         *

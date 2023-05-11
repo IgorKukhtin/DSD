@@ -5489,6 +5489,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_BanToTransferTimeGoods: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1047#1072#1087#1088#1077#1090' '#1085#1072' '#1087#1077#1088#1077#1074#1086#1076' '#1074' '#1089#1088#1086#1082#1080
+      FormName = 'TReport_BanToTransferTimeGoodsForm'
+      FormNameParam.Value = 'TReport_BanToTransferTimeGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6358,6 +6369,9 @@
       end
       object N374: TMenuItem
         Action = acTReport_FulfillmentPlanMobileApp
+      end
+      object N379: TMenuItem
+        Action = actReport_BanToTransferTimeGoods
       end
     end
     object N36: TMenuItem [5]

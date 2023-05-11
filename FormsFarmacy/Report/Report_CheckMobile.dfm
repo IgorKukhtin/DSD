@@ -3,6 +3,7 @@ inherited Report_CheckMobileForm: TReport_CheckMobileForm
   ClientHeight = 480
   ClientWidth = 1170
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1188
   ExplicitHeight = 527
   PixelsPerInch = 96

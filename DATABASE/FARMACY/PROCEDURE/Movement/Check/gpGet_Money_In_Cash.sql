@@ -27,7 +27,9 @@ BEGIN
   WHERE 
     Movement_Check.StatusId = zc_Enum_Status_Complete()
     AND
-    date_trunc('day',Movement_Check.OperDate)=date_trunc('day',inDate)
+    Movement_Check.OperDate >= date_trunc('day', inDate)
+    AND
+    Movement_Check.OperDate < date_trunc('day', inDate) + INTERVAL '1 DAY'
     AND
     (
       Movement_Check.UnitId = vbUnitId 
@@ -49,4 +51,4 @@ ALTER FUNCTION gpGet_Money_in_Cash (TDateTime, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Money_in_Cash ('20150706'::TDateTime,'2')
+-- SELECT * FROM gpGet_Money_in_Cash (CURRENT_DATE,'3')

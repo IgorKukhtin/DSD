@@ -61,6 +61,13 @@ type
     bbShowAll: TdxBarButton;
     DriverCertificate: TcxGridDBColumn;
     INN: TcxGridDBColumn;
+    spUpdate_GLN: TdsdStoredProc;
+    ExecuteDialogGLN: TExecuteDialog;
+    actUpdate_GLN: TdsdExecStoredProc;
+    macUpdate_GLN: TMultiAction;
+    FormParams: TdsdFormParams;
+    bbUpdate_GLN: TdxBarButton;
+    GLN: TcxGridDBColumn;
   private
     { Private declarations }
   public

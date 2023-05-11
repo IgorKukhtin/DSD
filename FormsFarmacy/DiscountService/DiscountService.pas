@@ -854,8 +854,8 @@ begin
           if BarCode_find <> '' then
           begin
 
-            if (CheckCDS.FieldByName('Amount').AsInteger <> CheckCDS.FieldByName('Amount').AsCurrency) and
-                (gService <> 'Asacard') then
+            if (CheckCDS.FieldByName('Amount').AsInteger <> CheckCDS.FieldByName('Amount').AsCurrency) {and
+                (gService <> 'Asacard')} then
             begin
                 ShowMessage ('Количество должно быть целым.' + #10+ #13
                 + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
@@ -1615,8 +1615,8 @@ begin
           BarCode_find := '';
 
       // Проверим чтоб количество было целое
-      if (BarCode_find <> '') and (CheckCDS.FieldByName('Amount').AsInteger <> CheckCDS.FieldByName('Amount').AsCurrency) and
-         (gService <> 'Asacard') then
+      if (BarCode_find <> '') and (CheckCDS.FieldByName('Amount').AsInteger <> CheckCDS.FieldByName('Amount').AsCurrency) {and
+         (gService <> 'Asacard')} then
       begin
           ShowMessage ('Количество должно быть целым.' + #10+ #13
           + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'

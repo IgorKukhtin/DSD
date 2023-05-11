@@ -128,8 +128,10 @@ BEGIN
                                                        , inCuterWeight            := 0
                                                        , inPartionGoodsDate       := NULL
                                                        , inPartionGoods           := NULL
+                                                       , inPartNumber             := NULL
                                                        , inGoodsKindId            := tmp.GoodsKindId
                                                        , inGoodsKindId_Complete   := NULL
+                                                       , inStorageId              := NULL
                                                        , inUserId                 := inUserId
                                                         ) AS MovementItemId_new
                      FROM (-- взяли только там где есть ReceiptId
@@ -209,8 +211,10 @@ BEGIN
                                                                                        , inParentId            := _tmpItemProduction_Child.ParentId
                                                                                        , inPartionGoodsDate    := NULL
                                                                                        , inPartionGoods        := NULL
+                                                                                       , inPartNumber          := NULL
                                                                                        , inGoodsKindId         := _tmpItemProduction_Child.GoodsKindId
                                                                                        , inGoodsKindCompleteId := NULL
+                                                                                       , inStorageId           := NULL
                                                                                        , inCount_onCount       := 0
                                                                                        , inUserId              := inUserId
                                                                                         )

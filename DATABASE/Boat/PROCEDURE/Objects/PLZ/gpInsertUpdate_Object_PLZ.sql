@@ -3,9 +3,9 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PLZ (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PLZ(
- INOUT ioId           Integer,       -- Ключ объекта <Физические лица>    
- INOUT ioCode         Integer,       -- Код объекта <Физические лица>     
-    IN inName         TVarChar,      -- Название объекта ФИО <Физические лица>
+ INOUT ioId           Integer,       -- Ключ объекта >    
+ INOUT ioCode         Integer,       -- Код объекта <>     
+    IN inName         TVarChar,      -- Название объекта ФИО <
     IN inCity         TVarChar,      -- ИНН
     IN inAreaCode     TVarChar,      -- E-Mail
     IN inComment      TVarChar,      -- Примечание

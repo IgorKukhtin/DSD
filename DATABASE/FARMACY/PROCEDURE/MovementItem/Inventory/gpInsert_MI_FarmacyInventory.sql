@@ -45,7 +45,7 @@ BEGIN
       
     IF COALESCE(vbMovementId, 0) = 0
     THEN
-      RAISE EXCEPTION 'Полная инвентаризация по подразделению <%> не найдена.', lfGet_Object_ValueData (inUnitId);
+      RAISE EXCEPTION 'Полная инвентаризация по подразделению <%> не найдена.%Необходимо создать документ полной инв в Farmacy', lfGet_Object_ValueData (inUnitId), Chr(13);
     END IF;
       
 

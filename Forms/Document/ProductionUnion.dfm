@@ -1,6 +1,7 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1128
+  ExplicitTop = -41
   ExplicitWidth = 1144
   ExplicitHeight = 713
   PixelsPerInch = 96
@@ -11,18 +12,19 @@ inherited ProductionUnionForm: TProductionUnionForm
     Height = 552
     TabOrder = 2
     ExplicitTop = 122
-    ExplicitWidth = 1074
+    ExplicitWidth = 1128
     ExplicitHeight = 552
     ClientRectBottom = 552
     ClientRectRight = 1128
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1074
+      ExplicitWidth = 1128
       ExplicitHeight = 528
       inherited cxGrid: TcxGrid
         Width = 1128
         Height = 220
-        ExplicitTop = -1
-        ExplicitWidth = 1180
+        ExplicitLeft = 176
+        ExplicitTop = 24
+        ExplicitWidth = 1128
         ExplicitHeight = 220
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -446,13 +448,35 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderHint = #8470' '#1050#1042#1050
             Width = 70
           end
+          object StorageName: TcxGridDBColumn
+            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062')'
+            DataBinding.FieldName = 'StorageName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPartionGoodsAssetChoiceMaster
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object PartNumber: TcxGridDBColumn
+            Caption = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
+            DataBinding.FieldName = 'PartNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
         end
       end
       inherited cxGridChild: TcxGrid
         Top = 225
         Width = 1128
         ExplicitTop = 225
-        ExplicitWidth = 1074
+        ExplicitWidth = 1128
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -486,6 +510,7 @@ inherited ProductionUnionForm: TProductionUnionForm
               Kind = skSum
               Column = colChildAmount_weight
             end>
+          OptionsData.CancelOnExit = False
           Styles.Content = nil
           object colChildGroupNumber: TcxGridDBColumn [0]
             Caption = #1043#1088#1091#1087#1087#1072' '#8470
@@ -617,21 +642,42 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object colChildStorageName: TcxGridDBColumn
+            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062')'
+            DataBinding.FieldName = 'StorageName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPartionGoodsAssetChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object colChildPartNumber: TcxGridDBColumn
+            Caption = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
+            DataBinding.FieldName = 'PartNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
         end
       end
       inherited cxBottomSplitter: TcxSplitter
         Top = 220
         Width = 1128
         ExplicitTop = 220
-        ExplicitWidth = 1074
+        ExplicitWidth = 1128
       end
     end
   end
   inherited DataPanel: TPanel
     Width = 1128
     Height = 96
-    ExplicitTop = 4
-    ExplicitWidth = 1140
+    ExplicitWidth = 1128
     ExplicitHeight = 96
     inherited ceStatus: TcxButtonEdit
       ExplicitWidth = 200
@@ -1149,6 +1195,227 @@ inherited ProductionUnionForm: TProductionUnionForm
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1086#1076#1072#1078#1072'>'
       ImageIndex = 24
     end
+    object actPartionGoodsAssetChoiceForm: TOpenChoiceForm
+      Category = 'Asset'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'> ('#1088#1072#1089#1093#1086#1076')'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'> ('#1088#1072#1089#1093#1086#1076')'
+      ImageIndex = 1
+      FormName = 'TPartionGoodsAssetChoiceForm'
+      FormNameParam.Value = 'TPartionGoodsAssetChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoods'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Price'
+          Value = Null
+          DataType = ftFloat
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'Amount'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartNumber'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'PartNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actInsertRecordAsset: TInsertRecord
+      Category = 'Asset'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableViewChild
+      Action = actPartionGoodsAssetChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'> ('#1088#1072#1089#1093#1086#1076')'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'> ('#1088#1072#1089#1093#1086#1076')'
+      ImageIndex = 0
+    end
+    object macInsertRecordAsset: TMultiAction
+      Category = 'Asset'
+      TabSheet = tsMain
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertRecordAsset
+        end
+        item
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'> ('#1088#1072#1089#1093#1086#1076')'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'> ('#1088#1072#1089#1093#1086#1076')'
+      ImageIndex = 0
+    end
+    object actPartionGoodsAssetChoiceMaster: TOpenChoiceForm
+      Category = 'Asset'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      ImageIndex = 1
+      FormName = 'TPartionGoodsAssetChoiceForm'
+      FormNameParam.Value = 'TPartionGoodsAssetChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoods'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Price'
+          Value = Null
+          DataType = ftFloat
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Amount_Remains'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 768
@@ -1217,6 +1484,22 @@ inherited ProductionUnionForm: TProductionUnionForm
         item
           Visible = True
           ItemName = 'bbUnErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordAsset'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartionGoodsAssetChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1335,6 +1618,14 @@ inherited ProductionUnionForm: TProductionUnionForm
     end
     object bbOpenDocument: TdxBarButton
       Action = macOpenDocument
+      Category = 0
+    end
+    object bbInsertRecordAsset: TdxBarButton
+      Action = macInsertRecordAsset
+      Category = 0
+    end
+    object bbPartionGoodsAssetChoice: TdxBarButton
+      Action = actPartionGoodsAssetChoiceForm
       Category = 0
     end
   end
@@ -1608,6 +1899,8 @@ inherited ProductionUnionForm: TProductionUnionForm
       item
         Control = edDocumentKind
       end>
+    Left = 264
+    Top = 177
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Master_SetErased'
@@ -1690,6 +1983,15 @@ inherited ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioPartNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartNumber'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsKindId'
         Value = Null
         Component = MasterCDS
@@ -1702,6 +2004,14 @@ inherited ProductionUnionForm: TProductionUnionForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId_Complete'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StorageId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1792,6 +2102,13 @@ inherited ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioPartNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsKindId'
         Value = Null
         Component = MasterCDS
@@ -1804,6 +2121,12 @@ inherited ProductionUnionForm: TProductionUnionForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId_Complete'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageId'
+        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1830,6 +2153,10 @@ inherited ProductionUnionForm: TProductionUnionForm
   end
   inherited spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Child_SetUnErased'
+  end
+  inherited spInsertMaskMIChild: TdsdStoredProc
+    Left = 656
+    Top = 456
   end
   inherited GuidesTo: TdsdGuides
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
@@ -1905,6 +2232,15 @@ inherited ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioPartNumber'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'PartNumber'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsKindId'
         Value = Null
         Component = ChildCDS
@@ -1919,9 +2255,17 @@ inherited ProductionUnionForm: TProductionUnionForm
         ComponentItem = 'GoodsKindCompleteId'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'StorageId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 520
-    Top = 512
+    Top = 520
   end
   inherited PrintHeaderCDS: TClientDataSet
     Left = 716

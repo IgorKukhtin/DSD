@@ -85,7 +85,7 @@ BEGIN
 
            , Object_Goods_Main.isResolution_224                                       AS isResolution_224
            
-           , ('2020'||TRIM(to_char(Object_Goods_Main.ObjectCode, '000000000')))::TVarChar   AS BarCode
+           , ('2020'||TRIM(to_char(Object_Goods_Main.ObjectCode, '00000000'))||'0')::TVarChar   AS BarCode
 
            , CASE WHEN COALESCE (tmpGoodsSP.isSP, False) = TRUE THEN zc_Color_Yelow()
                   WHEN Object_Goods_Retail.isSecond = TRUE THEN 16440317

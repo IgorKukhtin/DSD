@@ -20,7 +20,7 @@ uses
   cxImageComboBox, cxNavigator, dxDateRanges, Data.Bind.Components,
   Data.Bind.ObjectScope, System.Actions, dsdDB, Datasnap.DBClient, dsdAction,
   AncestorBase, cxPropertiesStore, dsdAddOn, dxBarBuiltInMenu, cxDateUtils,
-  Vcl.StdActns, Vcl.Buttons, cxButtons;
+  Vcl.StdActns, Vcl.Buttons, cxButtons, dsdGuides;
 
 type
   TMainInventoryForm = class(TAncestorBaseForm)
@@ -71,7 +71,6 @@ type
     spSelectChilg: TdsdStoredProcSQLite;
     cxLabel1: TcxLabel;
     edOperDate: TcxDateEdit;
-    edUnitName: TcxTextEdit;
     ChildIsSend: TcxGridDBColumn;
     N10: TMenuItem;
     actExit: TAction;
@@ -107,6 +106,10 @@ type
     actInsert_MI_Inventory: TdsdExecStoredProc;
     actUpdateSend: TAction;
     chAmountGoods: TcxGridDBColumn;
+    edUnitName: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    HeaderSaver: THeaderSaver;
+    spUpdateIventory: TdsdStoredProcSQLite;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);
@@ -292,8 +295,8 @@ begin
     FreeAndNil(Params);
   end;
 
-  edOperDateInfo.Date := FormParams.ParamByName('OperDate').Value;
-  edUnitNameInfo.Text := FormParams.ParamByName('UnitName').Value;
+//  GuidesUnit.Params.ParamByName('Key').Value := FormParams.ParamByName('UnitId').Value;
+//  GuidesUnit.Params.ParamByName('TextValue').Value := FormParams.ParamByName('UnitName').Value;
 
   PageControl.ActivePage := tsInfo;
   spSelectInfo.Execute;
@@ -433,6 +436,7 @@ begin
   Self.Caption := 'Проведение инвентаризации (' + GetFileVersionString(ParamStr(0)) + ')' +  ' - <' + gc_User.Login + '>';
   SQLiteChechAndArc;
   UserSettingsStorageAddOn.LoadUserSettings;
+  FormParams.ParamByName('OperDate').Value := Date;
 end;
 
 procedure TMainInventoryForm.ParentFormDestroy(Sender: TObject);
@@ -511,6 +515,7 @@ begin
   finally
     freeAndNil(ds);
     ceAmount.Value := 1;
+    edBarCode.SetFocus;
   end;
 end;
 

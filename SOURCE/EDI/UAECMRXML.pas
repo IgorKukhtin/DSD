@@ -37,6 +37,7 @@ type
   IXMLIDType = interface;
   IXMLPostalTradeAddressType = interface;
   IXMLConsigneeTradePartyType = interface;
+  IXMLSpecifiedTaxRegistrationType = interface;
   IXMLSpecifiedGovernmentRegistrationType = interface;
   IXMLCarrierTradePartyType = interface;
   IXMLDefinedTradeContactType = interface;
@@ -282,6 +283,7 @@ type
     function Get_Name: UnicodeString;
     function Get_RoleCode: UnicodeString;
     function Get_PostalTradeAddress: IXMLPostalTradeAddressType;
+    function Get_DefinedTradeContact: IXMLDefinedTradeContactType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_RoleCode(Value: UnicodeString);
     { Methods & Properties }
@@ -289,6 +291,7 @@ type
     property Name: UnicodeString read Get_Name write Set_Name;
     property RoleCode: UnicodeString read Get_RoleCode write Set_RoleCode;
     property PostalTradeAddress: IXMLPostalTradeAddressType read Get_PostalTradeAddress;
+    property DefinedTradeContact: IXMLDefinedTradeContactType read Get_DefinedTradeContact;
   end;
 
 { IXMLIDType }
@@ -311,15 +314,18 @@ type
     function Get_StreetName: UnicodeString;
     function Get_CityName: UnicodeString;
     function Get_CountryID: UnicodeString;
+    function Get_CountrySubDivisionName: UnicodeString;
     procedure Set_PostcodeCode(Value: UnicodeString);
     procedure Set_StreetName(Value: UnicodeString);
     procedure Set_CityName(Value: UnicodeString);
     procedure Set_CountryID(Value: UnicodeString);
+    procedure Set_CountrySubDivisionName(Value: UnicodeString);
     { Methods & Properties }
     property PostcodeCode: UnicodeString read Get_PostcodeCode write Set_PostcodeCode;
     property StreetName: UnicodeString read Get_StreetName write Set_StreetName;
     property CityName: UnicodeString read Get_CityName write Set_CityName;
     property CountryID: UnicodeString read Get_CountryID write Set_CountryID;
+    property CountrySubDivisionName: UnicodeString read Get_CountrySubDivisionName write Set_CountrySubDivisionName;
   end;
 
 { IXMLConsigneeTradePartyType }
@@ -331,6 +337,7 @@ type
     function Get_Name: UnicodeString;
     function Get_RoleCode: UnicodeString;
     function Get_PostalTradeAddress: IXMLPostalTradeAddressType;
+    function Get_DefinedTradeContact: IXMLDefinedTradeContactType;
     function Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_RoleCode(Value: UnicodeString);
@@ -339,7 +346,19 @@ type
     property Name: UnicodeString read Get_Name write Set_Name;
     property RoleCode: UnicodeString read Get_RoleCode write Set_RoleCode;
     property PostalTradeAddress: IXMLPostalTradeAddressType read Get_PostalTradeAddress;
+    property DefinedTradeContact: IXMLDefinedTradeContactType read Get_DefinedTradeContact;
     property SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType read Get_SpecifiedGovernmentRegistration;
+  end;
+
+{ IXMLSpecifiedTaxRegistrationType }
+
+  IXMLSpecifiedTaxRegistrationType = interface(IXMLNode)
+    ['{BF3FE8FC-0F8C-44D3-B417-6080F918DB7F}']
+    { Property Accessors }
+    function Get_ID: UnicodeString;
+    procedure Set_ID(Value: UnicodeString);
+    { Methods & Properties }
+    property ID: UnicodeString read Get_ID write Set_ID;
   end;
 
 { IXMLSpecifiedGovernmentRegistrationType }
@@ -364,6 +383,7 @@ type
     function Get_DefinedTradeContact: IXMLDefinedTradeContactType;
     function Get_PostalTradeAddress: IXMLPostalTradeAddressType;
     function Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
+    function Get_SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_RoleCode(Value: UnicodeString);
     { Methods & Properties }
@@ -372,6 +392,7 @@ type
     property RoleCode: UnicodeString read Get_RoleCode write Set_RoleCode;
     property DefinedTradeContact: IXMLDefinedTradeContactType read Get_DefinedTradeContact;
     property PostalTradeAddress: IXMLPostalTradeAddressType read Get_PostalTradeAddress;
+    property SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType read Get_SpecifiedTaxRegistration;
     property SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType read Get_SpecifiedGovernmentRegistration;
   end;
 
@@ -880,6 +901,7 @@ type
   TXMLIDType = class;
   TXMLPostalTradeAddressType = class;
   TXMLConsigneeTradePartyType = class;
+  TXMLSpecifiedTaxRegistrationType = class;
   TXMLSpecifiedGovernmentRegistrationType = class;
   TXMLCarrierTradePartyType = class;
   TXMLDefinedTradeContactType = class;
@@ -1092,6 +1114,7 @@ type
     function Get_Name: UnicodeString;
     function Get_RoleCode: UnicodeString;
     function Get_PostalTradeAddress: IXMLPostalTradeAddressType;
+    function Get_DefinedTradeContact: IXMLDefinedTradeContactType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_RoleCode(Value: UnicodeString);
   public
@@ -1116,10 +1139,12 @@ type
     function Get_StreetName: UnicodeString;
     function Get_CityName: UnicodeString;
     function Get_CountryID: UnicodeString;
+    function Get_CountrySubDivisionName: UnicodeString;
     procedure Set_PostcodeCode(Value: UnicodeString);
     procedure Set_StreetName(Value: UnicodeString);
     procedure Set_CityName(Value: UnicodeString);
     procedure Set_CountryID(Value: UnicodeString);
+    procedure Set_CountrySubDivisionName(Value: UnicodeString);
   end;
 
 { TXMLConsigneeTradePartyType }
@@ -1131,11 +1156,21 @@ type
     function Get_Name: UnicodeString;
     function Get_RoleCode: UnicodeString;
     function Get_PostalTradeAddress: IXMLPostalTradeAddressType;
+    function Get_DefinedTradeContact: IXMLDefinedTradeContactType;
     function Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_RoleCode(Value: UnicodeString);
   public
     procedure AfterConstruction; override;
+  end;
+
+{ TXMLSpecifiedTaxRegistrationType }
+
+  TXMLSpecifiedTaxRegistrationType = class(TXMLNode, IXMLSpecifiedTaxRegistrationType)
+  protected
+    { IXMLSpecifiedTaxRegistrationType }
+    function Get_ID: UnicodeString;
+    procedure Set_ID(Value: UnicodeString);
   end;
 
 { TXMLSpecifiedGovernmentRegistrationType }
@@ -1157,6 +1192,7 @@ type
     function Get_RoleCode: UnicodeString;
     function Get_DefinedTradeContact: IXMLDefinedTradeContactType;
     function Get_PostalTradeAddress: IXMLPostalTradeAddressType;
+    function Get_SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType;
     function Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_RoleCode(Value: UnicodeString);
@@ -1945,6 +1981,7 @@ procedure TXMLConsignorTradePartyType.AfterConstruction;
 begin
   RegisterChildNode('ID', TXMLIDType);
   RegisterChildNode('PostalTradeAddress', TXMLPostalTradeAddressType);
+  RegisterChildNode('DefinedTradeContact', TXMLDefinedTradeContactType);
   inherited;
 end;
 
@@ -1976,6 +2013,11 @@ end;
 function TXMLConsignorTradePartyType.Get_PostalTradeAddress: IXMLPostalTradeAddressType;
 begin
   Result := ChildNodes['ram:PostalTradeAddress'] as IXMLPostalTradeAddressType;
+end;
+
+function TXMLConsignorTradePartyType.Get_DefinedTradeContact: IXMLDefinedTradeContactType;
+begin
+  Result := ChildNodes['ram:DefinedTradeContact'] as IXMLDefinedTradeContactType;
 end;
 
 { TXMLIDType }
@@ -2032,12 +2074,23 @@ begin
   ChildNodes['ram:CountryID'].NodeValue := Value;
 end;
 
+function TXMLPostalTradeAddressType.Get_CountrySubDivisionName: UnicodeString;
+begin
+  Result := ChildNodes['ram:CountrySubDivisionName'].Text;
+end;
+
+procedure TXMLPostalTradeAddressType.Set_CountrySubDivisionName(Value: UnicodeString);
+begin
+  ChildNodes['ram:CountrySubDivisionName'].NodeValue := Value;
+end;
+
 { TXMLConsigneeTradePartyType }
 
 procedure TXMLConsigneeTradePartyType.AfterConstruction;
 begin
   RegisterChildNode('ID', TXMLIDType);
   RegisterChildNode('PostalTradeAddress', TXMLPostalTradeAddressType);
+  RegisterChildNode('DefinedTradeContact', TXMLDefinedTradeContactType);
   RegisterChildNode('SpecifiedGovernmentRegistration', TXMLSpecifiedGovernmentRegistrationType);
   inherited;
 end;
@@ -2072,9 +2125,26 @@ begin
   Result := ChildNodes['ram:PostalTradeAddress'] as IXMLPostalTradeAddressType;
 end;
 
+function TXMLConsigneeTradePartyType.Get_DefinedTradeContact: IXMLDefinedTradeContactType;
+begin
+  Result := ChildNodes['ram:DefinedTradeContact'] as IXMLDefinedTradeContactType;
+end;
+
 function TXMLConsigneeTradePartyType.Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;
 begin
   Result := ChildNodes['ram:SpecifiedGovernmentRegistration'] as IXMLSpecifiedGovernmentRegistrationType;
+end;
+
+{ TXMLSpecifiedTaxRegistrationType }
+
+function TXMLSpecifiedTaxRegistrationType.Get_ID: UnicodeString;
+begin
+  Result := ChildNodes['ram:ID'].Text;
+end;
+
+procedure TXMLSpecifiedTaxRegistrationType.Set_ID(Value: UnicodeString);
+begin
+  ChildNodes['ram:ID'].NodeValue := Value;
 end;
 
 { TXMLSpecifiedGovernmentRegistrationType }
@@ -2096,6 +2166,7 @@ begin
   RegisterChildNode('ID', TXMLIDType);
   RegisterChildNode('DefinedTradeContact', TXMLDefinedTradeContactType);
   RegisterChildNode('PostalTradeAddress', TXMLPostalTradeAddressType);
+  RegisterChildNode('SpecifiedTaxRegistration', TXMLSpecifiedTaxRegistrationType);
   RegisterChildNode('SpecifiedGovernmentRegistration', TXMLSpecifiedGovernmentRegistrationType);
   inherited;
 end;
@@ -2133,6 +2204,11 @@ end;
 function TXMLCarrierTradePartyType.Get_PostalTradeAddress: IXMLPostalTradeAddressType;
 begin
   Result := ChildNodes['ram:PostalTradeAddress'] as IXMLPostalTradeAddressType;
+end;
+
+function TXMLCarrierTradePartyType.Get_SpecifiedTaxRegistration: IXMLSpecifiedTaxRegistrationType;
+begin
+  Result := ChildNodes['ram:SpecifiedTaxRegistration'] as IXMLSpecifiedTaxRegistrationType;
 end;
 
 function TXMLCarrierTradePartyType.Get_SpecifiedGovernmentRegistration: IXMLSpecifiedGovernmentRegistrationType;

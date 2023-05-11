@@ -19,7 +19,9 @@ RETURNS TABLE (Id Integer, LineNum Integer
              , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
              , GoodsKindId_Complete Integer, GoodsKindCode_Complete Integer, GoodsKindName_Complete TVarChar
              , GoodsKindChildId Integer, GoodsKindChildCode Integer, GoodsKindChildName TVarChar
-             , GoodsKindId_Complete_child Integer, GoodsKindCode_Complete_child Integer, GoodsKindName_Complete_child TVarChar
+             , GoodsKindId_Complete_child Integer, GoodsKindCode_Complete_child Integer, GoodsKindName_Complete_child TVarChar 
+             , StorageId Integer, StorageName TVarChar, PartNumber TVarChar
+             , StorageId_child Integer, StorageName_child TVarChar, PartNumber_child TVarChar
              , isPeresort Boolean
              , isErased Boolean
              )
@@ -88,7 +90,15 @@ BEGIN
             , CAST (NULL AS TVarchar)               AS GoodsKindChildName
             , CAST (NULL AS Integer)                AS GoodsKindId_Complete_child
             , CAST (NULL AS Integer)                AS GoodsKindCode_Complete_child
-            , CAST (NULL AS TVarchar)               AS GoodsKindName_Complete_child
+            , CAST (NULL AS TVarchar)               AS GoodsKindName_Complete_child   
+
+            , CAST (NULL AS Integer)                AS StorageId
+            , CAST (NULL AS TVarChar)               AS StorageName            
+            , '' ::TVarChar                         AS PartNumber
+            
+            , CAST (NULL AS Integer)                AS StorageId_child
+            , CAST (NULL AS TVarChar)               AS StorageName_child            
+            , '' ::TVarChar                         AS PartNumber_child
 
             , FALSE :: Boolean AS isPeresort
 
@@ -163,6 +173,14 @@ BEGIN
             , Object_GoodsKind_Complete_child.ObjectCode       AS GoodsKindCode_Complete_child
             , Object_GoodsKind_Complete_child.ValueData        AS GoodsKindName_Complete_child
 
+            , Object_Storage.Id                         AS StorageId
+            , Object_Storage.ValueData                  AS StorageName
+            , MIString_PartNumber.ValueData :: TVarChar AS PartNumber
+
+            , Object_Storage_child.Id                         AS StorageId_child
+            , Object_Storage_child.ValueData                  AS StorageName_child
+            , MIString_PartNumber_child.ValueData :: TVarChar AS PartNumber_child
+
             , CASE WHEN tmpGoodsByGoodsKindSub.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPeresort
 
             , MovementItem.isErased             AS isErased
@@ -184,6 +202,11 @@ BEGIN
                                              AND MILinkObject_GoodsKind_Complete.DescId         = zc_MILinkObject_GoodsKindComplete()
              LEFT JOIN Object AS Object_GoodsKind_Complete ON Object_GoodsKind_Complete.Id = MILinkObject_GoodsKind_Complete.ObjectId
 
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
+                                              ON MILinkObject_Storage.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Storage.DescId         = zc_MILinkObject_Storage()
+             LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = MILinkObject_Storage.ObjectId
+
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -191,6 +214,10 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_PartionGoods
                                           ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                          AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+
+            LEFT JOIN MovementItemString AS MIString_PartNumber
+                                         ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                        AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
 
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
@@ -221,6 +248,10 @@ BEGIN
                                           ON MIString_PartionGoodsChild.DescId = zc_MIString_PartionGoods()
                                          AND MIString_PartionGoodsChild.MovementItemId =  MovementItemChild.Id
 
+             LEFT JOIN MovementItemString AS MIString_PartNumber_child
+                                          ON MIString_PartNumber_child.MovementItemId = MovementItemChild.Id
+                                         AND MIString_PartNumber_child.DescId = zc_MIString_PartNumber()
+
              LEFT JOIN MovementItemDate AS MIDate_PartionGoodsChild
                                         ON MIDate_PartionGoodsChild.DescId = zc_MIDate_PartionGoods()
                                        AND MIDate_PartionGoodsChild.MovementItemId =  MovementItemChild.Id
@@ -234,6 +265,11 @@ BEGIN
                                               ON MILinkObject_GoodsKind_Complete_child.MovementItemId = MovementItemChild.Id
                                              AND MILinkObject_GoodsKind_Complete_child.DescId         = zc_MILinkObject_GoodsKindComplete()
              LEFT JOIN Object AS Object_GoodsKind_Complete_child ON Object_GoodsKind_Complete_child.Id = MILinkObject_GoodsKind_Complete_child.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage_child
+                                              ON MILinkObject_Storage_child.MovementItemId = MovementItemChild.Id
+                                             AND MILinkObject_Storage_child.DescId         = zc_MILinkObject_Storage()
+             LEFT JOIN Object AS Object_Storage_child ON Object_Storage_child.Id = MILinkObject_Storage_child.ObjectId
 
              LEFT JOIN ObjectString AS ObjectString_GoodsChild_GoodsGroupFull
                                     ON ObjectString_GoodsChild_GoodsGroupFull.ObjectId = Object_GoodsChild.Id
@@ -310,6 +346,14 @@ BEGIN
             , Object_GoodsKind_Complete_child.Id               AS GoodsKindId_Complete_child
             , Object_GoodsKind_Complete_child.ObjectCode       AS GoodsKindCode_Complete_child
             , Object_GoodsKind_Complete_child.ValueData        AS GoodsKindName_Complete_child
+
+            , Object_Storage.Id                         AS StorageId
+            , Object_Storage.ValueData                  AS StorageName
+            , MIString_PartNumber.ValueData :: TVarChar AS PartNumber
+
+            , Object_Storage_child.Id                         AS StorageId_child
+            , Object_Storage_child.ValueData                  AS StorageName_child
+            , MIString_PartNumber_child.ValueData :: TVarChar AS PartNumber_child
             
             , CASE WHEN tmpGoodsByGoodsKindSub.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPeresort
 
@@ -330,6 +374,15 @@ BEGIN
                                               ON MILinkObject_GoodsKind_Complete.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind_Complete.DescId         = zc_MILinkObject_GoodsKindComplete()
              LEFT JOIN Object AS Object_GoodsKind_Complete ON Object_GoodsKind_Complete.Id = MILinkObject_GoodsKind_Complete.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
+                                              ON MILinkObject_Storage.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Storage.DescId         = zc_MILinkObject_Storage()
+             LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = MILinkObject_Storage.ObjectId
+
+             LEFT JOIN MovementItemString AS MIString_PartNumber
+                                          ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                         AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
 
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -382,6 +435,15 @@ BEGIN
                                              AND MILinkObject_GoodsKind_Complete_child.DescId         = zc_MILinkObject_GoodsKindComplete()
              LEFT JOIN Object AS Object_GoodsKind_Complete_child ON Object_GoodsKind_Complete_child.Id = MILinkObject_GoodsKind_Complete_child.ObjectId
 
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage_child
+                                              ON MILinkObject_Storage_child.MovementItemId = MovementItemChild.Id
+                                             AND MILinkObject_Storage_child.DescId         = zc_MILinkObject_Storage()
+             LEFT JOIN Object AS Object_Storage_child ON Object_Storage_child.Id = MILinkObject_Storage_child.ObjectId
+
+             LEFT JOIN MovementItemString AS MIString_PartNumber_child
+                                          ON MIString_PartNumber_child.MovementItemId = MovementItemChild.Id
+                                         AND MIString_PartNumber_child.DescId = zc_MIString_PartNumber()
+
              LEFT JOIN ObjectString AS ObjectString_GoodsChild_GoodsGroupFull
                                     ON ObjectString_GoodsChild_GoodsGroupFull.ObjectId = Object_GoodsChild.Id
                                    AND ObjectString_GoodsChild_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -404,6 +466,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 05.05.23         *
  18.10.22         *
  31.03.15         * 
  11.12.14         *

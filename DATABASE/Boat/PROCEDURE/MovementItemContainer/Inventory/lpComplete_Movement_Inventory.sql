@@ -97,7 +97,7 @@ BEGIN
              , tmp.PartNumber
              , tmp.OperCount
              , COALESCE ((SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = tmp.GoodsId), 0) AS OperPrice
-             , COALESCE ((SELECT tmpPriceList.PartnerId  FROM tmpPriceList WHERE tmpPriceList.GoodsId = tmp.GoodsId), 0) AS PartnerId
+             , COALESCE (MILinkObject_Partner.ObjectId, (SELECT tmpPriceList.PartnerId  FROM tmpPriceList WHERE tmpPriceList.GoodsId = tmp.GoodsId), 0) AS PartnerId
                -- ”œ
              , tmp.InfoMoneyGroupId
              , tmp.InfoMoneyDestinationId
@@ -127,6 +127,10 @@ BEGIN
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                         ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
+                                                    ON MILinkObject_Partner.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_Partner.DescId         = zc_MILinkObject_Partner()
                    -- !!!¬–≈Ã≈ÕÕŒ!!!  ÓÏÔÎÂÍÚÛ˛˘ËÂ
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (ObjectLink_Goods_InfoMoney.ChildObjectId, zc_Enum_InfoMoney_10101())
 
@@ -330,6 +334,7 @@ BEGIN
                    FROM lpInsertUpdate_MovementItem_Inventory (ioId              := 0
                                                              , inMovementId      := inMovementId
                                                              , inGoodsId         := tmp.GoodsId
+                                                             , inPartnerId       := Null ::Integer
                                                              , ioAmount          := 0
                                                              , inTotalCount      := 0
                                                              , inTotalCount_old  := 0
@@ -339,7 +344,7 @@ BEGIN
                                                              , inUserId          := inUserId
                                                               ) AS tmp) AS MovementItemId
 
-           FROM (SELECT DISTINCT _tmpItem_Child.GoodsId, _tmpItem_Child.PartNumber
+           FROM (SELECT DISTINCT _tmpItem_Child.GoodsId, _tmpItem_Child.PartNumber 
                  FROM _tmpItem_Child
                  WHERE _tmpItem_Child.MovementItemId = 0
                 ) AS tmp

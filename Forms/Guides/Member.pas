@@ -148,6 +148,12 @@ type
     PSP_N: TcxGridDBColumn;
     PSP_W: TcxGridDBColumn;
     PSP_D: TcxGridDBColumn;
+    spUpdate_GLN: TdsdStoredProc;
+    actUpdate_GLN: TdsdExecStoredProc;
+    ExecuteDialogGLN: TExecuteDialog;
+    macUpdate_GLN: TMultiAction;
+    bbUpdate_GLN: TdxBarButton;
+    GLN: TcxGridDBColumn;
   private
     { Private declarations }
   public

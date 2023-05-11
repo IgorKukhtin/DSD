@@ -283,7 +283,7 @@ BEGIN
                   THEN 'Вс '||LEFT ((ObjectDate_SundayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_SundayEnd.ValueData::Time)::TVarChar,5)
                   ELSE ''
              END), '')||
-             CASE WHEN COALESCE(ObjectString_Unit_PharmacyManager.ValueData, '') <> '' THEN CHR (13)||'ФИО Зав. аптекой: '||ObjectString_Unit_PharmacyManager.ValueData ELSE '' END
+             CASE WHEN COALESCE(ObjectString_Unit_PharmacyManager.ValueData, '') <> '' THEN CHR (13)||'Зав. аптекой: '||ObjectString_Unit_PharmacyManager.ValueData ELSE '' END
     INTO vbUnitData
     FROM Object AS Object_Unit
 
@@ -331,12 +331,11 @@ BEGIN
          REPLACE (vbSubject, '#1#', '#' || vbInvNumber || '#') :: TVarChar AS Subject
 
          -- Body 
-       , ('<b>ВНИМАНИЕ !!! Ящик  '||gpGet_User.Value||'  работает в авторежиме.  Не отсылайте на него ответ. Он не будет прочитан. Ящик для переписки указан ниже в контактах менеджера.</b>'|| CHR (13) || CHR (13) ||
+       , ('<b>ВНИМАНИЕ! Ящик  '||gpGet_User.Value||'  работает в авторежиме. Не отсылайте на него ответ. Он не будет прочитан. Ящик для переписки указан ниже в контактах менеджера.</b>'|| CHR (13) || CHR (13) ||
          'Добрый день.'|| CHR (13) ||
          'Информация по претензии во вложении.'|| CHR (13)|| CHR (13) ||
-         'Ждем ответа от Вас.'|| CHR (13)|| CHR (13) ||
-         'По вопросам подачи претензии, просьба обращаться к '|| COALESCE (vbUserName, '')|| CHR (13) || CHR (13) ||
-         'P.S. Ниже данные точки, по которой подаётся данная претензия'|| CHR (13) || CHR (13) ||       
+         'Менеджер по претензиям '|| COALESCE (vbUserName, '')|| CHR (13) || CHR (13) ||
+         'Данные аптеки: '|| CHR (13) ||
          CASE WHEN COALESCE (vbUnitData, '') <> '' THEN vbUnitData|| CHR (13) || CHR (13) ELSE '' END ||
          COALESCE (vbUnitSign, '') || '<br>' || COALESCE ('<b>'||vbUserMailSign||'</b>', '')) :: TBlob AS Body
 
@@ -372,4 +371,4 @@ $BODY$
 -- тест
 -- 
 --
-SELECT * From gpGet_Pretension_DataForEmail (inId:= 26120242     , inSession:= '183242');
+SELECT * From gpGet_Pretension_DataForEmail (inId:= 32002811   , inSession:= '10885233');

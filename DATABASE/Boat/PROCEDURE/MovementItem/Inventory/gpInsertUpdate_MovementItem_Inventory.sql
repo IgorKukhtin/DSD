@@ -3,13 +3,15 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
  INOUT ioId                                 Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId                         Integer   , -- Ключ объекта <Документ>
     IN inGoodsId                            Integer   , -- Товары
-    IN inPartionId                          Integer   , -- Партия
+    IN inPartionId                          Integer   , -- Партия  
+    IN inPartnerId                          Integer   , -- поставщик
  INOUT ioAmount                             TFloat    , -- Количество 
     IN inTotalCount                         TFloat    , -- Количество Итого
     IN inTotalCount_old                     TFloat    , -- Количество Итого
@@ -40,6 +42,7 @@ BEGIN
      FROM lpInsertUpdate_MovementItem_Inventory (ioId              := ioId
                                                , inMovementId      := inMovementId
                                                , inGoodsId         := inGoodsId
+                                               , inPartnerId       := inPartnerId
                                                , ioAmount          := ioAmount
                                                , inTotalCount      := inTotalCount
                                                , inTotalCount_old  := inTotalCount_old

@@ -15,6 +15,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer
                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer
+                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
  INOUT ioId              Integer,       -- ключ объекта <Бренд>
  INOUT ioCode            Integer,       -- свойство <Код Бренда>
@@ -29,12 +34,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
     IN inWWW             TVarChar,
     IN inEmail           TVarChar,
     IN inCodeDB          TVarChar,
-    IN inTaxNumber       TVarChar,
+    IN inTaxNumber       TVarChar, 
+    IN inCityName        TVarChar,
+    IN inCountryName     TVarChar,
     IN inDiscountTax     TFloat  ,      -- % скидки
     IN inDayCalendar     TFloat  ,
     IN inDayBank         TFloat  ,
     IN inBankId          Integer , 
-    IN inPLZId           Integer ,
+    --IN inPLZId           Integer ,
     IN inInfoMoneyId     Integer ,
     IN inTaxKindId       Integer ,
     IN inPaidKindId      Integer ,
@@ -45,6 +52,8 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbCountryId Integer;
+   DECLARE vbPLZId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Client());
@@ -92,9 +101,6 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Client_DayCalendar(), ioId, inDayCalendar);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Client_Bank(), ioId, inDayBank);
-
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_PLZ(), ioId, inPLZId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_Bank(), ioId, inBankId);
 
@@ -104,6 +110,56 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_TaxKind(), ioId, inTaxKindId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_PaidKind(), ioId, inPaidKindId);
+
+  
+   --inPLZId заменили на город и страну, можно вводить вручную, можно выбирать, если ввели и такого нет в справочнике создаем    , 
+   -- страна
+   vbCountryId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Country() AND UPPER(TRIM(Object.ValueData)) = UPPER(TRIM(inCountryName)) );
+   --если не находим создаем
+   IF COALESCE (vbCountryId,0) = 0       
+   THEN
+        vbCountryId := (SELECT tmp.ioId
+                        FROM gpInsertUpdate_Object_Country (ioId        := 0         :: Integer
+                                                          , ioCode      := 0         :: Integer
+                                                          , inName      := TRIM(inCountryName) :: TVarChar
+                                                          , inShortName := ''        :: TVarChar
+                                                          , inSession   := inSession :: TVarChar
+                                                           ) AS tmp);
+   END IF;
+   --пробуем найти  PLZId
+   vbPLZId := (SELECT Object_PLZ.Id
+               FROM Object AS Object_PLZ
+                    INNER JOIN ObjectString AS ObjectString_City
+                                            ON ObjectString_City.ObjectId = Object_PLZ.Id
+                                           AND ObjectString_City.DescId = zc_ObjectString_PLZ_City()
+                                           AND UPPER (TRIM (ObjectString_City.ValueData)) = UPPER (TRIM (inCityName))
+        
+                    INNER JOIN ObjectLink AS ObjectLink_Country
+                                          ON ObjectLink_Country.ObjectId = Object_PLZ.Id
+                                         AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
+                                         AND COALESCE (ObjectLink_Country.ChildObjectId,0) = vbCountryId
+        
+               WHERE Object_PLZ.DescId = zc_Object_PLZ()
+                 AND Object_PLZ.isErased = FALSE
+                );
+ 
+   IF COALESCE (vbPLZId,0) = 0       
+   THEN
+        vbPLZId := (SELECT tmp.ioId
+                    FROM gpInsertUpdate_Object_PLZ (ioId        := 0         :: Integer
+                                                  , ioCode      := 0         :: Integer
+                                                  , inName      := ''        :: TVarChar
+                                                  , inCity      := TRIM (inCityName) :: TVarChar
+                                                  , inAreaCode  := ''        ::TVarChar
+                                                  , inComment   := ''        ::TVarChar
+                                                  , inCountryId := vbCountryId
+                                                  , inSession   := inSession :: TVarChar
+                                                   ) AS tmp
+                   );
+   END IF;
+
+   -- сохранили свойство <PLZ почтовый адрес>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_PLZ(), ioId, vbPLZId);
 
 
    IF vbIsInsert = TRUE THEN

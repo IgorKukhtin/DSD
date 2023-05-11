@@ -1024,6 +1024,8 @@ type
     N4082: TMenuItem;
     actCommentCheck: TdsdOpenForm;
     N378: TMenuItem;
+    actReport_BanToTransferTimeGoods: TdsdOpenForm;
+    N379: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

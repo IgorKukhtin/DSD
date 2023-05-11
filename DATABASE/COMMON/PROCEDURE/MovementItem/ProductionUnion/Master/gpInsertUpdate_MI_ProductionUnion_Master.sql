@@ -4,7 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Inte
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Master  (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -14,14 +15,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master(
     IN inCount	               TFloat    , -- Количество батонов
     IN inCuterWeight	       TFloat    , -- Фактический вес(куттера)
     IN inPartionGoodsDate      TDateTime , -- Партия товара
-    IN inPartionGoods          TVarChar  , -- Партия товара
+    IN inPartionGoods          TVarChar  , -- Партия товара 
+ INOUT ioPartNumber            TVarChar  , -- № по тех паспорту
     IN inGoodsKindId           Integer   , -- Виды товаров
     IN inGoodsKindId_Complete  Integer   , -- Виды товаров ГП
+    IN inStorageId             Integer   , -- Место хранения
     IN inPersonalId_KVK        Integer   , -- 
     IN inKVK                   TVarChar   , -- 
     IN inSession               TVarChar    -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -38,8 +41,10 @@ BEGIN
                                                   , inCuterWeight         := inCuterWeight
                                                   , inPartionGoodsDate    := inPartionGoodsDate
                                                   , inPartionGoods        := inPartionGoods
+                                                  , inPartNumber          := ioPartNumber
                                                   , inGoodsKindId         := inGoodsKindId
                                                   , inGoodsKindId_Complete:= inGoodsKindId_Complete
+                                                  , inStorageId           := inStorageId
                                                   , inUserId              := vbUserId
                                                    );
 
@@ -56,6 +61,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.05.23         *
  26.10.20         * add inGoodsKindId_Complete
  29.06.16         * add inCuterWeight
  12.06.15                                        * add inPartionGoodsDate

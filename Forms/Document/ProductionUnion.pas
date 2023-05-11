@@ -108,6 +108,12 @@ type
     bbOpenDocument: TdxBarButton;
     spGet_checkopen: TdsdStoredProc;
     actGet_checkopen: TdsdExecStoredProc;
+    actPartionGoodsAssetChoiceForm: TOpenChoiceForm;
+    actInsertRecordAsset: TInsertRecord;
+    macInsertRecordAsset: TMultiAction;
+    bbInsertRecordAsset: TdxBarButton;
+    bbPartionGoodsAssetChoice: TdxBarButton;
+    actPartionGoodsAssetChoiceMaster: TOpenChoiceForm;
   private
     { Private declarations }
   public

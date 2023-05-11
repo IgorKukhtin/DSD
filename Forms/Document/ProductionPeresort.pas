@@ -75,6 +75,13 @@ type
     macOpenDocument: TMultiAction;
     bbOpenDocument: TdxBarButton;
     isPeresort: TcxGridDBColumn;
+    actPartionGoodsAssetChoiceForm: TOpenChoiceForm;
+    actInsertRecordAsset: TInsertRecord;
+    macInsertRecordAsset: TMultiAction;
+    bbInsertRecordAsset: TdxBarButton;
+    bbPartionGoodsAssetChoiceForm: TdxBarButton;
+    actStorageChoiceForm_child: TOpenChoiceForm;
+    actStorageChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
