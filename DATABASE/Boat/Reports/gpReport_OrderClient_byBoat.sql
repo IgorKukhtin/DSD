@@ -17,15 +17,17 @@ RETURNS TABLE  (MovementId Integer
               , ProductName TVarChar
               , CIN              TVarChar
               
-              , GoodsId Integer
-              , GoodsCode Integer
-              , GoodsName TVarChar
+              , ObjectId Integer
+              , ObjectCode Integer
+              , ObjectName TVarChar
               , Article TVarChar
               , Article_all TVarChar
               , GoodsGroupName TVarChar
               , GoodsGroupNameFull TVarChar
-              , MeasureName TVarChar
-              , ReceiptGoodsName TVarChar
+              , MeasureName TVarChar 
+              , ProdColorName TVarChar
+              , GoodsName_basis TVarChar
+              , GoodsName TVarChar
               , ReceiptLevelName TVarChar
               , Amount     TFloat
               , Amount1    TFloat
@@ -74,37 +76,73 @@ BEGIN
                       AND Movement.StatusId = zc_Enum_Status_Complete()
                     )
     --
-  , tmpMI_Detail AS (SELECT MovementItem.Id
-                          , MovementItem.ObjectId    -- Комплектующие 
-                          , MovementItem.Amount
-                          , Movement.ProductId
+  , tmpMI_Detail AS (SELECT Movement.ProductId
                           , Movement.OperDate 
                           , Movement.InvNumber
                           , Movement.Id AS MovementId
-                          -- только для zc_MI_Child
-                          , COALESCE (MILinkObject_ReceiptGoods.ObjectId, 0) AS ReceiptGoodsId
-                            -- только для zc_MI_Detail
-                          , COALESCE (MILinkObject_ReceiptLevel.ObjectId, 0) AS ReceiptLevelId
+                          -- Поставщик
+                          , MILinkObject_Partner.ObjectId             AS PartnerId
+
+                            -- какой узел собирается = zc_MI_Child.ObjectId, всегда заполнен
+                          , COALESCE (MILinkObject_Goods.ObjectId, 0)       AS GoodsId
+                          , COALESCE (MILinkObject_Goods_basis.ObjectId, 0) AS GoodsId_basis
+                            -- Комплектующие / Работы/Услуги
+                          , MovementItem.ObjectId                     AS ObjectId
+                            --  Опция
+                          , MILinkObject_ProdOptions.ObjectId         AS ProdOptionsId
+                            -- Шаблон Boat Structure
+                          , MILinkObject_ColorPattern.ObjectId        AS ColorPatternId
+                            --  Boat Structure
+                          , MILinkObject_ProdColorPattern.ObjectId    AS ProdColorPatternId
+                            --
+                          , MILinkObject_ReceiptLevel.ObjectId        AS ReceiptLevelId
+                            -- Количество для сборки Узла
+                          , zfCalc_Value_ForCount (MovementItem.Amount, MIFloat_ForCount.ValueData) AS Amount
+                            -- Количество заказ поставщику
+                          , MIFloat_AmountPartner.ValueData           AS AmountPartner
                      FROM tmpMovement AS Movement
                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                  AND MovementItem.DescId = zc_MI_Detail()
                                                  AND MovementItem.isErased = FALSE
-                          LEFT JOIN MovementItemLinkObject AS MILinkObject_ReceiptGoods
-                                                           ON MILinkObject_ReceiptGoods.MovementItemId = MovementItem.Id
-                                                          AND MILinkObject_ReceiptGoods.DescId         = zc_MILinkObject_ReceiptGoods()
+
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
+                                                           ON MILinkObject_Partner.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_Partner.DescId         = zc_MILinkObject_Partner()
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                           ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods_basis
+                                                           ON MILinkObject_Goods_basis.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_Goods_basis.DescId         = zc_MILinkObject_GoodsBasis()
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdOptions
+                                                           ON MILinkObject_ProdOptions.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_ColorPattern
+                                                           ON MILinkObject_ColorPattern.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_ColorPattern.DescId         = zc_MILinkObject_ColorPattern()
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdColorPattern
+                                                           ON MILinkObject_ProdColorPattern.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_ProdColorPattern.DescId         = zc_MILinkObject_ProdColorPattern()
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_ReceiptLevel
                                                            ON MILinkObject_ReceiptLevel.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_ReceiptLevel.DescId         = zc_MILinkObject_ReceiptLevel()
-                                                          
-                     )
+                          LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                      ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
+                          LEFT JOIN MovementItemFloat AS MIFloat_ForCount
+                                                      ON MIFloat_ForCount.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_ForCount.DescId         = zc_MIFloat_ForCount()
+
+                       )
 
   , tmpMI_group AS (SELECT  CASE WHEN inisDetail = TRUE THEN tmp.ProductId ELSE 0 END AS ProductId
                           , CASE WHEN inisDetail = TRUE THEN tmp.MovementId ELSE 0 END AS MovementId
                           , CASE WHEN inisDetail = TRUE THEN tmp.InvNumber  ELSE '' END AS InvNumber
                           , CASE WHEN inisDetail = TRUE THEN tmp.OperDate  ELSE NULL END AS OperDate
-                          , tmp.ObjectId  AS GoodsId  -- Комплектующие  
-                          , tmp.ReceiptLevelId
-                          , tmp.ReceiptGoodsId
+                          , tmp.ObjectId -- Комплектующие 
+                          , tmp.GoodsId_basis
+                          , CASE WHEN inisDetail = TRUE THEN tmp.GoodsId ELSE 0 END AS GoodsId
+                          , CASE WHEN inisDetail = TRUE THEN tmp.ReceiptLevelId ELSE 0 END AS ReceiptLevelId
                           , SUM (tmp.Amount) AS Amount
                           , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 1 THEN tmp.Amount ELSE 0 END) AS Amount1
                           , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 2 THEN tmp.Amount ELSE 0 END) AS Amount2
@@ -124,14 +162,15 @@ BEGIN
                            , CASE WHEN inisDetail = TRUE THEN tmp.InvNumber  ELSE '' END
                            , CASE WHEN inisDetail = TRUE THEN tmp.OperDate  ELSE NULL END
                            , tmp.ObjectId
-                           , tmp.ReceiptLevelId
-                           , tmp.ReceiptGoodsId
+                           , CASE WHEN inisDetail = TRUE THEN tmp.ReceiptLevelId ELSE 0 END
+                           , CASE WHEN inisDetail = TRUE THEN tmp.GoodsId_basis ELSE 0 END
+                           , CASE WHEN inisDetail = TRUE THEN tmp.GoodsId ELSE 0 END
                     )
 
     -- Параметры - Комплектующие
-  , tmpGoodsParams AS (SELECT tmpGoods.GoodsId
-                            , Object_Goods.ObjectCode            AS GoodsCode
-                            , Object_Goods.ValueData             AS GoodsName
+  , tmpGoodsParams AS (SELECT tmpGoods.ObjectId
+                            , Object_Goods.ObjectCode            AS ObjectCode
+                            , Object_Goods.ValueData             AS ObjectName
                             , ObjectString_Article.ValueData     AS Article
                             , Object_GoodsGroup.Id               AS GoodsGroupId
                             , Object_GoodsGroup.ValueData        AS GoodsGroupName
@@ -149,71 +188,62 @@ BEGIN
                             , Object_Engine.Id                   AS EngineId
                             , Object_Engine.ValueData            AS EngineName
                             , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice  -- Цена вх. без НДС   
-                       FROM (SELECT DISTINCT tmpMI_group.GoodsId FROM tmpMI_group) AS tmpGoods
-                           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
+                       FROM (SELECT DISTINCT tmpMI_group.ObjectId FROM tmpMI_group) AS tmpGoods
+                           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.ObjectId
                            LEFT JOIN ObjectString AS ObjectString_Article
-                                                  ON ObjectString_Article.ObjectId = tmpGoods.GoodsId
+                                                  ON ObjectString_Article.ObjectId = tmpGoods.ObjectId
                                                  AND ObjectString_Article.DescId = zc_ObjectString_Article()
 
                            LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
-                                                  ON ObjectString_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
+                                                  ON ObjectString_GoodsGroupFull.ObjectId = tmpGoods.ObjectId
                                                  AND ObjectString_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                                ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpGoods.GoodsId
+                                                ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpGoods.ObjectId
                                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
                            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                                ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
+                                                ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.ObjectId
                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
                            LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
-                                                 ON ObjectFloat_EKPrice.ObjectId = tmpGoods.GoodsId
+                                                 ON ObjectFloat_EKPrice.ObjectId = tmpGoods.ObjectId
                                                 AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
 
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
-                                                ON ObjectLink_Goods_TaxKind.ObjectId = tmpGoods.GoodsId
+                                                ON ObjectLink_Goods_TaxKind.ObjectId = tmpGoods.ObjectId
                                                AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
                            LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                                  ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_Goods_TaxKind.ChildObjectId
                                                 AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
 
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
-                                                ON ObjectLink_Goods_GoodsTag.ObjectId = tmpGoods.GoodsId
+                                                ON ObjectLink_Goods_GoodsTag.ObjectId = tmpGoods.ObjectId
                                                AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
                            LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
 
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsType
-                                                ON ObjectLink_Goods_GoodsType.ObjectId = tmpGoods.GoodsId
+                                                ON ObjectLink_Goods_GoodsType.ObjectId = tmpGoods.ObjectId
                                                AND ObjectLink_Goods_GoodsType.DescId   = zc_ObjectLink_Goods_GoodsType()
                            LEFT JOIN Object AS Object_GoodsType ON Object_GoodsType.Id = ObjectLink_Goods_GoodsType.ChildObjectId
 
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsSize
-                                                ON ObjectLink_Goods_GoodsSize.ObjectId = tmpGoods.GoodsId
+                                                ON ObjectLink_Goods_GoodsSize.ObjectId = tmpGoods.ObjectId
                                                AND ObjectLink_Goods_GoodsSize.DescId = zc_ObjectLink_Goods_GoodsSize()
                            LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = ObjectLink_Goods_GoodsSize.ChildObjectId
 
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
-                                                ON ObjectLink_Goods_ProdColor.ObjectId = tmpGoods.GoodsId
+                                                ON ObjectLink_Goods_ProdColor.ObjectId = tmpGoods.ObjectId
                                                AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
                            LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
 
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Engine
-                                                ON ObjectLink_Goods_Engine.ObjectId = tmpGoods.GoodsId
+                                                ON ObjectLink_Goods_Engine.ObjectId = tmpGoods.ObjectId
                                                AND ObjectLink_Goods_Engine.DescId = zc_ObjectLink_Goods_Engine()
                            LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Goods_Engine.ChildObjectId 
-                           
-                          /* LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
-                                                ON ObjectLink_ReceiptGoods_Object.ChildObjectId = tmpGoods.GoodsId
-                                               AND ObjectLink_ReceiptGoods_Object.DescId = zc_ObjectLink_ReceiptGoods_Object()
-                           LEFT JOIN Object AS Object_ReceiptGoods
-                                            ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods_Object.ObjectId
-                                           AND Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
-                                           AND Object_ReceiptGoods.isErased = FALSE
-                          */
-                       )
+                      )
 
 
       -- Результат
@@ -223,16 +253,21 @@ BEGIN
            , Object_Product.Id                   AS ProductId
            , Object_Product.ValueData ::TVarChar AS ProductName
            , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) ::TVarChar AS CIN
-           , tmp.GoodsId
-           , tmpGoodsParams.GoodsCode
-           , tmpGoodsParams.GoodsName  ::TVarChar
-           , tmpGoodsParams.Article    ::TVarChar
+           , tmp.ObjectId
+           , tmpGoodsParams.ObjectCode
+           , tmpGoodsParams.ObjectName  ::TVarChar
+           , tmpGoodsParams.Article     ::TVarChar
            , zfCalc_Article_all (tmpGoodsParams.Article) ::TVarChar AS Article_all
            , tmpGoodsParams.GoodsGroupName        ::TVarChar
            , tmpGoodsParams.GoodsGroupNameFull    ::TVarChar
            , tmpGoodsParams.MeasureName           ::TVarChar
-           , Object_ReceiptGoods.ValueData        ::TVarChar AS ReceiptGoodsName
+           , tmpGoodsParams.ProdColorName         ::TVarChar
+
+           , Object_Goods_basis.ValueData         ::TVarChar AS GoodsName_basis
+           , Object_Goods.ValueData               ::TVarChar AS GoodsName
            , Object_ReceiptLevel.ValueData        ::TVarChar AS ReceiptLevelName
+           
+           
 
            , tmp.Amount    :: TFloat
            , tmp.Amount1   :: TFloat
@@ -248,10 +283,11 @@ BEGIN
            , tmp.Amount11  :: TFloat
            , tmp.Amount12  :: TFloat
       FROM tmpMI_group AS tmp
-           LEFT JOIN tmpGoodsParams ON tmpGoodsParams.GoodsId = tmp.GoodsId
+           LEFT JOIN tmpGoodsParams ON tmpGoodsParams.ObjectId = tmp.ObjectId
 
            LEFT JOIN Object AS Object_Product ON Object_Product.Id = tmp.ProductId
-           LEFT JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = tmp.ReceiptGoodsId
+           LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = tmp.GoodsId_basis
+           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
            LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = tmp.ReceiptLevelId 
 
            LEFT JOIN ObjectString AS ObjectString_CIN

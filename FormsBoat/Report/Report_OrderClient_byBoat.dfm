@@ -97,7 +97,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = GoodsName
+              Column = ObjectName
             end
             item
               Format = ',0.####'
@@ -174,6 +174,21 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 88
+          end
+          object InvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumber'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 99
+          end
           object CIN: TcxGridDBColumn
             Caption = 'CIN Nr. (boat)'
             DataBinding.FieldName = 'CIN'
@@ -209,9 +224,9 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             Options.Editing = False
             Width = 100
           end
-          object GoodsCode: TcxGridDBColumn
+          object ObjectCode: TcxGridDBColumn
             Caption = 'Interne Nr'
-            DataBinding.FieldName = 'GoodsCode'
+            DataBinding.FieldName = 'ObjectCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -241,18 +256,25 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             Options.Editing = False
             Width = 54
           end
-          object ReceiptGoodsName: TcxGridDBColumn
-            Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080
-            DataBinding.FieldName = 'ReceiptGoodsName'
+          object ObjectName: TcxGridDBColumn
+            Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+            DataBinding.FieldName = 'ObjectName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object GoodsName_basis: TcxGridDBColumn
+            Caption = '***'#1059#1079#1083#1099
+            DataBinding.FieldName = 'GoodsName_basis'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1072
             Options.Editing = False
-            Width = 100
+            Width = 150
           end
           object GoodsName: TcxGridDBColumn
-            Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+            Caption = #1059#1079#1083#1099
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -656,7 +678,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'ReceiptLevelName;GoodsName'
+          IndexFieldNames = 'ReceiptLevelName;ObjectName'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -691,15 +713,19 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
     object actPrint2: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spSelectPrint3
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint3
+        end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1091#1079#1083#1072#1084
       Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1091#1079#1083#1072#1084
       ImageIndex = 15
       DataSets = <
         item
+          DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'ReceiptGoodsName;ReceiptLevelName;GoodsName'
-          GridView = cxGridDBTableView
+          IndexFieldNames = 'GoodsName;ReceiptLevelName;ObjectName'
         end>
       Params = <
         item
@@ -755,7 +781,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'OperDate;InvNumber;ReceiptGoodsName;ReceiptLevelName;GoodsName'
+          IndexFieldNames = 'OperDate;InvNumber;GoodsName;ReceiptLevelName;ObjectName'
         end>
       Params = <
         item
@@ -945,7 +971,8 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 368
+    Left = 384
+    Top = 248
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 80

@@ -27,8 +27,8 @@ uses
 
 type
   TReport_OrderClient_byBoatForm = class(TAncestorReportForm)
-    GoodsCode: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
+    ObjectCode: TcxGridDBColumn;
+    ObjectName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     bbSumm_branch: TdxBarControlContainerItem;
@@ -56,6 +56,8 @@ type
     bbPrint2: TdxBarButton;
     bbPrint3: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
+    OperDate: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public
