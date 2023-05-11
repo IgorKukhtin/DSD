@@ -32,7 +32,8 @@ BEGIN
                                             AND MIFloat_PromoMovement.ValueData      > 0
                                             AND MIFloat_PromoMovement.DescId     = zc_MIFloat_PromoMovementId()
        
-           WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate + INTERVAL '2 DAY'
+         --WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate + INTERVAL '2 DAY'
+           WHERE Movement.OperDate BETWEEN inStartDate AND CURRENT_DATE - INTERVAL '1 DAY'
              AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Sale(), zc_Movement_OrderExternal())
              AND Movement.StatusId = zc_Enum_Status_Complete()
           ) AS tmp
@@ -44,6 +45,7 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
                                                 AND MLO_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
+     ORDER BY 2, 1
          ;
 
 
@@ -58,4 +60,4 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM gpComplete_SelectAll_Sybase_Promo_Auto (inStartDate:= '01.06.2017', inEndDate:= '30.06.2017')
--- SELECT * FROM gpComplete_SelectAll_Sybase_Promo_Auto (inStartDate:= '01.07.2017', inEndDate:= '31.07.2017')
+-- SELECT * FROM gpComplete_SelectAll_Sybase_Promo_Auto (inStartDate:= '01.04.2023', inEndDate:= '30.04.2023')

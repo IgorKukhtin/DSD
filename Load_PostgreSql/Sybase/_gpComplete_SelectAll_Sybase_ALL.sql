@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpComplete_SelectAll_Sybase(
     IN inIsBefoHistoryCost  Boolean   , --
     IN inGroupId            Integer     -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
 )
-RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Code TVarChar, ItemName TVarChar
+RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Code TVarChar, ItemName TVarChar, BranchCode Integer, BranchName TVarChar
               )
 AS
 $BODY$
@@ -102,7 +102,10 @@ END IF;
                   UNION SELECT 8450 AS UnitId, NULL AS isMain  -- ЦЕХ копчения
                        )
      , tmpUnit_branch AS (SELECT ObjectLink.ObjectId AS UnitId, NULL AS isMain
+                               , Object_Branch.ObjectCode AS BranchCode
+                               , Object_Branch.ValueData  AS BranchName
                           FROM ObjectLink
+                               LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink.ChildObjectId
                           WHERE  ObjectLink.DescId = zc_ObjectLink_Unit_Branch()
                              AND ObjectLink.ChildObjectId > 0
                              AND ObjectLink.ChildObjectId <> zc_Branch_Basis()
@@ -180,6 +183,8 @@ END IF;
           , tmp.InvNumber
           , tmp.Code
           , tmp.ItemName
+          , tmp.BranchCode
+          , tmp.BranchName
      FROM (
      -- 1.0. zc_Movement_IncomeCost
      SELECT Movement.Id AS MovementId
@@ -187,6 +192,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , MovementDesc.ItemName AS ItemName
+          , 0  :: Integer  AS BranchCode
+          , '' :: TVarChar AS BranchName
      FROM Movement
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -201,6 +208,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , MovementDesc.ItemName AS ItemName
+          , 0  :: Integer  AS BranchCode
+          , '' :: TVarChar AS BranchName
      FROM Movement
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
           INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
@@ -219,6 +228,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
+          , 0  :: Integer  AS BranchCode
+          , '' :: TVarChar AS BranchName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -251,6 +262,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
+          , tmpUnit_branch_from.BranchCode
+          , tmpUnit_branch_from.BranchName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -278,6 +291,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
+          , 0  :: Integer  AS BranchCode
+          , '' :: TVarChar AS BranchName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -304,6 +319,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
+          , 0  :: Integer  AS BranchCode
+          , '' :: TVarChar AS BranchName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -329,6 +346,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
+          , 0  :: Integer  AS BranchCode
+          , '' :: TVarChar AS BranchName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -358,6 +377,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
+          , 0  :: Integer  AS BranchCode
+          , '' :: TVarChar AS BranchName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -386,6 +407,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
+          , 0  :: Integer  AS BranchCode
+          , '' :: TVarChar AS BranchName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -411,6 +434,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
+          , tmpUnit_branch.BranchCode
+          , tmpUnit_branch.BranchName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -442,6 +467,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
+          , tmpUnit_branch.BranchCode
+          , tmpUnit_branch.BranchName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -468,6 +495,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
+          , tmpUnit_branch.BranchCode
+          , tmpUnit_branch.BranchName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -491,6 +520,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
+          , tmpUnit_branch.BranchCode
+          , tmpUnit_branch.BranchName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -516,6 +547,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
+          , tmpUnit_branch_from.BranchCode
+          , tmpUnit_branch_from.BranchName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -598,4 +631,4 @@ create table dba._pgMovementReComlete
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= -1)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2019', inEndDate:= '30.06.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= -1)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.08.2022', inEndDate:= '31.08.2022', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.08.2023', inEndDate:= '31.08.2023', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
