@@ -90,6 +90,10 @@ type
     cbCountCount: TcxCheckBox;
     cbPartionGP: TcxCheckBox;
     cbAvance: TcxCheckBox;
+    edGLN: TcxTextEdit;
+    cxLabel19: TcxLabel;
+    edKATOTTG: TcxTextEdit;
+    cxLabel20: TcxLabel;
   private
     { Private declarations }
   public

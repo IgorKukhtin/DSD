@@ -34,6 +34,8 @@ type
     PartnerName: TcxGridDBColumn;
     actProtocol: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    KATOTTG: TcxGridDBColumn;
+    GLN: TcxGridDBColumn;
   private
     { Private declarations }
   public

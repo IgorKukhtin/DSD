@@ -32,7 +32,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isErased Boolean,
                Address TVarChar,
                Comment TVarChar,
-               isPersonalService Boolean, PersonalServiceDate TDateTime
+               isPersonalService Boolean, PersonalServiceDate TDateTime,
+               GLN TVarChar, KATOTTG TVarChar
                
 ) AS
 $BODY$
@@ -167,6 +168,8 @@ BEGIN
            , COALESCE (ObjectBoolean_PersonalService.ValueData, FALSE)  ::Boolean   AS isPersonalService
            , COALESCE (ObjectDate_PersonalService.ValueData, Null)      ::TDateTime AS PersonalServiceDate
            
+           , ObjectString_Unit_GLN.ValueData      :: TVarChar AS GLN
+           , ObjectString_Unit_KATOTTG.ValueData  :: TVarChar AS KATOTTG
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
@@ -178,6 +181,13 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Unit_Comment
                                    ON ObjectString_Unit_Comment.ObjectId = Object_Unit_View.Id 
                                   AND ObjectString_Unit_Comment.DescId = zc_ObjectString_Unit_Comment()
+
+            LEFT JOIN ObjectString AS ObjectString_Unit_GLN
+                                   ON ObjectString_Unit_GLN.ObjectId = Object_Unit_View.Id 
+                                  AND ObjectString_Unit_GLN.DescId = zc_ObjectString_Unit_GLN()
+            LEFT JOIN ObjectString AS ObjectString_Unit_KATOTTG
+                                   ON ObjectString_Unit_KATOTTG.ObjectId = Object_Unit_View.Id 
+                                  AND ObjectString_Unit_KATOTTG.DescId = zc_ObjectString_Unit_KATOTTG()
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_HistoryCost
                                  ON ObjectLink_Unit_HistoryCost.ObjectId = Object_Unit_View.Id
@@ -338,6 +348,9 @@ BEGIN
 
            , FALSE     ::Boolean   AS isPersonalService
            , Null      ::TDateTime AS PersonalServiceDate
+
+           , CAST ('' as TVarChar)  AS GLN
+           , CAST ('' as TVarChar)  AS KATOTTG
        FROM Object as Object_Partner
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_Partner.Id
@@ -420,6 +433,8 @@ BEGIN
            , CAST ('' as TVarChar)  AS Comment 
            , FALSE     ::Boolean    AS isPersonalService
            , Null      ::TDateTime  AS PersonalServiceDate
+           , CAST ('' as TVarChar)  AS GLN
+           , CAST ('' as TVarChar)  AS KATOTTG
       ;
 
 END;

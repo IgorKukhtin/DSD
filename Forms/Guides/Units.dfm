@@ -371,6 +371,21 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 100
       end
+      object KATOTTG: TcxGridDBColumn
+        Caption = #1050#1040#1058#1054#1058#1058#1043
+        DataBinding.FieldName = 'KATOTTG'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object GLN: TcxGridDBColumn
+        DataBinding.FieldName = 'GLN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'

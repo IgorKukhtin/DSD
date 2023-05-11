@@ -27,7 +27,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isPartionGP Boolean,
                isAvance Boolean,
                Address TVarChar,
-               Comment TVarChar
+               Comment TVarChar,
+               GLN TVarChar, KATOTTG TVarChar
 ) AS
 $BODY$
 BEGIN
@@ -92,6 +93,8 @@ BEGIN
            , CAST (FALSE AS Boolean) AS isAvance
            , CAST ('' as TVarChar)  AS Address
            , CAST ('' as TVarChar)  AS Comment
+           , CAST ('' as TVarChar)  AS GLN
+           , CAST ('' as TVarChar)  AS KATOTTG
 ;
    ELSE
        RETURN QUERY 
@@ -150,7 +153,8 @@ BEGIN
            , COALESCE (ObjectBoolean_Avance.ValueData, FALSE)           :: Boolean AS isAvance
            , ObjectString_Unit_Address.ValueData      AS Address
            , ObjectString_Unit_Comment.ValueData      AS Comment
-
+           , ObjectString_Unit_GLN.ValueData      :: TVarChar AS GLN
+           , ObjectString_Unit_KATOTTG.ValueData  :: TVarChar AS KATOTTG
        FROM Object_Unit_View
             LEFT JOIN Object_AccountDirection_View AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
 
@@ -161,6 +165,13 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Unit_Comment
                                    ON ObjectString_Unit_Comment.ObjectId = Object_Unit_View.Id 
                                   AND ObjectString_Unit_Comment.DescId = zc_ObjectString_Unit_Comment()
+
+            LEFT JOIN ObjectString AS ObjectString_Unit_GLN
+                                   ON ObjectString_Unit_GLN.ObjectId = Object_Unit_View.Id 
+                                  AND ObjectString_Unit_GLN.DescId = zc_ObjectString_Unit_GLN()
+            LEFT JOIN ObjectString AS ObjectString_Unit_KATOTTG
+                                   ON ObjectString_Unit_KATOTTG.ObjectId = Object_Unit_View.Id 
+                                  AND ObjectString_Unit_KATOTTG.DescId = zc_ObjectString_Unit_KATOTTG()
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_ProfitLossDirection -- "јналитика ќѕи” - направление" установлена !!!только!!! у следующего после самого верхнего уровн€ 
                                  ON ObjectLink_Unit_ProfitLossDirection.ObjectId = Object_Unit_View.Id

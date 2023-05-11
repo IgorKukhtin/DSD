@@ -295,9 +295,9 @@
   end
   object edAddress: TcxTextEdit
     Left = 40
-    Top = 410
+    Top = 409
     TabOrder = 35
-    Width = 449
+    Width = 209
   end
   object cxLabel17: TcxLabel
     Left = 40
@@ -354,6 +354,28 @@
     Caption = #1053#1072#1095'. '#1072#1074#1072#1085#1089#1072' '#1072#1074#1090#1086#1084#1072#1090'.'
     TabOrder = 43
     Width = 133
+  end
+  object edGLN: TcxTextEdit
+    Left = 280
+    Top = 409
+    TabOrder = 44
+    Width = 100
+  end
+  object cxLabel19: TcxLabel
+    Left = 280
+    Top = 390
+    Caption = 'GLN'
+  end
+  object edKATOTTG: TcxTextEdit
+    Left = 389
+    Top = 409
+    TabOrder = 46
+    Width = 100
+  end
+  object cxLabel20: TcxLabel
+    Left = 389
+    Top = 390
+    Caption = #1050#1040#1058#1054#1058#1058#1043
   end
   object ActionList: TActionList
     Left = 16
@@ -571,10 +593,26 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGLN'
+        Value = Null
+        Component = edGLN
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKATOTTG'
+        Value = Null
+        Component = edKATOTTG
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 16
-    Top = 176
+    Left = 136
+    Top = 16
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -856,10 +894,23 @@
         Component = cbAvance
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GLN'
+        Value = Null
+        Component = edGLN
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'KATOTTG'
+        Value = Null
+        Component = edKATOTTG
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 96
-    Top = 112
+    Left = 192
   end
   object ParentGuides: TdsdGuides
     KeyField = 'Id'

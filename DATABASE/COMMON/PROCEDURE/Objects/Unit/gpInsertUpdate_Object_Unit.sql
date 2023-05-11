@@ -4,7 +4,8 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
@@ -30,6 +31,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inSheetWorkTimeId         Integer   , -- Режим работы (Шаблон табеля р.вр.)
     IN inAddress                 TVarChar  , -- Адрес
     IN inComment                 TVarChar  , -- Примечание
+    IN inGLN                     TVarChar  ,
+    IN inKATOTTG                 TVarChar  ,
     IN inSession                 TVarChar    -- сессия пользователя
 )
   RETURNS Integer AS
@@ -120,7 +123,11 @@ BEGIN
 
    -- Сохранили <Примечание>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Comment(), ioId, inComment);
-
+   -- Сохранили <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_GLN(), ioId, inGLN);
+   -- Сохранили <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_KATOTTG(), ioId, inKATOTTG);
+   
    -- Если добавляли подразделение
    IF vbOldId <> ioId THEN
       -- Установить свойство лист\папка у себя
@@ -170,6 +177,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.05.23         *
  14.03.23         * inisAvance
  03.10.22         * inisPartionGP
  27.07.22         * inisCountCount
