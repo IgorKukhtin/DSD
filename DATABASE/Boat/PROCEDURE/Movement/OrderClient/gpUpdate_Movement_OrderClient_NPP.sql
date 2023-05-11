@@ -32,9 +32,9 @@ BEGIN
          -- тогда всех подтягиваем к этому номеру
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NPP(), MovementFloat.MovementId, MovementFloat.ValueData - 1)
          FROM MovementFloat
-             INNER JOIN Movement ON Movement.Id = MovementFloat.MovementId
-                                AND Movement.DescId = zc_Movement_OrderClient()
-                                AND Movement.StatusId <> zc_Enum_Status_Erased()
+              INNER JOIN Movement ON Movement.Id = MovementFloat.MovementId
+                                 AND Movement.DescId = zc_Movement_OrderClient()
+                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
          WHERE MovementFloat.DescId = zc_MovementFloat_NPP()
            AND MovementFloat.ValueData  >= vbNPP_old
            AND MovementFloat.MovementId <> inId
