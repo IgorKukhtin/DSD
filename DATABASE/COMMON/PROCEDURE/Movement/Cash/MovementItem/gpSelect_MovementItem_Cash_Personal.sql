@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummAvance TFloat
              , Amount_current TFloat, Amount_avance TFloat, Amount_avance_ret TFloat, Amount_service TFloat
              , SummRemains TFloat, SummCardSecondRemains TFloat
+             , AmountCardSecond_avance TFloat
              , isCalculated Boolean
              , Comment TVarChar
              , PersonalServiceListId Integer
@@ -288,7 +289,7 @@ BEGIN
                                                        AND ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId = MLO_PersonalServiceList.ObjectId
                                                        AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId        = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
                                    LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
-                                                        ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
+                                                        ON ObjectLink_Personal_PersonalServiceList.ObjectId = MovementItem.ObjectId -- ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId
                                                        AND ObjectLink_Personal_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
 
                               WHERE Movement.Id = inParentId
@@ -452,6 +453,7 @@ BEGIN
          , tmpMIContainer AS (SELECT SUM (CASE WHEN MIContainer.MovementId = inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS Amount_current
                                    , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) /*AND tmpContainer.isAvance = TRUE*/ AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
                                    , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) /*AND tmpContainer.isAvance = TRUE*/ AND MIContainer.Amount < 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_ret
+
                                    , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalCardSecond())  THEN MIContainer.Amount ELSE 0 END) AS AmountCardSecond_avance
                                    , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalService() THEN MIContainer.Amount ELSE 0 END) AS Amount_service
                                    -- , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END) AS Amount_income
@@ -637,8 +639,11 @@ BEGIN
                        + COALESCE (tmpData.SummAvCardSecond, 0)
                        + COALESCE (tmpData.SummCardSecondCash, 0)
                        - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN COALESCE (tmpData.Amount, 0) ELSE 0 END
-                       - COALESCE (tmpData.AmountCardSecond_avance, 0)
+                         -- 
+                       - CASE WHEN tmpData.SummCardSecondCash > 0 THEN 0 ELSE COALESCE (tmpData.AmountCardSecond_avance, 0) END
                END) :: TFloat AS SummCardSecondRemains
+
+            , CASE WHEN tmpData.SummCardSecondCash > 0 THEN 0 ELSE COALESCE (tmpData.AmountCardSecond_avance, 0) END :: TFloat AS AmountCardSecond_avance
 
             , COALESCE (MIBoolean_Calculated.ValueData, FALSE) AS isCalculated
             , MIString_Comment.ValueData       AS Comment

@@ -787,7 +787,6 @@ object OrderClientForm: TOrderClientForm
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
-            ExplicitWidth = 536
             object cxGridDBTableViewProdColorItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdColorItemsDS
@@ -1065,7 +1064,6 @@ object OrderClientForm: TOrderClientForm
             Color = clLime
             ParentBackground = False
             TabOrder = 1
-            ExplicitWidth = 536
           end
         end
         object PanelProdOptItems: TPanel
@@ -1077,8 +1075,6 @@ object OrderClientForm: TOrderClientForm
           BevelEdges = [beLeft]
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitLeft = 545
-          ExplicitWidth = 803
           object cxGridProdOptItems: TcxGrid
             Left = 0
             Top = 17
@@ -1088,7 +1084,6 @@ object OrderClientForm: TOrderClientForm
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
-            ExplicitWidth = 803
             object cxGridDBTableViewProdOptItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdOptItemsDS
@@ -1474,7 +1469,6 @@ object OrderClientForm: TOrderClientForm
             Color = clAqua
             ParentBackground = False
             TabOrder = 1
-            ExplicitWidth = 803
           end
         end
         object cxSplitter1: TcxSplitter
@@ -1483,7 +1477,6 @@ object OrderClientForm: TOrderClientForm
           Width = 8
           Height = 175
           Control = PanelProdColorItems
-          ExplicitLeft = 537
         end
       end
     end
@@ -4429,8 +4422,7 @@ object OrderClientForm: TOrderClientForm
         item
           Name = 'NPP'
           Value = 0.000000000000000000
-          Component = FormParams
-          ComponentItem = 'NPP'
+          Component = edNPP
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -4438,8 +4430,7 @@ object OrderClientForm: TOrderClientForm
         item
           Name = 'DateBegin'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'DateBegin'
+          Component = edDateBegin
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','

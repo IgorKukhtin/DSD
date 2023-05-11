@@ -181,6 +181,7 @@
 				<Form>PriorityPauseForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\StorageSQLite.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\UAECMRXML.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

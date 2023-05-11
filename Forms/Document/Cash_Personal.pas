@@ -109,6 +109,7 @@ type
     GuidesInfoMoney: TdsdGuides;
     SummAvance: TcxGridDBColumn;
     SummAvCardSecond: TcxGridDBColumn;
+    AmountCardSecond_avance: TcxGridDBColumn;
   private
     { Private declarations }
   public

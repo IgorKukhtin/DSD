@@ -68,6 +68,7 @@ BEGIN
 
            , Object_Juridical.Id                             AS JuridicalId
            , Object_Juridical.ValueData                      AS JuridicalName
+
            , (COALESCE (MovementFloat_TotalSummService.ValueData, 0)
             + COALESCE (MovementFloat_TotalSummAdd.ValueData, 0)
             + COALESCE (MovementFloat_TotalSummAddOth.ValueData, 0)
@@ -88,11 +89,13 @@ BEGIN
             + COALESCE (MovementFloat_TotalSummFine.ValueData, 0)
             + COALESCE (MovementFloat_TotalSummFineOth.ValueData, 0)
              ) ::TFloat AS TotalSummMinus
+
            , (COALESCE (MovementFloat_TotalSummFine.ValueData, 0) + COALESCE (MovementFloat_TotalSummFineOth.ValueData, 0)) :: TFloat AS TotalSummFine
            , MovementFloat_TotalSummCard.ValueData           AS TotalSummCard
+
            , (COALESCE (MovementFloat_TotalSummCardSecond.ValueData, 0) + COALESCE (MovementFloat_TotalSummCardSecondRecalc.ValueData, 0)
-            + COALESCE (MovementFloat_TotalSummAvCardSecond.ValueData, 0) + COALESCE (MovementFloat_TotalSummAvCardSecondRecalc.ValueData, 0)
              ) :: TFloat AS TotalSummCardSecond
+
            , MovementFloat_TotalSummCardSecondCash.ValueData AS TotalSummCardSecondCash
            , MovementFloat_TotalSummNalog.ValueData          AS TotalSummNalog
            , MovementFloat_TotalSummNalogRet.ValueData       AS TotalSummNalogRet  
@@ -315,9 +318,8 @@ BEGIN
                            , COALESCE (MIFloat_SummNalog.ValueData, 0)        AS SummNalog
                            , COALESCE (MIFloat_SummNalogRet.ValueData, 0)     AS SummNalogRet
                            , COALESCE (MIFloat_SummCard.ValueData, 0)         AS SummCard
-                           , COALESCE (MIFloat_SummCardSecond.ValueData, 0) + COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0)
-                           + COALESCE (MIFloat_SummAvCardSecond.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)
-                            AS SummCardSecond
+
+                           , COALESCE (MIFloat_SummCardSecond.ValueData, 0) + COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0) AS SummCardSecond
                            , COALESCE (MIFloat_SummCardSecondCash.ValueData, 0) AS SummCardSecondCash
                            , COALESCE (MIFloat_SummService.ValueData, 0)      AS SummService
                            , COALESCE (MIFloat_SummAdd.ValueData, 0)          AS SummAdd
@@ -345,7 +347,9 @@ BEGIN
                            , COALESCE (MIFloat_SummTransportTaxi.ValueData, 0) AS SummTransportTaxi
                            , COALESCE (MIFloat_SummPhone.ValueData, 0)         AS SummPhone
                            , COALESCE (MIFloat_SummHouseAdd.ValueData, 0)      AS SummHouseAdd
-                           , COALESCE (MIFloat_SummAvance.ValueData, 0) + COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0) AS SummAvance
+                           , COALESCE (MIFloat_SummAvance.ValueData, 0) + COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0)
+                           + COALESCE (MIFloat_SummAvCardSecond.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)
+                             AS SummAvance
 
                            , MIString_Comment.ValueData         AS Comment
 

@@ -3173,6 +3173,7 @@ var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
     strErr:String;
     strExec:String;
     execStoredProc:String;
+    addOrder:String;
 begin
      if (isPartion = FALSE) and (isDiff = FALSE) then if (not cbComplete_List.Checked)or(not cbComplete_List.Enabled) then exit;
      //
@@ -3183,6 +3184,8 @@ begin
      if cbOnlySale.Checked = true then isSale_str:=',TRUE' else isSale_str:=',FALSE';
      //
      // !!!заливка в сибасе!!!
+
+     addOrder:= '';
 
      // Get Data
      if (ParamStr(2)='autoReComplete') and (isBefoHistoryCost = TRUE)
@@ -3205,8 +3208,8 @@ begin
               then execStoredProc:= 'gpComplete_SelectHistoryCost_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+isSale_str+',FALSE)'
               else
                   if isBefoHistoryCost = TRUE
-                  then execStoredProc:= 'gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+isSale_str+',TRUE, -1)'
-                  else execStoredProc:= 'gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+isSale_str+',FALSE,' + IntToStr(GroupId_branch) + ')';
+                  then begin addOrder:= 'BranchCode,'; execStoredProc:= 'gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+isSale_str+',TRUE, -1)'; end
+                  else begin addOrder:= 'BranchCode,'; execStoredProc:= 'gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+isSale_str+',FALSE,' + IntToStr(GroupId_branch) + ')'; end;
 
      //
      fromZConnection.Connected:=false;
@@ -3219,7 +3222,8 @@ begin
                      +'       end as Order_master'
                      +'    , tmp.*'
                      +' from ' + execStoredProc + ' as tmp '
-                     +' order by Order_master,OperDate,MovementId,InvNumber');
+                     +' order by ' + addOrder + 'Order_master,OperDate,MovementId,InvNumber'
+                     );
      SaveRecord:=fromZQuery.RecordCount;
      Gauge.Progress:=0;
      Gauge.MaxValue:=SaveRecord;

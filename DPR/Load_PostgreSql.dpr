@@ -78,7 +78,8 @@ uses
   GoogleOTPDialogPsw in '..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
   GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
   PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
-  StorageSQLite in '..\SOURCE\StorageSQLite.pas';
+  StorageSQLite in '..\SOURCE\StorageSQLite.pas',
+  UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas';
 
 {$R *.res}
 

@@ -395,7 +395,11 @@ END IF;
                                  , tmp.UnitId_FineSubject
                          )
        -- только проводки - сколько уже выплатили (Авансом)
-     , tmpMIContainer AS (SELECT SUM (COALESCE (CASE WHEN tmpMIContainer_all.MovementDescId = zc_Movement_BankAccount() THEN 0 ELSE tmpMIContainer_all.Amount END, 0))  AS Amount
+     , tmpMIContainer AS (SELECT SUM (COALESCE (CASE WHEN tmpMIContainer_all.MovementDescId = zc_Movement_BankAccount()
+                                                       OR tmpMIContainer_all.AnalyzerId     = zc_Enum_AnalyzerId_Cash_PersonalCardSecond()
+                                                     THEN 0
+                                                     ELSE tmpMIContainer_all.Amount
+                                                END, 0))  AS Amount
                                , tmpMIContainer_all.PersonalId
                                , tmpMIContainer_all.UnitId
                                , tmpMIContainer_all.PositionId
@@ -586,9 +590,20 @@ from _tmpMI where _tmpMI.MemberId = 239655)
 -- !!!тест 
 -- PERFORM gpComplete_Movement_PersonalService (inMovementId:= inMovementId, inSession:= inSession);
 -- RAISE EXCEPTION 'ок' ;
-IF vbUserId = 5 and 1=0
+IF vbUserId = 5 and 1=1
 THEN
-    RAISE EXCEPTION 'Ошибка.test=ok';
+    RAISE EXCEPTION 'Ошибка.test=ok   %'
+  , (            SELECT sum (coalesce (MIF_SummCardSecondRecalc.ValueData, 0))
+                 
+            FROM MovementItem
+                 LEFT JOIN MovementItemFloat AS MIF_SummCardSecondRecalc
+                                             ON MIF_SummCardSecondRecalc.MovementItemId = MovementItem.Id
+                                            AND MIF_SummCardSecondRecalc.DescId         = zc_MIFloat_SummCardSecondRecalc()
+            WHERE MovementItem.MovementId = inMovementId
+              AND MovementItem.isErased   = FALSE
+              AND MovementItem.DescId     = zc_MI_Master()
+)
+;
 END IF;
 
 END;
