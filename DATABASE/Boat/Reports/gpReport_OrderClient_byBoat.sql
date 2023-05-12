@@ -140,7 +140,7 @@ BEGIN
                           , CASE WHEN inisDetail = TRUE THEN tmp.InvNumber  ELSE '' END AS InvNumber
                           , CASE WHEN inisDetail = TRUE THEN tmp.OperDate  ELSE NULL END AS OperDate
                           , tmp.ObjectId -- Комплектующие 
-                          , tmp.GoodsId_basis
+                          , CASE WHEN inisDetail = TRUE THEN tmp.GoodsId_basis ELSE 0 END AS GoodsId_basis
                           , CASE WHEN inisDetail = TRUE THEN tmp.GoodsId ELSE 0 END AS GoodsId
                           , CASE WHEN inisDetail = TRUE THEN tmp.ReceiptLevelId ELSE 0 END AS ReceiptLevelId
                           , SUM (tmp.Amount) AS Amount
