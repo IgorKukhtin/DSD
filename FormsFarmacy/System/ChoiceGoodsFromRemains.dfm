@@ -3,24 +3,26 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
   Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
   ClientWidth = 885
   ShowHint = True
-  ExplicitWidth = 901
-  ExplicitHeight = 347
+  ExplicitWidth = 903
+  ExplicitHeight = 355
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 885
+    ExplicitTop = 27
     ExplicitWidth = 885
+    ExplicitHeight = 281
     ClientRectRight = 885
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 885
-      ExplicitHeight = 282
+      ExplicitHeight = 281
       inherited cxGrid: TcxGrid
         Top = 27
         Width = 885
-        Height = 255
+        Height = 254
         ExplicitTop = 27
         ExplicitWidth = 885
-        ExplicitHeight = 255
+        ExplicitHeight = 254
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -131,8 +133,18 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             Options.Editing = False
             Width = 101
           end
+          object colPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object colPriceSale: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
+            Caption = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -739,7 +751,7 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <

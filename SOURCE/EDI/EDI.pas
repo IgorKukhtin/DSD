@@ -5696,7 +5696,7 @@ begin
     Content := 'CN';
   end;
 
-  // DR - Вантажоодержувач
+  // DR - Водій
   if HeaderDataSet.FieldByName('GLN_Driver').asString <> '' then
     with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
     begin
@@ -5790,17 +5790,26 @@ begin
   //UAECMR.ECMR.SpecifiedSupplyChainConsignment.NotifiedTradeParty.SpecifiedGovernmentRegistration.ID := 'XYZ000012';
 
   // Пункт навантаження
-  //UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.ID.SchemeAgencyID := 'КАТОТТГ';
-  //UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.ID.NodeValue := 'UA53080370010073240';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.Name := HeaderDataSet.FieldByName('JuridicalName_From').asString; // 'ТОВ "Вантажовідправник_v3"';
+  if HeaderDataSet.FieldByName('KATOTTG_Unit').asString <> '' then
+  begin
+    UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.ID.SchemeAgencyID := 'КАТОТТГ';
+    UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.ID.NodeValue := HeaderDataSet.FieldByName('KATOTTG_Unit').asString;
+  end;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.Name := HeaderDataSet.FieldByName('Name_Unit').asString; // 'ТОВ "Вантажовідправник_v3"';
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.TypeCode := 5;
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.Description := HeaderDataSet.FieldByName('JuridicalAddress_From').asString;  // 'Україна, 1233122, Полтавська обл,  Полтавський р-н, м. Полтава, Качури 99';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.PhysicalGeographicalCoordinate.SystemID.SchemeAgencyID := 'GLN';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.PhysicalGeographicalCoordinate.SystemID.NodeValue := HeaderDataSet.FieldByName('GLN_from').asString;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.Description := HeaderDataSet.FieldByName('Address_Unit').asString;  // 'Україна, 1233122, Полтавська обл,  Полтавський р-н, м. Полтава, Качури 99';
+  if HeaderDataSet.FieldByName('GLN_Unit').asString <> '' then
+  begin
+    UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.PhysicalGeographicalCoordinate.SystemID.SchemeAgencyID := 'GLN';
+    UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.PhysicalGeographicalCoordinate.SystemID.NodeValue := HeaderDataSet.FieldByName('GLN_Unit').asString;
+  end;;
 
   // Пункт розвантаження
-  //UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.ID.SchemeAgencyID := 'КАТОТТГ';
-  //UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.ID.NodeValue := 'UA59080270010036634';
+  if HeaderDataSet.FieldByName('KATOTTG_To').asString <> '' then
+  begin
+    UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.ID.SchemeAgencyID := 'КАТОТТГ';
+    UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.ID.NodeValue := HeaderDataSet.FieldByName('KATOTTG_To').asString;
+  end;
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString; // 'ТОВ "Вантажоодержувач_v3" (прод)';
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.TypeCode := 10;
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.Description := HeaderDataSet.FieldByName('PartnerAddress_To').asString; // 'Україна, 12351, Сумська обл,  Сумський р-н, м. Суми, вул. Київська, 1';
@@ -5864,11 +5873,12 @@ begin
   with UAECMR.ECMR.SpecifiedSupplyChainConsignment.UtilizedLogisticsTransportEquipment.Add do
   begin
     ID := HeaderDataSet.FieldByName('CarName').asString;
-    //with ApplicableNote.Add do
-    //begin
-    //  ContentCode := 'BRAND';
-    //  Content := 'VOLVO';
-    //end;
+    if HeaderDataSet.FieldByName('CarBrandName').asString <> '' then
+      with ApplicableNote.Add do
+      begin
+        ContentCode := 'BRAND';
+        Content := HeaderDataSet.FieldByName('CarBrandName').asString;
+      end;
     with ApplicableNote.Add do
     begin
       ContentCode := 'MODEL';
@@ -5883,21 +5893,22 @@ begin
       ID := HeaderDataSet.FieldByName('CarTrailerName').asString;
       CategoryCode := 'TE';
       CharacteristicCode := 14;
-      //with ApplicableNote.Add do
-      //begin
-      //  ContentCode := 'BRAND';
-      //  Content := 'VOLVO';
-      //end;
+      if HeaderDataSet.FieldByName('CarTrailerBrandName').asString <> '' then
+        with ApplicableNote.Add do
+        begin
+          ContentCode := 'BRAND';
+          Content := HeaderDataSet.FieldByName('CarTrailerBrandName').asString;
+        end;
       with ApplicableNote.Add do
       begin
         ContentCode := 'MODEL';
-        Content := HeaderDataSet.FieldByName('CarModelName').asString;
+        Content := HeaderDataSet.FieldByName('CarTrailerModelName').asString;
       end;
     end;
   end;
 
   // Вид перевезень
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.DeliveryInstructions.Description := 'відрядний тариф';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.DeliveryInstructions.Description := HeaderDataSet.FieldByName('DeliveryInstructionsName').asString;
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.DeliveryInstructions.DescriptionCode := 'TRANSPORTATION_TYPE';
 
   UAECMR.OwnerDocument.SaveToXML(AXML);
