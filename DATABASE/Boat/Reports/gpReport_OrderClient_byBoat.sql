@@ -138,6 +138,43 @@ BEGIN
 
                        )
 
+     -- Комплектующие сборка узла
+   , tmpItem_Detail AS (-- уровень 1 - собираем только "виртуальные" узлы
+                        SELECT tmpItem_Detail.GoodsId_basis AS GoodsId
+                             , tmpItem_Detail.ObjectId
+                             , tmpItem_Detail.PartnerId
+                             , tmpItem_Detail.Amount
+                             , tmpItem_Detail.AmountPartner
+                             , tmpItem_Detail.GoodsId_basis
+                             , tmpItem_Detail.ReceiptLevelId
+                             , tmpItem_Detail.ProdColorPatternId
+                             , tmpItem_Detail.ProductId
+                             , tmpItem_Detail.MovementId
+                             , tmpItem_Detail.InvNumber
+                             , tmpItem_Detail.OperDate
+                             , tmpItem_Detail.DateBegin
+                        FROM tmpMI_Detail AS tmpItem_Detail
+                        WHERE tmpItem_Detail.GoodsId_basis > 0
+                       UNION ALL
+                        -- уровень 2 - собираем узлы и подставляем "виртуальные" узлы
+                        SELECT DISTINCT
+                               tmpItem_Detail.GoodsId
+                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN tmpItem_Detail.GoodsId_basis ELSE tmpItem_Detail.ObjectId END AS ObjectId
+                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 0 ELSE tmpItem_Detail.PartnerId     END AS PartnerId
+                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 1 ELSE tmpItem_Detail.Amount        END AS Amount
+                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 0 ELSE tmpItem_Detail.AmountPartner END AS AmountPartner
+                             , 0 AS GoodsId_basis
+                             , 0 AS ReceiptLevelId
+                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 0 ELSE tmpItem_Detail.ProdColorPatternId END AS ProdColorPatternId
+                             , tmpItem_Detail.ProductId
+                             , tmpItem_Detail.MovementId
+                             , tmpItem_Detail.InvNumber
+                             , tmpItem_Detail.OperDate
+                             , tmpItem_Detail.DateBegin
+                        FROM tmpMI_Detail AS tmpItem_Detail
+                       )
+
+
   , tmpMI_group AS (SELECT  CASE WHEN inisDetail = TRUE THEN tmp.ProductId  ELSE 0    END AS ProductId
                           , CASE WHEN inisDetail = TRUE THEN tmp.MovementId ELSE 0    END AS MovementId
                           , CASE WHEN inisDetail = TRUE THEN tmp.InvNumber  ELSE ''   END AS InvNumber
@@ -159,7 +196,7 @@ BEGIN
                           , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 10 THEN tmp.Amount ELSE 0 END) AS Amount10
                           , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 11 THEN tmp.Amount ELSE 0 END) AS Amount11
                           , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 12 THEN tmp.Amount ELSE 0 END) AS Amount12
-                    FROM tmpMI_Detail AS tmp
+                    FROM tmpItem_Detail AS tmp
                     GROUP BY CASE WHEN inisDetail = TRUE THEN tmp.ProductId ELSE 0 END
                            , CASE WHEN inisDetail = TRUE THEN tmp.MovementId ELSE 0 END
                            , CASE WHEN inisDetail = TRUE THEN tmp.InvNumber  ELSE '' END
