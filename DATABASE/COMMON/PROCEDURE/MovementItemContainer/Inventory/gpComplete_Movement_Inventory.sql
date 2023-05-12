@@ -2091,6 +2091,7 @@ end if;
                                                                       AND CLO_5.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
                            --!!!where CLO_2.ObjectId = 0
                            -- and Container.Amount <> 0
+                           WHERE Container.DescId = 2
                            )
              , tmpRes as (select tmp1.Id AS ContainerId, tmp1.DescId, tmp1.ObjectId AS AccountId, tmp1.Amount, tmp1.ParentId
                               , tmp1.UnitId, tmp1.GoodsId, tmp1.InfoMoneyId, tmp1.InfoMoneyDetailId
