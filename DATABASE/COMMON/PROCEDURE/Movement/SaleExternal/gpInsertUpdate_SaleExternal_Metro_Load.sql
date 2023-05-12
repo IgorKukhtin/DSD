@@ -198,7 +198,7 @@ BEGIN
 
      IF COALESCE (vbGoodsId,0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Товар <%> с артикулом <%> не найден.', inGoodsName, inArticle;
+         RAISE EXCEPTION 'Ошибка.Товар <%> с артикулом <%> не найден. Для сети <%>.', inGoodsName, inArticle, lfGet_Object_ValueData_sh (inRetailId);
      END IF;
 
      -- сохраняем св-во  zc_ObjectString_GoodsPropertyValue_NameExternal
