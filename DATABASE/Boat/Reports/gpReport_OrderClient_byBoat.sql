@@ -55,7 +55,8 @@ BEGIN
     RETURN QUERY
     WITH
     --выбираем лодки по zc_ObjectDate_Product_DateBegin за период
-    tmpProduct AS (SELECT ObjectDate.ObjectId AS Id 
+    tmpProduct AS (SELECT DISTINCT ObjectDate.ObjectId AS Id
+                        , ObjectDate.ValueData AS DateBegin 
                    FROM ObjectDate
                    WHERE ObjectDate.DescId = zc_ObjectDate_Product_DateBegin()
                      AND ObjectDate.ValueData >=inStartDate
@@ -67,16 +68,18 @@ BEGIN
                          , Movement.OperDate
                          , Movement.InvNumber
                          , MovementLinkObject_Product.ObjectId AS ProductId
-                    FROM Movement
+                         , tmpProduct.DateBegin
+                    FROM tmpProduct
                         INNER JOIN MovementLinkObject AS MovementLinkObject_Product
-                                                      ON MovementLinkObject_Product.MovementId = Movement.Id
+                                                      ON MovementLinkObject_Product.ObjectId = tmpProduct.Id
                                                      AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product() 
-                                                     AND MovementLinkObject_Product.ObjectId IN (SELECT DISTINCT tmpProduct.Id FROM tmpProduct)
-                    WHERE Movement.DescId = zc_Movement_OrderClient()
-                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                        INNER JOIN Movement ON Movement.Id = MovementLinkObject_Product.MovementId
+                                           AND Movement.DescId = zc_Movement_OrderClient()
+                                           AND Movement.StatusId = zc_Enum_Status_Complete()
                     )
     --
   , tmpMI_Detail AS (SELECT Movement.ProductId
+                          , Movement.DateBegin
                           , Movement.OperDate 
                           , Movement.InvNumber
                           , Movement.Id AS MovementId
@@ -135,27 +138,27 @@ BEGIN
 
                        )
 
-  , tmpMI_group AS (SELECT  CASE WHEN inisDetail = TRUE THEN tmp.ProductId ELSE 0 END AS ProductId
-                          , CASE WHEN inisDetail = TRUE THEN tmp.MovementId ELSE 0 END AS MovementId
-                          , CASE WHEN inisDetail = TRUE THEN tmp.InvNumber  ELSE '' END AS InvNumber
-                          , CASE WHEN inisDetail = TRUE THEN tmp.OperDate  ELSE NULL END AS OperDate
+  , tmpMI_group AS (SELECT  CASE WHEN inisDetail = TRUE THEN tmp.ProductId  ELSE 0    END AS ProductId
+                          , CASE WHEN inisDetail = TRUE THEN tmp.MovementId ELSE 0    END AS MovementId
+                          , CASE WHEN inisDetail = TRUE THEN tmp.InvNumber  ELSE ''   END AS InvNumber
+                          , CASE WHEN inisDetail = TRUE THEN tmp.OperDate   ELSE NULL END AS OperDate
                           , tmp.ObjectId -- Комплектующие 
                           , CASE WHEN inisDetail = TRUE THEN tmp.GoodsId_basis ELSE 0 END AS GoodsId_basis
                           , CASE WHEN inisDetail = TRUE THEN tmp.GoodsId ELSE 0 END AS GoodsId
                           , CASE WHEN inisDetail = TRUE THEN tmp.ReceiptLevelId ELSE 0 END AS ReceiptLevelId
                           , SUM (tmp.Amount) AS Amount
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 1 THEN tmp.Amount ELSE 0 END) AS Amount1
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 2 THEN tmp.Amount ELSE 0 END) AS Amount2
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 3 THEN tmp.Amount ELSE 0 END) AS Amount3
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 4 THEN tmp.Amount ELSE 0 END) AS Amount4
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 5 THEN tmp.Amount ELSE 0 END) AS Amount5
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 6 THEN tmp.Amount ELSE 0 END) AS Amount6
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 7 THEN tmp.Amount ELSE 0 END) AS Amount7
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 8 THEN tmp.Amount ELSE 0 END) AS Amount8
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 9 THEN tmp.Amount ELSE 0 END) AS Amount9
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 10 THEN tmp.Amount ELSE 0 END) AS Amount10
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 11 THEN tmp.Amount ELSE 0 END) AS Amount11
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.OperDate) = 12 THEN tmp.Amount ELSE 0 END) AS Amount12
+                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 1 THEN tmp.Amount ELSE 0 END) AS Amount1
+                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 2 THEN tmp.Amount ELSE 0 END) AS Amount2
+                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 3 THEN tmp.Amount ELSE 0 END) AS Amount3
+                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 4 THEN tmp.Amount ELSE 0 END) AS Amount4
+                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 5 THEN tmp.Amount ELSE 0 END) AS Amount5
+                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 6 THEN tmp.Amount ELSE 0 END) AS Amount6
+                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 7 THEN tmp.Amount ELSE 0 END) AS Amount7
+                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 8 THEN tmp.Amount ELSE 0 END) AS Amount8
+                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 9 THEN tmp.Amount ELSE 0 END) AS Amount9
+                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 10 THEN tmp.Amount ELSE 0 END) AS Amount10
+                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 11 THEN tmp.Amount ELSE 0 END) AS Amount11
+                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 12 THEN tmp.Amount ELSE 0 END) AS Amount12
                     FROM tmpMI_Detail AS tmp
                     GROUP BY CASE WHEN inisDetail = TRUE THEN tmp.ProductId ELSE 0 END
                            , CASE WHEN inisDetail = TRUE THEN tmp.MovementId ELSE 0 END
