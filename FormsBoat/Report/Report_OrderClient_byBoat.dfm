@@ -680,7 +680,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'ReceiptLevelName;ObjectName'
+          IndexFieldNames = 'GoodsGroupNameFull;ReceiptLevelName;ObjectName'
           GridView = cxGridDBTableView
         end>
       Params = <
