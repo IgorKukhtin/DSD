@@ -184,6 +184,7 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     mactStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    actChoiceFormOrderClientItem: TOpenChoiceForm;
   private
   public
   end;

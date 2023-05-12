@@ -4,11 +4,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer,
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer,Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
  INOUT ioId                                 Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId                         Integer   , -- Ключ объекта <Документ>
+    IN inMovementId_OrderClient             Integer   , -- Заказ Клиента
     IN inGoodsId                            Integer   , -- Товары
     IN inPartionId                          Integer   , -- Партия  
     IN inPartnerId                          Integer   , -- поставщик
@@ -41,6 +43,7 @@ BEGIN
             INTO ioId, ioAmount, ioPrice, outAmountSumm
      FROM lpInsertUpdate_MovementItem_Inventory (ioId              := ioId
                                                , inMovementId      := inMovementId
+                                               , inMovementId_OrderClient := inMovementId_OrderClient
                                                , inGoodsId         := inGoodsId
                                                , inPartnerId       := inPartnerId
                                                , ioAmount          := ioAmount
