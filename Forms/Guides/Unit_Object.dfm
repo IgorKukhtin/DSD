@@ -52,6 +52,21 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
+          object KATOTTG: TcxGridDBColumn
+            Caption = #1050#1040#1058#1054#1058#1058#1043
+            DataBinding.FieldName = 'KATOTTG'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object GLN: TcxGridDBColumn
+            DataBinding.FieldName = 'GLN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
