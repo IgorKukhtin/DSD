@@ -37,7 +37,7 @@ type
     cxLabel2: TcxLabel;
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel3: TcxLabel;
     edComment: TcxTextEdit;
     cxLabel6: TcxLabel;
@@ -89,6 +89,9 @@ type
     cxLabel23: TcxLabel;
     edCountry: TcxButtonEdit;
     GuidesCountry: TdsdGuides;
+    edPLZ: TcxButtonEdit;
+    cxLabel14: TcxLabel;
+    GuidesPLZ: TdsdGuides;
   private
     { Private declarations }
   public

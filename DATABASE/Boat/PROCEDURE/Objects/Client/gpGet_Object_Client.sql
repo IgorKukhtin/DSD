@@ -91,8 +91,8 @@ BEGIN
            , Object_Bank.Id                  AS BankId
            , Object_Bank.ValueData           AS BankName
            , Object_PLZ.Id                   AS PLZId
-           --, Object_PLZ.ValueData            AS PLZName
-           , TRIM (COALESCE (Object_PLZ.ValueData,'')||' '||ObjectString_City.ValueData||' '||Object_Country.ValueData) ::TVarChar AS PLZName
+           , Object_PLZ.ValueData            AS PLZName
+         --, TRIM (COALESCE (Object_PLZ.ValueData,'')||' '||ObjectString_City.ValueData||' '||Object_Country.ValueData) ::TVarChar AS PLZName
            , ObjectString_City.ValueData     AS CityName
            , Object_Country.Id               AS CountryId
            , Object_Country.ValueData        AS CountryName

@@ -31,8 +31,8 @@ BEGIN
                   LEFT JOIN ObjectDesc       ON ObjectDesc.Id       = Object.DescId
                   LEFT JOIN ObjectStringDesc ON ObjectStringDesc.Id = ObjectString.DescId
              WHERE ObjectString.DescId    = inDescId
-              AND LEFT (OS.ValueData, 11) = LEFT (inValueData, 11)
-              AND ObjectString.ObjectId   <> COALESCE (inId, 0);
+              AND LEFT (ObjectString.ValueData, 11) = LEFT (inValueData, 11)
+              AND ObjectString.ObjectId             <> COALESCE (inId, 0);
     
              --
              RAISE EXCEPTION 'Значение <%> не уникально%для поля <%>%в справочнике <%>.', LEFT (inValueData, 11), CHR (13), vbFieldName, CHR (13), vbObjectName;

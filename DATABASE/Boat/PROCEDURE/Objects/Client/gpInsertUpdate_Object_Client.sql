@@ -19,6 +19,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer
                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                     , TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer
+                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
  INOUT ioId              Integer,       -- ключ объекта <Бренд>
@@ -35,6 +39,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
     IN inEmail           TVarChar,
     IN inCodeDB          TVarChar,
     IN inTaxNumber       TVarChar, 
+    IN inPLZ             TVarChar,
     IN inCityName        TVarChar,
     IN inCountryName     TVarChar,
     IN inDiscountTax     TFloat  ,      -- % скидки
@@ -112,9 +117,28 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_PaidKind(), ioId, inPaidKindId);
 
   
-   --inPLZId заменили на город и страну, можно вводить вручную, можно выбирать, если ввели и такого нет в справочнике создаем    , 
+   -- проверка <inCountryName>
+   IF TRIM (COALESCE (inCountryName, '')) = ''
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <Country> должно быть установлено.';
+   END IF;
+
+   -- проверка <inCityName>
+   IF TRIM (COALESCE (inCityName, '')) = ''
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <City> должно быть установлено.';
+   END IF;
+
+   -- проверка <inPLZ>
+   IF TRIM (COALESCE (inPLZ, '')) = ''
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <PLZ> должно быть установлено.';
+   END IF;
+   
+
+   -- inPLZId заменили на город и страну, можно вводить вручную, можно выбирать, если ввели и такого нет в справочнике создаем    , 
    -- страна
-   vbCountryId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Country() AND UPPER(TRIM(Object.ValueData)) = UPPER(TRIM(inCountryName)) );
+   vbCountryId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Country() AND TRIM(Object.ValueData) ILIKE TRIM(inCountryName));
    --если не находим создаем
    IF COALESCE (vbCountryId,0) = 0       
    THEN
@@ -126,7 +150,7 @@ BEGIN
                                                           , inSession   := inSession :: TVarChar
                                                            ) AS tmp);
    END IF;
-   --пробуем найти  PLZId
+   -- пробуем найти  PLZId
    vbPLZId := (SELECT Object_PLZ.Id
                FROM Object AS Object_PLZ
                     INNER JOIN ObjectString AS ObjectString_City
@@ -141,14 +165,15 @@ BEGIN
         
                WHERE Object_PLZ.DescId = zc_Object_PLZ()
                  AND Object_PLZ.isErased = FALSE
+                 AND TRIM (Object_PLZ.ValueData) ILIKE TRIM (inPLZ)
                 );
  
    IF COALESCE (vbPLZId,0) = 0       
    THEN
         vbPLZId := (SELECT tmp.ioId
-                    FROM gpInsertUpdate_Object_PLZ (ioId        := 0         :: Integer
-                                                  , ioCode      := 0         :: Integer
-                                                  , inName      := ''        :: TVarChar
+                    FROM gpInsertUpdate_Object_PLZ (ioId        := 0
+                                                  , ioCode      := 0
+                                                  , inName      := TRIM (inPLZ)
                                                   , inCity      := TRIM (inCityName) :: TVarChar
                                                   , inAreaCode  := ''        ::TVarChar
                                                   , inComment   := ''        ::TVarChar

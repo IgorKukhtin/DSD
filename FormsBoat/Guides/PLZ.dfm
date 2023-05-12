@@ -410,6 +410,30 @@ object PLZForm: TPLZForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CityName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'City'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CountryName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CountryName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NameFull'
+          Value = Null
+          Component = MasterCDS
           ComponentItem = 'NameFull'
           DataType = ftString
           MultiSelectSeparator = ','

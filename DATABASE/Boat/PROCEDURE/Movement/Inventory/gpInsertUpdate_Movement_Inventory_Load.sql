@@ -30,6 +30,12 @@ BEGIN
    IF COALESCE (inArticle,'') <> '' OR COALESCE (inGoodsName,'') <> ''
    THEN
        
+     -- проверка <inPLZ>
+     IF TRIM (COALESCE (inPartnerName, '')) = ''
+     THEN
+         RAISE EXCEPTION 'Ошибка.Значение <Partner> должно быть установлено.';
+     END IF;
+
      -- поиск поставщика
      vbPartnerId := (SELECT Object.Id
                      FROM Object 
@@ -41,7 +47,7 @@ BEGIN
          --RAISE EXCEPTION 'Ошибка.Не найден Поставщик <%>', inPartnerName;
        -- создаем
        SELECT tmp.ioId
-      INTO vbPartnerId
+              INTO vbPartnerId
        FROM gpInsertUpdate_Object_Partner(ioId           := 0          :: Integer
                                         , ioCode         := 0          :: Integer
                                         , inName         := TRIM (inPartnerName) :: TVarChar

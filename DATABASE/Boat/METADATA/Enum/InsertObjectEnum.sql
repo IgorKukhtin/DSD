@@ -5965,7 +5965,7 @@ BEGIN
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 2, 
                                                                 inName          := 'inPartnerName', 
-                                                                inParamType     := 'ftInteger', 
+                                                                inParamType     := 'ftString', 
                                                                 inUserParamName := 'Поставщик',
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);

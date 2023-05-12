@@ -18,13 +18,13 @@ object ClientEditForm: TClientEditForm
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 10
-    Top = 72
+    Top = 71
     TabOrder = 0
-    Width = 415
+    Width = 273
   end
   object cxLabel1: TcxLabel
     Left = 10
-    Top = 54
+    Top = 53
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
@@ -53,37 +53,37 @@ object ClientEditForm: TClientEditForm
   end
   object edCode: TcxCurrencyEdit
     Left = 10
-    Top = 30
+    Top = 25
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
     TabOrder = 5
-    Width = 135
+    Width = 130
   end
   object cxLabel3: TcxLabel
-    Left = 295
-    Top = 273
+    Left = 10
+    Top = 361
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
-    Left = 295
-    Top = 293
+    Left = 10
+    Top = 380
     TabOrder = 7
     Width = 273
   end
   object cxLabel6: TcxLabel
-    Left = 176
+    Left = 153
     Top = 8
     Caption = '% '#1089#1082#1080#1076#1082#1080
   end
   object edDiscountTax: TcxCurrencyEdit
-    Left = 176
-    Top = 30
+    Left = 153
+    Top = 25
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 9
-    Width = 107
+    Width = 130
   end
   object cxLabel17: TcxLabel
     Left = 295
@@ -95,7 +95,7 @@ object ClientEditForm: TClientEditForm
   end
   object ceDayCalendar: TcxCurrencyEdit
     Left = 295
-    Top = 30
+    Top = 25
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 11
@@ -103,7 +103,7 @@ object ClientEditForm: TClientEditForm
   end
   object ceDayBank: TcxCurrencyEdit
     Left = 438
-    Top = 30
+    Top = 25
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 12
@@ -117,111 +117,111 @@ object ClientEditForm: TClientEditForm
   end
   object cxLabel4: TcxLabel
     Left = 10
-    Top = 96
+    Top = 229
     Caption = #1060#1072#1082#1089
   end
   object edFax: TcxTextEdit
     Left = 10
-    Top = 116
+    Top = 247
     TabOrder = 15
     Width = 273
   end
   object cxLabel5: TcxLabel
-    Left = 295
-    Top = 96
+    Left = 10
+    Top = 185
     Caption = #1058#1077#1083'. '#1085#1086#1084#1077#1088
   end
   object edPhone: TcxTextEdit
-    Left = 295
-    Top = 116
+    Left = 10
+    Top = 203
     TabOrder = 17
     Width = 273
   end
   object cxLabel7: TcxLabel
     Left = 10
-    Top = 142
+    Top = 273
     Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1081
   end
   object edMobile: TcxTextEdit
     Left = 10
-    Top = 162
+    Top = 291
     TabOrder = 19
     Width = 273
   end
   object edIBAN: TcxTextEdit
     Left = 295
-    Top = 162
+    Top = 380
     TabOrder = 20
     Width = 273
   end
   object cxLabel8: TcxLabel
     Left = 295
-    Top = 142
+    Top = 361
     Caption = #1056'/ '#1089#1095#1077#1090
   end
   object cxLabel9: TcxLabel
     Left = 10
-    Top = 186
+    Top = 140
     Caption = #1059#1083#1080#1094#1072
   end
   object edStreet: TcxTextEdit
     Left = 10
-    Top = 206
+    Top = 159
     TabOrder = 23
     Width = 273
   end
   object edMember: TcxTextEdit
     Left = 295
-    Top = 206
+    Top = 203
     TabOrder = 24
     Width = 273
   end
   object cxLabel10: TcxLabel
     Left = 295
-    Top = 186
+    Top = 185
     Caption = #1050#1086#1085#1090#1072#1085#1082#1090#1085#1086#1077' '#1083#1080#1094#1086
   end
   object cxLabel11: TcxLabel
     Left = 10
-    Top = 229
+    Top = 316
     Caption = #1040#1076#1088#1077#1089' '#1089#1072#1081#1090#1072
   end
   object edWWW: TcxTextEdit
     Left = 10
-    Top = 249
+    Top = 336
     TabOrder = 27
     Width = 273
   end
   object edEmail: TcxTextEdit
     Left = 295
-    Top = 249
+    Top = 159
     TabOrder = 28
     Width = 273
   end
   object cxLabel12: TcxLabel
     Left = 295
-    Top = 229
+    Top = 140
     Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
   end
   object cxLabel13: TcxLabel
-    Left = 10
+    Left = 295
     Top = 273
     Caption = #1053#1072#1096' '#1082#1086#1076' '#1074' '#1080#1093' '#1073#1072#1079#1077
   end
   object edCodeDB: TcxTextEdit
-    Left = 10
-    Top = 293
+    Left = 295
+    Top = 291
     TabOrder = 31
-    Width = 133
+    Width = 130
   end
   object cxLabel15: TcxLabel
     Left = 295
-    Top = 321
+    Top = 316
     Caption = #1041#1072#1085#1082
   end
   object edBank: TcxButtonEdit
     Left = 295
-    Top = 338
+    Top = 336
     Properties.Buttons = <
       item
         Default = True
@@ -232,13 +232,13 @@ object ClientEditForm: TClientEditForm
     Width = 273
   end
   object cxLabel16: TcxLabel
-    Left = 10
-    Top = 363
+    Left = 295
+    Top = 227
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object edInfoMoney: TcxButtonEdit
-    Left = 10
-    Top = 380
+    Left = 295
+    Top = 247
     Properties.Buttons = <
       item
         Default = True
@@ -250,12 +250,12 @@ object ClientEditForm: TClientEditForm
   end
   object cxLabel19: TcxLabel
     Left = 295
-    Top = 363
+    Top = 53
     Caption = #1058#1080#1087' '#1053#1044#1057
   end
   object edTaxKind: TcxButtonEdit
     Left = 295
-    Top = 380
+    Top = 71
     Properties.Buttons = <
       item
         Default = True
@@ -263,27 +263,27 @@ object ClientEditForm: TClientEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 37
-    Width = 273
+    Width = 130
   end
   object cxLabel20: TcxLabel
-    Left = 153
+    Left = 438
     Top = 273
     Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1085#1086#1084#1077#1088
   end
   object edTaxNumber: TcxTextEdit
-    Left = 153
-    Top = 293
+    Left = 438
+    Top = 291
     TabOrder = 39
     Width = 130
   end
   object cxLabel21: TcxLabel
     Left = 438
-    Top = 54
+    Top = 53
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
   end
   object edPaidKind: TcxButtonEdit
     Left = 438
-    Top = 72
+    Top = 71
     Properties.Buttons = <
       item
         Default = True
@@ -321,29 +321,29 @@ object ClientEditForm: TClientEditForm
     Width = 171
   end
   object cxLabel22: TcxLabel
-    Left = 10
-    Top = 320
+    Left = 292
+    Top = 96
     Caption = #1043#1086#1088#1086#1076' ('#1055#1086#1095#1090#1086#1074#1099#1081' '#1072#1076#1088#1077#1089')'
   end
   object edCity: TcxButtonEdit
-    Left = 10
-    Top = 338
+    Left = 295
+    Top = 117
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 47
-    Width = 133
+    Width = 273
   end
   object cxLabel23: TcxLabel
-    Left = 153
-    Top = 320
+    Left = 150
+    Top = 97
     Caption = #1057#1090#1088#1072#1085#1072' ('#1055#1086#1095#1090#1086#1074#1099#1081' '#1072#1076#1088#1077#1089')'
   end
   object edCountry: TcxButtonEdit
     Left = 153
-    Top = 338
+    Top = 117
     Properties.Buttons = <
       item
         Default = True
@@ -351,6 +351,22 @@ object ClientEditForm: TClientEditForm
       end>
     TabOrder = 49
     Width = 130
+  end
+  object edPLZ: TcxButtonEdit
+    Left = 10
+    Top = 117
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 50
+    Width = 130
+  end
+  object cxLabel14: TcxLabel
+    Left = 10
+    Top = 97
+    Caption = 'PLZ'
   end
   object ActionList: TActionList
     Left = 176
@@ -524,6 +540,14 @@ object ClientEditForm: TClientEditForm
         Name = 'inTaxNumber'
         Value = Null
         Component = edTaxNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPLZ'
+        Value = Null
+        Component = edPLZ
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -728,6 +752,21 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'PLZId'
+        Value = Null
+        Component = GuidesPLZ
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PLZName'
+        Value = Null
+        Component = GuidesPLZ
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'CityName'
         Value = Null
         Component = edCity
@@ -844,8 +883,8 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 528
-    Top = 112
+    Left = 149
+    Top = 186
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -859,12 +898,12 @@ object ClientEditForm: TClientEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 160
-    Top = 104
+    Left = 112
+    Top = 432
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 104
-    Top = 104
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 56
+    Top = 448
   end
   object GuidesBank: TdsdGuides
     KeyField = 'Id'
@@ -893,7 +932,7 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end>
     Left = 485
-    Top = 325
+    Top = 323
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -921,8 +960,8 @@ object ClientEditForm: TClientEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 136
-    Top = 359
+    Left = 421
+    Top = 401
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
@@ -950,8 +989,8 @@ object ClientEditForm: TClientEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 413
-    Top = 359
+    Left = 342
+    Top = 53
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -980,7 +1019,7 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end>
     Left = 477
-    Top = 57
+    Top = 56
   end
   object GuidesCity: TdsdGuides
     KeyField = 'Id'
@@ -1016,8 +1055,8 @@ object ClientEditForm: TClientEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 77
-    Top = 323
+    Left = 434
+    Top = 101
   end
   object GuidesCountry: TdsdGuides
     KeyField = 'Id'
@@ -1045,7 +1084,52 @@ object ClientEditForm: TClientEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 212
-    Top = 322
+    Left = 217
+    Top = 115
+  end
+  object GuidesPLZ: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPLZ
+    FormNameParam.Value = 'TPLZForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPLZForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPLZ
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPLZ
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CityName'
+        Value = Null
+        Component = GuidesCity
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountryName'
+        Value = Null
+        Component = GuidesCountry
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 81
+    Top = 107
   end
 end
