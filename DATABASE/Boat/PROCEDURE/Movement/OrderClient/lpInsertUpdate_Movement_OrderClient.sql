@@ -75,13 +75,14 @@ BEGIN
      IF vbIsInsert = TRUE
      THEN
          -- сохранили новое значение <NPP>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NPP(), ioId, (SELECT 1 + COALESCE (MAX (MovementFloat.ValueData), 0)
-                                                                              FROM MovementFloat
-                                                                                   INNER JOIN Movement ON Movement.Id     = MovementFloat.MovementId
-                                                                                                      AND Movement.DescId = zc_Movement_OrderClient()
-                                                                                                      AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                                                              WHERE MovementFloat.DescId = zc_MovementFloat_NPP()
-                                                                             ));
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NPP(), ioId
+                                             , 1 + COALESCE ((SELECT MAX (COALESCE (MovementFloat.ValueData, 0))
+                                                              FROM MovementFloat
+                                                                   INNER JOIN Movement ON Movement.Id     = MovementFloat.MovementId
+                                                                                      AND Movement.DescId = zc_Movement_OrderClient()
+                                                                                      AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                              WHERE MovementFloat.DescId = zc_MovementFloat_NPP()
+                                                             ), 0));
 
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Product_DateBegin(), inProductId, inOperDate + INTERVAL '3 MONTH');     
