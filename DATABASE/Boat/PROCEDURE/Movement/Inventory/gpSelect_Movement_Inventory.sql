@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitName TVarChar
              , Comment TVarChar 
              , isList Boolean
+             
              )
 AS
 $BODY$

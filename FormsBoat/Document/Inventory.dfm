@@ -39,7 +39,6 @@ object InventoryForm: TInventoryForm
         Height = 341
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 3
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -307,6 +306,51 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 196
+          end
+          object FromName: TcxGridDBColumn
+            Caption = 'Kunden'
+            DataBinding.FieldName = 'FromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 120
+          end
+          object InvNumberFull_OrderClient: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumberFull_OrderClient'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormOrderClientItem
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            Width = 70
+          end
+          object CIN: TcxGridDBColumn
+            Caption = 'CIN Nr.'
+            DataBinding.FieldName = 'CIN'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 100
+          end
+          object ProductName: TcxGridDBColumn
+            Caption = 'Boat'
+            DataBinding.FieldName = 'ProductName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 100
           end
           object OperDate_protocol: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1055#1088#1086#1090#1086#1082#1086#1083')'
@@ -587,7 +631,7 @@ object InventoryForm: TInventoryForm
     end
     object Panel4: TPanel
       Left = 9
-      Top = 144
+      Top = 145
       Width = 326
       Height = 33
       TabOrder = 15
@@ -686,7 +730,7 @@ object InventoryForm: TInventoryForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 22
-    Top = 231
+    Top = 271
     DockControlHeights = (
       0
       0
@@ -925,13 +969,13 @@ object InventoryForm: TInventoryForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 81
-    Top = 232
+    Left = 89
+    Top = 296
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 51
-    Top = 231
+    Left = 43
+    Top = 263
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1963,6 +2007,56 @@ object InventoryForm: TInventoryForm
       ImageIndex = 74
       WithoutNext = True
     end
+    object actChoiceFormOrderClientItem: TOpenChoiceForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
+      ImageIndex = 1
+      FormName = 'TOrderClientJournalChoiceItemForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceItemForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ProductName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProductName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberFull_OrderClient'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_OrderClient'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -2035,6 +2129,14 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS
@@ -2047,6 +2149,14 @@ object InventoryForm: TInventoryForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2109,8 +2219,8 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 150
-    Top = 287
+    Left = 38
+    Top = 463
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

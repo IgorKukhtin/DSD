@@ -820,6 +820,9 @@ type
     procedure cxImageInstructionsClick(Sender: TObject);
     procedure acrRefreshNameExecute(Sender: TObject);
     procedure TimerTrayIconPUSHTimer(Sender: TObject);
+    procedure Color_IPEStylesGetContentStyle(Sender: TcxCustomGridTableView;
+      ARecord: TcxCustomGridRecord; AItem: TcxCustomGridTableItem;
+      var AStyle: TcxStyle);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -8278,14 +8281,32 @@ begin
   begin
     if PlanEmployeeCDS.Locate('GoodsCode', ARecord.Values[MainColCode.Index], []) then
     begin
+      if PlanEmployeeCDS.FieldByName('isFixedPercent').AsBoolean then
+        AHintText := 'Фикс. выполн. плана' + #13#10
+      else AHintText := '';
       if PlanEmployeeCDS.FieldByName('AmountPlan').AsCurrency > 0 then
-        AHintText := 'Для выполнения мин. плана - ' + PlanEmployeeCDS.FieldByName('AmountPlan').AsString + #13#10
-      else AHintText := 'Мин. план выполнен' + #13#10;
+        AHintText := AHintText + 'Для выполнения мин. плана - ' + PlanEmployeeCDS.FieldByName('AmountPlan').AsString + #13#10
+      else AHintText := AHintText + 'Мин. план выполнен' + #13#10;
       if PlanEmployeeCDS.FieldByName('AmountPlanAward').AsCurrency > 0 then
         AHintText := AHintText + 'Для выполнения плана для премии - ' + PlanEmployeeCDS.FieldByName('AmountPlanAward').AsString
       else AHintText := AHintText + 'План для премии выполнен';
       AIsHintMultiLine := False;
     end;
+  end;
+end;
+
+procedure TMainCashForm2.Color_IPEStylesGetContentStyle(
+  Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
+  AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
+begin
+  FStyle.Assign(MainGridDBTableView.Styles.Content);
+  try
+    if not PlanEmployeeCDS.Active then Exit;
+      if PlanEmployeeCDS.Locate('GoodsCode', ARecord.Values[MainColCode.Index], []) then
+        if PlanEmployeeCDS.FieldByName('isFixedPercent').AsBoolean then
+          FStyle.Color := clYellow;
+  finally
+    AStyle := FStyle;
   end;
 end;
 

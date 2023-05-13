@@ -9,7 +9,8 @@ RETURNS TABLE (UserId Integer,
                GoodsCode Integer,
                Color Integer,
                AmountPlan TFloat,
-               AmountPlanAward TFloat
+               AmountPlanAward TFloat,
+               isFixedPercent Boolean
                )
 AS
 $BODY$
@@ -28,7 +29,8 @@ BEGIN
              GoodsCode Integer,
              Color Integer,
              AmountPlan TFloat,
-             AmountPlanAward TFloat
+             AmountPlanAward TFloat,
+             isFixedPercent Boolean
     ) ON COMMIT DROP;
       
     BEGIN
@@ -43,11 +45,12 @@ BEGIN
          INSERT INTO tmpResultData 
           VALUES (vbUserId, vbRec.GoodsCode, CASE WHEN vbRec.AmountCash < vbRec.AmountPlanCash THEN 1       -- Red
                                                   WHEN vbRec.AmountCash < vbRec.AmountPlanAwardCash 
-                                                   AND COALESCE(vbRec.AmountPlanAwardCash, 0) > 0 THEN 2  -- Green
+                                                   AND COALESCE(vbRec.AmountPlanAwardCash, 0) > 0 THEN 2    -- Green
                                                   ELSE 3 END::Integer,                                      -- Blue
                   CASE WHEN vbRec.AmountCash < vbRec.AmountPlanCash THEN vbRec.AmountPlanCash - vbRec.AmountCash ELSE 0 END,
                   CASE WHEN vbRec.AmountCash < vbRec.AmountPlanAwardCash
-                        AND COALESCE(vbRec.AmountPlanAwardCash, 0) > 0 THEN vbRec.AmountPlanAwardCash - vbRec.AmountCash ELSE 0 END);
+                        AND COALESCE(vbRec.AmountPlanAwardCash, 0) > 0 THEN vbRec.AmountPlanAwardCash - vbRec.AmountCash ELSE 0 END,
+                  vbRec.isFixedPercent);
       END LOOP;
     EXCEPTION
       WHEN others THEN 
@@ -71,4 +74,4 @@ $BODY$
 
 -- тест
 -- 
-select * from gpSelect_GetImplementationPlanEmployeeCash(inSession := '9616498');
+select * from gpSelect_GetImplementationPlanEmployeeCash(inSession := '12625219');

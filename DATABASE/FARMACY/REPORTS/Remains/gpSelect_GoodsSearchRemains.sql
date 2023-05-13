@@ -25,6 +25,7 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , AmountIncome TFloat
              , AmountReserve TFloat
              , AmountAll TFloat
+             , Price  TFloat
              , PriceSale  TFloat
              , SummaSale TFloat
              , DateChange TDateTime
@@ -116,7 +117,7 @@ BEGIN
                    
     -- Цена со скидкой
     CREATE TEMP TABLE tmpPriceChangeUnit ON COMMIT DROP AS
-    SELECT DISTINCT ObjectLink_PriceChange_Goods.ChildObjectId        AS GoodsId
+    SELECT DISTINCT ObjectLink_PriceChange_Goods.ChildObjectId                 AS GoodsId
                   , ObjectLink_PriceChange_Unit.ChildObjectId                  AS UnitId
                   , PriceChange_Value_Unit.ValueData                           AS PriceChange
                   , PriceChange_FixPercent_Unit.ValueData                      AS FixPercent
@@ -245,6 +246,11 @@ BEGIN
                 WHEN COALESCE (tmpPromoBonus.PromoBonus, 0) > 0
                 THEN Round(Price_Value.ValueData * 100.0 / (100.0 + tmpPromoBonus.MarginPercent) * 
                           (100.0 - tmpPromoBonus.PromoBonus + tmpPromoBonus.MarginPercent) / 100, 2)
+                ELSE ROUND (Price_Value.ValueData, 2)
+           END :: TFloat                           AS PriceSale
+         , CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                 AND ObjectFloat_Goods_Price.ValueData > 0
+                THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
                 ELSE ROUND (Price_Value.ValueData, 2)
            END :: TFloat                           AS Price
          , Price_DateChange.ValueData              AS DateChange 
@@ -646,8 +652,9 @@ BEGIN
              , COALESCE (tmpReserve.Amount, 0)                                       :: TFloat AS AmountReserve
              , (COALESCE (tmpData.Amount,0) + COALESCE (tmpIncome.AmountIncome,0) +
                COALESCE (tmpDeferredSendIn.Amount, 0))                               :: TFloat AS AmountAll
-             , COALESCE (Object_Price.Price, 0)                                      :: TFloat AS PriceSale
-             , (tmpData.Amount * COALESCE (Object_Price.Price, 0))                   :: TFloat AS SummaSale
+             , COALESCE (Object_Price.Price, 0)                                      :: TFloat AS Price
+             , COALESCE (Object_Price.PriceSale, 0)                                  :: TFloat AS PriceSale
+             , (tmpData.Amount * COALESCE (Object_Price.PriceSale, 0))               :: TFloat AS SummaSale
              , Object_Price.DateChange                                                         AS DateChange 
              , CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE (tmpIncome.SummSale,0) / COALESCE (tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome
              , tmpData.MinExpirationDate  ::TDateTime

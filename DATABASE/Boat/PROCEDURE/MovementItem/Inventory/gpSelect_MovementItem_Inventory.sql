@@ -22,6 +22,8 @@ RETURNS TABLE (Id Integer
              , OperDate_protocol TDateTime, UserName_protocol TVarChar
              , Ord Integer
              , isErased Boolean
+             , MovementId_OrderClient Integer, InvNumber_OrderClient TVarChar, InvNumberFull_OrderClient TVarChar, OperDate_OrderClient TDateTime
+             , FromName TVarChar, ProductName TVarChar, CIN TVarChar
               )
 AS
 $BODY$
@@ -54,6 +56,7 @@ BEGIN
                            , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
                            , MILinkObject_Partner.ObjectId                AS PartnerId
                            , MovementItem.isErased
+                           , MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
@@ -71,6 +74,10 @@ BEGIN
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
                                                              ON MILinkObject_Partner.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_Partner.DescId         = zc_MILinkObject_Partner()
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                       ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                        )
 
      , tmpRemains AS (SELECT Container.Id       AS ContainerId
@@ -158,7 +165,14 @@ BEGIN
 
            , ROW_NUMBER() OVER (ORDER BY tmpMI.Id ASC) :: Integer AS Ord
            , tmpMI.isErased
-
+           
+           , Movement_OrderClient.Id                                   AS MovementId_OrderClient
+           , zfConvert_StringToNumber (Movement_OrderClient.InvNumber) :: TVarChar AS InvNumber_OrderClient
+           , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
+           , Movement_OrderClient.OperDate                             AS OperDate_OrderClient
+           , Object_From.ValueData                      AS FromName 
+           , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
+           , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,       Object_Product.isErased) AS CIN
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
 
@@ -201,6 +215,20 @@ BEGIN
 
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = tmpMI.Id
 
+            LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = Movement_OrderClient.Id
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
+                                         ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
+                                        AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+            LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId  
+
+            LEFT JOIN ObjectString AS ObjectString_CIN
+                                   ON ObjectString_CIN.ObjectId = Object_Product.Id
+                                  AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
        ;
 
 END;

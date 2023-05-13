@@ -177,6 +177,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'OperDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 88
@@ -265,16 +266,17 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             Width = 150
           end
           object GoodsName_basis: TcxGridDBColumn
-            Caption = '***'#1059#1079#1083#1099
+            Caption = #1059#1079#1083#1099
             DataBinding.FieldName = 'GoodsName_basis'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 150
           end
           object GoodsName: TcxGridDBColumn
-            Caption = #1059#1079#1083#1099
+            Caption = '***'#1059#1079#1083#1099
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -678,7 +680,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'ReceiptLevelName;ObjectName'
+          IndexFieldNames = 'GoodsGroupNameFull;ReceiptLevelName;ObjectName'
           GridView = cxGridDBTableView
         end>
       Params = <
