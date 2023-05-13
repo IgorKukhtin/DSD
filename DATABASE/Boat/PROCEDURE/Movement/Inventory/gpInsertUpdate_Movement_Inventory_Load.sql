@@ -31,7 +31,7 @@ BEGIN
    THEN
        
      -- проверка <inPLZ>
-     IF TRIM (COALESCE (inPartnerName, '')) = ''
+     IF 1=0 AND TRIM (COALESCE (inPartnerName, '')) = ''
      THEN
          RAISE EXCEPTION 'Ошибка.Значение <Partner> должно быть установлено.';
      END IF;
@@ -88,7 +88,7 @@ BEGIN
                       ); 
      END IF;
 
-     --пробуем найти по наименованию
+     -- пробуем найти по наименованию
      IF COALESCE (vbGoodsId,0) = 0
      THEN
          vbGoodsId := (SELECT Object.Id
