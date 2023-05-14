@@ -334,6 +334,14 @@ object InventoryItemEdit_limitForm: TInventoryItemEdit_limitForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmount'
         Value = 0.000000000000000000
         Component = ceOperCount
@@ -664,6 +672,21 @@ object InventoryItemEdit_limitForm: TInventoryItemEdit_limitForm
         Value = Null
         Component = ceOperPriceList
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 140

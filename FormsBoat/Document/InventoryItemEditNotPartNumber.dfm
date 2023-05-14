@@ -337,6 +337,14 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmount'
         Value = 0.000000000000000000
         Component = ceOperCount
@@ -661,6 +669,21 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         Component = ceOperPriceList
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 132
     Top = 104
@@ -854,8 +877,8 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 64
-    Top = 208
+    Left = 40
+    Top = 192
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = '0'

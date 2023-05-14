@@ -17,6 +17,7 @@ RETURNS TABLE (Id  Integer
   
              , UnitId Integer
              , UnitName TVarChar
+             , PartnerId Integer
              , PartnerName TVarChar
              , GoodsId Integer
              , GoodsCode Integer
@@ -74,6 +75,7 @@ BEGIN
            
            , Object_Unit.Id                 AS UnitId
            , Object_Unit.ValueData          AS UnitName
+           , Object_Partner.Id              AS PartnerId
            , Object_Partner.ValueData       AS PartnerName
 
            , Object_Goods.Id                AS GoodsId

@@ -333,7 +333,8 @@ BEGIN
                 , (SELECT tmp.ioId
                    FROM lpInsertUpdate_MovementItem_Inventory (ioId              := 0
                                                              , inMovementId      := inMovementId
-                                                             , inGoodsId         := tmp.GoodsId
+                                                             , inMovementId_OrderClient := Null ::Integer
+                                                             , inGoodsId         := tmp.GoodsId 
                                                              , inPartnerId       := Null ::Integer
                                                              , ioAmount          := 0
                                                              , inTotalCount      := 0

@@ -66,6 +66,9 @@ type
     ceAmountRemains: TcxCurrencyEdit;
     cxLabel10: TcxLabel;
     ceAmountDiff: TcxCurrencyEdit;
+    cxLabel15: TcxLabel;
+    edOrderClient: TcxButtonEdit;
+    GuidesOrderClient: TdsdGuides;
   private
     { Private declarations }
   public
