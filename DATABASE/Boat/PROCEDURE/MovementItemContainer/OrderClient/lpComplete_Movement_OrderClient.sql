@@ -630,6 +630,7 @@ BEGIN
          WHERE _tmpItem_Child.ObjectId_parent = tmp.ObjectId_parent
         ;
 
+--            RAISE EXCEPTION 'Ошибка-1.  <%>', (select count(*) FROM _tmpItem_Child where Key_Id_text ilike '%RAL%');
 
          -- Находим ObjectId_parent для Boat Structure
          UPDATE _tmpItem_Child SET ObjectId_parent_find = _tmpItem_find.ObjectId_parent_find
@@ -1484,6 +1485,7 @@ BEGIN
                                      -- здесь новый
                                    , _tmpReceiptItems_new.GoodsId_child
                               FROM _tmpReceiptItems_new
+                              WHERE _tmpReceiptItems_new.GoodsId_child_old > 0
                              ) AS _tmpReceiptItems_new
                                ON _tmpReceiptItems_new.ObjectId_parent_old = _tmpItem.ObjectId_parent
                               AND _tmpItem.GoodsId_child > 0
@@ -1500,6 +1502,16 @@ BEGIN
           --AND _tmpItem_Detail.ColorPatternId     = _tmpItem.ColorPatternId)
               )
        ;
+
+/*    RAISE EXCEPTION 'Ошибка. <%>    <%>    <%>  <%> '
+-- , (select count(*) from MovementItem join Object on  Object.Id = MovementItem.ObjectId and Object.ValueData ilike '%Капот AGL-280-RAL 5004%' where MovementItem.MovementId= inMovementId and MovementItem.DescId = zc_MI_Child() and MovementItem.isErased= false)
+    , (select count(*) from MovementItem join Object on  Object.Id = MovementItem.ObjectId and Object.ObjectCode = 197570 where MovementItem.MovementId= inMovementId and MovementItem.DescId = zc_MI_Detail() and MovementItem.isErased= false)
+ 
+    , (select lfGet_Object_ValueData_sh (max (_tmpReceiptItems_new.ObjectId)) from _tmpReceiptItems_new join Object on  Object.Id = _tmpReceiptItems_new.ObjectId  and _tmpReceiptItems_new.ObjectId_parent_old in (252244) and _tmpReceiptItems_new.GoodsId_child <> 0)
+    , (select                           (max (_tmpReceiptItems_new.ObjectId)) from _tmpReceiptItems_new join Object on  Object.Id = _tmpReceiptItems_new.ObjectId  and _tmpReceiptItems_new.ObjectId_parent_old not in (252234, 19761, 19749, 6357))
+    , (select  count(*) from _tmpReceiptItems_new join Object on  Object.Id = _tmpReceiptItems_new.ObjectId  and _tmpReceiptItems_new.ObjectId  in (6357))
+    ;*/
+
 
         -- !!!3.элементы документа, по партиям!!!
         WITH -- только ObjectId
@@ -1803,3 +1815,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUpdate_Status_OrderClient (inMovementId:= 662, inStatusCode:= 2, inIsChild_Recalc:= 'True', inSession:= '5');
+-- select * from gpUpdate_Status_OrderClient(inMovementId := 703 , inStatusCode := 2 , inIsChild_Recalc := 'False' ,  inSession := '5');

@@ -159,7 +159,7 @@ BEGIN
           -- сохранили <Ёлемент документа>
           PERFORM lpInsertUpdate_MovementItem_Inventory (ioId                    := COALESCE (vbMovementItemId,0)
                                                        , inMovementId            := inMovementId
-                                                       , inMovementId_OrderClient:= NULL
+                                                       , inMovementId_OrderClient:= 0
                                                        , inGoodsId               := vbGoodsId  
                                                        , InPartnerId             := vbPartnerId
                                                        , ioAmount                := inRemains ::TFloat

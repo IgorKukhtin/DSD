@@ -97,7 +97,7 @@ BEGIN
              , tmp.PartNumber
              , tmp.OperCount
              , COALESCE ((SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = tmp.GoodsId), 0) AS OperPrice
-             , COALESCE (MILinkObject_Partner.ObjectId, (SELECT tmpPriceList.PartnerId  FROM tmpPriceList WHERE tmpPriceList.GoodsId = tmp.GoodsId), 0) AS PartnerId
+             , tmp.PartnerId
                -- УП
              , tmp.InfoMoneyGroupId
              , tmp.InfoMoneyDestinationId
@@ -108,6 +108,8 @@ BEGIN
                      -- факт остаток
                    , MovementItem.Amount              AS OperCount
                      --
+                   , COALESCE (MILinkObject_Partner.ObjectId, (SELECT tmpPriceList.PartnerId  FROM tmpPriceList WHERE tmpPriceList.GoodsId = MovementItem.ObjectId), 0) AS PartnerId
+                     -- 
                    , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
                      -- Управленческая группа
                    , View_InfoMoney.InfoMoneyGroupId
@@ -331,19 +333,20 @@ BEGIN
      UPDATE _tmpItem_Child SET MovementItemId = tmp.MovementItemId
      FROM (SELECT tmp.GoodsId, tmp.PartNumber
                 , (SELECT tmp.ioId
-                   FROM lpInsertUpdate_MovementItem_Inventory (ioId              := 0
-                                                             , inMovementId      := inMovementId
-                                                             , inMovementId_OrderClient := Null ::Integer
-                                                             , inGoodsId         := tmp.GoodsId 
-                                                             , inPartnerId       := Null ::Integer
-                                                             , ioAmount          := 0
-                                                             , inTotalCount      := 0
-                                                             , inTotalCount_old  := 0
-                                                             , ioPrice           := 0
-                                                             , inPartNumber      := tmp.PartNumber
-                                                             , inComment         := ''
-                                                             , inUserId          := inUserId
-                                                              ) AS tmp) AS MovementItemId
+                   FROM lpInsertUpdate_MovementItem_Inventory (ioId                     := 0
+                                                             , inMovementId             := inMovementId
+                                                             , inMovementId_OrderClient := 0
+                                                             , inGoodsId                := tmp.GoodsId 
+                                                             , inPartnerId              := 0
+                                                             , ioAmount                 := 0
+                                                             , inTotalCount             := 0
+                                                             , inTotalCount_old         := 0
+                                                             , ioPrice                  := 0
+                                                             , inPartNumber             := tmp.PartNumber
+                                                             , inComment                := ''
+                                                             , inUserId                 := inUserId
+                                                              ) AS tmp
+                  ) AS MovementItemId
 
            FROM (SELECT DISTINCT _tmpItem_Child.GoodsId, _tmpItem_Child.PartNumber 
                  FROM _tmpItem_Child
