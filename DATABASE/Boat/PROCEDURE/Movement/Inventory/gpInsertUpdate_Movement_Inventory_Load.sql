@@ -157,17 +157,18 @@ BEGIN
                               );
 
           -- сохранили <Ёлемент документа>
-          PERFORM lpInsertUpdate_MovementItem_Inventory (ioId              := COALESCE (vbMovementItemId,0)
-                                                       , inMovementId      := inMovementId
-                                                       , inGoodsId         := vbGoodsId  
-                                                       , InPartnerId       := vbPartnerId
-                                                       , ioAmount          := inRemains ::TFloat
-                                                       , inTotalCount      := 0         ::TFloat
-                                                       , inTotalCount_old  := 0         ::TFloat
-                                                       , ioPrice           := 0         ::TFloat
-                                                       , inPartNumber      := ''        ::TVarChar
-                                                       , inComment         := ''        ::TVarChar
-                                                       , inUserId          := vbUserId
+          PERFORM lpInsertUpdate_MovementItem_Inventory (ioId                    := COALESCE (vbMovementItemId,0)
+                                                       , inMovementId            := inMovementId
+                                                       , inMovementId_OrderClient:= NULL
+                                                       , inGoodsId               := vbGoodsId  
+                                                       , InPartnerId             := vbPartnerId
+                                                       , ioAmount                := inRemains ::TFloat
+                                                       , inTotalCount            := 0         ::TFloat
+                                                       , inTotalCount_old        := 0         ::TFloat
+                                                       , ioPrice                 := 0         ::TFloat
+                                                       , inPartNumber            := ''        ::TVarChar
+                                                       , inComment               := ''        ::TVarChar
+                                                       , inUserId                := vbUserId
                                                         );
      END IF;
 
