@@ -25,6 +25,8 @@ RETURNS TABLE (Id                 Integer
              , TotalCount         TFloat
              , AmountRemains      TFloat
              , AmountDiff         TFloat
+             , MovementId_OrderClient Integer
+             , InvNumber_OrderClient  TVarChar
               )
 AS
 $BODY$
@@ -65,11 +67,15 @@ BEGIN
                      )
           , tmpMI AS (SELECT MI.ObjectId                                  AS GoodsId
                            , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                           , MAX (MIFloat_MovementId.ValueData) :: Integer AS MovementId_OrderClient
                            , SUM (MI.Amount)                              AS Amount
                       FROM MovementItem AS MI
                            LEFT JOIN MovementItemString AS MIString_PartNumber
                                                         ON MIString_PartNumber.MovementItemId = MI.Id
                                                        AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
+                           LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                       ON MIFloat_MovementId.MovementItemId = MI.Id
+                                                      AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                       WHERE MI.MovementId = inMovementId
                         AND MI.DescId     = zc_MI_Master()
                         AND MI.ObjectId   = inGoodsId
@@ -77,6 +83,7 @@ BEGIN
                         AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
                       GROUP BY MI.ObjectId
                              , COALESCE (MIString_PartNumber.ValueData, '')
+                             --, MIFloat_MovementId.ValueData :: Integer
                      )
            SELECT -1                               :: Integer AS Id
                 , Object_Goods.Id                             AS GoodsId
@@ -95,6 +102,10 @@ BEGIN
                 , (/*COALESCE (inAmount,1) +*/ COALESCE (tmpMI.Amount, 0))        :: TFloat AS TotalCount
                 , COALESCE (tmpRemains.Remains, 0)                                :: TFloat AS AmountRemains
                 , (COALESCE (tmpMI.Amount, 0) - COALESCE (tmpRemains.Remains, 0)) :: TFloat AS AmountDiff
+
+                , Movement_OrderClient.Id                                   AS MovementId_OrderClient
+                , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumber_OrderClient
+
 
            FROM Object AS Object_Goods
                 LEFT JOIN tmpRemains ON tmpRemains.GoodsId    = Object_Goods.Id
@@ -121,6 +132,7 @@ BEGIN
                                        ON ObjectString_Article.ObjectId = Object_Goods.Id
                                       AND ObjectString_Article.DescId = zc_ObjectString_Article()
 
+                LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
            WHERE Object_Goods.Id = inGoodsId
              AND inGoodsId <> 0
 
@@ -141,7 +153,10 @@ BEGIN
                 , 1  ::TFloat           AS OperCount
                 , 0  ::TFloat           AS TotalCount
                 , 0  ::TFloat           AS AmountRemains
-                , 0  ::TFloat           AS AmountDiff
+                , 0  ::TFloat           AS AmountDiff 
+                , 0                     AS MovementId_OrderClient
+                , '' ::TVarChar         AS InvNumber_OrderClient
+                
            WHERE inGoodsId = 0
           ;
 
@@ -153,6 +168,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.05.23         *
  08.04.22         *
 */
 

@@ -58,6 +58,8 @@ type
     PrintItemsCDS: TClientDataSet;
     OperDate: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    MonthName1: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1116,6 +1116,21 @@ object Goods_limitForm: TGoods_limitForm
           ComponentItem = 'EAN'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -1632,6 +1647,10 @@ object Goods_limitForm: TGoods_limitForm
     TextEdit = edSearchArticle
     DataSet = ClientDataSet
     Column = Article_all
+    ColumnList = <
+      item
+        Column = Article_all
+      end>
     ActionNumber1 = dsdChoiceGuides
     CheckBoxList = <>
     Left = 352
@@ -1641,6 +1660,10 @@ object Goods_limitForm: TGoods_limitForm
     TextEdit = edSearchCode
     DataSet = ClientDataSet
     Column = Code
+    ColumnList = <
+      item
+        Column = Code
+      end>
     ActionNumber1 = dsdChoiceGuides
     CheckBoxList = <>
     Left = 416
@@ -1650,6 +1673,10 @@ object Goods_limitForm: TGoods_limitForm
     TextEdit = edSearchName
     DataSet = ClientDataSet
     Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end>
     ActionNumber1 = dsdChoiceGuides
     CheckBoxList = <>
     Left = 504

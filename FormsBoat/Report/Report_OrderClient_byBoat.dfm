@@ -434,6 +434,102 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             HeaderHint = #1076#1077#1082#1072#1073#1088#1100
             Width = 43
           end
+          object MonthName1: TcxGridDBColumn
+            Caption = '*01'
+            DataBinding.FieldName = 'MonthName1'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MonthName2: TcxGridDBColumn
+            Caption = '*02'
+            DataBinding.FieldName = 'MonthName2'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MonthName3: TcxGridDBColumn
+            Caption = '*03'
+            DataBinding.FieldName = 'MonthName3'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MonthName4: TcxGridDBColumn
+            Caption = '*04'
+            DataBinding.FieldName = 'MonthName4'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MonthName5: TcxGridDBColumn
+            Caption = '*05'
+            DataBinding.FieldName = 'MonthName5'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MonthName6: TcxGridDBColumn
+            Caption = '*06'
+            DataBinding.FieldName = 'MonthName6'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MonthName7: TcxGridDBColumn
+            Caption = '*07'
+            DataBinding.FieldName = 'MonthName7'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MonthName8: TcxGridDBColumn
+            Caption = '*08'
+            DataBinding.FieldName = 'MonthName8'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MonthName9: TcxGridDBColumn
+            Caption = '*09'
+            DataBinding.FieldName = 'MonthName9'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MonthName10: TcxGridDBColumn
+            Caption = '*10'
+            DataBinding.FieldName = 'MonthName10'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MonthName11: TcxGridDBColumn
+            Caption = '*11'
+            DataBinding.FieldName = 'MonthName11'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object MonthName12: TcxGridDBColumn
+            Caption = '*12'
+            DataBinding.FieldName = 'MonthName12'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
         end
       end
     end
@@ -466,9 +562,9 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       ExplicitTop = 5
     end
     inherited cxLabel2: TcxLabel
-      Left = 222
+      Left = 218
       Top = 5
-      ExplicitLeft = 222
+      ExplicitLeft = 218
       ExplicitTop = 5
     end
     object cbisDetail: TcxCheckBox
@@ -478,6 +574,13 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       Properties.ReadOnly = False
       TabOrder = 4
       Width = 136
+    end
+    object cxLabel3: TcxLabel
+      Left = 754
+      Top = 5
+      Caption = #1055#1077#1088#1074#1099#1081' '#1084#1077#1089#1103#1094' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1091#1077#1090' '#1084#1077#1089#1103#1094#1091' '#1053#1072#1095#1072#1083#1072' '#1087#1077#1088#1080#1086#1076#1072
+      Style.BorderColor = clHighlightText
+      Style.TextColor = cl3DDkShadow
     end
   end
   object lbSearchArticle: TcxLabel [2]

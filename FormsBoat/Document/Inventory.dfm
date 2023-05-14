@@ -345,11 +345,18 @@ object InventoryForm: TInventoryForm
           object ProductName: TcxGridDBColumn
             Caption = 'Boat'
             DataBinding.FieldName = 'ProductName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormOrderClientItem
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-            Options.Editing = False
             Width = 100
           end
           object OperDate_protocol: TcxGridDBColumn
@@ -1492,6 +1499,21 @@ object InventoryForm: TInventoryForm
           ComponentItem = 'Article'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -2015,13 +2037,13 @@ object InventoryForm: TInventoryForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
       ImageIndex = 1
-      FormName = 'TOrderClientJournalChoiceItemForm'
-      FormNameParam.Value = 'TOrderClientJournalChoiceItemForm'
+      FormName = 'TOrderClientJournalChoiceForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'ProductName'
+          Name = 'ProductName_Full'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ProductName'

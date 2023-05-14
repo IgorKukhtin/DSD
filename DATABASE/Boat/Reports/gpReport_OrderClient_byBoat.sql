@@ -42,15 +42,32 @@ RETURNS TABLE  (MovementId Integer
               , Amount10   TFloat
               , Amount11   TFloat
               , Amount12   TFloat
+
+              , MonthName1    TVarChar
+              , MonthName2    TVarChar
+              , MonthName3    TVarChar
+              , MonthName4    TVarChar
+              , MonthName5    TVarChar
+              , MonthName6    TVarChar
+              , MonthName7    TVarChar
+              , MonthName8    TVarChar
+              , MonthName9    TVarChar
+              , MonthName10   TVarChar
+              , MonthName11   TVarChar
+              , MonthName12   TVarChar
 )
 AS
 $BODY$
  DECLARE vbUserId Integer;
+ DECLARE vbMonth Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Goods());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpGetUserBySession (inSession);  
+     
+     --
+     vbMonth := (EXTRACT (MONTH FROM inStartDate) -1);
 
     RETURN QUERY
     WITH
@@ -69,6 +86,8 @@ BEGIN
                          , Movement.InvNumber
                          , MovementLinkObject_Product.ObjectId AS ProductId
                          , tmpProduct.DateBegin
+                         , zfCalc_MonthName (tmpProduct.DateBegin) AS MonthName
+                         , CASE WHEN EXTRACT (MONTH FROM tmpProduct.DateBegin)-vbMonth >0 THEN EXTRACT (MONTH FROM tmpProduct.DateBegin)-vbMonth ELSE EXTRACT (MONTH FROM tmpProduct.DateBegin)-vbMonth+12 END AS MonthBegin
                     FROM tmpProduct
                         INNER JOIN MovementLinkObject AS MovementLinkObject_Product
                                                       ON MovementLinkObject_Product.ObjectId = tmpProduct.Id
@@ -79,7 +98,8 @@ BEGIN
                     )
     --
   , tmpMI_Detail AS (SELECT Movement.ProductId
-                          , Movement.DateBegin
+                          , Movement.MonthName
+                          , Movement.MonthBegin
                           , Movement.OperDate 
                           , Movement.InvNumber
                           , Movement.Id AS MovementId
@@ -152,7 +172,8 @@ BEGIN
                              , tmpItem_Detail.MovementId
                              , tmpItem_Detail.InvNumber
                              , tmpItem_Detail.OperDate
-                             , tmpItem_Detail.DateBegin
+                             , tmpItem_Detail.MonthName
+                             , tmpItem_Detail.MonthBegin
                         FROM tmpMI_Detail AS tmpItem_Detail
                         WHERE tmpItem_Detail.GoodsId_basis > 0
                        UNION ALL
@@ -170,7 +191,8 @@ BEGIN
                              , tmpItem_Detail.MovementId
                              , tmpItem_Detail.InvNumber
                              , tmpItem_Detail.OperDate
-                             , tmpItem_Detail.DateBegin
+                             , tmpItem_Detail.MonthName
+                             , tmpItem_Detail.MonthBegin
                         FROM tmpMI_Detail AS tmpItem_Detail
                        )
 
@@ -184,18 +206,18 @@ BEGIN
                           , CASE WHEN inisDetail = TRUE THEN tmp.GoodsId ELSE 0 END AS GoodsId
                           , CASE WHEN inisDetail = TRUE THEN tmp.ReceiptLevelId ELSE 0 END AS ReceiptLevelId
                           , SUM (tmp.Amount) AS Amount
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 1 THEN tmp.Amount ELSE 0 END) AS Amount1
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 2 THEN tmp.Amount ELSE 0 END) AS Amount2
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 3 THEN tmp.Amount ELSE 0 END) AS Amount3
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 4 THEN tmp.Amount ELSE 0 END) AS Amount4
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 5 THEN tmp.Amount ELSE 0 END) AS Amount5
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 6 THEN tmp.Amount ELSE 0 END) AS Amount6
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 7 THEN tmp.Amount ELSE 0 END) AS Amount7
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 8 THEN tmp.Amount ELSE 0 END) AS Amount8
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 9 THEN tmp.Amount ELSE 0 END) AS Amount9
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 10 THEN tmp.Amount ELSE 0 END) AS Amount10
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 11 THEN tmp.Amount ELSE 0 END) AS Amount11
-                          , SUM (CASE WHEN EXTRACT (MONTH FROM tmp.DateBegin) = 12 THEN tmp.Amount ELSE 0 END) AS Amount12
+                          , SUM (CASE WHEN tmp.MonthBegin = 1 THEN tmp.Amount ELSE 0 END) AS Amount1
+                          , SUM (CASE WHEN tmp.MonthBegin = 2 THEN tmp.Amount ELSE 0 END) AS Amount2
+                          , SUM (CASE WHEN tmp.MonthBegin = 3 THEN tmp.Amount ELSE 0 END) AS Amount3
+                          , SUM (CASE WHEN tmp.MonthBegin = 4 THEN tmp.Amount ELSE 0 END) AS Amount4
+                          , SUM (CASE WHEN tmp.MonthBegin = 5 THEN tmp.Amount ELSE 0 END) AS Amount5
+                          , SUM (CASE WHEN tmp.MonthBegin = 6 THEN tmp.Amount ELSE 0 END) AS Amount6
+                          , SUM (CASE WHEN tmp.MonthBegin = 7 THEN tmp.Amount ELSE 0 END) AS Amount7
+                          , SUM (CASE WHEN tmp.MonthBegin = 8 THEN tmp.Amount ELSE 0 END) AS Amount8
+                          , SUM (CASE WHEN tmp.MonthBegin = 9 THEN tmp.Amount ELSE 0 END) AS Amount9
+                          , SUM (CASE WHEN tmp.MonthBegin = 10 THEN tmp.Amount ELSE 0 END) AS Amount10
+                          , SUM (CASE WHEN tmp.MonthBegin = 11 THEN tmp.Amount ELSE 0 END) AS Amount11
+                          , SUM (CASE WHEN tmp.MonthBegin = 12 THEN tmp.Amount ELSE 0 END) AS Amount12
                     FROM tmpItem_Detail AS tmp
                     GROUP BY CASE WHEN inisDetail = TRUE THEN tmp.ProductId ELSE 0 END
                            , CASE WHEN inisDetail = TRUE THEN tmp.MovementId ELSE 0 END
@@ -306,8 +328,6 @@ BEGIN
            , Object_Goods_basis.ValueData         ::TVarChar AS GoodsName_basis
            , Object_Goods.ValueData               ::TVarChar AS GoodsName
            , Object_ReceiptLevel.ValueData        ::TVarChar AS ReceiptLevelName
-           
-           
 
            , tmp.Amount    :: TFloat
            , tmp.Amount1   :: TFloat
@@ -322,6 +342,20 @@ BEGIN
            , tmp.Amount10  :: TFloat
            , tmp.Amount11  :: TFloat
            , tmp.Amount12  :: TFloat
+
+           , zfCalc_MonthName (inStartDate)                      ::TVarChar AS MonthName1
+           , zfCalc_MonthName (inStartDate+ INTERVAL '1 MONTH')  ::TVarChar AS MonthName2
+           , zfCalc_MonthName (inStartDate+ INTERVAL '2 MONTH')  ::TVarChar AS MonthName3
+           , zfCalc_MonthName (inStartDate+ INTERVAL '3 MONTH')  ::TVarChar AS MonthName4
+           , zfCalc_MonthName (inStartDate+ INTERVAL '4 MONTH')  ::TVarChar AS MonthName5
+           , zfCalc_MonthName (inStartDate+ INTERVAL '5 MONTH')  ::TVarChar AS MonthName6
+           , zfCalc_MonthName (inStartDate+ INTERVAL '6 MONTH')  ::TVarChar AS MonthName7
+           , zfCalc_MonthName (inStartDate+ INTERVAL '7 MONTH')  ::TVarChar AS MonthName8
+           , zfCalc_MonthName (inStartDate+ INTERVAL '8 MONTH')  ::TVarChar AS MonthName9
+           , zfCalc_MonthName (inStartDate+ INTERVAL '9 MONTH')  ::TVarChar AS MonthName10
+           , zfCalc_MonthName (inStartDate+ INTERVAL '10 MONTH') ::TVarChar AS MonthName11
+           , zfCalc_MonthName (inStartDate+ INTERVAL '11 MONTH') ::TVarChar AS MonthName12
+
       FROM tmpMI_group AS tmp
            LEFT JOIN tmpGoodsParams ON tmpGoodsParams.ObjectId = tmp.ObjectId
 
@@ -347,4 +381,4 @@ $BODY$
 */
 
 -- тест
---      SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inisDetail := False ,inSession := '5');
+-- SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inisDetail := False ,inSession := '5');
