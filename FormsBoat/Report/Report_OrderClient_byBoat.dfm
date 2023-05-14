@@ -282,6 +282,14 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object GoodsCode: TcxGridDBColumn
+            Caption = 'Interne Nr ('#1091#1079#1083#1099')'
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
           object GoodsName: TcxGridDBColumn
             Caption = '***'#1059#1079#1083#1099
             DataBinding.FieldName = 'GoodsName'
@@ -289,6 +297,14 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 150
+          end
+          object Article_goods: TcxGridDBColumn
+            Caption = 'Artikel Nr ('#1091#1079#1083#1099')'
+            DataBinding.FieldName = 'Article_goods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
