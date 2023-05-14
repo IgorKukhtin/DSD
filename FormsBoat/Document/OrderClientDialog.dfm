@@ -14,6 +14,7 @@ object OrderClientDialogForm: TOrderClientDialogForm
   KeyPreview = True
   OldCreateOrder = False
   ShowHint = True
+  AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -109,5 +110,47 @@ object OrderClientDialogForm: TOrderClientDialogForm
       end>
     Left = 127
     Top = 23
+  end
+  object ActionList: TActionList
+    Left = 16
+    Top = 107
+    object actRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_OrderClient_NPP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioNPP'
+        Value = Null
+        Component = edNPP
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperDate'
+        Value = Null
+        Component = edDateBegin
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 283
+    Top = 12
   end
 end

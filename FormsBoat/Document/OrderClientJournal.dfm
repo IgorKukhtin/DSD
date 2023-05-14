@@ -1697,7 +1697,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           Name = 'NPP'
           Value = Null
-          Component = FormParams
+          Component = ClientDataSet
           ComponentItem = 'NPP'
           DataType = ftFloat
           ParamType = ptInput
@@ -1706,7 +1706,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           Name = 'DateBegin'
           Value = Null
-          Component = FormParams
+          Component = ClientDataSet
           ComponentItem = 'DateBegin'
           DataType = ftDateTime
           ParamType = ptInput
@@ -1724,6 +1724,9 @@ object OrderClientJournalForm: TOrderClientJournalForm
         end
         item
           Action = actUpdateMovement_NPP
+        end
+        item
+          Action = actRefresh
         end>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100
@@ -2157,7 +2160,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       item
         Name = 'inDateBegin'
         Value = Null
-        Component = FormParams
+        Component = ClientDataSet
         ComponentItem = 'DateBegin'
         DataType = ftDateTime
         ParamType = ptInput
@@ -2166,7 +2169,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       item
         Name = 'inNPP'
         Value = Null
-        Component = FormParams
+        Component = ClientDataSet
         ComponentItem = 'NPP'
         DataType = ftFloat
         ParamType = ptInput

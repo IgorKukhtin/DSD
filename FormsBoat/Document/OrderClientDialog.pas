@@ -19,7 +19,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  Vcl.ActnList, dsdAction;
 
 type
   TOrderClientDialogForm = class(TParentForm)
@@ -32,6 +33,9 @@ type
     cxLabel19: TcxLabel;
     edDateBegin: TcxDateEdit;
     cxLabel4: TcxLabel;
+    ActionList: TActionList;
+    actRefresh: TdsdDataSetRefresh;
+    spGet: TdsdStoredProc;
   private
     { Private declarations }
   public
