@@ -180,7 +180,8 @@ BEGIN
          , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
 
          , tmpMaterialOptions.MaterialOptionsName :: TVarChar AS MaterialOptionsName
-         , COALESCE (tmpProdColorPattern.ProdColorName, tmpProdColorPattern_next.ProdColorName, tmpProdColorPattern_next_all.ProdColorName) :: TVarChar AS ProdColorName_pcp
+       --, COALESCE (tmpProdColorPattern.ProdColorName, tmpProdColorPattern_next.ProdColorName, tmpProdColorPattern_next_all.ProdColorName) :: TVarChar AS ProdColorName_pcp
+         , (tmpProdColorPattern.ProdColorName || COALESCE ('*' || tmpProdColorPattern_next.ProdColorName, '*' || tmpProdColorPattern_next_all.ProdColorName, '')) :: TVarChar AS ProdColorName_pcp
 
          , Object_Unit.Id                     AS UnitId
          , Object_Unit.ValueData              AS UnitName
@@ -306,7 +307,7 @@ BEGIN
           LEFT JOIN (SELECT tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
                           , STRING_AGG (tmpReceiptGoodsChild_ProdColorPattern.ProdColorName, ';') AS ProdColorName
                      FROM tmpReceiptGoodsChild_ProdColorPattern
-                     WHERE tmpReceiptGoodsChild_ProdColorPattern.GoodsId > 0 OR tmpReceiptGoodsChild_ProdColorPattern.ProdColorPatternName_all ILIKE 'Stitching%'
+                     WHERE tmpReceiptGoodsChild_ProdColorPattern.GoodsId > 0 /*OR tmpReceiptGoodsChild_ProdColorPattern.ProdColorPatternName_all ILIKE 'Stitching%'*/
                      GROUP BY tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
                     ) AS tmpProdColorPattern
                       ON tmpProdColorPattern.ReceiptGoodsId = Object_ReceiptGoods.Id

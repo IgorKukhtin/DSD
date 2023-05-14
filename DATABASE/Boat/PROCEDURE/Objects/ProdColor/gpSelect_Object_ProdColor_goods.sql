@@ -91,6 +91,12 @@ BEGIN
                                                   AND (Object_GoodsGroup.ValueData ILIKE '%hypalon%'
                                                     OR Object_GoodsGroup.ValueData ILIKE 'Fabric%'
                                                     OR Object_Goods.ObjectCode < 0
+                                                    --
+                                                    OR Object_ProdColor.ValueData ILIKE 'RAL%'
+                                                    --
+                                                    OR Object_ProdColor.ValueData ILIKE 'wei%'
+                                                    OR Object_ProdColor.ValueData ILIKE 'grau'
+                                                    OR Object_ProdColor.ValueData ILIKE 'Schwarz'
                                                       )
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_TaxKind
