@@ -244,7 +244,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
   end
   object cxLabel15: TcxLabel
     Left = 8
-    Top = 200
+    Top = 199
     Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
   end
   object edOrderClient: TcxButtonEdit

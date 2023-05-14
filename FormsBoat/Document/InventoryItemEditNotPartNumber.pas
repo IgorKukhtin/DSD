@@ -66,6 +66,9 @@ type
     cxLabel10: TcxLabel;
     cxLabel9: TcxLabel;
     ceAmountRemains: TcxCurrencyEdit;
+    cxLabel15: TcxLabel;
+    edOrderClient: TcxButtonEdit;
+    GuidesOrderClient: TdsdGuides;
   private
     { Private declarations }
   public

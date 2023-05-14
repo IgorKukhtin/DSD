@@ -2,7 +2,7 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1102
-  ClientHeight = 252
+  ClientHeight = 296
   ClientWidth = 424
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,16 +17,16 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButtonOK: TcxButton
-    Left = 113
-    Top = 213
+    Left = 107
+    Top = 258
     Width = 75
     Height = 25
     Action = actInsertUpdate
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 258
-    Top = 213
+    Left = 252
+    Top = 258
     Width = 75
     Height = 25
     Action = actFormClose
@@ -245,6 +245,23 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
     TabOrder = 25
     Width = 95
   end
+  object cxLabel15: TcxLabel
+    Left = 8
+    Top = 199
+    Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+  end
+  object edOrderClient: TcxButtonEdit
+    Left = 8
+    Top = 219
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 27
+    Width = 407
+  end
   object ActionList: TActionList
     Left = 352
     Top = 133
@@ -321,6 +338,12 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = GuidesGoods
@@ -392,8 +415,8 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 183
-    Top = 199
+    Left = 177
+    Top = 244
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -605,8 +628,8 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
     Top = 60
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 313
-    Top = 192
+    Left = 323
+    Top = 237
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -877,8 +900,8 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 40
-    Top = 192
+    Left = 34
+    Top = 237
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = '0'
@@ -894,5 +917,44 @@ object InventoryItemEditNotPartNumberForm: TInventoryItemEditNotPartNumberForm
       end>
     Left = 232
     Top = 56
+  end
+  object GuidesOrderClient: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderClient
+    Key = '0'
+    FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderClientJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_all'
+        Value = ''
+        Component = GuidesOrderClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductName_Full'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    Left = 144
+    Top = 192
   end
 end
