@@ -231,7 +231,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 75
           end
           object Article: TcxGridDBColumn
             Caption = 'Artikel Nr'
@@ -275,6 +275,13 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             VisibleForCustomization = False
             Width = 150
           end
+          object ProdColorName: TcxGridDBColumn
+            Caption = 'Farbe'
+            DataBinding.FieldName = 'ProdColorName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object GoodsName: TcxGridDBColumn
             Caption = '***'#1059#1079#1083#1099
             DataBinding.FieldName = 'GoodsName'
@@ -291,6 +298,25 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
+          end
+          object Comment_goods: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1091#1079#1083#1099')'
+            DataBinding.FieldName = 'Comment_goods'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+            Options.Editing = False
+            Width = 80
+          end
+          object Comment_Object: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
+            DataBinding.FieldName = 'Comment_Object'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+            Options.Editing = False
+            Width = 80
           end
           object Amount: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086
@@ -783,7 +809,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;ReceiptLevelName;ObjectName'
+          IndexFieldNames = 'GoodsGroupNameFull;ObjectName'
           GridView = cxGridDBTableView
         end>
       Params = <

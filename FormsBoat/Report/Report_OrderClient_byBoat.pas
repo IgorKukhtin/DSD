@@ -60,6 +60,7 @@ type
     InvNumber: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     MonthName1: TcxGridDBColumn;
+    ProdColorName: TcxGridDBColumn;
   private
     { Private declarations }
   public
