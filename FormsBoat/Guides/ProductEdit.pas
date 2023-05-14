@@ -159,6 +159,10 @@ type
     actGet_ProductDocument: TdsdExecStoredProc;
     cxLabel35: TcxLabel;
     edNPP: TcxCurrencyEdit;
+    HeaderExit: THeaderExit;
+    actGet: TdsdExecStoredProc;
+    mactGet: TMultiAction;
+    actInsertUpdate: TdsdExecStoredProc;
   private
     { Private declarations }
   public

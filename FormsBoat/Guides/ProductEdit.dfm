@@ -1078,6 +1078,40 @@ object ProductEditForm: TProductEditForm
         end>
       Caption = 'actInsertUpdate_Photo'
     end
+    object actGet: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end>
+      Caption = 'actGet'
+    end
+    object mactGet: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdate
+        end
+        item
+          Action = actGet
+        end>
+      Caption = 'mactGet'
+    end
+    object actInsertUpdate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actInsertUpdate'
+    end
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Product'
@@ -2575,5 +2609,17 @@ object ProductEditForm: TProductEditForm
     PackSize = 1
     Left = 288
     Top = 216
+  end
+  object HeaderExit: THeaderExit
+    ExitList = <
+      item
+        Control = edDiscountTax
+      end
+      item
+        Control = edDiscountNextTax
+      end>
+    Action = mactGet
+    Left = 520
+    Top = 152
   end
 end
