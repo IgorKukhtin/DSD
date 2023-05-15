@@ -3,7 +3,7 @@ object ProductEditForm: TProductEditForm
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
   ClientHeight = 523
-  ClientWidth = 590
+  ClientWidth = 660
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -297,7 +297,7 @@ object ProductEditForm: TProductEditForm
     Width = 166
   end
   object edDiscountTax: TcxCurrencyEdit
-    Left = 331
+    Left = 333
     Top = 168
     Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
     ParentShowHint = False
@@ -385,7 +385,7 @@ object ProductEditForm: TProductEditForm
   end
   object edTotalSummPVAT: TcxCurrencyEdit
     Left = 331
-    Top = 215
+    Top = 214
     ParentFont = False
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
@@ -712,6 +712,44 @@ object ProductEditForm: TProductEditForm
     ShowHint = True
     TabOrder = 82
     Width = 66
+  end
+  object cxLabel36: TcxLabel
+    Left = 576
+    Top = 149
+    Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
+    Caption = 'C'#1082'. '#1088#1091#1095#1085'., '#1075#1088#1085
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object edSummTax: TcxCurrencyEdit
+    Left = 576
+    Top = 168
+    Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
+    ParentShowHint = False
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    ShowHint = True
+    TabOrder = 84
+    Width = 79
+  end
+  object cxLabel37: TcxLabel
+    Left = 576
+    Top = 195
+    Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
+    Caption = 'C'#1091#1084#1084#1072' '#1092#1072#1082#1090
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object edSummReal: TcxCurrencyEdit
+    Left = 576
+    Top = 215
+    Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
+    ParentShowHint = False
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    ShowHint = True
+    TabOrder = 86
+    Width = 79
   end
   object ActionList: TActionList
     Left = 232
@@ -1219,6 +1257,22 @@ object ProductEditForm: TProductEditForm
         Component = edDiscountNextTax
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummReal'
+        Value = Null
+        Component = edSummReal
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummTax'
+        Value = Null
+        Component = edSummTax
+        DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1746,6 +1800,20 @@ object ProductEditForm: TProductEditForm
         Name = 'AmountIn_remAll'
         Value = Null
         Component = edAmountIn_remAll
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummReal'
+        Value = Null
+        Component = edSummReal
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummTax'
+        Value = Null
+        Component = edSummTax
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
@@ -2619,7 +2687,7 @@ object ProductEditForm: TProductEditForm
         Control = edDiscountNextTax
       end>
     Action = mactGet
-    Left = 520
-    Top = 152
+    Left = 528
+    Top = 160
   end
 end

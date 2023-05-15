@@ -411,6 +411,10 @@ type
     Color_ProdColorValue_Ch2: TcxGridDBColumn;
     Color_ProdColor_ch2: TcxGridDBColumn;
     NPP_ch3: TcxGridDBColumn;
+    cxLabel36: TcxLabel;
+    edSummTax: TcxCurrencyEdit;
+    cxLabel37: TcxLabel;
+    edSummReal: TcxCurrencyEdit;
   private
   public
   end;

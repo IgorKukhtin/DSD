@@ -5,6 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderClient(Integer, TVarChar, T
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderClient(Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderClient(Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderClient(Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderClient(Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                          , Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderClient(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -15,6 +17,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderClient(
     IN inVATPercent          TFloat    , --
     IN inDiscountTax         TFloat    , --
     IN inDiscountNextTax     TFloat    , -- 
+ INOUT ioSummReal            TFloat    ,
+ INOUT ioSummTax             TFloat    ,
     --IN inNPP                 TFloat    , -- Очередность сборки
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
@@ -24,7 +28,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderClient(
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
-AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -33,17 +37,20 @@ BEGIN
     vbUserId := lpGetUserBySession (inSession);
 
     --    
-    ioId := lpInsertUpdate_Movement_OrderClient(ioId, inInvNumber, inInvNumberPartner
-                                         , inOperDate
-                                         , inPriceWithVAT
-                                         , inVATPercent, inDiscountTax, inDiscountNextTax
-                                         --, inNPP
-                                         , inFromId, inToId
-                                         , inPaidKindId
-                                         , inProductId
-                                         , inMovementId_Invoice
-                                         , inComment
-                                         , vbUserId);
+    SELECT tmp.ioId , tmp.ioSummReal , tmp.ioSummTax
+  INTO ioId , ioSummReal, ioSummTax
+    FROM lpInsertUpdate_Movement_OrderClient(ioId, inInvNumber, inInvNumberPartner
+                                              , inOperDate
+                                              , inPriceWithVAT
+                                              , inVATPercent, inDiscountTax, inDiscountNextTax
+                                              , ioSummReal, ioSummTax
+                                              --, inNPP
+                                              , inFromId, inToId
+                                              , inPaidKindId
+                                              , inProductId
+                                              , inMovementId_Invoice
+                                              , inComment
+                                              , vbUserId) AS tmp;
 
 END;
 $BODY$

@@ -62,10 +62,10 @@ object OrderClientForm: TOrderClientForm
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 263
+      Width = 208
     end
     object edTo: TcxButtonEdit
-      Left = 832
+      Left = 870
       Top = 23
       Properties.Buttons = <
         item
@@ -74,7 +74,7 @@ object OrderClientForm: TOrderClientForm
         end>
       Properties.ReadOnly = True
       TabOrder = 2
-      Width = 184
+      Width = 146
     end
     object cxLabel3: TcxLabel
       Left = 268
@@ -85,7 +85,7 @@ object OrderClientForm: TOrderClientForm
       ShowHint = True
     end
     object cxLabel4: TcxLabel
-      Left = 832
+      Left = 870
       Top = 5
       Caption = #1059#1095#1072#1089#1090#1086#1082' '#1091#1095#1077#1090#1072
     end
@@ -119,7 +119,7 @@ object OrderClientForm: TOrderClientForm
       Width = 81
     end
     object edDiscountTax: TcxCurrencyEdit
-      Left = 348
+      Left = 338
       Top = 63
       Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
       ParentShowHint = False
@@ -130,7 +130,7 @@ object OrderClientForm: TOrderClientForm
       Properties.ReadOnly = False
       ShowHint = True
       TabOrder = 5
-      Width = 88
+      Width = 65
     end
     object cxLabel7: TcxLabel
       Left = 1025
@@ -138,10 +138,10 @@ object OrderClientForm: TOrderClientForm
       Caption = '% '#1053#1044#1057
     end
     object cxLabel8: TcxLabel
-      Left = 348
+      Left = 338
       Top = 45
       Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
-      Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085'.)'
+      Caption = '% '#1089#1082'. ('#1086#1089#1085'.)'
       ParentShowHint = False
       ShowHint = True
     end
@@ -173,15 +173,15 @@ object OrderClientForm: TOrderClientForm
       Width = 157
     end
     object cxLabel16: TcxLabel
-      Left = 832
+      Left = 870
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 832
+      Left = 870
       Top = 63
       TabOrder = 18
-      Width = 184
+      Width = 146
     end
     object cxLabel10: TcxLabel
       Left = 1091
@@ -201,12 +201,12 @@ object OrderClientForm: TOrderClientForm
       Width = 107
     end
     object cxLabel15: TcxLabel
-      Left = 537
+      Left = 636
       Top = 45
       Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
     end
     object ceInvoice: TcxButtonEdit
-      Left = 537
+      Left = 635
       Top = 63
       Properties.Buttons = <
         item
@@ -215,19 +215,19 @@ object OrderClientForm: TOrderClientForm
         end>
       Properties.ReadOnly = True
       TabOrder = 22
-      Width = 159
+      Width = 118
     end
     object cxLabel9: TcxLabel
-      Left = 701
+      Left = 763
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1057#1095#1077#1090')'
     end
     object ceComment_Invoice: TcxTextEdit
-      Left = 701
+      Left = 763
       Top = 63
       Properties.ReadOnly = True
       TabOrder = 24
-      Width = 124
+      Width = 101
     end
     object cxLabel12: TcxLabel
       Left = 1137
@@ -326,7 +326,7 @@ object OrderClientForm: TOrderClientForm
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 35
-      Width = 72
+      Width = 64
     end
     object cxLabel19: TcxLabel
       Left = 174
@@ -348,6 +348,44 @@ object OrderClientForm: TOrderClientForm
       ShowHint = True
       TabOrder = 37
       Width = 84
+    end
+    object cxLabel36: TcxLabel
+      Left = 482
+      Top = 45
+      Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
+      Caption = 'C'#1082'. '#1088#1091#1095#1085'., '#1075#1088#1085
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edSummTax: TcxCurrencyEdit
+      Left = 482
+      Top = 63
+      Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
+      ParentShowHint = False
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.00'
+      ShowHint = True
+      TabOrder = 39
+      Width = 76
+    end
+    object cxLabel37: TcxLabel
+      Left = 564
+      Top = 45
+      Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
+      Caption = 'C'#1091#1084#1084#1072' '#1092#1072#1082#1090
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object edSummReal: TcxCurrencyEdit
+      Left = 564
+      Top = 63
+      Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
+      ParentShowHint = False
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.00'
+      ShowHint = True
+      TabOrder = 41
+      Width = 61
     end
   end
   object cxPageControl: TcxPageControl
@@ -2496,9 +2534,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -2556,9 +2591,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -3125,12 +3157,12 @@ object OrderClientForm: TOrderClientForm
     end
   end
   object cxLabel6: TcxLabel
-    Left = 537
+    Left = 482
     Top = 5
     Caption = 'Boat'
   end
   object edProduct: TcxButtonEdit
-    Left = 537
+    Left = 482
     Top = 23
     Properties.Buttons = <
       item
@@ -3139,18 +3171,18 @@ object OrderClientForm: TOrderClientForm
       end>
     Properties.ReadOnly = True
     TabOrder = 4
-    Width = 288
+    Width = 382
   end
   object cxLabel14: TcxLabel
-    Left = 443
+    Left = 409
     Top = 45
     Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081')'
-    Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087'.)'
+    Caption = '% '#1089#1082'. ('#1076#1086#1087'.)'
     ParentShowHint = False
     ShowHint = True
   end
   object edDiscountNextTax: TcxCurrencyEdit
-    Left = 443
+    Left = 409
     Top = 63
     Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081')'
     ParentShowHint = False
@@ -3161,7 +3193,7 @@ object OrderClientForm: TOrderClientForm
     Properties.ReadOnly = False
     ShowHint = True
     TabOrder = 6
-    Width = 88
+    Width = 66
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -4678,6 +4710,22 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioSummReal'
+        Value = Null
+        Component = edSummReal
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummTax'
+        Value = Null
+        Component = edSummTax
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inNPP'
         Value = Null
         DataType = ftFloat
@@ -4781,6 +4829,12 @@ object OrderClientForm: TOrderClientForm
       end
       item
         Control = edPaidKind
+      end
+      item
+        Control = edSummReal
+      end
+      item
+        Control = edSummTax
       end>
     GetStoredProc = spGet
     Left = 824
@@ -5017,6 +5071,20 @@ object OrderClientForm: TOrderClientForm
         Value = Null
         Component = edDateBegin
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummReal'
+        Value = Null
+        Component = edSummReal
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummTax'
+        Value = Null
+        Component = edSummTax
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -5392,8 +5460,8 @@ object OrderClientForm: TOrderClientForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 844
-    Top = 63
+    Left = 812
+    Top = 79
   end
   object GuidesProduct: TdsdGuides
     KeyField = 'Id'
@@ -5447,7 +5515,7 @@ object OrderClientForm: TOrderClientForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 568
+    Left = 624
     Top = 8
   end
   object GuidesBrand: TdsdGuides
@@ -5476,8 +5544,8 @@ object OrderClientForm: TOrderClientForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1143
-    Top = 4
+    Left = 1255
+    Top = 76
   end
   object DBViewAddOnProdColorItems: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
