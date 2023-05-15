@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , DiscountTax TFloat, DiscountNextTax TFloat
                --
              , TotalCount TFloat
-             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
+             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSumm_transport TFloat, TotalSummVAT TFloat
              , SummDiscount_total TFloat
                -- Цена продажи с сайта - без НДС, Basis+options
              , OperPrice_load TFloat
@@ -201,11 +201,21 @@ BEGIN
              , MovementFloat_DiscountTax.ValueData          AS DiscountTax
              , MovementFloat_DiscountNextTax.ValueData      AS DiscountNextTax
              , MovementFloat_TotalCount.ValueData           AS TotalCount
+               -- ИТОГО БЕЗ учета скидки и Транспорта, Сумма продажи без НДС
              , MovementFloat_TotalSummMVAT.ValueData        AS TotalSummMVAT
-             , MovementFloat_TotalSummPVAT.ValueData        AS TotalSummPVAT
+               -- ИТОГО с учетом всех скидок и Транспорта, Сумма продажи с НДС
+             , (MovementFloat_TotalSummPVAT.ValueData + zfCalc_SummWVAT (MovementFloat_TransportSumm_load.ValueData, MovementFloat_VATPercent.ValueData)) :: TFloat AS TotalSummPVAT
+               -- ИТОГО с учетом всех скидок, без Транспорта, Сумма продажи без НДС
              , MovementFloat_TotalSumm.ValueData            AS TotalSumm
-               --
-             , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSumm.ValueData,0)) :: TFloat AS TotalSummVAT
+               -- ИТОГО с учетом всех скидок и Транспорта, Сумма продажи без НДС
+             , (COALESCE (MovementFloat_TotalSumm.ValueData, 0) + COALESCE (MovementFloat_TransportSumm_load.ValueData, 0)) :: TFloat AS TotalSumm_transport
+
+               -- Сумма НДС
+             , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSumm.ValueData,0)
+              + zfCalc_SummWVAT (MovementFloat_TransportSumm_load.ValueData, MovementFloat_VATPercent.ValueData) - COALESCE (MovementFloat_TransportSumm_load.ValueData, 0)
+               ) :: TFloat AS TotalSummVAT
+
+               -- Итоговая сумма скидки по всем % скидки
              , (COALESCE (MovementFloat_TotalSummMVAT.ValueData,0) - COALESCE (MovementFloat_TotalSumm.ValueData,0)) :: TFloat AS SummDiscount_total
                -- Цена продажи с сайта - без НДС, Basis+options
              , MovementFloat_OperPrice_load.ValueData      AS OperPrice_load

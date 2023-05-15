@@ -270,7 +270,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ProdOptItems_Comment(), ioId, inComment);
 
    -- сохранили свойство < ол опций>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_Count(), ioId, inAmount);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_Count(), ioId, CASE WHEN inAmount > 0 THEN inAmount ELSE 1 END);
 
    -- сохранили свойство <PriceIn> - временно убрал, может потом понадобитс€
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceIn(), ioId, 0);

@@ -136,6 +136,7 @@ type
     OperPrice_load: TcxGridDBColumn;
     BasisPrice_load: TcxGridDBColumn;
     TransportSumm_load: TcxGridDBColumn;
+    TotalSumm_transport: TcxGridDBColumn;
   private
   public
   end;

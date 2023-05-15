@@ -217,6 +217,9 @@ type
     bbUpdate_NPP_Minus: TdxBarButton;
     actRefreshMaster: TdsdDataSetRefresh;
     StateColor: TcxGridDBColumn;
+    Basis_summ_orig: TcxGridDBColumn;
+    Basis_summ_transport: TcxGridDBColumn;
+    BasisWVAT_summ_transport: TcxGridDBColumn;
   private
     { Private declarations }
   public

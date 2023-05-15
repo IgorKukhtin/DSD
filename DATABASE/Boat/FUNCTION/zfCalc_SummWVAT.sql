@@ -13,9 +13,9 @@ BEGIN
      IF inTaxKindValue > 0
      THEN
          -- округлили до 2-х знаков
-         RETURN CAST (inSumm * (1 + COALESCE (inTaxKindValue, 0)/100) AS NUMERIC (16, 2));
+         RETURN CAST (COALESCE (inSumm, 0) * (1 + COALESCE (inTaxKindValue, 0)/100) AS NUMERIC (16, 2));
      ELSE
-         RETURN inSumm;
+         RETURN COALESCE (inSumm, 0);
      END IF;
                 
 END;

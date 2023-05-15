@@ -114,6 +114,21 @@
             Format = ',0.00'
             Kind = skSum
             Column = TransportSumm_load
+          end
+          item
+            Format = ',0.00'
+            Kind = skSum
+            Column = Basis_summ_orig
+          end
+          item
+            Format = ',0.00'
+            Kind = skSum
+            Column = Basis_summ_transport
+          end
+          item
+            Format = ',0.00'
+            Kind = skSum
+            Column = BasisWVAT_summ_transport
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -193,6 +208,21 @@
             Format = ',0.00'
             Kind = skSum
             Column = TransportSumm_load
+          end
+          item
+            Format = ',0.00'
+            Kind = skSum
+            Column = Basis_summ_orig
+          end
+          item
+            Format = ',0.00'
+            Kind = skSum
+            Column = Basis_summ_transport
+          end
+          item
+            Format = ',0.00'
+            Kind = skSum
+            Column = BasisWVAT_summ_transport
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
@@ -501,28 +531,56 @@
           Width = 70
         end
         object Basis_summ: TcxGridDBColumn
-          Caption = 'Total LP'
+          Caption = '***Total LP'
           DataBinding.FieldName = 'Basis_summ'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+          HeaderHint = 
+            #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044 +
+            #1057
           Options.Editing = False
-          Width = 70
+          Width = 80
         end
         object BasisWVAT_summ: TcxGridDBColumn
-          Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+          Caption = '***Total LP + Vat'
           DataBinding.FieldName = 'BasisWVAT_summ'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+          Options.Editing = False
+          Width = 80
+        end
+        object Basis_summ_transport: TcxGridDBColumn
+          Caption = 'Total LP'
+          DataBinding.FieldName = 'Basis_summ_transport'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
           Options.Editing = False
-          Width = 70
+          Width = 80
+        end
+        object BasisWVAT_summ_transport: TcxGridDBColumn
+          Caption = 'Total LP + Vat'
+          DataBinding.FieldName = 'BasisWVAT_summ_transport'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+          Options.Editing = False
+          Width = 80
         end
         object Basis_summ1: TcxGridDBColumn
           Caption = 'Total LP (Basis)'
@@ -548,7 +606,7 @@
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' '#1074' '#1086#1087#1094#1080#1103#1093', '#1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1086#1087#1094#1080#1081', '#1073#1077#1079' '#1053#1044#1057
+          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1076#1083#1103' '#1086#1087#1094#1080#1081', '#1057#1091#1084#1084#1072' '#1086#1087#1094#1080#1081', '#1073#1077#1079' '#1053#1044#1057
           Options.Editing = False
           Width = 70
         end
@@ -561,7 +619,7 @@
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1094#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
+          HeaderHint = #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
           Options.Editing = False
           Width = 70
         end
@@ -574,9 +632,23 @@
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1086#1087#1094#1080#1081', '#1073#1077#1079' '#1053#1044#1057
+          HeaderHint = #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1057#1091#1084#1084#1072' '#1086#1087#1094#1080#1081', '#1073#1077#1079' '#1053#1044#1057
           Options.Editing = False
           Width = 70
+        end
+        object Basis_summ_orig: TcxGridDBColumn
+          Caption = '***Total LP (Basis + Opt)'
+          DataBinding.FieldName = 'Basis_summ_orig'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = 
+            #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080' + '#1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1086#1087#1094#1080#1081 +
+            ', '#1073#1077#1079' '#1053#1044#1057
+          Options.Editing = False
+          Width = 80
         end
         object SummDiscount_total: TcxGridDBColumn
           Caption = #1057#1091#1084#1084#1072' '#1089#1082'. ('#1080#1090#1086#1075#1086')'
@@ -622,7 +694,7 @@
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' % '#1089#1082#1080#1076#1082#1080' '#1074' '#1054#1087#1094#1080#1103#1093
+          HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1086#1087#1094#1080#1081' '#1087#1086' '#1074#1089#1077#1084' % '#1089#1082#1080#1076#1082#1080
           Options.Editing = False
           Width = 75
         end
@@ -753,8 +825,6 @@
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitLeft = 561
-    ExplicitWidth = 627
     object cxGridProdOptItems: TcxGrid
       Left = 0
       Top = 17
@@ -765,7 +835,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 627
       object cxGridDBTableViewProdOptItems: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdOptItemsDS
@@ -1190,7 +1259,6 @@
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 627
     end
   end
   object PanelProdColorItems: TPanel
@@ -1212,7 +1280,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 553
       object cxGridDBTableViewProdColorItems: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdColorItemsDS
@@ -1507,7 +1574,6 @@
       Color = clLime
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 553
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -1524,7 +1590,6 @@
     Width = 8
     Height = 195
     Control = PanelProdColorItems
-    ExplicitLeft = 553
   end
   object DataSource: TDataSource
     DataSet = MasterCDS

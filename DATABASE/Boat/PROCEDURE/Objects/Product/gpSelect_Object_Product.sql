@@ -56,6 +56,11 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , Basis_summ2_orig       TFloat
                -- ИТОГО Сумма продажи с НДС - без Скидки (options)
              , BasisWVAT_summ2_orig   TFloat
+             
+               -- ИТОГО Сумма продажи без НДС - без Скидки (Basis + options)
+             , Basis_summ_orig       TFloat
+               -- ИТОГО Сумма продажи с НДС - без Скидки (Basis + options)
+             , BasisWVAT_summ_orig   TFloat
 
                -- ИТОГО Сумма вх. без НДС (Basis+options)
              , EKPrice_summ     TFloat
@@ -63,11 +68,10 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , Basis_summ       TFloat
                -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options)
              , BasisWVAT_summ   TFloat
-
-               -- ИТОГО Сумма продажи без НДС - без Скидки (Basis+options)
-             , Basis_summ_orig       TFloat
-               -- ИТОГО Сумма продажи с НДС - без Скидки
-             , BasisWVAT_summ_orig   TFloat
+               -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+             , Basis_summ_transport       TFloat
+               -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+             , BasisWVAT_summ_transport       TFloat
 
                -- Цена продажи с сайта - без НДС, Basis+options
              , OperPrice_load TFloat
@@ -359,6 +363,8 @@ BEGIN
                                    , lpSelect.ProdColorPatternId
                                      -- % скидки
                                    , lpSelect.DiscountTax
+                                   , lpSelect.DiscountTax_order
+                                   , lpSelect.DiscountNextTax_order
                                      -- % НДС Заказ клиента
                                    , lpSelect.VATPercent
                                      -- Сумма вх. без НДС
@@ -390,6 +396,7 @@ BEGIN
 
                                   , lpSelect.DiscountTax
                                   , lpSelect.DiscountNextTax
+                                  , 0 AS DiscountTax_opt
                                   , lpSelect.VATPercent
                                   , lpSelect.BasisPrice      AS BasisPrice_summ
                                   , lpSelect.BasisPriceWVAT  AS BasisPriceWVAT_summ
@@ -425,7 +432,9 @@ BEGIN
 
                                   , lpSelect.DiscountTax
                                   , lpSelect.DiscountNextTax
+                                  , 0 AS DiscountTax_opt
                                   , lpSelect.VATPercent
+
                                   , 0 AS BasisPrice_summ
                                   , 0 AS BasisPriceWVAT_summ
 
@@ -460,15 +469,30 @@ BEGIN
                                   , FALSE                                      AS isBasis
                                   , SUM (COALESCE (lpSelect.EKPrice_summ, 0))  AS EKPrice_summ
 
+                                /*, 0 AS BasisPrice_summ_disc_1
+                                  , 0 AS BasisPrice_summ_disc_2
+                                  , 0 AS BasisPriceWVAT_summ_disc
+                                  
+                                  , lpSelect.DiscountTax_order     AS DiscountTax
+                                  , lpSelect.DiscountNextTax_order AS DiscountNextTax
+                                  , lpSelect.DiscountTax           AS DiscountTax_opt*/
+
                                     -- со ВСЕМИ Скидками - без НДС
-                                  , SUM (zfCalc_SummDiscountTax    (lpSelect.Sale_summ, lpSelect.DiscountTax))     AS BasisPrice_summ_disc_1
-                                  , SUM (zfCalc_SummDiscountTax    (lpSelect.Sale_summ, lpSelect.DiscountTax))     AS BasisPrice_summ_disc_2
+                                  , SUM (zfCalc_SummDiscountTax (lpSelect.Sale_summ, lpSelect.DiscountTax_order))  AS BasisPrice_summ_disc_1
+                                  , SUM (zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (lpSelect.Sale_summ, lpSelect.DiscountTax_order)
+                                                                                       , lpSelect.DiscountNextTax_order)
+                                                               , lpSelect.DiscountTax)) AS BasisPrice_summ_disc_2
                                     -- со ВСЕМИ Скидками с НДС
-                                  , SUM (zfCalc_SummWVATDiscountTax(lpSelect.Sale_summ, lpSelect.DiscountTax, lpSelect.VATPercent)) AS BasisPriceWVAT_summ_disc
+                                  , SUM (zfCalc_SummWVATDiscountTax (zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (lpSelect.Sale_summ, lpSelect.DiscountTax_order)
+                                                                                           , lpSelect.DiscountNextTax_order)
+                                                                   , lpSelect.DiscountTax, lpSelect.VATPercent)) AS BasisPriceWVAT_summ_disc
 
                                   , 0 AS DiscountTax
                                   , 0 AS DiscountNextTax
+                                  , 0 AS DiscountTax_opt
+
                                   , lpSelect.VATPercent
+
                                   , SUM (lpSelect.Sale_summ)     AS BasisPrice_summ
                                   , SUM (lpSelect.SaleWVAT_summ) AS BasisPriceWVAT_summ
 
@@ -493,13 +517,14 @@ BEGIN
                                     -- с учетом % скидки №1 - без НДС
                                   , (zfCalc_SummDiscountTax     (tmpCalc_all.BasisPrice_summ, tmpCalc_all.DiscountTax)) AS BasisPrice_summ_disc_1
                                     -- с учетом % скидки №2 - без НДС
-                                  , (zfCalc_SummDiscountTax     (zfCalc_SummDiscountTax (tmpCalc_all.BasisPrice_summ, tmpCalc_all.DiscountTax), tmpCalc_all.DiscountNextTax))     AS BasisPrice_summ_disc_2
+                                  , (zfCalc_SummDiscountTax     (zfCalc_SummDiscountTax (tmpCalc_all.BasisPrice_summ, tmpCalc_all.DiscountTax), tmpCalc_all.DiscountNextTax)) AS BasisPrice_summ_disc_2
                                     -- Сумма продажи с НДС - с учетом ВСЕХ скидок
                                   , (zfCalc_SummWVATDiscountTax (zfCalc_SummDiscountTax (tmpCalc_all.BasisPrice_summ, tmpCalc_all.DiscountTax), tmpCalc_all.DiscountNextTax, tmpCalc_all.VATPercent)) AS BasisPriceWVAT_summ_disc
                              FROM tmpCalc_all
                              WHERE tmpCalc_all.isBasis = TRUE
 
                             UNION ALL
+                             -- 1.2. Опции
                              SELECT tmpCalc_all.MovementId_OrderClient
                                   , tmpCalc_all.ProductId
                                   , tmpCalc_all.isBasis
@@ -508,7 +533,7 @@ BEGIN
                                   , tmpCalc_all.BasisPriceWVAT_summ
                                     -- с учетом % скидки №1 - без НДС
                                   , tmpCalc_all.BasisPrice_summ_disc_1
-                                    -- с учетом % скидки №2 - без НДС
+                                    -- с учетом % скидки №2+3 - без НДС
                                   , tmpCalc_all.BasisPrice_summ_disc_2
                                     -- Сумма продажи с НДС - с учетом ВСЕХ скидок
                                   , tmpCalc_all.BasisPriceWVAT_summ_disc
@@ -733,18 +758,23 @@ BEGIN
          , tmpCalc_2.BasisPrice_summ       :: TFloat AS Basis_summ2_orig
          , tmpCalc_2.BasisPriceWVAT_summ   :: TFloat AS BasisWVAT_summ2_orig
 
-           -- ИТОГО Сумма вх. без НДС, Basis+options
-         , (COALESCE (tmpCalc_1.EKPrice_summ, 0)        + COALESCE (tmpCalc_2.EKPrice_summ, 0))           :: TFloat AS EKPrice_summ
-           -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками, Basis+options
-         , (COALESCE (tmpCalc_1.BasisPrice_summ_disc_2, 0)   + COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0))      :: TFloat AS Basis_summ
-           -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками, Basis+options
-         , (COALESCE (tmpCalc_1.BasisPriceWVAT_summ_disc, 0) + COALESCE (tmpCalc_2.BasisPriceWVAT_summ_disc, 0))    :: TFloat AS BasisWVAT_summ
-
            -- ИТОГО Сумма продажи без НДС - без Скидки, Basis+options
          , (COALESCE (tmpCalc_1.BasisPrice_summ, 0)     + COALESCE (tmpCalc_2.BasisPrice_summ, 0))        :: TFloat AS Basis_summ_orig
            -- ИТОГО Сумма продажи с НДС - без Скидки, Basis+options
          , (COALESCE (tmpCalc_1.BasisPriceWVAT_summ, 0) + COALESCE (tmpCalc_2.BasisPriceWVAT_summ, 0))    :: TFloat AS BasisWVAT_summ_orig
 
+           -- ИТОГО Сумма вх. без НДС (Basis+options)
+         , (COALESCE (tmpCalc_1.EKPrice_summ, 0)        + COALESCE (tmpCalc_2.EKPrice_summ, 0))           :: TFloat AS EKPrice_summ
+           -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
+         , (COALESCE (tmpCalc_1.BasisPrice_summ_disc_2, 0)   + COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0))      :: TFloat AS Basis_summ
+           -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options)
+         , (COALESCE (tmpCalc_1.BasisPriceWVAT_summ_disc, 0) + COALESCE (tmpCalc_2.BasisPriceWVAT_summ_disc, 0))    :: TFloat AS BasisWVAT_summ
+
+           -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+         , (COALESCE (tmpCalc_1.BasisPrice_summ_disc_2, 0)   + COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0) + COALESCE (tmpResAll.TransportSumm_load, 0)) :: TFloat AS Basis_summ_transport
+           -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+         , (COALESCE (tmpCalc_1.BasisPriceWVAT_summ_disc, 0) + COALESCE (tmpCalc_2.BasisPriceWVAT_summ_disc, 0) + zfCalc_SummWVAT (tmpResAll.TransportSumm_load, tmpOrderClient.VATPercent)) :: TFloat AS BasisWVAT_summ_transport
+                                                                  
            -- Цена продажи с сайта - без НДС, Basis+options
          , tmpResAll.OperPrice_load     :: TFloat AS OperPrice_load
            -- Базовая цена продажи модели с сайта

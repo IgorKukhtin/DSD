@@ -38,7 +38,9 @@ RETURNS TABLE (MovementId_OrderClient Integer
              , Color_ProdColorValue Integer
              , MeasureName TVarChar
                -- % скидки
-             , DiscountTax    TFloat
+             , DiscountTax           TFloat
+             , DiscountTax_order     TFloat
+             , DiscountNextTax_order TFloat
                -- % НДС Заказ клиента
              , VATPercent     TFloat
                -- Цена вх. без НДС
@@ -302,6 +304,11 @@ BEGIN
                               , MovementLinkObject_Product.ObjectId      AS ProductId
                                 -- % НДС Заказ клиента
                               , MovementFloat_VATPercent.ValueData       AS VATPercent
+                                -- 
+                              , MovementFloat_DiscountTax.ValueData      AS DiscountTax
+                                -- 
+                              , MovementFloat_DiscountNextTax.ValueData  AS DiscountNextTax
+
                          FROM MovementLinkObject AS MovementLinkObject_Product
                               INNER JOIN Movement ON Movement.Id = MovementLinkObject_Product.MovementId
                                                  AND Movement.DescId = zc_Movement_OrderClient()
@@ -310,13 +317,21 @@ BEGIN
                               LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                                       ON MovementFloat_VATPercent.MovementId = Movement.Id
                                                      AND MovementFloat_VATPercent.DescId     = zc_MovementFloat_VATPercent()
+                              LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
+                                                      ON MovementFloat_DiscountTax.MovementId = Movement.Id
+                                                     AND MovementFloat_DiscountTax.DescId     = zc_MovementFloat_DiscountTax()
+                              LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
+                                                      ON MovementFloat_DiscountNextTax.MovementId = Movement.Id
+                                                     AND MovementFloat_DiscountNextTax.DescId     = zc_MovementFloat_DiscountNextTax()
                          -- !!!временно, надо будет как-то выбирать НЕ ВСЕ!!!
                          WHERE MovementLinkObject_Product.ObjectId > 0
                            AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
                         )
            -- все лодки + определяем продана да/нет
-         , tmpProduct AS (SELECT COALESCE (tmpOrderClient.MovementId, 0) AS MovementId_OrderClient
-                               , COALESCE (tmpOrderClient.VATPercent, 0) AS VATPercent
+         , tmpProduct AS (SELECT COALESCE (tmpOrderClient.MovementId, 0)       AS MovementId_OrderClient
+                               , COALESCE (tmpOrderClient.VATPercent, 0)       AS VATPercent
+                               , COALESCE (tmpOrderClient.DiscountTax, 0)      AS DiscountTax_order
+                               , COALESCE (tmpOrderClient.DiscountNextTax, 0)  AS DiscountNextTax_order
                                , Object_Product.Id
                                , Object_Product.ObjectCode
                                , Object_Product.ValueData
@@ -417,6 +432,8 @@ BEGIN
 
                                , tmpProduct.MovementId_OrderClient
                                , tmpProduct.VATPercent
+                               , tmpProduct.DiscountTax_order
+                               , tmpProduct.DiscountNextTax_order
 
                                , COALESCE (ObjectFloat_Count.ValueData, 0) AS Amount
 
@@ -513,7 +530,9 @@ BEGIN
 
                            -- % скидки
                          , tmpProdOptItems.DiscountTax
-
+                         , tmpProdOptItems.DiscountTax_order
+                         , tmpProdOptItems.DiscountNextTax_order
+                         
                          , tmpProdOptItems.Value
                          , tmpProdOptItems.EKPrice
                          , tmpProdOptItems.SalePrice
@@ -536,20 +555,22 @@ BEGIN
                          , tmpProdOptions.GoodsId
 
                          , tmpProduct.Id     AS ProductId
-                         , 0     :: Integer  AS ProdOptPatternId
+                         , 0                 AS ProdOptPatternId
 
                          , tmpProdOptions.ProdColorPatternId
                          , tmpProdOptions.ProdColorId
                          , tmpProdOptions.ProdColorName
-                         , Null :: TVarChar    AS ProdColorValue
-                         , Null :: Integer     AS Color_ProdColorValue
+                         , NULL :: TVarChar    AS ProdColorValue
+                         , NULL :: Integer     AS Color_ProdColorValue
                          , tmpProdOptions.MaterialOptionsId
 
                            -- % скидки
-                         , 0     :: TFloat   AS DiscountTax
+                         , 0 AS DiscountTax
+                         , tmpProduct.DiscountTax_order
+                         , tmpProduct.DiscountNextTax_order
 
                            -- Кол-во
-                         , 0     :: TFloat   AS Value
+                         , 0 AS Value
 
                            -- Цена вх. без НДС
                          , tmpProdOptions.EKPrice
@@ -677,7 +698,10 @@ BEGIN
          , COALESCE(tmpRes.Color_ProdColorValue, ProdColorComent.Color_Value, ProdColorName.Color_Value, zc_Color_White()) ::Integer AS Color_ProdColorValue
          , tmpGoods.MeasureName
 
-         , tmpRes.DiscountTax    ::TFloat    AS DiscountTax
+         , tmpRes.DiscountTax           ::TFloat AS DiscountTax
+         , tmpRes.DiscountTax_order     ::TFloat AS DiscountTax_order
+         , tmpRes.DiscountNextTax_order ::TFloat AS DiscountNextTax_order
+         
          , tmpRes.VATPercent     ::TFloat    AS VATPercent
 
            -- Цена вх.

@@ -136,6 +136,11 @@ object OrderClientJournalForm: TOrderClientJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TransportSumm_load
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_transport
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -207,6 +212,11 @@ object OrderClientJournalForm: TOrderClientJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TransportSumm_load
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_transport
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -414,14 +424,14 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Width = 70
       end
       object TotalSummMVAT: TcxGridDBColumn
-        Caption = '***Total LP'
+        Caption = '*Total LP'
         DataBinding.FieldName = 'TotalSummMVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1058#1054#1043#1054' '#1041#1045#1047' '#1091#1095#1077#1090#1072' '#1089#1082#1080#1076#1082#1080', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+        HeaderHint = #1048#1058#1054#1043#1054' '#1041#1045#1047' '#1091#1095#1077#1090#1072' '#1089#1082#1080#1076#1082#1080' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
         Width = 70
       end
       object SummDiscount_total: TcxGridDBColumn
@@ -437,14 +447,27 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Width = 75
       end
       object TotalSumm: TcxGridDBColumn
-        Caption = 'Total LP'
+        Caption = '***Total LP'
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+        HeaderHint = 
+          #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044 +
+          #1057
+        Width = 80
+      end
+      object TotalSumm_transport: TcxGridDBColumn
+        Caption = 'Total LP'
+        DataBinding.FieldName = 'TotalSumm_transport'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
         Width = 80
       end
       object TotalSummPVAT: TcxGridDBColumn
@@ -456,8 +479,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
-        Width = 60
+        HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+        Width = 80
       end
       object TotalSummVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
@@ -1910,8 +1933,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 328
-    Top = 64
+    Left = 352
+    Top = 40
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

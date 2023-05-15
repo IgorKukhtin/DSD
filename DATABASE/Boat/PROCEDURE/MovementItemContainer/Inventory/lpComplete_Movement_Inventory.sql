@@ -638,6 +638,8 @@ BEGIN
                   , (select count(*) from _tmpRemains  where _tmpRemains.GoodsId = 14982)
                   , (select count(*) from _tmpMIContainer_insert)
                                        ;*/
+                                       
+     -- RAISE EXCEPTION 'end';
 
 END;
 $BODY$

@@ -11,7 +11,7 @@ AS
 $BODY$
 BEGIN
      -- округлили до 2-х знаков
-     RETURN inSumm - zfCalc_SummDiscountTax (inSumm, inDiscountTax);
+     RETURN COALESCE (inSumm, 0) - zfCalc_SummDiscountTax (inSumm, inDiscountTax);
 
 END;
 $BODY$
