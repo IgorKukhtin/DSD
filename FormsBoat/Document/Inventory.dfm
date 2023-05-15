@@ -830,6 +830,14 @@ object InventoryForm: TInventoryForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_Goods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -981,8 +989,8 @@ object InventoryForm: TInventoryForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 43
-    Top = 263
+    Left = 163
+    Top = 279
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1337,7 +1345,7 @@ object InventoryForm: TInventoryForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'LocationId'
+          Name = 'UnitGroupId'
           Value = ''
           Component = GuidesUnit
           ComponentItem = 'Key'
@@ -1345,7 +1353,7 @@ object InventoryForm: TInventoryForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'LocationName'
+          Name = 'UnitGroupName'
           Value = ''
           Component = GuidesUnit
           ComponentItem = 'TextValue'
@@ -1366,23 +1374,6 @@ object InventoryForm: TInventoryForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsSizeId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsSizeId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsSizeName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsSizeName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
