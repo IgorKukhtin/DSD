@@ -1393,6 +1393,7 @@
       Color = clLime
       ParentBackground = False
       TabOrder = 1
+      ExplicitLeft = -2
     end
   end
   object cxSplitter1: TcxSplitter
@@ -1641,6 +1642,14 @@
         item
           Visible = True
           ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol2'
         end
         item
           Visible = True
@@ -1944,6 +1953,14 @@
       Action = actspInsertUpdate_ReceiptGoods
       Category = 0
     end
+    object bbProtocol1: TdxBarButton
+      Action = actProtocol1
+      Category = 0
+    end
+    object bbProtocol2: TdxBarButton
+      Action = actProtocol2
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -2169,6 +2186,66 @@
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
       DataSource = DataSource
+    end
+    object actProtocol1: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = Child1CDS
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actProtocol2: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' Boat Structure'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' Boat Structure'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = Child2CDS
+          ComponentItem = 'ProdColorPatternName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -3917,6 +3994,10 @@
     TextEdit = edSearchArticle
     DataSet = Child1CDS
     Column = Article_all_ch1
+    ColumnList = <
+      item
+        Column = Article_all_ch1
+      end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 256
@@ -4008,8 +4089,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1084
-    Top = 8
+    Left = 1052
+    Top = 65528
   end
   object GuidesReceiptGoods: TdsdGuides
     KeyField = 'Id'

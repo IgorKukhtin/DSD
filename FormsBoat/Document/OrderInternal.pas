@@ -258,6 +258,12 @@ type
     actCompleteMovement: TChangeGuidesStatus;
     actUnCompleteMovement: TChangeGuidesStatus;
     actDeleteMovement: TChangeGuidesStatus;
+    spInsert_MI_byOrderAll: TdsdStoredProc;
+    actInsert_MI_byOrderAll: TdsdExecStoredProc;
+    macInsert_MI_byOrderAll: TMultiAction;
+    actOrderClientInsertForm: TOpenChoiceForm;
+    actRefreshMaster: TdsdDataSetRefresh;
+    bbInsert_MI_byOrder: TdxBarButton;
 
   private
   public

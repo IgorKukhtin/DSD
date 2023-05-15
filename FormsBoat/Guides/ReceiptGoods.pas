@@ -233,6 +233,10 @@ type
     bbInsertUpdate_ReceiptGoods: TdxBarButton;
     NPP_calc_ch1: TcxGridDBColumn;
     NPP_ch2: TcxGridDBColumn;
+    actProtocol1: TdsdOpenForm;
+    actProtocol2: TdsdOpenForm;
+    bbProtocol1: TdxBarButton;
+    bbProtocol2: TdxBarButton;
   private
     { Private declarations }
   public

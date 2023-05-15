@@ -166,8 +166,8 @@ object OrderInternalForm: TOrderInternalForm
       Width = 146
     end
     object cxLabel15: TcxLabel
-      Left = 268
-      Top = 50
+      Left = 273
+      Top = 46
       Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
     end
     object cxLabel6: TcxLabel
@@ -858,6 +858,7 @@ object OrderInternalForm: TOrderInternalForm
           Height = 170
           Align = alClient
           TabOrder = 0
+          ExplicitTop = 217
           object cxGridDBTableView_Det: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = DetailDS
@@ -1937,6 +1938,14 @@ object OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert_MI_byOrder'
+        end
+        item
+          Visible = True
+          ItemName = 'BarSubItemGoodsSep1'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -2104,6 +2113,10 @@ object OrderInternalForm: TOrderInternalForm
       Visible = ivAlways
       ShowCaption = False
     end
+    object bbInsert_MI_byOrder: TdxBarButton
+      Action = macInsert_MI_byOrderAll
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2213,6 +2226,19 @@ object OrderInternalForm: TOrderInternalForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object actRefreshMaster: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
     end
     object actSetErasedDetail: TdsdUpdateErased
       Category = 'Detail'
@@ -3297,6 +3323,61 @@ object OrderInternalForm: TOrderInternalForm
       Status = mtDelete
       Guides = StatusGuides
     end
+    object actInsert_MI_byOrderAll: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_byOrderAll
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_byOrderAll
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+        end>
+      Caption = 'actInsert_MI_byOrderAll'
+      ImageIndex = 47
+    end
+    object macInsert_MI_byOrderAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOrderClientInsertForm
+        end
+        item
+          Action = actInsert_MI_byOrderAll
+        end
+        item
+          Action = actRefreshMaster
+        end>
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
+      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+      ImageIndex = 47
+    end
+    object actOrderClientInsertForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'OrderClientJournalChoiceForm'
+      ImageIndex = 47
+      FormName = 'TOrderClientJournalChoiceForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementId_OrderClient'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3805,6 +3886,14 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS
@@ -3815,24 +3904,6 @@ object OrderInternalForm: TOrderInternalForm
       item
         Name = 'inAmount'
         Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioOperPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPrice'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCountForPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4041,8 +4112,8 @@ object OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 586
-    Top = 264
+    Left = 554
+    Top = 272
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4826,5 +4897,37 @@ object OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 54
     Top = 543
+  end
+  object spInsert_MI_byOrderAll: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_OrderInternal_byOrderClientAll'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 702
+    Top = 431
   end
 end
