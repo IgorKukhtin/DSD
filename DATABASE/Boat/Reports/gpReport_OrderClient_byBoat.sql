@@ -330,7 +330,7 @@ BEGIN
            , Object_Goods_basis.ValueData         ::TVarChar AS GoodsName_basis
            , Object_Goods.ObjectCode              ::Integer  AS GoodsCode
            , Object_Goods.ValueData               ::TVarChar AS GoodsName
-           , ObjectString_Article.ValueData       ::TVarChar AS Article_goods
+           , ObjectString_Article_Goods.ValueData       ::TVarChar AS Article_goods
            , Object_ReceiptLevel.ValueData        ::TVarChar AS ReceiptLevelName 
            , ObjectString_Goods_Comment.ValueData ::TVarChar AS Comment_goods
            , ObjectString_Object_Comment.ValueData ::TVarChar AS Comment_Object
