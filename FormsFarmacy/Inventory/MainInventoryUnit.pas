@@ -8,7 +8,7 @@ uses
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, System.RegularExpressions,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
-  cxContainer, Vcl.ComCtrls, dxCore, cxSpinEdit, Vcl.StdCtrls,
+  cxContainer, Vcl.ComCtrls, dxCore, cxSpinEdit, Vcl.StdCtrls, DataModul,
   cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxClasses, cxGridCustomView, cxGrid, cxPC, ZAbstractRODataset,
@@ -84,7 +84,7 @@ type
     InfoDS: TDataSource;
     InfoCDS: TClientDataSet;
     spSelectInfo: TdsdStoredProcSQLite;
-    cxGrid1: TcxGrid;
+    cxGridInfo: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     InfoGoodsCode: TcxGridDBColumn;
     InfoGoodsName: TcxGridDBColumn;
@@ -110,6 +110,34 @@ type
     GuidesUnit: TdsdGuides;
     HeaderSaver: THeaderSaver;
     spUpdateIventory: TdsdStoredProcSQLite;
+    actSetFocusedAmount: TdsdSetFocusedAction;
+    tsInventoryManual: TcxTabSheet;
+    Panel4: TPanel;
+    cxLabel11: TcxLabel;
+    edOperDateManual: TcxDateEdit;
+    cxButton2: TcxButton;
+    edUnitNameManual: TcxButtonEdit;
+    GuidesUnitManual: TdsdGuides;
+    actContinueInventManual: TAction;
+    N9: TMenuItem;
+    HeaderSaverManual: THeaderSaver;
+    spUpdateIventoryManual: TdsdStoredProcSQLite;
+    cxGridManual: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    ManualGoodsCode: TcxGridDBColumn;
+    ManualcxGoodsName: TcxGridDBColumn;
+    ManualRemains: TcxGridDBColumn;
+    ManualAmount: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    spSelectManual: TdsdStoredProcSQLite;
+    ManualCDS: TClientDataSet;
+    ManualDS: TDataSource;
+    actShowAll: TBooleanStoredProcAction;
+    actSetFocusedManualAmount: TdsdSetFocusedAction;
+    actSetEditAmount: TAction;
+    DBViewAddOnManual: TdsdDBViewAddOn;
+    TextEdit: TcxTextEdit;
+    FieldFilter: TdsdFieldFilter;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);
@@ -124,6 +152,10 @@ type
     procedure edBarCodeDblClick(Sender: TObject);
     procedure actSendInventChildExecute(Sender: TObject);
     procedure actUpdateSendExecute(Sender: TObject);
+    procedure actContinueInventManualExecute(Sender: TObject);
+    procedure ManualCDSPostError(DataSet: TDataSet; E: EDatabaseError;
+      var Action: TDataAction);
+    procedure actSetEditAmountExecute(Sender: TObject);
   protected
     procedure FormClose(Sender: TObject; var Action: TCloseAction); override;
   private
@@ -147,15 +179,23 @@ implementation
 uses UnilWin, CommonData, IniUtils, Splash, StorageSQLite;
 
 procedure TMainInventoryForm.FormClose(Sender: TObject; var Action: TCloseAction);
+ var OperDate: TDateTime; UnitName : String; isSave: boolean;
 begin
   if  PageControl.ActivePage = tsStart then
   begin
-    if MessageDlg('Закрыть приложение?', mtInformation, mbOKCancel, 0) <> mrOk then Action := caNone;
+    if ChechActiveInv(OperDate, UnitName, isSave) then
+    begin
+      if not isSave then
+        if MessageDlg('По аптеке ' + #13#10 + UnitName + #13#10 + 'от ' +
+          FormatDateTime('dd.mm.yyyy', OperDate) + #13#10'Не отправлены данные по инвентаризации.' +
+          #13#10#13#10'Вы дейсвительно хотите закрыть приложение?', mtInformation, mbOKCancel, 0) <> mrOk then Action := caNone;
+    end else if MessageDlg('Закрыть приложение?', mtInformation, mbOKCancel, 0) <> mrOk then Action := caNone;
   end else
   begin
     Action := caNone;
     InfoCDS.Close;
     MasterCDS.Close;
+    ManualCDS.Close;
     PageControl.ActivePage := tsStart;
   end;
 
@@ -167,6 +207,7 @@ begin
   PageControl.ActivePage := tsStart;
   InfoCDS.Close;
   MasterCDS.Close;
+  ManualCDS.Close;
 end;
 
 procedure TMainInventoryForm.actContinueInventExecute(Sender: TObject);
@@ -205,7 +246,55 @@ begin
   PageControl.ActivePage := tsInventory;
   spSelectChilg.Execute;
   InfoCDS.Close;
+  ManualCDS.Close;
   edBarCode.SetFocus;
+end;
+
+procedure TMainInventoryForm.actContinueInventManualExecute(Sender: TObject);
+ var OperDate: TDateTime; UnitName : String; isSave: boolean;
+     Params : TdsdParams;
+begin
+
+  if ChechActiveInv(OperDate, UnitName, isSave) then
+  begin
+    if isSave and (OperDate < IncDay(Date, - 3)) then
+    begin
+      ShowMessage('Инвентаризация не создана. С начало создайте ее.');
+      Exit;
+    end;
+  end else
+  begin
+    ShowMessage('Инвентаризация не создана. С начало создайте ее.');
+    Exit;
+  end;
+
+  Params := TdsdParams.Create(Self, TdsdParam);
+  try
+    Params.AddParam('Id', TFieldType.ftInteger, ptOutput, 0);
+    Params.AddParam('OperDate', TFieldType.ftDateTime, ptOutput, FormParams.ParamByName('OperDate').Value);
+    Params.AddParam('UnitId', TFieldType.ftInteger, ptOutput, FormParams.ParamByName('UnitId').Value);
+    Params.AddParam('UnitName', TFieldType.ftString, ptOutput, '');
+    if not SQLite_Get(InventoryGetActiveSQL, Params) then Exit;
+    FormParams.ParamByName('Id').Value := Params.ParamByName('Id').Value;
+    FormParams.ParamByName('OperDate').Value := Params.ParamByName('OperDate').Value;
+    FormParams.ParamByName('UnitId').Value := Params.ParamByName('UnitId').Value;
+    FormParams.ParamByName('UnitName').Value := Params.ParamByName('UnitName').Value;
+  finally
+    FreeAndNil(Params);
+  end;
+
+  edOperDateManual.Date := FormParams.ParamByName('OperDate').Value;
+  GuidesUnitManual.Params.ParamByName('Key').Value := FormParams.ParamByName('UnitId').Value;
+  GuidesUnitManual.Params.ParamByName('TextValue').Value := FormParams.ParamByName('UnitName').Value;
+
+
+  PageControl.ActivePage := tsInventoryManual;
+  spSelectManual.Execute;
+  actSetEditAmount.Execute;
+
+  InfoCDS.Close;
+  MasterCDS.Close;
+  actSetFocusedManualAmount.Execute;
 end;
 
 procedure TMainInventoryForm.actDoCreateInventoryExecute(Sender: TObject);
@@ -232,6 +321,8 @@ end;
 
 procedure TMainInventoryForm.actDoLoadDataExecute(Sender: TObject);
 begin
+
+  gc_User.Local := False;
 
   try
     spGet_User_IsAdmin.Execute;
@@ -295,12 +386,20 @@ begin
     FreeAndNil(Params);
   end;
 
-//  GuidesUnit.Params.ParamByName('Key').Value := FormParams.ParamByName('UnitId').Value;
-//  GuidesUnit.Params.ParamByName('TextValue').Value := FormParams.ParamByName('UnitName').Value;
+  edOperDateInfo.Date := FormParams.ParamByName('OperDate').Value;
+  edUnitNameInfo.Text := FormParams.ParamByName('UnitName').Value;
 
   PageControl.ActivePage := tsInfo;
   spSelectInfo.Execute;
   MasterCDS.Close;
+  ManualCDS.Close;
+end;
+
+procedure TMainInventoryForm.actSetEditAmountExecute(Sender: TObject);
+  var I : Integer;
+begin
+  for I := 0 to ManualCDS.FieldCount - 1 do if ManualCDS.Fields.Fields[I].ReadOnly then
+    ManualCDS.Fields.Fields[I].ReadOnly  := False;
 end;
 
 procedure TMainInventoryForm.actReCreteInventDateExecute(Sender: TObject);
@@ -310,6 +409,7 @@ begin
   PageControl.ActivePage := tsStart;
   InfoCDS.Close;
   MasterCDS.Close;
+  ManualCDS.Close;
 
   if ChechActiveInv(OperDate, UnitName, isSave) then
   begin
@@ -339,6 +439,9 @@ end;
 procedure TMainInventoryForm.actSendInventChildExecute(Sender: TObject);
 var OperDate: TDateTime; UnitName : String; isSave: boolean;
 begin
+
+  gc_User.Local := False;
+
   try
     spGet_User_IsAdmin.Execute;
   except
@@ -369,6 +472,7 @@ begin
 
   InfoCDS.Close;
   MasterCDS.Close;
+  ManualCDS.Close;
   PageControl.ActivePage := tsStart;
 
   try
@@ -452,7 +556,13 @@ procedure TMainInventoryForm.InsertBarCode;
       MainId : Integer;
 begin
   BarCode := Trim(edBarCode.Text);
-  if BarCode = '' then Exit;
+
+  if BarCode = '' then
+  begin
+    edBarCode.SetFocus;
+    Exit;
+  end;
+
   ds := TClientDataSet.Create(nil);
   try
     if Copy(BarCode, 1, 3) = '201' then
@@ -511,11 +621,46 @@ begin
 
     spSelectChilg.Execute;
     MasterCDS.First;
+    edBarCode.Text := '';
 
   finally
     freeAndNil(ds);
     ceAmount.Value := 1;
     edBarCode.SetFocus;
+  end;
+end;
+
+procedure TMainInventoryForm.ManualCDSPostError(DataSet: TDataSet;
+  E: EDatabaseError; var Action: TDataAction);
+var GoodsId : Integer; Remains, AmountOld, Amount : Currency;
+    Params : TdsdParams;
+begin
+  GoodsId := DataSet.FieldByName('GoodsId').AsInteger;
+  Remains := DataSet.FieldByName('Remains').AsCurrency;
+  AmountOld := DataSet.FieldByName('Amount').OldValue;
+  Amount := DataSet.FieldByName('Amount').AsCurrency;
+  DataSet.Cancel;
+  Action := daAbort;
+
+  if AmountOld <> Amount then
+  begin
+
+    Params := TdsdParams.Create(Self, TdsdParam);
+    try
+      Params.AddParam('Id', TFieldType.ftInteger, ptOutput, 0);
+      Params.AddParam('Inventory', TFieldType.ftInteger, ptInput, FormParams.ParamByName('Id').Value);
+      Params.AddParam('GoodsId', TFieldType.ftInteger, ptInput, GoodsId);
+      Params.AddParam('Amount', TFieldType.ftFloat, ptInput, Amount - AmountOld);
+      Params.AddParam('DateInput', TFieldType.ftDateTime, ptInput, Now);
+      Params.AddParam('UserInputId', TFieldType.ftInteger, ptInput, StrToInt(gc_User.Session));
+      Params.AddParam('IsSend', TFieldType.ftBoolean, ptInput, False);
+      SQLite_Insert(InventoryChild_Table, Params);
+    finally
+      FreeAndNil(Params);
+    end;
+
+    spSelectManual.Execute;
+    actSetEditAmount.Execute;
   end;
 end;
 

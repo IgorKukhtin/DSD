@@ -77,8 +77,8 @@ begin
     End;
 
     Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainInventoryForm, MainInventoryForm);
-  //StartCheckConnectThread(2);
+    Application.CreateForm(TMainInventoryForm, MainInventoryForm);
+    //StartCheckConnectThread(2);
   End;
   Application.Run;
   CloseHandle(hMutexCurr);

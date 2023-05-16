@@ -58,6 +58,9 @@ BEGIN
 
        -- сохранили св-во <>
        PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ContactPerson_Mail(), inId, TRIM (inMail));
+
+       -- сохранили протокол
+       PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
    END IF;
    
    -- записываем в свойство zc_ObjectLink_Maker_ContactPerson

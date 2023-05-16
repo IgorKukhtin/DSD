@@ -29,6 +29,7 @@ type
     AreaName: TcxGridDBColumn;
     AreaName_Mail: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
