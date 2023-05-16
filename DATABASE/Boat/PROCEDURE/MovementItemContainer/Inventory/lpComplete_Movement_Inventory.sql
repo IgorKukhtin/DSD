@@ -329,6 +329,8 @@ BEGIN
         WHERE _tmpItem.GoodsId IS NULL
        ;
 
+     -- RAISE EXCEPTION 'ќшибка. <%>', (select count(*) FROM _tmpItem_Child WHERE _tmpItem_Child.MovementItemId = 0);
+
      -- —оздали Ёлементы
      UPDATE _tmpItem_Child SET MovementItemId = tmp.MovementItemId
      FROM (SELECT tmp.GoodsId, tmp.PartNumber

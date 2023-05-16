@@ -38,6 +38,8 @@ $BODY$
 
    DECLARE vbServiceDateId         Integer;
    DECLARE vbPersonalServiceListId Integer;
+   DECLARE vbServiceDate TDateTime;
+   DECLARE vbOnly Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_Cash());
@@ -61,11 +63,29 @@ BEGIN
      -- определяем <Месяц начислений>
      IF inParentId <> 0
      THEN
-         vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inParentId AND MovementDate.DescId = zc_MIDate_ServiceDate()));
+         vbServiceDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inParentId AND MovementDate.DescId = zc_MIDate_ServiceDate());
+         vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= vbServiceDate);
      END IF;
      
      -- определяем
-     vbPersonalServiceListId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
+     vbPersonalServiceListId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inParentId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
+     
+     -- определяем
+     vbOnly:= -- одинаковые ведомости
+              vbPersonalServiceListId = COALESCE ((SELECT MLO_PersonalServiceList.ObjectId
+                                                   FROM MovementItem
+                                                        LEFT JOIN MovementItemLinkObject AS MLO_PersonalServiceList
+                                                                                         ON MLO_PersonalServiceList.MovementItemId = MovementItem.Id
+                                                                                        AND MLO_PersonalServiceList.DescId         = zc_MILinkObject_MoneyPlace()
+                                                   WHERE MovementItem.MovementId = inMovementId
+                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                     AND MovementItem.isErased   = FALSE
+                                                 ))
+              -- это НЕ БН для распределения
+          AND zc_Enum_PaidKind_FirstForm() <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbPersonalServiceListId AND OL.DescId = zc_ObjectLink_PersonalServiceList_PaidKind()), 0)
+              -- НЕ основная Ведомость
+          AND NOT EXISTS (SELECT 1 FROM Object JOIN ObjectLink AS OL ON OL.ObjectId = Object.Id AND OL.DescId = zc_ObjectLink_Personal_PersonalServiceList() AND OL.ChildObjectId = vbPersonalServiceListId WHERE Object.DescId = zc_Object_Personal() AND Object.isErased = FALSE)
+          ;
 
 
      -- Результат
@@ -448,6 +468,8 @@ BEGIN
                                                                   ON CLO_PersonalServiceList.ObjectId = tmpParent.PersonalServiceListId
                                                                  AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
                                                                  AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
+                              -- !!! НЕ схема премии!!!
+                              WHERE vbOnly = FALSE
                              )
           /*tmpCash*/
          , tmpMIContainer AS (SELECT SUM (CASE WHEN MIContainer.MovementId = inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS Amount_current
@@ -475,6 +497,39 @@ BEGIN
                                      , tmpContainer.InfoMoneyId
                                      , tmpContainer.PersonalServiceListId
                                    --, MIContainer.MovementDescId
+                             )
+         , tmpAvance_Only AS (SELECT MI_Child.ObjectId     AS PersonalId
+                                   , SUM (CASE WHEN MI_Child.MovementId = inMovementId THEN 0 ELSE MI_Child.Amount END) AS Amount
+                              FROM Movement
+                                 /*INNER JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                                                 ON MLO_PersonalServiceList.MovementId = Movement.Id
+                                                                AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                                                AND MLO_PersonalServiceList.ObjectId   = vbPersonalServiceListId*/
+                              
+                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                          AND MovementItem.DescId     = zc_MI_Master()
+                                                          AND MovementItem.isErased   = FALSE
+                                   INNER JOIN MovementItemLinkObject AS MLO_PersonalServiceList
+                                                                     ON MLO_PersonalServiceList.MovementItemId = MovementItem.Id
+                                                                    AND MLO_PersonalServiceList.DescId         = zc_MILinkObject_MoneyPlace()
+                                                                    AND MLO_PersonalServiceList.ObjectId       = vbPersonalServiceListId
+                                   INNER JOIN MovementItemDate AS MIDate_ServiceDate
+                                                               ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
+                                                              AND MIDate_ServiceDate.DescId        = zc_MIDate_ServiceDate()
+                                                              AND MIDate_ServiceDate.ValueData     = vbServiceDate
+                                   INNER JOIN MovementItem AS MI_Child
+                                                           ON MI_Child.MovementId = Movement.Id
+                                                          AND MI_Child.DescId     = zc_MI_Child()
+                                                          AND MI_Child.isErased   = FALSE
+
+
+                              WHERE Movement.DescId   = zc_Movement_Cash()
+                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                                
+                                -- !!!схема премии!!!
+                                AND vbOnly = TRUE
+
+                              GROUP BY MI_Child.ObjectId
                              )
              , tmpService AS (SELECT tmpParent.PersonalId
                                    , tmpParent.UnitId
@@ -569,6 +624,8 @@ BEGIN
                                  --, COALESCE (tmpService.PersonalServiceListId_calc, 0)  AS PersonalServiceListId_calc
                                    , tmpService.MovementId_find
                                    , tmpService.ContainerId_find
+                                     --
+                                   , ROW_NUMBER() OVER (PARTITION BY COALESCE (tmpMI.PersonalId, tmpService.PersonalId) ORDER BY tmpService.SummAdd DESC) AS Ord
                               FROM tmpMI
                                    FULL JOIN tmpService ON tmpService.PersonalId  = tmpMI.PersonalId
                                                        AND tmpService.UnitId      = tmpMI.UnitId
@@ -624,14 +681,16 @@ BEGIN
             , tmpData.SummAvance           :: TFloat AS SummAvance
 
             , tmpData.Amount_current     :: TFloat AS Amount_current
-            , CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0 ELSE tmpData.Amount_avance END :: TFloat AS Amount_avance
+            , CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0 ELSE COALESCE (tmpData.Amount_avance, 0) END :: TFloat AS Amount_avance
             , tmpData.Amount_avance_ret  :: TFloat AS Amount_avance_ret
-            , tmpData.Amount_service     :: TFloat AS Amount_service
+            , (COALESCE (tmpData.Amount_service, 0) + COALESCE (tmpAvance_Only.Amount, 0)) :: TFloat AS Amount_service
             , (COALESCE (tmpData.SummToPay_cash, 0)
                - CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN 0 ELSE COALESCE (tmpData.Amount, 0) END
                - COALESCE (tmpData.Amount_avance_ret, 0)
                - CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0 ELSE COALESCE (tmpData.Amount_avance, 0) END
                - COALESCE (tmpData.Amount_service, 0)
+               -- !!!схема премии!!!
+               - COALESCE (tmpAvance_Only.Amount, 0)
               ) :: TFloat AS SummRemains
 
             , (CASE WHEN tmpData.SummAvanceRecalc > 0 THEN 0
@@ -655,6 +714,8 @@ BEGIN
             , tmpData.isErased
          
        FROM tmpData
+            LEFT JOIN tmpAvance_Only ON tmpAvance_Only.PersonalId = tmpData.PersonalId
+                                    AND tmpData.Ord               = 1
             LEFT JOIN MovementItemString AS MIString_Comment 
                                          ON MIString_Comment.MovementItemId = tmpData.MovementItemId
                                         AND MIString_Comment.DescId         = zc_MIString_Comment()
