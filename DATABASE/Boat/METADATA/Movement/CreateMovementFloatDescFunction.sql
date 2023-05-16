@@ -139,11 +139,21 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_NPP() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_NPP', 'Очередность сборки' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_NPP');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_SummReal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummReal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_SummReal', 'Итого сумма факт (без НДС, с учетом скидки, без Транспорта)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummReal');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_SummTax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummTax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_SummTax', 'Сумма ручной скидки (без НДС)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummTax');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 04.02.23         *zc_MovementFloat_NPP
+ 15.05.23         * zc_MovementFloat_SummReal
+                    zc_MovementFloat_SummTax
+ 04.02.23         * zc_MovementFloat_NPP
  13.10.21         *
  12.07.21         * zc_MovementFloat_TotalCountChild
  10.06.21         * zc_MovementFloat_TotalSummCost

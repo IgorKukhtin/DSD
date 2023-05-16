@@ -1028,6 +1028,9 @@ INSERT INTO ObjectDesc (Code, ItemName)
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_GoodsKindNew', 'Виды товаров (НОВЫЕ)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsKindNew');
 
+ CREATE OR REPLACE FUNCTION zc_Object_TransportKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_TransportKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_TransportKind', 'Вид перевозок' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_TransportKind');
  
  
 
@@ -1656,6 +1659,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 16.05.23         * zc_Object_TransportKind
  18.04.23                                                                                        * zc_Object_CommentCheck
  21.03.23                                                                                        * zc_Object_AccountSalesDE
  14.11.22         * zc_Object_MemberReport

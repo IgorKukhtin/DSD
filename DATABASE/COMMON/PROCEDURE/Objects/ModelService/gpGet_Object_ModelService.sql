@@ -23,7 +23,7 @@ $BODY$BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
+           , lfGet_ObjectCode(0, zc_Object_ReceiptGoods())   AS Code
            , CAST ('' as TVarChar)  AS NAME
            
            , CAST ('' as TVarChar)     AS Comment

@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Product(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Hours TFloat, DiscountTax TFloat, DiscountNextTax TFloat
+             , SummReal TFloat, SummTax TFloat
              , DateStart TDateTime, DateBegin TDateTime, DateSale TDateTime
              , CIN TVarChar, EngineNum TVarChar
              , Comment TVarChar
@@ -72,6 +73,8 @@ BEGIN
            , CAST (0 AS TFloat)        AS Hours
            , CAST (0 AS TFloat)        AS DiscountTax
            , CAST (0 AS TFloat)        AS DiscountNextTax
+           , CAST (0 AS TFloat)        AS SummReal
+           , CAST (0 AS TFloat)        AS SummTax
            , CAST (NULL AS TDateTime)  AS DateStart
            , CAST (NULL AS TDateTime)  AS DateBegin
            , CAST (NULL AS TDateTime)  AS DateSale
@@ -144,6 +147,8 @@ BEGIN
                              , MovementFloat_OperPrice_load.ValueData     AS OperPrice_load
                              , MovementFloat_TransportSumm_load.ValueData AS TransportSumm_load
                              , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP
+                             , MovementFloat_SummReal.ValueData AS SummReal
+                             , MovementFloat_SummTax.ValueData  AS SummTax
                         FROM Movement
                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -163,7 +168,15 @@ BEGIN
                              LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
                                                      ON MovementFloat_DiscountNextTax.MovementId = Movement.Id
                                                     AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
+ 
+                             LEFT JOIN MovementFloat AS MovementFloat_SummReal
+                                                     ON MovementFloat_SummReal.MovementId = Movement.Id
+                                                    AND MovementFloat_SummReal.DescId = zc_MovementFloat_SummReal()
 
+                             LEFT JOIN MovementFloat AS MovementFloat_SummTax
+                                                     ON MovementFloat_SummTax.MovementId = Movement.Id
+                                                    AND MovementFloat_SummTax.DescId = zc_MovementFloat_SummTax()
+ 
                              LEFT JOIN MovementFloat AS MovementFloat_OperPrice_load
                                                      ON MovementFloat_OperPrice_load.MovementId = Movement.Id
                                                     AND MovementFloat_OperPrice_load.DescId     = zc_MovementFloat_OperPrice_load()
@@ -228,6 +241,8 @@ BEGIN
          , ObjectFloat_Hours.ValueData      AS Hours
          , tmpOrderClient.DiscountTax       AS DiscountTax
          , tmpOrderClient.DiscountNextTax   AS DiscountNextTax
+         , tmpOrderClient.SummReal ::TFloat
+         , tmpOrderClient.SummTax  ::TFloat
 
          , ObjectDate_DateStart.ValueData   AS DateStart
          , ObjectDate_DateBegin.ValueData   AS DateBegin
@@ -389,6 +404,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.05.23         *
  05.02.23         *
  04.01.21         *
  08.10.20         *

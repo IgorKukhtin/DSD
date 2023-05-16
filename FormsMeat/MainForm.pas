@@ -1428,6 +1428,8 @@ type
     miGoodsGroup_UKTZED: TMenuItem;
     actReport_Goods_byMovementSaleReturn: TdsdOpenForm;
     N254: TMenuItem;
+    actTransportKind: TdsdOpenForm;
+    miTransportKind: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

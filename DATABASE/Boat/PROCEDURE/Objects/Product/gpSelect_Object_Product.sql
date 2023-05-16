@@ -83,7 +83,10 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , SummDiscount1      TFloat
              , SummDiscount2      TFloat
              , SummDiscount3      TFloat
-             , SummDiscount_total TFloat
+             , SummDiscount_total TFloat   
+             
+             , SummReal TFloat, SummTax TFloat
+             , TotalSumm_diff TFloat
 
              , isBasicConf Boolean
 
@@ -138,6 +141,9 @@ BEGIN
                               , MovementFloat_DiscountNextTax.ValueData     AS DiscountNextTax
                               , MovementFloat_OperPrice_load.ValueData      AS OperPrice_load
                               , MovementFloat_TransportSumm_load.ValueData  AS TransportSumm_load
+                              , MovementFloat_SummReal.ValueData ::TFloat AS SummReal
+                              , MovementFloat_SummTax.ValueData  ::TFloat AS SummTax 
+                              , (COALESCE (MovementFloat_TotalSumm.ValueData,0) - COALESCE (MovementFloat_SummTax.ValueData,0)) ::TFloat AS TotalSumm_diff
                               , Object_InfoMoney_View.InfoMoneyId
                               , Object_InfoMoney_View.InfoMoneyName_all
                                 -- % НДС Заказ клиента
@@ -176,6 +182,18 @@ BEGIN
                               LEFT JOIN MovementFloat AS MovementFloat_NPP
                                                       ON MovementFloat_NPP.MovementId = Movement.Id
                                                      AND MovementFloat_NPP.DescId = zc_MovementFloat_NPP()
+
+                             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                     ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+                             LEFT JOIN MovementFloat AS MovementFloat_SummReal
+                                                     ON MovementFloat_SummReal.MovementId = Movement.Id
+                                                    AND MovementFloat_SummReal.DescId = zc_MovementFloat_SummReal()
+
+                             LEFT JOIN MovementFloat AS MovementFloat_SummTax
+                                                     ON MovementFloat_SummTax.MovementId = Movement.Id
+                                                    AND MovementFloat_SummTax.DescId = zc_MovementFloat_SummTax()
 
                               LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
                                                    ON ObjectLink_InfoMoney.ObjectId = Object_From.Id
@@ -267,7 +285,14 @@ BEGIN
 
                          , tmpOrderClient.NPP
                          , tmpOrderClient.OperDate
-                         , COALESCE (tmpOrderClient.StatusId, zc_Enum_Status_Erased()) AS StatusId
+                         , COALESCE (tmpOrderClient.StatusId, zc_Enum_Status_Erased()) AS StatusId 
+                         
+                         -- Итого сумма факт (без НДС, с учетом скидки, без Транспорта)
+                         ,tmpOrderClient.SummReal                                          
+                         -- Сумма ручной скидки (без НДС)
+                         ,tmpOrderClient.SummTax 
+                         --"информативнfz" колонку "Сумма расчет (без ндс)" 
+                         ,tmpOrderClient.TotalSumm_diff
 
                     FROM Object AS Object_Product
                          LEFT JOIN ObjectDate AS ObjectDate_DateSale
@@ -601,6 +626,13 @@ BEGIN
                          -- Базовая цена продажи модели с сайта
                        , Object_Product.BasisPrice_load
 
+                       -- Итого сумма факт (без НДС, с учетом скидки, без Транспорта)
+                       , Object_Product.SummReal                                          
+                       -- Сумма ручной скидки (без НДС)
+                       , Object_Product.SummTax 
+                       --"информативнfz" колонку "Сумма расчет (без ндс)" 
+                       , Object_Product.TotalSumm_diff
+                         
                    FROM tmpProduct AS Object_Product
                         LEFT JOIN tmpProdColorItems_find AS tmpProdColorItems_1
                                                          ON tmpProdColorItems_1.MovementId_OrderClient = Object_Product.MovementId_OrderClient
@@ -799,8 +831,14 @@ BEGIN
           + (COALESCE (tmpCalc_2.BasisPrice_summ, 0) - COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0))
            ) :: TFloat AS SummDiscount_total
 
-         , tmpResAll.isBasicConf
+         -- Итого сумма факт (без НДС, с учетом скидки, без Транспорта)
+         , tmpResAll.SummReal                                          
+         -- Сумма ручной скидки (без НДС)
+         , tmpResAll.SummTax 
+         --"информативнfz" колонку "Сумма расчет (без ндс)" 
+         , tmpResAll.TotalSumm_diff
 
+         , tmpResAll.isBasicConf
 
            -- Состояние
          , zfCalc_Order_State (tmpResAll.isSale

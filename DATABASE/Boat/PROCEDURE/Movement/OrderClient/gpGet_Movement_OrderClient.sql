@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
              , VATPercent TFloat, DiscountTax TFloat, DiscountNextTax TFloat
+             , SummReal TFloat, SummTax TFloat
              , NPP TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
@@ -21,6 +22,34 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , isChild_Recalc Boolean
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
+             -- Базовая цена продажи модели с сайта
+             ,  BasisPrice_load        TFloat
+             -- ИТОГО Сумма продажи без НДС - без Скидки, Basis+options
+             , Basis_summ_orig         TFloat
+             -- ИТОГО Сумма продажи без НДС - без Скидки (options)
+             , Basis_summ2_orig        TFloat
+             , BasisWVAT_summ2_orig    TFloat
+             -- % скидки осн
+             , DiscountTax_inf             TFloat
+             -- % скидки доп
+             , DiscountNextTax_inf         TFloat
+             -- ИТОГО Сумма Скидки - без НДС
+             , SummDiscount1           TFloat
+             , SummDiscount2           TFloat
+              -----&& 
+             , SummDiscount3           TFloat
+             , SummDiscount_total      TFloat
+               -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
+             , Basis_summ              TFloat
+
+              -- Сумма транспорт с сайта
+             , TransportSumm_load     TFloat
+              -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+             , Basis_summ_transport    TFloat
+             --НДС
+             , TaxKind_Value_Client    TFloat
+             -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+             , BasisWVAT_summ_transport TFloat
               )
 AS
 $BODY$
@@ -54,6 +83,8 @@ BEGIN
              , ObjectFloat_TaxKind_Value.ValueData :: TFloat AS VATPercent
              , CAST (0 as TFloat)        AS DiscountTax
              , CAST (0 as TFloat)        AS DiscountNextTax
+             , CAST (0 as TFloat)        AS SummReal
+             , CAST (0 as TFloat)        AS SummTax 
              , (vbNPP +1)       ::TFloat AS NPP
              , 0                         AS FromId
              , CAST ('' AS TVarChar)     AS FromName
@@ -75,7 +106,23 @@ BEGIN
 
              , Object_Insert.Id                AS InsertId
              , Object_Insert.ValueData         AS InsertName
-             , CURRENT_TIMESTAMP  ::TDateTime  AS InsertDate
+             , CURRENT_TIMESTAMP  ::TDateTime  AS InsertDate 
+             
+             , CAST (0 as TFloat)        AS BasisPrice_load
+             , CAST (0 as TFloat)        AS Basis_summ_orig     
+             , CAST (0 as TFloat)        AS Basis_summ2_orig    
+             , CAST (0 as TFloat)        AS BasisWVAT_summ2_orig
+             , CAST (0 as TFloat)        AS DiscountTax         
+             , CAST (0 as TFloat)        AS DiscountNextTax     
+             , CAST (0 as TFloat)        AS SummDiscount1       
+             , CAST (0 as TFloat)        AS SummDiscount2       
+             , CAST (0 as TFloat)        AS SummDiscount3
+             , CAST (0 as TFloat)        AS SummDiscount_total
+             , CAST (0 as TFloat)        AS Basis_summ  
+             , CAST (0 as TFloat)        AS TransportSumm_load 
+             , CAST (0 as TFloat)        AS Basis_summ_transport
+             , CAST (0 as TFloat)        AS TaxKind_Value_Client
+             , CAST (0 as TFloat)        AS BasisWVAT_summ_transport
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                      ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
@@ -86,6 +133,45 @@ BEGIN
      ELSE
 
      RETURN QUERY
+        WITH
+        tmpSummProduct AS (SELECT  
+                                 -- Базовая цена продажи модели с сайта
+                                   gpSelect.BasisPrice_load
+                                 -- ИТОГО Сумма продажи без НДС - без Скидки, Basis+options
+                                 , gpSelect.Basis_summ_orig
+                                 -- ИТОГО Сумма продажи без НДС - без Скидки (options)
+                                 , gpSelect.Basis_summ2_orig
+                                 , gpSelect.BasisWVAT_summ2_orig
+                                 -- % скидки осн
+                                 , gpSelect.DiscountTax
+                                 -- % скидки доп
+                                 , gpSelect.DiscountNextTax
+                                 -- ИТОГО Сумма Скидки - без НДС
+                                 , gpSelect.SummDiscount1
+                                 , gpSelect.SummDiscount2 
+                                  -----&& 
+                                 , gpSelect.SummDiscount3
+                                 , gpSelect.SummDiscount_total
+                                  
+                                   -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
+                                 , gpSelect.Basis_summ   
+                                  -- Сумма ручной скидки (без НДС)
+                                 , gpSelect.SummTax   
+                                  -- Итого сумма факт (без НДС, с учетом скидки, без Транспорта)
+                                 , gpSelect.SummReal   
+                                  -- Сумма транспорт с сайта
+                                 , gpSelect.TransportSumm_load 
+                                  -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+                                 , gpSelect.Basis_summ_transport
+                                 --НДС
+                                 , gpSelect.TaxKind_Value_Client
+       
+                                 -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+                                 , gpSelect.BasisWVAT_summ_transport
+                           FROM gpSelect_Object_Product (FALSE, FALSE, '') AS gpSelect 
+                           WHERE gpSelect.MovementId_OrderClient = inMovementId
+                           )
+
 
         SELECT
             Movement_OrderClient.Id
@@ -99,6 +185,8 @@ BEGIN
           , MovementFloat_VATPercent.ValueData        AS VATPercent
           , MovementFloat_DiscountTax.ValueData       AS DiscountTax
           , MovementFloat_DiscountNextTax.ValueData   AS DiscountNextTax
+          , MovementFloat_SummReal.ValueData ::TFloat AS SummReal
+          , MovementFloat_SummTax.ValueData  ::TFloat AS SummTax          
           , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP
 
           , Object_From.Id                            AS FromId
@@ -116,7 +204,7 @@ BEGIN
           , ObjectDate_DateBegin.ValueData             AS DateBegin
 
           , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
-        --, EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE) :: Boolean AS isChild_Recalc
+          --, EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE) :: Boolean AS isChild_Recalc
           , FALSE :: Boolean AS isChild_Recalc
 
           , Movement_Invoice.Id                                        AS MovementId_Invoice
@@ -126,6 +214,36 @@ BEGIN
           , Object_Insert.Id                     AS InsertId
           , Object_Insert.ValueData              AS InsertName
           , MovementDate_Insert.ValueData        AS InsertDate
+
+          -- Базовая цена продажи модели с сайта
+          ,  tmpSummProduct.BasisPrice_load          ::TFloat
+          -- ИТОГО Сумма продажи без НДС - без Скидки, Basis+options
+          , tmpSummProduct.Basis_summ_orig          ::TFloat
+          -- ИТОГО Сумма продажи без НДС - без Скидки (options)
+          , tmpSummProduct.Basis_summ2_orig         ::TFloat
+          , tmpSummProduct.BasisWVAT_summ2_orig     ::TFloat
+          -- % скидки осн
+          , tmpSummProduct.DiscountTax              ::TFloat AS DiscountTax_inf
+          -- % скидки доп
+          , tmpSummProduct.DiscountNextTax          ::TFloat AS DiscountNextTax_inf
+          -- ИТОГО Сумма Скидки - без НДС
+          , tmpSummProduct.SummDiscount1            ::TFloat
+          , tmpSummProduct.SummDiscount2            ::TFloat
+           -----&& 
+          , tmpSummProduct.SummDiscount3
+          , tmpSummProduct.SummDiscount_total
+           
+            -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
+          , tmpSummProduct.Basis_summ     
+           -- Сумма транспорт с сайта
+          , tmpSummProduct.TransportSumm_load 
+           -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+          , tmpSummProduct.Basis_summ_transport
+          --НДС
+          , tmpSummProduct.TaxKind_Value_Client
+
+          -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+          , tmpSummProduct.BasisWVAT_summ_transport
 
         FROM Movement AS Movement_OrderClient
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_OrderClient.StatusId
@@ -166,9 +284,17 @@ BEGIN
                                     ON MovementFloat_DiscountNextTax.MovementId = Movement_OrderClient.Id
                                    AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
 
-             LEFT JOIN MovementFloat AS MovementFloat_NPP
-                                     ON MovementFloat_NPP.MovementId = Movement_OrderClient.Id
-                                    AND MovementFloat_NPP.DescId = zc_MovementFloat_NPP()
+            LEFT JOIN MovementFloat AS MovementFloat_NPP
+                                    ON MovementFloat_NPP.MovementId = Movement_OrderClient.Id
+                                   AND MovementFloat_NPP.DescId = zc_MovementFloat_NPP()
+
+            LEFT JOIN MovementFloat AS MovementFloat_SummReal
+                                    ON MovementFloat_SummReal.MovementId = Movement_OrderClient.Id
+                                   AND MovementFloat_SummReal.DescId = zc_MovementFloat_SummReal()
+
+            LEFT JOIN MovementFloat AS MovementFloat_SummTax
+                                    ON MovementFloat_SummTax.MovementId = Movement_OrderClient.Id
+                                   AND MovementFloat_SummTax.DescId = zc_MovementFloat_SummTax()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId = Movement_OrderClient.Id
@@ -206,7 +332,9 @@ BEGIN
 
             LEFT JOIN ObjectDate AS ObjectDate_DateBegin
                                  ON ObjectDate_DateBegin.ObjectId = Object_Product.Id
-                                AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin()
+                                AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin() 
+            
+            LEFT JOIN tmpSummProduct ON 1 = 1
         WHERE Movement_OrderClient.Id = inMovementId
           AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
           ;
@@ -223,4 +351,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_OrderClient (inMovementId:= 0, inOperDate := '02.02.2021'::TDateTime, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_OrderClient (inMovementId:= 664, inOperDate := '02.02.2021'::TDateTime, inSession:= '9818')

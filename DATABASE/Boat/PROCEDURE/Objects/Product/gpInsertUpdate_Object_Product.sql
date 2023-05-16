@@ -18,6 +18,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar
                                                     , TFloat, TFloat, TFloat, TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
                                                     , Integer, TVarChar, TDateTime, Integer, TVarChar, TDateTime, TFloat, TFloat
                                                     , TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean
+                                                    , TFloat, TFloat, TFloat, TFloat, TFloat
+                                                    , TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
+                                                    , Integer, TVarChar, TDateTime, TFloat, Integer, TVarChar, TDateTime, TFloat, TFloat
+                                                    , TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
  INOUT ioId                    Integer   ,    -- ключ объекта <Лодки>
@@ -33,6 +38,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
     IN inHours                 TFloat    ,
     IN inDiscountTax           TFloat    ,
     IN inDiscountNextTax       TFloat    ,
+ INOUT ioSummReal              TFloat    ,
+ INOUT ioSummTax               TFloat    ,
     IN inDateStart             TDateTime ,
     IN inDateBegin             TDateTime ,
     IN inDateSale              TDateTime ,
@@ -53,7 +60,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
 
     IN inSession               TVarChar       -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -197,30 +204,34 @@ BEGIN
    THEN
        inInvNumber_OrderClient := COALESCE (NULLIF (zfConvert_StringToNumber (inInvNumber_OrderClient), 0), NEXTVAL ('movement_OrderClient_seq')) ::TVarChar;
        -- создаем документ
-       inMovementId_OrderClient:= lpInsertUpdate_Movement_OrderClient(ioId                 := inMovementId_OrderClient
-                                                                    , inInvNumber          := inInvNumber_OrderClient
-                                                                    , inInvNumberPartner   := ''
-                                                                    , inOperDate           := COALESCE (inOperDate_OrderClient, CURRENT_DATE)
-                                                                    , inPriceWithVAT       := FALSE
-                                                                    , inVATPercent         := (SELECT ObjectFloat_TaxKind_Value.ValueData
-                                                                                               FROM ObjectLink AS ObjectLink_TaxKind
-                                                                                                    LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                                                                                          ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
-                                                                                                                         AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
-                                                                                               WHERE ObjectLink_TaxKind.ObjectId = inClientId
-                                                                                                 AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
-                                                                                              )
-                                                                    , inDiscountTax        := inDiscountTax
-                                                                    , inDiscountNextTax    := inDiscountNextTax
-                                                                  --, inNPP                := inNPP_OrderClient
-                                                                    , inFromId             := inClientId
-                                                                    , inToId               := zc_Unit_Production()
-                                                                    , inPaidKindId         := zc_Enum_PaidKind_FirstForm()
-                                                                    , inProductId          := ioId
-                                                                    , inMovementId_Invoice := 0
-                                                                    , inComment            := ''
-                                                                    , inUserId             := vbUserId
-                                                                    );
+       SELECT tmp.ioId
+      INTO inMovementId_OrderClient 
+       FROM lpInsertUpdate_Movement_OrderClient(ioId                 := inMovementId_OrderClient
+                                              , inInvNumber          := inInvNumber_OrderClient
+                                              , inInvNumberPartner   := ''
+                                              , inOperDate           := COALESCE (inOperDate_OrderClient, CURRENT_DATE)
+                                              , inPriceWithVAT       := FALSE
+                                              , inVATPercent         := (SELECT ObjectFloat_TaxKind_Value.ValueData
+                                                                         FROM ObjectLink AS ObjectLink_TaxKind
+                                                                              LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                                                                    ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                                                                                   AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+                                                                         WHERE ObjectLink_TaxKind.ObjectId = inClientId
+                                                                           AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+                                                                        )
+                                              , inDiscountTax        := inDiscountTax
+                                              , inDiscountNextTax    := inDiscountNextTax
+                                              , ioSummReal           := ioSummReal
+                                              , ioSummTax            := ioSummTax
+                                            --, inNPP                := inNPP_OrderClient
+                                              , inFromId             := inClientId
+                                              , inToId               := zc_Unit_Production()
+                                              , inPaidKindId         := zc_Enum_PaidKind_FirstForm()
+                                              , inProductId          := ioId
+                                              , inMovementId_Invoice := 0
+                                              , inComment            := ''
+                                              , inUserId             := vbUserId
+                                              )AS tmp;
    ELSEIF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId_OrderClient AND Movement.StatusId = zc_Enum_Status_Complete())
    THEN
        -- пересохраняем
@@ -232,6 +243,8 @@ BEGIN
                                                  , inVATPercent       := tmp.VATPercent            ::TFloat
                                                  , inDiscountTax      := inDiscountTax             ::TFloat              --пересохраняем
                                                  , inDiscountNextTax  := inDiscountNextTax         ::TFloat              --пересохраняем
+                                                 , ioSummReal         := ioSummReal                ::TFloat
+                                                 , ioSummTax          := ioSummTax                 ::TFloat
                                                --, inNPP              := inNPP_OrderClient
                                                  , inFromId           := inClientId                ::Integer             --пересохраняем
                                                  , inToId             := tmp.ToId                  ::Integer

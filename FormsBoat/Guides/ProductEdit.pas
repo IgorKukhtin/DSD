@@ -163,6 +163,10 @@ type
     actGet: TdsdExecStoredProc;
     mactGet: TMultiAction;
     actInsertUpdate: TdsdExecStoredProc;
+    cxLabel36: TcxLabel;
+    edSummTax: TcxCurrencyEdit;
+    cxLabel37: TcxLabel;
+    edSummReal: TcxCurrencyEdit;
   private
     { Private declarations }
   public
