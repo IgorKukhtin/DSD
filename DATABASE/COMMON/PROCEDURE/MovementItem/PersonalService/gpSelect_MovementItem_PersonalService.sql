@@ -22,7 +22,8 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , FineSubjectId Integer, FineSubjectName TVarChar
              , UnitFineSubjectId Integer, UnitFineSubjectName TVarChar
              , StaffListSummKindName TVarChar
-             , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat
+             , Amount TFloat, AmountToPay TFloat, AmountCash TFloat,AmountCash_rem TFloat, AmountCash_pay TFloat
+             , SummService TFloat
              , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat, SummCardSecondDiff TFloat, SummCardSecondCash TFloat
              , SummCardSecond_Avance TFloat
              , SummAvCardSecond TFloat, SummAvCardSecondRecalc TFloat
@@ -356,6 +357,7 @@ BEGIN
             -- выплата аванса
           , tmpContainer_pay AS (SELECT DISTINCT
                                         CLO_ServiceDate.ContainerId
+                                      , CLO_Personal.ObjectId                    AS PersonalId
                                       , ObjectLink_Personal_Member.ChildObjectId AS MemberId
                                       , CLO_Position.ObjectId                    AS PositionId
                                       , ObjectLink_Personal_PositionLevel.ChildObjectId AS PositionLevelId
@@ -385,8 +387,8 @@ BEGIN
                                    AND CLO_PersonalServiceList.DescId   = zc_ContainerLinkObject_PersonalServiceList()
                                 )
         , tmpMIContainer_pay AS (SELECT SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
-                                    --, SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND MIContainer.Amount < 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_ret
-                                    --, SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS Amount_service
+                                      , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance())  THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_all
+                                      , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS Amount_service
                                         -- аванс по ведомости
                                       , SUM (CASE WHEN ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
                                                    AND MIContainer.MovementDescId = zc_Movement_Cash()
@@ -460,9 +462,6 @@ BEGIN
                                                                            AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
                                       GROUP BY MovementItem.ObjectId, MILinkObject_Position.ObjectId                                     
                                      )
-
-
-
        -- Результат
        SELECT tmpAll.MovementItemId                         AS Id
             , Object_Personal.Id                            AS PersonalId
@@ -510,6 +509,7 @@ BEGIN
 
             , tmpAll.Amount :: TFloat           AS Amount
             , MIFloat_SummToPay.ValueData       AS AmountToPay
+              -- К выплате (из кассы)
             , (COALESCE (MIFloat_SummToPay.ValueData, 0)
             + (-1) *  CASE WHEN 1=0 AND vbUserId = 5
                                THEN 0
@@ -518,6 +518,20 @@ BEGIN
                              + COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
                       END
               ) :: TFloat AS AmountCash
+              -- Остаток к выдаче (из кассы) грн
+            , (COALESCE (MIFloat_SummToPay.ValueData, 0)
+            + (-1) *  CASE WHEN 1=0 AND vbUserId = 5
+                               THEN 0
+                          ELSE COALESCE (MIFloat_SummCard.ValueData, 0)
+                             + COALESCE (MIFloat_SummCardSecond.ValueData, 0)
+                             + COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
+                             + COALESCE (tmpMIContainer_pay.Amount_avance_all, 0)
+                             + COALESCE (tmpMIContainer_pay.Amount_service, 0)
+                      END
+              ) :: TFloat AS AmountCash_rem
+              -- Остаток к выдаче (из кассы) грн
+            , (COALESCE (tmpMIContainer_pay.Amount_avance_all, 0) + COALESCE (tmpMIContainer_pay.Amount_service, 0)) :: TFloat AS AmountCash_pay
+
             , MIFloat_SummService.ValueData           AS SummService
             , MIFloat_SummCard.ValueData              AS SummCard
             , MIFloat_SummCardRecalc.ValueData        AS SummCardRecalc

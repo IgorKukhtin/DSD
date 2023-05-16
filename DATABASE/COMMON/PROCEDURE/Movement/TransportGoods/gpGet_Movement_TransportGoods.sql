@@ -157,7 +157,7 @@ BEGIN
                                                                  -- Бухгалтер (відповідальна особа вантажовідправника) - 2
                                                                , inMemberId2       := CASE WHEN COALESCE (tmpBranch.Member2Id,0) <> 0 THEN tmpBranch.Member2Id
                                                                                            ELSE CASE WHEN vbIsOd = TRUE
-                                                                                                     THEN 418699 -- Бирдіна Оксана Євгенівна
+                                                                                                     THEN 7892803 -- Новаковська Наталя Віталіївна -- 418699 -- Бирдіна Оксана Євгенівна
                                                                                                 WHEN vbIsNik = TRUE
                                                                                                      THEN 453450 -- Тимків Тетяна Василівна
                                                                                                      --THEN 419066 -- Глушкова Нина Николаевна  453450
@@ -167,7 +167,7 @@ BEGIN
                                                                  -- Відпуск дозволив - 3
                                                                , inMemberId3       := CASE WHEN COALESCE (tmpBranch.Member3Id,0) <> 0 THEN tmpBranch.Member3Id
                                                                                            ELSE CASE WHEN vbIsOd = TRUE
-                                                                                                          THEN 418699 -- Бирдіна Оксана Євгенівна
+                                                                                                          THEN 7892803 -- Новаковська Наталя Віталіївна -- 418699 -- Бирдіна Оксана Євгенівна
                                                                                                      WHEN vbIsNik = TRUE
                                                                                                           THEN 453450 -- Тимків Тетяна Василівна
                                                                                                           --THEN 419066 -- Глушкова Нина Николаевна
@@ -349,7 +349,7 @@ BEGIN
                                          ON MovementLinkObject_Member3.MovementId = Movement.Id
                                         AND MovementLinkObject_Member3.DescId = zc_MovementLinkObject_Member3()
             LEFT JOIN Object AS Object_Member3 ON Object_Member3.Id = CASE WHEN vbIsOd = TRUE AND MovementLinkObject_Member3.ObjectId IS NULL
-                                                                                THEN 418699 -- Бирдіна Оксана Євгенівна
+                                                                                THEN 7892803 -- Новаковська Наталя Віталіївна -- 418699 -- Бирдіна Оксана Євгенівна
                                                                            WHEN vbIsNik = TRUE AND MovementLinkObject_Member3.ObjectId IS NULL
                                                                                 THEN 453450 -- Тимків Тетяна Василівна
                                                                            ELSE MovementLinkObject_Member3.ObjectId

@@ -43,6 +43,10 @@ $BODY$
 
   DECLARE vbIsContainer_Asset Boolean;
 BEGIN
+
+-- if inUserId = zc_Enum_Process_Auto_PrimeCost() :: Integer then return; end if;
+
+
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
      DELETE FROM _tmpMIReport_insert;
