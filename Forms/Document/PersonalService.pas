@@ -304,6 +304,8 @@ type
     actDoLoad_Compens: TExecuteImportSettingsAction;
     macLoad_Compens: TMultiAction;
     bbLoad_Compens: TdxBarButton;
+    AmountCash_rem: TcxGridDBColumn;
+    AmountCash_pay: TcxGridDBColumn;
   private
     { Private declarations }
   public
