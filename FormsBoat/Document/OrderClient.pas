@@ -415,6 +415,11 @@ type
     edSummTax: TcxCurrencyEdit;
     cxLabel37: TcxLabel;
     edSummReal: TcxCurrencyEdit;
+    actChangeSummDialog: TExecuteDialog;
+    actUpdateMovement_Summ: TdsdExecStoredProc;
+    macChangeSumm: TMultiAction;
+    spUpdateMovement_Summ: TdsdStoredProc;
+    bbChangeSumm: TdxBarButton;
   private
   public
   end;

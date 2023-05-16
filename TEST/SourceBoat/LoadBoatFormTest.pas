@@ -417,6 +417,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientDialogForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientSummDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderClientSummDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderClientJournalChoiceItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderClientJournalChoiceItemForm');
   {

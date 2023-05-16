@@ -360,17 +360,18 @@ object OrderClientForm: TOrderClientForm
     object edSummTax: TcxCurrencyEdit
       Left = 482
       Top = 63
-      Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
+      Hint = #1057#1091#1084#1084#1072' '#1088#1091#1095#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1073#1077#1079' '#1053#1044#1057')'
       ParentShowHint = False
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 39
       Width = 76
     end
     object cxLabel37: TcxLabel
-      Left = 564
-      Top = 45
+      Left = 565
+      Top = 40
       Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
       Caption = 'C'#1091#1084#1084#1072' '#1092#1072#1082#1090
       ParentShowHint = False
@@ -379,10 +380,11 @@ object OrderClientForm: TOrderClientForm
     object edSummReal: TcxCurrencyEdit
       Left = 564
       Top = 63
-      Hint = '% '#1089#1082#1080#1076#1082#1080' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
+      Hint = ' '#9#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1092#1072#1082#1090' ('#1073#1077#1079' '#1053#1044#1057', '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072')'
       ParentShowHint = False
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 41
       Width = 61
@@ -395,7 +397,7 @@ object OrderClientForm: TOrderClientForm
     Height = 374
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheet1
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 374
     ClientRectRight = 1349
@@ -3336,6 +3338,10 @@ object OrderClientForm: TOrderClientForm
         end
         item
           Visible = True
+          ItemName = 'bbChangeSumm'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -3594,6 +3600,10 @@ object OrderClientForm: TOrderClientForm
       Action = macChangeNPP
       Category = 0
     end
+    object bbChangeSumm: TdxBarButton
+      Action = macChangeSumm
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -3614,6 +3624,20 @@ object OrderClientForm: TOrderClientForm
     Images = dmMain.ImageList
     Left = 43
     Top = 191
+    object macChangeSumm: TMultiAction
+      Category = 'NPP'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actChangeSummDialog
+        end
+        item
+          Action = actUpdateMovement_Summ
+        end>
+      Caption = 'macChangeSumm'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072', '#1057#1091#1084#1084#1091' '#1088#1091#1095#1085'. '#1089#1082#1080#1076#1082#1080
+      ImageIndex = 38
+    end
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -3630,6 +3654,48 @@ object OrderClientForm: TOrderClientForm
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 14
       ShortCut = 113
+    end
+    object actUpdateMovement_Summ: TdsdExecStoredProc
+      Category = 'NPP'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovement_Summ
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovement_Summ
+        end
+        item
+          StoredProc = spGet
+        end>
+      Caption = 'actUpdateMovement_Summ'
+    end
+    object actChangeSummDialog: TExecuteDialog
+      Category = 'NPP'
+      MoveParams = <>
+      Caption = 'actOrderClientSummDialog'
+      FormName = 'TOrderClientSummDialogForm'
+      FormNameParam.Value = 'TOrderClientSummDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'SummTax'
+          Value = 0.000000000000000000
+          Component = edSummTax
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SummReal'
+          Value = 42160d
+          Component = edSummReal
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
     object actUpdateMovement_NPP: TdsdExecStoredProc
       Category = 'NPP'
@@ -3667,7 +3733,6 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -3688,7 +3753,6 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -3840,7 +3904,6 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -3850,7 +3913,6 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -3867,7 +3929,6 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -3939,7 +4000,6 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 57
@@ -4010,7 +4070,6 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 34
@@ -4069,7 +4128,6 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spInsertMaskMIMaster
       StoredProcList = <
@@ -4121,7 +4179,6 @@ object OrderClientForm: TOrderClientForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
       Action = actGoodsChoiceForm
@@ -6498,5 +6555,38 @@ object OrderClientForm: TOrderClientForm
     PackSize = 1
     Left = 226
     Top = 232
+  end
+  object spUpdateMovement_Summ: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderClient_Summ'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummReal'
+        Value = 42160d
+        Component = edSummReal
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummTax'
+        Value = 0.000000000000000000
+        Component = edSummTax
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 226
+    Top = 192
   end
 end

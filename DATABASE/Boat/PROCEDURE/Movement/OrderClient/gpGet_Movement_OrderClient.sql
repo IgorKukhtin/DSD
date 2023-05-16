@@ -171,17 +171,17 @@ BEGIN
                                     ON MovementFloat_DiscountNextTax.MovementId = Movement_OrderClient.Id
                                    AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
 
-             LEFT JOIN MovementFloat AS MovementFloat_NPP
-                                     ON MovementFloat_NPP.MovementId = Movement_OrderClient.Id
-                                    AND MovementFloat_NPP.DescId = zc_MovementFloat_NPP()
+            LEFT JOIN MovementFloat AS MovementFloat_NPP
+                                    ON MovementFloat_NPP.MovementId = Movement_OrderClient.Id
+                                   AND MovementFloat_NPP.DescId = zc_MovementFloat_NPP()
 
-                             LEFT JOIN MovementFloat AS MovementFloat_SummReal
-                                                     ON MovementFloat_SummReal.MovementId = Movement_OrderClient.Id
-                                                    AND MovementFloat_SummReal.DescId = zc_MovementFloat_SummReal()
+            LEFT JOIN MovementFloat AS MovementFloat_SummReal
+                                    ON MovementFloat_SummReal.MovementId = Movement_OrderClient.Id
+                                   AND MovementFloat_SummReal.DescId = zc_MovementFloat_SummReal()
 
-                             LEFT JOIN MovementFloat AS MovementFloat_SummTax
-                                                     ON MovementFloat_SummTax.MovementId = Movement_OrderClient.Id
-                                                    AND MovementFloat_SummTax.DescId = zc_MovementFloat_SummTax()
+            LEFT JOIN MovementFloat AS MovementFloat_SummTax
+                                    ON MovementFloat_SummTax.MovementId = Movement_OrderClient.Id
+                                   AND MovementFloat_SummTax.DescId = zc_MovementFloat_SummTax()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId = Movement_OrderClient.Id

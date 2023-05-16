@@ -515,6 +515,32 @@ object OrderClientJournalForm: TOrderClientJournalForm
         HeaderHint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
         Width = 70
       end
+      object SummReal: TcxGridDBColumn
+        Caption = ' '#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1092#1072#1082#1090
+        DataBinding.FieldName = 'SummReal'
+        Visible = False
+        HeaderHint = ' '#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1092#1072#1082#1090' ('#1073#1077#1079' '#1053#1044#1057', '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072')'
+        Options.Editing = False
+        Width = 60
+      end
+      object SummTax: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1088#1091#1095#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1073#1077#1079' '#1053#1044#1057')'
+        DataBinding.FieldName = 'SummTax'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1091#1084#1084#1072' '#1088#1091#1095#1085#1086#1081' '#1089#1082#1080#1076#1082#1080' ('#1073#1077#1079' '#1053#1044#1057')'
+        Options.Editing = False
+        Width = 104
+      end
+      object TotalSumm_diff: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1095#1077#1090' ('#1073#1077#1079' '#1085#1076#1089')'
+        DataBinding.FieldName = 'TotalSumm_diff'
+        Visible = False
+        HeaderHint = #1057#1091#1084#1084#1072' '#1088#1072#1089#1095#1077#1090' ('#1073#1077#1079' '#1085#1076#1089')'
+        Options.Editing = False
+        Width = 60
+      end
       object OperPrice_load: TcxGridDBColumn
         Caption = 'Ladenpreis site'
         DataBinding.FieldName = 'OperPrice_load'

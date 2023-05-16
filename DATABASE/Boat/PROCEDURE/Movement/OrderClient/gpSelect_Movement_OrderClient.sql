@@ -30,6 +30,9 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , BasisPrice_load TFloat
                -- load Сумма транспорт с сайта
              , TransportSumm_load TFloat
+              
+             , SummReal TFloat, SummTax TFloat
+             , TotalSumm_diff TFloat
                --
              , NPP Integer, NPP_2 Integer
                --
@@ -223,6 +226,10 @@ BEGIN
              , MIFloat_BasisPrice_load.ValueData           AS BasisPrice_load
                -- load Сумма транспорт с сайта
              , MovementFloat_TransportSumm_load.ValueData  AS TransportSumm_load
+             
+             , MovementFloat_SummReal.ValueData ::TFloat AS SummReal
+             , MovementFloat_SummTax.ValueData  ::TFloat AS SummTax 
+             , (COALESCE (MovementFloat_TotalSumm.ValueData,0) - COALESCE (MovementFloat_SummTax.ValueData,0)) ::TFloat AS TotalSumm_diff
                --
              , Movement_OrderClient.NPP
              , CASE WHEN Movement_OrderClient.NPP > 0 AND Movement_OrderClient.StatusId <> zc_Enum_Status_Erased() THEN Movement_OrderClient.NPP_2 ELSE 0 END  :: Integer AS NPP_2
@@ -317,6 +324,14 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                      ON MovementFloat_TotalSummMVAT.MovementId = Movement_OrderClient.Id
                                     AND MovementFloat_TotalSummMVAT.DescId     = zc_MovementFloat_TotalSummMVAT()
+
+             LEFT JOIN MovementFloat AS MovementFloat_SummReal
+                                     ON MovementFloat_SummReal.MovementId = Movement_OrderClient.Id
+                                    AND MovementFloat_SummReal.DescId = zc_MovementFloat_SummReal()
+ 
+             LEFT JOIN MovementFloat AS MovementFloat_SummTax
+                                     ON MovementFloat_SummTax.MovementId = Movement_OrderClient.Id
+                                    AND MovementFloat_SummTax.DescId = zc_MovementFloat_SummTax()
 
              -- Цена продажи с сайта - без НДС, Basis+options
              LEFT JOIN MovementFloat AS MovementFloat_OperPrice_load
