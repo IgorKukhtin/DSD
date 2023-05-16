@@ -1428,7 +1428,9 @@ uses
   PersonalServiceJournal in '..\..\Forms\Document\PersonalServiceJournal.pas' {PersonalServiceJournalForm: TParentForm},
   PersonalServiceList_Object in '..\..\Forms\Guides\PersonalServiceList_Object.pas' {PersonalServiceList_ObjectForm: TParentForm},
   PartionGoodsAssetChoice in '..\..\Forms\Guides\PartionGoodsAssetChoice.pas' {PartionGoodsAssetChoiceForm: TParentForm},
-  MemberGLNDialog in '..\..\Forms\Guides\MemberGLNDialog.pas' {MemberGLNDialogForm: TParentForm};
+  MemberGLNDialog in '..\..\Forms\Guides\MemberGLNDialog.pas' {MemberGLNDialogForm: TParentForm},
+  TransportKindEdit in '..\..\Forms\Guides\TransportKindEdit.pas' {TransportKindEditForm: TParentForm},
+  TransportKind in '..\..\Forms\Guides\TransportKind.pas' {TransportKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

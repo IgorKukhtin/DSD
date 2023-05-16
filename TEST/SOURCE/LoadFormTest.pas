@@ -1880,6 +1880,11 @@ end;
 
 procedure TLoadFormTest.LoadTransportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTransportKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTransportKindEditForm');
+  exit;
  {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportRouteJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportRouteJournalForm');
   exit;
