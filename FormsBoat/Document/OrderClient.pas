@@ -420,6 +420,36 @@ type
     macChangeSumm: TMultiAction;
     spUpdateMovement_Summ: TdsdStoredProc;
     bbChangeSumm: TdxBarButton;
+    cxLabel31: TcxLabel;
+    cxLabel32: TcxLabel;
+    cxLabel33: TcxLabel;
+    cxLabel34: TcxLabel;
+    cxLabel20: TcxLabel;
+    cxLabel26: TcxLabel;
+    cxLabel27: TcxLabel;
+    cxLabel28: TcxLabel;
+    cxLabel29: TcxLabel;
+    cxLabel30: TcxLabel;
+    edBasisPrice_load: TcxCurrencyEdit;
+    edBasis_summ2_orig: TcxCurrencyEdit;
+    edDiscountTax_inf: TcxCurrencyEdit;
+    edDiscountNextTax_inf: TcxCurrencyEdit;
+    edSummDiscount1: TcxCurrencyEdit;
+    edSummDiscount_total: TcxCurrencyEdit;
+    edSummDiscount2: TcxCurrencyEdit;
+    edSummDiscount3: TcxCurrencyEdit;
+    edBasis_summ: TcxCurrencyEdit;
+    edSummTaxinf: TcxCurrencyEdit;
+    edBasis_summ_transport: TcxCurrencyEdit;
+    edSummRealinf: TcxCurrencyEdit;
+    edTransportSumm_load: TcxCurrencyEdit;
+    edTaxKind_Value_Client: TcxCurrencyEdit;
+    edBasisWVAT_summ_transport: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
+    cxLabel22: TcxLabel;
+    cxLabel38: TcxLabel;
+    cxLabel39: TcxLabel;
+    cxLabel40: TcxLabel;
   private
   public
   end;
