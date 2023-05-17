@@ -30,7 +30,7 @@ inherited MainInventoryForm: TMainInventoryForm
       BiDiMode = bdLeftToRight
       ParentBiDiMode = False
       TabOrder = 0
-      Properties.ActivePage = tsInventory
+      Properties.ActivePage = tsInventoryManual
       Properties.CustomButtons.Buttons = <>
       ClientRectBottom = 391
       ClientRectLeft = 4
@@ -41,7 +41,7 @@ inherited MainInventoryForm: TMainInventoryForm
         ImageIndex = 0
       end
       object tsInventory: TcxTabSheet
-        Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+        Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077
         ImageIndex = 1
         object cxGridChild: TcxGrid
           Left = 0
@@ -248,7 +248,7 @@ inherited MainInventoryForm: TMainInventoryForm
           end
           object edOperDate: TcxDateEdit
             Left = 125
-            Top = 5
+            Top = 9
             TabStop = False
             EditValue = 45033d
             TabOrder = 10
@@ -256,7 +256,7 @@ inherited MainInventoryForm: TMainInventoryForm
           end
           object cxButton1: TcxButton
             Left = 181
-            Top = 35
+            Top = 34
             Width = 33
             Height = 25
             Action = actGoodsInventory
@@ -268,7 +268,7 @@ inherited MainInventoryForm: TMainInventoryForm
           end
           object edUnitName: TcxButtonEdit
             Left = 252
-            Top = 6
+            Top = 11
             Properties.Buttons = <
               item
                 Default = True
@@ -276,6 +276,151 @@ inherited MainInventoryForm: TMainInventoryForm
               end>
             TabOrder = 12
             Width = 565
+          end
+        end
+      end
+      object tsInventoryManual: TcxTabSheet
+        Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1088#1091#1095#1085#1086#1081' '#1074#1074#1086#1076
+        ImageIndex = 3
+        object Panel4: TPanel
+          Left = 0
+          Top = 0
+          Width = 831
+          Height = 53
+          Align = alTop
+          ShowCaption = False
+          TabOrder = 0
+          object cxLabel11: TcxLabel
+            Left = 56
+            Top = 7
+            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1086#1090
+          end
+          object edOperDateManual: TcxDateEdit
+            Left = 165
+            Top = 6
+            TabStop = False
+            EditValue = 45033d
+            TabOrder = 1
+            Width = 121
+          end
+          object cxButton2: TcxButton
+            Left = 4
+            Top = 2
+            Width = 33
+            Height = 25
+            Action = actShowAll
+            PaintStyle = bpsGlyph
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 2
+            TabStop = False
+          end
+          object edUnitNameManual: TcxButtonEdit
+            Left = 292
+            Top = 6
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            TabOrder = 3
+            Width = 525
+          end
+          object TextEdit: TcxTextEdit
+            Left = 1
+            Top = 31
+            Align = alBottom
+            TabOrder = 4
+            DesignSize = (
+              829
+              21)
+            Width = 829
+          end
+        end
+        object cxGridManual: TcxGrid
+          Left = 0
+          Top = 53
+          Width = 831
+          Height = 314
+          Align = alClient
+          TabOrder = 1
+          object cxGridDBTableView2: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            DataController.DataSource = ManualDS
+            DataController.Filter.Options = [fcoCaseInsensitive]
+            DataController.Summary.DefaultGroupSummaryItems = <>
+            DataController.Summary.FooterSummaryItems = <
+              item
+                Format = #1057#1090#1088#1086#1082': ,0'
+                Kind = skCount
+                Column = ManualcxGoodsName
+              end
+              item
+                Format = ',0.####;-,0.####; ;'
+                Kind = skSum
+                Column = ManualRemains
+              end
+              item
+                Format = ',0.####;-,0.####; ;'
+                Kind = skSum
+                Column = ManualAmount
+              end>
+            DataController.Summary.SummaryGroups = <>
+            OptionsBehavior.GoToNextCellOnEnter = True
+            OptionsBehavior.FocusCellOnCycle = True
+            OptionsCustomize.ColumnHiding = True
+            OptionsCustomize.ColumnsQuickCustomization = True
+            OptionsCustomize.DataRowSizing = True
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Inserting = False
+            OptionsView.ColumnAutoWidth = True
+            OptionsView.Footer = True
+            OptionsView.GroupByBox = False
+            OptionsView.HeaderAutoHeight = True
+            OptionsView.Indicator = True
+            Styles.Content = dmMain.cxContentStyle
+            Styles.Footer = dmMain.cxFooterStyle
+            Styles.Header = dmMain.cxHeaderStyle
+            Styles.Inactive = dmMain.cxSelection
+            object ManualGoodsCode: TcxGridDBColumn
+              Caption = #1050#1086#1076
+              DataBinding.FieldName = 'GoodsCode'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 92
+            end
+            object ManualcxGoodsName: TcxGridDBColumn
+              Caption = #1058#1086#1074#1072#1088
+              DataBinding.FieldName = 'GoodsName'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 444
+            end
+            object ManualRemains: TcxGridDBColumn
+              Caption = #1054#1089#1090#1072#1090#1086#1082
+              DataBinding.FieldName = 'Remains'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 140
+            end
+            object ManualAmount: TcxGridDBColumn
+              Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+              DataBinding.FieldName = 'Amount'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              HeaderAlignmentHorz = taCenter
+              Styles.Content = dmMain.cxHeaderL1Style
+              Styles.Header = dmMain.cxHeaderStyle
+              Width = 140
+            end
+          end
+          object cxGridLevel2: TcxGridLevel
+            GridView = cxGridDBTableView2
           end
         end
       end
@@ -313,7 +458,7 @@ inherited MainInventoryForm: TMainInventoryForm
             Width = 565
           end
         end
-        object cxGrid1: TcxGrid
+        object cxGridInfo: TcxGrid
           Left = 0
           Top = 41
           Width = 831
@@ -342,7 +487,6 @@ inherited MainInventoryForm: TMainInventoryForm
                 Column = InfoAmount
               end>
             DataController.Summary.SummaryGroups = <>
-            Images = dmMain.SortImageList
             OptionsBehavior.GoToNextCellOnEnter = True
             OptionsBehavior.FocusCellOnCycle = True
             OptionsCustomize.ColumnHiding = True
@@ -421,7 +565,7 @@ inherited MainInventoryForm: TMainInventoryForm
   inherited ActionList: TActionList
     Images = dmMain.ImageList
     Left = 15
-    Top = 63
+    Top = 71
     object actDoLoadData: TAction
       Category = 'DSDLib'
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
@@ -512,8 +656,13 @@ inherited MainInventoryForm: TMainInventoryForm
     end
     object actContinueInvent: TAction
       Category = 'DSDLib'
-      Caption = #1055#1088#1086#1076#1086#1083#1078#1080#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1077' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
+      Caption = #1055#1088#1086#1076#1086#1083#1078#1080#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1077' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080' ('#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074')'
       OnExecute = actContinueInventExecute
+    end
+    object actContinueInventManual: TAction
+      Category = 'DSDLib'
+      Caption = #1055#1088#1086#1076#1086#1083#1078#1080#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1077' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080' ('#1088#1091#1095#1085#1086#1081' '#1074#1074#1086#1076')'
+      OnExecute = actContinueInventManualExecute
     end
     object actExit: TAction
       Category = 'DSDLib'
@@ -529,7 +678,7 @@ inherited MainInventoryForm: TMainInventoryForm
       Category = 'DSDLib'
       MoveParams = <>
       CancelAction = actSetFocusededBarCode
-      AfterAction = actSetFocusededBarCode
+      AfterAction = actSetFocusedAmount
       PostDataSetBeforeExecute = False
       Caption = #1053#1072#1081#1090#1080' '#1090#1086#1074#1072#1088' '#1087#1086' '#1085#1072#1079#1074#1072#1085#1080#1102
       Hint = #1053#1072#1081#1090#1080' '#1090#1086#1074#1072#1088' '#1087#1086' '#1085#1072#1079#1074#1072#1085#1080#1102
@@ -559,6 +708,14 @@ inherited MainInventoryForm: TMainInventoryForm
       Category = 'DSDLib'
       MoveParams = <>
       ControlName.Value = 'edBarCode'
+      ControlName.DataType = ftString
+      ControlName.MultiSelectSeparator = ','
+    end
+    object actSetFocusedAmount: TdsdSetFocusedAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetFocusedAmount'
+      ControlName.Value = 'ceAmount'
       ControlName.DataType = ftString
       ControlName.MultiSelectSeparator = ','
     end
@@ -598,6 +755,40 @@ inherited MainInventoryForm: TMainInventoryForm
       Caption = 'actUpdateSend'
       OnExecute = actUpdateSendExecute
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actSetFocusedManualAmount
+      StoredProc = spSelectManual
+      StoredProcList = <
+        item
+          StoredProc = spSelectManual
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1089' '#1085#1072#1083#1080#1095#1080#1077#1084' '#1080' '#1080#1085#1074#1077#1085#1090#1072#1088#1077#1079#1080#1088#1086#1074#1072#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1089' '#1085#1072#1083#1080#1095#1080#1077#1084' '#1080' '#1080#1085#1074#1077#1085#1090#1072#1088#1077#1079#1080#1088#1086#1074#1072#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
+    object actSetFocusedManualAmount: TdsdSetFocusedAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actSetEditAmount
+      Caption = 'actSetFocusedAmount'
+      ControlName.Value = 'ManualAmount'
+      ControlName.DataType = ftString
+      ControlName.MultiSelectSeparator = ','
+    end
+    object actSetEditAmount: TAction
+      Category = 'DSDLib'
+      Caption = 'actSetEditAmount'
+      OnExecute = actSetEditAmountExecute
+    end
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -624,6 +815,9 @@ inherited MainInventoryForm: TMainInventoryForm
       end
       object N5: TMenuItem
         Action = actContinueInvent
+      end
+      object N9: TMenuItem
+        Action = actContinueInventManual
       end
       object N11: TMenuItem
         Action = actInfoInvent
@@ -743,14 +937,14 @@ inherited MainInventoryForm: TMainInventoryForm
   end
   object InfoDS: TDataSource
     DataSet = InfoCDS
-    Left = 456
-    Top = 249
+    Left = 528
+    Top = 257
   end
   object InfoCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 456
-    Top = 177
+    Left = 528
+    Top = 185
   end
   object spSelectInfo: TdsdStoredProcSQLite
     DataSet = InfoCDS
@@ -776,6 +970,7 @@ inherited MainInventoryForm: TMainInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
+    ParamKeyField = 'GoodsId'
     SQLList = <
       item
         SQL.Strings = (
@@ -798,15 +993,14 @@ inherited MainInventoryForm: TMainInventoryForm
           '       , R.Remains'
           'ORDER BY G.Name')
       end>
-    Left = 461
-    Top = 113
+    Left = 525
+    Top = 121
   end
   object DBViewAddOnInfo: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView1
     OnDblClickActionList = <>
     ActionItemList = <>
-    SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
     ColorRuleList = <>
@@ -823,7 +1017,6 @@ inherited MainInventoryForm: TMainInventoryForm
     View = cxGridChildDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
-    SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
     ColorRuleList = <>
@@ -832,12 +1025,12 @@ inherited MainInventoryForm: TMainInventoryForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 549
-    Top = 241
+    Left = 645
+    Top = 249
   end
   object SendInventDS: TDataSource
     DataSet = SendInventCDS
-    Left = 632
+    Left = 736
     Top = 241
   end
   object SendInventCDS: TClientDataSet
@@ -970,8 +1163,8 @@ inherited MainInventoryForm: TMainInventoryForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 640
-    Top = 24
+    Left = 600
+    Top = 32
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -1027,5 +1220,192 @@ inherited MainInventoryForm: TMainInventoryForm
       end>
     Left = 133
     Top = 257
+  end
+  object GuidesUnitManual: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitNameManual
+    FormNameParam.Value = 'TUnitLocalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitLocalForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitManual
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitManual
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 704
+    Top = 32
+  end
+  object HeaderSaverManual: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    StoredProc = spUpdateIventoryManual
+    ControlList = <
+      item
+        Control = edOperDateManual
+      end
+      item
+        Control = edUnitNameManual
+      end>
+    Left = 256
+    Top = 201
+  end
+  object spUpdateIventoryManual: TdsdStoredProcSQLite
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inInventory'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnitManual
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 45033d
+        Component = edOperDateManual
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    SQLList = <
+      item
+        SQL.Strings = (
+          'UPDATE Inventory SET OperDate = :inOperDate, UnitId = :inUnitId'
+          'WHERE Inventory.ID = :inInventory'
+          'RETURNING *;')
+      end>
+    Left = 253
+    Top = 257
+  end
+  object spSelectManual: TdsdStoredProcSQLite
+    DataSet = ManualCDS
+    DataSets = <
+      item
+        DataSet = ManualCDS
+      end>
+    Params = <
+      item
+        Name = 'inInventory'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    ParamKeyField = 'GoodsId'
+    SQLList = <
+      item
+        SQL.Strings = (
+          'SELECT G.Id             AS GoodsId'
+          '     , G.Code           AS GoodsCode'
+          '     , G.Name           AS GoodsName'
+          '     , R.Remains        AS Remains'
+          '     , CAST(COALESCE (SUM(IC.Amount), 0.0) as Float)  AS Amount'
+          'FROM  Goods AS G'
+          
+            '     LEFT JOIN InventoryChild AS IC ON IC.Inventory = :inInvento' +
+            'ry'
+          '                                   AND IC.GoodsId = G.Id '
+          '     LEFT JOIN Remains AS R ON R.GoodsId = G.id'
+          '                           AND R.UnitId =  :inUnitId '
+          
+            'WHERE (COALESCE  (R.Remains, IC.Amount) <> 0) OR (:inisShowAll =' +
+            ' '#39'Y'#39')'
+          'GROUP BY G.Id'
+          '       , G.Code'
+          '       , G.Name '
+          '       , R.Remains'
+          'ORDER BY G.Name')
+      end>
+    Left = 429
+    Top = 121
+  end
+  object ManualCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    OnPostError = ManualCDSPostError
+    Left = 424
+    Top = 193
+  end
+  object ManualDS: TDataSource
+    DataSet = ManualCDS
+    Left = 424
+    Top = 257
+  end
+  object DBViewAddOnManual: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView2
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    Left = 357
+    Top = 305
+  end
+  object FieldFilter: TdsdFieldFilter
+    TextEdit = TextEdit
+    DataSet = ManualCDS
+    Column = ManualcxGoodsName
+    ColumnList = <
+      item
+        Column = ManualcxGoodsName
+      end
+      item
+        Column = ManualGoodsCode
+      end>
+    CheckBoxList = <>
+    Left = 248
+    Top = 120
   end
 end

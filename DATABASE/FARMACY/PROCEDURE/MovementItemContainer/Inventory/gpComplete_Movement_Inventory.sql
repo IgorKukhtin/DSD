@@ -17,6 +17,9 @@ $BODY$
   DECLARE vbStatusId Integer;
 BEGIN
    vbUserId:= inSession;
+
+   -- Запрет запуска второй копии
+   PERFORM  zfCheckRunProc ('gpComplete_Movement_Inventory', 1);
   
    SELECT MLO_Unit.ObjectId, Movement.ParentId, Movement.StatusId
    INTO vbUnitId, vbParentId, vbStatusId

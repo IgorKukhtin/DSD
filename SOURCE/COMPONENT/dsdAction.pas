@@ -6189,7 +6189,7 @@ end;
 function TdsdSetFocusedAction.LocalExecute: Boolean;
 begin
   inherited;
-  Result := False;
+  Result := True;
 
   if FControlNameParam.Value = '' then
   begin
