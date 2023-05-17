@@ -15,8 +15,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderClient(
     IN inVATPercent          TFloat    , --
     IN inDiscountTax         TFloat    , --
     IN inDiscountNextTax     TFloat    , -- 
- INOUT ioSummReal            TFloat    ,
  INOUT ioSummTax             TFloat    ,
+ INOUT ioSummReal            TFloat    ,
     --IN inNPP               TFloat    , -- Очередность сборки
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
@@ -66,11 +66,6 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountTax(), ioId, inDiscountTax);
      -- сохранили значение <% скидки доп>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountNextTax(), ioId, inDiscountNextTax);
-
-     -- сохранили значение <Итого сумма факт (без НДС, с учетом скидки, без Транспорта)>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReal(), ioId, ioSummReal);
-     -- сохранили значение <Cумма ручной скидки (без НДС)>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTax(), ioId, ioSummTax);
 
      -- сохранили <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
@@ -169,6 +164,21 @@ BEGIN
 */
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
+     
+     -- расчет после !!!пересчета!!!
+     IF ioSummReal > 0
+     THEN
+         ioSummTax:= COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_TotalSumm()), 0)
+                   - ioSummReal
+                    ;
+     ELSE
+         ioSummReal:= 0;
+     END IF;
+
+     -- сохранили значение <Cумма откорректированной скидки, без НДС>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTax(), ioId, ioSummTax);
+     -- сохранили значение <ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReal(), ioId, ioSummReal);
 
 
     -- !!!протокол через свойства конкретного объекта!!!

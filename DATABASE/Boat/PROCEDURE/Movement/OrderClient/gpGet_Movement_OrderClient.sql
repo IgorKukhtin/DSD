@@ -11,8 +11,17 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
-             , VATPercent TFloat, DiscountTax TFloat, DiscountNextTax TFloat
-             , SummReal TFloat, SummTax TFloat
+             , VATPercent TFloat
+               -- % скидки осн
+             , DiscountTax TFloat
+               -- % скидки доп
+             , DiscountNextTax TFloat
+               -- Cумма откорректированной скидки, без НДС
+             , SummTax TFloat
+               -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
+             , SummReal TFloat
+             , SummReal_real TFloat
+               --
              , NPP TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
@@ -22,33 +31,28 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , isChild_Recalc Boolean
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
              , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
-             -- Базовая цена продажи модели с сайта
-             ,  BasisPrice_load        TFloat
-             -- ИТОГО Сумма продажи без НДС - без Скидки, Basis+options
-             , Basis_summ_orig         TFloat
-             -- ИТОГО Сумма продажи без НДС - без Скидки (options)
+
+               -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
+             , Basis_summ1_orig        TFloat
+               -- ИТОГО Без скидки, Сумма опций, без НДС
              , Basis_summ2_orig        TFloat
-             , BasisWVAT_summ2_orig    TFloat
-             -- % скидки осн
-             , DiscountTax_inf             TFloat
-             -- % скидки доп
-             , DiscountNextTax_inf         TFloat
-             -- ИТОГО Сумма Скидки - без НДС
+               -- ИТОГО Без скидки, Цена продажи базовой модели лодки + Сумма всех опций, без НДС
+             , Basis_summ_orig         TFloat
+
+               -- ИТОГО Сумма Скидки - без НДС
              , SummDiscount1           TFloat
              , SummDiscount2           TFloat
-              -----&& 
              , SummDiscount3           TFloat
              , SummDiscount_total      TFloat
+
                -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
              , Basis_summ              TFloat
-
-              -- Сумма транспорт с сайта
+               -- Сумма транспорт с сайта
              , TransportSumm_load     TFloat
+
               -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
              , Basis_summ_transport    TFloat
-             --НДС
-             , TaxKind_Value_Client    TFloat
-             -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+               -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
              , BasisWVAT_summ_transport TFloat
               )
 AS
@@ -63,116 +67,109 @@ BEGIN
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
-     vbNPP := COALESCE ((SELECT MAX(MovementFloat.ValueData)
-                         FROM MovementFloat
-                             INNER JOIN Movement ON Movement.Id = MovementFloat.MovementId
-                                                AND Movement.DescId = zc_Movement_OrderClient()
-                                                AND Movement.StatusId <> zc_Enum_Status_Erased()
-                         WHERE MovementFloat.DescId = zc_MovementFloat_NPP()
-                           AND COALESCE (MovementFloat.ValueData,0)<>0
-                         ), 0);
-     RETURN QUERY
-         SELECT
-               0                         AS Id
-             , CAST (NEXTVAL ('movement_OrderClient_seq') AS TVarChar) AS InvNumber
-             , CAST ('' AS TVarChar)     AS InvNumberPartner
-             , inOperDate   :: TDateTime AS OperDate
-             , Object_Status.Code        AS StatusCode
-             , Object_Status.Name        AS StatusName
-             , CAST (False as Boolean)   AS PriceWithVAT
-             , ObjectFloat_TaxKind_Value.ValueData :: TFloat AS VATPercent
-             , CAST (0 as TFloat)        AS DiscountTax
-             , CAST (0 as TFloat)        AS DiscountNextTax
-             , CAST (0 as TFloat)        AS SummReal
-             , CAST (0 as TFloat)        AS SummTax 
-             , (vbNPP +1)       ::TFloat AS NPP
-             , 0                         AS FromId
-             , CAST ('' AS TVarChar)     AS FromName
-             , 0                         AS ToId
-             , CAST ('' AS TVarChar)     AS ToName
-             , 0                         AS PaidKindId
-             , CAST ('' AS TVarChar)     AS PaidKindName
-             , 0                         AS ProductId
-             , CAST ('' AS TVarChar)     AS ProductName
-             , 0                         AS BrandId
-             , CAST ('' AS TVarChar)     AS BrandName
-             , CAST ('' AS TVarChar)     AS CIN
-             , (inOperDate + INTERVAL '1 MONTH') :: TDateTime AS DateBegin
-             , CAST ('' AS TVarChar)     AS Comment
-             , FALSE :: Boolean          AS isChild_Recalc
-             , 0                         AS MovementId_Invoice
-             , CAST ('' as TVarChar)     AS InvNumber_Invoice
-             , CAST ('' as TVarChar)     AS Comment_Invoice
-
-             , Object_Insert.Id                AS InsertId
-             , Object_Insert.ValueData         AS InsertName
-             , CURRENT_TIMESTAMP  ::TDateTime  AS InsertDate 
-             
-             , CAST (0 as TFloat)        AS BasisPrice_load
-             , CAST (0 as TFloat)        AS Basis_summ_orig     
-             , CAST (0 as TFloat)        AS Basis_summ2_orig    
-             , CAST (0 as TFloat)        AS BasisWVAT_summ2_orig
-             , CAST (0 as TFloat)        AS DiscountTax         
-             , CAST (0 as TFloat)        AS DiscountNextTax     
-             , CAST (0 as TFloat)        AS SummDiscount1       
-             , CAST (0 as TFloat)        AS SummDiscount2       
-             , CAST (0 as TFloat)        AS SummDiscount3
-             , CAST (0 as TFloat)        AS SummDiscount_total
-             , CAST (0 as TFloat)        AS Basis_summ  
-             , CAST (0 as TFloat)        AS TransportSumm_load 
-             , CAST (0 as TFloat)        AS Basis_summ_transport
-             , CAST (0 as TFloat)        AS TaxKind_Value_Client
-             , CAST (0 as TFloat)        AS BasisWVAT_summ_transport
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-               LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                     ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
-                                    AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
-               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
-          ;
+         --
+         vbNPP := COALESCE ((SELECT MAX(MovementFloat.ValueData)
+                             FROM MovementFloat
+                                 INNER JOIN Movement ON Movement.Id = MovementFloat.MovementId
+                                                    AND Movement.DescId = zc_Movement_OrderClient()
+                                                    AND Movement.StatusId <> zc_Enum_Status_Erased()
+                             WHERE MovementFloat.DescId = zc_MovementFloat_NPP()
+                               AND COALESCE (MovementFloat.ValueData,0)<>0
+                             ), 0);
+         -- Результат
+         RETURN QUERY
+             SELECT
+                   0                         AS Id
+                 , CAST (NEXTVAL ('movement_OrderClient_seq') AS TVarChar) AS InvNumber
+                 , CAST ('' AS TVarChar)     AS InvNumberPartner
+                 , inOperDate   :: TDateTime AS OperDate
+                 , Object_Status.Code        AS StatusCode
+                 , Object_Status.Name        AS StatusName
+                 , CAST (False as Boolean)   AS PriceWithVAT
+                 , ObjectFloat_TaxKind_Value.ValueData :: TFloat AS VATPercent
+    
+                 , CAST (0 as TFloat)        AS DiscountTax
+                 , CAST (0 as TFloat)        AS DiscountNextTax
+                 , CAST (0 as TFloat)        AS SummTax
+                 , CAST (0 as TFloat)        AS SummReal
+                 , CAST (0 as TFloat)        AS SummReal_real
+    
+                 , (vbNPP +1)       ::TFloat AS NPP
+                 , 0                         AS FromId
+                 , CAST ('' AS TVarChar)     AS FromName
+                 , 0                         AS ToId
+                 , CAST ('' AS TVarChar)     AS ToName
+                 , 0                         AS PaidKindId
+                 , CAST ('' AS TVarChar)     AS PaidKindName
+                 , 0                         AS ProductId
+                 , CAST ('' AS TVarChar)     AS ProductName
+                 , 0                         AS BrandId
+                 , CAST ('' AS TVarChar)     AS BrandName
+                 , CAST ('' AS TVarChar)     AS CIN
+                 , (inOperDate + INTERVAL '1 MONTH') :: TDateTime AS DateBegin
+                 , CAST ('' AS TVarChar)     AS Comment
+                 , FALSE :: Boolean          AS isChild_Recalc
+                 , 0                         AS MovementId_Invoice
+                 , CAST ('' as TVarChar)     AS InvNumber_Invoice
+                 , CAST ('' as TVarChar)     AS Comment_Invoice
+    
+                 , Object_Insert.Id                AS InsertId
+                 , Object_Insert.ValueData         AS InsertName
+                 , CURRENT_TIMESTAMP  ::TDateTime  AS InsertDate
+    
+                 , CAST (0 as TFloat)        AS Basis_summ1_orig
+                 , CAST (0 as TFloat)        AS Basis_summ2_orig
+                 , CAST (0 as TFloat)        AS Basis_summ_orig
+    
+                 , CAST (0 as TFloat)        AS SummDiscount1
+                 , CAST (0 as TFloat)        AS SummDiscount2
+                 , CAST (0 as TFloat)        AS SummDiscount3
+                 , CAST (0 as TFloat)        AS SummDiscount_total
+    
+                 , CAST (0 as TFloat)        AS Basis_summ
+                 , CAST (0 as TFloat)        AS TransportSumm_load
+    
+                 , CAST (0 as TFloat)        AS Basis_summ_transport
+                 , CAST (0 as TFloat)        AS BasisWVAT_summ_transport
+    
+              FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+                   LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                         ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
+                                        AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+                   LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
+              ;
 
      ELSE
 
      RETURN QUERY
         WITH
-        tmpSummProduct AS (SELECT  
-                                 -- Базовая цена продажи модели с сайта
-                                   gpSelect.BasisPrice_load
-                                 -- ИТОГО Сумма продажи без НДС - без Скидки, Basis+options
-                                 , gpSelect.Basis_summ_orig
-                                 -- ИТОГО Сумма продажи без НДС - без Скидки (options)
+        tmpSummProduct AS (SELECT  -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
+                                   gpSelect.Basis_summ1_orig
+                                   -- ИТОГО Без скидки, Сумма опций, без НДС
                                  , gpSelect.Basis_summ2_orig
-                                 , gpSelect.BasisWVAT_summ2_orig
-                                 -- % скидки осн
-                                 , gpSelect.DiscountTax
-                                 -- % скидки доп
-                                 , gpSelect.DiscountNextTax
-                                 -- ИТОГО Сумма Скидки - без НДС
+                                   -- ИТОГО Без скидки, Цена продажи базовой модели лодки + Сумма всех опций, без НДС
+                                 , gpSelect.Basis_summ_orig
+
+                                   -- ИТОГО Сумма Скидки - без НДС
                                  , gpSelect.SummDiscount1
-                                 , gpSelect.SummDiscount2 
-                                  -----&& 
+                                 , gpSelect.SummDiscount2
                                  , gpSelect.SummDiscount3
                                  , gpSelect.SummDiscount_total
-                                  
+
                                    -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
-                                 , gpSelect.Basis_summ   
-                                  -- Сумма ручной скидки (без НДС)
-                                 , gpSelect.SummTax   
-                                  -- Итого сумма факт (без НДС, с учетом скидки, без Транспорта)
-                                 , gpSelect.SummReal   
-                                  -- Сумма транспорт с сайта
-                                 , gpSelect.TransportSumm_load 
-                                  -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+                                 , gpSelect.Basis_summ
+                                   -- Сумма транспорт с сайта
+                                 , gpSelect.TransportSumm_load
+
+                                   -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
                                  , gpSelect.Basis_summ_transport
-                                 --НДС
-                                 , gpSelect.TaxKind_Value_Client
-       
-                                 -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+                                   -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
                                  , gpSelect.BasisWVAT_summ_transport
-                           FROM gpSelect_Object_Product (FALSE, FALSE, '') AS gpSelect 
+
+                           FROM gpSelect_Object_Product (FALSE, FALSE, '') AS gpSelect
                            WHERE gpSelect.MovementId_OrderClient = inMovementId
-                           )
-
-
+                          )
+        -- Результат
         SELECT
             Movement_OrderClient.Id
           , Movement_OrderClient.InvNumber
@@ -180,13 +177,18 @@ BEGIN
           , Movement_OrderClient.OperDate             AS OperDate
           , Object_Status.ObjectCode                  AS StatusCode
           , Object_Status.ValueData                   AS StatusName
-
+            --
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean AS PriceWithVAT
+            --
           , MovementFloat_VATPercent.ValueData        AS VATPercent
           , MovementFloat_DiscountTax.ValueData       AS DiscountTax
           , MovementFloat_DiscountNextTax.ValueData   AS DiscountNextTax
-          , MovementFloat_SummReal.ValueData ::TFloat AS SummReal
-          , MovementFloat_SummTax.ValueData  ::TFloat AS SummTax          
+            -- Cумма откорректированной скидки, без НДС
+          , COALESCE (MovementFloat_SummTax.ValueData, 0)  :: TFLoat AS SummTax
+            -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
+          , CASE WHEN MovementFloat_SummTax.ValueData <> 0 THEN COALESCE (tmpSummProduct.Basis_summ, 0) - MovementFloat_SummTax.ValueData ELSE 0 END :: TFloat AS SummReal
+          , COALESCE (MovementFloat_SummReal.ValueData, 0) :: TFLoat AS SummReal_real
+            -- 
           , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP
 
           , Object_From.Id                            AS FromId
@@ -215,34 +217,27 @@ BEGIN
           , Object_Insert.ValueData              AS InsertName
           , MovementDate_Insert.ValueData        AS InsertDate
 
-          -- Базовая цена продажи модели с сайта
-          ,  tmpSummProduct.BasisPrice_load          ::TFloat
-          -- ИТОГО Сумма продажи без НДС - без Скидки, Basis+options
-          , tmpSummProduct.Basis_summ_orig          ::TFloat
-          -- ИТОГО Сумма продажи без НДС - без Скидки (options)
+            -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
+          ,  tmpSummProduct.Basis_summ1_orig        ::TFloat
+            -- ИТОГО Без скидки, Сумма опций, без НДС
           , tmpSummProduct.Basis_summ2_orig         ::TFloat
-          , tmpSummProduct.BasisWVAT_summ2_orig     ::TFloat
-          -- % скидки осн
-          , tmpSummProduct.DiscountTax              ::TFloat AS DiscountTax_inf
-          -- % скидки доп
-          , tmpSummProduct.DiscountNextTax          ::TFloat AS DiscountNextTax_inf
-          -- ИТОГО Сумма Скидки - без НДС
+            -- ИТОГО Без скидки, Цена продажи базовой модели лодки + Сумма всех опций, без НДС
+          , tmpSummProduct.Basis_summ_orig          ::TFloat
+
+            -- ИТОГО Сумма Скидки - без НДС
           , tmpSummProduct.SummDiscount1            ::TFloat
           , tmpSummProduct.SummDiscount2            ::TFloat
-           -----&& 
-          , tmpSummProduct.SummDiscount3
-          , tmpSummProduct.SummDiscount_total
-           
+          , tmpSummProduct.SummDiscount3            ::TFloat
+          , tmpSummProduct.SummDiscount_total       ::TFloat
+
             -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
-          , tmpSummProduct.Basis_summ     
+          , tmpSummProduct.Basis_summ
            -- Сумма транспорт с сайта
-          , tmpSummProduct.TransportSumm_load 
+          , tmpSummProduct.TransportSumm_load
+
            -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
           , tmpSummProduct.Basis_summ_transport
-          --НДС
-          , tmpSummProduct.TaxKind_Value_Client
-
-          -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+            -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
           , tmpSummProduct.BasisWVAT_summ_transport
 
         FROM Movement AS Movement_OrderClient
@@ -332,8 +327,8 @@ BEGIN
 
             LEFT JOIN ObjectDate AS ObjectDate_DateBegin
                                  ON ObjectDate_DateBegin.ObjectId = Object_Product.Id
-                                AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin() 
-            
+                                AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin()
+
             LEFT JOIN tmpSummProduct ON 1 = 1
         WHERE Movement_OrderClient.Id = inMovementId
           AND Movement_OrderClient.DescId = zc_Movement_OrderClient()

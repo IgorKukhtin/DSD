@@ -17,8 +17,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderClient(
     IN inVATPercent          TFloat    , --
     IN inDiscountTax         TFloat    , --
     IN inDiscountNextTax     TFloat    , -- 
- INOUT ioSummReal            TFloat    ,
  INOUT ioSummTax             TFloat    ,
+ INOUT ioSummReal            TFloat    ,
     --IN inNPP                 TFloat    , -- Очередность сборки
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
@@ -38,19 +38,19 @@ BEGIN
 
     --    
     SELECT tmp.ioId , tmp.ioSummReal , tmp.ioSummTax
-  INTO ioId , ioSummReal, ioSummTax
+           INTO ioId , ioSummReal, ioSummTax
     FROM lpInsertUpdate_Movement_OrderClient(ioId, inInvNumber, inInvNumberPartner
-                                              , inOperDate
-                                              , inPriceWithVAT
-                                              , inVATPercent, inDiscountTax, inDiscountNextTax
-                                              , ioSummReal, ioSummTax
-                                              --, inNPP
-                                              , inFromId, inToId
-                                              , inPaidKindId
-                                              , inProductId
-                                              , inMovementId_Invoice
-                                              , inComment
-                                              , vbUserId) AS tmp;
+                                           , inOperDate
+                                           , inPriceWithVAT
+                                           , inVATPercent, inDiscountTax, inDiscountNextTax
+                                           , ioSummTax, ioSummReal
+                                           , inFromId, inToId
+                                           , inPaidKindId
+                                           , inProductId
+                                           , inMovementId_Invoice
+                                           , inComment
+                                           , vbUserId
+                                            ) AS tmp;
 
 END;
 $BODY$
