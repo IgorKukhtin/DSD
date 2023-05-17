@@ -65,7 +65,6 @@ type
     edPriceWithVAT: TcxCheckBox;
     edVATPercent: TcxCurrencyEdit;
     edDiscountTax: TcxCurrencyEdit;
-    cxLabel7: TcxLabel;
     HeaderSaver: THeaderSaver;
     edInvNumberPartner: TcxTextEdit;
     spGet: TdsdStoredProc;
@@ -431,9 +430,9 @@ type
     edSummDiscount2: TcxCurrencyEdit;
     edSummDiscount3: TcxCurrencyEdit;
     edBasis_summ: TcxCurrencyEdit;
-    edSummTaxinf: TcxCurrencyEdit;
+    edSummTax: TcxCurrencyEdit;
     edBasis_summ_transport: TcxCurrencyEdit;
-    edSummRealinf: TcxCurrencyEdit;
+    edSummReal: TcxCurrencyEdit;
     edTransportSumm_load: TcxCurrencyEdit;
     edBasisWVAT_summ_transport: TcxCurrencyEdit;
     cxLabel21: TcxLabel;
@@ -441,6 +440,8 @@ type
     cxLabel38: TcxLabel;
     cxLabel39: TcxLabel;
     cxLabel40: TcxLabel;
+    cxLabel8: TcxLabel;
+    edBasis_summ_orig: TcxCurrencyEdit;
   private
   public
   end;
