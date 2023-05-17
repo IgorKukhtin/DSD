@@ -61,6 +61,7 @@ type
     cxLabel3: TcxLabel;
     MonthName1: TcxGridDBColumn;
     ProdColorName: TcxGridDBColumn;
+    MonthRemains: TcxGridDBColumn;
   private
     { Private declarations }
   public

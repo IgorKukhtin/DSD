@@ -335,14 +335,25 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             Width = 80
           end
           object Remains: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082
+            Caption = #1048#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1090#1077#1082#1091#1097#1080#1081
+            HeaderHint = #1048#1090#1086#1075#1086' '#1054#1089#1090#1072#1090#1086#1082' '#1090#1077#1082#1091#1097#1080#1081
+            Width = 70
+          end
+          object MonthRemains: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1086#1089#1090'.'
+            DataBinding.FieldName = 'MonthRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1077#1089#1103#1094' '#1086#1089#1090#1072#1090#1082#1072
+            Options.Editing = False
             Width = 70
           end
           object Amount: TcxGridDBColumn

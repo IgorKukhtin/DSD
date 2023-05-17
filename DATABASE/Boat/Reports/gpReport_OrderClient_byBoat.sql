@@ -31,7 +31,10 @@ RETURNS TABLE  (MovementId Integer
               , ReceiptLevelName TVarChar
               , Comment_goods TVarChar
               , Comment_Object TVarChar
+              
+              , MonthRemains Integer
               , Remains    TFloat
+              
               , Amount     TFloat
               , Amount1    TFloat
               , Amount2    TFloat
@@ -198,8 +201,7 @@ BEGIN
                              , tmpItem_Detail.MonthBegin
                         FROM tmpMI_Detail AS tmpItem_Detail
                        )
-
-
+                      
   , tmpMI_group AS (SELECT  CASE WHEN inisDetail = TRUE THEN tmp.ProductId  ELSE 0    END AS ProductId
                           , CASE WHEN inisDetail = TRUE THEN tmp.MovementId ELSE 0    END AS MovementId
                           , CASE WHEN inisDetail = TRUE THEN tmp.InvNumber  ELSE ''   END AS InvNumber
@@ -317,7 +319,28 @@ BEGIN
                       AND COALESCE(Container.Amount,0) <> 0
                       AND Container.ObjectId IN (SELECT DISTINCT tmpMI_group.ObjectId FROM tmpMI_group)
                     )
+  , tmpGroupDetail1 AS (SELECT tmp.ObjectId
+                            , tmp.MonthBegin
+                            , SUM (tmp.Amount) AS Amount
+                       FROM tmpItem_Detail AS tmp
+                       GROUP BY tmp.ObjectId
+                              , tmp.MonthBegin
+                      )
 
+  , tmpGroupDetail2 AS (SELECT t1.ObjectId, t1.MonthBegin, SUM (t2.Amount) AS AmountTotal  
+                        FROM tmpGroupDetail1 As t1
+                             LEFT JOIN tmpGroupDetail1 AS t2 
+                                                       ON t2.ObjectId = t1.ObjectId
+                                                      AND t2.MonthBegin <= t1.MonthBegin
+                        GROUP BY t1.ObjectId, t1.MonthBegin, t1.Amount
+                        )
+  , tmpRemainsMonth AS (SELECT DISTINCT tmpGroupDetail2.ObjectId
+                             , MAX (tmpGroupDetail2.MonthBegin) OVER (PARTITION BY tmpGroupDetail2.ObjectId ) AS MonthBegin
+                        from tmpGroupDetail2
+                            LEFT JOIN  tmpRemains ON tmpRemains.ObjectId = tmpGroupDetail2.ObjectId 
+                        WHERE COALESCE (tmpRemains.Amount,0) - COALESCE (tmpGroupDetail2.AmountTotal,0)>= 0
+                        )
+  
       -- Результат
       SELECT tmp.MovementId ::Integer
            , tmp.InvNumber  ::TVarChar
@@ -342,7 +365,8 @@ BEGIN
            , Object_ReceiptLevel.ValueData        ::TVarChar AS ReceiptLevelName 
            , ObjectString_Goods_Comment.ValueData ::TVarChar AS Comment_goods
            , ObjectString_Object_Comment.ValueData ::TVarChar AS Comment_Object
-
+           
+           , CASE WHEN COALESCE (tmpRemains.Amount,0) - COALESCE (tmp.Amount) >0 THEN 12 ELSE tmpRemainsMonth.MonthBegin END :: Integer AS MonthRemains
            , tmpRemains.Amount ::TFloat AS Remains
            
            , tmp.Amount    :: TFloat
@@ -397,6 +421,7 @@ BEGIN
                                  AND ObjectString_Article_Goods.DescId = zc_ObjectString_Article()  
            
            LEFT JOIN tmpRemains ON tmpRemains.ObjectId = tmp.ObjectId
+           LEFT JOIN tmpRemainsMonth ON tmpRemainsMonth.ObjectId = tmp.ObjectId
      ;
 
 END;
