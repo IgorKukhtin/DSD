@@ -31,6 +31,7 @@ RETURNS TABLE  (MovementId Integer
               , ReceiptLevelName TVarChar
               , Comment_goods TVarChar
               , Comment_Object TVarChar
+              , Remains    TFloat
               , Amount     TFloat
               , Amount1    TFloat
               , Amount2    TFloat
@@ -308,7 +309,14 @@ BEGIN
                                                AND ObjectLink_Goods_Engine.DescId = zc_ObjectLink_Goods_Engine()
                            LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Goods_Engine.ChildObjectId 
                       )
-
+     --текущий остаток
+   , tmpRemains AS (SELECT Container.ObjectId
+                         , COALESCE(Container.Amount,0) AS Amount
+                    FROM Container
+                    WHERE Container.DescId = zc_Container_Count()
+                      AND COALESCE(Container.Amount,0) <> 0
+                      AND Container.ObjectId IN (SELECT DISTINCT tmpMI_group.ObjectId FROM tmpMI_group)
+                    )
 
       -- Результат
       SELECT tmp.MovementId ::Integer
@@ -335,6 +343,8 @@ BEGIN
            , ObjectString_Goods_Comment.ValueData ::TVarChar AS Comment_goods
            , ObjectString_Object_Comment.ValueData ::TVarChar AS Comment_Object
 
+           , tmpRemains.Amount ::TFloat AS Remains
+           
            , tmp.Amount    :: TFloat
            , tmp.Amount1   :: TFloat
            , tmp.Amount2   :: TFloat
@@ -384,7 +394,9 @@ BEGIN
 
            LEFT JOIN ObjectString AS ObjectString_Article_Goods
                                   ON ObjectString_Article_Goods.ObjectId = tmp.GoodsId
-                                 AND ObjectString_Article_Goods.DescId = zc_ObjectString_Article()
+                                 AND ObjectString_Article_Goods.DescId = zc_ObjectString_Article()  
+           
+           LEFT JOIN tmpRemains ON tmpRemains.ObjectId = tmp.ObjectId
      ;
 
 END;
