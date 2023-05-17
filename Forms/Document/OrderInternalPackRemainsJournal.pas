@@ -58,6 +58,9 @@ type
     bbPrintRemainsLessUpak: TdxBarButton;
     actOrderInternalPackRemainsOpen: TdsdOpenForm;
     bbOrderInternalPackRemains: TdxBarButton;
+    spSelectPrintRemains_fact2: TdsdStoredProc;
+    actPrintRemains_fact2: TdsdPrintAction;
+    bbPrintRemains_fact2: TdxBarButton;
   private
     { Private declarations }
   public
