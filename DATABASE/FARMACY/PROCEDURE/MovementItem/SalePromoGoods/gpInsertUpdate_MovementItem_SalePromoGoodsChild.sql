@@ -1,13 +1,14 @@
 -- Function: gpInsertUpdate_MovementItem_SalePromoGoodsChild()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SalePromoGoodsChild (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SalePromoGoodsChild (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SalePromoGoodsChild(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inPrice               TFloat    , -- Количество
+    IN inPrice               TFloat    , -- Цена
+    IN inDiscount            TFloat    , -- Процент скидки
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -26,6 +27,8 @@ BEGIN
 
     -- сохранили свойство <Примечание>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
+    -- сохранили свойство <Процент скидки>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Discount(), ioId, inDiscount);
 
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);

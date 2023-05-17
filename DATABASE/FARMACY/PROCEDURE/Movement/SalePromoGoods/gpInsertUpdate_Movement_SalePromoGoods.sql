@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_SalePromoGoods()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SalePromoGoods (Integer, TVarChar, TDateTime, Integer, TDateTime, TDateTime, TVarChar, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SalePromoGoods (Integer, TVarChar, TDateTime, Integer, TDateTime, TDateTime, TVarChar, Boolean, TFloat, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SalePromoGoods(
@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SalePromoGoods(
     IN inComment               TVarChar   , -- Примечание
     IN inisAmountCheck         Boolean    , -- Акция от суммы чека
     IN inAmountCheck           TFloat     , -- От суммы чека
+    IN inisDiscountInformation Boolean    , -- Информирование о скидке
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -43,6 +44,7 @@ BEGIN
                                                   , inComment       := inComment
                                                   , inisAmountCheck := inisAmountCheck
                                                   , inAmountCheck   := inAmountCheck
+                                                  , inisDiscountInformation := inisDiscountInformation
                                                   , inUserId        := vbUserId
                                                   );
 

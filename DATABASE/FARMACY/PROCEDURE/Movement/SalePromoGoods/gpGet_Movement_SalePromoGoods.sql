@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer
              , Comment       TVarChar
              , isAmountCheck Boolean
              , AmountCheck   TFloat
+             , isDiscountInformation Boolean 
              )
 AS
 $BODY$
@@ -57,6 +58,7 @@ BEGIN
           , NULL  ::TVarChar            AS Comment
           , False :: Boolean            AS isAmountCheck
           , 0 :: TFloat                 AS AmountCheck
+          , False :: Boolean            AS isDiscountInformation
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
   
@@ -81,6 +83,7 @@ BEGIN
           , MovementString_Comment.ValueData                               AS Comment
           , COALESCE (MovementBoolean_AmountCheck.ValueData, False)        AS isAmountCheck
           , MovementFloat_AmountCheck.ValueData                            AS AmountCheck
+          , COALESCE(MovementBoolean_DiscountInformation.ValueData, False) AS isDiscountInformation
      FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -98,6 +101,10 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_AmountCheck
                                   ON MovementBoolean_AmountCheck.MovementId = Movement.Id
                                  AND MovementBoolean_AmountCheck.DescId = zc_MovementBoolean_AmountCheck()
+        LEFT JOIN MovementBoolean AS MovementBoolean_DiscountInformation
+                                  ON MovementBoolean_DiscountInformation.MovementId = Movement.Id
+                                 AND MovementBoolean_DiscountInformation.DescId = zc_MovementBoolean_DiscountInformation()
+
         LEFT JOIN MovementFloat AS MovementFloat_AmountCheck
                                 ON MovementFloat_AmountCheck.MovementId = Movement.Id
                                AND MovementFloat_AmountCheck.DescId = zc_MovementFloat_AmountCheck()

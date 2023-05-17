@@ -30,7 +30,7 @@ inherited MainInventoryForm: TMainInventoryForm
       BiDiMode = bdLeftToRight
       ParentBiDiMode = False
       TabOrder = 0
-      Properties.ActivePage = tsInventoryManual
+      Properties.ActivePage = tsInventory
       Properties.CustomButtons.Buttons = <>
       ClientRectBottom = 391
       ClientRectLeft = 4
@@ -39,6 +39,10 @@ inherited MainInventoryForm: TMainInventoryForm
       object tsStart: TcxTabSheet
         Caption = #1057#1090#1072#1088#1090#1086#1074#1072#1103' '#1089#1090#1088#1072#1085#1080#1094#1072
         ImageIndex = 0
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
       end
       object tsInventory: TcxTabSheet
         Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077
@@ -179,7 +183,7 @@ inherited MainInventoryForm: TMainInventoryForm
           TabOrder = 1
           object edBarCode: TcxTextEdit
             Left = 14
-            Top = 38
+            Top = 39
             TabOrder = 1
             OnDblClick = edBarCodeDblClick
             OnKeyDown = edBarCodeKeyDown
@@ -187,7 +191,7 @@ inherited MainInventoryForm: TMainInventoryForm
           end
           object ceAmount: TcxCurrencyEdit
             Left = 220
-            Top = 38
+            Top = 39
             EditValue = 1.000000000000000000
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####'
@@ -197,17 +201,17 @@ inherited MainInventoryForm: TMainInventoryForm
           end
           object cxLabel4: TcxLabel
             Left = 16
-            Top = 25
+            Top = 23
             Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
           end
           object cxLabel5: TcxLabel
             Left = 220
-            Top = 25
+            Top = 22
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
           end
           object ceAmountAdd: TcxCurrencyEdit
             Left = 727
-            Top = 40
+            Top = 39
             TabStop = False
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####'
@@ -217,12 +221,12 @@ inherited MainInventoryForm: TMainInventoryForm
           end
           object cxLabel6: TcxLabel
             Left = 735
-            Top = 26
+            Top = 23
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
           end
           object edGoodsCode: TcxTextEdit
             Left = 335
-            Top = 38
+            Top = 39
             TabStop = False
             Properties.ReadOnly = True
             TabOrder = 6
@@ -230,12 +234,12 @@ inherited MainInventoryForm: TMainInventoryForm
           end
           object cxLabel7: TcxLabel
             Left = 335
-            Top = 25
+            Top = 22
             Caption = #1055#1086#1089#1083#1077#1076#1085#1080#1081' '#1076#1086#1073#1072#1074#1083#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088
           end
           object edGoodsName: TcxTextEdit
             Left = 407
-            Top = 38
+            Top = 39
             TabStop = False
             Properties.ReadOnly = True
             TabOrder = 8
@@ -243,12 +247,12 @@ inherited MainInventoryForm: TMainInventoryForm
           end
           object cxLabel1: TcxLabel
             Left = 16
-            Top = 6
+            Top = 3
             Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1086#1090
           end
           object edOperDate: TcxDateEdit
             Left = 125
-            Top = 9
+            Top = 2
             TabStop = False
             EditValue = 45033d
             TabOrder = 10
@@ -256,7 +260,7 @@ inherited MainInventoryForm: TMainInventoryForm
           end
           object cxButton1: TcxButton
             Left = 181
-            Top = 34
+            Top = 37
             Width = 33
             Height = 25
             Action = actGoodsInventory
@@ -268,7 +272,7 @@ inherited MainInventoryForm: TMainInventoryForm
           end
           object edUnitName: TcxButtonEdit
             Left = 252
-            Top = 11
+            Top = 2
             Properties.Buttons = <
               item
                 Default = True
@@ -926,9 +930,9 @@ inherited MainInventoryForm: TMainInventoryForm
           '     LEFT JOIN Goods AS G ON G.Id = IC.GoodsId'
           '     LEFT JOIN UserSettings AS us ON us.Id = IC.UserInputId'
           
-            '     LEFT JOIN (SELECT MAX(IC.Id) AS ID, SUM(IC.Amount) AS Amoun' +
-            'tGoods FROM InventoryChild AS IC GROUP BY IC.Inventory, IC.Goods' +
-            'Id) AS ICS ON ICS.Id = IC.Id  '
+            '     LEFT JOIN (SELECT MAX(IC.Id) AS ID, CAST(SUM(IC.Amount) AS ' +
+            'Float) AS AmountGoods FROM InventoryChild AS IC GROUP BY IC.Inve' +
+            'ntory, IC.GoodsId) AS ICS ON ICS.Id = IC.Id  '
           'WHERE IC.Inventory = :inId'
           'ORDER BY IC.DateInput DESC')
       end>
