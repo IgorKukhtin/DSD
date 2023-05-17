@@ -3,25 +3,26 @@ inherited ContactPersonForm: TContactPersonForm
   ClientHeight = 335
   ClientWidth = 936
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 952
-  ExplicitHeight = 374
+  ExplicitWidth = 954
+  ExplicitHeight = 382
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 936
-    Height = 309
+    Height = 308
+    ExplicitTop = 27
     ExplicitWidth = 936
-    ExplicitHeight = 309
-    ClientRectBottom = 309
+    ExplicitHeight = 308
+    ClientRectBottom = 308
     ClientRectRight = 936
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 936
-      ExplicitHeight = 309
+      ExplicitHeight = 308
       inherited cxGrid: TcxGrid
         Width = 936
-        Height = 309
+        Height = 308
         ExplicitWidth = 936
-        ExplicitHeight = 309
+        ExplicitHeight = 308
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -229,7 +230,7 @@ inherited ContactPersonForm: TContactPersonForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -278,7 +279,15 @@ inherited ContactPersonForm: TContactPersonForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
+    end
+    object dxBarButton1: TdxBarButton
+      Action = ProtocolOpenForm
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
