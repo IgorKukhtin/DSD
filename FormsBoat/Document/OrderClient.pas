@@ -66,7 +66,6 @@ type
     edVATPercent: TcxCurrencyEdit;
     edDiscountTax: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
-    cxLabel8: TcxLabel;
     HeaderSaver: THeaderSaver;
     edInvNumberPartner: TcxTextEdit;
     spGet: TdsdStoredProc;
@@ -136,7 +135,6 @@ type
     edBrand: TcxButtonEdit;
     edCIN: TcxTextEdit;
     cxLabel13: TcxLabel;
-    cxLabel14: TcxLabel;
     edDiscountNextTax: TcxCurrencyEdit;
     DBViewAddOnProdColorItems: TdsdDBViewAddOn;
     ProdColorItemsDS: TDataSource;
@@ -411,10 +409,6 @@ type
     Color_ProdColorValue_Ch2: TcxGridDBColumn;
     Color_ProdColor_ch2: TcxGridDBColumn;
     NPP_ch3: TcxGridDBColumn;
-    cxLabel36: TcxLabel;
-    edSummTax: TcxCurrencyEdit;
-    cxLabel37: TcxLabel;
-    edSummReal: TcxCurrencyEdit;
     actChangeSummDialog: TExecuteDialog;
     actUpdateMovement_Summ: TdsdExecStoredProc;
     macChangeSumm: TMultiAction;
@@ -430,10 +424,8 @@ type
     cxLabel28: TcxLabel;
     cxLabel29: TcxLabel;
     cxLabel30: TcxLabel;
-    edBasisPrice_load: TcxCurrencyEdit;
+    edBasis_summ1_orig: TcxCurrencyEdit;
     edBasis_summ2_orig: TcxCurrencyEdit;
-    edDiscountTax_inf: TcxCurrencyEdit;
-    edDiscountNextTax_inf: TcxCurrencyEdit;
     edSummDiscount1: TcxCurrencyEdit;
     edSummDiscount_total: TcxCurrencyEdit;
     edSummDiscount2: TcxCurrencyEdit;
@@ -443,7 +435,6 @@ type
     edBasis_summ_transport: TcxCurrencyEdit;
     edSummRealinf: TcxCurrencyEdit;
     edTransportSumm_load: TcxCurrencyEdit;
-    edTaxKind_Value_Client: TcxCurrencyEdit;
     edBasisWVAT_summ_transport: TcxCurrencyEdit;
     cxLabel21: TcxLabel;
     cxLabel22: TcxLabel;
