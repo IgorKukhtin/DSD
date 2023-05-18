@@ -2,8 +2,10 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Product (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Product (Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Product (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Product(
+    IN inProductId   Integer,
     IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет
     IN inIsSale      Boolean,       -- признак показать проданные да / нет
     IN inSession     TVarChar       -- сессия пользователя
@@ -202,7 +204,8 @@ BEGIN
 
                          -- !!!временно, надо будет как-то выбирать НЕ ВСЕ!!!
                          WHERE MovementLinkObject_Product.ObjectId > 0
-                           AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+                           AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product() 
+                           AND (COALESCE (MovementLinkObject_Product.ObjectId, 0) = inProductId OR inProductId = 0)
                         )
     -- выводим 2 цвета в мастере
   , tmpProdColorItems_find AS (SELECT ObjectFloat_MovementId_OrderClient.ValueData :: Integer AS MovementId_OrderClient
@@ -250,6 +253,7 @@ BEGIN
 
                                 WHERE Object_ProdColorItems.DescId = zc_Object_ProdColorItems()
                                   AND Object_ProdColorItems.isErased = FALSE
+                                  AND (COALESCE (ObjectLink_Product.ChildObjectId, 0) = inProductId OR inProductId = 0)
                                )
      -- Product
    , tmpProduct AS (SELECT COALESCE (tmpOrderClient.MovementId, 0) AS MovementId_OrderClient
@@ -334,6 +338,7 @@ BEGIN
                     WHERE Object_Product.DescId = zc_Object_Product()
                      AND (Object_Product.isErased = FALSE OR inIsShowAll = TRUE)
                      AND (COALESCE (ObjectDate_DateSale.ValueData, zc_DateStart()) = zc_DateStart() OR inIsSale = TRUE)
+                     AND (COALESCE (Object_Product.Id, 0) = inProductId OR inProductId = 0)
                    )
    -- все Элементы сборки Модели - у Лодки - здесь вся база
  , tmpReceiptProdModelChild_all AS (SELECT tmpProduct.MovementId_OrderClient
@@ -382,6 +387,7 @@ BEGIN
                                                                  , inIsSale   := TRUE
                                                                  , inSession  := inSession
                                                                   ) AS lpSelect
+                              WHERE (COALESCE (lpSelect.ProductId, 0) = inProductId OR inProductId = 0)
                              )
           -- существующие элементы ProdOptItems - у Лодки
         , tmpProdOptItems AS (SELECT lpSelect.MovementId_OrderClient
@@ -408,6 +414,7 @@ BEGIN
                                                                , inIsSale   := TRUE
                                                                , inSession  := inSession
                                                                 ) AS lpSelect
+                              WHERE (COALESCE (lpSelect.ProductId, 0) = inProductId OR inProductId = 0) 
                              )
              -- РАСЧЕТ стоимости - у Лодки
            , tmpCalc_all AS (-- 1.1. Базовая - ВСЯ
@@ -901,6 +908,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.05.23         * add inProductId
  05.02.23         *
  04.01.21         *
  08.10.20         *
@@ -908,5 +916,5 @@ $BODY$
 
 -- тест
 --
--- SELECT * FROM gpSelect_Object_Product (false, true, zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Object_Product (false, false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Product (254225, false, true, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Product (254225, false, false, zfCalc_UserAdmin())

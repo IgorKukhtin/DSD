@@ -59,11 +59,19 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbNPP TFloat;
+  DECLARE vbProductId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_OrderClient());
      vbUserId := inSession;
+
+     vbProductId:= COALESCE ((SELECT MovementLinkObject_Product.ObjectId 
+                              FROM  MovementLinkObject AS MovementLinkObject_Product
+                              WHERE MovementLinkObject_Product.MovementId = inMovementId
+                                AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+                              )
+                              ,0);
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -166,7 +174,7 @@ BEGIN
                                    -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
                                  , gpSelect.BasisWVAT_summ_transport
 
-                           FROM gpSelect_Object_Product (FALSE, FALSE, '') AS gpSelect
+                           FROM gpSelect_Object_Product (vbProductId, FALSE, FALSE, '') AS gpSelect
                            WHERE gpSelect.MovementId_OrderClient = inMovementId
                           )
         -- Результат
