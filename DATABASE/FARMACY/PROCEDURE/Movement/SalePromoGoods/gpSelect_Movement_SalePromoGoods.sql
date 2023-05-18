@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer
              , Comment       TVarChar
              , isAmountCheck Boolean
              , AmountCheck   TFloat
+             , isDiscountInformation Boolean 
               )
 
 AS
@@ -56,6 +57,7 @@ BEGIN
           , MovementString_Comment.ValueData                               AS Comment
           , COALESCE (MovementBoolean_AmountCheck.ValueData, False)        AS isAmountCheck
           , MovementFloat_AmountCheck.ValueData                            AS AmountCheck
+          , COALESCE(MovementBoolean_DiscountInformation.ValueData, False) AS isDiscountInformation
      FROM Movement
         INNER JOIN tmpStatus ON Movement.StatusId = tmpStatus.StatusId
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -74,6 +76,10 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_AmountCheck
                                   ON MovementBoolean_AmountCheck.MovementId = Movement.Id
                                  AND MovementBoolean_AmountCheck.DescId = zc_MovementBoolean_AmountCheck()
+        LEFT JOIN MovementBoolean AS MovementBoolean_DiscountInformation
+                                  ON MovementBoolean_DiscountInformation.MovementId = Movement.Id
+                                 AND MovementBoolean_DiscountInformation.DescId = zc_MovementBoolean_DiscountInformation()
+
         LEFT JOIN MovementFloat AS MovementFloat_AmountCheck
                                 ON MovementFloat_AmountCheck.MovementId = Movement.Id
                                AND MovementFloat_AmountCheck.DescId = zc_MovementFloat_AmountCheck()
@@ -116,4 +122,3 @@ $BODY$
  07.09.22                                                       *
 */
 -- select * from gpSelect_Movement_SalePromoGoods(inStartDate := ('13.03.2016')::TDateTime ,inEndDate := ('13.03.2020')::TDateTime , inIsErased:= true, inSession := '3');
-

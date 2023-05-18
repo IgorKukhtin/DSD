@@ -3551,6 +3551,12 @@
       end>
     Params = <
       item
+        Name = 'inProductId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsShowAll'
         Value = False
         Component = actShowAllErased

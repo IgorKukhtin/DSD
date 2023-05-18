@@ -37,10 +37,17 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ProdColorName TVarChar
 AS
 $BODY$
     DECLARE vbUserId Integer;
+    DECLARE vbProductId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     vbProductId:= COALESCE ((SELECT MovementLinkObject_Product.ObjectId 
+                              FROM  MovementLinkObject AS MovementLinkObject_Product
+                              WHERE MovementLinkObject_Product.MovementId = inMovementId_OrderClient
+                                AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
+                              )
+                              ,0);
 
       -- Результат
       RETURN QUERY
@@ -62,7 +69,7 @@ BEGIN
                                , gpSelect.BasisPrice_load
                                  -- load Сумма транспорт с сайта 
                                , gpSelect.TransportSumm_load
-                          FROM gpSelect_Object_Product (inIsShowAll:= TRUE, inIsSale:= TRUE, inSession:= inSession) AS gpSelect
+                          FROM gpSelect_Object_Product (inProductId:= vbProductId, inIsShowAll:= TRUE, inIsSale:= TRUE, inSession:= inSession) AS gpSelect
                           WHERE gpSelect.MovementId_OrderClient = inMovementId_OrderClient
                          )
        -- выбор Примечаний

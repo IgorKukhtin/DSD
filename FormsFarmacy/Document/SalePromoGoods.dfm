@@ -3,27 +3,27 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
   ClientHeight = 658
   ClientWidth = 918
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 934
-  ExplicitHeight = 697
+  ExplicitWidth = 936
+  ExplicitHeight = 705
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 115
+    Top = 116
     Width = 918
-    Height = 543
-    ExplicitTop = 115
+    Height = 542
+    ExplicitTop = 116
     ExplicitWidth = 918
-    ExplicitHeight = 543
-    ClientRectBottom = 543
+    ExplicitHeight = 542
+    ClientRectBottom = 542
     ClientRectRight = 918
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 918
-      ExplicitHeight = 519
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 446
-        Height = 519
+        Height = 518
         ExplicitWidth = 446
-        ExplicitHeight = 519
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -74,7 +74,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         Left = 446
         Top = 0
         Width = 8
-        Height = 519
+        Height = 518
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salRight
@@ -84,7 +84,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         Left = 454
         Top = 0
         Width = 464
-        Height = 519
+        Height = 518
         Align = alRight
         BevelOuter = bvNone
         Caption = 'Panel1'
@@ -94,7 +94,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
           Left = 0
           Top = 0
           Width = 464
-          Height = 519
+          Height = 518
           Align = alClient
           BevelOuter = bvNone
           Caption = 'Panel2'
@@ -102,7 +102,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
           TabOrder = 0
           object cxGrid1: TcxGrid
             Left = 0
-            Top = 288
+            Top = 287
             Width = 464
             Height = 231
             Align = alBottom
@@ -190,7 +190,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
             Left = 0
             Top = 0
             Width = 464
-            Height = 280
+            Height = 279
             Align = alClient
             PopupMenu = PopupMenu
             TabOrder = 1
@@ -251,6 +251,16 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
                 HeaderAlignmentVert = vaCenter
                 Width = 74
               end
+              object MasterDiscount: TcxGridDBColumn
+                Caption = #1055#1088#1086#1094'. '#1089#1082#1076#1082#1080
+                DataBinding.FieldName = 'Discount'
+                PropertiesClassName = 'TcxCurrencyEditProperties'
+                Properties.DecimalPlaces = 4
+                Properties.DisplayFormat = ',0.####;-,0.####; ;'
+                HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
+                Width = 74
+              end
             end
             object cxGridLevel2: TcxGridLevel
               GridView = cxGridDBTableView2
@@ -258,7 +268,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
           end
           object cxSplitter2: TcxSplitter
             Left = 0
-            Top = 280
+            Top = 279
             Width = 464
             Height = 8
             Touch.ParentTabletOptions = False
@@ -294,24 +304,24 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       ExplicitLeft = 108
     end
     inherited cxLabel15: TcxLabel
-      Top = 45
-      ExplicitTop = 45
+      Top = 47
+      ExplicitTop = 47
     end
     inherited ceStatus: TcxButtonEdit
-      Top = 62
-      ExplicitTop = 62
+      Top = 64
+      ExplicitTop = 64
       ExplicitWidth = 200
       ExplicitHeight = 22
       Width = 200
     end
     object cxLabel7: TcxLabel
       Left = 225
-      Top = 45
+      Top = 47
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
       Left = 225
-      Top = 62
+      Top = 64
       Properties.ReadOnly = False
       TabOrder = 7
       Width = 300
@@ -336,12 +346,12 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
     end
     object cxLabel11: TcxLabel
       Left = 642
-      Top = 45
+      Top = 47
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1082#1086#1088#1088'.'
     end
     object edUpdateName: TcxButtonEdit
       Left = 642
-      Top = 62
+      Top = 64
       Properties.Buttons = <
         item
           Default = True
@@ -354,12 +364,12 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
     end
     object cxLabel13: TcxLabel
       Left = 787
-      Top = 45
+      Top = 47
       Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088'.'
     end
     object edUpdateDate: TcxDateEdit
       Left = 787
-      Top = 62
+      Top = 64
       EditValue = 42485d
       Properties.Kind = ckDateTime
       Properties.ReadOnly = True
@@ -433,15 +443,22 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
     end
     object ceAmountCheck: TcxCurrencyEdit
       Left = 533
-      Top = 62
+      Top = 64
       Properties.DisplayFormat = ',0.00;-,0.00; ;'
       TabOrder = 23
       Width = 100
     end
     object cxLabel4: TcxLabel
       Left = 533
-      Top = 45
+      Top = 47
       Caption = #1054#1090' '#1089#1091#1084#1084#1099' '#1095#1077#1082#1072
+    end
+    object cbDiscountInformation: TcxCheckBox
+      Left = 322
+      Top = 42
+      Caption = #1048#1085#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1086' '#1089#1082#1080#1076#1082#1077
+      TabOrder = 25
+      Width = 175
     end
   end
   inherited ActionList: TActionList
@@ -758,6 +775,30 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100
       ImageIndex = 41
     end
+    object mactUnitChecked: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUnitChecked
+        end>
+      View = cxGridDBTableView1
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1091#1095#1072#1089#1090#1080#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084'?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1091#1095#1072#1089#1090#1080#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1091#1095#1072#1089#1090#1080#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
+      ImageIndex = 80
+    end
+    object actUnitChecked: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUnitChecked
+      StoredProcList = <
+        item
+          StoredProc = spUnitChecked
+        end>
+      Caption = 'actUnitChecked'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_SalePromoGoods'
@@ -766,7 +807,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -834,6 +875,10 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton8'
         end
         item
           Visible = True
@@ -1054,6 +1099,10 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       Visible = ivAlways
       ImageIndex = 1
       ShortCut = 115
+    end
+    object dxBarButton8: TdxBarButton
+      Action = mactUnitChecked
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1302,6 +1351,13 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         Component = ceAmountCheck
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDiscountInformation'
+        Value = Null
+        Component = cbDiscountInformation
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 224
@@ -1380,6 +1436,14 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDiscountInformation'
+        Value = Null
+        Component = cbDiscountInformation
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -1426,6 +1490,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         Control = ceAmountCheck
       end
       item
+        Control = cbDiscountInformation
       end
       item
       end
@@ -1624,6 +1689,15 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         Value = Null
         Component = ChildDCS
         ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscount'
+        Value = Null
+        Component = ChildDCS
+        ComponentItem = 'Discount'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1998,8 +2072,7 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
       end>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 384
-    Top = 32
+    Left = 368
   end
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
@@ -2028,6 +2101,47 @@ inherited SalePromoGoodsForm: TSalePromoGoodsForm
         MultiSelectSeparator = ','
       end>
     Left = 264
-    Top = 16
+  end
+  object spUnitChecked: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_SalePromoGoods_UnitChecked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = SignDCS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = SignDCS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioIsChecked'
+        Value = Null
+        Component = SignDCS
+        ComponentItem = 'IsChecked'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 696
+    Top = 528
   end
 end

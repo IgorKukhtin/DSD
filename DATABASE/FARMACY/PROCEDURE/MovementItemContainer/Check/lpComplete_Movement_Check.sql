@@ -183,7 +183,7 @@ BEGIN
                                              , inInfoMoneyId            := NULL
                                              , inUserId                 := inUserId);
 
-    IF vbSPKindId = zc_Enum_SPKind_SP() AND vbMedicalProgramSP <> 20079831
+    IF vbSPKindId = zc_Enum_SPKind_SP() AND vbMedicalProgramSP NOT IN (20079831, 22065611)
     THEN
       SELECT COALESCE(ObjectFloat_CashSettings_PriceSamples.ValueData, 0)                          AS PriceSamples
       INTO vbPriceSamples

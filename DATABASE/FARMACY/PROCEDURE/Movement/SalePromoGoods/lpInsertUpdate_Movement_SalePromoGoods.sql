@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_SalePromoGoods()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SalePromoGoods (Integer, TVarChar, TDateTime, Integer, TDateTime, TDateTime, TVarChar, Boolean, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_SalePromoGoods (Integer, TVarChar, TDateTime, Integer, TDateTime, TDateTime, TVarChar, Boolean, TFloat, Boolean, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_SalePromoGoods(
@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_SalePromoGoods(
     IN inComment               TVarChar   , -- Примечание
     IN inisAmountCheck         Boolean    , -- Акция от суммы чека
     IN inAmountCheck           TFloat     , -- От суммы чека
+    IN inisDiscountInformation Boolean    , -- Информирование о скидке
     IN inUserId                Integer      -- сессия пользователя
 )
 RETURNS Integer AS
@@ -39,6 +40,9 @@ BEGIN
 
     -- сохранили <Акция от суммы чека>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_AmountCheck(), ioId, inisAmountCheck);
+
+    -- сохранили <Акция от суммы чека>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DiscountInformation(), ioId, inisDiscountInformation);
 
     -- сохранили <От суммы чека>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCheck(), ioId, inAmountCheck);

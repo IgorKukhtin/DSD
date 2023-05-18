@@ -1638,10 +1638,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_PercPositionCheck() RETURNS Integer AS $BO
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_PercPositionCheck', 'Процент выполнения маркет позиции с галочкой' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PercPositionCheck');
   
+CREATE OR REPLACE FUNCTION zc_MIFloat_Discount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Discount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_Discount', 'Процент скидки' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Discount');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 17.05.23                                                                                                     * zc_MIFloat_Discount
  02.05.23         * zc_MIFloat_SummAvCardSecond
                     zc_MIFloat_SummAvCardSecondRecalc
  10.04.23                                                                                                     * zc_MIFloat_PercPositionCheck

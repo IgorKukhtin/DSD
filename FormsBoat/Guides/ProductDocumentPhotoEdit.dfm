@@ -295,7 +295,7 @@
     Left = 12
     Top = 76
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 9
     Width = 182
   end
   object cxLabel19: TcxLabel
@@ -986,6 +986,7 @@
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1086#1090#1086
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1060#1086#1090#1086
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object DocumentRefresh: TdsdDataSetRefresh
@@ -1002,6 +1003,7 @@
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1044#1086#1082#1091#1084#1077#1085#1090#1086#1074
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object PhotoOpenAction: TDocumentOpenAction

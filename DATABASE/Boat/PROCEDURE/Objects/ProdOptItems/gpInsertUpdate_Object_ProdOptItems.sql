@@ -311,7 +311,7 @@ BEGIN
 
    -- пересохраняем - элемент  - Заказ Клиента
    vbMI_Id:= (WITH gpSelect AS (SELECT gpSelect.Basis_summ, gpSelect.Basis_summ_orig, gpSelect.Basis_summ1_orig
-                                FROM gpSelect_Object_Product (FALSE, FALSE, vbUserId :: TVarChar) AS gpSelect
+                                FROM gpSelect_Object_Product (inProductId, FALSE, FALSE, vbUserId :: TVarChar) AS gpSelect
                                 WHERE gpSelect.MovementId_OrderClient = inMovementId_OrderClient
                                )
               -- Результат

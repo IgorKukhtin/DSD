@@ -186,9 +186,14 @@ begin
     if ChechActiveInv(OperDate, UnitName, isSave) then
     begin
       if not isSave then
-        if MessageDlg('По аптеке ' + #13#10 + UnitName + #13#10 + 'от ' +
-          FormatDateTime('dd.mm.yyyy', OperDate) + #13#10'Не отправлены данные по инвентаризации.' +
-          #13#10#13#10'Вы дейсвительно хотите закрыть приложение?', mtInformation, mbOKCancel, 0) <> mrOk then Action := caNone;
+        case MessageDlg('По аптеке ' + #13#10 + UnitName + #13#10 + 'от ' +
+          FormatDateTime('dd.mm.yyyy', OperDate) + #13#10'Не отправлены данные по инвентаризации' +
+          #13#10#13#10'Yes - Выйти?' +
+          #13#10#13#10'Ok - Отправить и выйти?', mtInformation, [mbYes, mbOK, mbCancel], 0) Of
+            mrOk : actSendInventChildExecute(Sender);
+            mrYes : ;
+        else Action := caNone;
+        end;
     end else if MessageDlg('Закрыть приложение?', mtInformation, mbOKCancel, 0) <> mrOk then Action := caNone;
   end else
   begin
@@ -219,12 +224,12 @@ begin
   begin
     if isSave and (OperDate < IncDay(Date, - 3)) then
     begin
-      ShowMessage('Инвентаризация не создана. С начало создайте ее.');
+      ShowMessage('Инвентаризация не создана. С начало создайте ее');
       Exit;
     end;
   end else
   begin
-    ShowMessage('Инвентаризация не создана. С начало создайте ее.');
+    ShowMessage('Инвентаризация не создана. С начало создайте ее');
     Exit;
   end;
 
@@ -259,12 +264,12 @@ begin
   begin
     if isSave and (OperDate < IncDay(Date, - 3)) then
     begin
-      ShowMessage('Инвентаризация не создана. С начало создайте ее.');
+      ShowMessage('Инвентаризация не создана. С начало создайте ее');
       Exit;
     end;
   end else
   begin
-    ShowMessage('Инвентаризация не создана. С начало создайте ее.');
+    ShowMessage('Инвентаризация не создана. С начало создайте ее');
     Exit;
   end;
 
@@ -331,7 +336,7 @@ begin
 
   if gc_User.Local then
   begin
-    ShowMessage('В локальном режим не работает.');
+    ShowMessage('В локальном режиме не работает');
     Exit;
   end;
 
@@ -362,12 +367,12 @@ begin
   begin
     if isSave and (OperDate < IncDay(Date, - 3)) then
     begin
-      ShowMessage('Инвентаризация не создана. С начало создайте ее.');
+      ShowMessage('Инвентаризация не создана. С начало создайте ее');
       Exit;
     end;
   end else
   begin
-    ShowMessage('Инвентаризация не создана. С начало создайте ее.');
+    ShowMessage('Инвентаризация не создана. С начало создайте ее');
     Exit;
   end;
 
@@ -417,9 +422,9 @@ begin
     begin
       if MessageDlg('Активна инвентаризация по' + #13#10 + UnitName + #13#10 + 'от ' +
         FormatDateTime('dd.mm.yyyy', OperDate) + #13#10'Пересоздание инвентаризации преведет к потере введенных данных.' +
-        #13#10#13#10'Вы дейсвительно хотите пересоздать инвентаризацию?', mtInformation, mbOKCancel, 0) = mrOk then
+        #13#10#13#10'Вы действительно хотите пересоздать инвентаризацию?', mtInformation, mbOKCancel, 0) = mrOk then
       begin
-        if MessageDlg('Дейсвительно удалить активную инвентаризацию?', mtInformation, mbOKCancel, 0) <> mrOk then
+        if MessageDlg('Действительно удалить активную инвентаризацию?', mtInformation, mbOKCancel, 0) <> mrOk then
           raise Exception.Create ('Прервано сотрудником...');
       end else raise Exception.Create ('Прервано сотрудником...');
 
@@ -449,7 +454,7 @@ begin
 
   if gc_User.Local then
   begin
-    ShowMessage('В локальном режим не работает.');
+    ShowMessage('В локальном режиме не работает');
     Exit;
   end;
 
@@ -457,12 +462,12 @@ begin
   begin
     if isSave then
     begin
-      ShowMessage('Все даные отправлены.');
+      ShowMessage('Все данные отправлены');
       Exit;
     end;
   end else
   begin
-    ShowMessage('Нет данных для отпраки.');
+    ShowMessage('Нет данных для отпраки');
     Exit;
   end;
 
@@ -572,7 +577,7 @@ begin
         LoadSQLiteSQL(ds, Format(GetGoodsIdSQL, [IntToStr(MainId)]));
       end else
       begin
-        ShowMessage('Ошибка получения ID товара из штрихкода <' + BarCode + '>.');
+        ShowMessage('Ошибка получения ID товара из штрихкода <' + BarCode + '>');
         Exit;
       end;
     end else if Copy(BarCode, 1, 3) = '202' then
@@ -582,7 +587,7 @@ begin
         LoadSQLiteSQL(ds, Format(GetGoodsCodeSQL, [IntToStr(MainId)]));
       end else
       begin
-        ShowMessage('Ошибка получения ID товара из штрихкода <' + BarCode + '>.');
+        ShowMessage('Ошибка получения ID товара из штрихкода <' + BarCode + '>');
         Exit;
       end;
     end else
@@ -592,12 +597,12 @@ begin
 
     if ds.IsEmpty then
     begin
-      ShowMessage('Товар по штрихкоду <' + BarCode + '> не найден.');
+      ShowMessage('Товар по штрихкоду <' + BarCode + '> не найден');
       Exit;
     end;
     if ds.RecordCount > 1 then
     begin
-      ShowMessage('Штрихкод <' + BarCode + '> прикреплен к более чем одному товару.');
+      ShowMessage('Штрихкод <' + BarCode + '> прикреплен к более чем одному товару');
       Exit;
     end;
 
@@ -661,6 +666,7 @@ begin
 
     spSelectManual.Execute;
     actSetEditAmount.Execute;
+    cxGridDBTableView2.DataController.GotoNext;
   end;
 end;
 

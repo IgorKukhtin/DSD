@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_SalePromoGoodsChild(
 )
 RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount TFloat, Price TFloat 
+             , Amount TFloat, Price TFloat, Discount TFloat  
              , isErased Boolean
               )
 AS
@@ -31,15 +31,19 @@ BEGIN
             WITH 
                 
             MI_PromoCode AS (SELECT MI_PromoCode.Id
-                                  , MI_PromoCode.ObjectId    AS GoodsId
+                                  , MI_PromoCode.ObjectId       AS GoodsId
                                   , MI_PromoCode.Amount
-                                  , MIFloat_Price.ValueData  AS Price
+                                  , MIFloat_Price.ValueData     AS Price
+                                  , MIFloat_Discount.ValueData  AS Discount
                                   , MI_PromoCode.IsErased
                              FROM MovementItem AS MI_PromoCode
                              
                                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                               ON MIFloat_Price.MovementItemId =  MI_PromoCode.Id
                                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                  LEFT JOIN MovementItemFloat AS MIFloat_Discount
+                                                              ON MIFloat_Discount.MovementItemId =  MI_PromoCode.Id
+                                                             AND MIFloat_Discount.DescId = zc_MIFloat_Discount()
                                                               
                              WHERE MI_PromoCode.MovementId = inMovementId
                                AND MI_PromoCode.DescId = zc_MI_Child()
@@ -52,6 +56,7 @@ BEGIN
                  , Object_Goods.Name                     AS GoodsName
                  , MI_PromoCode.Amount                   AS Amount
                  , MI_PromoCode.Price                    AS Price
+                 , MI_PromoCode.Discount                 AS Discount
                  , COALESCE(MI_PromoCode.IsErased,FALSE) AS isErased
             FROM Object_Goods_Main AS Object_Goods
                 FULL OUTER JOIN MI_PromoCode ON MI_PromoCode.GoodsId = Object_Goods.Id
@@ -62,11 +67,12 @@ BEGIN
         RETURN QUERY
 
            SELECT MI_PromoCode.Id
-                , MI_PromoCode.ObjectId     AS GoodsId
-                , Object_Goods.ObjectCode   AS GoodsCode
-                , Object_Goods.Name         AS GoodsName
-                , MI_PromoCode.Amount       AS Amount
-                , MIFloat_Price.ValueData   AS Price
+                , MI_PromoCode.ObjectId       AS GoodsId
+                , Object_Goods.ObjectCode     AS GoodsCode
+                , Object_Goods.Name           AS GoodsName
+                , MI_PromoCode.Amount         AS Amount
+                , MIFloat_Price.ValueData     AS Price
+                , MIFloat_Discount.ValueData  AS Discount
                 , MI_PromoCode.IsErased
            FROM MovementItem AS MI_PromoCode
                 LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = MI_PromoCode.ObjectId  
@@ -74,6 +80,9 @@ BEGIN
                 LEFT JOIN MovementItemFloat AS MIFloat_Price
                                             ON MIFloat_Price.MovementItemId =  MI_PromoCode.Id
                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                LEFT JOIN MovementItemFloat AS MIFloat_Discount
+                                            ON MIFloat_Discount.MovementItemId =  MI_PromoCode.Id
+                                           AND MIFloat_Discount.DescId = zc_MIFloat_Discount()
                                            
            WHERE MI_PromoCode.MovementId = inMovementId
              AND MI_PromoCode.DescId = zc_MI_Child()

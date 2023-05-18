@@ -304,7 +304,7 @@ BEGIN
                                 AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
                                -- AND MovementLinkObject_PartnerMedical.ObjectId <> 0
                                 AND COALESCE (MovementLinkObject_SPKind.ObjectId, 0) = zc_Enum_SPKind_SP()
-                                AND (COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882) = inMedicalProgramSPId OR COALESCE(inMedicalProgramSPId, 0) = 0 AND COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882) <> 20079831)
+                                AND (COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882) = inMedicalProgramSPId OR COALESCE(inMedicalProgramSPId, 0) = 0 AND COALESCE (MovementLinkObject_MedicalProgramSP.ObjectId, 18076882) NOT IN (20079831 , 22065611 ))
                                 AND (COALESCE (ObjectLink_GroupMedicalProgramSP.ChildObjectId, 0) = inGroupMedicalProgramSPId OR COALESCE(inGroupMedicalProgramSPId, 0) = 0)
                                 AND COALESCE (MovementBoolean_PaperRecipeSP.ValueData,  False) = False
                               )
