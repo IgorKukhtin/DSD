@@ -1430,7 +1430,9 @@ uses
   PartionGoodsAssetChoice in '..\..\Forms\Guides\PartionGoodsAssetChoice.pas' {PartionGoodsAssetChoiceForm: TParentForm},
   MemberGLNDialog in '..\..\Forms\Guides\MemberGLNDialog.pas' {MemberGLNDialogForm: TParentForm},
   TransportKindEdit in '..\..\Forms\Guides\TransportKindEdit.pas' {TransportKindEditForm: TParentForm},
-  TransportKind in '..\..\Forms\Guides\TransportKind.pas' {TransportKindForm: TParentForm};
+  TransportKind in '..\..\Forms\Guides\TransportKind.pas' {TransportKindForm: TParentForm},
+  AreaUnitEdit in '..\..\Forms\Guides\AreaUnitEdit.pas' {AreaUnitEditForm: TParentForm},
+  AreaUnit in '..\..\Forms\Guides\AreaUnit.pas' {AreaUnitForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

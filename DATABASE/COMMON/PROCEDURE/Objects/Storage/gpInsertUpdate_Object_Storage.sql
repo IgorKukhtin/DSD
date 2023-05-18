@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Storage(Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Storage(Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Storage(Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Storage(
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Storage(
     IN inComment        TVarChar  ,     -- Примечание
     IN inAddress        TVarChar  ,     -- Адрес места
     IN inUnitId         Integer   ,     -- Подразделение
+    IN inAreaUnitId     Integer   ,     -- Участок
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -43,7 +45,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Storage_Comment(), ioId, inComment);
    -- сохранили связь с <Подразделение>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Storage_Unit(), ioId, inUnitId);
-   
+   -- сохранили связь с <Участок>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Storage_AreaUnit(), ioId, inAreaUnitId);   
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -57,6 +60,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.05.23         *
  26.07.16         *
  28.07.14         *
 */

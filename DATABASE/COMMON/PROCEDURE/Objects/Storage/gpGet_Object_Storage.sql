@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Storage(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , UnitId Integer, UnitName TVarChar
+             , UnitId Integer, UnitName TVarChar 
+             , AreaUnitId Integer, AreaUnitName TVarChar
              , Address TVarChar, Comment TVarChar
              , isErased boolean
 ) AS
@@ -28,6 +29,9 @@ BEGIN
            , CAST (0 as Integer)    AS UnitId
            , CAST ('' as TVarChar)  AS UnitName
 
+           , CAST (0 as Integer)    AS AreaUnitId
+           , CAST ('' as TVarChar)  AS AreaUnitName
+           
            , CAST ('' as TVarChar)  AS Address
            , CAST ('' as TVarChar)  AS Comment
 
@@ -41,6 +45,9 @@ BEGIN
 
            , Object_Unit.Id            AS UnitId
            , Object_Unit.ValueData     AS UnitName
+
+           , Object_AreaUnit.Id            AS AreaUnitId
+           , Object_AreaUnit.ValueData     AS AreaUnitName
 
            , ObjectString_Storage_Address.ValueData   AS Address
            , ObjectString_Storage_Comment.ValueData   AS Comment
@@ -58,6 +65,11 @@ BEGIN
                                  ON ObjectLink_Storage_Unit.ObjectId = Object_Storage.Id 
                                 AND ObjectLink_Storage_Unit.DescId = zc_ObjectLink_Storage_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Storage_Unit.ChildObjectId
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Storage_AreaUnit
+                                 ON ObjectLink_Storage_AreaUnit.ObjectId = Object_Storage.Id 
+                                AND ObjectLink_Storage_AreaUnit.DescId = zc_ObjectLink_Storage_AreaUnit()
+            LEFT JOIN Object AS Object_AreaUnit ON Object_AreaUnit.Id = ObjectLink_Storage_AreaUnit.ChildObjectId
        WHERE Object_Storage.Id = inId;
    END IF; 
   

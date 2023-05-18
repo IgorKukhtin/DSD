@@ -23,6 +23,7 @@ type
     procedure LoadAddressFormTest;
     procedure LoadAdvertisingFormTest;
     procedure LoadAssetFormTest;
+    procedure LoadAreaUnitFormTest;
     procedure LoadArticleLossFormTest;
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
@@ -3647,6 +3648,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTradeMarkEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTradeMarkEditForm');
 end;
+
+procedure TLoadFormTest.LoadAreaUnitFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAreaUnitForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaUnitEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAreaUnitkEditForm');
+end;
+
 procedure TLoadFormTest.LoadAssetFormTest;
 begin
   {

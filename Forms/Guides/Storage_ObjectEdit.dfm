@@ -2,7 +2,7 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
-  ClientHeight = 289
+  ClientHeight = 321
   ClientWidth = 303
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 251
+    Top = 286
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 251
+    Top = 286
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -61,23 +61,23 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 146
+    Top = 183
     Caption = #1040#1076#1088#1077#1089
   end
   object ceAddress: TcxTextEdit
     Left = 10
-    Top = 165
+    Top = 202
     TabOrder = 7
     Width = 273
   end
   object cxLabel4: TcxLabel
     Left = 10
-    Top = 191
+    Top = 224
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit
     Left = 10
-    Top = 210
+    Top = 245
     TabOrder = 9
     Width = 273
   end
@@ -96,6 +96,23 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 11
+    Width = 273
+  end
+  object cxLabel6: TcxLabel
+    Left = 10
+    Top = 142
+    Caption = #1059#1095#1072#1089#1090#1086#1082
+  end
+  object edAreaUnit: TcxButtonEdit
+    Left = 10
+    Top = 160
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
     Width = 273
   end
   object ActionList: TActionList
@@ -181,6 +198,14 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAreaUnitId'
+        Value = Null
+        Component = GuidesAreaUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 104
@@ -251,6 +276,21 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AreaUnitId'
+        Value = Null
+        Component = GuidesAreaUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AreaUnitName'
+        Value = Null
+        Component = GuidesAreaUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -269,7 +309,7 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 264
-    Top = 184
+    Top = 219
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 56
@@ -301,5 +341,32 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
       end>
     Left = 208
     Top = 117
+  end
+  object GuidesAreaUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edAreaUnit
+    FormNameParam.Value = 'TAreaUnitForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TAreaUnitForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesAreaUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesAreaUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 112
+    Top = 149
   end
 end
