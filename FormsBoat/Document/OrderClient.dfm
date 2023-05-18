@@ -26,8 +26,6 @@ object OrderClientForm: TOrderClientForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 1
-    ExplicitTop = 5
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -176,7 +174,6 @@ object OrderClientForm: TOrderClientForm
       Left = 1021
       Top = 45
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-      Style.Color = clBtnFace
     end
     object edPaidKind: TcxButtonEdit
       Left = 1021

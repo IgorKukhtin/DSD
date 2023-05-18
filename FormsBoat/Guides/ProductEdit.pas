@@ -88,10 +88,7 @@ type
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
-    Panel1: TPanel;
-    dxBarDockControl3: TdxBarDockControl;
     BarManager: TdxBarManager;
-    BarManagerBar1: TdxBar;
     bbCompleteMovement: TdxBarButton;
     bbDeleteMovement: TdxBarButton;
     bbDeleteDocument: TdxBarButton;
