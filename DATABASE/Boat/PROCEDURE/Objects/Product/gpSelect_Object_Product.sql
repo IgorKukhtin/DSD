@@ -183,10 +183,6 @@ BEGIN
                                                       ON MovementFloat_NPP.MovementId = Movement.Id
                                                      AND MovementFloat_NPP.DescId = zc_MovementFloat_NPP()
 
-                             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                                     ON MovementFloat_TotalSumm.MovementId = Movement.Id
-                                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
                              LEFT JOIN MovementFloat AS MovementFloat_SummReal
                                                      ON MovementFloat_SummReal.MovementId = Movement.Id
                                                     AND MovementFloat_SummReal.DescId = zc_MovementFloat_SummReal()

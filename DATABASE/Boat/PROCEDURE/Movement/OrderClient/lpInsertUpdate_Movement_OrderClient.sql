@@ -14,10 +14,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderClient(
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , --
     IN inDiscountTax         TFloat    , --
-    IN inDiscountNextTax     TFloat    , -- 
- INOUT ioSummTax             TFloat    ,
- INOUT ioSummReal            TFloat    ,
-    --IN inNPP               TFloat    , -- Очередность сборки
+    IN inDiscountNextTax     TFloat    , --
+ INOUT ioSummTax             TFloat    , -- Cумма откорректированной скидки, без НДС
+ INOUT ioSummReal            TFloat    , -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
     IN inPaidKindId          Integer   , -- ФО
@@ -88,7 +87,7 @@ BEGIN
                                                              ), 0));
 
          -- сохранили свойство <>
-         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Product_DateBegin(), inProductId, inOperDate + INTERVAL '3 MONTH');     
+         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Product_DateBegin(), inProductId, inOperDate + INTERVAL '3 MONTH');
 
      END IF;
 
@@ -162,26 +161,9 @@ BEGIN
      END IF;
   -----------
 */
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
-     
-     -- расчет после !!!пересчета!!!
-     IF ioSummReal > 0
-     THEN
-         ioSummTax:= COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_TotalSumm()), 0)
-                   - ioSummReal
-                    ;
-     ELSE
-         ioSummReal:= 0;
-     END IF;
-
-     -- сохранили значение <Cумма откорректированной скидки, без НДС>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTax(), ioId, ioSummTax);
-     -- сохранили значение <ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReal(), ioId, ioSummReal);
 
 
-    -- !!!протокол через свойства конкретного объекта!!!
+     -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = FALSE
      THEN
          -- сохранили свойство <Дата корректировки>
@@ -199,9 +181,6 @@ BEGIN
      END IF;
 
 
-       
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
      IF inProductId > 0
      THEN
@@ -230,7 +209,7 @@ BEGIN
                                                                 , inOperPriceList := (SELECT gpSelect.Basis_summ_orig  FROM gpSelect)
                                                                   -- ИТОГО Сумма продажи без НДС - без Скидки (Basis)
                                                                 , inBasisPrice    := (SELECT gpSelect.Basis_summ1_orig FROM gpSelect)
-                                                                  -- 
+                                                                  --
                                                                 , inCountForPrice := 1  ::TFloat
                                                                 , inComment       := '' ::TVarChar
                                                                 , inUserId        := inUserId
@@ -242,7 +221,30 @@ BEGIN
          -- пересчитали Итоговые суммы
          PERFORM lpInsertUpdate_MovementFloat_TotalSumm_order (ioId);
 
+
+         -- расчет после !!!пересчета!!!
+         IF ioSummReal > 0
+         THEN
+             ioSummTax:= COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_TotalSumm()), 0)
+                       - ioSummReal
+                        ;
+         ELSE
+             ioSummReal:= 0;
+         END IF;
+
+         -- сохранили значение <Cумма откорректированной скидки, без НДС>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTax(), ioId, ioSummTax);
+         -- сохранили значение <ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReal(), ioId, ioSummReal);
+
+     ELSE
+         -- пересчитали Итоговые суммы по накладной
+         PERFORM lpInsertUpdate_MovementFloat_TotalSumm_order (ioId);
+
      END IF;
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
 
 END;
