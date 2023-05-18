@@ -9,10 +9,12 @@ RETURNS TABLE (EndPromo         TDateTime
              , GoodsId          Integer
              , Amount           TFloat 
              , isAmountCheck    Boolean
+             , isDiscountInformation Boolean
              , AmountCheck      TFloat
              , GoodsPresentId   Integer
              , AmountPresent    TFloat
              , Price            TFloat
+             , Discount         TFloat
              , GoodsPresentCode Integer
              , GoodsPresentName TVarChar
              , PriceSale        TFloat
@@ -61,7 +63,7 @@ BEGIN
                                                           AND MovementDate_EndPromo.ValueData  >= CURRENT_DATE
 
                               WHERE Movement.DescId = zc_Movement_SalePromoGoods()
-                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                                AND (Movement.StatusId = zc_Enum_Status_Complete() OR vbUserId = 3)
                               ),
            tmpMIUnitAll AS (SELECT Movement.Id                      AS Id
                                  , MI_SalePromoGoods.ObjectId       AS UnitId
@@ -79,8 +81,9 @@ BEGIN
                               FROM tmpMIUnitAll AS MovementItem),
            tmpMovement AS (SELECT Movement.Id
                                 , Movement.EndPromo
-                                , COALESCE (MovementBoolean_AmountCheck.ValueData, False)        AS isAmountCheck
-                                , MovementFloat_AmountCheck.ValueData                            AS AmountCheck
+                                , COALESCE (MovementBoolean_AmountCheck.ValueData, False)           AS isAmountCheck
+                                , COALESCE (MovementBoolean_DiscountInformation.ValueData, False)   AS isDiscountInformation
+                                , MovementFloat_AmountCheck.ValueData                               AS AmountCheck
                            FROM tmpMovementAll AS Movement
 
                                 LEFT JOIN tmpMIUnit ON tmpMIUnit.Id = Movement.Id
@@ -90,6 +93,9 @@ BEGIN
                                 LEFT JOIN MovementBoolean AS MovementBoolean_AmountCheck
                                                           ON MovementBoolean_AmountCheck.MovementId = Movement.Id
                                                          AND MovementBoolean_AmountCheck.DescId = zc_MovementBoolean_AmountCheck()
+                                LEFT JOIN MovementBoolean AS MovementBoolean_DiscountInformation
+                                                          ON MovementBoolean_DiscountInformation.MovementId = Movement.Id
+                                                         AND MovementBoolean_DiscountInformation.DescId = zc_MovementBoolean_DiscountInformation()
                                 LEFT JOIN MovementFloat AS MovementFloat_AmountCheck
                                                         ON MovementFloat_AmountCheck.MovementId = Movement.Id
                                                        AND MovementFloat_AmountCheck.DescId = zc_MovementFloat_AmountCheck()
@@ -98,12 +104,14 @@ BEGIN
                           , Goods_Retail.Id                               AS GoodsId
                           , MI_SalePromoGoods.Amount                      AS Amount
                           , Movement.isAmountCheck
+                          , Movement.isDiscountInformation
                           , Movement.AmountCheck
                           , Goods_RetailPresent.Id                        AS GoodsPresentId
                           , Object_Goods_Main.ObjectCode                  AS GoodsPresentCode
                           , Object_Goods_Main.Name                        AS GoodsPresentName
                           , MI_SalePromoGoodsPresent.Amount               AS AmountPresent
                           , COALESCE(MIFloat_Price.ValueData, 0)::TFloat  AS Price
+                          , COALESCE(MIFloat_Discount.ValueData, 0)::TFloat AS Discount
                           , ROW_NUMBER() OVER (PARTITION BY MI_SalePromoGoods.ObjectId, MI_SalePromoGoodsPresent.ObjectId ORDER BY Movement.EndPromo DESC) AS Ord
                      FROM tmpMovement AS Movement
 
@@ -129,16 +137,21 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                       ON MIFloat_Price.MovementItemId =  MI_SalePromoGoodsPresent.Id
                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                          LEFT JOIN MovementItemFloat AS MIFloat_Discount
+                                                      ON MIFloat_Discount.MovementItemId =  MI_SalePromoGoodsPresent.Id
+                                                     AND MIFloat_Discount.DescId = zc_MIFloat_Discount()
                      )
                           
         SELECT MovementIten.EndPromo                             AS EndPromo
              , MovementIten.GoodsId
              , MovementIten.Amount
              , MovementIten.isAmountCheck
+             , MovementIten.isDiscountInformation
              , MovementIten.AmountCheck
              , MovementIten.GoodsPresentId
              , MovementIten.AmountPresent
              , MovementIten.Price
+             , MovementIten.Discount
              , MovementIten.GoodsPresentCode
              , MovementIten.GoodsPresentName
              , 0::TFloat   AS PriceSale

@@ -123,6 +123,8 @@ type
     edSummSend: TcxCurrencyEdit;
     isChoice: TcxGridDBColumn;
     cbSendAll: TcxCheckBox;
+    spUpdate_Send_Deferred: TdsdStoredProc;
+    actUpdate_Send_Deferred: TdsdExecStoredProc;
   private
     { Private declarations }
   public

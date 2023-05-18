@@ -11,7 +11,6 @@ inherited MainCashForm2: TMainCashForm2
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitTop = -165
   ExplicitWidth = 986
   ExplicitHeight = 747
   PixelsPerInch = 96
@@ -31,8 +30,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 153
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = -3
-      ExplicitTop = 1
       object CheckGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = CheckGridDBTableViewFocusedRecordChanged
