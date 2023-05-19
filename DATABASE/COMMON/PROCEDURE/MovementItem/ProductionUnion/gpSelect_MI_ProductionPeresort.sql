@@ -20,8 +20,8 @@ RETURNS TABLE (Id Integer, LineNum Integer
              , GoodsKindId_Complete Integer, GoodsKindCode_Complete Integer, GoodsKindName_Complete TVarChar
              , GoodsKindChildId Integer, GoodsKindChildCode Integer, GoodsKindChildName TVarChar
              , GoodsKindId_Complete_child Integer, GoodsKindCode_Complete_child Integer, GoodsKindName_Complete_child TVarChar 
-             , StorageId Integer, StorageName TVarChar, PartNumber TVarChar
-             , StorageId_child Integer, StorageName_child TVarChar, PartNumber_child TVarChar
+             , StorageId Integer, StorageName TVarChar, PartNumber TVarChar, Model TVarChar
+             , StorageId_child Integer, StorageName_child TVarChar, PartNumber_child TVarChar, Model_child TVarChar
              , isPeresort Boolean
              , isErased Boolean
              )
@@ -95,10 +95,12 @@ BEGIN
             , CAST (NULL AS Integer)                AS StorageId
             , CAST (NULL AS TVarChar)               AS StorageName            
             , '' ::TVarChar                         AS PartNumber
+            , '' ::TVarChar                         AS Model
             
             , CAST (NULL AS Integer)                AS StorageId_child
             , CAST (NULL AS TVarChar)               AS StorageName_child            
             , '' ::TVarChar                         AS PartNumber_child
+            , '' ::TVarChar                         AS Model_child
 
             , FALSE :: Boolean AS isPeresort
 
@@ -176,10 +178,12 @@ BEGIN
             , Object_Storage.Id                         AS StorageId
             , Object_Storage.ValueData                  AS StorageName
             , MIString_PartNumber.ValueData :: TVarChar AS PartNumber
+            , MIString_Model.ValueData      :: TVarChar AS Model
 
             , Object_Storage_child.Id                         AS StorageId_child
             , Object_Storage_child.ValueData                  AS StorageName_child
             , MIString_PartNumber_child.ValueData :: TVarChar AS PartNumber_child
+            , MIString_ModelChild.ValueData       :: TVarChar AS Model_child
 
             , CASE WHEN tmpGoodsByGoodsKindSub.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPeresort
 
@@ -219,6 +223,10 @@ BEGIN
                                          ON MIString_PartNumber.MovementItemId = MovementItem.Id
                                         AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
 
+            LEFT JOIN MovementItemString AS MIString_Model
+                                         ON MIString_Model.MovementItemId = MovementItem.Id
+                                        AND MIString_Model.DescId = zc_MIString_Model()
+
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                        AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id
@@ -251,6 +259,9 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_PartNumber_child
                                           ON MIString_PartNumber_child.MovementItemId = MovementItemChild.Id
                                          AND MIString_PartNumber_child.DescId = zc_MIString_PartNumber()
+            LEFT JOIN MovementItemString AS MIString_ModelChild
+                                         ON MIString_ModelChild.MovementItemId = MovementItemChild.Id
+                                        AND MIString_ModelChild.DescId = zc_MIString_Model()
 
              LEFT JOIN MovementItemDate AS MIDate_PartionGoodsChild
                                         ON MIDate_PartionGoodsChild.DescId = zc_MIDate_PartionGoods()
@@ -350,10 +361,12 @@ BEGIN
             , Object_Storage.Id                         AS StorageId
             , Object_Storage.ValueData                  AS StorageName
             , MIString_PartNumber.ValueData :: TVarChar AS PartNumber
+            , MIString_Model.ValueData      :: TVarChar AS Model
 
             , Object_Storage_child.Id                         AS StorageId_child
             , Object_Storage_child.ValueData                  AS StorageName_child
             , MIString_PartNumber_child.ValueData :: TVarChar AS PartNumber_child
+            , MIString_ModelChild.ValueData       :: TVarChar AS Model_child
             
             , CASE WHEN tmpGoodsByGoodsKindSub.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPeresort
 
@@ -420,6 +433,9 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_PartionGoodsChild
                                           ON MIString_PartionGoodsChild.DescId = zc_MIString_PartionGoods()
                                          AND MIString_PartionGoodsChild.MovementItemId =  MovementItemChild.Id
+             LEFT JOIN MovementItemString AS MIString_Model
+                                          ON MIString_Model.MovementItemId = MovementItem.Id
+                                         AND MIString_Model.DescId = zc_MIString_Model()
 
              LEFT JOIN MovementItemDate AS MIDate_PartionGoodsChild
                                         ON MIDate_PartionGoodsChild.DescId = zc_MIDate_PartionGoods()
@@ -443,6 +459,9 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_PartNumber_child
                                           ON MIString_PartNumber_child.MovementItemId = MovementItemChild.Id
                                          AND MIString_PartNumber_child.DescId = zc_MIString_PartNumber()
+            LEFT JOIN MovementItemString AS MIString_ModelChild
+                                         ON MIString_ModelChild.MovementItemId = MovementItemChild.Id
+                                        AND MIString_ModelChild.DescId = zc_MIString_Model()
 
              LEFT JOIN ObjectString AS ObjectString_GoodsChild_GoodsGroupFull
                                     ON ObjectString_GoodsChild_GoodsGroupFull.ObjectId = Object_GoodsChild.Id
@@ -466,6 +485,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.05.23         *
  05.05.23         *
  18.10.22         *
  31.03.15         * 

@@ -59,6 +59,7 @@ type
     Address: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
+    Room: TcxGridDBColumn;
   private
     { Private declarations }
   public

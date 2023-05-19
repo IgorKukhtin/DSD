@@ -38,6 +38,10 @@ CREATE OR REPLACE FUNCTION zc_MIString_PartNumber() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_PartNumber', '№ по тех паспорту ' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_PartNumber');
 
+CREATE OR REPLACE FUNCTION zc_MIString_Model() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Model'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_Model', 'Модель' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Model');
+
 
    
 

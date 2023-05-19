@@ -1674,6 +1674,7 @@ BEGIN
                                                         , inPartionGoodsDate    := NULL
                                                         , inPartionGoods        := NULL
                                                         , inPartNumber          := NULL
+                                                        , inModel               := Null
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inGoodsKindCompleteId := NULL
                                                         , inStorageId           := NULL

@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, TFloat, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, TFloat, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, TVarChar,TVarChar, Integer, Integer, Integer, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,7 +14,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Child(
     IN inParentId            Integer   , -- Главный элемент документа
     IN inPartionGoodsDate    TDateTime , -- Партия товара	
     IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inPartNumber          TVarChar  , -- № по тех паспорту        
+    IN inPartNumber          TVarChar  , -- № по тех паспорту 
+    IN inModel               TVarChar  , -- модель       
     IN inGoodsKindId         Integer   , -- Виды товаров 
     IN inGoodsKindCompleteId Integer   , -- Виды товаров ГП 
     IN inStorageId           Integer   , -- Место хранения             
@@ -103,6 +105,8 @@ BEGIN
 
    -- сохранили свойство <№ по тех паспорту>
    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
+   -- сохранили свойство <модель>
+   PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Model(), ioId, inModel);
    
    -- сохранили связь с <Виды товаров>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
@@ -136,6 +140,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.05.23         *
  07.11.15         * add inGoodsKindCompleteId
  11.07.15                                        * add inUserId:=
  05.07.15                                        * add inCount_onCount

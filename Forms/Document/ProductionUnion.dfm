@@ -1,7 +1,7 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1128
-  ExplicitTop = -41
+  ExplicitTop = -64
   ExplicitWidth = 1144
   ExplicitHeight = 713
   PixelsPerInch = 96
@@ -22,8 +22,6 @@ inherited ProductionUnionForm: TProductionUnionForm
       inherited cxGrid: TcxGrid
         Width = 1128
         Height = 220
-        ExplicitLeft = 176
-        ExplicitTop = 24
         ExplicitWidth = 1128
         ExplicitHeight = 220
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -470,6 +468,13 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object Model: TcxGridDBColumn
+            Caption = #1052#1086#1076#1077#1083#1100
+            DataBinding.FieldName = 'Model'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
         end
       end
       inherited cxGridChild: TcxGrid
@@ -660,6 +665,13 @@ inherited ProductionUnionForm: TProductionUnionForm
           object colChildPartNumber: TcxGridDBColumn
             Caption = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
             DataBinding.FieldName = 'PartNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object colChildModel: TcxGridDBColumn
+            Caption = #1052#1086#1076#1077#1083#1100
+            DataBinding.FieldName = 'Model'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
@@ -1992,6 +2004,15 @@ inherited ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioModel'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Model'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsKindId'
         Value = Null
         Component = MasterCDS
@@ -2032,8 +2053,8 @@ inherited ProductionUnionForm: TProductionUnionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 592
-    Top = 200
+    Left = 552
+    Top = 192
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionUnion_Master'
@@ -2109,6 +2130,13 @@ inherited ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioModel'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsKindId'
         Value = Null
         Component = MasterCDS
@@ -2147,6 +2175,8 @@ inherited ProductionUnionForm: TProductionUnionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    Left = 416
+    Top = 280
   end
   inherited spErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionUnion_Child_SetErased'
@@ -2236,6 +2266,15 @@ inherited ProductionUnionForm: TProductionUnionForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'PartNumber'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioModel'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Model'
         DataType = ftString
         ParamType = ptInputOutput
         MultiSelectSeparator = ','

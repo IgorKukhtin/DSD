@@ -342,6 +342,13 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object Model: TcxGridDBColumn
+            Caption = #1052#1086#1076#1077#1083#1100' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'Model'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object StorageName_child: TcxGridDBColumn
             Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062') ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'StorageName_child'
@@ -360,6 +367,13 @@ inherited ProductionPeresortForm: TProductionPeresortForm
           object PartNumber_child: TcxGridDBColumn
             Caption = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'PartNumber_child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object Model_child: TcxGridDBColumn
+            Caption = #1052#1086#1076#1077#1083#1100' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'Model_child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
@@ -1492,8 +1506,8 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       item
         Guides = GuidesTo
       end>
-    Left = 160
-    Top = 192
+    Left = 384
+    Top = 360
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
@@ -1707,6 +1721,24 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioModel'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Model'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioModel_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Model_child'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outGoodsChildName'
         Value = Null
         Component = MasterCDS
@@ -1847,6 +1879,58 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId_Complete_child'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StorageId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageId_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StorageId_child'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartNumber_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartNumber_child'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioModel'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Model'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioModel_child'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Model_child'
+        DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

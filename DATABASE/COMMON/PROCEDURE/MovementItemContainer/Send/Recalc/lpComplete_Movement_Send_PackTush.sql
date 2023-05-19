@@ -129,6 +129,7 @@ BEGIN
                                                        , inPartionGoodsDate       := NULL
                                                        , inPartionGoods           := NULL
                                                        , inPartNumber             := NULL
+                                                       , inModel                  := NULL
                                                        , inGoodsKindId            := tmp.GoodsKindId
                                                        , inGoodsKindId_Complete   := NULL
                                                        , inStorageId              := NULL
@@ -212,6 +213,7 @@ BEGIN
                                                                                        , inPartionGoodsDate    := NULL
                                                                                        , inPartionGoods        := NULL
                                                                                        , inPartNumber          := NULL
+                                                                                       , inModel               := NULL
                                                                                        , inGoodsKindId         := _tmpItemProduction_Child.GoodsKindId
                                                                                        , inGoodsKindCompleteId := NULL
                                                                                        , inStorageId           := NULL

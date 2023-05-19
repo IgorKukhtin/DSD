@@ -62,6 +62,7 @@ BEGIN
             , CAST (NULL AS Integer)                AS StorageId
             , CAST (NULL AS TVarChar)               AS StorageName            
             , '' ::TVarChar                         AS PartNumber
+            , '' ::TVarChar                         AS Model
 
             , Object_InfoMoney_View.InfoMoneyCode
             , Object_InfoMoney_View.InfoMoneyGroupName
@@ -158,6 +159,7 @@ BEGIN
             , Object_Storage.Id                         AS StorageId
             , Object_Storage.ValueData                  AS StorageName
             , MIString_PartNumber.ValueData :: TVarChar AS PartNumber
+            , MIString_Model.ValueData      :: TVarChar AS Model
 
             , Object_InfoMoney_View.InfoMoneyCode
             , Object_InfoMoney_View.InfoMoneyGroupName
@@ -279,6 +281,9 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_PartNumber
                                           ON MIString_PartNumber.MovementItemId = MovementItem.Id
                                          AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+             LEFT JOIN MovementItemString AS MIString_Model
+                                          ON MIString_Model.MovementItemId = MovementItem.Id
+                                         AND MIString_Model.DescId = zc_MIString_Model()
 
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
@@ -351,6 +356,7 @@ BEGIN
             , Object_Storage.Id                         AS StorageId
             , Object_Storage.ValueData                  AS StorageName
             , MIString_PartNumber.ValueData :: TVarChar AS PartNumber
+            , MIString_Model.ValueData      :: TVarChar AS Model
 
             , Object_InfoMoney_View.InfoMoneyCode
             , Object_InfoMoney_View.InfoMoneyGroupName
@@ -472,7 +478,10 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_PartNumber
                                           ON MIString_PartNumber.MovementItemId = MovementItem.Id
                                          AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-
+             LEFT JOIN MovementItemString AS MIString_Model
+                                          ON MIString_Model.MovementItemId = MovementItem.Id
+                                         AND MIString_Model.DescId = zc_MIString_Model()
+                                         
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
                                        AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
@@ -542,6 +551,7 @@ BEGIN
             , Object_Storage.Id                         AS StorageId
             , Object_Storage.ValueData                  AS StorageName
             , MIString_PartNumber.ValueData :: TVarChar AS PartNumber
+            , MIString_Model.ValueData      :: TVarChar AS Model
 
             , zfCalc_ReceiptChild_GroupNumber (inGoodsId                := Object_Goods.Id
                                              , inGoodsKindId            := Object_GoodsKind.Id
@@ -603,6 +613,9 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_PartNumber
                                           ON MIString_PartNumber.MovementItemId = MovementItem.Id
                                          AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+             LEFT JOIN MovementItemString AS MIString_Model
+                                          ON MIString_Model.MovementItemId = MovementItem.Id
+                                         AND MIString_Model.DescId = zc_MIString_Model()
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -649,6 +662,7 @@ ALTER FUNCTION gpSelect_MI_ProductionUnion (Integer, Boolean, Boolean, TVarChar)
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 19.05.23         *
  13.09.22         *
  31.03.15         * add GoodsGroupNameFull
  19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete

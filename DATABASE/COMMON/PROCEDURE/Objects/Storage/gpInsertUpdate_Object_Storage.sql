@@ -14,11 +14,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Storage(
     IN inAddress        TVarChar  ,     -- Адрес места
     IN inUnitId         Integer   ,     -- Подразделение
     IN inAreaUnitName   TVarChar  ,     -- Участок
+    IN inRoom           TVarChar  ,     -- Кабинет
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId Integer;                                 
    DECLARE vbCode_calc Integer;
    DECLARE vbAreaUnitId Integer;   
 BEGIN
@@ -45,6 +46,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Storage_Address(), ioId, inAddress);
    -- сохранили свойство <Примечание>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Storage_Comment(), ioId, inComment);
+   -- сохранили свойство <кабинет>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Storage_Room(), ioId, inRoom);
    -- сохранили связь с <Подразделение>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Storage_Unit(), ioId, inUnitId);
    

@@ -75,7 +75,7 @@ object Storage_ObjectForm: TStorage_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 156
+        Width = 126
       end
       object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
@@ -83,7 +83,7 @@ object Storage_ObjectForm: TStorage_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 95
+        Width = 76
       end
       object AreaUnitName: TcxGridDBColumn
         Caption = #1059#1095#1072#1089#1090#1086#1082
@@ -91,7 +91,14 @@ object Storage_ObjectForm: TStorage_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 156
+        Width = 81
+      end
+      object Room: TcxGridDBColumn
+        Caption = #1050#1072#1073#1080#1085#1077#1090
+        DataBinding.FieldName = 'Room'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 62
       end
       object Address: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089

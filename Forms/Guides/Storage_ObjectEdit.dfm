@@ -113,7 +113,18 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
       end>
     Properties.ReadOnly = False
     TabOrder = 13
-    Width = 273
+    Width = 143
+  end
+  object cxLabel7: TcxLabel
+    Left = 169
+    Top = 142
+    Caption = #1050#1072#1073#1080#1085#1077#1090
+  end
+  object edRoom: TcxTextEdit
+    Left = 169
+    Top = 161
+    TabOrder = 15
+    Width = 114
   end
   object ActionList: TActionList
     Left = 208
@@ -206,6 +217,14 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRoom'
+        Value = Null
+        Component = edRoom
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 248
@@ -291,6 +310,13 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Room'
+        Value = Null
+        Component = edRoom
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -339,8 +365,8 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 117
+    Left = 80
+    Top = 101
   end
   object GuidesAreaUnit: TdsdGuides
     KeyField = 'Id'

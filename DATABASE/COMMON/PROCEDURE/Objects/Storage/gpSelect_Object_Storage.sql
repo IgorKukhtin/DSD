@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Storage(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UnitId Integer, UnitName TVarChar, BranchName TVarChar
-             , AreaUnitId Integer, AreaUnitName TVarChar
+             , AreaUnitId Integer, AreaUnitName TVarChar, Room TVarChar
              , Address TVarChar, Comment TVarChar
              , isErased boolean
 ) AS
@@ -28,9 +28,10 @@ $BODY$BEGIN
 
    , Object_AreaUnit.Id            AS AreaUnitId
    , Object_AreaUnit.ValueData     AS AreaUnitName
-
+   , ObjectString_Storage_Room.ValueData      AS Room
    , ObjectString_Storage_Address.ValueData   AS Address
    , ObjectString_Storage_Comment.ValueData   AS Comment
+   
 
    , Object_Storage.isErased   AS isErased
 
@@ -41,6 +42,10 @@ $BODY$BEGIN
             LEFT JOIN ObjectString AS ObjectString_Storage_Comment
                                    ON ObjectString_Storage_Comment.ObjectId = Object_Storage.Id 
                                   AND ObjectString_Storage_Comment.DescId = zc_ObjectString_Storage_Comment()
+            LEFT JOIN ObjectString AS ObjectString_Storage_Room
+                                   ON ObjectString_Storage_Room.ObjectId = Object_Storage.Id 
+                                  AND ObjectString_Storage_Room.DescId = zc_ObjectString_Storage_Room()
+
             LEFT JOIN ObjectLink AS ObjectLink_Storage_Unit
                                  ON ObjectLink_Storage_Unit.ObjectId = Object_Storage.Id 
                                 AND ObjectLink_Storage_Unit.DescId = zc_ObjectLink_Storage_Unit()

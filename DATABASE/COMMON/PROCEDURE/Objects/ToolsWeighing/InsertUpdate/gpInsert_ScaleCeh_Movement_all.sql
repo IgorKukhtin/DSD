@@ -856,6 +856,7 @@ BEGIN
                                                         , inPartionGoodsDate    := tmp.PartionGoodsDate
                                                         , inPartionGoods        := tmp.PartionGoods  
                                                         , inPartNumber          := NULL
+                                                        , inModel               := NULL
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inGoodsKindId_Complete   := NULL
                                                         , inStorageId              := NULL
@@ -1120,6 +1121,7 @@ BEGIN
                                                         , inPartionGoodsDate    := NULL
                                                         , inPartionGoods        := NULL
                                                         , inPartNumber          := NULL
+                                                        , inModel               := NULL
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inGoodsKindCompleteId := NULL
                                                         , inStorageId           := NULL
@@ -1192,6 +1194,7 @@ BEGIN
                                                         , inPartionGoodsDate    := NULL
                                                         , inPartionGoods        := NULL
                                                         , inPartNumber          := NULL
+                                                        , inModel               := NULL
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inGoodsKindCompleteId := NULL
                                                         , inStorageId           := NULL

@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integ
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnion_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Master(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnion_Master(
     IN inPartionGoodsDate      TDateTime , -- Партия товара
     IN inPartionGoods          TVarChar  , -- Партия товара
     IN inPartNumber            TVarChar  , -- № по тех паспорту
+    IN inModel                 TVarChar  , -- модель
     IN inGoodsKindId           Integer   , -- Виды товаров
     IN inGoodsKindId_Complete  Integer   , -- Виды товаров ГП 
     IN inStorageId             Integer   , -- Место хранения
@@ -115,6 +117,9 @@ BEGIN
 
    -- сохранили свойство <№ по тех паспорту>
    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
+   -- сохранили свойство <модель>
+   PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Model(), ioId, inModel);
+
 
    -- пересчитали Итоговые суммы по накладной
    PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -129,6 +134,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.05.23         * Model
  26.10.20         * add inGoodsKindId_Complete
  29.06.16         * add inCuterWeight
  21.03.15                                        * all

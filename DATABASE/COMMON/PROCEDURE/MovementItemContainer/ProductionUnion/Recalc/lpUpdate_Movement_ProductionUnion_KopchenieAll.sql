@@ -276,7 +276,8 @@ BEGIN
                                                               , inCuterWeight      := 0
                                                               , inPartionGoodsDate := NULL
                                                               , inPartionGoods     := NULL
-                                                              , inPartNumber       := NULL
+                                                              , inPartNumber       := NULL 
+                                                              , inModel            := NULL
                                                               , inGoodsKindId      := CLO_GoodsKind.ObjectId
                                                               , inGoodsKindId_Complete   := NULL
                                                               , inStorageId        := NULL
@@ -302,6 +303,7 @@ BEGIN
                                                        , inPartionGoodsDate := NULL
                                                        , inPartionGoods     := NULL
                                                        , inPartNumber       := NULL
+                                                       , inModel            := NULL
                                                        , inGoodsKindId      := CLO_GoodsKind.ObjectId
                                                        , inGoodsKindCompleteId := NULL
                                                        , inStorageId        := NULL
