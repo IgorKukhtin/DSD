@@ -105,19 +105,19 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
   end
   object edAreaUnit: TcxButtonEdit
     Left = 10
-    Top = 160
+    Top = 161
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 13
     Width = 273
   end
   object ActionList: TActionList
-    Left = 152
-    Top = 56
+    Left = 208
+    Top = 64
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -200,16 +200,16 @@ object Storage_ObjectEditForm: TStorage_ObjectEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAreaUnitId'
+        Name = 'inAreaUnitName'
         Value = Null
-        Component = GuidesAreaUnit
-        ComponentItem = 'Key'
+        Component = edAreaUnit
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
-    Top = 56
+    Left = 248
+    Top = 16
   end
   object dsdFormParams: TdsdFormParams
     Params = <

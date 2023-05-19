@@ -57,7 +57,7 @@ object Storage_ObjectForm: TStorage_ObjectForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 220
+        Width = 188
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -76,6 +76,14 @@ object Storage_ObjectForm: TStorage_ObjectForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 156
+      end
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 95
       end
       object AreaUnitName: TcxGridDBColumn
         Caption = #1059#1095#1072#1089#1090#1086#1082

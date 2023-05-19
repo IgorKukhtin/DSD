@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Storage(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , UnitId Integer, UnitName TVarChar
+             , UnitId Integer, UnitName TVarChar, BranchName TVarChar
              , AreaUnitId Integer, AreaUnitName TVarChar
              , Address TVarChar, Comment TVarChar
              , isErased boolean
@@ -24,6 +24,7 @@ $BODY$BEGIN
 
    , Object_Unit.Id            AS UnitId
    , Object_Unit.ValueData     AS UnitName
+   , Object_Branch.ValueData   AS BranchName
 
    , Object_AreaUnit.Id            AS AreaUnitId
    , Object_AreaUnit.ValueData     AS AreaUnitName
@@ -49,6 +50,12 @@ $BODY$BEGIN
                                  ON ObjectLink_Storage_AreaUnit.ObjectId = Object_Storage.Id 
                                 AND ObjectLink_Storage_AreaUnit.DescId = zc_ObjectLink_Storage_AreaUnit()
             LEFT JOIN Object AS Object_AreaUnit ON Object_AreaUnit.Id = ObjectLink_Storage_AreaUnit.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                 ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+
    WHERE Object_Storage.DescId = zc_Object_Storage();
   
 END;$BODY$
