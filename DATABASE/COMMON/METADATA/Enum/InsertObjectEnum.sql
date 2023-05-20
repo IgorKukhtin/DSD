@@ -7217,7 +7217,7 @@ BEGIN
     vbImportTypeId := gpInsertUpdate_Object_ImportType(ioId            := COALESCE(vbImportTypeId,0), 
                                                        inCode          := COALESCE(vbImportTypeCode,0), 
                                                        inName          := 'Загрузка ОС (Пересортица)', 
-                                                       inProcedureName := 'gpInsertUpdate_MI_ProductionPeresortAsset_Load', 
+                                                       inProcedureName := 'gpInsertUpdate_Movement_ProductionPeresortAsset_Load', 
                                                        inSession       := lfGet_User_Session (vbUserId));
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportTypeId, 'zc_Enum_ImportType_PeresortAsset');
@@ -7285,7 +7285,7 @@ BEGIN
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 3,
                                                                 inName          := 'inGoodsCode', 
-                                                                inParamType     := 'ftString', 
+                                                                inParamType     := 'ftInteger', 
                                                                 inUserParamName := 'Код товара (приход)',
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := lfGet_User_Session (vbUserId));
@@ -7392,10 +7392,10 @@ BEGIN
 
     --9
     vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'StorageName';
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inUnitName_Storage';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 9, 
-                                                                inName          := 'StorageName', 
+                                                                inName          := 'inUnitName_Storage', 
                                                                 inParamType     := 'ftString', 
                                                                 inUserParamName := 'Подразделение (Место хранения) (приход)',
                                                                 inImportTypeId  := vbImportTypeId, 
