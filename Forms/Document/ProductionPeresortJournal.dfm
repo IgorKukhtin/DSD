@@ -263,6 +263,53 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
   inherited ActionList: TActionList
     Left = 23
     Top = 202
+    object actGetImportSettingAsset: TdsdExecStoredProc [0]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingAsset
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingAsset
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actDoLoadAsset: TExecuteImportSettingsAction [2]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inOperDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object macLoadExcelAsset: TMultiAction [4]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingAsset
+        end
+        item
+          Action = actDoLoadAsset
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1054#1057' '#1080#1079' Excel?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1054#1057' '#1080#1079' Excel'
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1054#1057' '#1080#1079' Excel'
+      ImageIndex = 74
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TProductionPeresortForm'
       FormNameParam.Value = 'TProductionPeresortForm'
@@ -558,6 +605,14 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -595,6 +650,10 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
     end
     object bbLoadExcel: TdxBarButton
       Action = macLoadExcel
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macLoadExcelAsset
       Category = 0
     end
   end
@@ -842,5 +901,39 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
     PackSize = 1
     Left = 792
     Top = 168
+  end
+  object spGetImportSettingAsset: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'TProductionPeresortJournalForm;zc_Object_ImportSetting_PeresortA' +
+          'sset'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 232
   end
 end
