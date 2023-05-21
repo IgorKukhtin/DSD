@@ -117,14 +117,14 @@ BEGIN
 
      -- замена - временно - захардкодил
      IF inValue1 ILIKE 'b280_loa_'
-     THEN 
+     THEN
          IF inValue2 ILIKE 'LED Deck Lights 3x'    THEN inValue1:= 'b280_loa_0'; END IF;
          IF inValue2 ILIKE 'OceanLED X4 x2'        THEN inValue1:= 'b280_loa_1'; END IF;
          IF inValue2 ILIKE 'LED Navigation Lights' THEN inValue1:= 'b280_loa_2'; END IF;
      END IF;
      -- замена - временно - захардкодил
      IF inValue1 ILIKE 'b280_aoa_'
-     THEN 
+     THEN
          IF inValue2 ILIKE 'Removable Steering wheel'               THEN inValue1:= 'b280_aoa_1'; END IF;
          IF inValue2 ILIKE 'Anti-Theft Security System (D.E.S.S.)'  THEN inValue1:= 'b280_aoa_2'; END IF;
          IF inValue2 ILIKE 'Ladder'                                 THEN inValue1:= 'b280_aoa_3'; END IF;
@@ -132,7 +132,7 @@ BEGIN
      END IF;
      -- замена - временно - захардкодил
      IF inValue1 ILIKE 'b280_aoav__'
-     THEN 
+     THEN
          IF TRIM (inValue4) ILIKE '3 x Flush fitting padeyes c\/w tie down starps and fixings' THEN inValue1:= 'b280_aoav_8_0'; END IF;
      END IF;
 
@@ -574,7 +574,8 @@ BEGIN
 
 
          -- 5.1. сохранили значение
-         ioProductId:= (SELECT gpInsertUpdate_Object_Product
+         ioProductId:= (SELECT tmp.ioId
+                        FROM gpInsertUpdate_Object_Product
                                                (ioId                    := ioProductId
                                               , inCode                  := COALESCE ((SELECT Object.ObjectCode FROM Object WHERE Object.Id = ioProductId), lfGet_ObjectCode(0, zc_Object_Product()))
                                               , inName                  := (SELECT Object.ValueData  FROM Object WHERE Object.Id = ioProductId)
@@ -617,6 +618,8 @@ BEGIN
                                               , inHours                 := 0
                                               , inDiscountTax           := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_DiscountTax()), 0)
                                               , inDiscountNextTax       := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_DiscountNextTax()), 0)
+                                              , ioSummTax               := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_SummTax()), 0)
+                                              , ioSummReal              := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_SummReal()), 0)
                                               , inDateStart             := NULL
                                               , inDateBegin             := NULL
                                               , inDateSale              := NULL
@@ -636,7 +639,8 @@ BEGIN
                                               , inAmountOut_Invoice     := 0
 
                                               , inSession               := inSession
-                                               ));
+                                               ) AS tmp
+                       );
 
          --  если вдруг был пустой
          IF COALESCE (ioMovementId_OrderClient, 0) = 0
@@ -651,32 +655,33 @@ BEGIN
          END IF;
 
          -- еще раз - теперь все параметры
-         ioMovementId_OrderClient:= lpInsertUpdate_Movement_OrderClient(ioId                 := ioMovementId_OrderClient
-                                                                      , inInvNumber          := (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioMovementId_OrderClient)
-                                                                      , inInvNumberPartner   := (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.DescId = zc_MovementString_InvNumberPartner() AND MS.MovementId = ioMovementId_OrderClient)
-                                                                      , inOperDate           := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = ioMovementId_OrderClient)
-                                                                      , inPriceWithVAT       := COALESCE ((SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.DescId = zc_MovementBoolean_PriceWithVAT() AND MB.MovementId = ioMovementId_OrderClient), FALSE)
-                                                                      , inVATPercent         := (SELECT ObjectFloat_TaxKind_Value.ValueData
-                                                                                                 FROM ObjectLink AS ObjectLink_TaxKind
-                                                                                                      LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
-                                                                                                                           AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
-                                                                                                 WHERE ObjectLink_TaxKind.ObjectId = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_From() AND MLO.MovementId = ioMovementId_OrderClient)
-                                                                                                   AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
-                                                                                                )
-                                                                      , inDiscountTax        := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_DiscountTax()), 0)
-                                                                      , inDiscountNextTax    := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_DiscountNextTax()), 0)
-                                                                      , ioSummReal           := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_SummReal()), 0)
-                                                                      , ioSummTax            := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_SummTax()), 0)
-                                                                    --, inNPP                := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_NPP()), 0)
-                                                                      , inFromId             := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_From() AND MLO.MovementId = ioMovementId_OrderClient)
-                                                                      , inToId               := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_To() AND MLO.MovementId = ioMovementId_OrderClient), zc_Unit_Production())
-                                                                      , inPaidKindId         := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_PaidKind() AND MLO.MovementId = ioMovementId_OrderClient), zc_Enum_PaidKind_FirstForm())
-                                                                      , inProductId          := ioProductId
-                                                                      , inMovementId_Invoice := (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.DescId = zc_MovementLinkMovement_Invoice() AND MLM.MovementId = ioMovementId_OrderClient)
-                                                                      , inComment            := COALESCE ((SELECT MS.ValueData FROM MovementString AS MS WHERE MS.DescId = zc_MovementString_Comment() AND MS.MovementId = ioMovementId_OrderClient), '1')
-                                                                      , inUserId             := vbUserId
-                                                                       );
+         ioMovementId_OrderClient:= (SELECT tmp.ioId
+                                     FROM lpInsertUpdate_Movement_OrderClient (ioId                 := ioMovementId_OrderClient
+                                                                             , inInvNumber          := (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = ioMovementId_OrderClient)
+                                                                             , inInvNumberPartner   := (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.DescId = zc_MovementString_InvNumberPartner() AND MS.MovementId = ioMovementId_OrderClient)
+                                                                             , inOperDate           := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = ioMovementId_OrderClient)
+                                                                             , inPriceWithVAT       := COALESCE ((SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.DescId = zc_MovementBoolean_PriceWithVAT() AND MB.MovementId = ioMovementId_OrderClient), FALSE)
+                                                                             , inVATPercent         := (SELECT ObjectFloat_TaxKind_Value.ValueData
+                                                                                                        FROM ObjectLink AS ObjectLink_TaxKind
+                                                                                                             LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                                                                                                   ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                                                                                                                  AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+                                                                                                        WHERE ObjectLink_TaxKind.ObjectId = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_From() AND MLO.MovementId = ioMovementId_OrderClient)
+                                                                                                          AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+                                                                                                       )
+                                                                             , inDiscountTax        := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_DiscountTax()), 0)
+                                                                             , inDiscountNextTax    := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_DiscountNextTax()), 0)
+                                                                             , ioSummTax            := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_SummTax()), 0)
+                                                                             , ioSummReal           := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_SummReal()), 0)
+                                                                             , inFromId             := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_From() AND MLO.MovementId = ioMovementId_OrderClient)
+                                                                             , inToId               := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_To() AND MLO.MovementId = ioMovementId_OrderClient), zc_Unit_Production())
+                                                                             , inPaidKindId         := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_PaidKind() AND MLO.MovementId = ioMovementId_OrderClient), zc_Enum_PaidKind_FirstForm())
+                                                                             , inProductId          := ioProductId
+                                                                             , inMovementId_Invoice := (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.DescId = zc_MovementLinkMovement_Invoice() AND MLM.MovementId = ioMovementId_OrderClient)
+                                                                             , inComment            := COALESCE ((SELECT MS.ValueData FROM MovementString AS MS WHERE MS.DescId = zc_MovementString_Comment() AND MS.MovementId = ioMovementId_OrderClient), '1')
+                                                                             , inUserId             := vbUserId
+                                                                              ) AS tmp
+                                    );
 
          -- нашли созданный
          vbMovementItemId:= (SELECT MI.Id FROM MovementItem AS MI WHERE MI.MovementId = ioMovementId_OrderClient AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE);
@@ -1213,7 +1218,7 @@ BEGIN
                                                                           OR OS_Comment.ValueData ILIKE 'DECK'
                                                                           OR OS_Comment.ValueData ILIKE 'STEERING CONSOLE'
                                                                             )
- 
+
                                              WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
                                                -- с таким Цветом
                                                AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
