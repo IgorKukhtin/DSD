@@ -548,6 +548,7 @@ END IF;
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
                                                  , inPartNumber             := NULL
+                                                 , inModel                  := NULL
                                                  , inGoodsKindId            := tmp.GoodsKindId_to
                                                  , inGoodsKindId_Complete   := NULL
                                                  , inStorageId              := NULL
@@ -596,6 +597,7 @@ END IF;
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
                                                  , inPartNumber             := NULL
+                                                 , inModel                  := NULL
                                                  , inGoodsKindId            := _tmpItemPeresort_new.GoodsKindId_from
                                                  , inGoodsKindCompleteId    := NULL
                                                  , inStorageId              := NULL

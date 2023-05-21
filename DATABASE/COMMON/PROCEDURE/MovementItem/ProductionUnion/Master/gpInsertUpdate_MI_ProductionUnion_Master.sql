@@ -16,7 +16,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master(
     IN inCuterWeight	       TFloat    , -- Фактический вес(куттера)
     IN inPartionGoodsDate      TDateTime , -- Партия товара
     IN inPartionGoods          TVarChar  , -- Партия товара 
- INOUT ioPartNumber            TVarChar  , -- № по тех паспорту
+ INOUT ioPartNumber            TVarChar  , -- № по тех паспорту 
+ INOUT ioModel                 TVarChar  , -- модель
     IN inGoodsKindId           Integer   , -- Виды товаров
     IN inGoodsKindId_Complete  Integer   , -- Виды товаров ГП
     IN inStorageId             Integer   , -- Место хранения
@@ -42,6 +43,7 @@ BEGIN
                                                   , inPartionGoodsDate    := inPartionGoodsDate
                                                   , inPartionGoods        := inPartionGoods
                                                   , inPartNumber          := ioPartNumber
+                                                  , inModel               := ioModel
                                                   , inGoodsKindId         := inGoodsKindId
                                                   , inGoodsKindId_Complete:= inGoodsKindId_Complete
                                                   , inStorageId           := inStorageId
@@ -61,6 +63,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.05.23         * inModel
  06.05.23         *
  26.10.20         * add inGoodsKindId_Complete
  29.06.16         * add inCuterWeight

@@ -562,6 +562,23 @@ procedure TMainInventoryForm.InsertBarCode;
 begin
   BarCode := Trim(edBarCode.Text);
 
+  if Screen.ActiveControl is TcxCustomInnerTextEdit then
+  begin
+    if TcxCustomInnerTextEdit(Screen.ActiveControl).Parent = edBarCode then
+    begin
+      ceAmount.SetFocus;
+      Exit;
+    end else if TcxCustomInnerTextEdit(Screen.ActiveControl).Parent <> ceAmount then
+    begin
+      edBarCode.SetFocus;
+      Exit;
+    end;
+  end else
+  begin
+    edBarCode.SetFocus;
+    Exit;
+  end;
+
   if BarCode = '' then
   begin
     edBarCode.SetFocus;

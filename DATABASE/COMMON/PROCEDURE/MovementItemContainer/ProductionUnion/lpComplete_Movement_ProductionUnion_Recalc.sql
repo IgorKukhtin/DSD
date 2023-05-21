@@ -168,6 +168,7 @@ BEGIN
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
                                                  , inPartNumber             := NULL
+                                                 , inModel                  := NULL
                                                  , inGoodsKindId            := NULL
                                                  , inGoodsKindId_Complete   := NULL
                                                  , inStorageId              := NULL
@@ -199,6 +200,7 @@ BEGIN
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
                                                  , inPartNumber             := NULL
+                                                 , inModel                  := NULL
                                                  , inGoodsKindId            := NULL
                                                  , inGoodsKindCompleteId    := NULL
                                                  , inStorageId              := NULL

@@ -47,8 +47,13 @@ BEGIN
                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                      AND MovementLinkObject_To.ObjectId = inToId
 
+        Left JOIN MovementBoolean AS MovementBoolean_SUN
+                                  ON MovementBoolean_SUN.MovementId = Movement.Id
+                                 AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+
       WHERE Movement.DescId = zc_Movement_Send() AND Movement.OperDate = inOperDate
-          AND Movement.StatusId <> zc_Enum_Status_Erased();
+          AND Movement.StatusId <> zc_Enum_Status_Erased()
+          AND COALESCE(MovementBoolean_SUN.ValueData, False) = False;
     
       IF COALESCE (vbMovementId,0) = 0 THEN
        -- записываем новый <Документ>
@@ -57,7 +62,7 @@ BEGIN
                                                    , inOperDate         := inOperDate
                                                    , inFromId           := inFromId
                                                    , inToId             := inToId
-                                                   , inComment          := '' :: TVarChar
+                                                   , inComment          := 'Перемещение товара (менеджер)' :: TVarChar
                                                    , inChecked          := FALSE
                                                    , inisComplete       := FALSE
                                                    , inNumberSeats      := 0
@@ -93,7 +98,7 @@ BEGIN
                                                            , inGoodsId            := inGoodsId
                                                            , inAmount             := inRemainsMCS_result
                                                            , inAmountManual       := 0 ::TFloat
-                                                           , inAmountStorage      := 0 ::TFloat
+                                                           , inAmountStorage      := inRemainsMCS_result
                                                            , inReasonDifferencesId:= 0
                                                            , inCommentSendID      := 0
                                                            , inUserId             := vbUserId
@@ -105,6 +110,12 @@ BEGIN
 
    END IF;
 
+    -- !!!ВРЕМЕННО для ТЕСТА!!!
+    IF inSession = zfCalc_UserAdmin()
+    THEN
+        RAISE EXCEPTION 'Тест прошел успешно для <%>', inSession;
+    END IF;
+    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -116,4 +127,4 @@ $BODY$
 */
 
 -- тест
---select * from gpInsertUpdate_MovementItem_Send_Auto(inFromId := 183292 , inToId := 183290 , inOperDate := ('01.06.2016')::TDateTime , inGoodsId := 3022 , inRemainsMCS_result := 0.8 , inPrice_from := 155.1 , inPrice_to := 155.1 ,  inSession := '3');
+-- select * from gpInsertUpdate_MovementItem_Send_Auto(inFromId := 183292 , inToId := 183290 , inOperDate := CURRENT_DATE , inGoodsId := 3022 , inRemainsMCS_result := 0.8 , inPrice_from := 155.1 , inPrice_to := 155.1 , inMCSPeriod := 0, inMCSDay := 0,  inSession := '3');

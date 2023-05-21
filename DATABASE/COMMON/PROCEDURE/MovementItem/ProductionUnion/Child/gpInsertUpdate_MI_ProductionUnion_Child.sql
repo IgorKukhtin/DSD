@@ -2,7 +2,8 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnion_Child (Integer, Integer, Integer, TFloat, Integer, TDateTime, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Child(
     IN inPartionGoodsDate    TDateTime , -- Партия товара	
     IN inPartionGoods        TVarChar  , -- Партия товара        
  INOUT ioPartNumber          TVarChar  , -- № по тех паспорту
+ INOUT ioModel               TVarChar  , -- модель
     IN inGoodsKindId         Integer   , -- Виды товаров 
     IN inGoodsKindCompleteId Integer   , -- Виды товаров ГП
     IN inStorageId           Integer   , -- Место хранения           
@@ -35,6 +37,7 @@ BEGIN
                                                  , inPartionGoodsDate := inPartionGoodsDate
                                                  , inPartionGoods     := inPartionGoods 
                                                  , inPartNumber       := ioPartNumber
+                                                 , inModel            := ioModel
                                                  , inGoodsKindId      := inGoodsKindId
                                                  , inGoodsKindCompleteId := inGoodsKindCompleteId  
                                                  , inStorageId        := inStorageId
@@ -49,6 +52,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.05.23         * Model
  07.11.15         * add inGoodsKindCompleteId
  21.03.15                                        * all
  11.12.14         * add lpInsertUpdate_MI_ProductionUnion_Child

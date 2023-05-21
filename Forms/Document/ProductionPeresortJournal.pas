@@ -53,6 +53,11 @@ type
     bbLoadExcel: TdxBarButton;
     ItemName_from: TcxGridDBColumn;
     ItemName_to: TcxGridDBColumn;
+    spGetImportSettingAsset: TdsdStoredProc;
+    actGetImportSettingAsset: TdsdExecStoredProc;
+    actDoLoadAsset: TExecuteImportSettingsAction;
+    macLoadExcelAsset: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

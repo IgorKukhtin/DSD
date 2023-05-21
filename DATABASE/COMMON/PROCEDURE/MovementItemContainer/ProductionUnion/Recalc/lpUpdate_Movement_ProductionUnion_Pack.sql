@@ -1346,6 +1346,7 @@ BEGIN
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL 
                                                  , inPartNumber             := NULL
+                                                 , inModel                  := NULL
                                                  , inGoodsKindId            := tmp.GoodsKindId
                                                  , inGoodsKindId_Complete   := NULL 
                                                  , inStorageId        := NULL
@@ -1380,6 +1381,7 @@ BEGIN
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
                                                  , inPartNumber             := NULL
+                                                 , inModel                  := NULL
                                                  , inGoodsKindId            := CLO_GoodsKind.ObjectId
                                                  , inGoodsKindCompleteId    := NULL
                                                  , inStorageId        := NULL
@@ -1411,7 +1413,8 @@ BEGIN
                                                  , inParentId               := _tmpResult.MovementItemId
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
-                                                 , inPartNumber             := NULL
+                                                 , inPartNumber             := NULL 
+                                                 , inModel                  := NULL
                                                  , inGoodsKindId            := ObjectLink_ReceiptChild_GoodsKind.ChildObjectId
                                                  , inGoodsKindCompleteId    := NULL
                                                  , inStorageId              := NULL

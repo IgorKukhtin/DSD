@@ -937,6 +937,7 @@ type
     procedure AddSalePromoGoodsAmountCheck;
 
     function CheckGoodsPromoGoods(AGoodsId : Integer; APrice : Currency) : Boolean;
+    function GetSalePromoGoodsPrice(AGoodsId : Integer; ADiscount : Currency) : Currency;
 
     // проверили что есть остаток
     function fCheck_RemainsError: Boolean;
@@ -9086,6 +9087,14 @@ begin
     end;
   end;
 
+  if (SourceClientDataSet = CheckCDS) and
+     SourceClientDataSet.FieldByName('isGoodsPresent').AsBoolean and
+     (AisGoodsPresent = False) then
+  begin
+    ShowMessage('Изменять или добавлять акционный товара в чек запрещено.');
+    exit;
+  end;
+
   try
 
     if not CheckShareFromPrice(nAmount,
@@ -13936,7 +13945,9 @@ begin
               while not RemainsCDS.Eof do
               begin
                 SalePromoGoodsCDS.Edit;
-                if SalePromoGoodsCDS.FieldByName('Price').AsCurrency = 0 then
+                if (SalePromoGoodsCDS.FieldByName('Price').AsCurrency = 0) and (SalePromoGoodsCDS.FieldByName('Discount').AsCurrency > 0) then
+                  SalePromoGoodsCDS.FieldByName('PriceSale').AsCurrency := RoundTo(RemainsCDS.FieldByName('Price').AsCurrency * (100 - SalePromoGoodsCDS.FieldByName('Discount').AsCurrency) / 100 , -2)
+                else if SalePromoGoodsCDS.FieldByName('Price').AsCurrency = 0 then
                   SalePromoGoodsCDS.FieldByName('PriceSale').AsCurrency := RemainsCDS.FieldByName('Price').AsCurrency
                 else SalePromoGoodsCDS.FieldByName('PriceSale').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
                 SalePromoGoodsCDS.FieldByName('AmountSale').AsCurrency := Min(SalePromoGoodsCDS.FieldByName('Remains').AsCurrency + RemainsCDS.FieldByName('Remains').AsCurrency,
@@ -14608,7 +14619,9 @@ begin
             begin
               SalePromoGoodsCalcCDS.Append;
               SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger;
-              SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
+              if SalePromoGoodsCDS.FieldByName('Discount').AsCurrency <> 0 then
+                SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := GetSalePromoGoodsPrice(SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Discount').AsCurrency)
+              else SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
               SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency * Round(CheckCDS.FieldByName('Amount').AsCurrency / SalePromoGoodsCDS.FieldByName('Amount').AsCurrency + 0.01);
               SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := 0;
               SalePromoGoodsCalcCDS.Post;
@@ -14628,7 +14641,9 @@ begin
           begin
             SalePromoGoodsCalcCDS.Append;
             SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := CheckCDS.FieldByName('GoodsId').AsInteger;
-            SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
+            if SalePromoGoodsCDS.FieldByName('Discount').AsCurrency <> 0 then
+              SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := GetSalePromoGoodsPrice(SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Discount').AsCurrency)
+            else SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
             SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := 0;
             SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := CheckCDS.FieldByName('Amount').AsCurrency;
             SalePromoGoodsCalcCDS.Post;
@@ -14658,7 +14673,9 @@ begin
           begin
             SalePromoGoodsCalcCDS.Append;
             SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger;
-            SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
+            if SalePromoGoodsCDS.FieldByName('Discount').AsCurrency <> 0 then
+              SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := GetSalePromoGoodsPrice(SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Discount').AsCurrency)
+            else SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
             SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency;
             SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := 0;
             SalePromoGoodsCalcCDS.Post;
@@ -14782,7 +14799,9 @@ begin
           begin
             SalePromoGoodsCalcCDS.Append;
             SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger;
-            SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
+            if SalePromoGoodsCDS.FieldByName('Discount').AsCurrency <> 0 then
+              SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := GetSalePromoGoodsPrice(SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Discount').AsCurrency)
+            else SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
             SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency * Round(CheckCDS.FieldByName('Amount').AsCurrency / SalePromoGoodsCDS.FieldByName('Amount').AsCurrency + 0.01);
             SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := 0;
             SalePromoGoodsCalcCDS.Post;
@@ -14802,7 +14821,9 @@ begin
         begin
           SalePromoGoodsCalcCDS.Append;
           SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := CheckCDS.FieldByName('GoodsId').AsInteger;
-          SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
+          if SalePromoGoodsCDS.FieldByName('Discount').AsCurrency <> 0 then
+            SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := GetSalePromoGoodsPrice(SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Discount').AsCurrency)
+          else SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
           SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := 0;
           SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := CheckCDS.FieldByName('Amount').AsCurrency;
           SalePromoGoodsCalcCDS.Post;
@@ -14896,7 +14917,9 @@ begin
           begin
             SalePromoGoodsCalcCDS.Append;
             SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger;
-            SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
+            if SalePromoGoodsCDS.FieldByName('Discount').AsCurrency <> 0 then
+              SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := GetSalePromoGoodsPrice(SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Discount').AsCurrency)
+            else SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
             SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency * Round(CheckCDS.FieldByName('Amount').AsCurrency / SalePromoGoodsCDS.FieldByName('Amount').AsCurrency + 0.01);
             SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := 0;
             SalePromoGoodsCalcCDS.Post;
@@ -14916,7 +14939,9 @@ begin
         begin
           SalePromoGoodsCalcCDS.Append;
           SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := CheckCDS.FieldByName('GoodsId').AsInteger;
-          SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
+          if SalePromoGoodsCDS.FieldByName('Discount').AsCurrency <> 0 then
+            SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := GetSalePromoGoodsPrice(SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Discount').AsCurrency)
+          else SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
           SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := 0;
           SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := CheckCDS.FieldByName('Amount').AsCurrency;
           SalePromoGoodsCalcCDS.Post;
@@ -14953,7 +14978,9 @@ begin
           begin
             SalePromoGoodsCalcCDS.Append;
             SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := CheckCDS.FieldByName('GoodsId').AsInteger;
-            SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
+            if SalePromoGoodsCDS.FieldByName('Discount').AsCurrency <> 0 then
+              SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := GetSalePromoGoodsPrice(SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Discount').AsCurrency)
+            else SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
             SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := 0;
             SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := CheckCDS.FieldByName('Amount').AsCurrency;
             SalePromoGoodsCalcCDS.Post;
@@ -15081,7 +15108,8 @@ begin
   if SalePromoGoodsCDS.IsEmpty then Exit;
 
   try
-      SalePromoGoodsCDS.Filter := '(Price = 0 OR Price = ' + FloatToStr(APrice) + ') and (EndPromo >= ' + FloatToStr(Date) + ' and GoodsPresentId = ' + IntToStr(AGoodsId) + ')';
+      SalePromoGoodsCDS.Filter := '(Price = 0 and Discount = 0 OR Price = ' + FloatToStr(APrice) +
+        ') and (EndPromo >= ' + FloatToStr(Date) + ' and GoodsPresentId = ' + IntToStr(AGoodsId) + ')';
       SalePromoGoodsCDS.Filtered := True;
       SalePromoGoodsCDS.First;
       if not SalePromoGoodsCDS.Eof then
@@ -15094,6 +15122,37 @@ begin
       SalePromoGoodsCDS.Filter := '';
   end;
 
+end;
+
+function TMainCashForm2.GetSalePromoGoodsPrice(AGoodsId : Integer; ADiscount : Currency) : Currency;
+var RBookmark : TBookmark; RemainsFilter : string;
+begin
+  Result := 0;
+  if SalePromoGoodsCDS.IsEmpty then Exit;
+
+  RBookmark := RemainsCDS.GetBookmark;
+  RemainsFilter := RemainsCDS.Filter;
+  RemainsCDS.DisableControls;
+  try
+    RemainsCDS.Filtered := false;
+    RemainsCDS.Filter := 'ID = ' + SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsString;
+    RemainsCDS.Filtered := true;
+    RemainsCDS.First;
+    while not RemainsCDS.Eof do
+    begin
+      if Result < RoundTo(RemainsCDS.FieldByName('Price').AsCurrency * (100 - ADiscount) / 100 , -2) then
+        Result := RoundTo(RemainsCDS.FieldByName('Price').AsCurrency * (100 - ADiscount) / 100 , -2);
+      RemainsCDS.Next;
+    end;
+
+  finally
+    RemainsCDS.Filtered := false;
+    RemainsCDS.Filter := RemainsFilter;
+    RemainsCDS.Filtered := true;
+    if not RemainsCDS.IsEmpty then RemainsCDS.GotoBookmark(RBookmark);
+    RemainsCDS.FreeBookmark(RBookmark);
+    RemainsCDS.EnableControls;
+  end;
 end;
 
 procedure TMainCashForm2.AddSalePromoGoodsAmountCheck;

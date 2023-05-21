@@ -1593,6 +1593,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Storage_Unit() RETURNS Integer AS $BODY
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Storage_Unit', 'Связь с Подразделением', zc_Object_Storage(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Storage_Unit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Storage_AreaUnit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Storage_AreaUnit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Storage_AreaUnit', 'Связь с Участок(Места хранения)', zc_Object_Storage(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Storage_AreaUnit');
+
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_PartionRemains_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartionRemains_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
@@ -2905,6 +2910,7 @@ SELECT 'zc_ObjectLink_CommentCheck_CommentTR', 'Связь с Комментарием строк техни
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.05.23         * zc_ObjectLink_Storage_AreaUnit
  18.04.23                                                                                      * zc_ObjectLink_CommentCheck_CommentTR
  18.01.23                                                                                      * zc_ObjectLink_PartionDateWages_PartionDateKind
  20.12.22         * zc_ObjectLink_GoodsByGoodsKind_GoodsKindNew

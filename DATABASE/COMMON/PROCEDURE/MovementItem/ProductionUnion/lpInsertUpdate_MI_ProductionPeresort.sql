@@ -2,27 +2,30 @@
 
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionPeresort (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TDateTime, TDateTime, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionPeresort (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TDateTime, TDateTime, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionPeresort (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionPeresort (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionPeresort (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionPeresort(
-    INOUT ioId Integer,
-    IN inMovementId Integer,
-    IN inGoodsId Integer,
-    IN inGoodsId_child Integer,
-    IN inGoodsKindId Integer,
+    INOUT ioId                  Integer,
+    IN inMovementId             Integer,
+    IN inGoodsId                Integer,
+    IN inGoodsId_child          Integer,
+    IN inGoodsKindId            Integer,
     IN inGoodsKindId_Complete   Integer   , -- Виды товаров
-    IN inGoodsKindId_child Integer,
+    IN inGoodsKindId_child      Integer,
     IN inGoodsKindId_Complete_child  Integer   , -- Виды товаров
-    IN inAmount TFloat,
-    IN inAmount_child TFloat,
-    IN inPartionGoods TVarChar,
-    IN inPartionGoods_child TVarChar,
-    IN inPartionGoodsDate TDateTime,
+    IN inAmount                 TFloat,
+    IN inAmount_child           TFloat,
+    IN inPartionGoods           TVarChar,
+    IN inPartionGoods_child     TVarChar,
+    IN inPartionGoodsDate       TDateTime,
     IN inPartionGoodsDate_child TDateTime, 
     IN inStorageId              Integer   , -- Место хранения
     IN inStorageId_child        Integer   , -- Место хранения
     IN inPartNumber             TVarChar  , -- № по тех паспорту
-    IN inPartNumber_child       TVarChar  , -- № по тех паспорту
+    IN inPartNumber_child       TVarChar  , -- № по тех паспорту 
+    IN inModel                  TVarChar  , -- Model
+    IN inModel_child            TVarChar  , -- Model
     IN inUserId Integer
 )
 RETURNS Integer
@@ -46,6 +49,7 @@ BEGIN
                                                   , inPartionGoodsDate := inPartionGoodsDate
                                                   , inPartionGoods     := inPartionGoods
                                                   , inPartNumber       := inPartNumber
+                                                  , inModel            := inModel
                                                   , inGoodsKindId      := inGoodsKindId
                                                   , inGoodsKindId_Complete := inGoodsKindId_Complete
                                                   , inStorageId        := inStorageId
@@ -60,7 +64,8 @@ BEGIN
                                                   , inParentId         := ioId
                                                   , inPartionGoodsDate := inPartionGoodsDate_child
                                                   , inPartionGoods     := inPartionGoods_child
-                                                  , inPartNumber       := inPartNumber_child
+                                                  , inPartNumber       := inPartNumber_child 
+                                                  , inModel            := inModel_child
                                                   , inGoodsKindId      := inGoodsKindId_child
                                                   , inGoodsKindCompleteId := inGoodsKindId_Complete_child
                                                   , inStorageId        := inStorageId_child

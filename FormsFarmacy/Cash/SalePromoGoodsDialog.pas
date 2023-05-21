@@ -63,7 +63,8 @@ begin
         begin
           Result := True;
           Break;
-        end else ShowMessage('Акционный товар надо выбрать.');;
+        end else if ADS.FieldByName('isDiscountInformation').AsBoolean then Break
+        else ShowMessage('Акционный товар надо выбрать.');;
     Except ON E: Exception DO
       MessageDlg(E.Message,mtError,[mbOk],0);
     end;

@@ -3,8 +3,8 @@ inherited Report_RemainsOverGoods_NForm: TReport_RemainsOverGoods_NForm
   ClientHeight = 557
   ClientWidth = 1104
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1120
-  ExplicitHeight = 595
+  ExplicitWidth = 1122
+  ExplicitHeight = 604
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2319,6 +2319,7 @@ inherited Report_RemainsOverGoods_NForm: TReport_RemainsOverGoods_NForm
     object macSendOver: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actUpdate_Send_Deferred
       ActionList = <
         item
           Action = actSendOver
@@ -2355,6 +2356,17 @@ inherited Report_RemainsOverGoods_NForm: TReport_RemainsOverGoods_NForm
       Hint = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' ('#1044#1072'/'#1053#1077#1090')'
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actUpdate_Send_Deferred: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Send_Deferred
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Send_Deferred
+        end>
+      Caption = 'actUpdate_Send_Deferred'
     end
   end
   inherited MasterDS: TDataSource
@@ -2708,7 +2720,7 @@ inherited Report_RemainsOverGoods_NForm: TReport_RemainsOverGoods_NForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -3171,7 +3183,7 @@ inherited Report_RemainsOverGoods_NForm: TReport_RemainsOverGoods_NForm
       end
       item
         Name = 'inMinExpirationDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'MinExpirationDate'
         DataType = ftDateTime
@@ -3305,7 +3317,7 @@ inherited Report_RemainsOverGoods_NForm: TReport_RemainsOverGoods_NForm
       end
       item
         Name = 'inMinExpirationDate'
-        Value = 'NULL'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'MinExpirationDate'
         DataType = ftDateTime
@@ -3412,12 +3424,41 @@ inherited Report_RemainsOverGoods_NForm: TReport_RemainsOverGoods_NForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 880
     Top = 312
+  end
+  object spUpdate_Send_Deferred: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Send_Auto_Deferred'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 576
+    Top = 280
   end
 end
