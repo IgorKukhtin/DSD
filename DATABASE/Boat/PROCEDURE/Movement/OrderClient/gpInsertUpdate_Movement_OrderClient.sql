@@ -17,8 +17,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderClient(
     IN inVATPercent          TFloat    , --
     IN inDiscountTax         TFloat    , --
     IN inDiscountNextTax     TFloat    , -- 
- INOUT ioSummTax             TFloat    ,
- INOUT ioSummReal            TFloat    ,
+ INOUT ioSummTax             TFloat    , -- Cумма откорректированной скидки, без НДС
+ INOUT ioSummReal            TFloat    , -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
     --IN inNPP                 TFloat    , -- Очередность сборки
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
@@ -28,7 +28,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderClient(
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS RECORD AS
+RETURNS RECORD
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -37,8 +38,8 @@ BEGIN
     vbUserId := lpGetUserBySession (inSession);
 
     --    
-    SELECT tmp.ioId , tmp.ioSummReal , tmp.ioSummTax
-           INTO ioId , ioSummReal, ioSummTax
+    SELECT tmp.ioId , tmp.ioSummTax, tmp.ioSummReal
+           INTO ioId, ioSummTax, ioSummReal
     FROM lpInsertUpdate_Movement_OrderClient(ioId, inInvNumber, inInvNumberPartner
                                            , inOperDate
                                            , inPriceWithVAT

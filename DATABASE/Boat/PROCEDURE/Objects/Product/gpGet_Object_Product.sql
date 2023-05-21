@@ -168,15 +168,14 @@ BEGIN
                              LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
                                                      ON MovementFloat_DiscountNextTax.MovementId = Movement.Id
                                                     AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
- 
-                             LEFT JOIN MovementFloat AS MovementFloat_SummReal
-                                                     ON MovementFloat_SummReal.MovementId = Movement.Id
-                                                    AND MovementFloat_SummReal.DescId = zc_MovementFloat_SummReal()
 
                              LEFT JOIN MovementFloat AS MovementFloat_SummTax
                                                      ON MovementFloat_SummTax.MovementId = Movement.Id
                                                     AND MovementFloat_SummTax.DescId = zc_MovementFloat_SummTax()
- 
+                             LEFT JOIN MovementFloat AS MovementFloat_SummReal
+                                                     ON MovementFloat_SummReal.MovementId = Movement.Id
+                                                    AND MovementFloat_SummReal.DescId = zc_MovementFloat_SummReal()
+
                              LEFT JOIN MovementFloat AS MovementFloat_OperPrice_load
                                                      ON MovementFloat_OperPrice_load.MovementId = Movement.Id
                                                     AND MovementFloat_OperPrice_load.DescId     = zc_MovementFloat_OperPrice_load()
@@ -276,9 +275,30 @@ BEGIN
          , tmpOrderClient.VATPercent  :: TFloat    AS VATPercent_OrderClient
          , tmpOrderClient.NPP         :: TFloat    AS NPP_OrderClient
 
-         , zfCalc_Summ_NoVAT (MovementFloat_TotalSumm.ValueData, tmpOrderClient.VATPercent):: TFloat AS TotalSummMVAT
-         , MovementFloat_TotalSumm.ValueData                                               :: TFloat AS TotalSummPVAT
-         , zfCalc_Summ_VAT (MovementFloat_TotalSumm.ValueData, tmpOrderClient.VATPercent)  :: TFloat AS TotalSummVAT
+           -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+         , (zfCalc_Summ_NoVAT (MovementFloat_TotalSumm.ValueData, tmpOrderClient.VATPercent)
+            -- минус откорректированная скидка
+          - COALESCE (tmpOrderClient.SummTax, 0)
+            -- плюс Транспорт
+          + COALESCE (tmpOrderClient.TransportSumm_load, 0)
+           ) :: TFloat AS TotalSummMVAT
+
+           -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+         , (MovementFloat_TotalSumm.ValueData
+            -- минус откорректированная скидка
+          - zfCalc_SummWVAT (tmpOrderClient.SummTax, tmpOrderClient.VATPercent)
+            -- плюс Транспорт
+          + zfCalc_SummWVAT (tmpOrderClient.TransportSumm_load, tmpOrderClient.VATPercent)
+           ) :: TFloat AS TotalSummPVAT
+
+           -- ИТОГО НДС
+         , zfCalc_Summ_VAT (MovementFloat_TotalSumm.ValueData
+                            -- минус откорректированная скидка
+                          - zfCalc_SummWVAT (tmpOrderClient.SummTax, tmpOrderClient.VATPercent)
+                            -- плюс Транспорт
+                          + zfCalc_SummWVAT (tmpOrderClient.TransportSumm_load, tmpOrderClient.VATPercent)
+                          , tmpOrderClient.VATPercent
+                           )  :: TFloat AS TotalSummVAT
 
          , tmpOrderClient.OperPrice_load      :: TFloat AS OperPrice_load
          , tmpOrderClient.TransportSumm_load  :: TFloat AS TransportSumm_load
@@ -305,7 +325,14 @@ BEGIN
            -- итого остаток к оплате по всем счетам
          , (COALESCE (tmpInvoice.AmountIn, 0) - COALESCE (tmpBankAccount.AmountIn,0))              ::TFloat AS AmountIn_rem
            -- итого остаток к оплате за лодку
-         , (COALESCE (MovementFloat_TotalSumm.ValueData,0) - COALESCE (tmpBankAccount.AmountIn,0)) ::TFloat AS AmountIn_remAll
+         , (COALESCE (MovementFloat_TotalSumm.ValueData,0)
+            -- минус откорректированная скидка
+          - zfCalc_SummWVAT (tmpOrderClient.SummTax, tmpOrderClient.VATPercent)
+            -- плюс Транспорт
+          + zfCalc_SummWVAT (tmpOrderClient.TransportSumm_load, tmpOrderClient.VATPercent)
+            -- оплата
+          - COALESCE (tmpBankAccount.AmountIn,0)
+           ) ::TFloat AS AmountIn_remAll
 
      FROM Object AS Object_Product
           LEFT JOIN ObjectBoolean AS ObjectBoolean_BasicConf

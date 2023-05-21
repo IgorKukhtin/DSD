@@ -65,7 +65,7 @@ BEGIN
                                   AND MovementFloat_DiscountTax.DescId     = zc_MovementFloat_DiscountTax()
            LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
                                    ON MovementFloat_DiscountNextTax.MovementId = Movement.Id
-                                  AND MovementFloat_DiscountNextTax.DescId     = zc_MovementFloat_DiscountTax()
+                                  AND MovementFloat_DiscountNextTax.DescId     = zc_MovementFloat_DiscountNextTax()
 
            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -88,8 +88,11 @@ BEGIN
                  , MIFloat_OperPrice.ValueData      AS OperPrice_original
                    -- Сумма "без НДС ?" - с учетом скидки в элементе
                  , CASE WHEN vbMovementDescId = zc_Movement_Income()
-                        THEN COALESCE (MIFloat_SummIn.ValueData, 0)
-                        ELSE zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)
+                         AND MovementItem.DescId = zc_MI_Master()
+                             THEN COALESCE (MIFloat_SummIn.ValueData, 0)
+                        WHEN MovementItem.DescId = zc_MI_Master()
+                             THEN zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)
+                        ELSE 0
                    END AS SummIn
             FROM MovementItem
 
@@ -126,6 +129,8 @@ BEGIN
 
                             ELSE zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (vbOperSumm_MVAT, vbDiscountTax), vbDiscountNextTax)
                        END;
+
+         -- RAISE EXCEPTION '   %  %  %     %', vbOperSumm_MVAT, zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (vbOperSumm_MVAT, vbDiscountTax), vbDiscountNextTax), vbDiscountTax, vbDiscountNextTax;
 
          -- Итого сумма по документу (с НДС) - с учетом ВСЕХ скидок и расходов
          vbOperSumm_PVAT:= zfCalc_SummWVAT (vbTotalSumm, vbVATPercent);
