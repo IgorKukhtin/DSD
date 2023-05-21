@@ -1531,6 +1531,7 @@ end if;
                    LEFT JOIN tmpPL_Basis AS tmpPL_Basis_kind
                                          ON tmpPL_Basis_kind.GoodsId                   = tmpMI.GoodsId
                                         AND COALESCE (tmpPL_Basis_kind.GoodsKindId, 0) = COALESCE (tmpMI.GoodsKindId, 0)
+                                        AND tmpPL_Basis_kind.PriceListPrice            <> 0
                    LEFT JOIN tmpPL_Basis ON tmpPL_Basis.GoodsId     = tmpMI.GoodsId
                                         AND tmpPL_Basis.GoodsKindId IS NULL
 
@@ -1538,6 +1539,7 @@ end if;
                    LEFT JOIN tmpPL_Jur AS tmpPL_Jur_kind
                                        ON tmpPL_Jur_kind.GoodsId                  = tmpMI.GoodsId
                                       AND COALESCE (tmpPL_Jur_kind.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
+                                      AND tmpPL_Jur_kind.PriceListPrice           <> 0
                    LEFT JOIN tmpPL_Jur ON tmpPL_Jur.GoodsId     = tmpMI.GoodsId
                                       AND tmpPL_Jur.GoodsKindId IS NULL
              ) AS _tmp
@@ -3896,7 +3898,7 @@ end if;
      -- 6.3. ФИНИШ - перепроводим Налоговую
      IF inUserId <> zc_Enum_Process_Auto_PrimeCost()
         AND inUserId <> 343013  -- Нагорная Я.Г.
-        AND inUserId <> 6604558 -- Голота К.О.
+        -- AND inUserId <> 6604558 -- Голота К.О.
         -- AND inUserId <> 9459   -- Малахова Т.Н.
         -- AND inUserId <> zfCalc_UserMain()
         -- AND inUserId <> 5

@@ -316,6 +316,39 @@ BEGIN
                                 AND Movement.StatusId = zc_Enum_Status_Complete()
                                 AND (tmp.PersonalId IS NOT NULL OR COALESCE (inMovementItemId, 0) = 0) -- ограничение, если нужна только 1 запись
 
+
+                                AND (MovementItem.Amount <> 0 
+                                  OR MIFloat_SummService.ValueData <> 0
+                                  OR MIFloat_SummAvanceRecalc.ValueData <> 0
+                                  OR MIFloat_SummAvance.ValueData <> 0
+                                  OR MIFloat_SummToPay.ValueData <> 0
+                                  OR MIFloat_SummNalog.ValueData <> 0
+ 
+                                  OR MIFloat_SummCard.ValueData <> 0
+                                  OR MIFloat_SummCardSecond.ValueData <> 0
+                                  OR MIFloat_SummAvCardSecond.ValueData <> 0
+                                  OR MIFloat_SummCardSecondCash.ValueData <> 0
+                                  OR MIFloat_SummCardSecondRecalc.ValueData <> 0
+                                  OR MIFloat_SummAvCardSecondRecalc.ValueData <> 0
+ 
+                                  OR MIFloat_SummMinus.ValueData <> 0
+                                  OR MIFloat_SummFine.ValueData <> 0
+                                  OR MIFloat_SummAdd.ValueData <> 0
+                                  OR MIFloat_SummAddOth.ValueData <> 0
+                                  OR MIFloat_SummHoliday.ValueData <> 0
+                                  OR MIFloat_SummHosp.ValueData <> 0
+                                  OR MIFloat_SummSocialIn.ValueData <> 0
+                                  OR MIFloat_SummSocialAdd.ValueData <> 0
+                                  OR MIFloat_SummChild.ValueData <> 0
+                                  OR MIFloat_SummMinusExt.ValueData <> 0
+                                  OR MIFloat_SummTransport.ValueData <> 0
+                                  OR MIFloat_SummTransportAdd.ValueData <> 0
+                                  OR MIFloat_SummTransportAddLong.ValueData <> 0
+                                  OR MIFloat_SummTransportTaxi.ValueData <> 0
+                                  OR MIFloat_SummPhone.ValueData <> 0
+                                  OR MIFloat_SummCompensation.ValueData <> 0
+                                    )
+
                               GROUP BY MovementItem.ObjectId
                                      , MILinkObject_Unit.ObjectId
                                      , MILinkObject_Position.ObjectId
@@ -661,7 +694,9 @@ BEGIN
             , tmpData.SummCard         :: TFloat AS SummCard
             , tmpData.SummCardSecond   :: TFloat AS SummCardSecond
             , tmpData.SummAvCardSecond :: TFloat AS SummAvCardSecond
+              -- Карта БН (касса)- 2ф. 
             , tmpData.SummCardSecondCAsh  :: TFloat AS SummCardSecondCash
+              -- 
             , tmpData.SummNalog        :: TFloat AS SummNalog
             , tmpData.SummMinus        :: TFloat AS SummMinus
             , tmpData.SummFine         :: TFloat AS SummFine
@@ -702,6 +737,7 @@ BEGIN
                        - CASE WHEN tmpData.SummCardSecondCash > 0 THEN 0 ELSE COALESCE (tmpData.AmountCardSecond_avance, 0) END
                END) :: TFloat AS SummCardSecondRemains
 
+              -- Карта БН - 2ф.  (выплачено)
             , CASE WHEN tmpData.SummCardSecondCash > 0 THEN 0 ELSE COALESCE (tmpData.AmountCardSecond_avance, 0) END :: TFloat AS AmountCardSecond_avance
 
             , COALESCE (MIBoolean_Calculated.ValueData, FALSE) AS isCalculated

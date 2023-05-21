@@ -31,7 +31,7 @@ BEGIN
      -- определили данные из ведомости начисления
      SELECT --ObjectFloat_KoeffSummCardSecond.ValueData AS KoeffSummCardSecond  --Коэфф для выгрузки ведомости Банк 2ф.
             CAST (ObjectFloat_KoeffSummCardSecond.ValueData/ 1000 AS NUMERIC (16,10)) AS KoeffSummCardSecond  --Коэфф для выгрузки ведомости Банк 2ф.
-   INTO vbKoeffSummCardSecond
+            INTO vbKoeffSummCardSecond
      FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
           LEFT JOIN ObjectFloat AS ObjectFloat_KoeffSummCardSecond
                                 ON ObjectFloat_KoeffSummCardSecond.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
@@ -101,7 +101,7 @@ BEGIN
       WITH
       tmp AS (SELECT COALESCE (gpSelect.CardSecond, '') AS CardSecond
                    , COALESCE (gpSelect.INN, '')  AS INN
-                   , SUM (FLOOR (100 * CAST ( (COALESCE (gpSelect.SummCardSecondRecalc, 0) * vbKoeffSummCardSecond) AS NUMERIC (16, 1)) ))  AS SummCardSecondRecalc -- добавили % и округлили до 2-х знаков + ПЕРЕВОДИМ в копейки
+                   , SUM (FLOOR (100 * CAST ( ((COALESCE (gpSelect.SummCardSecondRecalc, 0) + COALESCE (gpSelect.SummAvCardSecondRecalc, 0)) * vbKoeffSummCardSecond) AS NUMERIC (16, 1)) ))  AS SummCardSecondRecalc -- добавили % и округлили до 2-х знаков + ПЕРЕВОДИМ в копейки
                    , UPPER (COALESCE (gpSelect.PersonalName, '') )  AS PersonalName
               FROM gpSelect_MovementItem_PersonalService (inMovementId:= inMovementId  , inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
            --   WHERE gpSelect.SummCardSecondRecalc <> 0

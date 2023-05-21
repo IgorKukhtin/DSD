@@ -44,7 +44,7 @@ BEGIN
      IF COALESCE (vbAmount,0) = 0
      THEN
          -- проверка
-         IF vbUserId = 5
+         IF vbUserId = 5 AND 1=0
          THEN
              RAISE EXCEPTION 'Ошибка.Не установлено кол-во.';
          END IF;
@@ -129,7 +129,36 @@ BEGIN
      vbGoodsKindId := 0;
      vbGoodsPropertyValueId := 0;
 
-     --находим GoodsId по Артикулу
+/*
+if inArticle ILIKE '188191'
+then
+         RAISE EXCEPTION 'Ошибка.(<%>)'
+, (
+SELECT count(*)
+-- SELECT MAX (ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId) OVER (PARTITION BY ObjectLink_GoodsPropertyValue_Goods.ChildObjectId ,ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId) AS GoodsPropertyId_max
+             FROM
+                  (SELECT vbGoodsPropertyId_f AS GoodsPropertyId
+                   WHERE COALESCE (vbGoodsPropertyId_f,0) <> 0
+                  ) AS tmp
+                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                           ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmp.GoodsPropertyId
+                                          AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                     INNER JOIN ObjectString AS ObjectString_Article
+                                             ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                            AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_ArticleExternal()
+                                            AND TRIM(ObjectString_Article.ValueData) = TRIM (inArticle)  --'26841'
+                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                           ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                     INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                          ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                         AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+           
+)
+;
+end if;*/
+
+     -- находим GoodsId по Артикулу
      SELECT tmp.GoodsId
           , tmp.GoodsKindId
           , tmp.GoodsPropertyValueId
@@ -199,7 +228,17 @@ BEGIN
 
      IF COALESCE (vbGoodsId,0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Товар <%> с артикулом <%> не найден. Для сети <%> + <%> <%> и ТТ = <%> + <%>.', inGoodsName, inArticle, lfGet_Object_ValueData_sh (inRetailId), lfGet_Object_ValueData_sh (vbGoodsPropertyId_f), lfGet_Object_ValueData_sh (vbGoodsPropertyId), inPartnerExternalCode, inPartnerExternalName;
+         RAISE EXCEPTION 'Ошибка. Товар <%> с артикулом <%> не найден. Для сети <%> + <%> <%> и ТТ = <%> + <%>. (<%>)  (<%>) (<%>)'
+                        , inGoodsName
+                        , inArticle
+                        , lfGet_Object_ValueData_sh (inRetailId)
+                        , lfGet_Object_ValueData_sh (vbGoodsPropertyId_f)
+                        , lfGet_Object_ValueData_sh (vbGoodsPropertyId)
+                        , inPartnerExternalCode, inPartnerExternalName
+                        , inRetailId
+                        , vbGoodsPropertyId_f
+                        , vbGoodsPropertyId
+                         ;
      END IF;
 
      -- сохраняем св-во  zc_ObjectString_GoodsPropertyValue_NameExternal
