@@ -174,7 +174,7 @@ BEGIN
                                    -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
                                  , gpSelect.BasisWVAT_summ_transport
 
-                           FROM gpSelect_Object_Product (vbProductId, FALSE, FALSE, '') AS gpSelect
+                           FROM gpSelect_Object_Product (inMovementId, FALSE, FALSE, '') AS gpSelect
                            WHERE gpSelect.MovementId_OrderClient = inMovementId
                           )
         -- Результат

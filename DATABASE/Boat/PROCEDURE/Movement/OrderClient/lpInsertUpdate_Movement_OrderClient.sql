@@ -194,7 +194,7 @@ BEGIN
                     );
          -- сохраняем лодку в строчную часть
          vbMI_Id:= (WITH gpSelect AS (SELECT gpSelect.Basis_summ, gpSelect.Basis_summ_orig, gpSelect.Basis_summ1_orig
-                                      FROM gpSelect_Object_Product (inProductId,FALSE, FALSE, inUserId :: TVarChar) AS gpSelect
+                                      FROM gpSelect_Object_Product (ioId, FALSE, FALSE, inUserId :: TVarChar) AS gpSelect
                                       WHERE gpSelect.MovementId_OrderClient = ioId
                                      )
                     -- Результат

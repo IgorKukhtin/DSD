@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_ProdOptItems()
 
---DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
@@ -311,7 +311,7 @@ BEGIN
 
    -- пересохраняем - элемент  - Заказ Клиента
    vbMI_Id:= (WITH gpSelect AS (SELECT gpSelect.Basis_summ, gpSelect.Basis_summ_orig, gpSelect.Basis_summ1_orig
-                                FROM gpSelect_Object_Product (inProductId, FALSE, FALSE, vbUserId :: TVarChar) AS gpSelect
+                                FROM gpSelect_Object_Product (inMovementId_OrderClient, FALSE, FALSE, vbUserId :: TVarChar) AS gpSelect
                                 WHERE gpSelect.MovementId_OrderClient = inMovementId_OrderClient
                                )
               -- Результат

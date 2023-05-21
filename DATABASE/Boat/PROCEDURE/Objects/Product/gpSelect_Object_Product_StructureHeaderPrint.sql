@@ -69,7 +69,7 @@ BEGIN
                                , gpSelect.BasisPrice_load
                                  -- load Сумма транспорт с сайта 
                                , gpSelect.TransportSumm_load
-                          FROM gpSelect_Object_Product (inProductId:= vbProductId, inIsShowAll:= TRUE, inIsSale:= TRUE, inSession:= inSession) AS gpSelect
+                          FROM gpSelect_Object_Product (inMovementId_OrderClient:= inMovementId_OrderClient, inIsShowAll:= TRUE, inIsSale:= TRUE, inSession:= inSession) AS gpSelect
                           WHERE gpSelect.MovementId_OrderClient = inMovementId_OrderClient
                          )
        -- выбор Примечаний

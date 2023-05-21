@@ -99,7 +99,7 @@ BEGIN
 
      -- данные по лодкe
      CREATE TEMP TABLE tmpProduct ON COMMIT DROP AS (SELECT tmp.*
-                                                     FROM gpSelect_Object_Product (inProductId := vbProductId, inIsShowAll:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
+                                                     FROM gpSelect_Object_Product (inMovementId_OrderClient:= inMovementId_OrderClient, inIsShowAll:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
                                                      WHERE tmp.Id = vbProductId
                                                        AND tmp.MovementId_OrderClient = inMovementId_OrderClient
                                                      );
@@ -232,4 +232,4 @@ $BODY$
 */
 
 -- тест
---
+-- SELECT * FROM gpSelect_Object_Product_OfferPrint (inMovementId_OrderClient:= 662, inSession:= zfCalc_UserAdmin())
