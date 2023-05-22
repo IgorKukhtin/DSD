@@ -1,4 +1,4 @@
-unit Report_OrderClient_byBoat;
+unit Report_OrderClient_byBoatChoice;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_OrderClient_byBoatForm = class(TAncestorReportForm)
+  TReport_OrderClient_byBoatChoiceForm = class(TAncestorReportForm)
     ObjectCode: TcxGridDBColumn;
     ObjectName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
@@ -62,8 +62,9 @@ type
     MonthName1: TcxGridDBColumn;
     ProdColorName: TcxGridDBColumn;
     MonthRemains: TcxGridDBColumn;
-    actReport_OC_ByBoatChoice: TdsdOpenForm;
-    bbReport_OC_ByBoatChoice: TdxBarButton;
+    GuidesObject: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edGoods: TcxButtonEdit;
   private
     { Private declarations }
   public
@@ -74,6 +75,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_OrderClient_byBoatForm);
+  RegisterClass(TReport_OrderClient_byBoatChoiceForm);
 
 end.

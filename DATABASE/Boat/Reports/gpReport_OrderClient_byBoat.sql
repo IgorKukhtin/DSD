@@ -2,11 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpReport_OrderClient_byBoat (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_OrderClient_byBoat (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderClient_byBoat (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_OrderClient_byBoat (
     IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
-    IN inisDetail    Boolean   , -- развернуть по лодкам
+    IN inObjectId     Integer   , 
+    IN inisDetail     Boolean   , -- развернуть по лодкам
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE  (MovementId Integer
@@ -133,6 +135,7 @@ BEGIN
                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                  AND MovementItem.DescId = zc_MI_Detail()
                                                  AND MovementItem.isErased = FALSE
+                                                 AND (MovementItem.ObjectId = inObjectId OR inObjectId = 0)
 
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
                                                            ON MILinkObject_Partner.MovementItemId = MovementItem.Id
@@ -161,7 +164,6 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_ForCount
                                                       ON MIFloat_ForCount.MovementItemId = MovementItem.Id
                                                      AND MIFloat_ForCount.DescId         = zc_MIFloat_ForCount()
-
                        )
 
      -- Комплектующие сборка узла
@@ -318,6 +320,7 @@ BEGIN
                     WHERE Container.DescId = zc_Container_Count()
                       AND COALESCE(Container.Amount,0) <> 0
                       AND Container.ObjectId IN (SELECT DISTINCT tmpMI_group.ObjectId FROM tmpMI_group)
+                      AND (Container.ObjectId = inObjectId OR inObjectId = 0)
                     )
   , tmpGroupDetail1 AS (SELECT tmp.ObjectId
                             , tmp.MonthBegin
@@ -435,4 +438,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inisDetail := False ,inSession := '5');
+-- SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inObjectId := 0, inisDetail := False ,inSession := '5');
+--SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inObjectId := 252790, inisDetail := true ,inSession := '5')
