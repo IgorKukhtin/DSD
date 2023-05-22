@@ -76,6 +76,7 @@ type
     bbShowAll: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    isAsset: TcxGridDBColumn;
   private
     { Private declarations }
   public

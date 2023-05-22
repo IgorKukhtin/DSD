@@ -31,6 +31,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar, Name
              , isCheck_basis Boolean, isCheck_main Boolean
              , isNameOrig Boolean
              , isIrna Boolean
+             , isAsset Boolean
              , isErased Boolean
               )
 AS
@@ -113,6 +114,7 @@ BEGIN
             , COALESCE (ObjectBoolean_NameOrig.ValueData, FALSE)     :: Boolean AS isNameOrig
 
             , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
+            , COALESCE (ObjectBoolean_Goods_Asset.ValueData, FALSE)  :: Boolean AS isAsset
 
             , Object_Goods.isErased       AS isErased
 
@@ -214,6 +216,11 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
                                      ON ObjectBoolean_Guide_Irna.ObjectId = Object_Goods.Id
                                     AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Asset
+                                   ON ObjectBoolean_Goods_Asset.ObjectId = Object_Goods.Id 
+                                  AND ObjectBoolean_Goods_Asset.DescId = zc_ObjectBoolean_Goods_Asset()
+
 
              LEFT JOIN ObjectDate AS ObjectDate_BUH
                                   ON ObjectDate_BUH.ObjectId = Object_Goods.Id
@@ -318,6 +325,7 @@ BEGIN
             , FALSE                           AS isCheck_main
             , FALSE                           AS isNameOrig
             , FALSE                           AS isIrna
+            , FALSE                           AS isAsset
             , FALSE                           AS isErased
       ;
 
@@ -330,6 +338,7 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.05.23         *
  30.06.22         *
  04.05.22         *
  04.08.21         *

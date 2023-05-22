@@ -137,6 +137,7 @@ type
     actGetImportSetting_Goods_BUH: TdsdExecStoredProc;
     macStartLoad_BUH: TMultiAction;
     bbcStartLoad_BUH: TdxBarButton;
+    isAsset: TcxGridDBColumn;
   private
     { Private declarations }
   public
