@@ -175,7 +175,16 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Options.Editing = False
             Width = 59
           end
-          object isPeresort: TcxGridDBColumn [6]
+          object isAsset: TcxGridDBColumn [6]
+            Caption = #1055#1088'. '#1054#1057'  ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'isAsset'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1079#1085#1072#1082' - '#1054#1057
+            Options.Editing = False
+            Width = 59
+          end
+          object isPeresort: TcxGridDBColumn [7]
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isPeresort'
             HeaderAlignmentHorz = taCenter
@@ -184,7 +193,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Options.Editing = False
             Width = 70
           end
-          object PartionGoods: TcxGridDBColumn [7]
+          object PartionGoods: TcxGridDBColumn [8]
             Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072' / '#1048#1085#1074'. '#1085#1086#1084#1077#1088'('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -192,7 +201,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 121
           end
-          object PartionGoodsDate: TcxGridDBColumn [8]
+          object PartionGoodsDate: TcxGridDBColumn [9]
             Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' ('#1087#1088#1080#1093#1086#1076')'
             DataBinding.FieldName = 'PartionGoodsDate'
             Visible = False
@@ -200,7 +209,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object GoodsChildGroupNameFull: TcxGridDBColumn [9]
+          object GoodsChildGroupNameFull: TcxGridDBColumn [10]
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077') ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsChildGroupNameFull'
             Visible = False
@@ -209,7 +218,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Options.Editing = False
             Width = 100
           end
-          object GoodsChildCode: TcxGridDBColumn [10]
+          object GoodsChildCode: TcxGridDBColumn [11]
             Caption = #1050#1086#1076' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsChildCode'
             HeaderAlignmentHorz = taCenter
@@ -217,7 +226,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Options.Editing = False
             Width = 55
           end
-          object GoodsChildName: TcxGridDBColumn [11]
+          object GoodsChildName: TcxGridDBColumn [12]
             Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsChildName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -232,13 +241,22 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 133
           end
-          object MeasureChildName: TcxGridDBColumn [12]
+          object MeasureChildName: TcxGridDBColumn [13]
             Caption = #1045#1076'. '#1080#1079#1084'. ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'MeasureChildName'
             Options.Editing = False
             Width = 59
           end
-          object GoodsKindChildName: TcxGridDBColumn [13]
+          object isAssetChild: TcxGridDBColumn [14]
+            Caption = #1055#1088'. '#1054#1057' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'isAssetChild'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1079#1085#1072#1082' - '#1054#1057
+            Options.Editing = False
+            Width = 59
+          end
+          object GoodsKindChildName: TcxGridDBColumn [15]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsKindChildName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -253,7 +271,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object GoodsKindName_Complete_child: TcxGridDBColumn [14]
+          object GoodsKindName_Complete_child: TcxGridDBColumn [16]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'GoodsKindName_Complete_child'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -268,7 +286,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object PartionGoodsChild: TcxGridDBColumn [15]
+          object PartionGoodsChild: TcxGridDBColumn [17]
             Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072' / '#1048#1085#1074'. '#1085#1086#1084#1077#1088' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'PartionGoodsChild'
             Visible = False
@@ -276,7 +294,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 166
           end
-          object PartionGoodsDateChild: TcxGridDBColumn [16]
+          object PartionGoodsDateChild: TcxGridDBColumn [18]
             Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'PartionGoodsDateChild'
             Visible = False
@@ -284,7 +302,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountOut: TcxGridDBColumn [17]
+          object AmountOut: TcxGridDBColumn [19]
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'AmountOut'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -294,7 +312,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 91
           end
-          object AmountIn: TcxGridDBColumn [18]
+          object AmountIn: TcxGridDBColumn [20]
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'AmountIn'
             HeaderAlignmentHorz = taCenter
@@ -302,7 +320,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Options.Editing = False
             Width = 91
           end
-          object Amount_Remains: TcxGridDBColumn [19]
+          object Amount_Remains: TcxGridDBColumn [21]
             Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1080#1085#1092'.)'
             DataBinding.FieldName = 'Amount_Remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -313,7 +331,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Options.Editing = False
             Width = 70
           end
-          object Comment: TcxGridDBColumn [20]
+          object Comment: TcxGridDBColumn [22]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
