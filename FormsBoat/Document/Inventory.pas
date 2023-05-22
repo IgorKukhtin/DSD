@@ -185,6 +185,8 @@ type
     mactStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     actChoiceFormOrderClientItem: TOpenChoiceForm;
+    actReport_Price: TdsdOpenForm;
+    bbReport_Price: TdxBarButton;
   private
   public
   end;
