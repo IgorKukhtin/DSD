@@ -1416,10 +1416,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CommentCheck_LostPositions() RETURNS
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_CommentCheck(), 'zc_ObjectBoolean_CommentCheck_LostPositions', 'Утерянные позиции' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CommentCheck_LostPositions');
 
+   
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_GoodsGroup_Asset() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsGroup_Asset'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsGroup(), 'zc_ObjectBoolean_GoodsGroup_Asset', 'Признак - ОС' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsGroup_Asset');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 22.05.23         * zc_ObjectBoolean_GoodsGroup_Asset
  01.05.23         * zc_ObjectBoolean_Contract_NotVAT
  18.04.23                                                                                                          * zc_ObjectBoolean_CommentCheck_SendPartionDate, zc_ObjectBoolean_CommentCheck_LostPositions
  06.04.23                                                                                                          * zc_ObjectBoolean_MedicalProgramSP_ElectronicPrescript

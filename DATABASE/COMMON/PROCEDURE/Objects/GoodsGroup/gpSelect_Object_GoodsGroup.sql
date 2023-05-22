@@ -16,7 +16,8 @@ RETURNS TABLE (Id Integer, Code Integer, CodeUKTZED TVarChar
              , GoodsTagId Integer, GoodsTagName TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
              , GoodsPlatformId Integer, GoodsPlatformName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer 
+             , isAsset Boolean
              )
 AS
 $BODY$
@@ -64,6 +65,8 @@ BEGIN
          , Object_InfoMoney_View.InfoMoneyName
          , Object_InfoMoney_View.InfoMoneyId
          
+         , COALESCE(ObjectBoolean_GoodsGroup_Asset.ValueData, FALSE) ::Boolean AS isAsset
+         
      FROM Object AS Object_GoodsGroup
            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
                                 ON ObjectLink_GoodsGroup.ObjectId = Object_GoodsGroup.Id
@@ -104,6 +107,9 @@ BEGIN
                                   ON ObjectString_GoodsGroup_UKTZED.ObjectId = Object_GoodsGroup.Id 
                                  AND ObjectString_GoodsGroup_UKTZED.DescId = zc_ObjectString_GoodsGroup_UKTZED()*/  
            
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsGroup_Asset
+                                   ON ObjectBoolean_GoodsGroup_Asset.ObjectId = Object_GoodsGroup.Id 
+                                  AND ObjectBoolean_GoodsGroup_Asset.DescId = zc_ObjectBoolean_GoodsGroup_Asset()
 
            LEFT JOIN lfGet_Object_GoodsGroup_CodeUKTZED_new (Object_GoodsGroup.Id) AS Get_CodeUKTZED_new ON 1 = 1
 
@@ -118,6 +124,7 @@ END;$BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.05.23         * isAsset
  14.04.15         * add GoodsPlatform
  24.11.14         * add GoodsGroupAnalyst             
  15.09.14         * add GoodsTag

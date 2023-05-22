@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1043#1088#1091#1087#1087#1091' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 464
+  ClientHeight = 476
   ClientWidth = 298
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 50
-    Top = 431
+    Top = 444
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@
     TabOrder = 3
   end
   object cxButton2: TcxButton
-    Left = 194
-    Top = 431
+    Left = 193
+    Top = 444
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -218,9 +218,16 @@
   end
   object ceTaxAction: TcxTextEdit
     Left = 8
-    Top = 401
+    Top = 404
     TabOrder = 27
-    Width = 273
+    Width = 152
+  end
+  object ceisAsset: TcxCheckBox
+    Left = 189
+    Top = 404
+    Caption = #1055#1088#1080#1079#1085#1072#1082' - '#1054#1057
+    TabOrder = 28
+    Width = 92
   end
   object ActionList: TActionList
     Left = 112
@@ -369,6 +376,14 @@
         Value = Null
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAsset'
+        Value = Null
+        Component = ceisAsset
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -544,6 +559,13 @@
         Value = Null
         Component = ceTaxImport
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAsset'
+        Value = Null
+        Component = ceisAsset
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -82,6 +82,13 @@ object GoodsGroup_UKTZEDForm: TGoodsGroup_UKTZEDForm
         Options.Editing = False
         Width = 135
       end
+      object isAsset: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' - '#1054#1057
+        DataBinding.FieldName = 'isAsset'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 67
+      end
       object CodeUKTZED: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044
         DataBinding.FieldName = 'CodeUKTZED'

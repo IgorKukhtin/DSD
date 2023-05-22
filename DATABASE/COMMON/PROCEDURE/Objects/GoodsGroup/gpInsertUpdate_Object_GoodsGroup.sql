@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_GoodsGroup()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
  INOUT ioId                  Integer   ,    -- ключ объекта <Группа товаров>
@@ -16,7 +17,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
     IN inTradeMarkId         Integer   ,    -- ***Торговая марка
     IN inGoodsTagId          Integer   ,    -- ***Признак товара
     IN inGoodsPlatformId     Integer   ,    -- ***Производственная площадка
-    IN inInfoMoneyId         Integer   ,    -- ***УП статья назначения
+    IN inInfoMoneyId         Integer   ,    -- ***УП статья назначения 
+    IN inisAsset             Boolean   ,    -- Признак - ОС
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -78,6 +80,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsGroup_DKPP(), ioId, inDKPP);
    -- сохранили свойство
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsGroup_TaxAction(), ioId, inTaxAction);
+
+   -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsGroup_Asset(), ioId, inisAsset);
 
    -- Список
    CREATE TEMP TABLE _tmpList ON COMMIT DROP AS

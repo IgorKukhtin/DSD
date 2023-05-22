@@ -70,6 +70,7 @@ type
     ParentName: TcxGridDBColumn;
     spUpdateCodeUKTZED: TdsdStoredProc;
     actUpdateDataSource: TdsdUpdateDataSet;
+    isAsset: TcxGridDBColumn;
   private
     { Private declarations }
   public

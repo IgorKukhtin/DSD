@@ -136,7 +136,7 @@ object GoodsGroupForm: TGoodsGroupForm
       Caption.Text = #1055#1088#1080#1079#1085#1072#1082' '#1080#1084#1087#1086#1088#1090'. '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'TaxImport'
       Width = 68
-      Position.ColIndex = 7
+      Position.ColIndex = 14
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>
@@ -169,6 +169,17 @@ object GoodsGroupForm: TGoodsGroupForm
       Position.ColIndex = 10
       Position.RowIndex = 0
       Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
+    end
+    object isAsset: TcxDBTreeListColumn
+      Caption.Text = #1055#1088#1080#1079#1085#1072#1082' - '#1054#1057
+      DataBinding.FieldName = 'isAsset'
+      Width = 90
+      Position.ColIndex = 7
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      StatusHint = #1055#1088#1080#1079#1085#1072#1082' - '#1054#1057
       Summary.FooterSummaryItems = <>
       Summary.GroupFooterSummaryItems = <>
     end
