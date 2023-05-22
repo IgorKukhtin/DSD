@@ -1432,7 +1432,8 @@ uses
   TransportKindEdit in '..\..\Forms\Guides\TransportKindEdit.pas' {TransportKindEditForm: TParentForm},
   TransportKind in '..\..\Forms\Guides\TransportKind.pas' {TransportKindForm: TParentForm},
   AreaUnitEdit in '..\..\Forms\Guides\AreaUnitEdit.pas' {AreaUnitEditForm: TParentForm},
-  AreaUnit in '..\..\Forms\Guides\AreaUnit.pas' {AreaUnitForm: TParentForm};
+  AreaUnit in '..\..\Forms\Guides\AreaUnit.pas' {AreaUnitForm: TParentForm},
+  PartionModel in '..\..\Forms\Guides\PartionModel.pas' {PartionModelForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
