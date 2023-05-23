@@ -38,28 +38,50 @@ BEGIN
     -- Найти Id от кого
     vbFromId:= (SELECT Object.Id
                   FROM Object
-                  WHERE TRIM (UPPER(Object.ValueData)) = TRIM (UPPER(inFromName))
+                  WHERE TRIM (Object.ValueData) ILIKE TRIM (inFromName)
                     AND Object.DescId IN (zc_Object_Unit(), zc_Object_Member() )
                   LIMIT 1 --
                  );
+    -- вторая попытка
+    IF COALESCE (vbFromId, 0) = 0
+    THEN
+        vbFromId:= (SELECT Object.Id
+                      FROM Object
+                      WHERE TRIM (zfCalc_Text_replace (Object.ValueData, CHR (39), '`')) ILIKE TRIM (inFromName)
+                        AND Object.DescId IN (zc_Object_Unit(), zc_Object_Member() )
+                      LIMIT 1 --
+                     );
+    END IF;
+
     -- Если нет такого элемента, то выдать сообщение об ошибке и прервать выполнение загрузки
     IF COALESCE (vbFromId, 0) = 0
     THEN
-        RAISE EXCEPTION 'Ошибка. <%> не найден в справочнике. % Загрузка не возможна', TRIM (inFromName), chr(13);
+        RAISE EXCEPTION 'Ошибка.Значение От кого = <%> не найдено.%Загрузка остановлена.', TRIM (inFromName), CHR(13);
     END IF;
+
 
     -- Найти Id кому
     vbToId:= (SELECT Object.Id
                   FROM Object
-                  WHERE TRIM (UPPER(Object.ValueData)) = TRIM (UPPER(inToName))
+                  WHERE TRIM (Object.ValueData) ILIKE TRIM (inToName)
                     AND Object.DescId IN (zc_Object_Unit(), zc_Object_Member() )
                   LIMIT 1 --
                  );
 
+    -- вторая попытка
+    IF COALESCE (vbToId, 0) = 0
+    THEN
+        vbToId:= (SELECT Object.Id
+                      FROM Object
+                      WHERE TRIM (zfCalc_Text_replace (Object.ValueData, CHR (39), '`')) ILIKE TRIM (inToName)
+                        AND Object.DescId IN (zc_Object_Unit(), zc_Object_Member() )
+                      LIMIT 1 --
+                     );
+    END IF;
     -- Если нет такого элемента, то выдать сообщение об ошибке и прервать выполнение загрузки
     IF COALESCE (vbToId, 0) = 0
     THEN
-        RAISE EXCEPTION 'Ошибка. <%> не найден в справочнике. % Загрузка не возможна', TRIM (inToName), chr(13);
+        RAISE EXCEPTION 'Ошибка.Значение Кому = <%> не найдено.%Загрузка остановлена.', TRIM (inToName), CHR(13);
     END IF;
 
     -- Найти Id OC расход
@@ -73,7 +95,7 @@ BEGIN
     -- Если такого OC нет, то выдать сообщение об ошибке и прервать выполнение загрузки
     IF COALESCE (vbGoodsId_child, 0) = 0
     THEN
-        RAISE EXCEPTION 'Ошибка. ОС с кодом <%> не найдено в справочнике. % Загрузка не возможна', inGoodsCode_child, chr(13);
+        RAISE EXCEPTION 'Ошибка. ОС с кодом <%> не найдено в справочнике.%Загрузка остановлена.', inGoodsCode_child, CHR(13);
     END IF;
  
      -- Найти Id товара
@@ -87,33 +109,33 @@ BEGIN
     -- Если такого товара нет, то выдать сообщение об ошибке и прервать выполнение загрузки
     IF COALESCE (vbGoodsId, 0) = 0
     THEN
-        RAISE EXCEPTION 'Ошибка. ОС % с кодом <%> не найдено в справочнике. % Загрузка не возможна', TRIM (inGoodsName), inGoodsCode, chr(13);
+        RAISE EXCEPTION 'Ошибка. ОС % с кодом <%> не найдено в справочнике.%Загрузка остановлена.', TRIM (inGoodsName), inGoodsCode, chr(13);
     END IF;
 
-    --Найди Ид Подразделения (Место хранение)
+    -- Найди Ид Подразделения (Место хранение)
     vbUnitId_Storage := (SELECT Object.Id
                            FROM Object
-                           WHERE TRIM (UPPER( Object.ValueData)) = TRIM (UPPER( inUnitName_Storage))
+                           WHERE TRIM (Object.ValueData) ILIKE TRIM (inUnitName_Storage)
                              AND Object.DescId = zc_Object_Unit()
                            LIMIT 1 --
                           );
      -- Если нет такого элемента, то выдать сообщение об ошибке и прервать выполнение загрузки
     IF COALESCE (vbUnitId_Storage, 0) = 0
     THEN
-        RAISE EXCEPTION 'Ошибка. <%> не найден в справочнике Подразделений. % Загрузка не возможна', TRIM (inUnitName_Storage), chr(13);
+        RAISE EXCEPTION 'Ошибка. <%> не найден в справочнике Подразделений.%Загрузка остановлена.', TRIM (inUnitName_Storage), chr(13);
     END IF;
 
-    --Найди Ид участка, если нет такого создаем
+    -- Поиск <Участок (Место хранения)>, если нет такого создаем
     vbAreaUnitId := (SELECT Object.Id
                      FROM Object
-                     WHERE TRIM (UPPER( Object.ValueData)) = TRIM (UPPER( inAreaUnitName))
+                     WHERE TRIM (Object.ValueData) ILIKE TRIM (inAreaUnitName)
                        AND Object.DescId = zc_Object_AreaUnit()
                      LIMIT 1 --
                     );
-     -- Если нет такого элемента, то создаем
+    -- Если нет такого
     IF COALESCE (vbAreaUnitId, 0) = 0
     THEN
-         --создаем новый участок
+       -- создаем <Участок (Место хранения)>
        vbAreaUnitId := (SELECT tmp.ioId
                         FROM gpInsertUpdate_Object_AreaUnit (ioId      := 0    :: Integer
                                                            , inCode    := 0    :: Integer
@@ -122,43 +144,43 @@ BEGIN
                                                             ) AS tmp);
     END IF;
 
+    -- Поиск <Место хранения>
     vbStoregeId := (SELECT Object_Storage.Id
                     FROM Object AS Object_Storage
                         INNER JOIN ObjectString AS ObjectString_Storage_Room
-                                                ON ObjectString_Storage_Room.ObjectId = Object_Storage.Id 
-                                               AND ObjectString_Storage_Room.DescId = zc_ObjectString_Storage_Room()
-            
+                                                ON ObjectString_Storage_Room.ObjectId  = Object_Storage.Id 
+                                               AND ObjectString_Storage_Room.DescId    = zc_ObjectString_Storage_Room()
+                                               AND ObjectString_Storage_Room.ValueData = inRoom
                         INNER JOIN ObjectLink AS ObjectLink_Storage_Unit
                                               ON ObjectLink_Storage_Unit.ObjectId = Object_Storage.Id 
                                              AND ObjectLink_Storage_Unit.DescId = zc_ObjectLink_Storage_Unit()
                                              AND ObjectLink_Storage_Unit.ChildObjectId = vbUnitId_Storage
-
                         INNER JOIN ObjectLink AS ObjectLink_Storage_AreaUnit
                                               ON ObjectLink_Storage_AreaUnit.ObjectId = Object_Storage.Id 
                                              AND ObjectLink_Storage_AreaUnit.DescId = zc_ObjectLink_Storage_AreaUnit()
                                              AND ObjectLink_Storage_AreaUnit.ChildObjectId = vbAreaUnitId
                     WHERE Object_Storage.DescId = zc_Object_Storage() 
-                    );
+                   );
     
-     -- Если нет такого элемента, то создаем
+    -- Если нет такого
     IF COALESCE (vbStoregeId, 0) = 0
     THEN
-         --создаем новый участок
+       -- создаем  <Место хранения>
        vbStoregeId := (SELECT tmp.ioId
-                        FROM gpInsertUpdate_Object_Storage (ioId      := 0    :: Integer
-                                                          , inCode    := 0    :: Integer
-                                                          , inName    := (TRIM (inUnitName_Storage)||' '||TRIM (inAreaUnitName)||' '||TRIM (inRoom)) ::TVarChar
-                                                          , inComment := Null ::TVarChar
-                                                          , inAddress := Null ::TVarChar
-                                                          , inUnitId  := vbUnitId_Storage   ::Integer
-                                                          , inAreaUnitName:= inAreaUnitName ::TVarChar
-                                                          , inRoom    := inRoom             ::TVarChar
-                                                          , inSession := inSession          ::TVarChar
-                                                           ) AS tmp);
+                       FROM gpInsertUpdate_Object_Storage (ioId      := 0    :: Integer
+                                                         , inCode    := 0    :: Integer
+                                                         , inName    := (TRIM (inUnitName_Storage)||' '||TRIM (inAreaUnitName)||' '||TRIM (inRoom)) ::TVarChar
+                                                         , inComment := Null ::TVarChar
+                                                         , inAddress := Null ::TVarChar
+                                                         , inUnitId  := vbUnitId_Storage   ::Integer
+                                                         , inAreaUnitName:= inAreaUnitName ::TVarChar
+                                                         , inRoom    := inRoom             ::TVarChar
+                                                         , inSession := inSession          ::TVarChar
+                                                          ) AS tmp);
     END IF;
 
 
-    -- Найди документ zc_Movement_Production по дате и от кого / кому.
+    -- Поиск документ zc_Movement_Production по дате и от кого / кому.
     SELECT Movement.Id INTO vbMovementId
     FROM Movement
          INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -186,7 +208,7 @@ BEGIN
                                                               , inFromId         := vbFromId
                                                               , inToId           := vbToId
                                                               , inDocumentKindId := 0          --inDocumentKindId
-                                                              , inIsPeresort     := True
+                                                              , inIsPeresort     := TRUE
                                                               , inUserId         := vbUserId
                                                               );
     END IF;
@@ -232,7 +254,7 @@ BEGIN
 
    
    
- if vbUserId = 5 OR vbUserId = 9457
+ if vbUserId = 5 AND 1=0
  then
     RAISE EXCEPTION 'ok1 %   %    %    %  %',  lfGet_Object_ValueData (vbGoodsId_child), lfGet_Object_ValueData (vbGoodsId), vbStoregeId, vbFromId,vbToId;
  end if;

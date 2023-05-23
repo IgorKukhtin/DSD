@@ -36,6 +36,8 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , Price_Partion TFloat
              , Storage_Partion TVarChar
              , Unit_Partion TVarChar
+             , PartNumber_Partion TVarChar
+             , Model_Partion TVarChar
 
              , AssetToCode Integer, AssetToName TVarChar
 
@@ -702,6 +704,8 @@ BEGIN
         , (COALESCE (Object_Unit.ValueData, '') 
            || CASE WHEN tmpMIContainer_group.PartionGoodsId > 0 AND COALESCE (Object_Unit.ValueData, '') = '' THEN ' ' || COALESCE (tmpMIContainer_group.PartionGoodsId, 0) :: TVarChar ELSE '' END
           ) :: TVarChar AS Unit_Partion
+        , ObjectString_PartNumber.ValueData        :: TVarChar  AS PartNumber_Partion
+        , Object_PartionModel.ValueData            :: TVarChar  AS Model_Partion
 
         , Object_AssetTo.ObjectCode      AS AssetToCode
         , Object_AssetTo.ValueData       AS AssetToName
@@ -1001,6 +1005,14 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Price
                               ON ObjectFloat_PartionGoods_Price.ObjectId = tmpMIContainer_group.PartionGoodsId
                              AND ObjectFloat_PartionGoods_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
+
+        LEFT JOIN ObjectLink AS ObjectLink_PartionModel
+                             ON ObjectLink_PartionModel.ObjectId = tmpMIContainer_group.PartionGoodsId
+                            AND ObjectLink_PartionModel.DescId   = zc_ObjectLink_PartionGoods_PartionModel()
+        LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = ObjectLink_PartionModel.ChildObjectId
+        LEFT JOIN ObjectString AS ObjectString_PartNumber
+                               ON ObjectString_PartNumber.ObjectId = tmpMIContainer_group.PartionGoodsId
+                              AND ObjectString_PartNumber.DescId   = zc_ObjectString_PartionGoods_PartNumber()
 
         LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpMIContainer_group.AccountId
 
