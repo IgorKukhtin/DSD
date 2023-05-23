@@ -564,11 +564,11 @@ begin
 
   if Screen.ActiveControl is TcxCustomInnerTextEdit then
   begin
-    if TcxCustomInnerTextEdit(Screen.ActiveControl).Parent = edBarCode then
+    if TcxCustomInnerTextEdit(Screen.ActiveControl).Parent = ceAmount then
     begin
-      ceAmount.SetFocus;
+      edBarCode.SetFocus;
       Exit;
-    end else if TcxCustomInnerTextEdit(Screen.ActiveControl).Parent <> ceAmount then
+    end else if TcxCustomInnerTextEdit(Screen.ActiveControl).Parent <> edBarCode then
     begin
       edBarCode.SetFocus;
       Exit;

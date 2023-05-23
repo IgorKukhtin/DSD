@@ -77,6 +77,10 @@ type
     mactUpdate_Closed: TMultiAction;
     actUpdate_Closed: TdsdExecStoredProc;
     bbUpdate_Closed: TdxBarButton;
+    UpdateUserName: TcxGridDBColumn;
+    UpdateDate: TcxGridDBColumn;
+    dxBarButton2: TdxBarButton;
+    MovementProtocolOpenForm: TdsdOpenForm;
   private
     { Private declarations }
   public

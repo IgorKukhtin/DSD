@@ -26,12 +26,13 @@ BEGIN
     RETURN;
   END IF;
   
-  PERFORM gpInsertUpdate_MovementItem_Check_Site (ioId:= 0
+  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementItemId(),
+           gpInsertUpdate_MovementItem_Check_Site (ioId:= 0 
                                                 , inMovementId:= inMovementID
                                                 , inGoodsId:= MI_Master.ObjectId
                                                 , inAmount:= MI_Master.Amount
                                                 , inPrice:= MIFloat_Price.ValueData 
-                                                , inSession := inSession)
+                                                , inSession := inSession), MI_Master.Id)
   FROM MovementItem AS MI_Master
        LEFT JOIN MovementItemFloat AS MIFloat_Price
                                    ON MIFloat_Price.MovementItemId = MI_Master.Id
