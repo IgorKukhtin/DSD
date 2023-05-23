@@ -19,18 +19,29 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , isErased boolean
               ) AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_PartionGoods());
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY
 
-  WITH
+      WITH
        tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
                     FROM ObjectLink AS ObjectLink_Goods_InfoMoney
                     WHERE ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                       AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20202() --Спецодежда
-                    )
+
+                   UNION
+                    SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
+                    FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                         INNER JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
+                                               ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                              AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+                                              AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_20300(), zc_Enum_InfoMoneyDestination_70100(), zc_Enum_InfoMoneyDestination_70200())
+                                              AND vbUserId IN (5)
+                    WHERE ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                   )
      , tmpContainer_Count AS (SELECT Container.ObjectId AS GoodsId
                                    , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
                                    , Container.Amount
