@@ -358,7 +358,8 @@ uses
   UAECMRXML in '..\..\SOURCE\EDI\UAECMRXML.pas',
   Report_OrderClient_byBoat in '..\..\FormsBoat\Report\Report_OrderClient_byBoat.pas' {Report_OrderClient_byBoatForm: TParentForm},
   Report_OrderClient_byBoatDialog in '..\..\FormsBoat\Report\Report_OrderClient_byBoatDialog.pas' {Report_OrderClient_byBoatDialogForm: TParentForm},
-  OrderClientSummDialog in '..\..\FormsBoat\Document\OrderClientSummDialog.pas' {OrderClientSummDialogForm: TParentForm};
+  OrderClientSummDialog in '..\..\FormsBoat\Document\OrderClientSummDialog.pas' {OrderClientSummDialogForm: TParentForm},
+  Report_OrderClient_byBoatChoice in '..\..\FormsBoat\Report\Report_OrderClient_byBoatChoice.pas' {Report_OrderClient_byBoatChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

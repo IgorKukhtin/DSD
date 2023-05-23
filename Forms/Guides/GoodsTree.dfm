@@ -60,6 +60,15 @@ object GoodsTreeForm: TGoodsTreeForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object isAsset: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1089#1082' - '#1054#1057
+        DataBinding.FieldName = 'isAsset'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1080#1079#1085#1072#1089#1082' - '#1054#1057
+        Options.Editing = False
+        Width = 60
+      end
       object GroupStatName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
         DataBinding.FieldName = 'GroupStatName'
@@ -123,6 +132,7 @@ object GoodsTreeForm: TGoodsTreeForm
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 37
       end
@@ -583,10 +593,13 @@ object GoodsTreeForm: TGoodsTreeForm
     OnDblClickActionList = <>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 336
     Top = 184
   end

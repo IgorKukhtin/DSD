@@ -9,8 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionPeresort(
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, LineNum Integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar, MeasureName TVarChar
-             , GoodsChildId Integer, GoodsChildCode Integer, GoodsChildName TVarChar, GoodsChildGroupNameFull TVarChar, MeasureChildName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar, MeasureName TVarChar, isAsset Boolean
+             , GoodsChildId Integer, GoodsChildCode Integer, GoodsChildName TVarChar, GoodsChildGroupNameFull TVarChar, MeasureChildName TVarChar, isAssetChild Boolean
              , AmountOut TFloat, Amountin TFloat
              , Amount_Remains TFloat
              , PartionGoods TVarChar, PartionGoodsDate TDateTime
@@ -59,12 +59,14 @@ BEGIN
             , tmpGoods.GoodsName                    AS GoodsName
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_Measure.ValueData                    AS MeasureName
+            , COALESCE (ObjectBoolean_Goods_Asset.ValueData, FALSE) ::Boolean AS isAsset
 
             , CAST (NULL AS Integer)                AS GoodsChildId
             , CAST (NULL AS Integer)                AS GoodsChildCode
             , CAST (NULL AS TVarchar)               AS GoodsChildName
             , CAST (NULL AS TVarchar)               AS GoodsChildGroupNameFull
             , CAST (NULL AS TVarchar)               AS MeasureChildName
+            , FALSE  ::Boolean                      AS isAssetChild
 
             , CAST (NULL AS TFloat)                 AS AmountOut
             , CAST (NULL AS TFloat)                 AS AmountIn
@@ -129,6 +131,9 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Asset
+                                    ON ObjectBoolean_Goods_Asset.ObjectId = tmpGoods.GoodsId 
+                                   AND ObjectBoolean_Goods_Asset.DescId = zc_ObjectBoolean_Goods_Asset()
        WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -141,12 +146,14 @@ BEGIN
             , Object_Goods.ValueData            AS GoodsName
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_Measure.ValueData                    AS MeasureName
+            , COALESCE (ObjectBoolean_Goods_Asset.ValueData, FALSE) ::Boolean AS isAsset
 
             , Object_GoodsChild.Id                   AS GoodsChildId
             , Object_GoodsChild.ObjectCode           AS GoodsChildCode
             , Object_GoodsChild.ValueData            AS GoodsChildName
             , ObjectString_GoodsChild_GoodsGroupFull.ValueData AS GoodsChildGroupNameFull
             , Object_MeasureChild.ValueData                    AS MeasureChildName
+            , COALESCE (ObjectBoolean_GoodsChild_Asset.ValueData, FALSE) ::Boolean AS isAssetChild
 
             , MovementItemChild.Amount            AS AmountOut
             , MovementItem.Amount                 AS Amountin
@@ -293,6 +300,13 @@ BEGIN
 
              LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId     = Object_Goods.Id
                                              AND tmpGoodsByGoodsKindSub.GoodsKindId = Object_GoodsKind.Id
+ 
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Asset
+                                   ON ObjectBoolean_Goods_Asset.ObjectId = Object_Goods.Id 
+                                  AND ObjectBoolean_Goods_Asset.DescId = zc_ObjectBoolean_Goods_Asset()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsChild_Asset
+                                   ON ObjectBoolean_GoodsChild_Asset.ObjectId = Object_GoodsChild.Id
+                                  AND ObjectBoolean_GoodsChild_Asset.DescId = zc_ObjectBoolean_Goods_Asset() 
             ;
 
 
@@ -325,12 +339,14 @@ BEGIN
             , Object_Goods.ValueData            AS GoodsName
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_Measure.ValueData                    AS MeasureName
+            , COALESCE (ObjectBoolean_Goods_Asset.ValueData, FALSE) ::Boolean AS isAsset
 
             , Object_GoodsChild.Id                   AS GoodsChildId
             , Object_GoodsChild.ObjectCode           AS GoodsChildCode
             , Object_GoodsChild.ValueData            AS GoodsChildName
             , ObjectString_GoodsChild_GoodsGroupFull.ValueData AS GoodsChildGroupNameFull
             , Object_MeasureChild.ValueData                    AS MeasureChildName
+            , COALESCE (ObjectBoolean_GoodsChild_Asset.ValueData, FALSE) ::Boolean AS isAssetChild
 
             , MovementItemChild.Amount            AS Amountout
             , MovementItem.Amount                 AS Amountin
@@ -474,6 +490,14 @@ BEGIN
              
              LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId     = Object_Goods.Id
                                              AND tmpGoodsByGoodsKindSub.GoodsKindId = Object_GoodsKind.Id
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Asset
+                                     ON ObjectBoolean_Goods_Asset.ObjectId = Object_Goods.Id 
+                                    AND ObjectBoolean_Goods_Asset.DescId = zc_ObjectBoolean_Goods_Asset()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsChild_Asset
+                                     ON ObjectBoolean_GoodsChild_Asset.ObjectId = Object_GoodsChild.Id
+                                    AND ObjectBoolean_GoodsChild_Asset.DescId = zc_ObjectBoolean_Goods_Asset()
+
             ;
 
    END IF;
@@ -485,6 +509,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.05.23         *
  19.05.23         *
  05.05.23         *
  18.10.22         *

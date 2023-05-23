@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, CodeUKTZED TVarChar, Name TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
              , GoodsPlatformId Integer, GoodsPlatformName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , isAsset Boolean
              )
 AS
 $BODY$
@@ -51,7 +52,8 @@ BEGIN
            , CAST ('' as TVarChar)  AS GoodsPlatformName
 
            , CAST (0 as Integer)   AS InfoMoneyId
-           , CAST ('' as TVarChar) AS InfoMoneyName
+           , CAST ('' as TVarChar) AS InfoMoneyName 
+           , FALSE ::Boolean       AS isAsset
            ;
    ELSE
        RETURN QUERY 
@@ -84,6 +86,8 @@ BEGIN
 
            , Object_InfoMoney.Id          AS InfoMoneyId
            , Object_InfoMoney.ValueData   AS InfoMoneyName
+           
+           , COALESCE(ObjectBoolean_GoodsGroup_Asset.ValueData, FALSE) ::Boolean AS isAsset
 
        FROM OBJECT AS Object_GoodsGroup
            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
@@ -136,6 +140,10 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_GoodsGroup_TaxAction
                                   ON ObjectString_GoodsGroup_TaxAction.ObjectId = Object_GoodsGroup.Id
                                  AND ObjectString_GoodsGroup_TaxAction.DescId = zc_ObjectString_GoodsGroup_TaxAction()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsGroup_Asset
+                                   ON ObjectBoolean_GoodsGroup_Asset.ObjectId = Object_GoodsGroup.Id 
+                                  AND ObjectBoolean_GoodsGroup_Asset.DescId = zc_ObjectBoolean_GoodsGroup_Asset()
            
        WHERE Object_GoodsGroup.Id = inId;
    END IF;

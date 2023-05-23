@@ -1037,6 +1037,11 @@ INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_AreaUnit', 'Участок(Места хранения)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_AreaUnit');
  
 
+ CREATE OR REPLACE FUNCTION zc_Object_PartionModel() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PartionModel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_PartionModel', 'Модель (Партия учета)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PartionModel');
+ 
+ 
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --!!! Аптека

@@ -736,8 +736,8 @@ object InventoryForm: TInventoryForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 22
-    Top = 271
+    Left = 38
+    Top = 295
     DockControlHeights = (
       0
       0
@@ -831,6 +831,14 @@ object InventoryForm: TInventoryForm
         item
           Visible = True
           ItemName = 'bbReport_Goods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Price'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -964,6 +972,10 @@ object InventoryForm: TInventoryForm
     end
     object bbStartLoad: TdxBarButton
       Action = mactStartLoad
+      Category = 0
+    end
+    object bbReport_Price: TdxBarButton
+      Action = actReport_Price
       Category = 0
     end
   end
@@ -1298,6 +1310,52 @@ object InventoryForm: TInventoryForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actReport_Price: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1072#1081#1089#1072#1084'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1072#1081#1089#1072#1084'>'
+      ImageIndex = 24
+      FormName = 'TReport_Movement_PriceListForm'
+      FormNameParam.Value = 'TReport_Movement_PriceListForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -2073,8 +2131,8 @@ object InventoryForm: TInventoryForm
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
-    Left = 46
-    Top = 303
+    Left = 22
+    Top = 351
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>

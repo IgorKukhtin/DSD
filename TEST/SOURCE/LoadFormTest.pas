@@ -129,6 +129,7 @@ type
     procedure LoadPartnerTagFormTest;
     procedure LoadPartnerExternalFormTest;
     procedure LoadPartionGoodsChoiceFormTest;
+    procedure LoadPartionModelFormTest;
     procedure LoadPartionRemainsFormTest;
     procedure LoadPaidKindFormTest;
     procedure LoadPairDayFormTest;
@@ -599,11 +600,11 @@ begin
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_Name_BUHDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_Name_BUHDialogForm');
- }
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
-   exit;
-  {
+   {exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   exit;
@@ -611,10 +612,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTreeForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_WeightTareDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_WeightTareDialogForm');
   exit;
@@ -622,27 +623,28 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_ObjectForm');
   exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTree_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTree_ObjectForm');
-   }
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindForm');
     exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_NormForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_NormForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_OrderForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_ScaleCehForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_ScaleCehForm');
   exit;
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_StickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_StickerForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_lineVMCForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_lineVMCForm');
 
@@ -717,6 +719,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroup_UKTZEDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroup_UKTZEDForm');
   //
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupStatForm'));
   TdsdFormStorageFactory.GetStorage.Load('GoodsGroupStatForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupStatEditForm'));
@@ -726,6 +729,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('GoodsGroupAnalystForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupAnalystEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupAnalystEditForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadGoodsKindFormTest;
@@ -1849,10 +1853,10 @@ begin
 end;
 procedure TLoadFormTest.LoadProductionUnionFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionForm');
-  {exit;
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
   exit;
@@ -1865,11 +1869,11 @@ begin
   exit;
 
   // 11,12,14 Инна
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortJournalForm');
   //exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortForm');
   //
@@ -2295,6 +2299,12 @@ begin
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsChoiceForm');
+end;
+
+procedure TLoadFormTest.LoadPartionModelFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionModelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionModelForm');
 end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;

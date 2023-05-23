@@ -1432,6 +1432,8 @@ type
     miTransportKind: TMenuItem;
     actAreaUnit: TdsdOpenForm;
     miAreaUnit: TMenuItem;
+    actPartionModel: TdsdOpenForm;
+    miPartionModel: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

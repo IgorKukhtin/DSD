@@ -1,29 +1,28 @@
-inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
-  Caption = #1054#1090#1095#1077#1090' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' '#1082#1083#1080#1077#1085#1090#1072'>'
+inherited Report_OrderClient_byBoatChoiceForm: TReport_OrderClient_byBoatChoiceForm
+  Caption = #1054#1090#1095#1077#1090' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' '#1082#1083#1080#1077#1085#1090#1072'> '#1076#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1047#1072#1082#1072#1079#1072#1084
   ClientHeight = 341
   ClientWidth = 1071
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1087
   ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 55
+    Top = 83
     Width = 1071
-    Height = 286
+    Height = 258
     TabOrder = 3
     ExplicitTop = 55
     ExplicitWidth = 1071
     ExplicitHeight = 286
-    ClientRectBottom = 286
+    ClientRectBottom = 258
     ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1071
       ExplicitHeight = 286
       inherited cxGrid: TcxGrid
         Width = 1071
-        Height = 286
+        Height = 258
         ExplicitWidth = 1071
         ExplicitHeight = 286
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -600,9 +599,9 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
   end
   inherited Panel: TPanel
     Width = 1071
-    Height = 29
+    Height = 57
     ExplicitWidth = 1071
-    ExplicitHeight = 29
+    ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
       Top = 4
@@ -612,12 +611,12 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       ExplicitTop = 4
     end
     inherited deEnd: TcxDateEdit
-      Left = 334
-      Top = 4
+      Left = 118
+      Top = 31
       EditValue = 44927d
       Properties.SaveTime = False
-      ExplicitLeft = 334
-      ExplicitTop = 4
+      ExplicitLeft = 118
+      ExplicitTop = 31
     end
     inherited cxLabel1: TcxLabel
       Left = 25
@@ -626,18 +625,19 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       ExplicitTop = 5
     end
     inherited cxLabel2: TcxLabel
-      Left = 218
-      Top = 5
-      ExplicitLeft = 218
-      ExplicitTop = 5
+      Left = 2
+      Top = 32
+      ExplicitLeft = 2
+      ExplicitTop = 32
     end
     object cbisDetail: TcxCheckBox
-      Left = 441
-      Top = 4
+      Left = 209
+      Top = 31
       Action = actRefreshEmpty
-      Properties.ReadOnly = False
+      Properties.ReadOnly = True
+      State = cbsChecked
       TabOrder = 4
-      Width = 136
+      Width = 128
     end
     object cxLabel3: TcxLabel
       Left = 754
@@ -645,6 +645,23 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       Caption = #1055#1077#1088#1074#1099#1081' '#1084#1077#1089#1103#1094' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1091#1077#1090' '#1084#1077#1089#1103#1094#1091' '#1053#1072#1095#1072#1083#1072' '#1087#1077#1088#1080#1086#1076#1072
       Style.BorderColor = clHighlightText
       Style.TextColor = cl3DDkShadow
+    end
+    object cxLabel4: TcxLabel
+      Left = 209
+      Top = 5
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077':'
+    end
+    object edGoods: TcxButtonEdit
+      Left = 308
+      Top = 4
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 346
     end
   end
   object lbSearchArticle: TcxLabel [2]
@@ -971,59 +988,6 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       PictureFields.Strings = (
         'photo1')
     end
-    object actReport_OC_ByBoatChoice: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086#1090#1086#1074#1072#1088#1072#1084'>'
-      Hint = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086#1090#1086#1074#1072#1088#1072#1084'>'
-      ImageIndex = 26
-      FormName = 'TReport_OrderClient_byBoatChoiceForm'
-      FormNameParam.Value = 'TReport_OrderClient_byBoatChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'StartDate'
-          Value = Null
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = Null
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ObjectId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ObjectId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ObjectName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'ObjectName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isDetail'
-          Value = True
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1055,6 +1019,8 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       item
         Name = 'inObjectId'
         Value = '0'
+        Component = GuidesObject
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1108,18 +1074,6 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_OC_ByBoatChoice'
         end
         item
           Visible = True
@@ -1200,10 +1154,6 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
     end
     object bbPrint3: TdxBarButton
       Action = actPrint3
-      Category = 0
-    end
-    object bbReport_OC_ByBoatChoice: TdxBarButton
-      Action = actReport_OC_ByBoatChoice
       Category = 0
     end
   end
@@ -1319,36 +1269,27 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitGroupId'
+        Name = 'ObjectId'
         Value = Null
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitGroupName'
+        Name = 'ObjectName'
         Value = Null
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartionId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsName'
-        Value = Null
-        DataType = ftString
+        Name = 'isDetail'
+        Value = True
+        Component = cbisDetail
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 296
@@ -1394,6 +1335,8 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       item
         Name = 'inObjectId'
         Value = '0'
+        Component = GuidesObject
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1413,5 +1356,35 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
     Params = <>
     Left = 1028
     Top = 86
+  end
+  object GuidesObject: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TGoodsForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 456
+    Top = 3
   end
 end

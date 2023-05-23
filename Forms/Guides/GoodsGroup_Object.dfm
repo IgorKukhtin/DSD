@@ -42,7 +42,6 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
     RootValue = -1
     Styles.StyleSheet = dmMain.cxTreeListStyleSheet
     TabOrder = 4
-    ExplicitWidth = 728
     object Name: TcxDBTreeListColumn
       Caption.Text = #1053#1072#1079#1074#1072#1085#1080#1077
       DataBinding.FieldName = 'Name'
@@ -108,6 +107,16 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
       DataBinding.FieldName = 'InfoMoneyName'
       Width = 87
       Position.ColIndex = 6
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
+    end
+    object isAsset: TcxDBTreeListColumn
+      Caption.Text = #1055#1088#1080#1079#1085#1072#1082' - '#1054#1057
+      DataBinding.FieldName = 'isAsset'
+      Width = 90
+      Position.ColIndex = 8
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>
