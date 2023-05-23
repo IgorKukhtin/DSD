@@ -242,6 +242,8 @@ type
     CountSale_40208_byCount: TcxGridDBColumn;
     CountSale_byCount: TcxGridDBColumn;
     CountReturnIn_byCount: TcxGridDBColumn;
+    PartNumber_Partion: TcxGridDBColumn;
+    Model_Partion: TcxGridDBColumn;
   private
   public
   end;

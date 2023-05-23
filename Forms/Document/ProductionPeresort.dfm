@@ -2,6 +2,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
   ClientHeight = 502
   ClientWidth = 1128
+  ExplicitLeft = -234
   ExplicitWidth = 1144
   ExplicitHeight = 541
   PixelsPerInch = 96
@@ -336,7 +337,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Width = 90
           end
           object PartNumber: TcxGridDBColumn
-            Caption = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091' ('#1087#1088#1080#1093#1086#1076')'
+            Caption = #1057#1077#1088#1080#1081#1085#1099#1081' '#1085#1086#1084#1077#1088' ('#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091') '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'PartNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -365,7 +366,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             Width = 90
           end
           object PartNumber_child: TcxGridDBColumn
-            Caption = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091' ('#1088#1072#1089#1093#1086#1076')'
+            Caption = #1057#1077#1088#1080#1081#1085#1099#1081' '#1085#1086#1084#1077#1088' ('#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091') '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'PartNumber_child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

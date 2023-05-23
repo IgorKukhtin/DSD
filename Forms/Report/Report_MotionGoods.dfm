@@ -2488,6 +2488,22 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         VisibleForCustomization = False
         Width = 70
       end
+      object PartNumber_Partion: TcxGridDBColumn
+        Caption = #1057#1077#1088#1080#1081#1085#1099#1081' '#1085#1086#1084#1077#1088' ('#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091')'
+        DataBinding.FieldName = 'PartNumber_Partion'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object Model_Partion: TcxGridDBColumn
+        Caption = #1052#1086#1076#1077#1083#1100
+        DataBinding.FieldName = 'Model_Partion'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -2697,7 +2713,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Top = 87
     Caption = #1090#1086#1083#1100#1082#1086' '#1050#1086#1083'-'#1074#1086
     Properties.ReadOnly = False
-    TabOrder = 6
+    TabOrder = 5
     Width = 102
   end
   object cbCount: TcxCheckBox
