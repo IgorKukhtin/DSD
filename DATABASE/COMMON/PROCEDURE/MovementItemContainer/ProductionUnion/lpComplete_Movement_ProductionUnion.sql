@@ -726,6 +726,15 @@ BEGIN
      WHERE _tmpItem_pr.MovementItemId = tmpItemChild.MovementItemId_Parent
     ;
 
+     -- переносятся Партии товара для Child(расход)-элементы, новая схема - ОС
+     UPDATE _tmpItemChild SET PartionGoodsId = _tmpItem_pr.PartionGoodsId
+     FROM _tmpItem_pr
+     WHERE _tmpItem_pr.MovementItemId = _tmpItemChild.MovementItemId_Parent
+       AND _tmpItem_pr.PartionGoodsId > 0
+       AND COALESCE (_tmpItemChild.PartionGoodsId, 0) = 0
+       AND _tmpItemChild.isAsset_master = TRUE
+    ;
+
      -- формируются Партии товара для Master(ПРИХОД)-элементы, ЕСЛИ надо ...
      UPDATE _tmpItem_pr SET PartionGoodsId_child = tmpItemChild.PartionGoodsId
      FROM (SELECT _tmpItemChild.MovementItemId_Parent, MAX (_tmpItemChild.PartionGoodsId) AS PartionGoodsId

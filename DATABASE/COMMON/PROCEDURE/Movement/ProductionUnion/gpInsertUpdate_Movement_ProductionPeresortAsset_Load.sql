@@ -223,10 +223,15 @@ BEGIN
                           AND MovementItemChild.isErased   = FALSE
                           AND MovementItemChild.ObjectId   = vbGoodsId_child
 
+         LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                      ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                     AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+
     WHERE MovementItem.MovementId = vbMovementId
       AND MovementItem.DescId = zc_MI_Master()
       AND MovementItem.isErased = FALSE
       AND MovementItem.ObjectId = vbGoodsId
+      AND COALESCE (MIString_PartionGoods.ValueData, '') = COALESCE (inInvNumber, '')
      ;
     
     PERFORM lpInsertUpdate_MI_ProductionPeresort (ioId                     := COALESCE (vbMovementItemId,0)
