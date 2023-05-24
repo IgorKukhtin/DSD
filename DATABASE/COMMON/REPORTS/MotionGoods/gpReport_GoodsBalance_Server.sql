@@ -138,9 +138,10 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , StorageName         TVarChar
              , PartionModelId      Integer
              , PartionModelName    TVarChar
-             , UnitId              Integer
-             , UnitName            TVarChar
-             , PartNumber          TVarChar
+             , UnitId_Partion      Integer
+             , UnitName_Partion    TVarChar
+             , BranchName_Partion  TVarChar
+             , PartNumber_Partion   TVarChar
              , AreaUnitName_storage TVarChar
              , Room_storage         TVarChar
              , Address_storage      TVarChar
@@ -1662,9 +1663,10 @@ BEGIN
           , tmpResult.StorageName      ::TVarChar
           , tmpResult.PartionModelId
           , tmpResult.PartionModelName ::TVarChar
-          , tmpResult.UnitId           
-          , tmpResult.UnitName         ::TVarChar
-          , tmpResult.PartNumber       ::TVarChar
+          , tmpResult.UnitId                      AS UnitId_Partion
+          , tmpResult.UnitName         ::TVarChar AS UnitName_Partion
+          , Object_Branch.ValueData    ::TVarChar AS BranchName_Partion
+          , tmpResult.PartNumber       ::TVarChar AS PartNumber_Partion
           , tmpStorage.AreaUnitName ::TVarChar AS AreaUnitName_storage
           , tmpStorage.Room         ::TVarChar AS Room_storage
           , tmpStorage.Address      ::TVarChar AS Address_storage
@@ -1771,6 +1773,11 @@ BEGIN
                                           AND COALESCE (tmpGoodsByGoodsKindParam.GoodsKindId, 0) = COALESCE (tmpResult.GoodsKindId, 0)
 
         LEFT JOIN tmpStorage ON tmpStorage.Id = tmpResult.StorageId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                             ON ObjectLink_Unit_Branch.ObjectId = tmpResult.UnitId
+                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+        LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
       WHERE tmpResult.CountReal <> 0
          OR tmpResult.SummReal <> 0
 

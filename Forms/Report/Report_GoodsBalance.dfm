@@ -749,6 +749,51 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
+      object StorageName: TcxGridDBColumn
+        Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103')'
+        DataBinding.FieldName = 'StorageName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object Unit_Partion: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1072#1088#1090#1080#1103' '#1087#1088#1080#1093#1086#1076#1072')'
+        DataBinding.FieldName = 'Unit_Partion'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object PartionModelName: TcxGridDBColumn
+        Caption = #1052#1086#1076#1077#1083#1100' ('#1087#1072#1088#1090#1080#1103' '#1087#1088#1080#1093#1086#1076#1072')'
+        DataBinding.FieldName = 'PartionModelName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object BranchName_Partion: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' ('#1087#1072#1088#1090#1080#1103' '#1087#1088#1080#1093#1086#1076#1072')'
+        DataBinding.FieldName = 'BranchName_Partion'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object PartNumber_Partion: TcxGridDBColumn
+        Caption = #1057#1077#1088#1080#1081#1085#1099#1081' '#1085#1086#1084#1077#1088' ('#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091')'
+        DataBinding.FieldName = 'PartNumber_Partion'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
@@ -2362,14 +2407,14 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -2446,28 +2491,28 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -2793,28 +2838,28 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -2891,28 +2936,28 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -2989,28 +3034,28 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -3107,28 +3152,28 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -3219,28 +3264,28 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         end
         item
           Name = 'isGoodsKind'
-          Value = 'False'
+          Value = False
           Component = cbGoodsKind
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
-          Value = 'False'
+          Value = False
           Component = cbPartionGoods
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isAmount'
-          Value = 'False'
+          Value = False
           Component = cbAmount
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isInfoMoney'
-          Value = 'False'
+          Value = False
           Component = cbInfoMoney
           DataType = ftBoolean
           MultiSelectSeparator = ','
@@ -3396,7 +3441,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         end
         item
           Name = 'IsPartner'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3503,6 +3548,7 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <
       item
         ColorColumn = CountOut_calc
@@ -3572,6 +3618,8 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 456
     Top = 392
   end

@@ -2516,8 +2516,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Height = 54
     Align = alTop
     TabOrder = 1
-    ExplicitLeft = -88
-    ExplicitTop = 114
     object edGoodsGroup: TcxButtonEdit
       Left = 858
       Top = 5
