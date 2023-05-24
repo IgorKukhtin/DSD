@@ -2511,7 +2511,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 0
+    Top = 26
     Width = 1344
     Height = 54
     Align = alTop
@@ -2713,7 +2713,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Top = 87
     Caption = #1090#1086#1083#1100#1082#1086' '#1050#1086#1083'-'#1074#1086
     Properties.ReadOnly = False
-    TabOrder = 5
+    TabOrder = 4
     Width = 102
   end
   object cbCount: TcxCheckBox
@@ -2989,6 +2989,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_GoodsPartion'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -3089,6 +3097,10 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Hint = #1087#1077#1095#1072#1090#1100' '#1073#1072#1090#1086#1085#1099
       Visible = ivAlways
       Control = cbCount
+    end
+    object bbPrint_GoodsPartion: TdxBarButton
+      Action = actPrint_GoodsPartion
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -3291,6 +3303,104 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actPrint_GoodsPartion: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1072#1088#1090#1080#1080' '#1054#1057')'
+      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1072#1088#1090#1080#1080' '#1054#1057')'
+      ImageIndex = 23
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
+            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
+            'l'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 43466d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43466d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = GuidesUnitGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = ''
+          Component = GuidesLocation
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          Component = GuidesGoodsGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = ''
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = False
+          Component = cbGoodsKind
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = False
+          Component = cbPartionGoods
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAmount'
+          Value = False
+          Component = cbAmount
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isInfoMoney'
+          Value = False
+          Component = cbInfoMoney
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1072#1088#1090#1080#1080' '#1076#1074#1080#1078#1077#1085#1080#1077')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1087#1072#1088#1090#1080#1080' '#1076#1074#1080#1078#1077#1085#1080#1077')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Goods: TdsdPrintAction
       Category = 'DSDLib'
@@ -4787,8 +4897,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1016
-    Top = 51
+    Left = 856
+    Top = 65515
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

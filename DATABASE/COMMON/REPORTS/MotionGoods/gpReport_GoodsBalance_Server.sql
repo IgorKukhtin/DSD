@@ -133,6 +133,18 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , ColorB_GreenL Integer, ColorB_Yelow Integer, ColorB_Cyan Integer
 
              , ContainerId_count Integer, ContainerId_begin Integer
+
+             , StorageId           Integer
+             , StorageName         TVarChar
+             , PartionModelId      Integer
+             , PartionModelName    TVarChar
+             , UnitId_Partion      Integer
+             , UnitName_Partion    TVarChar
+             , BranchName_Partion  TVarChar
+             , PartNumber_Partion   TVarChar
+             , AreaUnitName_storage TVarChar
+             , Room_storage         TVarChar
+             , Address_storage      TVarChar
               )
 AS
 $BODY$
@@ -837,6 +849,15 @@ BEGIN
                               , tmpAll.PartionGoodsName
                               , tmpAll.PartionGoodsDate
 
+                               --cвойства из партий
+                              , tmpAll.StorageId
+                              , tmpAll.StorageName
+                              , tmpAll.PartionModelId
+                              , tmpAll.PartionModelName
+                              , tmpAll.UnitId
+                              , tmpAll.UnitName
+                              , tmpAll.PartNumber
+
                               , SUM (tmpAll.CountIn_byPF)     AS CountIn_byPF
                               , SUM (tmpAll.CuterCount)       AS CuterCount
                               , SUM (tmpAll.CountOut_byPF)    AS CountOut_byPF
@@ -927,7 +948,14 @@ BEGIN
                                     , 0 AS CountStart_byCount
                                     , 0 AS CountEnd_byCount
                                     , 0 AS CountInventory_byCount
-
+                                    --
+                                    , 0  AS StorageId
+                                    , '' AS StorageName
+                                    , 0  AS PartionModelId
+                                    , '' AS PartionModelName
+                                    , 0  AS UnitId
+                                    , '' AS UnitName
+                                    , '' AS PartNumber
                                FROM tmpMovement_all
                                     LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
                                                             ON ObjectBoolean_PartionCount.ObjectId = tmpMovement_all.GoodsId
@@ -980,7 +1008,14 @@ BEGIN
                                     , 0 AS CountStart_byCount
                                     , 0 AS CountEnd_byCount
                                     , 0 AS CountInventory_byCount
-
+                                    --
+                                    , Object_Storage.Id                 AS StorageId
+                                    , Object_Storage.ValueData          AS StorageName
+                                    , Object_PartionModel.Id            AS PartionModelId
+                                    , Object_PartionModel.ValueData     AS PartionModelName
+                                    , Object_Unit.Id                    AS UnitId
+                                    , Object_Unit.ValueData             AS UnitName
+                                    , ObjectString_PartNumber.ValueData AS PartNumber
                                FROM tmpMIContainer_Count
                                     LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_Count.PartionGoodsId
                                     LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
@@ -989,6 +1024,26 @@ BEGIN
                                     LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                                                          ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_Count.PartionGoodsId
                                                         AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+
+                                    --
+                                    LEFT JOIN ObjectLink AS ObjectLink_Storage
+                                                         ON ObjectLink_Storage.ObjectId = tmpMIContainer_Count.PartionGoodsId
+                                                        AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+                                    LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId                                    
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                         ON ObjectLink_Unit.ObjectId = tmpMIContainer_Count.PartionGoodsId
+                                                        AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
+
+                                    LEFT JOIN ObjectString AS ObjectString_PartNumber
+                                                           ON ObjectString_PartNumber.ObjectId = tmpMIContainer_Count.PartionGoodsId                   -- Сер.номер
+                                                          AND ObjectString_PartNumber.DescId = zc_ObjectString_PartionGoods_PartNumber()
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_PartionModel
+                                                         ON ObjectLink_PartionModel.ObjectId = tmpMIContainer_Count.PartionGoodsId		               -- модель
+                                                        AND ObjectLink_PartionModel.DescId = zc_ObjectLink_PartionGoods_PartionModel()
+                                    LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = ObjectLink_PartionModel.ChildObjectId
                               UNION ALL
                                -- Остатки + Движение товара
                                SELECT tmpMIContainer_all.ContainerId_count
@@ -1054,6 +1109,14 @@ BEGIN
                                     , 0 AS CountStart_byCount
                                     , 0 AS CountEnd_byCount
                                     , 0 AS CountInventory_byCount
+                                     --
+                                    , Object_Storage.Id                 AS StorageId
+                                    , Object_Storage.ValueData          AS StorageName
+                                    , Object_PartionModel.Id            AS PartionModelId
+                                    , Object_PartionModel.ValueData     AS PartionModelName
+                                    , Object_Unit.Id                    AS UnitId
+                                    , Object_Unit.ValueData             AS UnitName
+                                    , ObjectString_PartNumber.ValueData AS PartNumber
                                FROM tmpMIContainer_all
                                     LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_all.PartionGoodsId
                                     LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
@@ -1078,6 +1141,16 @@ BEGIN
                                     LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                                                          ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_all.PartionGoodsId
                                                         AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+
+                                    LEFT JOIN ObjectString AS ObjectString_PartNumber
+                                                           ON ObjectString_PartNumber.ObjectId = tmpMIContainer_all.PartionGoodsId                    -- Сер.номер
+                                                          AND ObjectString_PartNumber.DescId = zc_ObjectString_PartionGoods_PartNumber()
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_PartionModel
+                                                         ON ObjectLink_PartionModel.ObjectId = tmpMIContainer_all.PartionGoodsId		               -- модель
+                                                        AND ObjectLink_PartionModel.DescId = zc_ObjectLink_PartionGoods_PartionModel()
+                                    LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = ObjectLink_PartionModel.ChildObjectId
+
                               UNION ALL
                                -- Приход с производства ГП
                                SELECT 0 AS ContainerId_count
@@ -1130,6 +1203,14 @@ BEGIN
                                     , 0 AS CountStart_byCount
                                     , 0 AS CountEnd_byCount
                                     , 0 AS CountInventory_byCount
+                                     --
+                                    , Object_Storage.Id                 AS StorageId
+                                    , Object_Storage.ValueData          AS StorageName
+                                    , Object_PartionModel.Id            AS PartionModelId
+                                    , Object_PartionModel.ValueData     AS PartionModelName
+                                    , Object_Unit.Id                    AS UnitId
+                                    , Object_Unit.ValueData             AS UnitName
+                                    , ObjectString_PartNumber.ValueData AS PartNumber                                    
                                FROM tmpMIContainer_GP
                                     LEFT JOIN tmpNorm_GP ON tmpNorm_GP.GoodsId_gp     = tmpMIContainer_GP.GoodsId_gp
                                                         AND tmpNorm_GP.GoodsKindId_gp = tmpMIContainer_GP.GoodsKindId_gp
@@ -1149,6 +1230,26 @@ BEGIN
                                     LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                                                          ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_GP.PartionGoodsId
                                                         AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+
+                                    --
+                                    LEFT JOIN ObjectLink AS ObjectLink_Storage
+                                                         ON ObjectLink_Storage.ObjectId = tmpMIContainer_GP.PartionGoodsId
+                                                        AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+                                    LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId                                    
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                         ON ObjectLink_Unit.ObjectId = tmpMIContainer_GP.PartionGoodsId
+                                                        AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
+
+                                    LEFT JOIN ObjectString AS ObjectString_PartNumber
+                                                           ON ObjectString_PartNumber.ObjectId = tmpMIContainer_GP.PartionGoodsId                   -- Сер.номер
+                                                          AND ObjectString_PartNumber.DescId = zc_ObjectString_PartionGoods_PartNumber()
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_PartionModel
+                                                         ON ObjectLink_PartionModel.ObjectId = tmpMIContainer_GP.PartionGoodsId		               -- модель
+                                                        AND ObjectLink_PartionModel.DescId = zc_ObjectLink_PartionGoods_PartionModel()
+                                    LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = ObjectLink_PartionModel.ChildObjectId
                               UNION ALL
                                -- остатки и движение батонов
                                SELECT 0 AS ContainerId_count
@@ -1197,6 +1298,14 @@ BEGIN
                                     , tmpContainer_CountCount.AmountEnd_byCount   AS CountEnd_byCount
                                     , tmpContainer_CountCount.AmountInventory_byCount AS CountInventory_byCount
 
+                                     --
+                                    , Object_Storage.Id                 AS StorageId
+                                    , Object_Storage.ValueData          AS StorageName
+                                    , Object_PartionModel.Id            AS PartionModelId
+                                    , Object_PartionModel.ValueData     AS PartionModelName
+                                    , Object_Unit.Id                    AS UnitId
+                                    , Object_Unit.ValueData             AS UnitName
+                                    , ObjectString_PartNumber.ValueData AS PartNumber
                                FROM tmpContainer_CountCount
                                     LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpContainer_CountCount.PartionGoodsId
                                     LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
@@ -1205,6 +1314,26 @@ BEGIN
                                     LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                                                          ON ObjectLink_GoodsKindComplete.ObjectId = tmpContainer_CountCount.PartionGoodsId
                                                         AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+
+                                    --
+                                    LEFT JOIN ObjectLink AS ObjectLink_Storage
+                                                         ON ObjectLink_Storage.ObjectId = tmpContainer_CountCount.PartionGoodsId
+                                                        AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+                                    LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId                                    
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                                         ON ObjectLink_Unit.ObjectId = tmpContainer_CountCount.PartionGoodsId
+                                                        AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
+
+                                    LEFT JOIN ObjectString AS ObjectString_PartNumber
+                                                           ON ObjectString_PartNumber.ObjectId = tmpContainer_CountCount.PartionGoodsId                   -- Сер.номер
+                                                          AND ObjectString_PartNumber.DescId = zc_ObjectString_PartionGoods_PartNumber()
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_PartionModel
+                                                         ON ObjectLink_PartionModel.ObjectId = tmpContainer_CountCount.PartionGoodsId	               -- модель
+                                                        AND ObjectLink_PartionModel.DescId = zc_ObjectLink_PartionGoods_PartionModel()
+                                    LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = ObjectLink_PartionModel.ChildObjectId
                               ) AS tmpAll
 
                         GROUP BY tmpAll.ContainerId_count
@@ -1215,6 +1344,13 @@ BEGIN
                                , tmpAll.GoodsKindId_complete
                                , tmpAll.PartionGoodsName
                                , tmpAll.PartionGoodsDate
+                               , tmpAll.StorageId
+                               , tmpAll.StorageName
+                               , tmpAll.PartionModelId
+                               , tmpAll.PartionModelName
+                               , tmpAll.UnitId
+                               , tmpAll.UnitName
+                               , tmpAll.PartNumber
                         )
          , tmpNorm_PF AS (-- Нормы ПФ (ГП)
                           SELECT tmp.GoodsId, tmp.GoodsKindId, tmp.GoodsKindId_complete, MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
@@ -1307,7 +1443,9 @@ BEGIN
                                         OR COALESCE (ObjectLink_GoodsByGoodsKind_GoodsMain.ChildObjectId, 0) <> 0
                                      )
 
-
+       , tmpStorage AS (SELECT spSelect.*
+                        FROM gpSelect_Object_Storage (inSession) AS spSelect
+                        )
  
      -- !!!РЕЗУЛЬТАТ!!!
      SELECT View_Account.AccountGroupName, View_Account.AccountDirectionName
@@ -1521,6 +1659,17 @@ BEGIN
           , tmpResult.ContainerId_count :: Integer
           , tmpResult.ContainerId_begin :: Integer
 
+          , tmpResult.StorageId
+          , tmpResult.StorageName      ::TVarChar
+          , tmpResult.PartionModelId
+          , tmpResult.PartionModelName ::TVarChar
+          , tmpResult.UnitId                      AS UnitId_Partion
+          , tmpResult.UnitName         ::TVarChar AS UnitName_Partion
+          , Object_Branch.ValueData    ::TVarChar AS BranchName_Partion
+          , tmpResult.PartNumber       ::TVarChar AS PartNumber_Partion
+          , tmpStorage.AreaUnitName ::TVarChar AS AreaUnitName_storage
+          , tmpStorage.Room         ::TVarChar AS Room_storage
+          , tmpStorage.Address      ::TVarChar AS Address_storage
       FROM tmpResult
         LEFT JOIN tmpGoods_Term ON tmpGoods_Term.GoodsId     = tmpResult.GoodsId
                                AND tmpGoods_Term.GoodsKindId = tmpResult.GoodsKindId
@@ -1622,6 +1771,13 @@ BEGIN
         
         LEFT JOIN tmpGoodsByGoodsKindParam ON tmpGoodsByGoodsKindParam.GoodsId = tmpResult.GoodsId
                                           AND COALESCE (tmpGoodsByGoodsKindParam.GoodsKindId, 0) = COALESCE (tmpResult.GoodsKindId, 0)
+
+        LEFT JOIN tmpStorage ON tmpStorage.Id = tmpResult.StorageId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                             ON ObjectLink_Unit_Branch.ObjectId = tmpResult.UnitId
+                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+        LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
       WHERE tmpResult.CountReal <> 0
          OR tmpResult.SummReal <> 0
 

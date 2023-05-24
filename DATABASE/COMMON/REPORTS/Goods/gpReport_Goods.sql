@@ -24,7 +24,13 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , CarCode Integer, CarName TVarChar
               , ObjectByDescName TVarChar, ObjectByCode Integer, ObjectByName TVarChar
               , PaidKindName TVarChar
-              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, PartionGoods TVarChar
+              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, GoodsKindName_complete TVarChar
+              , PartionGoods TVarChar
+              , StorageId Integer, StorageName TVarChar
+              , PartionModelId Integer, PartionModelName TVarChar
+              , UnitId_partion Integer, UnitName_partion TVarChar, BranchName_partion TVarChar
+              , PartNumber_partion  TVarChar
+        
               , GoodsCode_parent Integer, GoodsName_parent TVarChar, GoodsKindName_parent TVarChar
               , Price TFloat, Price_branch TFloat, Price_end TFloat, Price_branch_end TFloat, Price_partner TFloat
               , SummPartnerIn TFloat, SummPartnerOut TFloat
@@ -955,6 +961,16 @@ BEGIN
 
                         , tmpProtocolInsert.OperDate ::TDateTime AS OperDate_Insert
                         , tmpProtocolInsert.UserName ::TVarChar  AS UserName_Insert
+                        
+                         --
+                        , Object_Storage.Id                 AS StorageId
+                        , Object_Storage.ValueData          AS StorageName
+                        , Object_PartionModel.Id            AS PartionModelId
+                        , Object_PartionModel.ValueData     AS PartionModelName
+                        , Object_Unit.Id                    AS UnitId_partion
+                        , Object_Unit.ValueData             AS UnitName_partion
+                        , Object_Branch.ValueData           AS BranchName_partion
+                        , ObjectString_PartNumber.ValueData AS PartNumber_partion
                    FROM tmpMIContainer_group
                         LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
                         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -1020,6 +1036,35 @@ BEGIN
                                             AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                         LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = ObjectLink_GoodsKindComplete.ChildObjectId
 
+                        --
+                        LEFT JOIN ObjectLink AS ObjectLink_Storage
+                                             ON ObjectLink_Storage.ObjectId = tmpMIContainer_group.PartionGoodsId
+                                            AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+                                            AND inIsPartion = TRUE
+                        LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId                                    
+
+                        LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                             ON ObjectLink_Unit.ObjectId = tmpMIContainer_group.PartionGoodsId
+                                            AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                                            AND inIsPartion = TRUE
+                        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
+
+                        LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                             ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                        LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+
+                        LEFT JOIN ObjectString AS ObjectString_PartNumber
+                                               ON ObjectString_PartNumber.ObjectId = tmpMIContainer_group.PartionGoodsId                   -- Сер.номер
+                                              AND ObjectString_PartNumber.DescId = zc_ObjectString_PartionGoods_PartNumber()
+                                              AND inIsPartion = TRUE
+
+                        LEFT JOIN ObjectLink AS ObjectLink_PartionModel
+                                             ON ObjectLink_PartionModel.ObjectId = tmpMIContainer_group.PartionGoodsId	               -- модель
+                                            AND ObjectLink_PartionModel.DescId = zc_ObjectLink_PartionGoods_PartionModel()
+                                            AND inIsPartion = TRUE
+                        LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = ObjectLink_PartionModel.ChildObjectId
+
                         LEFT JOIN Object AS Object_PersonalKVK ON Object_PersonalKVK.Id = tmpMIContainer_group.PersonalId_KVK
                
                         LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionKVK
@@ -1072,6 +1117,15 @@ BEGIN
         , tmpDataAll.GoodsKindName
         , tmpDataAll.GoodsKindName_complete
         , CASE WHEN inIsPartion = TRUE THEN tmpDataAll.PartionGoods ELSE NULL END ::TVarChar AS PartionGoods
+        , tmpDataAll.StorageId           ::Integer
+        , tmpDataAll.StorageName         ::TVarChar
+        , tmpDataAll.PartionModelId      ::Integer
+        , tmpDataAll.PartionModelName    ::TVarChar
+        , tmpDataAll.UnitId_partion      ::Integer
+        , tmpDataAll.UnitName_partion    ::TVarChar
+        , tmpDataAll.BranchName_partion ::TVarChar
+        , tmpDataAll.PartNumber_partion  ::TVarChar
+
         , tmpDataAll.GoodsCode_parent
         , tmpDataAll.GoodsName_parent
         , tmpDataAll.GoodsKindName_parent
@@ -1188,6 +1242,14 @@ BEGIN
         , tmpDataAll.UserName_Protocol_auto
         , tmpDataAll.OperDate_Insert
         , tmpDataAll.UserName_Insert
+        , tmpDataAll.StorageId          
+        , tmpDataAll.StorageName        
+        , tmpDataAll.PartionModelId     
+        , tmpDataAll.PartionModelName   
+        , tmpDataAll.UnitId_partion     
+        , tmpDataAll.UnitName_partion 
+        , tmpDataAll.BranchName_partion
+        , tmpDataAll.PartNumber_partion 
    ;
 
    END IF;

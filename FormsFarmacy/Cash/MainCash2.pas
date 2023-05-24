@@ -14799,9 +14799,7 @@ begin
           begin
             SalePromoGoodsCalcCDS.Append;
             SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger;
-            if SalePromoGoodsCDS.FieldByName('Discount').AsCurrency <> 0 then
-              SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := GetSalePromoGoodsPrice(SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Discount').AsCurrency)
-            else SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
+            SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
             SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency * Round(CheckCDS.FieldByName('Amount').AsCurrency / SalePromoGoodsCDS.FieldByName('Amount').AsCurrency + 0.01);
             SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := 0;
             SalePromoGoodsCalcCDS.Post;
@@ -14821,9 +14819,7 @@ begin
         begin
           SalePromoGoodsCalcCDS.Append;
           SalePromoGoodsCalcCDS.FieldByName('GoodsPresentId').AsInteger := CheckCDS.FieldByName('GoodsId').AsInteger;
-          if SalePromoGoodsCDS.FieldByName('Discount').AsCurrency <> 0 then
-            SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := GetSalePromoGoodsPrice(SalePromoGoodsCDS.FieldByName('GoodsPresentId').AsInteger, SalePromoGoodsCDS.FieldByName('Discount').AsCurrency)
-          else SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
+          SalePromoGoodsCalcCDS.FieldByName('Price').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
           SalePromoGoodsCalcCDS.FieldByName('Amount').AsCurrency := 0;
           SalePromoGoodsCalcCDS.FieldByName('AmountUse').AsCurrency := CheckCDS.FieldByName('Amount').AsCurrency;
           SalePromoGoodsCalcCDS.Post;

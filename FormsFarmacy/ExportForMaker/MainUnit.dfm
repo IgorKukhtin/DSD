@@ -155,7 +155,6 @@ object MainForm: TMainForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 42
       end
@@ -163,7 +162,6 @@ object MainForm: TMainForm
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 168
@@ -173,7 +171,6 @@ object MainForm: TMainForm
         DataBinding.FieldName = 'Mail'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 114
@@ -182,7 +179,6 @@ object MainForm: TMainForm
         Caption = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
         DataBinding.FieldName = 'SendPlan'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100'('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
         Options.Editing = False
         Width = 85
@@ -193,7 +189,6 @@ object MainForm: TMainForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderHint = #1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1080'  '#1074' '#1084#1077#1089#1103#1094#1072#1093
         Options.Editing = False
         Width = 53
@@ -204,7 +199,6 @@ object MainForm: TMainForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderHint = #1087#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1074' '#1076#1085#1103#1093
         Options.Editing = False
         Width = 52
@@ -213,7 +207,6 @@ object MainForm: TMainForm
         Caption = #1058#1077#1082'. '#1084#1077#1089#1103#1094
         DataBinding.FieldName = 'isCurrMonth'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 56
       end
@@ -221,7 +214,6 @@ object MainForm: TMainForm
         Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1074#1085#1077#1087#1083#1072#1085#1086#1074#1099#1077' '#1086#1090#1095#1077#1090#1099
         DataBinding.FieldName = 'isUnPlanned'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 81
       end
@@ -229,21 +221,18 @@ object MainForm: TMainForm
         Caption = #1044#1086#1087#1086#1083#1085'. '#1082#1074#1072#1088#1090#1072#1083
         DataBinding.FieldName = 'isQuarterAdd'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Width = 62
       end
       object is4MonthAdd: TcxGridDBColumn
         Caption = #1044#1086#1087#1086#1083#1085'. 4 '#1084#1077#1089#1103#1094#1072
         DataBinding.FieldName = 'is4MonthAdd'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Width = 55
       end
       object StartDateUnPlanned: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1076#1083#1103' '#1042#1054
         DataBinding.FieldName = 'StartDateUnPlanned'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1076#1083#1103' '#1074#1085#1077#1087#1083#1072#1085#1086#1074#1086#1075#1086' '#1086#1090#1095#1077#1090#1072
         Options.Editing = False
         Width = 68
@@ -252,7 +241,6 @@ object MainForm: TMainForm
         Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1076#1083#1103' '#1042#1054
         DataBinding.FieldName = 'EndDateUnPlanned'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1076#1083#1103' '#1074#1085#1077#1087#1083#1072#1085#1086#1074#1086#1075#1086' '#1086#1090#1095#1077#1090#1072
         Options.Editing = False
         Width = 70
@@ -261,7 +249,6 @@ object MainForm: TMainForm
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
         DataBinding.FieldName = 'isReport1'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
         Options.Editing = False
         Width = 62
@@ -270,7 +257,6 @@ object MainForm: TMainForm
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084'"'
         DataBinding.FieldName = 'isReport2'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084'"'
         Options.Editing = False
         Width = 68
@@ -279,7 +265,6 @@ object MainForm: TMainForm
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090#1072#1090#1082#1072#1084#1080' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
         DataBinding.FieldName = 'isReport3'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090#1072#1090#1082#1072#1084#1080' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
         Options.Editing = False
         Width = 121
@@ -288,7 +273,6 @@ object MainForm: TMainForm
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
         DataBinding.FieldName = 'isReport4'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderHint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
         Options.Editing = False
         Width = 80
@@ -297,21 +281,18 @@ object MainForm: TMainForm
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1080#1089#1090#1077#1082#1096#1080#1081' '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080'"'
         DataBinding.FieldName = 'isReport6'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Width = 87
       end
       object isReport7: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1087#1083#1072#1090#1077' '#1087#1088#1080#1093#1086#1076#1086#1074'"'
         DataBinding.FieldName = 'isReport7'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Width = 88
       end
       object isQuarter: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1082#1074#1072#1088#1090#1072#1083#1100#1085#1099#1077' '#1086#1090#1095#1077#1090#1099
         DataBinding.FieldName = 'isQuarter'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
       end
@@ -319,7 +300,6 @@ object MainForm: TMainForm
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1095#1077#1090#1099' '#1079#1072' 4 '#1084#1077#1089#1103#1094#1072
         DataBinding.FieldName = 'is4Month'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 94
       end
@@ -333,7 +313,6 @@ object MainForm: TMainForm
             Kind = bkEllipsis
           end>
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 100
       end
@@ -341,7 +320,6 @@ object MainForm: TMainForm
         Caption = #1057#1090#1088#1072#1085#1072
         DataBinding.FieldName = 'CountryName'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 147
       end
@@ -350,7 +328,6 @@ object MainForm: TMainForm
         DataBinding.FieldName = 'Phone'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 109
@@ -359,7 +336,6 @@ object MainForm: TMainForm
         Caption = #1050#1086#1075#1076#1072' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1088#1086#1096#1083#1072' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
         DataBinding.FieldName = 'SendReal'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1075#1076#1072' '#1091#1089#1087#1077#1096#1085#1086' '#1087#1088#1086#1096#1083#1072' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1076#1072#1090#1072' / '#1074#1088#1077#1084#1103')'
         Options.Editing = False
         Width = 97
@@ -368,7 +344,6 @@ object MainForm: TMainForm
         Caption = #1057#1083'. '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1076#1072#1090#1072'/'#1074#1088#1077#1084#1103')'
         DataBinding.FieldName = 'SendLast'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderHint = #1076#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1083#1077#1076#1091#1102#1097#1077#1081' '#1086#1090#1087#1088#1072#1074#1082#1080
         Options.Editing = False
         Width = 85
@@ -379,7 +354,6 @@ object MainForm: TMainForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 53
       end
@@ -390,8 +364,12 @@ object MainForm: TMainForm
   end
   object ZConnection1: TZConnection
     ControlsCodePage = cCP_UTF16
-    UTF8StringsAsWideField = True
+    Catalog = ''
+    HostName = ''
     Port = 5432
+    Database = ''
+    User = ''
+    Password = ''
     Protocol = 'postgresql-9'
     Left = 136
     Top = 136

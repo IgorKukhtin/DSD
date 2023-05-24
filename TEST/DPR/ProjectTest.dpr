@@ -1433,7 +1433,9 @@ uses
   TransportKind in '..\..\Forms\Guides\TransportKind.pas' {TransportKindForm: TParentForm},
   AreaUnitEdit in '..\..\Forms\Guides\AreaUnitEdit.pas' {AreaUnitEditForm: TParentForm},
   AreaUnit in '..\..\Forms\Guides\AreaUnit.pas' {AreaUnitForm: TParentForm},
-  PartionModel in '..\..\Forms\Guides\PartionModel.pas' {PartionModelForm: TParentForm};
+  PartionModel in '..\..\Forms\Guides\PartionModel.pas' {PartionModelForm: TParentForm},
+  Report_Remains_Partion in '..\..\Forms\Report\Report_Remains_Partion.pas' {Report_Remains_PartionForm: TParentForm},
+  Report_Remains_PartionDialog in '..\..\Forms\Report\Report_Remains_PartionDialog.pas' {Report_Remains_PartionDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
