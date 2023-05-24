@@ -303,6 +303,21 @@ inherited PartionGoodsAssetChoiceForm: TPartionGoodsAssetChoiceForm
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionModelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionModelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionModelName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionModelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
     end
     object actShowAll: TBooleanStoredProcAction

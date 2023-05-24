@@ -3,7 +3,9 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -20,7 +22,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
     IN inAssetId               Integer   , -- Основные средства 1(для которых закупается ТМЦ)
     IN inAssetId_two           Integer   , -- Основные средства 2(для которых закупается ТМЦ)
     IN inUnitId                Integer   , -- Подразделение (для МО)
-    IN inStorageId             Integer   , -- Место хранения
+    IN inStorageId             Integer   , -- Место хранения 
+    IN inPartionModelId        Integer   , -- Модель
     IN inPartionGoodsId        Integer   , -- Партии товаров (для партии расхода если с МО)
     IN inSession               TVarChar    -- сессия пользователя
 )
@@ -51,6 +54,7 @@ BEGIN
                                           , inAssetId_two         := inAssetId_two
                                           , inUnitId              := inUnitId
                                           , inStorageId           := inStorageId
+                                          , inPartionModelId      := inPartionModelId
                                           , inPartionGoodsId      := inPartionGoodsId
                                           , inUserId              := vbUserId
                                            ) AS tmp;

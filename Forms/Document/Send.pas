@@ -189,6 +189,7 @@ type
     macInsertRecordAsset: TMultiAction;
     bbInsertRecordAsset: TdxBarButton;
     bbPartionGoodsAssetChoiceForm: TdxBarButton;
+    PartionModelName: TcxGridDBColumn;
   private
     { Private declarations }
   public
