@@ -12,7 +12,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, PartNumber TVarChar
              , OperDate TDateTime, Price TFloat
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , StorageId Integer, StorageName TVarChar
-             , UnitId Integer, UnitName TVarChar  
+             , UnitId Integer, UnitName TVarChar 
+             , BranchId Integer, BranchName TVarChar
+             , PartionModelId Integer, PartionModelName TVarChar 
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , Amount TFloat
              , isErased boolean
@@ -126,7 +128,13 @@ BEGIN
            , Object_Storage.ValueData        AS StorageName
 
            , Object_Unit.Id                  AS UnitId
-           , Object_Unit.ValueData           AS UnitName 
+           , Object_Unit.ValueData           AS UnitName
+           
+           , Object_Branch.Id                AS BranchId
+           , Object_Branch.ValueData         AS BranchName
+
+           , Object_PartionModel.Id          AS PartionModelId
+           , Object_PartionModel.ValueData   AS PartionModelName
            
            , Object_InfoMoney.Id             AS InfoMoneyId
            , Object_InfoMoney.ValueData      AS InfoMoneyName
@@ -149,11 +157,21 @@ BEGIN
                                ON ObjectLink_Unit.ObjectId = tmpContainer_Count.PartionGoodsId
                               AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                               ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                              AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
           -- место хранения
           LEFT JOIN ObjectLink AS ObjectLink_Storage
                                ON ObjectLink_Storage.ObjectId = tmpContainer_Count.PartionGoodsId
                               AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
           LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId
+          -- модель
+          LEFT JOIN ObjectLink AS ObjectLink_PartionModel
+                               ON ObjectLink_PartionModel.ObjectId = tmpContainer_Count.PartionGoodsId		        
+                              AND ObjectLink_PartionModel.DescId = zc_ObjectLink_PartionGoods_PartionModel()
+          LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = ObjectLink_PartionModel.ChildObjectId
           -- дата
           LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
                                ON ObjectDate_PartionGoods_Value.ObjectId = tmpContainer_Count.PartionGoodsId
@@ -187,4 +205,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Object_PartionGoodsAsset(inGoodsId := 0 , inUnitId := 8456, inShowAll := 'False',  inSession := '5');
+-- select * from gpSelect_Object_PartionGoodsAsset(inGoodsId := 0 , inUnitId := 13177 , inShowAll := 'False',  inSession := '5');

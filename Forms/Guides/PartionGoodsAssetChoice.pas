@@ -22,12 +22,12 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, cxImageComboBox, cxContainer, dsdGuides, cxLabel,
-  cxTextEdit, cxMaskEdit, cxButtonEdit, Vcl.ExtCtrls;
+  cxTextEdit, cxMaskEdit, cxButtonEdit, Vcl.ExtCtrls, cxCurrencyEdit;
 
 type
   TPartionGoodsAssetChoiceForm = class(TAncestorEnumForm)
     OperDate: TcxGridDBColumn;
-    lPrice: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
@@ -47,6 +47,8 @@ type
     GoodsCode: TcxGridDBColumn;
     PartNumber: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
+    PartionModelName: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

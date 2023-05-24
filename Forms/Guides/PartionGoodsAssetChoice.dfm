@@ -67,6 +67,13 @@ inherited PartionGoodsAssetChoiceForm: TPartionGoodsAssetChoiceForm
             Options.Editing = False
             Width = 100
           end
+          object PartionModelName: TcxGridDBColumn
+            Caption = #1052#1086#1076#1077#1083#1100
+            DataBinding.FieldName = 'PartionModelName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
@@ -75,9 +82,12 @@ inherited PartionGoodsAssetChoiceForm: TPartionGoodsAssetChoiceForm
             Options.Editing = False
             Width = 63
           end
-          object lPrice: TcxGridDBColumn
+          object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -86,6 +96,9 @@ inherited PartionGoodsAssetChoiceForm: TPartionGoodsAssetChoiceForm
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -95,31 +108,6 @@ inherited PartionGoodsAssetChoiceForm: TPartionGoodsAssetChoiceForm
           object StorageName: TcxGridDBColumn
             Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'StorageName'
-            PropertiesClassName = 'TcxImageComboBoxProperties'
-            Properties.Alignment.Horz = taLeftJustify
-            Properties.Alignment.Vert = taVCenter
-            Properties.Images = dmMain.ImageList
-            Properties.Items = <
-              item
-                Description = #1055#1086#1076#1087#1080#1089#1072#1085
-                ImageIndex = 12
-                Value = 1
-              end
-              item
-                Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
-                ImageIndex = 11
-                Value = 2
-              end
-              item
-                Description = #1047#1072#1074#1077#1088#1096#1077#1085
-                ImageIndex = 13
-                Value = 3
-              end
-              item
-                Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-                ImageIndex = 66
-                Value = 4
-              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -132,6 +120,19 @@ inherited PartionGoodsAssetChoiceForm: TPartionGoodsAssetChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 176
           end
+          object BranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            Width = 80
+          end
+          object InfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1057#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -140,14 +141,6 @@ inherited PartionGoodsAssetChoiceForm: TPartionGoodsAssetChoiceForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 30
-          end
-          object InfoMoneyName: TcxGridDBColumn
-            Caption = #1059#1055' '#1057#1090#1072#1090#1100#1103
-            DataBinding.FieldName = 'InfoMoneyName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
           end
         end
       end
