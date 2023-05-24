@@ -31,6 +31,20 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Complete()
     THEN
+    
+      IF EXISTS(SELECT Movement_ReturnIn.Id
+                FROM Movement AS Movement_ReturnIn
+
+                     INNER JOIN MovementFloat AS MovementFloat_MovementId
+                                              ON MovementFloat_MovementId.MovementId = Movement_ReturnIn.Id
+                                             AND MovementFloat_MovementId.ValueData = inMovementId
+                                             AND MovementFloat_MovementId.DescId = zc_MovementFloat_MovementId()
+
+                WHERE Movement_ReturnIn.StatusId = zc_Enum_Status_Complete()
+                  AND Movement_ReturnIn.DescId = zc_Movement_ReturnIn())
+      THEN
+        RAISE EXCEPTION 'Ошибка. По чеку сформирован возврат. Удаление запрещено.';     
+      END IF;            
 
       IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
                 WHERE Object_RoleUser.ID = inSession::Integer AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy()) -- Для роли "Кассир аптеки"

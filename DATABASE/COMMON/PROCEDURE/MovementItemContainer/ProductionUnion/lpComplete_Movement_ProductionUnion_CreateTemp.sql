@@ -18,7 +18,7 @@ BEGIN
                                   , BusinessId_To Integer
                                   , UnitId_Item Integer, StorageId_Item Integer
                                   , isPartionCount Boolean, isPartionSumm Boolean
-                                  , PartionGoodsId Integer, PartionGoodsId_child Integer
+                                  , PartionGoodsId Integer, PartionGoodsId_child Integer, PartNumber TVarChar, PartionModelName TVarChar, isAsset Boolean
                                    ) ON COMMIT DROP;
      -- таблица - суммовые Master(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItemSumm_pr (MovementItemId Integer, AccountGroupId_From Integer, AccountDirectionId_From Integer, AccountId_From Integer, ContainerId_From Integer, MIContainerId_To BigInt, ContainerId_To Integer, AccountId_To Integer, InfoMoneyId_Detail_To Integer, OperSumm TFloat) ON COMMIT DROP;
@@ -29,9 +29,11 @@ BEGIN
                                     , OperCount TFloat, OperCountCount TFloat
                                     , InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                     , BusinessId_From Integer
-                                    , UnitId_Item Integer, PartionGoodsId_Item Integer
+                                    , UnitId_Item Integer, PartionGoodsId_container Integer
                                     , isPartionCount Boolean, isPartionSumm Boolean
-                                    , PartionGoodsId Integer) ON COMMIT DROP;
+                                    , PartionGoodsId Integer
+                                    , isAsset_master Boolean
+                                     ) ON COMMIT DROP;
      -- таблица - суммовые Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItemSummChild (MovementItemId_Parent Integer, MovementItemId Integer, ContainerId_From Integer, AccountId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat) ON COMMIT DROP;
 

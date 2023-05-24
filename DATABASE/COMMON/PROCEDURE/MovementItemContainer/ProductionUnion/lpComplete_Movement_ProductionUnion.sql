@@ -253,7 +253,9 @@ BEGIN
                          , BusinessId_To
                          , UnitId_Item, StorageId_Item
                          , isPartionCount, isPartionSumm
-                         , PartionGoodsId)
+                         , PartionGoodsId
+                         , PartNumber, PartionModelName, isAsset
+                          )
         SELECT _tmp.MovementItemId
 
              , 0 AS MIContainerId_To
@@ -278,11 +280,19 @@ BEGIN
                -- значение Бизнес !!!выбирается!!! из Товара или Подраделения/Сотрудника
              , CASE WHEN _tmp.BusinessId_To = 0 THEN vbBusinessId_To ELSE _tmp.BusinessId_To END AS BusinessId_To
 
-             , 0 AS UnitId_Item, 0 AS StorageId_Item
+             , 0 AS UnitId_Item
+             , CASE WHEN _tmp.isAsset = TRUE THEN _tmp.StorageId ELSE 0 END AS StorageId_Item
+             
              , _tmp.isPartionCount
              , _tmp.isPartionSumm
+
                -- Партии товара, сформируем позже
              , 0 AS PartionGoodsId
+
+             , _tmp.PartNumber
+             , _tmp.PartionModelName
+             , _tmp.isAsset
+
         FROM
              (SELECT MovementItem.Id AS MovementItemId
 
@@ -317,6 +327,7 @@ BEGIN
                    , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_complete
 
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
+                   , COALESCE (MILinkObject_Storage.ObjectId, 0) AS StorageId
                    , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                    , CASE WHEN vbIsPeresort = TRUE THEN COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) ELSE Movement.OperDate END AS PartionGoodsDate
 
@@ -338,10 +349,14 @@ BEGIN
                   , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
 
                     -- Бизнес из Товара
-                  , COALESCE (ObjectLink_Goods_Business.ChildObjectId, 0) AS BusinessId_To
+                  , COALESCE (ObjectLink_Goods_Business.ChildObjectId, 0)  AS BusinessId_To
 
-                  , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)     AS isPartionCount
-                  , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)      AS isPartionSumm
+                  , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE) AS isPartionCount
+                  , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)  AS isPartionSumm
+
+                  , MIString_PartNumber.ValueData                          AS PartNumber
+                  , MIString_Model.ValueData                               AS PartionModelName
+                  , COALESCE (ObjectBoolean_Asset.ValueData, FALSE)        AS isAsset
 
               FROM Movement
                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE AND MovementItem.Amount <> 0
@@ -356,6 +371,9 @@ BEGIN
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                     ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
+                                                    ON MILinkObject_Storage.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
 
                    LEFT JOIN MovementItemFloat AS MIFloat_Count
                                                ON MIFloat_Count.MovementItemId = MovementItem.Id
@@ -370,6 +388,16 @@ BEGIN
                    LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                               ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                              AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+
+                   LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                               AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
+                   LEFT JOIN MovementItemString AS MIString_Model
+                                                ON MIString_Model.MovementItemId = MovementItem.Id
+                                               AND MIString_Model.DescId         = zc_MIString_Model()
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset
+                                           ON ObjectBoolean_Asset.ObjectId = MovementItem.ObjectId
+                                          AND ObjectBoolean_Asset.DescId   = zc_ObjectBoolean_Goods_Asset()
 
                    LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
                                            ON ObjectBoolean_PartionCount.ObjectId = MovementItem.ObjectId
@@ -419,9 +447,11 @@ BEGIN
                               , OperCount, OperCountCount
                               , InfoMoneyDestinationId, InfoMoneyId
                               , BusinessId_From
-                              , UnitId_Item, PartionGoodsId_Item
+                              , UnitId_Item, PartionGoodsId_container
                               , isPartionCount, isPartionSumm
-                              , PartionGoodsId)
+                              , PartionGoodsId
+                              , isAsset_master
+                               )
         WITH tmpMI AS
              (SELECT MovementItem.ParentId AS MovementItemId_Parent
                    , MovementItem.Id AS MovementItemId
@@ -468,6 +498,8 @@ BEGIN
 
                    , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)     AS isPartionCount
                    , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)      AS isPartionSumm
+                   
+                   , COALESCE (_tmpItem_pr.isAsset, FALSE) AS isAsset_master
 
               -- FROM Movement
               --     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE
@@ -525,6 +557,9 @@ BEGIN
                                                        , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                        , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                         )
+                     -- или новая схема - ОС
+                     OR tmpMI.isAsset_master = TRUE
+
                   GROUP BY tmpMI.GoodsId
                  )
    , tmpContainer_all AS (SELECT tmpMI.GoodsId
@@ -600,11 +635,14 @@ BEGIN
 
              , 0 AS UnitId_Item
                -- !!!подбор партий!!!
-             , COALESCE (tmpContainer.PartionGoodsId, 0) AS PartionGoodsId_Item
+             , COALESCE (tmpContainer.PartionGoodsId, 0) AS PartionGoodsId_container
              , _tmp.isPartionCount
              , _tmp.isPartionSumm
                -- Партии товара, сформируем позже
              , 0 AS PartionGoodsId
+               --
+             , _tmp.isAsset_master
+
         FROM tmpMI AS _tmp
              LEFT JOIN tmpContainer_res AS tmpContainer ON tmpContainer.MovementItemId = _tmp.MovementItemId
        ;
@@ -646,7 +684,9 @@ BEGIN
                                                     WHEN _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                       OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                       OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
-                                                         THEN _tmpItemChild.PartionGoodsId_Item
+                                                      OR _tmpItemChild.isAsset_master = TRUE                                         -- или новая схема - ОС
+                                                         THEN _tmpItemChild.PartionGoodsId_container
+
                                                     ELSE lpInsertFind_Object_PartionGoods ('')
                                                END
      WHERE _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
@@ -656,6 +696,8 @@ BEGIN
         OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
         OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье
         OR _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+        -- или новая схема - ОС
+        OR _tmpItemChild.isAsset_master = TRUE
      ;
 
 
@@ -664,13 +706,36 @@ BEGIN
      vbWhereObjectId_Analyzer_To:= CASE WHEN vbUnitId_To <> 0 THEN vbUnitId_To WHEN vbMemberId_To <> 0 THEN vbMemberId_To END;
 
 
+     -- формируются Партии товара для Master(ПРИХОД)-элементы, новая схема - ОС
+     UPDATE _tmpItem_pr SET PartionGoodsId = lpInsertFind_Object_PartionGoods (inUnitId_Partion := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = tmpItemChild.PartionGoodsId AND OL.DescId  = zc_ObjectLink_PartionGoods_Unit())
+                                                                             , inGoodsId        := _tmpItem_pr.GoodsId
+                                                                             , inStorageId      := _tmpItem_pr.StorageId_Item
+                                                                             , inPartionModelId := lpInsertFind_Object_PartionModel (_tmpItem_pr.PartionModelName, inUserId)
+                                                                             , inInvNumber      := _tmpItem_pr.PartionGoods
+                                                                             , inPartNumber      := _tmpItem_pr.PartNumber
+                                                                             , inOperDate       := (SELECT OD.ValueData  FROM ObjectDate  AS OD  WHERE OD.ObjectId  = tmpItemChild.PartionGoodsId AND OD.DescId  = zc_ObjectDate_PartionGoods_Value())
+                                                                             , inPrice          := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = tmpItemChild.PartionGoodsId AND OFl.DescId = zc_ObjectFloat_PartionGoods_Price())
+                                                                              )
+     FROM (SELECT _tmpItemChild.MovementItemId_Parent, MAX (_tmpItemChild.PartionGoodsId) AS PartionGoodsId
+           FROM _tmpItemChild
+           -- если новая схема - ОС
+           WHERE _tmpItemChild.isAsset_master = TRUE
+           GROUP BY _tmpItemChild.MovementItemId_Parent
+           HAVING COUNT(*) = 1
+          ) AS tmpItemChild
+     WHERE _tmpItem_pr.MovementItemId = tmpItemChild.MovementItemId_Parent
+    ;
+
      -- формируются Партии товара для Master(ПРИХОД)-элементы, ЕСЛИ надо ...
      UPDATE _tmpItem_pr SET PartionGoodsId_child = tmpItemChild.PartionGoodsId
      FROM (SELECT _tmpItemChild.MovementItemId_Parent, MAX (_tmpItemChild.PartionGoodsId) AS PartionGoodsId
            FROM _tmpItemChild
            WHERE _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
              AND _tmpItemChild.PartionGoodsId > 0
-           GROUP BY _tmpItemChild.MovementItemId_Parent HAVING COUNT(*) = 1
+             -- НЕ новая схема - ОС
+             AND _tmpItemChild.isAsset_master = FALSE
+           GROUP BY _tmpItemChild.MovementItemId_Parent
+           HAVING COUNT(*) = 1
           ) AS tmpItemChild
      WHERE _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
        AND _tmpItem_pr.MovementItemId = tmpItemChild.MovementItemId_Parent
@@ -679,7 +744,11 @@ BEGIN
   --RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmpItem_pr where _tmpItem_pr.PartionGoodsId_child > 0);
 
      -- формируются Партии товара для Master(ПРИХОД)-элементы, ЕСЛИ надо ...
-     UPDATE _tmpItem_pr SET PartionGoodsId = CASE -- Спецодежда
+     UPDATE _tmpItem_pr SET PartionGoodsId = CASE -- новая схема - ОС
+                                                  WHEN _tmpItem_pr.isAsset = TRUE
+                                                       -- оставляем какую нашли
+                                                       THEN _tmpItem_pr.PartionGoodsId
+                                                  -- Спецодежда
                                                   WHEN _tmpItem_pr.InfoMoneyId = zc_Enum_InfoMoney_20202() AND _tmpItem_pr.PartionGoodsId_child > 0
                                                        AND 0 < (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem_pr.PartionGoodsId_child AND OL.DescId  = zc_ObjectLink_PartionGoods_Unit())
                                                        THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem_pr.PartionGoodsId_child AND OL.DescId  = zc_ObjectLink_PartionGoods_Unit())
@@ -1412,3 +1481,4 @@ $BODY$
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 143712, inSession:= '2')
 -- SELECT * FROM lpComplete_Movement_ProductionUnion (inMovementId:= 143712, inIsHistoryCost:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 143712, inSession:= '2')
+-- select * from gpUpdate_Status_ProductionUnion(inMovementId := 25281711 , inStatusCode := 2 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');

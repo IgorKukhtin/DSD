@@ -31,6 +31,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Statu
              , ActNumber TVarChar
              , AmountAct TFloat
              , isClosed boolean
+             , UpdateUserName TVarChar
+             , UpdateDate TDateTime
               )
 AS
 $BODY$
@@ -206,6 +208,25 @@ BEGIN
 
      ANALYSE tmpMIC;
      
+     CREATE TEMP TABLE tmpAccountSalesDEProtocol ON COMMIT DROP AS 
+     SELECT MovementItem.MovementItemContainerId
+          , ObjectProtocol.UserId   
+          , ObjectProtocol.OperDate
+          , ROW_NUMBER() OVER (Partition BY MovementItem.MovementItemContainerId ORDER BY ObjectProtocol.OperDate DESC) AS ord
+     FROM tmpMovement AS Movement_Check
+
+          INNER JOIN tmpMIC AS MovementItem
+                            ON MovementItem.MovementId = Movement_Check.Id
+                          -- AND MovementItem.Amount > 0 
+
+          INNER JOIN Object AS Object_AccountSalesDE ON Object_AccountSalesDE.DescId = zc_Object_AccountSalesDE()
+                                                    AND Object_AccountSalesDE.ObjectCode = MovementItem.MovementItemContainerId
+
+          INNER JOIN ObjectProtocol ON ObjectProtocol.ObjectId = Object_AccountSalesDE.Id;
+       
+     ANALYSE tmpAccountSalesDEProtocol;
+     
+     
      --raise notice   'Value 5: %', CLOCK_TIMESTAMP();
 
      -- Результат
@@ -248,6 +269,9 @@ BEGIN
            , COALESCE(Object_AccountSalesDE.ValueData, MovementString_ActNumber.ValueData)         AS ActNumber
            , COALESCE (AccountSalesDE_Amount.ValueData, MovementFloat_AmountAct.ValueData)         AS AmountAct
            , COALESCE (MovementBoolean_Closed.ValueData, False) AS isClosed
+           
+           , Object_UpdateUser.ValueData                AS UpdateUserName
+           , tmpAccountSalesDEProtocol.OperDate         AS UpdateDate
 
         FROM tmpMovement AS Movement_Check
 
@@ -316,7 +340,11 @@ BEGIN
                                             
              LEFT JOIN ObjectFloat AS AccountSalesDE_Amount
                                    ON AccountSalesDE_Amount.ObjectId = Object_AccountSalesDE.Id
-                                  AND AccountSalesDE_Amount.DescId = zc_ObjectFloat_AccountSalesDE_Amount()                                   
+                                  AND AccountSalesDE_Amount.DescId = zc_ObjectFloat_AccountSalesDE_Amount()  
+                                  
+             LEFT JOIN tmpAccountSalesDEProtocol ON tmpAccountSalesDEProtocol.MovementItemContainerId = MovementItem.MovementItemContainerId
+                                                AND tmpAccountSalesDEProtocol.ord = 1
+             LEFT JOIN Object AS Object_UpdateUser ON Object_UpdateUser.Id = tmpAccountSalesDEProtocol.UserId
                                             
              ;
 
@@ -332,4 +360,5 @@ $BODY$
  29.10.19                                                       *
 */
 
-select * from gpReport_MovementCheck_DiscountExternal(inStartDate := ('10.03.2023')::TDateTime , inEndDate := ('19.03.2023')::TDateTime , inUnitId := 0 , inDiscountExternalId := 0 ,  inSession := '3');
+
+select * from gpReport_MovementCheck_DiscountExternal(inStartDate := ('01.03.2023')::TDateTime , inEndDate := ('31.03.2023')::TDateTime , inUnitId := 1529734 , inDiscountExternalId := 0 ,  inSession := '3');

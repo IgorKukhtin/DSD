@@ -303,6 +303,22 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
             HeaderAlignmentVert = vaCenter
             Width = 82
           end
+          object UpdateUserName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateUserName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 99
+          end
+          object UpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
+          end
         end
       end
     end
@@ -640,6 +656,36 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
         end>
       Caption = 'actUpdate_Closed'
     end
+    object MovementProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -756,6 +802,10 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end>
     end
     object bbOpenDocument: TdxBarButton
@@ -783,6 +833,10 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
     end
     object bbUpdate_Closed: TdxBarButton
       Action = mactUpdate_Closed
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = MovementProtocolOpenForm
       Category = 0
     end
   end
@@ -944,7 +998,7 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 360
+    Left = 320
     Top = 24
   end
   object spUpdateDateCompensation: TdsdStoredProc

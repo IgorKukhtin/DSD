@@ -136,6 +136,8 @@ BEGIN
          WHERE MovementItem.MovementId = vbMovementId 
            AND MovementItem.DescId = zc_MI_Master()
            AND MovementItem.isErased = FALSE;
+           
+      ANALYSE tmpMIMaster;
 
       -- Ищем cтроки чайлда (ключ - ид документа, товар)
       INSERT INTO tmpMIChild (UnitId, GoodsMainId,  GoodsId, Amount, Summa, MIChild_Id)
@@ -160,6 +162,9 @@ BEGIN
       WHERE MovementItem.MovementId = vbMovementId 
         AND MovementItem.DescId = zc_MI_Child()
         AND MovementItem.isErased = FALSE;
+        
+      ANALYSE tmpMIChild;
+    
 ------------------------------------------------
        -- определяем подразделения для распределения
        INSERT INTO tmpUnit_list (UnitId)
@@ -178,6 +183,8 @@ BEGIN
                                 */
                            WHERE ObjectBoolean_Over.DescId = zc_ObjectBoolean_Unit_Over()
                              AND ObjectBoolean_Over.ValueData = TRUE;
+                             
+       ANALYSE tmpUnit_list;
                            
        -- Remains
        INSERT INTO tmpRemains_1 (GoodsId, UnitId, RemainsStart, Amount_In, ContainerId)
@@ -230,6 +237,8 @@ BEGIN
                                         AND tmp_In.UnitId  = tmpContainer.UnitId
                    GROUP BY tmpContainer.ContainerId, tmpContainer.GoodsId, tmpContainer.UnitId
                    ;
+                   
+         ANALYSE tmpRemains_1;
 
          -- автоперемещения приход / расход
          INSERT INTO tmpSend  (GoodsId, UnitId, Amount) 
@@ -276,6 +285,8 @@ BEGIN
                                , MovementLinkObject_Unit.ObjectId 
                         HAVING SUM (MI_Send.Amount) <> 0 
                        ;
+                       
+       ANALYSE tmpSend;
 
        -- остатки
        INSERT INTO tmpRemains (GoodsId, UnitId, RemainsStart, RemainsStart_save, Amount_Reserve, Amount_In, MinExpirationDate)                              
@@ -375,6 +386,8 @@ BEGIN
                          WHERE tmpSend.UnitId <> inUnitId
                            AND tmp.GoodsId IS NULL
                         ;
+                        
+       ANALYSE tmpRemains;
 
        -- MCS
        IF (inisMCS = FALSE AND inisInMCS = FALSE) OR (inisMCS = TRUE AND inisInMCS = FALSE)
@@ -402,6 +415,8 @@ BEGIN
                    WHERE tmp.MCSValue > 0;
        END IF;
        
+       ANALYSE tmpMCS;
+       
        -- tmpPrice
        INSERT INTO tmpPrice (PriceId, UnitId, GoodsId, MCSValue, MCSNotRecalc)   
                     SELECT ObjectLink_Price_Unit.ObjectId           AS PriceId
@@ -422,6 +437,8 @@ BEGIN
                        LEFT JOIN ObjectBoolean AS MCS_NotRecalc
                                                ON MCS_NotRecalc.ObjectId = ObjectLink_Price_Unit.ObjectId
                                               AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc();
+                                              
+       ANALYSE tmpPrice;
 
        -- Goods_list
        INSERT INTO tmpGoods_list (GoodsMainId, GoodsId, UnitId, PriceId, MCSValue)
@@ -450,6 +467,8 @@ BEGIN
                   LEFT JOIN  ObjectLink AS ObjectLink_Main 
                                         ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                        AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain();
+                                       
+       ANALYSE tmpGoods_list;
 
 
        -- Goods_list - PriceId
@@ -596,6 +615,8 @@ BEGIN
                                          AND COALESCE (ObjectHistoryFloat_Price.ValueData, 0) < tmpOverSettings_all.MinPriceEnd
                                          AND tmpOverSettings.UnitId IS NULL
             ;
+            
+      ANALYSE tmpData;
        
 
      -- !!!ResultTO!!!
@@ -664,6 +685,9 @@ BEGIN
               LEFT JOIN tmpData ON tmpData.GoodsId = tmpTo.GoodsId 
                                AND tmpData.UnitId  = tmpTo.UnitId
          ;
+         
+         
+     ANALYSE tmpDataTo;
 
 
 --  RAISE EXCEPTION '<%>  <%>  <%>  <%>', (select Count (*) from tmpGoods_list), (select Count (*) from tmpDataTo), (select Count (*) from tmpData where UnitId = inUnitId), (select Count (*) from tmpData where UnitId <> inUnitId);
@@ -917,6 +941,6 @@ $BODY$
 
 -- тест
 /*
-SELECT * FROM gpReport_RemainsOverGoods_Test(inUnitId := 183288 , inStartDate := ('23.02.2017')::TDateTime , inPeriod := 30 , inDay := 30 , inAssortment := 1 , inisMCS := 'False' , inisInMCS := 'True' , inisRecal := 'False' , inisAssortment := 'False' , inIsReserve:='False' ,  inSession := '3')
+SELECT * FROM gpReport_RemainsOverGoods_Test(inUnitId := 183288 , inStartDate := ('23.02.2023')::TDateTime , inPeriod := 30 , inDay := 30 , inAssortment := 1 , inisMCS := 'False' , inisInMCS := 'True' , inisRecal := 'False' , inisAssortment := 'False' , inIsReserve:='False' ,  inSession := '3')
 FETCH ALL "<unnamed portal 1>";
 */

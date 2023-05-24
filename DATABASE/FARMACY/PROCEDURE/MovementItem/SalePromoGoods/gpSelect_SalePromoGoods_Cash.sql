@@ -63,7 +63,7 @@ BEGIN
                                                           AND MovementDate_EndPromo.ValueData  >= CURRENT_DATE
 
                               WHERE Movement.DescId = zc_Movement_SalePromoGoods()
-                                AND (Movement.StatusId = zc_Enum_Status_Complete() OR vbUserId = 3)
+                                AND Movement.StatusId = zc_Enum_Status_Complete()
                               ),
            tmpMIUnitAll AS (SELECT Movement.Id                      AS Id
                                  , MI_SalePromoGoods.ObjectId       AS UnitId
@@ -99,6 +99,8 @@ BEGIN
                                 LEFT JOIN MovementFloat AS MovementFloat_AmountCheck
                                                         ON MovementFloat_AmountCheck.MovementId = Movement.Id
                                                        AND MovementFloat_AmountCheck.DescId = zc_MovementFloat_AmountCheck()
+                                                       
+                           WHERE COALESCE (tmpMIUnit.Id, 0) <> 0 OR COALESCE (tmpMIUnitGroup.Id, 0) = 0
                            ),
            tmpMI AS (SELECT Movement.EndPromo                             AS EndPromo
                           , Goods_Retail.Id                               AS GoodsId
@@ -174,4 +176,4 @@ $BODY$
 --реяр
 --
 
-SELECT * FROM gpSelect_SalePromoGoods_Cash (inSession:= '3')
+SELECT * FROM gpSelect_SalePromoGoods_Cash (inSession:= '3997056')

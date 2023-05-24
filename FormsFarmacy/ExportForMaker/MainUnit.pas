@@ -27,7 +27,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxDateUtils;
+  dxSkinXmas2008Blue, cxDateUtils, cxNavigator, dxDateRanges;
 
 type
   TMainForm = class(TForm)
@@ -734,6 +734,7 @@ begin
     '  PriceWithVAT AS "Цена прихода с НДС", '#13#10 +
     '  TotalAmount AS "Итого кол-во", '#13#10 +
     '  SummaWithVAT AS "Сумма, в ценах прихода с НДС", '#13#10 +
+    '  PriceSale AS "Цена реализации с НДС", '#13#10 +
     '  PriceSIP AS "Цена СИП", '#13#10 +
     '  SummSIP AS "Сумма СИП", '#13#10 +
     '  StatusName AS "Статус", '#13#10 +

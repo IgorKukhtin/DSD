@@ -5805,18 +5805,18 @@ begin
   end;;
 
   // Пункт розвантаження
-  if HeaderDataSet.FieldByName('KATOTTG_To').asString <> '' then
+  if HeaderDataSet.FieldByName('KATOTTG_Unloading').asString <> '' then
   begin
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.ID.SchemeAgencyID := 'КАТОТТГ';
-    UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.ID.NodeValue := HeaderDataSet.FieldByName('KATOTTG_To').asString;
+    UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.ID.NodeValue := HeaderDataSet.FieldByName('KATOTTG_Unloading').asString;
   end;
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString; // 'ТОВ "Вантажоодержувач_v3" (прод)';
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.TypeCode := 10;
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.Description := HeaderDataSet.FieldByName('PartnerAddress_To').asString; // 'Україна, 12351, Сумська обл,  Сумський р-н, м. Суми, вул. Київська, 1';
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.Description := HeaderDataSet.FieldByName('PartnerAddress_Unloading').asString; // 'Україна, 12351, Сумська обл,  Сумський р-н, м. Суми, вул. Київська, 1';
   //UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.PhysicalGeographicalCoordinate.LatitudeMeasure := '50.4489298';
   //UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.PhysicalGeographicalCoordinate.LatitudeMeasure := '30.5194162';
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.PhysicalGeographicalCoordinate.SystemID.SchemeAgencyID := 'GLN';
-  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.PhysicalGeographicalCoordinate.SystemID.NodeValue := HeaderDataSet.FieldByName('GLN_to').asString; // 9864232596127;
+  UAECMR.ECMR.SpecifiedSupplyChainConsignment.ConsigneeReceiptLogisticsLocation.PhysicalGeographicalCoordinate.SystemID.NodeValue := HeaderDataSet.FieldByName('GLN_Unloading').asString; // 9864232596127;
 
   // Розвантажувальні роботи
   UAECMR.ECMR.SpecifiedSupplyChainConsignment.DeliveryTransportEvent.Description := 'Розвантаження';

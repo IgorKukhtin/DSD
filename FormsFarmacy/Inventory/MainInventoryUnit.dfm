@@ -179,7 +179,7 @@ inherited MainInventoryForm: TMainInventoryForm
           TabOrder = 1
           object edBarCode: TcxTextEdit
             Left = 14
-            Top = 39
+            Top = 38
             TabOrder = 1
             OnDblClick = edBarCodeDblClick
             OnKeyDown = edBarCodeKeyDown
@@ -677,8 +677,7 @@ inherited MainInventoryForm: TMainInventoryForm
     object actGoodsInventory: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      CancelAction = actSetFocusededBarCode
-      AfterAction = actSetFocusedAmount
+      AfterAction = actSetFocusededBarCode
       PostDataSetBeforeExecute = False
       Caption = #1053#1072#1081#1090#1080' '#1090#1086#1074#1072#1088' '#1087#1086' '#1085#1072#1079#1074#1072#1085#1080#1102
       Hint = #1053#1072#1081#1090#1080' '#1090#1086#1074#1072#1088' '#1087#1086' '#1085#1072#1079#1074#1072#1085#1080#1102

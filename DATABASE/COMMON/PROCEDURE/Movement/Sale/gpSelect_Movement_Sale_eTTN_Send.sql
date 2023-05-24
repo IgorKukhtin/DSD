@@ -332,7 +332,7 @@ BEGIN
                 ) 
                ELSE 
                  OH_Juridical_Basis.JuridicalAddress
-             END   :: TVarChar            AS PartnerAddress_To
+             END   :: TVarChar            AS PartnerAddress_Unloading
              
            , CASE WHEN COALESCE (View_Partner_Address.PartnerId, 0) <> 0 
                   THEN TRIM (ObjectString_PostalCode.ValueData) 
@@ -368,8 +368,11 @@ BEGIN
                                                    || View_Partner_Address.ProvinceName || ' ð-í '  ELSE '' END)
                   ELSE ParseAddress_To.CountrySubDivisionName END :: TVarChar                 AS CountrySubDivisionName_To  
              
-           , COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_GLNCode_To.ValueData, ObjectString_Juridical_GLNCode_To.ValueData) AS GLN_To
-           , COALESCE(ObjectString_Unit_KATOTTG_To.ValueData, '')  AS KATOTTG_To
+           , COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_GLNCode_To.ValueData, ObjectString_Juridical_GLNCode_To.ValueData) AS GLN_Unloading
+
+           , COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_Juridical_GLNCode_To.ValueData, ObjectString_GLNCode_To.ValueData) AS GLN_To
+
+           , COALESCE(ObjectString_Unit_KATOTTG_To.ValueData, '')  AS KATOTTG_Unloading
              
 
            , OH_JuridicalDetails_From.FullName AS JuridicalName_From
