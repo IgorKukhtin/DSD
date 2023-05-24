@@ -2391,6 +2391,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Remains_PartionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Remains_PartionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Remains_PartionDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Remains_PartionDialogForm');
+  exit;
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnIn_RealExForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnIn_RealExForm');

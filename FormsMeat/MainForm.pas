@@ -1434,6 +1434,8 @@ type
     miAreaUnit: TMenuItem;
     actPartionModel: TdsdOpenForm;
     miPartionModel: TMenuItem;
+    actReport_Remains_Partion: TdsdOpenForm;
+    miReport_Remains_Partion: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
