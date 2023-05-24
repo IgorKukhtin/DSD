@@ -99,26 +99,57 @@ BEGIN
                                        );
   
    -- сохранили свойство <Партия товара>
-   PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
-   -- сохранили свойство <Партия товара>
-   PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
+   IF inPartionGoodsDate NOT IN (zc_DateStart(), zc_DateEnd()) OR EXISTS (SELECT 1 FROM MovementItemDate AS MID WHERE MID.MovementItemId = ioId AND MID.DescId = zc_MIDate_PartionGoods())
+   THEN
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
+   END IF;
+   
+
+   -- сохранили свойство <Партия товара/Инвентарный номер>
+   IF inPartionGoods <> '' OR EXISTS (SELECT 1 FROM MovementItemString AS MIS WHERE MIS.MovementItemId = ioId AND MIS.DescId = zc_MIString_PartionGoods())
+   THEN
+       PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
+   END IF;
+   
 
    -- сохранили свойство <№ по тех паспорту>
-   PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
-   -- сохранили свойство <модель>
-   PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Model(), ioId, inModel);
+   IF inPartNumber <> '' OR EXISTS (SELECT 1 FROM MovementItemString AS MIS WHERE MIS.MovementItemId = ioId AND MIS.DescId = zc_MIString_PartNumber())
+   THEN
+       PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
+   END IF;
+   
+   -- сохранили свойство <Модель (Партия учета)>
+   IF inModel <> '' OR EXISTS (SELECT 1 FROM MovementItemString AS MIS WHERE MIS.MovementItemId = ioId AND MIS.DescId = zc_MIString_Model())
+   THEN
+       PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Model(), ioId, inModel);
+   END IF;
    
    -- сохранили связь с <Виды товаров>
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+   IF inGoodsKindId > 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_GoodsKind())
+   THEN
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+   END IF;
 
    -- сохранили связь с <Виды товаров ГП>
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
+   IF inGoodsKindCompleteId > 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_GoodsKindComplete())
+   THEN
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
+   END IF;
+   
 
    -- сохранили связь с <Место хранения> - для партии прихода на МО
-   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
+   IF inStorageId > 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_Storage())
+   THEN
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
+   END IF;
+   
    
    -- сохранили свойство <Количество батонов>
-   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Count(), ioId, inCount_onCount);
+   IF inCount_onCount <> 0 OR EXISTS (SELECT 1 FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_Count())
+   THEN
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), ioId, inCount_onCount);
+   END IF;
+   
      
    -- !!!только при создании!!!
    IF vbIsInsert = TRUE AND inUserId IN (zc_Enum_Process_Auto_PartionDate(), zc_Enum_Process_Auto_PartionClose())
