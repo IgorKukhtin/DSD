@@ -2395,7 +2395,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Remains_PartionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Remains_PartionDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Remains_PartionDialogForm');
-  exit;
+ // exit;
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturnIn_RealExForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturnIn_RealExForm');
@@ -2606,11 +2606,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SupplyBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SupplyBalanceDialogForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsDialogForm');
 

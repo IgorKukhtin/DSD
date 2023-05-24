@@ -640,6 +640,10 @@ BEGIN
                                      OR COALESCE (ObjectLink_GoodsByGoodsKind_GoodsMain.ChildObjectId, 0) <> 0
                                   )
 
+       , tmpStorage AS (SELECT spSelect.*
+                        FROM gpSelect_Object_Storage (inSession) AS spSelect
+                        )
+
    -- Результат
    SELECT View_Account.AccountGroupName, View_Account.AccountDirectionName
         , View_Account.AccountId, View_Account.AccountCode, View_Account.AccountName, View_Account.AccountName_all
@@ -927,6 +931,7 @@ BEGIN
         , CAST (row_number() OVER () AS INTEGER)        AS LineNum
 
         , CAST( CASE WHEN COALESCE(Object_Car.ValueData,'') <> '' THEN Object_Car.ValueData ELSE COALESCE(Object_Location.ValueData,'') END  AS TVarChar)  AS LocationName_inf
+
       FROM tmpMIContainer_group
 
         LEFT JOIN ContainerLinkObject AS CLO_InfoMoney

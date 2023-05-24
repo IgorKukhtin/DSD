@@ -244,6 +244,8 @@ type
     CountReturnIn_byCount: TcxGridDBColumn;
     PartNumber_Partion: TcxGridDBColumn;
     Model_Partion: TcxGridDBColumn;
+    actPrint_GoodsPartion: TdsdPrintAction;
+    bbPrint_GoodsPartion: TdxBarButton;
   private
   public
   end;
