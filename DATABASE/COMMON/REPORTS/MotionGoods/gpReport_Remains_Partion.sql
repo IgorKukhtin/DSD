@@ -123,8 +123,8 @@ BEGIN
                                                   AND ObjectString_PartNumber.DescId = zc_ObjectString_PartionGoods_PartNumber()
 
                             LEFT JOIN ObjectFloat AS ObjectFloat_Price
-                                             ON ObjectFloat_Price.ObjectId = Object_PartionGoods.Id                       -- цена
-                                            AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()    
+                                                  ON ObjectFloat_Price.ObjectId = Object_PartionGoods.Id                       -- цена
+                                                 AND ObjectFloat_Price.DescId = zc_ObjectFloat_PartionGoods_Price()    
 
                             LEFT JOIN ObjectLink AS ObjectLink_Unit
                                                  ON ObjectLink_Unit.ObjectId = Object_PartionGoods.Id		        -- подразделение
