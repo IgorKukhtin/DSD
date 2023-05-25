@@ -1708,6 +1708,7 @@ inherited SendForm: TSendForm
         end
         item
           Name = 'PartionModelId'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionModelId'
           ParamType = ptInput
@@ -1718,6 +1719,23 @@ inherited SendForm: TSendForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionModelName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
