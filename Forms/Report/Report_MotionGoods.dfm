@@ -2511,11 +2511,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 26
+    Top = 0
     Width = 1344
     Height = 54
     Align = alTop
     TabOrder = 1
+    ExplicitTop = -22
     object edGoodsGroup: TcxButtonEdit
       Left = 858
       Top = 5

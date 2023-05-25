@@ -30,10 +30,13 @@ BEGIN
                                             , inHeadCount           := 0    -- !!!не ошибка, здесь не формируется!!!
                                             , inPartionGoodsDate    := inPartionGoodsDate
                                             , inPartionGoods        := inPartionGoods
+                                            , inPartNumber          := Null ::TVarChar
                                             , inGoodsKindId         := inGoodsKindId
                                             , inGoodsKindCompleteId := NULL -- !!!не ошибка, здесь не формируется!!!
                                             , inAssetId             := inAssetId
-                                            , inPartionGoodsId      := NULL -- !!!не ошибка, здесь не формируется!!!
+                                            , inPartionGoodsId      := NULL -- !!!не ошибка, здесь не формируется!!! 
+                                            , inStorageId           := NULL -- 
+                                            , inPartionModelId      := NULL -- 
                                             , inUserId              := inUserId
                                              );
 

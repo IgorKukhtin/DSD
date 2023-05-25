@@ -10,19 +10,19 @@ inherited LossForm: TLossForm
     Top = 113
     Width = 1038
     Height = 555
-    ExplicitTop = 87
+    ExplicitTop = 113
     ExplicitWidth = 1038
-    ExplicitHeight = 581
+    ExplicitHeight = 555
     ClientRectBottom = 555
     ClientRectRight = 1038
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1038
-      ExplicitHeight = 557
+      ExplicitHeight = 531
       inherited cxGrid: TcxGrid
         Width = 1038
         Height = 531
         ExplicitWidth = 1038
-        ExplicitHeight = 557
+        ExplicitHeight = 531
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -150,12 +150,12 @@ inherited LossForm: TLossForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object PartionGoodsDate: TcxGridDBColumn [7]
-            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
-            DataBinding.FieldName = 'PartionGoodsDate'
+          object PartNumber: TcxGridDBColumn [7]
+            Caption = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
+            DataBinding.FieldName = 'PartNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 100
           end
           object MeasureName: TcxGridDBColumn [8]
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -258,6 +258,44 @@ inherited LossForm: TLossForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 155
+          end
+          object PartionModelName: TcxGridDBColumn [18]
+            Caption = #1052#1086#1076#1077#1083#1100' ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'PartionModelName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPartionModelForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object PartionGoodsDate: TcxGridDBColumn [19]
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
+            DataBinding.FieldName = 'PartionGoodsDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object StorageName: TcxGridDBColumn [20]
+            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062')'
+            DataBinding.FieldName = 'StorageName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actStorageChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
           object InDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088'. '#1086#1090' '#1087#1086#1089#1090'. '
@@ -714,6 +752,60 @@ inherited LossForm: TLossForm
         end>
       isShowModal = True
     end
+    object actStorageChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'StorageForm'
+      FormName = 'TStorage_ObjectForm'
+      FormNameParam.Value = 'TStorage_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actPartionModelForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionModelForm'
+      FormName = 'TPartionModelForm'
+      FormNameParam.Value = 'TPartionModelForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionModelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionModelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -981,6 +1073,166 @@ inherited LossForm: TLossForm
         end>
       isShowModal = False
     end
+    object actPartionGoodsAssetChoiceForm: TOpenChoiceForm
+      Category = 'Asset'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      ImageIndex = 1
+      FormName = 'TPartionGoodsAssetChoiceForm'
+      FormNameParam.Value = 'TPartionGoodsAssetChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoods'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Price'
+          Value = Null
+          DataType = ftFloat
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountRemains'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionModelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionModelId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionModelName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionModelName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actInsertRecordAsset: TInsertRecord
+      Category = 'Asset'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actPartionGoodsAssetChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      ImageIndex = 0
+    end
+    object macInsertRecordAsset: TMultiAction
+      Category = 'Asset'
+      TabSheet = tsMain
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertRecordAsset
+        end
+        item
+          Action = actRefreshPrice
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      ImageIndex = 0
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1077,6 +1329,18 @@ inherited LossForm: TLossForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertRecordAsset'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartionGoodsAssetChoiceForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -1159,7 +1423,6 @@ inherited LossForm: TLossForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-      Visible = True
     end
     object bbPrint_Sale: TdxBarButton
       Action = actPrint_Sale
@@ -1180,6 +1443,14 @@ inherited LossForm: TLossForm
     end
     object bbOpenProductionForm: TdxBarButton
       Action = actOpenProductionForm
+      Category = 0
+    end
+    object bbInsertRecordAsset: TdxBarButton
+      Action = macInsertRecordAsset
+      Category = 0
+    end
+    object bbPartionGoodsAssetChoiceForm: TdxBarButton
+      Action = actPartionGoodsAssetChoiceForm
       Category = 0
     end
   end
@@ -1597,6 +1868,15 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioPartNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartNumber'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsKindId'
         Value = Null
         Component = MasterCDS
@@ -1648,6 +1928,22 @@ inherited LossForm: TLossForm
         Value = 0
         Component = MasterCDS
         ComponentItem = 'PartionGoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StorageId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionModelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionModelId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1721,6 +2017,13 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioPartNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsKindId'
         Value = Null
         Component = MasterCDS
@@ -1770,6 +2073,18 @@ inherited LossForm: TLossForm
       item
         Name = 'inPartionGoodsId'
         Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionModelId'
+        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

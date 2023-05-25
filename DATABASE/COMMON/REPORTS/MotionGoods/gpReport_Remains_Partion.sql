@@ -20,6 +20,7 @@ RETURNS TABLE  (ContainerId        Integer
               , LocationDescName   TVarChar
               , PartionGoodsId     Integer
               , InvNumber          TVarChar
+              , InvNumber_calc     TVarChar
               , OperDate           TDateTime
               , Price              TFloat
               , StorageName        TVarChar
@@ -98,6 +99,7 @@ BEGIN
 
        , tmpPartion AS (SELECT Object_PartionGoods.Id          AS Id
                              , Object_PartionGoods.ValueData   AS InvNumber
+                             , Object_PartionGoods.ObjectCode  AS Code
                              , ObjectDate_Value.ValueData      AS OperDate
                              , ObjectFloat_Price.ValueData     AS Price
                   
@@ -114,9 +116,9 @@ BEGIN
                         FROM (SELECT DISTINCT tmpContainer.PartionGoodsId FROM tmpContainer) AS tmp
                             INNER JOIN Object as Object_PartionGoods  ON Object_PartionGoods.Id = tmp.PartionGoodsId                       --партия
 
-                            LEFT JOIN ObjectDate AS objectdate_value
-                                                 ON objectdate_value.ObjectId = Object_PartionGoods.Id                    -- дата
-                                                AND objectdate_value.DescId = zc_ObjectDate_PartionGoods_Value()
+                            LEFT JOIN ObjectDate AS ObjectDate_Value
+                                                 ON ObjectDate_Value.ObjectId = Object_PartionGoods.Id                    -- дата
+                                                AND ObjectDate_Value.DescId = zc_ObjectDate_PartionGoods_Value()
 
                             LEFT JOIN ObjectString AS ObjectString_PartNumber
                                                    ON ObjectString_PartNumber.ObjectId = Object_PartionGoods.Id                    -- дата
@@ -158,7 +160,27 @@ BEGIN
              , Object_Location.ValueData   AS LocationName
              , ObjectDesc.ItemName         AS LocationDescName
              , tmpPartion.Id               AS PartionGoodsId
-             , tmpPartion.InvNumber
+             , tmpPartion.InvNumber    
+
+             , CASE WHEN tmpPartion.UnitId <> 0 AND tmpPartion.Code > 0
+                       THEN zfCalc_PartionGoodsName_Asset (inMovementId      := tmpPartion.Code                --
+                                                         , inInvNumber       := tmpPartion.InvNumber           -- Инвентарный номер
+                                                         , inOperDate        := tmpPartion.OperDate            -- Дата ввода в эксплуатацию
+                                                         , inUnitName        := tmpPartion.UnitName            -- Подразделение использования
+                                                         , inStorageName     := tmpPartion.StorageName         -- Место хранения
+                                                         , inGoodsName       := ''                             -- Основные средства или Товар
+                                                          )
+                  WHEN tmpPartion.UnitId <> 0
+                       THEN zfCalc_PartionGoodsName_InvNumber (inInvNumber       := tmpPartion.InvNumber       -- Инвентарный номер
+                                                             , inOperDate        := tmpPartion.OperDate        -- Дата перемещения
+                                                             , inPrice           := tmpPartion.Price           -- Цена
+                                                             , inUnitName_Partion:= tmpPartion.UnitName        -- Подразделение(для цены)
+                                                             , inStorageName     := tmpPartion.StorageName     -- Место хранения
+                                                             , inGoodsName       := ''                         -- Товар
+                                                              )
+                  ELSE COALESCE (tmpPartion.InvNumber, '')
+             END :: TVarChar AS InvNumber_calc
+             
              , tmpPartion.OperDate
              , tmpPartion.Price
              , tmpPartion.StorageName

@@ -3,9 +3,10 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat,TFloat, TDateTime, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(                                                                                                                           
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
@@ -14,11 +15,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Loss(
     IN inHeadCount           TFloat    , -- Количество голов
     IN inPartionGoodsDate    TDateTime , -- Дата партии/Дата перемещения
     IN inPartionGoods        TVarChar  , -- Партия товара
+ INOUT ioPartNumber          TVarChar  , -- № по тех паспорту 
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inAssetId_top         Integer   , -- Основные средства из Шапки документа
-    IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
+    IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО) 
+    IN inStorageId           Integer   , -- Место хранения 
+    IN inPartionModelId      Integer   , -- Модель
    OUT outAssetId            Integer   , -- Основные средства (для которых закупается ТМЦ)
    OUT outAssetName          TVarChar  , -- Основные средства (для которых закупается ТМЦ)
     IN inSession             TVarChar    -- сессия пользователя
@@ -42,10 +46,13 @@ BEGIN
                                             , inHeadCount           := inHeadCount
                                             , inPartionGoodsDate    := inPartionGoodsDate
                                             , inPartionGoods        := inPartionGoods
+                                            , inPartNumber          := ioPartNumber
                                             , inGoodsKindId         := inGoodsKindId
                                             , inGoodsKindCompleteId := inGoodsKindCompleteId
                                             , inAssetId             := outAssetId :: Integer
                                             , inPartionGoodsId      := inPartionGoodsId
+                                            , inStorageId           := inStorageId
+                                            , inPartionModelId      := inPartionModelId
                                             , inUserId              := vbUserId
                                              );
 
@@ -56,6 +63,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.23         *
  13.03.22         *
  10.10.14                                        * add inPartionGoodsId
  06.09.14                                        * add lpInsertUpdate_MovementItem_Loss

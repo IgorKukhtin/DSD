@@ -89,6 +89,11 @@ type
     GuidesProductionDoc: TdsdGuides;
     actOpenProductionForm: TdsdOpenForm;
     bbOpenProductionForm: TdxBarButton;
+    actPartionGoodsAssetChoiceForm: TOpenChoiceForm;
+    actInsertRecordAsset: TInsertRecord;
+    macInsertRecordAsset: TMultiAction;
+    bbInsertRecordAsset: TdxBarButton;
+    bbPartionGoodsAssetChoiceForm: TdxBarButton;
   private
     { Private declarations }
   public

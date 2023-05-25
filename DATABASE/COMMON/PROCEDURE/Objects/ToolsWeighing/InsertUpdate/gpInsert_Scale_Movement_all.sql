@@ -1066,6 +1066,7 @@ BEGIN
 
                                , MIDate_PartionGoods.ValueData                       AS PartionGoodsDate
                                , COALESCE (MIString_PartionGoods.ValueData, '')      AS PartionGoods
+                               , COALESCE (MIString_PartNumber.ValueData,'')         AS PartNumber
                                , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) AS ChangePercentAmount
                                , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
                                , COALESCE (MIFloat_CountForPrice.ValueData, 0)       AS CountForPrice
@@ -1115,7 +1116,9 @@ BEGIN
                                 LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                              ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                             AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-
+                                LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                             ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                            AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
                                 LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                             ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                            AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
@@ -1319,11 +1322,13 @@ BEGIN
                                                         , inCount               := tmp.CountPack
                                                         , inHeadCount           := tmp.HeadCount
                                                         , inPartionGoods        := tmp.PartionGoods
+                                                        , inPartNumber          := tmp.PartNumber
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inAssetId             := tmp.AssetId
                                                         , inAssetId_two         := NULL
                                                         , inUnitId              := NULL -- !!!не ошибка, здесь не формируется!!!
                                                         , inStorageId           := NULL
+                                                        , inPartionModelId      := NULL
                                                         , inPartionGoodsId      := NULL
                                                         , inUserId              := vbUserId
                                                          )
@@ -1374,7 +1379,8 @@ BEGIN
                        --
                      , tmp.AssetId
                      , tmp.PartionGoodsDate
-                     , tmp.PartionGoods
+                     , tmp.PartionGoods 
+                     , tmp.PartNumber
                      , SUM (tmp.Amount)              AS Amount
                      , SUM (tmp.AmountChangePercent) AS AmountChangePercent
                      , SUM (tmp.AmountPartner)       AS AmountPartner
@@ -1398,6 +1404,7 @@ BEGIN
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MILinkObject_Box.ObjectId, 0)        END AS BoxId
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE MIDate_PartionGoods.ValueData                  END AS PartionGoodsDate
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MIString_PartionGoods.ValueData, '') END AS PartionGoods
+                           , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MIString_PartNumber.ValueData, '')   END AS PartNumber
 
                            , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
 
@@ -1525,6 +1532,9 @@ BEGIN
                            LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                           LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                        ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                       AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
 
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -1581,6 +1591,8 @@ BEGIN
                                        THEN ''
                                   ELSE tmpMI.PartionGoods
                              END AS PartionGoods
+                             
+                           , tmpMI.PartNumber
 
                            , tmpMI.AssetId
 
@@ -1630,7 +1642,8 @@ BEGIN
                      --, tmp.BoxId
                        , tmp.AssetId
                        , tmp.PartionGoodsDate
-                       , tmp.PartionGoods
+                       , tmp.PartionGoods 
+                       , tmp.PartNumber
                        , tmp.ChangePercentAmount
                        , tmp.Price
                        , tmp.CountForPrice

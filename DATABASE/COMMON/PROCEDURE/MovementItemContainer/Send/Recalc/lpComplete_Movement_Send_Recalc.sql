@@ -139,12 +139,14 @@ BEGIN
                                           , inCount               := 0
                                           , inHeadCount           := 0
                                           , ioPartionGoods        := ''
+                                          , ioPartNumber          := ''
                                           , inGoodsKindId         := NULL
                                           , inGoodsKindCompleteId := NULL
                                           , inAssetId             := NULL
                                           , inAssetId_two         := NULL
                                           , inUnitId              := NULL
                                           , inStorageId           := NULL
+                                          , inPartionModelId      := NULL
                                           , inPartionGoodsId      := NULL
                                           , inUserId              := inUserId
                                             )

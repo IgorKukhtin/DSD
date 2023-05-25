@@ -3,7 +3,9 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -20,7 +22,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send(
     IN inAssetId             Integer   , -- Выработка на оборудовании 1
     IN inAssetId_two         Integer   , -- Выработка на оборудовании 2
     IN inUnitId              Integer   , -- Подразделение (для МО)
-    IN inStorageId           Integer   , -- Место хранения
+    IN inStorageId           Integer   , -- Место хранения 
+    IN inPartionModelId      Integer   , -- Модель
     IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
     IN inUserId              Integer     -- пользователь
 )
@@ -333,10 +336,20 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
 
      -- сохранили свойство <Партия товара>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, ioPartionGoods);
-     -- сохранили свойство <№ по тех паспорту>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, ioPartNumber);
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, ioPartionGoods); 
 
+     -- сохранили свойство <Модель>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionModel(), ioId, inPartionModelId);
+   
+     -- сохранили свойство <№ по тех паспорту>
+     --PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, ioPartNumber);
+
+     -- сохранили свойство <№ по тех паспорту>
+     IF ioPartNumber <> '' OR EXISTS (SELECT 1 FROM MovementItemString AS MIS WHERE MIS.MovementItemId = ioId AND MIS.DescId = zc_MIString_PartNumber())
+     THEN
+         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, ioPartNumber);
+     END IF;
+   
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
      -- сохранили связь с <Виды товаров ГП>

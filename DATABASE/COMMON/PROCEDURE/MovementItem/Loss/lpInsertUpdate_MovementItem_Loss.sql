@@ -1,7 +1,8 @@
 -- Function: lpInsertUpdate_MovementItem_Loss()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar,TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Loss(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,11 +12,14 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Loss(
     IN inCount               TFloat    , -- Количество батонов или упаковок
     IN inHeadCount           TFloat    , -- Количество голов
     IN inPartionGoodsDate    TDateTime , -- Дата партии/Дата перемещения
-    IN inPartionGoods        TVarChar  , -- Партия товара
+    IN inPartionGoods        TVarChar  , -- Партия товара  
+    IN inPartNumber          TVarChar  , -- № по тех паспорту
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
-    IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
+    IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)   
+    IN inStorageId           Integer   , -- Место хранения 
+    IN inPartionModelId      Integer   , -- Модель
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -113,6 +117,17 @@ BEGIN
      THEN
          -- создали объект <Связи Товары и Виды товаров>
          PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inUserId);
+     END IF;
+
+     -- сохранили связь с <Место хранения> - для партии прихода на МО
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
+     -- сохранили свойство <Модель>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionModel(), ioId, inPartionModelId);
+     
+     -- сохранили свойство <№ по тех паспорту>
+     IF inPartNumber <> '' OR EXISTS (SELECT 1 FROM MovementItemString AS MIS WHERE MIS.MovementItemId = ioId AND MIS.DescId = zc_MIString_PartNumber())
+     THEN
+         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
      END IF;
 
      -- пересчитали Итоговые суммы по накладной

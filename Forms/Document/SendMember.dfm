@@ -3,7 +3,7 @@ inherited SendMemberForm: TSendMemberForm
   ClientHeight = 602
   ClientWidth = 1013
   ExplicitWidth = 1029
-  ExplicitHeight = 640
+  ExplicitHeight = 641
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,8 +21,6 @@ inherited SendMemberForm: TSendMemberForm
       inherited cxGrid: TcxGrid
         Width = 1013
         Height = 452
-        ExplicitLeft = 1
-        ExplicitTop = -3
         ExplicitWidth = 1013
         ExplicitHeight = 452
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -767,7 +765,7 @@ inherited SendMemberForm: TSendMemberForm
         end
         item
           Name = 'OperDatePartion'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'PartionGoodsOperDate'
           DataType = ftDateTime
@@ -1307,7 +1305,7 @@ inherited SendMemberForm: TSendMemberForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1398,7 +1396,7 @@ inherited SendMemberForm: TSendMemberForm
       end
       item
         Name = 'InsertDate'
-        Value = 'NULL'
+        Value = Null
         Component = edInsertDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1560,43 +1558,11 @@ inherited SendMemberForm: TSendMemberForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 718
     Top = 464
   end
@@ -1638,7 +1604,7 @@ inherited SendMemberForm: TSendMemberForm
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
@@ -1673,6 +1639,13 @@ inherited SendMemberForm: TSendMemberForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioPartNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsKindId'
         Value = Null
         Component = MasterCDS
@@ -1702,6 +1675,12 @@ inherited SendMemberForm: TSendMemberForm
       end
       item
         Name = 'inStorageId'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionModelId'
         Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1744,14 +1723,14 @@ inherited SendMemberForm: TSendMemberForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = 'NULL'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
@@ -1760,14 +1739,14 @@ inherited SendMemberForm: TSendMemberForm
       end
       item
         Name = 'inCount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inHeadCount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1779,6 +1758,13 @@ inherited SendMemberForm: TSendMemberForm
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1803,6 +1789,12 @@ inherited SendMemberForm: TSendMemberForm
       end
       item
         Name = 'inStorageId'
+        Value = 0
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionModelId'
         Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','

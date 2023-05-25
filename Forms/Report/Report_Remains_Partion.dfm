@@ -244,7 +244,7 @@ inherited Report_Remains_PartionForm: TReport_Remains_PartionForm
           Styles.Footer = nil
           Styles.Header = nil
           object InvNumber: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103
+            Caption = #1048#1085#1074#1077#1085#1090'. '#1085#1086#1084#1077#1088' '#1087#1072#1088#1090#1080#1080
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -333,13 +333,6 @@ inherited Report_Remains_PartionForm: TReport_Remains_PartionForm
             HeaderAlignmentVert = vaCenter
             Width = 104
           end
-          object PartionGoods: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103
-            DataBinding.FieldName = 'PartionGoods'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'Price'
@@ -418,6 +411,14 @@ inherited Report_Remains_PartionForm: TReport_Remains_PartionForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object InvNumber_calc: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1088#1072#1079#1074#1077#1088#1085#1091#1090#1086')'
+            DataBinding.FieldName = 'InvNumber_calc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
           end
         end
       end
