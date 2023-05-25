@@ -23,10 +23,13 @@ BEGIN
                                             , inHeadCount           := COALESCE (tmp.HeadCount,0)
                                             , inPartionGoodsDate    := tmp.PartionGoodsDate
                                             , inPartionGoods        := tmp.PartionGoods
+                                            , inPartNumber          := Null ::TVarChar
                                             , inGoodsKindId         := tmp.GoodsKindId
                                             , inGoodsKindCompleteId := tmp.GoodsKindCompleteId
                                             , inAssetId             := tmp.AssetId
-                                            , inPartionGoodsId      := 0
+                                            , inPartionGoodsId      := 0 
+                                            , inStorageId           := 0
+                                            , inPartionModelId      := 0
                                             , inUserId              := vbUserId
                                              )
        FROM (SELECT tmpMI.MovementItemId                                                        AS MovementItemId
