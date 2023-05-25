@@ -711,7 +711,7 @@ BEGIN
                                        THEN ''
                                   ELSE COALESCE (MIString_PartionGoods.ValueData, '')
                              END AS PartionGoods
-
+                           , MIString_PartNumber.ValueData                       AS PartNumber
                            , MovementItem.Amount                                 AS Amount
                            , COALESCE (MIFloat_Count.ValueData, 0)               AS Count
                            , COALESCE (MIFloat_CountPack.ValueData, 0)           AS CountPack
@@ -763,7 +763,9 @@ BEGIN
                            LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-
+                           LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                        ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                       AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -804,11 +806,13 @@ BEGIN
                                                         , inCount               := tmp.CountPack
                                                         , inHeadCount           := tmp.HeadCount
                                                         , inPartionGoods        := tmp.PartionGoods
+                                                        , inPartNumber          := tmp.PartNumber
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inAssetId             := tmp.AssetId
                                                         , inAssetId_two         := tmp.AssetId_two
                                                         , inUnitId              := NULL -- !!!не ошибка, здесь не формируетс€!!!
                                                         , inStorageId           := NULL
+                                                        , inPartionModelId      := NULL
                                                         , inPartionGoodsId      := NULL
                                                         , inUserId              := vbUserId
                                                          )
@@ -921,6 +925,7 @@ BEGIN
                      , tmp.AssetId_two
                      , tmp.PartionGoodsDate
                      , tmp.PartionGoods
+                     , tmp.PartNumber
                      , SUM (tmp.Amount)       AS Amount
                      , SUM (tmp.Count)        AS Count
                      , SUM (tmp.CountPack)    AS CountPack
@@ -949,6 +954,7 @@ BEGIN
                            , COALESCE (MILinkObject_StorageLine.ObjectId, 0) AS StorageLineId
                            , COALESCE (MILinkObject_Asset.ObjectId, 0)       AS AssetId
                            , COALESCE (MILinkObject_Asset_two.ObjectId, 0)   AS AssetId_two
+                           , MIString_PartNumber.ValueData                   AS PartNumber
 
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
                                        THEN NULL
@@ -1037,6 +1043,10 @@ BEGIN
                                                        AND vbMovementDescId <> zc_Movement_ProductionSeparate() -- !!!надо убрать партии, т.к. в UNION их нет!!!
                                                        AND vbMovementDescId <> zc_Movement_ProductionUnion() -- !!!надо убрать партии, т.к. в UNION их нет!!!
 
+                           LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                        ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                       AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+
                            LEFT JOIN MovementItemString AS MIString_KVK
                                                         ON MIString_KVK.MovementItemId = MovementItem.Id
                                                        AND MIString_KVK.DescId = zc_MIString_KVK()
@@ -1079,9 +1089,10 @@ BEGIN
                            , tmpMI.StorageLineId
                            , tmpMI.AssetId
                            , tmpMI.AssetId_two
-
+                           , tmpMI.PartNumber
                            , tmpMI.PartionGoodsDate
                            , tmpMI.PartionGoods
+                           
 
                            , tmpMI.Amount
                            , tmpMI.Count
@@ -1103,7 +1114,8 @@ BEGIN
                        , tmp.AssetId
                        , tmp.AssetId_two
                        , tmp.PartionGoodsDate
-                       , tmp.PartionGoods
+                       , tmp.PartionGoods 
+                       , tmp.PartNumber
                        , tmp.myId -- если нет суммировани€ - каждое взвешивание в отдельной строчке
                 HAVING SUM (tmp.Amount_mi) <> 0
                ) AS tmp

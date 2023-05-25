@@ -39,7 +39,6 @@ type
     OperDate: TcxGridDBColumn;
     StorageName: TcxGridDBColumn;
     Price: TcxGridDBColumn;
-    PartionGoods: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     Amount: TcxGridDBColumn;
@@ -64,6 +63,7 @@ type
     AreaUnitName_storage: TcxGridDBColumn;
     Room_storage: TcxGridDBColumn;
     Address_storage: TcxGridDBColumn;
+    InvNumber_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

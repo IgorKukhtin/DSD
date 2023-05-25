@@ -1,7 +1,8 @@
 -- Function: lpInsertUpdate_MovementItem_Send_Value()
 
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send_Value (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send_Value (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send_Value (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Send_Value (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send_Value(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,12 +12,14 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Send_Value(
     IN inPartionGoodsDate    TDateTime , -- Дата партии
     IN inCount               TFloat    , -- Количество батонов или упаковок
     IN inHeadCount           TFloat    , -- Количество голов
-    IN inPartionGoods        TVarChar  , -- Партия товара/Инвентарный номер
+    IN inPartionGoods        TVarChar  , -- Партия товара/Инвентарный номер 
+    IN inPartNumber          TVarChar  , -- Сер номер
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inAssetId_two         Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inUnitId              Integer   , -- Подразделение (для МО)
     IN inStorageId           Integer   , -- Место хранения
+    IN inPartionModelId      Integer   , -- Модель
     IN inPartionGoodsId      Integer   , -- Партии товаров (для партии расхода если с МО)
     IN inUserId              Integer     -- пользователь
 )
@@ -36,12 +39,14 @@ BEGIN
                                           , inCount               := inCount
                                           , inHeadCount           := inHeadCount
                                           , ioPartionGoods        := inPartionGoods
+                                          , ioPartNumber          := inPartNumber
                                           , inGoodsKindId         := inGoodsKindId
                                           , inGoodsKindCompleteId := NULL
                                           , inAssetId             := inAssetId 
                                           , inAssetId_two         := inAssetId_two
                                           , inUnitId              := inUnitId
                                           , inStorageId           := inStorageId
+                                          , inPartionModelId      := inPartionModelId
                                           , inPartionGoodsId      := inPartionGoodsId
                                           , inUserId              := inUserId
                                            ) AS tmp);
