@@ -30,6 +30,15 @@ THEN
     PERFORM gpUnComplete_Movement_PersonalService (inMovementId:= inMovementId, inSession:= inSession);
 END IF;
  
+     -- сначала все удалили
+     PERFORM lpSetErased_MovementItem (inMovementItemId:= MovementItem.Id, inUserId:= vbUserId)
+     FROM MovementItem
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     IN (zc_MI_Master())
+       AND MovementItem.isErased   = FALSE
+     --AND 1=0
+     ;
+
      -- определ€ем <ћес€ц начислений>
      vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate()));
 
@@ -491,7 +500,7 @@ END IF;
               AND MIF_SummAvanceRecalc.ValueData > 0
           ;
  
--- RAISE EXCEPTION '<%>', (select count(*) from _tmpMI where _tmpMI.MemberId = 239655);
+--  RAISE EXCEPTION '<%>', (select count(*) from _tmpMI where _tmpMI.PersonalId = 7412781);
 
 
      -- сохран€ем элементы
