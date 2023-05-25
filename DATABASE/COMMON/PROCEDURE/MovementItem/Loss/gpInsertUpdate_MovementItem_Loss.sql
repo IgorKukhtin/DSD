@@ -51,6 +51,8 @@ BEGIN
                                             , inGoodsKindCompleteId := inGoodsKindCompleteId
                                             , inAssetId             := outAssetId :: Integer
                                             , inPartionGoodsId      := inPartionGoodsId
+                                            , inStorageId           := inStorageId
+                                            , inPartionModelId      := inPartionModelId
                                             , inUserId              := vbUserId
                                              );
 
