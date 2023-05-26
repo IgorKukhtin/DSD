@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemFloat (Integer, Integer, TFlo
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemFloat(
     IN inDescId                Integer           , -- ключ класса свойства
-    IN inMovementItemId        Integer           , -- ключ 
+    IN inMovementItemId        Integer           , -- ключ
     IN inValueData             TFloat              -- свойство
 )
 RETURNS Boolean
@@ -29,17 +29,16 @@ BEGIN
      -- если не нашли
      IF NOT FOUND AND inValueData <> 0
      THEN
-        -- вставить <свойство>
+         -- добавить <свойство>
          INSERT INTO MovementItemFloat (DescId, MovementItemId, ValueData)
                                 VALUES (inDescId, inMovementItemId, inValueData);
      END IF;
 
-     RETURN (TRUE);
+     RETURN TRUE;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_MovementItemFloat (Integer, Integer, TFloat) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

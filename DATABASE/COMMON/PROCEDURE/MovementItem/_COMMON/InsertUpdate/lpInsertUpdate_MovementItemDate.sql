@@ -1,21 +1,38 @@
+-- Function: lpInsertUpdate_MovementItemDate
+
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemDate (Integer, Integer, TDateTime);
+
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemDate(
- inDescId                    Integer           ,  /* код класса свойства       */
- inMovementItemId            Integer           ,  /* ключ главного объекта     */
- inValueData                 TDateTime            /* Значение */
-)
-  RETURNS boolean AS
-$BODY$BEGIN
+    IN inDescId                Integer           , -- ключ класса свойства
+    IN inMovementItemId        Integer           , -- ключ 
+    IN inValueData             TDateTime           -- свойство
+))
+RETURNS Boolean
+AS
+$BODY$
+BEGIN
 
-    UPDATE MovementItemDate SET ValueData = inValueData WHERE MovementItemId = inMovementItemId AND DescId = inDescId;
-    IF NOT found THEN            
-       /* вставить <ключ свойства> , <ключ главного объекта> и <ключ подчиненного объекта> */
-       INSERT INTO MovementItemDate (DescId, MovementItemId, ValueData)
-           VALUES (inDescId, inMovementItemId, inValueData);
-    END IF;             
-    RETURN true;
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpInsertUpdate_MovementItemDate(Integer, Integer, TDateTime)
-  OWNER TO postgres;
+     -- изменить <свойство>
+     UPDATE MovementItemDate SET ValueData = inValueData WHERE MovementItemId = inMovementItemId AND DescId = inDescId;
 
+     -- если не нашли
+     IF NOT FOUND
+     THEN
+         -- добавить <свойство>
+        INSERT INTO MovementItemDate (DescId, MovementItemId, ValueData)
+            VALUES (inDescId, inMovementItemId, inValueData);
+     END IF;             
+
+     RETURN TRUE;
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.03.15                                        * IF ... AND inValueData <> 0
+ 17.05.14                                        * add проверка - inValueData
+*/
