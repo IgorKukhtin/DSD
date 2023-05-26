@@ -32,6 +32,11 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , UnitCode Integer, UnitName TVarChar
              , CarName TVarChar
              
+             , Price_Partion TFloat
+             , PartNumber_Partion TVarChar
+             , Model_Partion TVarChar
+             , UnitName_Storage TVarChar
+             , BranchName_Storage TVarChar
 
              , CountStart TFloat
              , CountStart_Weight TFloat
@@ -368,6 +373,12 @@ BEGIN
         , Object_Unit.ValueData          AS UnitName
 
         , Object_Car.ValueData           AS CarName  --гос номер авто 
+
+        , ObjectFloat_PartionGoods_Price.ValueData :: TFloat    AS Price_Partion
+        , ObjectString_PartNumber.ValueData        :: TVarChar  AS PartNumber_Partion
+        , Object_PartionModel.ValueData            :: TVarChar  AS Model_Partion
+        , Object_Unit_Storage.ValueData            :: TVarChar  AS UnitName_Storage
+        , Object_Branch_Storage.ValueData          :: TVarChar  AS BranchName_Storage        
 
         , CAST (tmpMIContainer_group.CountStart          AS TFloat) AS CountStart
         , CAST (tmpMIContainer_group.CountStart * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END          AS TFloat) AS CountStart_Weight
@@ -783,9 +794,31 @@ BEGIN
                             AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
         LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Storage_Unit
+                             ON ObjectLink_Storage_Unit.ObjectId = Object_Storage.Id 
+                            AND ObjectLink_Storage_Unit.DescId = zc_ObjectLink_Storage_Unit()
+        LEFT JOIN Object AS Object_Unit_Storage ON Object_Unit_Storage.Id = ObjectLink_Storage_Unit.ChildObjectId
+ 
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                             ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+        LEFT JOIN Object AS Object_Branch_Storage ON Object_Branch_Storage.Id = ObjectLink_Unit_Branch.ChildObjectId
+
         LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
                              ON ObjectDate_PartionGoods_Value.ObjectId = tmpMIContainer_group.PartionGoodsId
                             AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Price
+                              ON ObjectFloat_PartionGoods_Price.ObjectId = tmpMIContainer_group.PartionGoodsId
+                             AND ObjectFloat_PartionGoods_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
+
+        LEFT JOIN ObjectLink AS ObjectLink_PartionModel
+                             ON ObjectLink_PartionModel.ObjectId = tmpMIContainer_group.PartionGoodsId
+                            AND ObjectLink_PartionModel.DescId   = zc_ObjectLink_PartionGoods_PartionModel()
+        LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = ObjectLink_PartionModel.ChildObjectId
+        LEFT JOIN ObjectString AS ObjectString_PartNumber
+                               ON ObjectString_PartNumber.ObjectId = tmpMIContainer_group.PartionGoodsId
+                              AND ObjectString_PartNumber.DescId   = zc_ObjectString_PartionGoods_PartNumber()
 
         LEFT JOIN Movement AS Movement_PartionGoods ON Movement_PartionGoods.Id = Object_PartionGoods.ObjectCode
         LEFT JOIN MovementDesc AS MovementDesc_PartionGoods ON MovementDesc_PartionGoods.Id = Movement_PartionGoods.DescId
