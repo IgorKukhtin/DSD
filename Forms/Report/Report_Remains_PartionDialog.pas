@@ -36,6 +36,9 @@ type
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     cbShowAll: TcxCheckBox;
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
   private
     { Private declarations }
   public

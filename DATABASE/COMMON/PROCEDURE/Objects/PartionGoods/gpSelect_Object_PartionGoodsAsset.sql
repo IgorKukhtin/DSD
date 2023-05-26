@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, PartNumber TVarChar
              , UnitId Integer, UnitName TVarChar 
              , BranchId Integer, BranchName TVarChar
              , PartionModelId Integer, PartionModelName TVarChar 
-             , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount TFloat
              , isErased boolean
               ) AS
@@ -136,8 +137,12 @@ BEGIN
            , Object_PartionModel.Id          AS PartionModelId
            , Object_PartionModel.ValueData   AS PartionModelName
            
-           , Object_InfoMoney.Id             AS InfoMoneyId
-           , Object_InfoMoney.ValueData      AS InfoMoneyName
+           , View_InfoMoney.InfoMoneyGroupName
+           , View_InfoMoney.InfoMoneyDestinationName
+           , View_InfoMoney.InfoMoneyId
+           , View_InfoMoney.InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName
+           , View_InfoMoney.InfoMoneyName_all
            
            , tmpContainer_Count.Amount       AS Amount
 
@@ -189,7 +194,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                ON ObjectLink_Goods_InfoMoney.ObjectId = tmpContainer_Count.GoodsId
                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-          LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Goods_InfoMoney.ChildObjectId
+          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
        ;
 
 

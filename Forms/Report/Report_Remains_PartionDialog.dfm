@@ -3,8 +3,8 @@ object Report_Remains_PartionDialogForm: TReport_Remains_PartionDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1087#1072#1088#1090#1080#1103#1084'>'
-  ClientHeight = 204
-  ClientWidth = 349
+  ClientHeight = 247
+  ClientWidth = 358
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_Remains_PartionDialogForm: TReport_Remains_PartionDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 49
-    Top = 161
+    Left = 57
+    Top = 209
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_Remains_PartionDialogForm: TReport_Remains_PartionDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 223
-    Top = 161
+    Left = 231
+    Top = 209
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -71,12 +71,29 @@ object Report_Remains_PartionDialogForm: TReport_Remains_PartionDialogForm
     Caption = #1058#1086#1074#1072#1088':'
   end
   object cbShowAll: TcxCheckBox
-    Left = 18
-    Top = 124
+    Left = 26
+    Top = 172
     Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
     Properties.ReadOnly = False
     TabOrder = 6
     Width = 112
+  end
+  object cxLabel4: TcxLabel
+    Left = 17
+    Top = 109
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+  end
+  object edUnit: TcxButtonEdit
+    Left = 18
+    Top = 129
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 323
   end
   object PeriodChoice: TPeriodChoice
     Left = 288
@@ -156,6 +173,23 @@ object Report_Remains_PartionDialogForm: TReport_Remains_PartionDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 46
     Top = 80
@@ -187,8 +221,8 @@ object Report_Remains_PartionDialogForm: TReport_Remains_PartionDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 103
+    Left = 216
+    Top = 151
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
@@ -217,7 +251,34 @@ object Report_Remains_PartionDialogForm: TReport_Remains_PartionDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 144
-    Top = 120
+    Left = 152
+    Top = 168
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 152
+    Top = 125
   end
 end
