@@ -1,20 +1,38 @@
-﻿CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemString(
- inDescId                    Integer           ,  /* код класса свойства       */
- inMovementItemId            Integer           ,  /* ключ главного объекта     */
- inValueData                 TVarChar             /* Значение */
-)
-  RETURNS boolean AS
-$BODY$BEGIN
+﻿-- Function: lpInsertUpdate_MovementItemString
 
-    UPDATE MovementItemString SET ValueData = inValueData WHERE MovementItemId = inMovementItemId AND DescId = inDescId;
-    IF NOT found THEN            
-       /* вставить <ключ свойства> , <ключ главного объекта> и <ключ подчиненного объекта> */
-       INSERT INTO MovementItemString (DescId, MovementItemId, ValueData)
-           VALUES (inDescId, inMovementItemId, inValueData);
-    END IF;             
-    RETURN true;
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpInsertUpdate_MovementItemString(Integer, Integer, TVarChar)
-  OWNER TO postgres;
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemString (Integer, Integer, TFloat);
+
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemString(
+    IN inDescId                Integer           , -- ключ класса свойства
+    IN inMovementItemId        Integer           , -- ключ 
+    IN inObjectId              Integer             -- ключ объекта
+)
+RETURNS Boolean
+AS
+$BODY$
+BEGIN
+
+     -- изменить <свойство>
+     UPDATE MovementItemString SET ValueData = inValueData WHERE MovementItemId = inMovementItemId AND DescId = inDescId;
+
+     -- если не нашли
+     IF NOT FOUND AND inValueData <> ''
+     THEN
+         -- добавить <свойство>
+         INSERT INTO MovementItemString (DescId, MovementItemId, ValueData)
+                                 VALUES (inDescId, inMovementItemId, inValueData);
+     END IF;
+
+     RETURN TRUE;
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.03.15                                        * IF ... AND inValueData <> 0
+ 17.05.14                                        * add проверка - inValueData
+*/
