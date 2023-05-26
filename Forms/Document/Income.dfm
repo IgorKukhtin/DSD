@@ -347,15 +347,12 @@ object IncomeForm: TIncomeForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 166
-    ExplicitHeight = 314
     ClientRectBottom = 325
     ClientRectRight = 1056
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 290
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -363,7 +360,6 @@ object IncomeForm: TIncomeForm
         Height = 301
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 290
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -784,7 +780,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitHeight = 290
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -792,7 +787,6 @@ object IncomeForm: TIncomeForm
         Height = 301
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 290
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CostDS

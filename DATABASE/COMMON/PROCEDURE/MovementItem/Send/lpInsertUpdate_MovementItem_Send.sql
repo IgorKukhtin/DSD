@@ -326,20 +326,41 @@ BEGIN
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
 
-     -- сохранили свойство <Дата партии>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
-
      -- сохранили свойство <Количество упаковок>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountPack(), ioId, inCount);
-
      -- сохранили свойство <Количество голов>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
+     
+     -- сохранили связь с <Виды товаров>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+     -- сохранили связь с <Виды товаров ГП>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
 
-     -- сохранили свойство <Партия товара>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, ioPartionGoods); 
+     -- сохранили связь с <Выработка на оборудовании 1>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
+     -- сохранили связь с <Выработка на оборудовании 2>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset_two(), ioId, inAssetId_two);
 
-     -- сохранили свойство <Модель>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionModel(), ioId, inPartionModelId);
+     -- сохранили связь с <Подразделение (для МО)> - теперь НЕ надо
+     -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
+     
+     -- сохранили свойство <Дата партии>
+     IF COALESCE (inPartionGoodsDate, zc_DateStart()) <> zc_DateStart() OR EXISTS (SELECT 1 FROM MovementItemDate AS MID WHERE MID.MovementItemId = ioId AND MID.DescId = zc_MIDate_PartionGoods())
+     THEN
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate); 
+     END IF;
+
+     -- сохранили свойство <Партия товара> 
+     IF ioPartionGoods <> '' OR EXISTS (SELECT 1 FROM MovementItemString AS MIS WHERE MIS.MovementItemId = ioId AND MIS.DescId = zc_MIString_PartionGoods())
+     THEN
+        PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, ioPartionGoods);
+     END IF; 
+
+     -- сохранили свойство <Модель> 
+     IF COALESCE (inPartionModelId,0) <> 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_PartionModel())
+     THEN
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionModel(), ioId, inPartionModelId);
+     END IF;
    
      -- сохранили свойство <№ по тех паспорту>
      --PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, ioPartNumber);
@@ -350,26 +371,18 @@ BEGIN
          PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, ioPartNumber);
      END IF;
    
-     -- сохранили связь с <Виды товаров>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-     -- сохранили связь с <Виды товаров ГП>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
-
-     -- сохранили связь с <Основные средства (для которых закупается ТМЦ)> - почти не используется, т.к. в приходе от пост. этой партии нет
-     -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
-
-     -- сохранили связь с <Подразделение (для МО)> - теперь НЕ надо
-     -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
-     -- сохранили связь с <Место хранения> - для партии прихода на МО
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
+     -- сохранили связь с <Место хранения> - для партии прихода на МО 
+     IF COALESCE (inStorageId,0) <> 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_Storage())
+     THEN
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
+     END IF;
 
      -- сохранили связь с <Партии товаров (для партии расхода если с МО)> - пока НЕ надо
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, inPartionGoodsId);
+     IF COALESCE (inPartionGoodsId,0) <> 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_PartionGoods())
+     THEN
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionGoods(), ioId, inPartionGoodsId);
+     END IF;
 
-     -- сохранили связь с <Выработка на оборудовании 1>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
-     -- сохранили связь с <Выработка на оборудовании 2>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset_two(), ioId, inAssetId_two);
 
      IF inGoodsId <> 0 AND inGoodsKindId <> 0
      THEN

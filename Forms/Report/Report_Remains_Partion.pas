@@ -56,7 +56,7 @@ type
     actOpenDocument: TMultiAction;
     bbOpenDocument: TdxBarButton;
     FormParams: TdsdFormParams;
-    UnitName: TcxGridDBColumn;
+    UnitName_partion: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     UnitName_storage: TcxGridDBColumn;
     BranchName_storage: TcxGridDBColumn;
@@ -64,6 +64,11 @@ type
     Room_storage: TcxGridDBColumn;
     Address_storage: TcxGridDBColumn;
     InvNumber_calc: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    GuidesUnit: TdsdGuides;
+    edUnit: TcxButtonEdit;
+    BranchName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

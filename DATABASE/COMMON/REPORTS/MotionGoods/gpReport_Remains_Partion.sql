@@ -1,10 +1,12 @@
 -- Function: gpReport_Remains_Partion()
 
 DROP FUNCTION IF EXISTS gpReport_Remains_Partion (Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Remains_Partion (Integer, Integer,Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Remains_Partion(
     IN inGoodsGroupId       Integer   ,
     IN inGoodsId            Integer   ,
+    IN inUnitId             Integer   ,
     IN inIsShowAll          Boolean   ,
     IN inSession            TVarChar    -- сессия пользователя
 )
@@ -26,13 +28,17 @@ RETURNS TABLE  (ContainerId        Integer
               , StorageName        TVarChar
               , PartionModelName   TVarChar
               , PartNumber         TVarChar
-              , UnitName           TVarChar
+              , UnitName_partion   TVarChar
               , UnitName_storage   TVarChar
               , BranchName_storage TVarChar
               , AreaUnitName_storage TVarChar
               , Room_storage       TVarChar
               , Address_storage    TVarChar
               , Comment_storage    TVarChar
+              , UnitName           TVarChar
+              , BranchName         TVarChar
+              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar
+              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
               )
 AS
 $BODY$
@@ -63,8 +69,14 @@ BEGIN
                      UNION
                       SELECT Object_Unit.Id AS LocationId, zc_ContainerLinkObject_Unit() AS DescId FROM Object AS Object_Unit WHERE Object_Unit.DescId = zc_Object_Unit()
                     )
+       , tmpPersonal AS (SELECT lfSelect.MemberId
+                              , lfSelect.UnitId
+                         FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                        )
+
        , tmpContainer AS (SELECT Container.Id          AS ContainerId
                                      , CLO_Location.ObjectId AS LocationId
+                                     , COALESCE (ObjectLink_Car_Unit.ChildObjectId, tmpPersonal.UnitId, CLO_Location.ObjectId) AS UnitId
                                      , Container.ObjectId    AS GoodsId
                                     -- , COALESCE (CLO_GoodsKind.ObjectId, 0)    AS GoodsKindId
                                      , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
@@ -86,9 +98,16 @@ BEGIN
                                                                   AND COALESCE (CLO_PartionGoods.ObjectId, 0) <> 0
                                      LEFT JOIN ContainerLinkObject AS CLO_Account
                                                                    ON CLO_Account.ContainerId = Container.Id
-                                                                  AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                                                  AND CLO_Account.DescId = zc_ContainerLinkObject_Account() 
+                                     -- если это авто - находим его через zc_ObjectLink_Car_Unit, если физ лицо - находим в сотрудниках основное место работы, там подразделение
+                                     LEFT JOIN ObjectLink AS ObjectLink_Car_Unit
+                                                          ON ObjectLink_Car_Unit.ObjectId = CLO_Location.ObjectId
+                                                         AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+                                     LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = CLO_Location.ObjectId
+
                                 WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                                   AND COALESCE (CLO_Location.ObjectId,0) <> 0
+                                  AND (COALESCE (ObjectLink_Car_Unit.ChildObjectId, tmpPersonal.UnitId, CLO_Location.ObjectId) = inUnitId OR inUnitId = 0)
                                )
 
        , tmpCLO_GoodsKind AS (SELECT ContainerLinkObject.*
@@ -186,16 +205,24 @@ BEGIN
              , tmpPartion.StorageName
              , tmpPartion.PartionModelName
              , tmpPartion.PartNumber
-             , tmpPartion.UnitName 
+             , tmpPartion.UnitName     AS UnitName_partion
              , tmpStorage.UnitName     AS UnitName_storage
              , tmpStorage.BranchName   AS BranchName_storage
              , tmpStorage.AreaUnitName AS AreaUnitName_storage
              , tmpStorage.Room         AS Room_storage
              , tmpStorage.Address      AS Address_storage
-             , tmpStorage.Comment      AS Comment_storage
+             , tmpStorage.Comment      AS Comment_storage  
 
+             , Object_Unit.ValueData   AS UnitName
+             , Object_Branch.ValueData AS BranchName 
+             
+             , View_InfoMoney.InfoMoneyGroupName
+             , View_InfoMoney.InfoMoneyDestinationName
+             , View_InfoMoney.InfoMoneyCode
+             , View_InfoMoney.InfoMoneyName
+             , View_InfoMoney.InfoMoneyName_all
          FROM tmpContainer
-             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind 
+              LEFT JOIN ContainerLinkObject AS CLO_GoodsKind 
                                             ON CLO_GoodsKind.ContainerId = tmpContainer.ContainerId
                                            AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
               LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE (CLO_GoodsKind.ObjectId, 0) 
@@ -209,6 +236,17 @@ BEGIN
               LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                      ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                     AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpContainer.UnitId
+              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                   ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                                  AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+              LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+
+              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                   ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
+                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
       ;
 
 END;
