@@ -104,7 +104,7 @@ BEGIN
                    , SUM (FLOOR (100 * CAST ( ((COALESCE (gpSelect.SummCardSecondRecalc, 0) + COALESCE (gpSelect.SummAvCardSecondRecalc, 0)) * vbKoeffSummCardSecond) AS NUMERIC (16, 1)) ))  AS SummCardSecondRecalc -- добавили % и округлили до 2-х знаков + ПЕРЕВОДИМ в копейки
                    , UPPER (COALESCE (gpSelect.PersonalName, '') )  AS PersonalName
               FROM gpSelect_MovementItem_PersonalService (inMovementId:= inMovementId  , inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
-           --   WHERE gpSelect.SummCardSecondRecalc <> 0
+              WHERE gpSelect.SummCardSecondRecalc <> 0 OR gpSelect.SummAvCardSecondRecalc <> 0
 	      GROUP BY COALESCE (gpSelect.CardSecond, ''), UPPER (COALESCE (gpSelect.PersonalName, '')), COALESCE (gpSelect.INN, '')
 	      )
 	      
