@@ -3689,6 +3689,7 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <
       item
@@ -3699,6 +3700,7 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
     PropertiesCellList = <>
     Left = 456
     Top = 392
@@ -3710,11 +3712,11 @@ object Report_MotionGoodsAssetNoBalanceForm: TReport_MotionGoodsAssetNoBalanceFo
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroup
-    FormNameParam.Value = 'TAssetGroupForm'
+    FormNameParam.Value = 'TAssetGroup_GoodsGroupForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TAssetGroupForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TAssetGroup_GoodsGroupForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

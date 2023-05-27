@@ -57,7 +57,12 @@ BEGIN
             , ObjectFloat_Weight.ValueData     AS Weight
             , Object_Goods.isErased  AS isErased
 
-       FROM Object AS Object_Goods 
+       FROM Object AS Object_Goods
+             INNER JOIN ObjectBoolean AS ObjectBoolean_Goods_Asset
+                                      ON ObjectBoolean_Goods_Asset.ObjectId = Object_Goods.Id 
+                                     AND ObjectBoolean_Goods_Asset.DescId = zc_ObjectBoolean_Goods_Asset()
+                                     AND COALESCE (ObjectBoolean_Goods_Asset.ValueData, FALSE) = TRUE
+ 
              LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                    ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
@@ -72,6 +77,7 @@ BEGIN
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
              LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
              
        WHERE Object_Goods.DescId = zc_Object_Goods()
          AND (Object_Goods.isErased = False OR inShowAll = TRUE)

@@ -394,11 +394,11 @@ object Report_MotionGoodsAssetDialogForm: TReport_MotionGoodsAssetDialogForm
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroup
-    FormNameParam.Value = 'TAssetGroupForm'
+    FormNameParam.Value = 'TAssetGroup_GoodsGroupForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TAssetGroupForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TAssetGroup_GoodsGroupForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
