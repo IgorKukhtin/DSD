@@ -247,6 +247,12 @@ BEGIN
          -- !!!криво хардкодим ОС и все что для них!!!
        , tmpReport_all AS (SELECT tmp.* FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= -1 * zc_Enum_AccountGroup_10000()
                                                                  , inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId
+                                                                 , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp 
+                         UNION ALL
+                           SELECT tmp.* FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate
+                                                                 , inAccountGroupId:= zc_Enum_AccountGroup_20100()
+                                                                 , inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId
+                                                                 , inGoodsGroupId:= CASE WHEN inGoodsGroupId = 0 AND inGoodsId = 0 THEN 9354099 ELSE inGoodsGroupId END
                                                                  , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp
                           )
 
@@ -332,8 +338,7 @@ BEGIN
                             , COALESCE (tmpReport_summ.SummProductionOut, 0) AS SummProductionOut
                        FROM tmpReport_summ
                             FULL JOIN tmpReport_count ON tmpReport_count.ContainerId_count = tmpReport_summ.ContainerId_count
-                      )
-
+                     )
 
    -- Результат
    SELECT View_Account.AccountGroupName, View_Account.AccountDirectionName
@@ -845,6 +850,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.05.23         *
  28.07.20         *
 */
 

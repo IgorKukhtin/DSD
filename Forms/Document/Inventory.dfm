@@ -2,8 +2,6 @@ inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 598
   ClientWidth = 1020
-  ExplicitLeft = -22
-  ExplicitTop = -101
   ExplicitWidth = 1036
   ExplicitHeight = 637
   PixelsPerInch = 96
@@ -299,6 +297,28 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 74
+          end
+          object PartNumber: TcxGridDBColumn
+            Caption = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
+            DataBinding.FieldName = 'PartNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object PartionModelName: TcxGridDBColumn
+            Caption = #1052#1086#1076#1077#1083#1100' ('#1087#1072#1088#1090#1080#1103')'
+            DataBinding.FieldName = 'PartionModelName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPartionModelForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -1265,6 +1285,195 @@ inherited InventoryForm: TInventoryForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPartionGoodsAssetChoiceForm: TOpenChoiceForm
+      Category = 'Asset'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      ImageIndex = 1
+      FormName = 'TPartionGoodsAssetChoiceForm'
+      FormNameParam.Value = 'TPartionGoodsAssetChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionGoods'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Price'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Amount'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionModelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionModelId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionModelName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionModelName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actInsertRecordAsset: TInsertRecord
+      Category = 'Asset'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actPartionGoodsAssetChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      ImageIndex = 0
+    end
+    object macInsertRecordAsset: TMultiAction
+      Category = 'Asset'
+      TabSheet = tsMain
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertRecordAsset
+        end
+        item
+          Action = actRefreshPrice
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
+      ImageIndex = 0
+    end
+    object actPartionModelForm: TOpenChoiceForm
+      Category = 'Asset'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionModelForm'
+      FormName = 'TPartionModelForm'
+      FormNameParam.Value = 'TPartionModelForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionModelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartionModelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1346,6 +1555,18 @@ inherited InventoryForm: TInventoryForm
         item
           Visible = True
           ItemName = 'bbAddMask'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordAsset'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartionGoodsAssetChoiceForm'
         end
         item
           Visible = True
@@ -1527,6 +1748,14 @@ inherited InventoryForm: TInventoryForm
     end
     object bbDelete_bySale: TdxBarButton
       Action = macDelete_bySale
+      Category = 0
+    end
+    object bbInsertRecordAsset: TdxBarButton
+      Action = macInsertRecordAsset
+      Category = 0
+    end
+    object bbPartionGoodsAssetChoiceForm: TdxBarButton
+      Action = actPartionGoodsAssetChoiceForm
       Category = 0
     end
   end

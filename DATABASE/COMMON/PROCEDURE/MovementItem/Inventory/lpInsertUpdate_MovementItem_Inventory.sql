@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Inventory(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -14,13 +15,15 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Inventory(
     IN inSumm                TFloat    , -- Сумма
     IN inHeadCount           TFloat    , -- Количество голов
     IN inCount               TFloat    , -- Количество батонов или упаковок
-    IN inPartionGoods        TVarChar  , -- Партия товара/Инвентарный номер
+    IN inPartionGoods        TVarChar  , -- Партия товара/Инвентарный номер 
+    IN inPartNumber          TVarChar  , -- № по тех паспорту 
     IN inPartionGoodsId      Integer   , -- партия
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inUnitId              Integer   , -- Подразделение (для МО)
-    IN inStorageId           Integer   , -- Место хранения
+    IN inStorageId           Integer   , -- Место хранения 
+    IN inPartionModelId      Integer   , -- Модель
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -123,11 +126,30 @@ BEGIN
          PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
          -- сохранили свойство <Партия товара/Инвентарный номер>
          PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
-         -- сохранили связь с <Место хранения>
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
+         
+         -- сохранили связь с <Место хранения> - для партии прихода на МО 
+         IF COALESCE (inStorageId,0) <> 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_Storage())
+         THEN
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
+         END IF;
+
+         -- сохранили свойство <Модель> 
+         IF COALESCE (inPartionModelId,0) <> 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_PartionModel())
+         THEN
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionModel(), ioId, inPartionModelId);
+         END IF;
+         
          -- сохранили связь с <Подразделение (для МО)>
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
+
+         -- сохранили свойство <№ по тех паспорту>
+         IF inPartNumber <> '' OR EXISTS (SELECT 1 FROM MovementItemString AS MIS WHERE MIS.MovementItemId = ioId AND MIS.DescId = zc_MIString_PartNumber())
+         THEN
+             PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
+         END IF;
      END IF;
+
+
 
      -- создали объект <Связи Товары и Виды товаров>
      PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inUserId);
