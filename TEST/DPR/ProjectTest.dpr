@@ -1435,7 +1435,8 @@ uses
   AreaUnit in '..\..\Forms\Guides\AreaUnit.pas' {AreaUnitForm: TParentForm},
   PartionModel in '..\..\Forms\Guides\PartionModel.pas' {PartionModelForm: TParentForm},
   Report_Remains_Partion in '..\..\Forms\Report\Report_Remains_Partion.pas' {Report_Remains_PartionForm: TParentForm},
-  Report_Remains_PartionDialog in '..\..\Forms\Report\Report_Remains_PartionDialog.pas' {Report_Remains_PartionDialogForm: TParentForm};
+  Report_Remains_PartionDialog in '..\..\Forms\Report\Report_Remains_PartionDialog.pas' {Report_Remains_PartionDialogForm: TParentForm},
+  AssetGroup_GoodsGroup in '..\..\Forms\Guides\AssetGroup_GoodsGroup.pas' {AssetGroup_GoodsGroupForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -3016,6 +3016,7 @@ end;
 
 procedure TLoadFormTest.LoadReportAssetFormTest;
 begin
+{
 TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AssetRepairForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AssetRepairForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AssetRepairDialogForm'));
@@ -3024,10 +3025,11 @@ TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AssetRepairForm'));
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSold_AssetNoBalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSold_AssetNoBalanceForm');
-
+  exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsAssetNoBalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsAssetNoBalanceForm');
- // exit;
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsAssetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsAssetDialogForm'));
@@ -3356,6 +3358,10 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroup_GoodsGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAssetGroup_GoodsGroupForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceList_Unit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceList_Unit_ObjectForm');

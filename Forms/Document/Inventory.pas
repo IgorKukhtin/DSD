@@ -124,6 +124,12 @@ type
     cxLabel18: TcxLabel;
     edPriceList: TcxButtonEdit;
     GuidesPriceList: TdsdGuides;
+    actPartionGoodsAssetChoiceForm: TOpenChoiceForm;
+    actInsertRecordAsset: TInsertRecord;
+    macInsertRecordAsset: TMultiAction;
+    bbInsertRecordAsset: TdxBarButton;
+    bbPartionGoodsAssetChoiceForm: TdxBarButton;
+    actPartionModelForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

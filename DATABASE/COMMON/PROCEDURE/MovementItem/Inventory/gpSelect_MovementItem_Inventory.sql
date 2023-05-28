@@ -16,17 +16,20 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Price TFloat, Summ TFloat
              , Price_pr TFloat, Summ_pr TFloat
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
+             , PartNumber TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , GoodsKindId_Complete Integer, GoodsKindName_Complete  TVarChar
              , AssetId Integer, AssetName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , UnitId Integer, UnitName TVarChar
              , StorageId Integer, StorageName TVarChar
+             , PartionModelId Integer, PartionModelName TVarChar
              , ContainerId Integer
              , isErased Boolean
              , PartionGoodsId Integer
              , IdBarCode TVarChar
-             , OperDate TDateTime
+             , OperDate TDateTime 
+             
            --  , Price_Partion     TFloat
              )
 AS
@@ -93,7 +96,8 @@ BEGIN
            , COALESCE (tmpPricePR_Kind.Price, tmpPricePR.Price) :: TFloat AS Price_pr
            , CAST (NULL AS TFloat)              AS Summ_pr 
            , CAST (NULL AS TDateTime)           AS PartionGoodsDate
-           , CAST (NULL AS TVarChar)            AS PartionGoods
+           , CAST (NULL AS TVarChar)            AS PartionGoods 
+           , CAST (NULL AS TVarChar)            AS PartNumber
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , CAST (NULL AS Integer)             AS GoodsKindId_Complete
@@ -108,6 +112,8 @@ BEGIN
            , CAST (NULL AS TVarChar)            AS UnitName
            , CAST (0 AS Integer)                AS StorageId
            , CAST (NULL AS TVarChar)            AS StorageName
+           , CAST (0 AS Integer)                AS PartionModelId
+           , CAST (NULL AS TVarChar)            AS PartionModelName
 
            , 0 :: Integer AS ContainerId
 
@@ -199,6 +205,7 @@ BEGIN
 
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 AND Object_PartionGoods.ValueData <> '0' THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
+           , CASE WHEN COALESCE (MIString_PartNumber.ValueData,'') = '' THEN ObjectString_PartNumber.ValueData ELSE MIString_PartNumber.ValueData END :: TVarChar     AS PartNumber
            , Object_GoodsKind.Id                AS GoodsKindId
            , Object_GoodsKind.ValueData         AS GoodsKindName
            , Object_GoodsKindComplete.Id         AS GoodsKindId_Complete
@@ -214,7 +221,9 @@ BEGIN
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_Unit_Partion.ValueData ELSE Object_Unit.ValueData END AS UnitName
 
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_Storage_Partion.Id ELSE Object_Storage.Id               END AS StorageId
-           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_Storage_Partion.ValueData ELSE Object_Storage.ValueData END AS StorageName
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_Storage_Partion.ValueData ELSE Object_Storage.ValueData END AS StorageName 
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionModel_Partion.Id ELSE Object_PartionModel.Id               END AS PartionModelId
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionModel_Partion.ValueData ELSE Object_PartionModel.ValueData END AS PartionModelName
 
            , MIFloat_ContainerId.ValueData :: Integer AS ContainerId
            , MovementItem.isErased              AS isErased
@@ -265,6 +274,10 @@ BEGIN
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
+            LEFT JOIN MovementItemString AS MIString_PartNumber
+                                         ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                        AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -295,6 +308,11 @@ BEGIN
                                             AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
             LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = MILinkObject_Storage.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionModel
+                                             ON MILinkObject_PartionModel.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PartionModel.DescId = zc_MILinkObject_Storage()
+            LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = MILinkObject_PartionModel.ObjectId
+
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -320,13 +338,16 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_Value 
                                  ON ObjectDate_Value.ObjectId = MILinkObject_PartionGoods.ObjectId                      -- дата
                                 AND ObjectDate_Value.DescId = zc_ObjectDate_PartionGoods_Value()
+            LEFT JOIN ObjectString AS ObjectString_PartNumber
+                                   ON ObjectString_PartNumber.ObjectId = MILinkObject_PartionGoods.ObjectId             -- сер. номер
+                                  AND ObjectString_PartNumber.DescId = zc_ObjectString_PartionGoods_PartNumber()
 
             JOIN ObjectFloat AS ObjectFloat_Price_Partion 
                              ON ObjectFloat_Price_Partion.ObjectId = MILinkObject_PartionGoods.ObjectId                 -- цена
                             AND ObjectFloat_Price_Partion.DescId = zc_ObjectFloat_PartionGoods_Price()    
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit 
-                                 ON ObjectLink_Unit.ObjectId = MILinkObject_PartionGoods.ObjectId		        -- подразделение
+                                 ON ObjectLink_Unit.ObjectId = MILinkObject_PartionGoods.ObjectId		                -- подразделение
                                 AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
             JOIN Object AS Object_Unit_Partion ON Object_Unit_Partion.Id = ObjectLink_Unit.ChildObjectId
 
@@ -334,6 +355,11 @@ BEGIN
                                  ON ObjectLink_Storage.ObjectId = MILinkObject_PartionGoods.ObjectId	                -- склад
                                 AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
             LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId  
+
+            LEFT JOIN ObjectLink AS ObjectLink_PartionModel 
+                                 ON ObjectLink_PartionModel.ObjectId = MILinkObject_PartionGoods.ObjectId	            -- Модель
+                                AND ObjectLink_PartionModel.DescId = zc_ObjectLink_PartionGoods_Storage()
+            LEFT JOIN Object AS Object_PartionModel_Partion ON Object_PartionModel_Partion.Id = ObjectLink_PartionModel.ChildObjectId
 
             -- привязываем цены по прайсу 2 раза по виду товара и без
             LEFT JOIN tmpPricePR AS tmpPricePR_Kind 
@@ -396,6 +422,7 @@ BEGIN
            
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 AND Object_PartionGoods.ValueData <> '0' THEN Object_PartionGoods.ValueData ELSE MIString_PartionGoods.ValueData END AS PartionGoods
+           , CASE WHEN COALESCE (MIString_PartNumber.ValueData,'') = '' THEN ObjectString_PartNumber.ValueData ELSE MIString_PartNumber.ValueData END :: TVarChar     AS PartNumber
            , Object_GoodsKind.Id                 AS GoodsKindId
            , Object_GoodsKind.ValueData          AS GoodsKindName
            , Object_GoodsKindComplete.Id         AS GoodsKindId_Complete
@@ -412,7 +439,9 @@ BEGIN
 
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_Storage_Partion.Id ELSE Object_Storage.Id               END AS StorageId
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_Storage_Partion.ValueData ELSE Object_Storage.ValueData END AS StorageName
-
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionModel_Partion.Id ELSE Object_PartionModel.Id               END AS PartionModelId
+           , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN Object_PartionModel_Partion.ValueData ELSE Object_PartionModel.ValueData END AS PartionModelName
+           
            , MIFloat_ContainerId.ValueData :: Integer AS ContainerId
 
            , MovementItem.isErased               AS isErased
@@ -448,12 +477,15 @@ BEGIN
                                        AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
 
             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                       ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                       ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
             LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                         ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+            LEFT JOIN MovementItemString AS MIString_PartNumber
+                                         ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                        AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
 
             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                           ON CLO_GoodsKind.ContainerId = MIFloat_ContainerId.ValueData :: Integer
@@ -488,6 +520,11 @@ BEGIN
                                             AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
             LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = MILinkObject_Storage.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionModel
+                                             ON MILinkObject_PartionModel.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PartionModel.DescId = zc_MILinkObject_Storage()
+            LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = MILinkObject_PartionModel.ObjectId
+
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -513,13 +550,16 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_Value 
                                  ON ObjectDate_Value.ObjectId = MILinkObject_PartionGoods.ObjectId                      -- дата
                                 AND ObjectDate_Value.DescId = zc_ObjectDate_PartionGoods_Value()
-
+            LEFT JOIN ObjectString AS ObjectString_PartNumber
+                                   ON ObjectString_PartNumber.ObjectId = MILinkObject_PartionGoods.ObjectId             -- сер. номер
+                                  AND ObjectString_PartNumber.DescId = zc_ObjectString_PartionGoods_PartNumber()
+                                
             LEFT JOIN ObjectFloat AS ObjectFloat_Price_Partion 
                              ON ObjectFloat_Price_Partion.ObjectId = MILinkObject_PartionGoods.ObjectId                 -- цена
                             AND ObjectFloat_Price_Partion.DescId = zc_ObjectFloat_PartionGoods_Price()    
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit 
-                                 ON ObjectLink_Unit.ObjectId = MILinkObject_PartionGoods.ObjectId		        -- подразделение
+                                 ON ObjectLink_Unit.ObjectId = MILinkObject_PartionGoods.ObjectId		               -- подразделение
                                 AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
             LEFT JOIN Object AS Object_Unit_Partion ON Object_Unit_Partion.Id = ObjectLink_Unit.ChildObjectId
 
@@ -528,6 +568,11 @@ BEGIN
                                 AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
             LEFT JOIN Object AS Object_Storage_Partion ON Object_Storage_Partion.Id = ObjectLink_Storage.ChildObjectId 
 
+            LEFT JOIN ObjectLink AS ObjectLink_PartionModel 
+                                 ON ObjectLink_PartionModel.ObjectId = MILinkObject_PartionGoods.ObjectId	            -- Модель
+                                AND ObjectLink_PartionModel.DescId = zc_ObjectLink_PartionGoods_Storage()
+            LEFT JOIN Object AS Object_PartionModel_Partion ON Object_PartionModel_Partion.Id = ObjectLink_PartionModel.ChildObjectId
+            
             -- привязываем цены по прайсу 2 раза по виду товара и без
             LEFT JOIN tmpPricePR AS tmpPricePR_Kind 
                                  ON tmpPricePR_Kind.GoodsId = MovementItem.ObjectId
@@ -550,6 +595,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
+ 27.05.23         *
  02.12.19         * цена с учетом вида товара
  19.12.18         *
  31.03.15         * add GoodsGroupNameFull, MeasureName

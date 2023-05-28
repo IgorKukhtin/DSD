@@ -2,7 +2,9 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -15,12 +17,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
     IN inHeadCount           TFloat    , -- Количество голов
     IN inCount               TFloat    , -- Количество батонов или упаковок
     IN inPartionGoods        TVarChar  , -- Партия товара/Инвентарный номер
+    IN inPartNumber          TVarChar  , -- № по тех паспорту 
     IN inPartionGoodsId      Integer   , -- партия
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inUnitId              Integer   , -- Подразделение (для МО)
-    IN inStorageId           Integer   , -- Место хранения
+    IN inStorageId           Integer   , -- Место хранения 
+    IN inPartionModelId      Integer   , -- Модель
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -73,12 +77,14 @@ BEGIN
                                                  , inHeadCount          := inHeadCount
                                                  , inCount              := inCount
                                                  , inPartionGoods       := inPartionGoods
+                                                 , inPartNumber         := inPartNumber
                                                  , inPartionGoodsId     := inPartionGoodsId
                                                  , inGoodsKindId        := inGoodsKindId
                                                  , inGoodsKindCompleteId:= inGoodsKindCompleteId
                                                  , inAssetId            := inAssetId
                                                  , inUnitId             := inUnitId
                                                  , inStorageId          := inStorageId
+                                                 , inPartionModelId     := inPartionModelId
                                                  , inUserId             := vbUserId
                                                   ) AS tmp;
 
@@ -89,6 +95,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.05.23         *
  19.12.18         * add inPartionGoodsId              
  25.04.05         * add lpInsertUpdate_MovementItem_Inventory
  26.07.14                                        * add inPrice and inUnitId and inStorageId
