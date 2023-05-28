@@ -1,11 +1,12 @@
 ﻿-- Function: lpInsertUpdate_MovementItemString
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemString (Integer, Integer, TFloat);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemString (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemString(
     IN inDescId                Integer           , -- ключ класса свойства
-    IN inMovementItemId        Integer           , -- ключ 
-    IN inObjectId              Integer             -- ключ объекта
+    IN inMovementItemId        Integer           , -- ключ
+    IN inValueData             TVarChar            -- Значение
 )
 RETURNS Boolean
 AS
@@ -33,6 +34,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 22.03.15                                        * IF ... AND inValueData <> 0
+ 27.05.23                                        * IF ... AND inValueData <> ''
  17.05.14                                        * add проверка - inValueData
 */
