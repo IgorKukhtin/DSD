@@ -43,13 +43,15 @@ BEGIN
                                                   , inSumm               := 0
                                                   , inHeadCount          := 0
                                                   , inCount              := 0
-                                                  , inPartionGoods       := tmp.PartionGoods
+                                                  , inPartionGoods       := tmp.PartionGoods   
+                                                  , inPartNumber         := NULL
                                                   , inPartionGoodsId     := tmp.PartionGoodsId
                                                   , inGoodsKindId        := tmp.GoodsKindId
                                                   , inGoodsKindCompleteId:= tmp.GoodsKindCompleteId
                                                   , inAssetId            := NULL
                                                   , inUnitId             := NULL
-                                                  , inStorageId          := NULL
+                                                  , inStorageId          := NULL  
+                                                  , inPartionModelId     := NULL
                                                   , inUserId             := vbUserId
                                                    )
      FROM (WITH
@@ -102,7 +104,7 @@ BEGIN
                                                      ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
                                                     AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                           LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                                       ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                                       ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                       AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
                                                            ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
