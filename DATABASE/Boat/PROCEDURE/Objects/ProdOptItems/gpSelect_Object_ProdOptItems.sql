@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ProdOptItems(
 RETURNS TABLE (MovementId_OrderClient Integer
              , Id Integer, Code Integer, Name TVarChar
              , NPP Integer
-             , PartNumber TVarChar, Comment TVarChar
+             , PartNumber TVarChar, Comment TVarChar, CommentOpt TVarChar
              , KeyId TVarChar
              , ProductId Integer, ProductName TVarChar
              , ProdOptionsId Integer, ProdOptionsName TVarChar
@@ -661,6 +661,7 @@ BEGIN
 
          , ObjectString_PartNumber.ValueData  ::TVarChar  AS PartNumber
          , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
+         , ObjectString_CommentOpt.ValueData  ::TVarChar  AS CommentOpt
 
          , (tmpProduct.Id :: TVarChar || '_' || tmpRes.MovementId_OrderClient :: TVarChar) :: TVarChar KeyId
 
@@ -741,6 +742,9 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = tmpRes.Id
                                 AND ObjectString_Comment.DescId   = zc_ObjectString_ProdOptItems_Comment()
+          LEFT JOIN ObjectString AS ObjectString_CommentOpt
+                                 ON ObjectString_CommentOpt.ObjectId = tmpRes.Id
+                                AND ObjectString_CommentOpt.DescId   = zc_ObjectString_ProdOptItems_CommentOpt()
           LEFT JOIN ObjectString AS ObjectString_PartNumber
                                  ON ObjectString_PartNumber.ObjectId = tmpRes.Id
                                 AND ObjectString_PartNumber.DescId   = zc_ObjectString_ProdOptItems_PartNumber()
@@ -790,6 +794,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 29.05.23         *
  23.09.22                                                       *
  08.10.20         *
 */

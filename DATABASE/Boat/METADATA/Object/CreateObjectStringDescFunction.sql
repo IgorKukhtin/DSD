@@ -69,6 +69,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_ProdOptItems_Comment() RETURNS Intege
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_ProdOptItems_Comment', zc_Object_ProdOptItems(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ProdOptItems_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_ProdOptItems_CommentOpt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ProdOptItems_CommentOpt'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_ProdOptItems_CommentOpt', zc_Object_ProdOptItems(), 'Примечание(опция)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ProdOptItems_CommentOpt');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectString_ProdOptItems_PartNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ProdOptItems_PartNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_ProdOptItems_PartNumber', zc_Object_ProdOptItems(), '№ уст. доп.оборуд' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ProdOptItems_PartNumber');

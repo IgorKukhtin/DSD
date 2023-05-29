@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ProdOptItems(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Amount TFloat
              , PriceIn TFloat, PriceOut TFloat, DiscountTax TFloat
-             , PartNumber TVarChar, Comment TVarChar
+             , PartNumber TVarChar, Comment TVarChar, CommentOpt TVarChar
              , ProductId Integer, ProductName TVarChar
              , ProdOptionsId Integer, ProdOptionsName TVarChar
              , ProdOptPatternId Integer, ProdOptPatternName TVarChar
@@ -35,6 +35,7 @@ BEGIN
            ,  0 :: TFloat             AS DiscountTax
            , '' :: TVarChar           AS PartNumber
            , '' :: TVarChar           AS Comment
+           , '' :: TVarChar           AS CommentOpt
            ,  0 :: Integer            AS ProductId
            , '' :: TVarChar           AS ProductName
            ,  0 :: Integer            AS ProdOptionsId
@@ -55,6 +56,7 @@ BEGIN
          , ObjectFloat_DiscountTax.ValueData  ::TFloat    AS DiscountTax
          , ObjectString_PartNumber.ValueData  ::TVarChar  AS PartNumber
          , ObjectString_Comment.ValueData     ::TVarChar  AS Comment
+         , ObjectString_CommentOpt.ValueData  ::TVarChar  AS CommentOpt
 
          , Object_Product.Id                  ::Integer   AS ProductId
          , Object_Product.ValueData           ::TVarChar  AS ProductName
@@ -69,6 +71,9 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ProdOptItems.Id
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ProdOptItems_Comment()  
+          LEFT JOIN ObjectString AS ObjectString_CommentOpt
+                                 ON ObjectString_CommentOpt.ObjectId = Object_ProdOptItems.Id
+                                AND ObjectString_CommentOpt.DescId = zc_ObjectString_ProdOptItems_CommentOpt()
           LEFT JOIN ObjectString AS ObjectString_PartNumber
                                  ON ObjectString_PartNumber.ObjectId = Object_ProdOptItems.Id
                                 AND ObjectString_PartNumber.DescId = zc_ObjectString_ProdOptItems_PartNumber()
@@ -116,6 +121,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.05.23         *
  04.01.21         * DiscountTax
  08.10.20         *
 */

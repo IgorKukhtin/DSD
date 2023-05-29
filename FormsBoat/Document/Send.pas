@@ -229,7 +229,7 @@ type
     bbedSearchArticle: TdxBarControlContainerItem;
     bblbSearchArticle: TdxBarControlContainerItem;
     Panel1: TPanel;
-    actOrderClientChoiceForm: TOpenChoiceForm;
+    actOrderClientChoiceItemForm: TOpenChoiceForm;
     cxLabel15: TcxLabel;
     edReceiptGoods: TcxButtonEdit;
     GuidesGoods: TdsdGuides;
@@ -265,6 +265,7 @@ type
     bbInsert: TdxBarSubItem;
     dxBarSeparator1: TdxBarSeparator;
     dxBarSeparator2: TdxBarSeparator;
+    actOrderClientChoiceForm: TOpenChoiceForm;
   private
   public
   end;

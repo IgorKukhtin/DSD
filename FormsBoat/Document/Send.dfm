@@ -2233,6 +2233,82 @@ object SendForm: TSendForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'OrderClientJournalChoiceForm'
+      FormName = 'TOrderClientJournalChoiceForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_OrderClient'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumberFull_OrderClient'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ProductName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CIN'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CIN'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOrderClientChoiceItemForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'OrderClientJournalChoiceForm'
       FormName = 'TOrderClientJournalChoiceItemForm'
       FormNameParam.Value = 'TOrderClientJournalChoiceItemForm'
       FormNameParam.DataType = ftString
@@ -4317,6 +4393,10 @@ object SendForm: TSendForm
     TextEdit = edSearchArticle
     DataSet = MasterCDS
     Column = Article_all
+    ColumnList = <
+      item
+        Column = Article_all
+      end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 280

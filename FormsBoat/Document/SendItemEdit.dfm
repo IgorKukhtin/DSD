@@ -853,10 +853,10 @@ object SendItemEditForm: TSendItemEditForm
     KeyField = 'Id'
     LookupControl = edOrderClient
     Key = '0'
-    FormNameParam.Value = 'TOrderClientJournalChoiceItemForm'
+    FormNameParam.Value = 'TOrderClientJournalChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TOrderClientJournalChoiceItemForm'
+    FormName = 'TOrderClientJournalChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -882,6 +882,7 @@ object SendItemEditForm: TSendItemEditForm
         Value = Null
         Component = GuidesGoods
         ComponentItem = 'Key'
+        ParamType = ptResult
         MultiSelectSeparator = ','
       end
       item
@@ -890,7 +891,7 @@ object SendItemEditForm: TSendItemEditForm
         Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInputOutput
+        ParamType = ptResult
         MultiSelectSeparator = ','
       end
       item
@@ -898,12 +899,14 @@ object SendItemEditForm: TSendItemEditForm
         Value = Null
         Component = edArticle
         DataType = ftString
+        ParamType = ptResult
         MultiSelectSeparator = ','
       end
       item
         Name = 'ObjectCode'
         Value = Null
         Component = edGoodsCode
+        ParamType = ptResult
         MultiSelectSeparator = ','
       end>
     Left = 288
