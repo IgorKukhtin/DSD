@@ -190,6 +190,8 @@ type
     bbInsertRecordAsset: TdxBarButton;
     bbPartionGoodsAssetChoiceForm: TdxBarButton;
     PartionModelName: TcxGridDBColumn;
+    NewOpenChoiceForm1: TOpenChoiceForm;
+    actGoodsChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
