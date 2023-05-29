@@ -92,6 +92,11 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount12
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -163,6 +168,11 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount12
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False

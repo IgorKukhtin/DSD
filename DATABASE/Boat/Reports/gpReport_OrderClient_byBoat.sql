@@ -225,6 +225,7 @@ BEGIN
                           , SUM (CASE WHEN tmp.MonthBegin = 10 THEN tmp.Amount ELSE 0 END) AS Amount10
                           , SUM (CASE WHEN tmp.MonthBegin = 11 THEN tmp.Amount ELSE 0 END) AS Amount11
                           , SUM (CASE WHEN tmp.MonthBegin = 12 THEN tmp.Amount ELSE 0 END) AS Amount12
+                          , ROW_Number() OVER (PARTITION BY tmp.ObjectId) AS Ord
                     FROM tmpItem_Detail AS tmp
                     GROUP BY CASE WHEN inisDetail = TRUE THEN tmp.ProductId ELSE 0 END
                            , CASE WHEN inisDetail = TRUE THEN tmp.MovementId ELSE 0 END
@@ -338,7 +339,8 @@ BEGIN
                         GROUP BY t1.ObjectId, t1.MonthBegin, t1.Amount
                         )
   , tmpRemainsMonth AS (SELECT DISTINCT tmpGroupDetail2.ObjectId
-                             , MAX (tmpGroupDetail2.MonthBegin) OVER (PARTITION BY tmpGroupDetail2.ObjectId ) AS MonthBegin
+                             , MAX (tmpGroupDetail2.MonthBegin) OVER (PARTITION BY tmpGroupDetail2.ObjectId )  AS MonthBegin 
+                             , MAX (tmpGroupDetail2.AmountTotal) OVER (PARTITION BY tmpGroupDetail2.ObjectId ) AS AmountTotal
                         from tmpGroupDetail2
                             LEFT JOIN  tmpRemains ON tmpRemains.ObjectId = tmpGroupDetail2.ObjectId 
                         WHERE COALESCE (tmpRemains.Amount,0) - COALESCE (tmpGroupDetail2.AmountTotal,0)>= 0
@@ -423,8 +425,9 @@ BEGIN
                                   ON ObjectString_Article_Goods.ObjectId = tmp.GoodsId
                                  AND ObjectString_Article_Goods.DescId = zc_ObjectString_Article()  
            
-           LEFT JOIN tmpRemains ON tmpRemains.ObjectId = tmp.ObjectId
-           LEFT JOIN tmpRemainsMonth ON tmpRemainsMonth.ObjectId = tmp.ObjectId
+           LEFT JOIN tmpRemains ON (tmpRemains.ObjectId = tmp.ObjectId AND tmp.Ord = 1 AND inisDetail = TRUE) OR (tmpRemains.ObjectId = tmp.ObjectId AND inisDetail = FALSE)
+           LEFT JOIN tmpRemainsMonth ON (tmpRemainsMonth.ObjectId = tmp.ObjectId AND tmp.Ord = 1 AND inisDetail = TRUE) OR (tmpRemainsMonth.ObjectId = tmp.ObjectId AND inisDetail = FALSE)
+
      ;
 
 END;

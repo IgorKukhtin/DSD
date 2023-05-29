@@ -39,6 +39,7 @@ object InventoryForm: TInventoryForm
         Height = 341
         Align = alClient
         TabOrder = 0
+        ExplicitTop = 5
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1340,22 +1341,6 @@ object InventoryForm: TInventoryForm
           Component = MasterCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'StartDate'
-          Value = Null
-          Component = edOperDate
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = Null
-          Component = edOperDate
-          DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

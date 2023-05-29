@@ -17,10 +17,10 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
-    Left = 10
+    Left = 11
     Top = 73
     TabOrder = 0
-    Width = 407
+    Width = 406
   end
   object cxLabel1: TcxLabel
     Left = 10
@@ -84,7 +84,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 9
-    Width = 256
+    Width = 128
   end
   object cxLabel12: TcxLabel
     Left = 10
@@ -140,12 +140,12 @@ object ProdOptionsEditForm: TProdOptionsEditForm
     Width = 106
   end
   object cxLabel5: TcxLabel
-    Left = 272
+    Left = 288
     Top = 100
     Caption = #1058#1080#1087' '#1053#1044#1057
   end
   object edTaxKind: TcxButtonEdit
-    Left = 272
+    Left = 288
     Top = 120
     Properties.Buttons = <
       item
@@ -154,7 +154,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 17
-    Width = 145
+    Width = 125
   end
   object cxLabel7: TcxLabel
     Left = 10
@@ -232,6 +232,20 @@ object ProdOptionsEditForm: TProdOptionsEditForm
     Top = 247
     Caption = #1069#1083#1077#1084#1077#1085#1090' Boat Structure'
   end
+  object cxLabel14: TcxLabel
+    Left = 154
+    Top = 100
+    Hint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
+    Caption = #1050#1086#1083'-'#1074#1086' ('#1082#1086#1084#1087#1083'.)'
+  end
+  object edAmount: TcxCurrencyEdit
+    Left = 154
+    Top = 120
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 29
+    Width = 120
+  end
   object ActionList: TActionList
     Left = 160
     Top = 121
@@ -303,6 +317,14 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         Name = 'inSalePrice'
         Value = Null
         Component = edSalePrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = edAmount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -393,7 +415,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         MultiSelectSeparator = ','
       end>
     Left = 376
-    Top = 73
+    Top = 97
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ProdOptions'
@@ -434,6 +456,13 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         Name = 'SalePrice'
         Value = Null
         Component = edSalePrice
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = edAmount
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -691,8 +720,8 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 207
-    Top = 185
+    Left = 183
+    Top = 161
   end
   object GuidesProdEngine: TdsdGuides
     KeyField = 'Id'

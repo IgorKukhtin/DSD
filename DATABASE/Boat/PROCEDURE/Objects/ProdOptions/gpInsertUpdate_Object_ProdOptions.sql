@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, TVar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, Integer, TVarChar, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptions(
  INOUT ioId                  Integer   ,    -- ключ объекта <Названия опций>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptions(
     IN inCodeVergl           Integer   ,    -- Альтернативный код
     IN inName                TVarChar  ,    -- Название объекта
     IN inSalePrice           TFloat    ,
+    IN inAmount              TFloat    , 
     IN inComment             TVarChar  ,
     IN inId_Site             TVarChar  ,    -- Id Сайт
     IN inGoodsId             Integer   ,
@@ -94,6 +96,9 @@ BEGIN
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptions_SalePrice(), ioId, inSalePrice);
    END IF;
+ 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptions_Amount(), ioId, inAmount);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptions_TaxKind(), ioId, inTaxKindId);
@@ -128,6 +133,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.05.23         *
  22.06.22         *
  27.12.20         *
  08.10.20         *

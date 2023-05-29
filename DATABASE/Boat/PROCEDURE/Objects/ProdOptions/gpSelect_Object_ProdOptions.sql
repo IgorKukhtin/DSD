@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EKPrice TFloat, EKPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
              , SalePrice TFloat, SalePriceWVAT TFloat
+             , Amount TFloat
              , Comment TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -221,7 +222,8 @@ BEGIN
                                ELSE -- опция - Цена продажи с НДС
                                     CAST (COALESCE (ObjectFloat_SalePrice.ValueData, 0)
                                        * (1 + (COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0) / 100)) AS NUMERIC (16, 2))
-                          END :: TFloat AS SalePriceWVAT
+                          END :: TFloat AS SalePriceWVAT 
+                        , ObjectFloat_Amount.ValueData    AS Amount
                
                         , ObjectString_Comment.ValueData  AS Comment
                
@@ -263,7 +265,11 @@ BEGIN
                          -- Цена продажи Опции
                          LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
                                                ON ObjectFloat_SalePrice.ObjectId = Object_ProdOptions.Id
-                                              AND ObjectFloat_SalePrice.DescId = zc_ObjectFloat_ProdOptions_SalePrice()
+                                              AND ObjectFloat_SalePrice.DescId = zc_ObjectFloat_ProdOptions_SalePrice() 
+                         -- Кол-во (комплектующие)
+                         LEFT JOIN ObjectFloat AS ObjectFloat_Amount
+                                               ON ObjectFloat_Amount.ObjectId = Object_ProdOptions.Id
+                                              AND ObjectFloat_Amount.DescId = zc_ObjectFloat_ProdOptions_Amount()
                          LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                                               ON ObjectLink_TaxKind.ObjectId = Object_ProdOptions.Id
                                              AND ObjectLink_TaxKind.DescId = zc_ObjectLink_ProdOptions_TaxKind()
@@ -425,7 +431,9 @@ BEGIN
          , tmpRes.SalePrice :: TFloat
 
            -- цена продажи с НДС - если товар указан то берем цену товара, иначе это Boat Structure тогда берем SalePrice
-         , tmpRes.SalePriceWVAT :: TFloat
+         , tmpRes.SalePriceWVAT :: TFloat 
+         
+         , tmpRes.Amount ::TFloat
 
          , tmpRes.Comment
 
@@ -470,6 +478,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.05.23         *
  25.12.20         *
  08.10.20         *
 */
