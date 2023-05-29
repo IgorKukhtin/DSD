@@ -159,7 +159,7 @@ inherited SendForm: TSendForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actAssetGoodsChoiceForm
+                Action = actGoodsChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1769,6 +1769,40 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
+    object NewOpenChoiceForm1: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsForm1'
+      FormName = 'TAssetGoods_ObjectForm'
+      FormNameParam.Value = 'TAssetGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actUnitChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2493,6 +2527,40 @@ inherited SendForm: TSendForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel (B/C/D/F)'
       ImageIndex = 41
     end
+    object actGoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -3194,7 +3262,7 @@ inherited SendForm: TSendForm
       item
         Guides = GuidesTo
       end>
-    Left = 160
+    Left = 200
     Top = 192
   end
   inherited HeaderSaver: THeaderSaver

@@ -2265,6 +2265,15 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPartionGoodsId'
         Value = Null
         Component = MasterCDS
@@ -2309,6 +2318,14 @@ inherited InventoryForm: TInventoryForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'StorageId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionModelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionModelId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2402,6 +2419,23 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsKindId'
         Value = Null
         Component = MasterCDS
@@ -2438,6 +2472,14 @@ inherited InventoryForm: TInventoryForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'StorageId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionModelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionModelId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

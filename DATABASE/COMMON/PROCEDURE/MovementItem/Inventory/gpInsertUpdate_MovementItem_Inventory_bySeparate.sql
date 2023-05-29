@@ -40,12 +40,14 @@ BEGIN
                                                   , inHeadCount          := 0
                                                   , inCount              := 0
                                                   , inPartionGoods       := tmp.PartionGoods
+                                                  , inPartNumber         := NULL
                                                   , inPartionGoodsId     := NULL
                                                   , inGoodsKindId        := tmp.GoodsKindId
                                                   , inGoodsKindCompleteId:= tmp.GoodsKindCompleteId
                                                   , inAssetId            := NULL
                                                   , inUnitId             := NULL
-                                                  , inStorageId          := NULL
+                                                  , inStorageId          := NULL 
+                                                  , inPartionModelId     := NULL
                                                   , inUserId             := vbUserId
                                                    )
      FROM (SELECT tmpMI.MovementItemId                                                          AS MovementItemId

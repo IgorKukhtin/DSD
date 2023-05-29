@@ -42,6 +42,7 @@ BEGIN
     END IF;
   END IF;
 
+
   -- Первичный ключ. Не составной
   IF TG_NARGS = 1 AND _replica.zc_isReplica_two() = TRUE
   THEN
