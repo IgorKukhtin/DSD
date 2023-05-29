@@ -439,4 +439,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inObjectId := 0, inisDetail := False ,inSession := '5');
---SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inObjectId := 252790, inisDetail := true ,inSession := '5')
+-- SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inObjectId := 252790, inisDetail := true ,inSession := '5')

@@ -25,6 +25,7 @@ BEGIN
                                    , isPartionCount Boolean, isPartionSumm Boolean, isPartionDate_From Boolean, isPartionDate_To Boolean, isPartionGoodsKind_From Boolean, isPartionGoodsKind_To Boolean
                                    , PartionGoodsId_From Integer, PartionGoodsId_To Integer
                                    , ProfitLossGroupId Integer, ProfitLossDirectionId Integer, UnitId_ProfitLoss Integer, BranchId_ProfitLoss Integer, BusinessId_ProfitLoss Integer
+                                   , PartNumber TVarChar, PartionModelId Integer, isAsset Boolean
                                     ) ON COMMIT DROP;
          -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
          CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerDescId Integer, MIContainerId_To BigInt, ContainerId_To Integer, AccountId_To Integer, ContainerId_ProfitLoss Integer, ContainerId_GoodsFrom Integer, ContainerId_From Integer, AccountId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat) ON COMMIT DROP;

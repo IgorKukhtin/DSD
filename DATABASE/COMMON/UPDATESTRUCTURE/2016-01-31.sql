@@ -12,17 +12,26 @@
 
 -- select last_value from movementitemprotocol_id_seq
 -- select last_value from movementprotocol_id_seq
+
          insert into movementprotocol_arc
-            select * from movementprotocol where Id >= 409608521
--- truncate table movementitemprotocol;
+            select * from movementprotocol where Id >= 123
 -- truncate table movementprotocol;
 
+         insert into movementitemprotocol_arc
+            select * from movementitemprotocol where Id >= 123
+-- truncate table movementitemprotocol;
 
+--       select max(Id), count(*) from movementprotocol 
+--       insert into movementprotocol_arc
+--          select * from movementprotocol order by Id limit 1000000;
          insert into movementprotocol_arc
-            select * from movementprotocol order by Id limit 1000000;
-         insert into movementprotocol_arc
-            select * from movementprotocol where Id > (select max(Id) from movementprotocol_arc ) and Id < 409608521 order by Id limit 2000000;
+            select * from movementprotocol where Id > (select max(Id) from movementprotocol_arc ) and Id < 12345 order by Id limit 2000000;
 
+--       select max(Id), count(*) from movementitemprotocol 
+--       insert into movementitemprotocol_arc
+--          select * from movementitemprotocol order by Id limit 1000000;
+         insert into movementitemprotocol_arc
+            select * from movementitemprotocol where Id > (select max(Id) from movementitemprotocol_arc ) and Id < 12345 order by Id limit 2000000;
 
 */
 -- 

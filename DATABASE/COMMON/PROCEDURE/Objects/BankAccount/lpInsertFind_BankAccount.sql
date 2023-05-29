@@ -17,14 +17,34 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
 --   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_BankAccount());
 
-   -- Ищем Банк по МФО. Если не находим, то добавляем
-   vbBankId := lpInsertFind_Bank (inBankMFO, inBankName, inUserId);
 
-    
-   SELECT Id INTO vbBankAccountId 
-     FROM Object_BankAccount_View 
+   IF COALESCE (inBankName, '') = '' AND 1=0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Банк пусто для MFO = <%> '
+                     , inBankMFO
+                      ;
+
+   END IF;
+
+   -- Ищем Банк по МФО. Если не находим, то добавляем
+   vbBankId := lpInsertFind_Bank (COALESCE (inBankMFO, ''), COALESCE (inBankName, ''), inUserId);
+
+
+   SELECT Id INTO vbBankAccountId
+     FROM Object_BankAccount_View
     WHERE BankId = vbBankId AND JuridicalId = inJuridicalId AND Name = inBankAccount;
 
+
+   IF COALESCE (inBankAccount, '') = ''
+   THEN
+       RAISE EXCEPTION 'Ошибка.Р.сч. пусто для <%> <%> <%> <%>'
+                     , inBankMFO
+                     , inBankName
+                     , lfGet_Object_ValueData_sh (inJuridicalId)
+                     , inJuridicalId
+                      ;
+
+   END IF;
 
    IF COALESCE(vbBankAccountId, 0) = 0
    THEN
@@ -45,7 +65,7 @@ BEGIN
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertFind_BankAccount(TVarChar, TVarChar, TVarChar, Integer, Integer) OWNER TO postgres;  
+ALTER FUNCTION lpInsertFind_BankAccount(TVarChar, TVarChar, TVarChar, Integer, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

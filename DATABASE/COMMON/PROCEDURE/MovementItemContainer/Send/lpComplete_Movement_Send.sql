@@ -55,6 +55,7 @@ BEGIN
                          , isPartionCount, isPartionSumm, isPartionDate_From, isPartionDate_To, isPartionGoodsKind_From, isPartionGoodsKind_To
                          , PartionGoodsId_From, PartionGoodsId_To
                          , ProfitLossGroupId, ProfitLossDirectionId, UnitId_ProfitLoss, BranchId_ProfitLoss, BusinessId_ProfitLoss
+                         , PartNumber, PartionModelId, isAsset
                           )
         WITH tmpMember AS (SELECT lfSelect.MemberId, lfSelect.UnitId
                            FROM lfSelect_Object_Member_findPersonal (lfGet_User_Session (inUserId)) AS lfSelect
@@ -178,6 +179,10 @@ BEGIN
                               -- для ОПиУ
                             , ObjectLink_UnitTo_Business_ProfitLoss.ChildObjectId AS BusinessId_ProfitLoss
 
+                            , MIString_PartNumber.ValueData                          AS PartNumber
+                            , MILinkObject_PartionModel.ObjectId                     AS PartionModelId
+                            , COALESCE (ObjectBoolean_Asset.ValueData, FALSE)        AS isAsset
+
                         FROM Movement
                              JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
 
@@ -205,6 +210,16 @@ BEGIN
                              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                         ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                        AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionModel
+                                                              ON MILinkObject_PartionModel.MovementItemId = MovementItem.Id
+                                                             AND MILinkObject_PartionModel.DescId = zc_MILinkObject_PartionModel()
+                             LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                          ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                         AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
+                             LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset
+                                                     ON ObjectBoolean_Asset.ObjectId = MovementItem.ObjectId
+                                                    AND ObjectBoolean_Asset.DescId   = zc_ObjectBoolean_Goods_Asset()
 
                              LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                          ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
@@ -355,6 +370,37 @@ BEGIN
                                              INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
                                                                  AND Container.DescId   = zc_Container_Count()
                                                                  AND Container.Amount   > 0
+                                             INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                            ON CLO_Unit.ContainerId = Container.Id
+                                                                           AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                                                           AND CLO_Unit.ObjectId    = tmpMI.UnitId_From
+                                             -- !!!
+                                             LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                                           ON CLO_PartionGoods.ContainerId = Container.Id
+                                                                          AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                             LEFT JOIN ObjectDate AS ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                                                     AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                                             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+                                        WHERE (tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100()) -- Общефирменные + Запчасти и Ремонты
+                                            -- или новая схема - ОС
+                                            OR tmpMI.isAsset = TRUE
+                                              )
+                                          -- только не Перемещение ОС
+                                          AND tmpMI.ContainerId_asset = 0
+                                          -- партия
+                                          AND CLO_PartionGoods.ContainerId IS NULL
+
+                                       UNION ALL
+                                        SELECT tmpMI.MovementItemId                                  AS MovementItemId
+                                             , Container.Id                                          AS ContainerId
+                                             , Container.Amount                                      AS Amount
+                                             , COALESCE (CLO_PartionGoods.ObjectId, 0)               AS PartionGoodsId
+                                             , COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
+                                             , COALESCE (Object_PartionGoods.ValueData, '')          AS PartionGoods
+                                        FROM tmpMI
+                                             INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
+                                                                 AND Container.DescId   = zc_Container_Count()
+                                                                 AND Container.Amount   > 0
                                              INNER JOIN ContainerLinkObject AS CLO_Member
                                                                             ON CLO_Member.ContainerId = Container.Id
                                                                            AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
@@ -367,15 +413,18 @@ BEGIN
                                              LEFT JOIN ObjectDate AS ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                                                      AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
                                              LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
-                                        WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
-                                                                             , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
-                                                                             , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                                             , zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
-                                                                             , zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
-                                                                             , zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
-                                                                             , zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
-                                                                             , zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
-                                                                              )
+                                        WHERE (tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                              , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                              , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                              , zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
+                                                                              , zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                                              , zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                                              , zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                                              , zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
+                                                                               )
+                                            -- или новая схема - ОС
+                                            OR tmpMI.isAsset = TRUE
+                                             )
                                           -- только не Перемещение ОС
                                           AND tmpMI.ContainerId_asset = 0
                                           -- партия
@@ -403,15 +452,18 @@ BEGIN
                                              LEFT JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                                                      AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
                                              LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
-                                        WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
-                                                                             , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
-                                                                             , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                                             , zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
-                                                                             , zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
-                                                                             , zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
-                                                                             , zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
-                                                                             , zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
-                                                                              )
+                                        WHERE (tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                              , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                              , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                              , zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
+                                                                              , zc_Enum_InfoMoneyDestination_70200() -- Инвестиции + Капитальный ремонт
+                                                                              , zc_Enum_InfoMoneyDestination_70300() -- Инвестиции + Долгосрочные инвестиции
+                                                                              , zc_Enum_InfoMoneyDestination_70400() -- Инвестиции + Капитальное строительство
+                                                                              , zc_Enum_InfoMoneyDestination_70500() -- Инвестиции + НМА
+                                                                               )
+                                            -- или новая схема - ОС
+                                            OR tmpMI.isAsset = TRUE
+                                             )
                                           -- только не Перемещение ОС
                                           AND tmpMI.ContainerId_asset = 0
                                           -- партия
@@ -515,6 +567,10 @@ BEGIN
               -- для ОПиУ
             , _tmp.BusinessId_ProfitLoss
 
+            , _tmp.PartNumber
+            , _tmp.PartionModelId
+            , _tmp.isAsset
+
         FROM tmpMI AS _tmp
              LEFT JOIN tmpContainer       ON tmpContainer.MovementItemId          = _tmp.MovementItemId
                                        --AND _tmp.InfoMoneyId <> zc_Enum_InfoMoney_20202() -- Спецодежда
@@ -573,12 +629,27 @@ BEGIN
 IF inUserId = 5 AND 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.<%>  %   %', (select _tmpItem.PartionGoods from _tmpItem)
-    , (select _tmpItem.PartionGoodsId_mi from _tmpItem)
+    , (select _tmpItem.ContainerId_GoodsFrom from _tmpItem)
     , (select _tmpItem.PartionGoodsId_From from _tmpItem)
     ;
 end if;
 
-     -- №1 - формируются Партии товара, ЕСЛИ надо ...
+
+     --  №1.1. - формируются Партии товара для Master(ПРИХОД)-элементы, новая схема - ОС
+     UPDATE _tmpItem SET PartionGoodsId_To = lpInsertFind_Object_PartionGoods (inUnitId_Partion := (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = _tmpItem.PartionGoodsId_From AND OL.DescId  = zc_ObjectLink_PartionGoods_Unit())
+                                                                             , inGoodsId        := _tmpItem.GoodsId
+                                                                             , inStorageId      := _tmpItem.StorageId_mi
+                                                                             , inPartionModelId := _tmpItem.PartionModelId
+                                                                             , inInvNumber      := _tmpItem.PartionGoods
+                                                                             , inPartNumber      := _tmpItem.PartNumber
+                                                                             , inOperDate       := (SELECT OD.ValueData  FROM ObjectDate  AS OD  WHERE OD.ObjectId  = _tmpItem.PartionGoodsId_From AND OD.DescId  = zc_ObjectDate_PartionGoods_Value())
+                                                                             , inPrice          := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = _tmpItem.PartionGoodsId_From AND OFl.DescId = zc_ObjectFloat_PartionGoods_Price())
+                                                                              )
+     WHERE _tmpItem.isAsset = TRUE AND (_tmpItem.PartionGoods <> '' OR _tmpItem.PartNumber <> '') AND _tmpItem.StorageId_mi <> 0
+     --AND 1=0
+    ;
+
+     -- №1.2. - формируются Партии товара, ЕСЛИ надо ...
      UPDATE _tmpItem SET PartionGoodsId_From = CASE -- Спецодежда + PartionGoodsId_asset
                                                     WHEN _tmpItem.PartionGoodsId_From > 0
                                                          THEN _tmpItem.PartionGoodsId_From
