@@ -30,7 +30,7 @@ inherited MainInventoryForm: TMainInventoryForm
       BiDiMode = bdLeftToRight
       ParentBiDiMode = False
       TabOrder = 0
-      Properties.ActivePage = tsInfo
+      Properties.ActivePage = tsInventory
       Properties.CustomButtons.Buttons = <>
       ClientRectBottom = 391
       ClientRectLeft = 4
@@ -1209,11 +1209,11 @@ inherited MainInventoryForm: TMainInventoryForm
             '                 ELSE 0 END AS Float)                           ' +
             '                            AS ProficitSumm'
           
-            '     , CAST((COALESCE (ID.Remains, 0) - CAST(COALESCE (ID.Amount' +
-            ', 0) + COALESCE (IC.Amount, 0) AS Float)) AS Float) AS Diff'
+            '     , CAST(( CAST(COALESCE (ID.Amount, 0) + COALESCE (IC.Amount' +
+            ', 0) - COALESCE (ID.Remains, 0) AS Float)) AS Float) AS Diff'
           
-            '     , CAST((COALESCE (ID.Remains, 0) - CAST(COALESCE (ID.Amount' +
-            ', 0) + COALESCE (IC.Amount, 0) AS Float))'
+            '     , CAST(( CAST(COALESCE (ID.Amount, 0) + COALESCE (IC.Amount' +
+            ', 0) - COALESCE (ID.Remains, 0) AS Float))'
           
             '                 * COALESCE(ID.Price, 0) AS Float)              ' +
             '                                  AS DiffSumm'

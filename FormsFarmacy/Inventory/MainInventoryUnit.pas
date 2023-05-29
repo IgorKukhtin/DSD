@@ -702,6 +702,13 @@ begin
     Exit;
   end;
 
+  if Abs(ceAmount.Value) > 10000 then
+  begin
+    ShowMessage('Ошибка количество <' + FormatCurr(',0.0', ceAmount.Value) + '> превышает допустимое.'#13#10+
+      'Проверьте столбец количество - возможно вы внесли значения ш/к вместо количества по товару');
+    Exit;
+  end;
+
   ds := TClientDataSet.Create(nil);
   try
     if Copy(BarCode, 1, 3) = '201' then
