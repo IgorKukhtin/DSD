@@ -376,8 +376,8 @@ BEGIN
                   WHEN COALESCE (tmpRemains.Amount,0) - COALESCE (tmpRemainsMonth.AmountTotal) > 0 AND inisDetail = True THEN 12
                  ELSE tmpRemainsMonth.MonthBegin END :: Integer AS MonthRemains
 
-           , CASE WHEN COALESCE (tmpRemains.Amount,0) - COALESCE (tmp.Amount) < 0 AND inisDetail = FALSE THEN zc_Color_Red()                  
-                 ELSE zc_Color_Black()
+           , CASE WHEN COALESCE (tmpRemains.Amount,0) - COALESCE (tmp.Amount) < 0 AND inisDetail = FALSE THEN zc_Color_Pink()                  
+                 ELSE zc_Color_White()
              END :: Integer AS ColorText
              
            , tmpRemains.Amount ::TFloat AS Remains  

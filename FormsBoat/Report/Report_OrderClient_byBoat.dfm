@@ -1226,7 +1226,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
       item
-        ValueColumn = ColorText
+        BackGroundValueColumn = ColorText
         ColorValueList = <>
       end>
     Left = 384
