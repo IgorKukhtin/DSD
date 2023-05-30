@@ -35,6 +35,7 @@ RETURNS TABLE  (MovementId Integer
               , Comment_Object TVarChar
               
               , MonthRemains Integer
+              , ColorText    Integer
               , Remains    TFloat
               
               , Amount     TFloat
@@ -325,7 +326,7 @@ BEGIN
                     )
   , tmpGroupDetail1 AS (SELECT tmp.ObjectId
                             , tmp.MonthBegin
-                            , SUM (tmp.Amount) AS Amount
+                            , SUM (COALESCE (tmp.Amount,0)) AS Amount
                        FROM tmpItem_Detail AS tmp
                        GROUP BY tmp.ObjectId
                               , tmp.MonthBegin
@@ -339,7 +340,7 @@ BEGIN
                         GROUP BY t1.ObjectId, t1.MonthBegin, t1.Amount
                         )
   , tmpRemainsMonth AS (SELECT DISTINCT tmpGroupDetail2.ObjectId
-                             , MAX (tmpGroupDetail2.MonthBegin) OVER (PARTITION BY tmpGroupDetail2.ObjectId )  AS MonthBegin 
+                             , MAX (tmpGroupDetail2.MonthBegin) OVER (PARTITION BY tmpGroupDetail2.ObjectId )  AS MonthBegin
                              , MAX (tmpGroupDetail2.AmountTotal) OVER (PARTITION BY tmpGroupDetail2.ObjectId ) AS AmountTotal
                         from tmpGroupDetail2
                             LEFT JOIN  tmpRemains ON tmpRemains.ObjectId = tmpGroupDetail2.ObjectId 
@@ -371,9 +372,16 @@ BEGIN
            , ObjectString_Goods_Comment.ValueData ::TVarChar AS Comment_goods
            , ObjectString_Object_Comment.ValueData ::TVarChar AS Comment_Object
            
-           , CASE WHEN COALESCE (tmpRemains.Amount,0) - COALESCE (tmp.Amount) >0 THEN 12 ELSE tmpRemainsMonth.MonthBegin END :: Integer AS MonthRemains
-           , tmpRemains.Amount ::TFloat AS Remains
-           
+           , CASE WHEN COALESCE (tmpRemains.Amount,0) - COALESCE (tmp.Amount) > 0 AND inisDetail = FALSE THEN 12
+                  WHEN COALESCE (tmpRemains.Amount,0) - COALESCE (tmpRemainsMonth.AmountTotal) > 0 AND inisDetail = True THEN 12
+                 ELSE tmpRemainsMonth.MonthBegin END :: Integer AS MonthRemains
+
+           , CASE WHEN COALESCE (tmpRemains.Amount,0) - COALESCE (tmp.Amount) < 0 AND inisDetail = FALSE THEN zc_Color_Red()                  
+                 ELSE zc_Color_Black()
+             END :: Integer AS ColorText
+             
+           , tmpRemains.Amount ::TFloat AS Remains  
+
            , tmp.Amount    :: TFloat
            , tmp.Amount1   :: TFloat
            , tmp.Amount2   :: TFloat
@@ -427,7 +435,6 @@ BEGIN
            
            LEFT JOIN tmpRemains ON (tmpRemains.ObjectId = tmp.ObjectId AND tmp.Ord = 1 AND inisDetail = TRUE) OR (tmpRemains.ObjectId = tmp.ObjectId AND inisDetail = FALSE)
            LEFT JOIN tmpRemainsMonth ON (tmpRemainsMonth.ObjectId = tmp.ObjectId AND tmp.Ord = 1 AND inisDetail = TRUE) OR (tmpRemainsMonth.ObjectId = tmp.ObjectId AND inisDetail = FALSE)
-
      ;
 
 END;

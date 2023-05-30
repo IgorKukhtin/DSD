@@ -64,6 +64,7 @@ type
     MonthRemains: TcxGridDBColumn;
     actReport_OC_ByBoatChoice: TdsdOpenForm;
     bbReport_OC_ByBoatChoice: TdxBarButton;
+    ColorText: TcxGridDBColumn;
   private
     { Private declarations }
   public
