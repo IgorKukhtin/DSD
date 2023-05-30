@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , EKPrice TFloat, EKPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
-             , SalePrice TFloat, SalePriceWVAT TFloat
+             , SalePrice TFloat, SalePriceWVAT TFloat 
+             , Amount TFloat
              , Comment TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -91,6 +92,8 @@ BEGIN
          , MAX (tmpSelect.SalePrice)      :: TFloat AS SalePrice
            -- цена продажи с НДС - если товар указан то берем цену товара, иначе это Boat Structure тогда берем SalePrice
          , MAX (tmpSelect.SalePriceWVAT)  :: TFloat AS SalePriceWVAT
+         
+         , MAX (tmpSelect.Amount)         :: TFloat AS Amount
 
          , MAX (tmpSelect.Comment)        :: TVarChar  AS Comment
 
@@ -151,6 +154,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.05.23         *
  27.06.22                                        *
 */
 

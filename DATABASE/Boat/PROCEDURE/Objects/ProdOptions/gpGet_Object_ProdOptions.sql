@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ProdEngineId Integer, ProdEngineName TVarChar
              , GoodsId Integer, GoodsName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
-             , SalePrice TFloat
+             , SalePrice TFloat, Amount TFloat
              , Comment TVarChar
              , ProdColorPatternId Integer, ProdColorPatternName TVarChar
              , ColorPatternId Integer, ColorPatternName TVarChar
@@ -51,6 +51,7 @@ BEGIN
            , Object_TaxKind.ValueData AS TaxKindName
 
            , CAST (0 AS TFloat)       AS SalePrice
+           , CAST (0 AS TFloat)       AS Amount
            , CAST ('' AS TVarChar)    AS Comment
 
            , 0  :: Integer            AS ProdColorPatternId
@@ -104,6 +105,7 @@ BEGIN
 
 
          , ObjectFloat_SalePrice.ValueData    AS SalePrice
+         , ObjectFloat_Amount.ValueData       AS Amount
          , ObjectString_Comment.ValueData     AS Comment
 
          , Object_ProdColorPattern.Id        :: Integer   AS ProdColorPatternId
@@ -130,6 +132,9 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
                                 ON ObjectFloat_SalePrice.ObjectId = Object_ProdOptions.Id
                                AND ObjectFloat_SalePrice.DescId = zc_ObjectFloat_ProdOptions_SalePrice()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Amount
+                                ON ObjectFloat_Amount.ObjectId = Object_ProdOptions.Id
+                               AND ObjectFloat_Amount.DescId = zc_ObjectFloat_ProdOptions_Amount()
 
           LEFT JOIN ObjectFloat AS ObjectFloat_CodeVergl
                                 ON ObjectFloat_CodeVergl.ObjectId = Object_ProdOptions.Id
@@ -196,6 +201,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.05.23         *
  06.07.22         *
  22.06.22         *
  25.12.20         *

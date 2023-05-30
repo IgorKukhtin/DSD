@@ -78,7 +78,13 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_ProdOptions_CodeVergl() RETURNS Intege
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_ProdOptions(), 'zc_ObjectFloat_ProdOptions_CodeVergl', 'Альтернативный код' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ProdOptions_CodeVergl');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ProdOptions_Amount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ProdOptions_Amount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ProdOptions(), 'zc_ObjectFloat_ProdOptions_Amount', 'Кол-во (комплектующие)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ProdOptions_Amount');
 
+ 
+ 
+ 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Product_Hours() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Product_Hours'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_ProdOptions(), 'zc_ObjectFloat_Product_Hours', 'Время обслуживания,ч.' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Product_Hours');
@@ -201,6 +207,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 29.05.23         * zc_ObjectFloat_ProdOptions_Amount
  22.09.22                                                       * zc_ObjectFloat_ProdColor_Value
  06.04.21         * zc_ObjectFloat_ProdOptItems_Count
  02.02.21         * zc_ObjectFloat_Partner_DiscountTax

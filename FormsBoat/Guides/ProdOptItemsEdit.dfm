@@ -2,7 +2,7 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090#1099' '#1054#1087#1094#1080#1081' ('#1051#1086#1076#1082#1072')>'
-  ClientHeight = 382
+  ClientHeight = 429
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,8 +22,8 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
     Caption = #1069#1083#1077#1084#1077#1085#1090
   end
   object cxButton1: TcxButton
-    Left = 41
-    Top = 344
+    Left = 32
+    Top = 394
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -31,8 +31,8 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
     TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 185
-    Top = 344
+    Left = 176
+    Top = 394
     Width = 75
     Height = 25
     Action = actFormClose
@@ -183,6 +183,17 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
     TabOrder = 21
     Width = 66
   end
+  object cxLabel9: TcxLabel
+    Left = 10
+    Top = 331
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1086#1087#1094#1080#1103')'
+  end
+  object edCommentOpt: TcxTextEdit
+    Left = 10
+    Top = 351
+    TabOrder = 23
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 152
     Top = 56
@@ -306,6 +317,14 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCommentOpt'
+        Value = Null
+        Component = edCommentOpt
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -403,6 +422,13 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
         Name = 'Comment'
         Value = Null
         Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CommentOpt'
+        Value = Null
+        Component = edCommentOpt
         DataType = ftString
         MultiSelectSeparator = ','
       end

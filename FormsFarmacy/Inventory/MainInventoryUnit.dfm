@@ -485,6 +485,51 @@ inherited MainInventoryForm: TMainInventoryForm
                 Format = ',0.####;-,0.####; ;'
                 Kind = skSum
                 Column = InfoAmount
+              end
+              item
+                Format = ',0.####;-,0.####; '
+                Kind = skSum
+                Column = InfoDeficit
+              end
+              item
+                Format = ',0.####;-,0.####; '
+                Kind = skSum
+                Column = InfoProficit
+              end
+              item
+                Format = ',0.00;-,0.00; ;'
+                Kind = skSum
+                Column = InfoDiffSumm
+              end
+              item
+                Format = ',0.00;-,0.00; ;'
+                Kind = skSum
+                Column = InfoRemains_Summ
+              end
+              item
+                Format = ',0.00;-,0.00; ;'
+                Kind = skSum
+                Column = InfoSumm
+              end
+              item
+                Format = ',0.####;-,0.####; ;'
+                Kind = skSum
+                Column = InfoAmountUser
+              end
+              item
+                Format = ',0.00;-,0.00; ;'
+                Kind = skSum
+                Column = InfoDeficitSumm
+              end
+              item
+                Format = ',0.00;-,0.00; ;'
+                Kind = skSum
+                Column = InfoProficitSumm
+              end
+              item
+                Format = '+ ,0.####;- ,0.####; ;'
+                Kind = skSum
+                Column = InfoDiff
               end>
             DataController.Summary.SummaryGroups = <>
             OptionsBehavior.GoToNextCellOnEnter = True
@@ -495,7 +540,6 @@ inherited MainInventoryForm: TMainInventoryForm
             OptionsData.Deleting = False
             OptionsData.DeletingConfirmation = False
             OptionsData.Inserting = False
-            OptionsView.ColumnAutoWidth = True
             OptionsView.Footer = True
             OptionsView.GroupByBox = False
             OptionsView.HeaderAutoHeight = True
@@ -509,34 +553,162 @@ inherited MainInventoryForm: TMainInventoryForm
               DataBinding.FieldName = 'GoodsCode'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 92
+              Width = 44
             end
             object InfoGoodsName: TcxGridDBColumn
               Caption = #1058#1086#1074#1072#1088
               DataBinding.FieldName = 'GoodsName'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 444
+              Width = 219
+            end
+            object InfoExpirationDate: TcxGridDBColumn
+              Caption = #1052#1080#1085'. '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+              DataBinding.FieldName = 'ExpirationDate'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 67
             end
             object InfoRemains: TcxGridDBColumn
-              Caption = #1054#1089#1090#1072#1090#1086#1082
+              Caption = #1056#1072#1089#1095'. '#1054#1089#1090#1072#1090#1086#1082
               DataBinding.FieldName = 'Remains'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 140
+              Width = 67
+            end
+            object InfoPrice: TcxGridDBColumn
+              Caption = #1062#1077#1085#1072
+              DataBinding.FieldName = 'Price'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DisplayFormat = ',0.00;-,0.00; ;'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 49
+            end
+            object InfoRemains_Summ: TcxGridDBColumn
+              Caption = 'C'#1091#1084#1084#1072' '#1088#1072#1089#1095'. '#1086#1089#1090'.'
+              DataBinding.FieldName = 'Remains_Summ'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DisplayFormat = ',0.00;-,0.00; ;'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 72
             end
             object InfoAmount: TcxGridDBColumn
-              Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+              Caption = #1060#1072#1082#1090' '#1080#1090#1086#1075#1086' '#1086#1089#1090#1072#1090#1086#1082
               DataBinding.FieldName = 'Amount'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 140
+              Width = 71
+            end
+            object InfoSumm: TcxGridDBColumn
+              Caption = 'C'#1091#1084#1084#1072' '#1092#1072#1082#1090' '#1086#1089#1090'.'
+              DataBinding.FieldName = 'Summ'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DisplayFormat = ',0.00;-,0.00; ;'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 65
+            end
+            object InfoAmountUser: TcxGridDBColumn
+              Caption = #1060#1072#1082#1090'. '#1086#1089#1090#1072#1090#1086#1082' ('#1090#1077#1082'. '#1087#1086#1083#1100#1079'.)'
+              DataBinding.FieldName = 'AmountUser'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; ;'
+              HeaderAlignmentHorz = taCenter
+              Styles.Content = dmMain.cxHeaderL1Style
+              Styles.GroupSummary = dmMain.cxHeaderStyle
+              Styles.Header = dmMain.cxHeaderStyle
+              Width = 73
+            end
+            object InfoCountUser: TcxGridDBColumn
+              Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1083#1100#1079'.'
+              DataBinding.FieldName = 'CountUser'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 0
+              Properties.DisplayFormat = ',0;-,0; ;'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 59
+            end
+            object InfoDeficit: TcxGridDBColumn
+              Caption = #1053#1077#1076#1086#1089#1090#1072#1095#1072
+              DataBinding.FieldName = 'Deficit'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; '
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 68
+            end
+            object InfoDeficitSumm: TcxGridDBColumn
+              Caption = #1057#1091#1084#1084#1072' '#1085#1077#1076#1086#1089#1090#1072#1095#1080
+              DataBinding.FieldName = 'DeficitSumm'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DisplayFormat = ',0.00;-,0.00; ;'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 66
+            end
+            object InfoProficit: TcxGridDBColumn
+              Caption = #1048#1079#1083#1080#1096#1077#1082
+              DataBinding.FieldName = 'Proficit'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = ',0.####;-,0.####; '
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 61
+            end
+            object InfoProficitSumm: TcxGridDBColumn
+              Caption = #1057#1091#1084#1084#1072' '#1080#1079#1083#1080#1096#1082#1072
+              DataBinding.FieldName = 'ProficitSumm'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DisplayFormat = ',0.00;-,0.00; ;'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 67
+            end
+            object InfoDiff: TcxGridDBColumn
+              Caption = #1056#1072#1079#1085#1080#1094#1072
+              DataBinding.FieldName = 'Diff'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DecimalPlaces = 4
+              Properties.DisplayFormat = '+ ,0.####;- ,0.####; ;'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 65
+            end
+            object InfoDiffSumm: TcxGridDBColumn
+              Caption = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085#1080#1094#1099
+              DataBinding.FieldName = 'DiffSumm'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DisplayFormat = ',0.00;-,0.00; ;'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 79
+            end
+            object InfoMIComment: TcxGridDBColumn
+              Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+              DataBinding.FieldName = 'MIComment'
+              HeaderAlignmentHorz = taCenter
+              Styles.Content = dmMain.cxHeaderL1Style
+              Styles.Header = dmMain.cxHeaderStyle
+              Width = 69
+            end
+            object InfoisAuto: TcxGridDBColumn
+              Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
+              DataBinding.FieldName = 'isAuto'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 60
             end
           end
           object cxGridLevel1: TcxGridLevel
@@ -942,6 +1114,9 @@ inherited MainInventoryForm: TMainInventoryForm
   object InfoCDS: TClientDataSet
     Aggregates = <>
     Params = <>
+    BeforePost = InfoCDSBeforePost
+    AfterPost = InfoCDSAfterPost
+    OnPostError = InfoCDSPostError
     Left = 528
     Top = 185
   end
@@ -973,24 +1148,93 @@ inherited MainInventoryForm: TMainInventoryForm
     SQLList = <
       item
         SQL.Strings = (
-          'SELECT G.Id             AS GoodsId'
-          '     , G.Code           AS GoodsCode'
-          '     , G.Name           AS GoodsName'
-          '     , R.Remains        AS Remains'
-          '     , CAST(COALESCE (SUM(IC.Amount), 0.0) as Float)  AS Amount'
-          'FROM  Goods AS G'
+          'SELECT ID.Id'
+          '     , COALESCE (ID.GoodsId, IC.GoodsId) AS GoodsId'
+          '     , G.Code   AS GoodsCode'
+          '     , G.Name  AS GoodsName'
+          '     , ID.Remains '
+          '     , ID.ExpirationDate'
+          '     , ID.Price'
           
-            '     LEFT JOIN InventoryChild AS IC ON IC.Inventory = :inInvento' +
-            'ry'
-          '                                   AND IC.GoodsId = G.Id '
-          '     LEFT JOIN Remains AS R ON R.GoodsId = G.id'
-          '                           AND R.UnitId =  :inUnitId '
-          'WHERE COALESCE  (R.Remains, IC.Amount) <> 0'
-          'GROUP BY G.Id'
-          '       , G.Code'
-          '       , G.Name '
-          '       , R.Remains'
-          'ORDER BY G.Name')
+            '     , CAST(COALESCE (ID.Remains, 0) * COALESCE(ID.Price, 0) AS ' +
+            'Float)   AS Remains_Summ'
+          
+            '     , CAST(COALESCE (ID.Amount, 0) + COALESCE (IC.Amount, 0) AS' +
+            ' Float)  AS Amount'
+          
+            '     , CAST((COALESCE (ID.Amount, 0) + COALESCE (IC.Amount, 0)) ' +
+            '* COALESCE(ID.Price, 0) AS Float)   AS Summ'
+          
+            '     , CAST(COALESCE (ID.AmountUser, 0) + COALESCE (IC.Amount, 0' +
+            ') AS Float)                         AS AmountUser'
+          
+            '     , CAST(COALESCE (ID.CountUser, 0) + CASE WHEN COALESCE (IC.' +
+            'GoodsId, 0) <> 0 THEN 1 ELSE 0 END AS Integer) AS CountUser'
+          
+            '     , CAST(CASE WHEN COALESCE (ID.Remains, 0) > CAST(COALESCE (' +
+            'ID.Amount, 0) + COALESCE (IC.Amount, 0) AS Float)'
+          
+            '                 THEN COALESCE (ID.Remains, 0) - CAST(COALESCE (' +
+            'ID.Amount, 0) + COALESCE (IC.Amount, 0) AS Float)'
+          
+            '                 ELSE 0 END AS Float)                           ' +
+            '                            AS Deficit'
+          
+            '     , CAST(CASE WHEN COALESCE (ID.Remains, 0) > CAST(COALESCE (' +
+            'ID.Amount, 0) + COALESCE (IC.Amount, 0) AS Float)'
+          
+            '                 THEN (COALESCE (ID.Remains, 0) - CAST(COALESCE ' +
+            '(ID.Amount, 0) + COALESCE (IC.Amount, 0) AS Float)) * COALESCE(I' +
+            'D.Price, 0)'
+          
+            '                 ELSE 0 END AS Float)                           ' +
+            '                            AS DeficitSumm'
+          
+            '     , CAST(CASE WHEN CAST(COALESCE (ID.Amount, 0) + COALESCE (I' +
+            'C.Amount, 0) AS Float) > COALESCE (ID.Remains, 0)'
+          
+            '                 THEN CAST(COALESCE (ID.Amount, 0) + COALESCE (I' +
+            'C.Amount, 0) AS Float) - COALESCE (ID.Remains, 0)'
+          
+            '                 ELSE 0 END AS Float)                           ' +
+            '                            AS Proficit'
+          
+            '     , CAST(CASE WHEN CAST(COALESCE (ID.Amount, 0) + COALESCE (I' +
+            'C.Amount, 0) AS Float) > COALESCE (ID.Remains, 0)'
+          
+            '                 THEN (CAST(COALESCE (ID.Amount, 0) + COALESCE (' +
+            'IC.Amount, 0) AS Float) - COALESCE (ID.Remains, 0)) * COALESCE(I' +
+            'D.Price, 0)'
+          
+            '                 ELSE 0 END AS Float)                           ' +
+            '                            AS ProficitSumm'
+          
+            '     , CAST(( CAST(COALESCE (ID.Amount, 0) + COALESCE (IC.Amount' +
+            ', 0) - COALESCE (ID.Remains, 0) AS Float)) AS Float) AS Diff'
+          
+            '     , CAST(( CAST(COALESCE (ID.Amount, 0) + COALESCE (IC.Amount' +
+            ', 0) - COALESCE (ID.Remains, 0) AS Float))'
+          
+            '                 * COALESCE(ID.Price, 0) AS Float)              ' +
+            '                                  AS DiffSumm'
+          '     , ID.MIComment'
+          '     , ID.isAuto'
+          'FROM InventoryDate AS ID'
+          '     FULL JOIN (SELECT IC.GoodsId       AS GoodsId'
+          
+            #9#9#9#9'     , CAST(COALESCE (SUM(IC.Amount), 0.0) as Float)  AS Amo' +
+            'unt'
+          
+            #9#9#9#9'FROM InventoryChild AS IC                                   ' +
+            ' '
+          #9#9#9#9'WHERE IC.Inventory = :inInventory'
+          #9#9#9#9'  AND IC.IsSend = '#39'N'#39
+          #9#9#9#9'GROUP BY IC.GoodsId) AS IC ON IC.GoodsId = ID.GoodsId '
+          
+            #9'INNER JOIN Goods AS G ON G.id = COALESCE (ID.GoodsId, IC.GoodsI' +
+            'd) '
+          'WHERE ID.UnitId =  :inUnitId OR COALESCE (IC.GoodsId, 0) <> 0'
+          'ORDER BY 3')
       end>
     Left = 525
     Top = 121
@@ -1369,7 +1613,7 @@ inherited MainInventoryForm: TMainInventoryForm
     Params = <>
     OnPostError = ManualCDSPostError
     Left = 424
-    Top = 193
+    Top = 177
   end
   object ManualDS: TDataSource
     DataSet = ManualCDS
@@ -1406,5 +1650,27 @@ inherited MainInventoryForm: TMainInventoryForm
     CheckBoxList = <>
     Left = 248
     Top = 120
+  end
+  object spUpdate_Comment: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Inventory_Comment'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 136
+    Top = 318
   end
 end

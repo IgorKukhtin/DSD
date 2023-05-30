@@ -10,7 +10,9 @@ procedure SaveUserUnit;
 procedure SaveGoods;
 procedure SaveGoodsBarCode;
 procedure SaveRemains;
+function SaveInventory(AUnitId : Integer; AOperDate : TDateTime) : Boolean;
 
+function InventoryDate_Table: String;
 function Inventory_Table: String;
 function InventoryChild_Table: String;
 
@@ -109,6 +111,11 @@ Begin
   Result := 'Remains';
 End;
 
+function InventoryDate_Table: String;
+Begin
+  Result := 'InventoryDate';
+End;
+
 function Inventory_Table: String;
 Begin
   Result := 'Inventory';
@@ -126,26 +133,18 @@ var
 begin
   sp := TdsdStoredProc.Create(nil);
   try
+    ds := TClientDataSet.Create(nil);
     try
-      ds := TClientDataSet.Create(nil);
-      try
-        sp.OutputType := otDataSet;
-        sp.DataSet := ds;
+      sp.OutputType := otDataSet;
+      sp.DataSet := ds;
 
-        sp.StoredProcName := 'gpSelect_Inventory_UserSettings';
-        sp.Params.Clear;
-        sp.Execute;
-        SaveLocalData(ds,UserSettings_lcl);
+      sp.StoredProcName := 'gpSelect_Inventory_UserSettings';
+      sp.Params.Clear;
+      sp.Execute;
+      SaveLocalData(ds,UserSettings_lcl);
 
-      finally
-        ds.free;
-      end;
-    except
-      on E: Exception do
-      begin
-        ShowMessage('SaveUserSettings Exception: ' + E.Message);
-        Exit;
-      end;
+    finally
+      ds.free;
     end;
   finally
     freeAndNil(sp);
@@ -159,26 +158,18 @@ var
 begin
   sp := TdsdStoredProc.Create(nil);
   try
+    ds := TClientDataSet.Create(nil);
     try
-      ds := TClientDataSet.Create(nil);
-      try
-        sp.OutputType := otDataSet;
-        sp.DataSet := ds;
+      sp.OutputType := otDataSet;
+      sp.DataSet := ds;
 
-        sp.StoredProcName := 'gpSelect_Inventory_Object_Form';
-        sp.Params.Clear;
-        sp.Execute;
-        SaveLocalData(ds, FormData_lcl);
+      sp.StoredProcName := 'gpSelect_Inventory_Object_Form';
+      sp.Params.Clear;
+      sp.Execute;
+      SaveLocalData(ds, FormData_lcl);
 
-      finally
-        ds.free;
-      end;
-    except
-      on E: Exception do
-      begin
-        ShowMessage('SaveFormData Exception: ' + E.Message);
-        Exit;
-      end;
+    finally
+      ds.free;
     end;
   finally
     freeAndNil(sp);
@@ -192,27 +183,19 @@ var
 begin
   sp := TdsdStoredProc.Create(nil);
   try
+    ds := TClientDataSet.Create(nil);
     try
-      ds := TClientDataSet.Create(nil);
-      try
-        sp.OutputType := otDataSet;
-        sp.DataSet := ds;
+      sp.OutputType := otDataSet;
+      sp.DataSet := ds;
 
-        sp.StoredProcName := 'gpSelect_Object_Unit_Active';
-        sp.Params.Clear;
-        sp.Params.AddParam('inNotUnitId', ftInteger, ptInput, 0);
-        sp.Execute;
-        SaveLocalData(ds, 'Unit');
+      sp.StoredProcName := 'gpSelect_Object_Unit_Active';
+      sp.Params.Clear;
+      sp.Params.AddParam('inNotUnitId', ftInteger, ptInput, 0);
+      sp.Execute;
+      SaveLocalData(ds, 'Unit');
 
-      finally
-        ds.free;
-      end;
-    except
-      on E: Exception do
-      begin
-        ShowMessage('SaveUserUnit Exception: ' + E.Message);
-        Exit;
-      end;
+    finally
+      ds.free;
     end;
   finally
     freeAndNil(sp);
@@ -226,26 +209,18 @@ var
 begin
   sp := TdsdStoredProc.Create(nil);
   try
+    ds := TClientDataSet.Create(nil);
     try
-      ds := TClientDataSet.Create(nil);
-      try
-        sp.OutputType := otDataSet;
-        sp.DataSet := ds;
+      sp.OutputType := otDataSet;
+      sp.DataSet := ds;
 
-        sp.StoredProcName := 'gpSelect_Inventory_Goods';
-        sp.Params.Clear;
-        sp.Execute;
-        SaveLocalData(ds, Goods_Table);
+      sp.StoredProcName := 'gpSelect_Inventory_Goods';
+      sp.Params.Clear;
+      sp.Execute;
+      SaveLocalData(ds, Goods_Table);
 
-      finally
-        ds.free;
-      end;
-    except
-      on E: Exception do
-      begin
-        ShowMessage('SaveGoods Exception: ' + E.Message);
-        Exit;
-      end;
+    finally
+      ds.free;
     end;
   finally
     freeAndNil(sp);
@@ -259,26 +234,18 @@ var
 begin
   sp := TdsdStoredProc.Create(nil);
   try
+    ds := TClientDataSet.Create(nil);
     try
-      ds := TClientDataSet.Create(nil);
-      try
-        sp.OutputType := otDataSet;
-        sp.DataSet := ds;
+      sp.OutputType := otDataSet;
+      sp.DataSet := ds;
 
-        sp.StoredProcName := 'gpSelect_Inventory_Goods_BarCode';
-        sp.Params.Clear;
-        sp.Execute;
-        SaveLocalData(ds, GoodsBarCode_Table);
+      sp.StoredProcName := 'gpSelect_Inventory_Goods_BarCode';
+      sp.Params.Clear;
+      sp.Execute;
+      SaveLocalData(ds, GoodsBarCode_Table);
 
-      finally
-        ds.free;
-      end;
-    except
-      on E: Exception do
-      begin
-        ShowMessage('SaveGoods Exception: ' + E.Message);
-        Exit;
-      end;
+    finally
+      ds.free;
     end;
   finally
     freeAndNil(sp);
@@ -292,26 +259,47 @@ var
 begin
   sp := TdsdStoredProc.Create(nil);
   try
+    ds := TClientDataSet.Create(nil);
     try
-      ds := TClientDataSet.Create(nil);
-      try
-        sp.OutputType := otDataSet;
-        sp.DataSet := ds;
+      sp.OutputType := otDataSet;
+      sp.DataSet := ds;
 
-        sp.StoredProcName := 'gpSelect_Inventory_Remains';
-        sp.Params.Clear;
-        sp.Execute;
-        SaveLocalData(ds, Remains_Table);
+      sp.StoredProcName := 'gpSelect_Inventory_Remains';
+      sp.Params.Clear;
+      sp.Execute;
+      SaveLocalData(ds, Remains_Table);
 
-      finally
-        ds.free;
-      end;
-    except
-      on E: Exception do
-      begin
-        ShowMessage('SaveGoods Exception: ' + E.Message);
-        Exit;
-      end;
+    finally
+      ds.free;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
+function SaveInventory(AUnitId : Integer; AOperDate : TDateTime) : Boolean;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin
+  Result := False;
+  sp := TdsdStoredProc.Create(nil);
+  try
+    ds := TClientDataSet.Create(nil);
+    try
+      sp.OutputType := otDataSet;
+      sp.DataSet := ds;
+
+      sp.StoredProcName := 'gpSelect_Inventory_MI_Full';
+      sp.Params.Clear;
+      sp.Params.AddParam('inUnitId', ftInteger, ptInput, AUnitId);
+      sp.Params.AddParam('inOperDate', ftDateTime, ptInput, AOperDate);
+      sp.Execute;
+      SaveLocalData(ds, InventoryDate_Table);
+      Result := True;
+
+    finally
+      ds.free;
     end;
   finally
     freeAndNil(sp);

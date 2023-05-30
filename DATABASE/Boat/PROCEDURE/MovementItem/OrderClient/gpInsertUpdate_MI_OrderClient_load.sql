@@ -1613,6 +1613,7 @@ vbProdOptItemsId
                                                                         , inDiscountTax            := 0
                                                                         , inPartNumber             := ''
                                                                         , inComment                := vbComment
+                                                                        , inCommentOpt             := ''
                                                                         , inSession                := inSession
                                                                          ) AS gpInsertUpdate);
          END IF;

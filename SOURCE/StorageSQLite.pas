@@ -567,7 +567,7 @@ end;
 // Изменить запись в таблице
 function SQLite_Update(ATableName: String; AId : Integer; AParams : TdsdParams) : Boolean;
   var  ZQuery: TZQuery; I : Integer;
-       cMessages : String;
+       cMessages, S : String;
 begin
   Result := False;
 
@@ -591,8 +591,13 @@ begin
           TMessagesForm.Create(nil).Execute(cMessages, cMessages, true);
         end;
 
+        S := 'Id';
+        if Assigned(AParams) then
+          for I := 0 to AParams.Count - 1 do
+            if AParams[I].Name <> 'Id' then S := S + ', ' + AParams[I].Name;
+
           // Вставка записи
-        ZQuery.SQL.Text := 'SELECT * FROM ' + ATableName + ' WHERE Id = ' + IntToStr(AId);
+        ZQuery.SQL.Text := 'SELECT ' + S + ' FROM ' + ATableName + ' WHERE Id = ' + IntToStr(AId);
         ZQuery.Open;
         ZQuery.Edit;
 

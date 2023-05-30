@@ -3743,9 +3743,11 @@ begin
               FieldByName('DivisionPartiesID').AsVariant]), []);
 
           if (FieldByName('Multiplicity').asCurrency <> 0) and
-            (FieldByName('Price').asCurrency <> FieldByName('PriceSale').asCurrency)
-            and (FormParams.ParamByName('MobileDiscount').Value = 0)
-            and (trunc(FieldByName('Amount').asCurrency /
+            (FieldByName('Price').asCurrency <> FieldByName('PriceSale').asCurrency) and
+            ((CheckCDS.FieldByName('PriceLoad').asCurrency <> 0) OR
+             (FieldByName('Price').asCurrency <> FieldByName('PriceLoad').asCurrency)) and
+            (FormParams.ParamByName('MobileDiscount').Value = 0) and
+            (trunc(FieldByName('Amount').asCurrency /
             FieldByName('Multiplicity').asCurrency * 100) mod 100 <> 0) then
           begin
             ShowMessage('Для медикамента '#13#10 + FieldByName('GoodsName').AsString
@@ -13948,7 +13950,6 @@ begin
                 if (SalePromoGoodsCDS.FieldByName('Price').AsCurrency = 0) and (SalePromoGoodsCDS.FieldByName('Discount').AsCurrency > 0) then
                   SalePromoGoodsCDS.FieldByName('PriceSale').AsCurrency := RoundTo(RemainsCDS.FieldByName('Price').AsCurrency * (100 - SalePromoGoodsCDS.FieldByName('Discount').AsCurrency) / 100 , -2)
                 else if SalePromoGoodsCDS.FieldByName('Price').AsCurrency = 0 then
-                  SalePromoGoodsCDS.FieldByName('PriceSale').AsCurrency := RemainsCDS.FieldByName('Price').AsCurrency
                 else SalePromoGoodsCDS.FieldByName('PriceSale').AsCurrency := SalePromoGoodsCDS.FieldByName('Price').AsCurrency;
                 SalePromoGoodsCDS.FieldByName('AmountSale').AsCurrency := Min(SalePromoGoodsCDS.FieldByName('Remains').AsCurrency + RemainsCDS.FieldByName('Remains').AsCurrency,
                     SalePromoGoodsCDS.FieldByName('AmountPresent').AsCurrency * Round(CheckCDS.FieldByName('Amount').AsCurrency / SalePromoGoodsCDS.FieldByName('Amount').AsCurrency + 0.01));
@@ -13968,7 +13969,7 @@ begin
       end;
 
       SalePromoGoodsCDS.Filtered := False;
-      SalePromoGoodsCDS.Filter := 'AmountSale > 0 and EndPromo >= ' + FloatToStr(Date) + ' and GoodsId = ' + CheckCDS.FieldByName('GoodsId').AsString;
+      SalePromoGoodsCDS.Filter := 'Remains > 0 and AmountSale > 0 and EndPromo >= ' + FloatToStr(Date) + ' and GoodsId = ' + CheckCDS.FieldByName('GoodsId').AsString;
       SalePromoGoodsCDS.Filtered := True;
 
       if SalePromoGoodsCDS.RecordCount > 0 then

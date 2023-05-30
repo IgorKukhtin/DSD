@@ -138,6 +138,21 @@ type
     DBViewAddOnManual: TdsdDBViewAddOn;
     TextEdit: TcxTextEdit;
     FieldFilter: TdsdFieldFilter;
+    InfoDeficit: TcxGridDBColumn;
+    InfoProficit: TcxGridDBColumn;
+    InfoDiffSumm: TcxGridDBColumn;
+    InfoCountUser: TcxGridDBColumn;
+    InfoExpirationDate: TcxGridDBColumn;
+    InfoPrice: TcxGridDBColumn;
+    InfoRemains_Summ: TcxGridDBColumn;
+    InfoSumm: TcxGridDBColumn;
+    InfoAmountUser: TcxGridDBColumn;
+    InfoDeficitSumm: TcxGridDBColumn;
+    InfoProficitSumm: TcxGridDBColumn;
+    InfoMIComment: TcxGridDBColumn;
+    InfoisAuto: TcxGridDBColumn;
+    InfoDiff: TcxGridDBColumn;
+    spUpdate_Comment: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);
@@ -156,6 +171,10 @@ type
     procedure ManualCDSPostError(DataSet: TDataSet; E: EDatabaseError;
       var Action: TDataAction);
     procedure actSetEditAmountExecute(Sender: TObject);
+    procedure InfoCDSPostError(DataSet: TDataSet; E: EDatabaseError;
+      var Action: TDataAction);
+    procedure InfoCDSBeforePost(DataSet: TDataSet);
+    procedure InfoCDSAfterPost(DataSet: TDataSet);
   protected
     procedure FormClose(Sender: TObject; var Action: TCloseAction); override;
   private
@@ -376,6 +395,19 @@ begin
     Exit;
   end;
 
+  gc_User.Local := False;
+
+  try
+    spGet_User_IsAdmin.Execute;
+  except
+  end;
+
+  if gc_User.Local then
+  begin
+    ShowMessage('В локальном режиме не работает');
+    Exit;
+  end;
+
   Params := TdsdParams.Create(Self, TdsdParam);
   try
     Params.AddParam('Id', TFieldType.ftInteger, ptOutput, 0);
@@ -391,11 +423,20 @@ begin
     FreeAndNil(Params);
   end;
 
+  StartSplash('Старт', 'Проведение инвентаризации');
+  try
+    ChangeStatus('Получение "Получение данных инвентаризации"');
+    if not SaveInventory(FormParams.ParamByName('UnitId').Value, FormParams.ParamByName('OperDate').Value) then Exit;
+  finally
+    EndSplash;
+  end;
+
   edOperDateInfo.Date := FormParams.ParamByName('OperDate').Value;
   edUnitNameInfo.Text := FormParams.ParamByName('UnitName').Value;
 
   PageControl.ActivePage := tsInfo;
   spSelectInfo.Execute;
+  actSetEditAmount.Execute;
   MasterCDS.Close;
   ManualCDS.Close;
 end;
@@ -403,8 +444,12 @@ end;
 procedure TMainInventoryForm.actSetEditAmountExecute(Sender: TObject);
   var I : Integer;
 begin
-  for I := 0 to ManualCDS.FieldCount - 1 do if ManualCDS.Fields.Fields[I].ReadOnly then
-    ManualCDS.Fields.Fields[I].ReadOnly  := False;
+  if ManualCDS.Active then
+    for I := 0 to ManualCDS.FieldCount - 1 do if ManualCDS.Fields.Fields[I].ReadOnly then
+      ManualCDS.Fields.Fields[I].ReadOnly  := False;
+  if InfoCDS.Active then
+    for I := 0 to InfoCDS.FieldCount - 1 do if InfoCDS.Fields.Fields[I].ReadOnly then
+      InfoCDS.Fields.Fields[I].ReadOnly  := False;
 end;
 
 procedure TMainInventoryForm.actReCreteInventDateExecute(Sender: TObject);
@@ -554,6 +599,78 @@ begin
   if not gc_User.Local then UserSettingsStorageAddOn.SaveUserSettings;
 end;
 
+procedure TMainInventoryForm.InfoCDSAfterPost(DataSet: TDataSet);
+begin
+  inherited;
+  if DataSet.FieldByName('MIComment').AsVariant <>
+     DataSet.FieldByName('MIComment').OldValue then
+  begin
+    spSelectInfo.Execute;
+    actSetEditAmount.Execute;
+  end;
+end;
+
+procedure TMainInventoryForm.InfoCDSBeforePost(DataSet: TDataSet);
+var Id : Integer;
+    MIComment, MICommentOld : Variant;
+    Params : TdsdParams;
+begin
+  Id := DataSet.FieldByName('Id').AsInteger;
+  MIComment := DataSet.FieldByName('MIComment').AsVariant;
+  MICommentOld := DataSet.FieldByName('MIComment').OldValue;
+  if MIComment <> MICommentOld then
+  begin
+
+    spUpdate_Comment.ParamByName('inId').Value := Id;
+    spUpdate_Comment.ParamByName('inComment').Value := MIComment;
+    spUpdate_Comment.Execute;
+
+    Params := TdsdParams.Create(Self, TdsdParam);
+    try
+      Params.AddParam('MIComment', TFieldType.ftString, ptInput, MIComment);
+      SQLite_Update(InventoryDate_Table, Id, Params);
+    finally
+      FreeAndNil(Params);
+    end;
+
+  end;
+end;
+
+procedure TMainInventoryForm.InfoCDSPostError(DataSet: TDataSet;
+  E: EDatabaseError; var Action: TDataAction);
+var GoodsId : Integer;
+    AmountUser, AmountUserOld : Currency;
+    Params : TdsdParams;
+begin
+  GoodsId := DataSet.FieldByName('GoodsId').AsInteger;
+  AmountUser := DataSet.FieldByName('AmountUser').AsCurrency;
+  AmountUserOld := DataSet.FieldByName('AmountUser').OldValue;
+  DataSet.Cancel;
+  Action := daAbort;
+
+  if AmountUser <> AmountUserOld then
+  begin
+
+    Params := TdsdParams.Create(Self, TdsdParam);
+    try
+      Params.AddParam('Id', TFieldType.ftInteger, ptOutput, 0);
+      Params.AddParam('Inventory', TFieldType.ftInteger, ptInput, FormParams.ParamByName('Id').Value);
+      Params.AddParam('GoodsId', TFieldType.ftInteger, ptInput, GoodsId);
+      Params.AddParam('Amount', TFieldType.ftFloat, ptInput, AmountUser - AmountUserOld);
+      Params.AddParam('DateInput', TFieldType.ftDateTime, ptInput, Now);
+      Params.AddParam('UserInputId', TFieldType.ftInteger, ptInput, StrToInt(gc_User.Session));
+      Params.AddParam('IsSend', TFieldType.ftBoolean, ptInput, False);
+      SQLite_Insert(InventoryChild_Table, Params);
+    finally
+      FreeAndNil(Params);
+    end;
+
+    spSelectInfo.Execute;
+    actSetEditAmount.Execute;
+    cxGridDBTableView1.DataController.GotoNext;
+  end;
+end;
+
 procedure TMainInventoryForm.InsertBarCode;
   var ds: TClientDataSet;
       BarCode: String;
@@ -582,6 +699,13 @@ begin
   if BarCode = '' then
   begin
     edBarCode.SetFocus;
+    Exit;
+  end;
+
+  if Abs(ceAmount.Value) > 10000 then
+  begin
+    ShowMessage('Ошибка количество <' + FormatCurr(',0.0', ceAmount.Value) + '> превышает допустимое.'#13#10+
+      'Проверьте столбец количество - возможно вы внесли значения ш/к вместо количества по товару');
     Exit;
   end;
 

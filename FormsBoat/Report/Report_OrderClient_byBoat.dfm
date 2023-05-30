@@ -92,6 +92,11 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount12
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -163,6 +168,11 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount12
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Remains
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -592,6 +602,12 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ColorText: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorText'
+            Visible = False
+            VisibleForCustomization = False
             Width = 70
           end
         end
@@ -1208,6 +1224,11 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = ColorText
+        ColorValueList = <>
+      end>
     Left = 384
     Top = 248
   end

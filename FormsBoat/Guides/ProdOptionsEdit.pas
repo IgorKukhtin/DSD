@@ -67,6 +67,8 @@ type
     GuidesProdColorPattern: TdsdGuides;
     edProdColorPattern: TcxButtonEdit;
     cxLabel13: TcxLabel;
+    cxLabel14: TcxLabel;
+    edAmount: TcxCurrencyEdit;
   private
     { Private declarations }
   public

@@ -1134,6 +1134,15 @@
           HeaderGlyphAlignmentHorz = taCenter
           Width = 110
         end
+        object CommentOpt_ch2: TcxGridDBColumn
+          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1086#1087#1094#1080#1103')'
+          DataBinding.FieldName = 'CommentOpt'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderGlyphAlignmentHorz = taCenter
+          Width = 110
+        end
         object GoodsGroupNameFull_ch2: TcxGridDBColumn
           Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
           DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -4078,6 +4087,15 @@
         Value = Null
         Component = ProdOptItemsCDS
         ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCommentOpt'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'CommentOpt'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

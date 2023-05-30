@@ -353,6 +353,16 @@
         Options.Editing = False
         Width = 70
       end
+      object Amount: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' ('#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077')'
+        DataBinding.FieldName = 'Amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object SalePrice: TcxGridDBColumn
         Caption = 'Ladenpreis (Opt.)'
         DataBinding.FieldName = 'SalePrice'
@@ -1552,6 +1562,15 @@
         Value = 0.000000000000000000
         Component = MasterCDS
         ComponentItem = 'SalePrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

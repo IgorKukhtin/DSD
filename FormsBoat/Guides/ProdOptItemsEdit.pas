@@ -57,6 +57,8 @@ type
     edDiscountTax: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
     edAmount: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
+    edCommentOpt: TcxTextEdit;
   private
     { Private declarations }
   public

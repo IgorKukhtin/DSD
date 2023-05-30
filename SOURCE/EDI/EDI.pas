@@ -5852,7 +5852,7 @@ begin
       GrossWeightMeasure.NodeValue := RoundTo(ListDataSet.FieldByName('TotalWeight_BruttoKg').AsCurrency, -2);
       TariffQuantity.UnitCode := 'UAH';
       TariffQuantity.NodeValue := RoundTo(ListDataSet.FieldByName('pricenovat').AsCurrency, -2);
-      TransportLogisticsPackage.ItemQuantity := ListDataSet.FieldByName('Amount').AsFloat;
+      TransportLogisticsPackage.ItemQuantity := ListDataSet.FieldByName('Amount_Weight').AsFloat;
       TransportLogisticsPackage.Type_ := ListDataSet.FieldByName('MeasureName').AsString;
       //GlobalID.SchemeAgencyID := '” “«≈ƒ';
       //GlobalID.NodeValue := 500;
