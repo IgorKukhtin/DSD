@@ -2,7 +2,6 @@ inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 460
   ClientWidth = 1434
-  ExplicitLeft = -297
   ExplicitWidth = 1450
   ExplicitHeight = 499
   PixelsPerInch = 96
@@ -996,6 +995,50 @@ inherited OrderExternalForm: TOrderExternalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrintSort: TdsdPrintAction [12]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1089#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1074#1077#1089#1091' )'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1089#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1074#1077#1089#1091' )'
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'AmountSort;LineNum;GoodsGroupNameFull;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsJuridical'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderExternalQty'
+      ReportNameParam.Value = 'PrintMovement_OrderExternalQty'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -1049,7 +1092,7 @@ inherited OrderExternalForm: TOrderExternalForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
-    object actGoodsKindChoice: TOpenChoiceForm [17]
+    object actGoodsKindChoice: TOpenChoiceForm [18]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1076,7 +1119,7 @@ inherited OrderExternalForm: TOrderExternalForm
         end>
       isShowModal = True
     end
-    object actRefreshPrice: TdsdDataSetRefresh [22]
+    object actRefreshPrice: TdsdDataSetRefresh [23]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -1750,6 +1793,10 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintQty'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1844,6 +1891,10 @@ inherited OrderExternalForm: TOrderExternalForm
     end
     object bbUpdate_MIChild_AmountSecondNull: TdxBarButton
       Action = actUpdate_MIChild_AmountSecondNull
+      Category = 0
+    end
+    object bbPrintQty: TdxBarButton
+      Action = actPrintSort
       Category = 0
     end
   end

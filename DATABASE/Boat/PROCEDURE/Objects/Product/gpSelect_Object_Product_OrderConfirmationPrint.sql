@@ -21,7 +21,8 @@ $BODY$
     DECLARE vbInsertName TVarChar;
     DECLARE vbPriceWithVAT Boolean;
     DECLARE vbVATPercent   TFloat;
-    DECLARE vbDiscountTax  TFloat;    
+    DECLARE vbDiscountTax  TFloat; 
+    DECLARE vbDiscountNextTax TFloat;   
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -30,7 +31,8 @@ BEGIN
      -- данные из документа заказа
      SELECT MovementBoolean_PriceWithVAT.ValueData  AS PriceWithVAT
           , MovementFloat_VATPercent.ValueData      AS VATPercent
-          , MovementFloat_DiscountTax.ValueData     AS DiscountTax
+          , MovementFloat_DiscountTax.ValueData     AS DiscountTax 
+          , MovementFloat_DiscountNextTax.ValueData AS DiscountNextTax
           , Movement_OrderClient.OperDate
           , Movement_OrderClient.InvNumber
           , Object_Member.ValueData  AS InsertNamer
@@ -38,6 +40,7 @@ BEGIN
          vbPriceWithVAT
        , vbVATPercent
        , vbDiscountTax
+       , vbDiscountNextTax
        , vbOperDate_OrderClient
        , vbInvNumber_OrderClient
        , vbInsertName
@@ -51,6 +54,9 @@ BEGIN
          LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
                                  ON MovementFloat_DiscountTax.MovementId = Movement_OrderClient.Id
                                 AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
+         LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
+                                 ON MovementFloat_DiscountNextTax.MovementId = Movement_OrderClient.Id
+                                AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
          LEFT JOIN MovementLinkObject AS MLO_Insert
                                       ON MLO_Insert.MovementId = Movement_OrderClient.Id
                                      AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
@@ -101,10 +107,10 @@ BEGIN
                                                      );
      -- выбор данных по опциям
      CREATE TEMP TABLE tmpProdOptItems ON COMMIT DROP AS (SELECT tmp.*
-                                                     FROM gpSelect_Object_ProdOptItems (inMovementId_OrderClient:= inMovementId_OrderClient, inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
-                                                     WHERE tmp.ProductId = vbProductId
-                                                       AND tmp.MovementId_OrderClient = inMovementId_OrderClient
-                                                     );
+                                                          FROM gpSelect_Object_ProdOptItems (inMovementId_OrderClient:= inMovementId_OrderClient, inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
+                                                          WHERE tmp.ProductId = vbProductId
+                                                            AND tmp.MovementId_OrderClient = inMovementId_OrderClient
+                                                          );
      -- выбор данных по цвету
      CREATE TEMP TABLE tmpProdColorItems ON COMMIT DROP AS (SELECT tmp.*
                                                             FROM gpSelect_Object_ProdColorItems (inMovementId_OrderClient:= inMovementId_OrderClient, inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
@@ -253,7 +259,11 @@ BEGIN
             , tmpProdOptItems.Amount
             , tmpProdOptItems.SalePrice                       -- Цена продажи без НДС
             , tmpProdOptItems.DiscountTax                     -- Скидка
-            , zfCalc_SummDiscountTax (tmpProdOptItems.Sale_summ, COALESCE (tmpProdOptItems.DiscountTax,0)) ::TFloat AS Sale_summ  -- Сумма продажи без НДС со скидкой
+            --, vbDiscountTax                ::TFloat AS DiscountTax
+            , zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmpProdOptItems.Amount * tmpProdOptItems.SalePrice
+                                                                                    , COALESCE (vbDiscountTax,0))
+                                                            , COALESCE (vbDiscountNextTax,0)) 
+                                    , COALESCE (tmpProdOptItems.DiscountTax,0) ) ::TFloat AS Sale_summ  -- Сумма продажи без НДС со скидкой
        FROM tmpProdOptItems
      UNION
        SELECT tmp.GoodsName                  AS GoodsName
@@ -262,7 +272,9 @@ BEGIN
             , tmp.Amount                          ::TFloat AS Amount
             , tmp.OperPrice                ::TFloat AS SalePrice
             , vbDiscountTax                ::TFloat AS DiscountTax
-            , zfCalc_SummDiscountTax (tmp.Amount * tmp.OperPrice, COALESCE (vbDiscountTax,0)) ::TFloat AS Sale_summ
+            , zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmp.Amount * tmp.OperPrice
+                                                            , COALESCE (vbDiscountTax,0))
+                                    , COALESCE (vbDiscountNextTax,0) ) ::TFloat AS Sale_summ
        FROM tmpOrderClient AS tmp
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = tmp.GoodsId

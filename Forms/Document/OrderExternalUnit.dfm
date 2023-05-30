@@ -898,6 +898,50 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end>
       RefreshOnTabSetChanges = True
     end
+    object actPrintSort: TdsdPrintAction [8]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1089#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1074#1077#1089#1091' )'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1089#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1074#1077#1089#1091' )'
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'AmountSort;GoodsGroupNameFull;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsJuridical'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderExternal'
+      ReportNameParam.Value = 'PrintMovement_OrderExternal'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -951,7 +995,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
-    object actGoodsKindChoice: TOpenChoiceForm [13]
+    object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -978,7 +1022,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end>
       isShowModal = True
     end
-    object actRefreshPrice: TdsdDataSetRefresh [18]
+    object actRefreshPrice: TdsdDataSetRefresh [19]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -1610,6 +1654,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSort'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1666,6 +1718,10 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     object bbOpenFormOrderExternalChild: TdxBarButton
       Action = actOpenFormOrderExternalChild
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1088#1077#1079#1077#1088#1074#1072' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
+      Category = 0
+    end
+    object bbPrintSort: TdxBarButton
+      Action = actPrintSort
       Category = 0
     end
   end
@@ -2664,8 +2720,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 672
-    Top = 128
+    Left = 776
+    Top = 96
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -3188,8 +3244,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 692
-    Top = 100
+    Left = 732
+    Top = 52
   end
   object spInsertFromOrder: TdsdStoredProc
     StoredProcName = 'gpInsert_MI_OrderExternalUnit'

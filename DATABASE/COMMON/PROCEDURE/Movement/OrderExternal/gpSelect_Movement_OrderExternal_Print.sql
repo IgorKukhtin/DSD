@@ -265,9 +265,9 @@ BEGIN
            , Object_Partner.ValueData                   AS PartnerName
            , Object_From.ObjectCode                     AS FromCode
            , Object_From.ValueData                      AS FromName
-           , Object_To.ValueData               		AS ToName
-           , Object_PaidKind.ValueData         		AS PaidKindName
-           , View_Contract.InvNumber        		AS ContractName
+           , Object_To.ValueData               		    AS ToName
+           , Object_PaidKind.ValueData         		    AS PaidKindName
+           , View_Contract.InvNumber        		    AS ContractName
            , View_Contract.ContractTagName              AS ContractTagName
 
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
@@ -622,6 +622,12 @@ BEGIN
            , Object_Measure.ValueData        AS MeasureName
 
            , tmpMI.Amount          :: TFloat AS Amount
+ 
+           , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                       THEN tmpMI.Amount * CASE WHEN ObjectFloat_Weight.ValueData > 0 THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                       ELSE tmpMI.Amount
+              END  * (-1)) :: TFloat AS AmountSort --для сортировки по убыванию по весу
+
            , tmpMI.AmountSecond    :: TFloat AS AmountSecond
            , tmpMI.Price           :: TFloat AS Price
            , tmpMI.CountForPrice   :: TFloat AS CountForPrice
