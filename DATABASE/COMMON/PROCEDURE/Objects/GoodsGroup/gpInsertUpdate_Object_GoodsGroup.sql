@@ -170,131 +170,179 @@ BEGIN
 
    -- обновили свойства у всех товаров этой группы
    CREATE TEMP TABLE _tmpInsert ON COMMIT DROP AS
-   SELECT CASE WHEN tmp.isInfomoney OR tmp.isTradeMark OR tmp.isGoodsTag OR tmp.isGoodsGroupAnalyst OR tmp.isGoodsPlatform THEN 0 ELSE 0 END :: Integer AS tmpValue
+   SELECT CASE WHEN tmp.isInfomoney OR tmp.isTradeMark OR tmp.isGoodsTag OR tmp.isGoodsGroupAnalyst OR tmp.isGoodsPlatform OR tmp.isAsset THEN 0 ELSE 0 END :: Integer AS tmpValue
    FROM
-  (SELECT -- ***<УП статья назначения>
-          CASE WHEN ObjectLink_Infomoney0.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_Infomoney0.ChildObjectId <> COALESCE (ObjectLink_Infomoney.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Infomoney(), ObjectLink.ObjectId, ObjectLink_Infomoney0.ChildObjectId) END
+  (SELECT 
+          CASE WHEN InfomoneyId_curr         <> InfomoneyId_new         THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Infomoney(),         ObjectId, InfomoneyId_new)         END AS isInfomoney
+        , CASE WHEN TradeMarkId_curr         <> TradeMarkId_new         THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(),         ObjectId, TradeMarkId_new)         END AS isTradeMark
+        , CASE WHEN GoodsTagId_curr          <> GoodsTagId_new          THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(),          ObjectId, GoodsTagId_new)          END AS isGoodsTag
+        , CASE WHEN GoodsGroupAnalystId_curr <> GoodsGroupAnalystId_new THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ObjectId, GoodsGroupAnalystId_new) END AS isGoodsGroupAnalyst
+        , CASE WHEN GoodsPlatformId_curr     <> GoodsPlatformId_new     THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(),     ObjectId, GoodsPlatformId_new)     END AS isGoodsPlatform
+        , CASE WHEN isAsset_curr             <> isAsset_new             THEN lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Asset(),       ObjectId, isAsset_new)             END AS isAsset
+   FROM
+  (SELECT ObjectLink.ObjectId
+          -- ***<УП статья назначения>
+        , COALESCE (ObjectLink_Infomoney.ChildObjectId, 0) AS InfomoneyId_curr
+        , CASE WHEN ObjectLink_Infomoney0.ChildObjectId <> 0
+                    THEN ObjectLink_Infomoney0.ChildObjectId
                WHEN ObjectLink_Infomoney1.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_Infomoney1.ChildObjectId <> COALESCE (ObjectLink_Infomoney.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Infomoney(), ObjectLink.ObjectId, ObjectLink_Infomoney1.ChildObjectId) END
+                    THEN ObjectLink_Infomoney1.ChildObjectId
                WHEN ObjectLink_Infomoney2.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_Infomoney2.ChildObjectId <> COALESCE (ObjectLink_Infomoney.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Infomoney(), ObjectLink.ObjectId, ObjectLink_Infomoney2.ChildObjectId) END
+                    THEN ObjectLink_Infomoney2.ChildObjectId
                WHEN ObjectLink_Infomoney3.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_Infomoney3.ChildObjectId <> COALESCE (ObjectLink_Infomoney.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Infomoney(), ObjectLink.ObjectId, ObjectLink_Infomoney3.ChildObjectId) END
+                    THEN ObjectLink_Infomoney3.ChildObjectId
                WHEN ObjectLink_Infomoney4.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_Infomoney4.ChildObjectId <> COALESCE (ObjectLink_Infomoney.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Infomoney(), ObjectLink.ObjectId, ObjectLink_Infomoney4.ChildObjectId) END
+                    THEN ObjectLink_Infomoney4.ChildObjectId
                WHEN ObjectLink_Infomoney5.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_Infomoney5.ChildObjectId <> COALESCE (ObjectLink_Infomoney.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Infomoney(), ObjectLink.ObjectId, ObjectLink_Infomoney5.ChildObjectId) END
+                    THEN ObjectLink_Infomoney5.ChildObjectId
                WHEN ObjectLink_Infomoney6.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_Infomoney6.ChildObjectId <> COALESCE (ObjectLink_Infomoney.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Infomoney(), ObjectLink.ObjectId, ObjectLink_Infomoney6.ChildObjectId) END
+                    THEN ObjectLink_Infomoney6.ChildObjectId
                WHEN ObjectLink_Infomoney7.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_Infomoney7.ChildObjectId <> COALESCE (ObjectLink_Infomoney.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Infomoney(), ObjectLink.ObjectId, ObjectLink_Infomoney7.ChildObjectId) END
+                    THEN ObjectLink_Infomoney7.ChildObjectId
                WHEN ObjectLink_Infomoney8.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_Infomoney8.ChildObjectId <> COALESCE (ObjectLink_Infomoney.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Infomoney(), ObjectLink.ObjectId, ObjectLink_Infomoney8.ChildObjectId) END
+                    THEN ObjectLink_Infomoney8.ChildObjectId
                WHEN ObjectLink_Infomoney9.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_Infomoney9.ChildObjectId <> COALESCE (ObjectLink_Infomoney.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Infomoney(), ObjectLink.ObjectId, ObjectLink_Infomoney9.ChildObjectId) END
+                    THEN ObjectLink_Infomoney9.ChildObjectId
                WHEN ObjectLink_Infomoney10.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_Infomoney10.ChildObjectId <> COALESCE (ObjectLink_Infomoney.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Infomoney(), ObjectLink.ObjectId, ObjectLink_Infomoney10.ChildObjectId) END
-          END AS isInfomoney
+                    THEN ObjectLink_Infomoney10.ChildObjectId
+               ELSE 0
+          END AS InfomoneyId_new
+
           -- ***<Торговая марка>
+        , COALESCE (ObjectLink_TradeMark.ChildObjectId, 0) AS TradeMarkId_curr
         , CASE WHEN ObjectLink_TradeMark0.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_TradeMark0.ChildObjectId <> COALESCE (ObjectLink_TradeMark.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ObjectLink.ObjectId, ObjectLink_TradeMark0.ChildObjectId) END
+                    THEN ObjectLink_TradeMark0.ChildObjectId
                WHEN ObjectLink_TradeMark1.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_TradeMark1.ChildObjectId <> COALESCE (ObjectLink_TradeMark.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ObjectLink.ObjectId, ObjectLink_TradeMark1.ChildObjectId) END
+                    THEN ObjectLink_TradeMark1.ChildObjectId
                WHEN ObjectLink_TradeMark2.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_TradeMark2.ChildObjectId <> COALESCE (ObjectLink_TradeMark.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ObjectLink.ObjectId, ObjectLink_TradeMark2.ChildObjectId) END
+                    THEN ObjectLink_TradeMark2.ChildObjectId
                WHEN ObjectLink_TradeMark3.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_TradeMark3.ChildObjectId <> COALESCE (ObjectLink_TradeMark.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ObjectLink.ObjectId, ObjectLink_TradeMark3.ChildObjectId) END
+                    THEN ObjectLink_TradeMark3.ChildObjectId
                WHEN ObjectLink_TradeMark4.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_TradeMark4.ChildObjectId <> COALESCE (ObjectLink_TradeMark.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ObjectLink.ObjectId, ObjectLink_TradeMark4.ChildObjectId) END
+                    THEN ObjectLink_TradeMark4.ChildObjectId
                WHEN ObjectLink_TradeMark5.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_TradeMark5.ChildObjectId <> COALESCE (ObjectLink_TradeMark.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ObjectLink.ObjectId, ObjectLink_TradeMark5.ChildObjectId) END
+                    THEN ObjectLink_TradeMark5.ChildObjectId
                WHEN ObjectLink_TradeMark6.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_TradeMark6.ChildObjectId <> COALESCE (ObjectLink_TradeMark.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ObjectLink.ObjectId, ObjectLink_TradeMark6.ChildObjectId) END
+                    THEN ObjectLink_TradeMark6.ChildObjectId
                WHEN ObjectLink_TradeMark7.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_TradeMark7.ChildObjectId <> COALESCE (ObjectLink_TradeMark.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ObjectLink.ObjectId, ObjectLink_TradeMark7.ChildObjectId) END
+                    THEN ObjectLink_TradeMark7.ChildObjectId
                WHEN ObjectLink_TradeMark8.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_TradeMark8.ChildObjectId <> COALESCE (ObjectLink_TradeMark.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ObjectLink.ObjectId, ObjectLink_TradeMark8.ChildObjectId) END
+                    THEN ObjectLink_TradeMark8.ChildObjectId
                WHEN ObjectLink_TradeMark9.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_TradeMark9.ChildObjectId <> COALESCE (ObjectLink_TradeMark.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ObjectLink.ObjectId, ObjectLink_TradeMark9.ChildObjectId) END
+                    THEN ObjectLink_TradeMark9.ChildObjectId
                WHEN ObjectLink_TradeMark10.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_TradeMark10.ChildObjectId <> COALESCE (ObjectLink_TradeMark.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ObjectLink.ObjectId, ObjectLink_TradeMark10.ChildObjectId) END
-          END AS isTradeMark
+                    THEN ObjectLink_TradeMark10.ChildObjectId
+               ELSE 0
+          END AS TradeMarkId_new
 
           -- ***<Признак товара>
+        , COALESCE (ObjectLink_GoodsTag.ChildObjectId, 0) AS GoodsTagId_curr
         , CASE WHEN ObjectLink_GoodsTag0.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsTag0.ChildObjectId <> COALESCE (ObjectLink_GoodsTag.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ObjectLink.ObjectId, ObjectLink_GoodsTag0.ChildObjectId) END
+                    THEN ObjectLink_GoodsTag0.ChildObjectId
                WHEN ObjectLink_GoodsTag1.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsTag1.ChildObjectId <> COALESCE (ObjectLink_GoodsTag.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ObjectLink.ObjectId, ObjectLink_GoodsTag1.ChildObjectId) END
+                    THEN ObjectLink_GoodsTag1.ChildObjectId
                WHEN ObjectLink_GoodsTag2.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsTag2.ChildObjectId <> COALESCE (ObjectLink_GoodsTag.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ObjectLink.ObjectId, ObjectLink_GoodsTag2.ChildObjectId) END
+                    THEN ObjectLink_GoodsTag2.ChildObjectId
                WHEN ObjectLink_GoodsTag3.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsTag3.ChildObjectId <> COALESCE (ObjectLink_GoodsTag.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ObjectLink.ObjectId, ObjectLink_GoodsTag3.ChildObjectId) END
+                    THEN ObjectLink_GoodsTag3.ChildObjectId
                WHEN ObjectLink_GoodsTag4.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsTag4.ChildObjectId <> COALESCE (ObjectLink_GoodsTag.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ObjectLink.ObjectId, ObjectLink_GoodsTag4.ChildObjectId) END
+                    THEN ObjectLink_GoodsTag4.ChildObjectId
                WHEN ObjectLink_GoodsTag5.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsTag5.ChildObjectId <> COALESCE (ObjectLink_GoodsTag.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ObjectLink.ObjectId, ObjectLink_GoodsTag5.ChildObjectId) END
+                    THEN ObjectLink_GoodsTag5.ChildObjectId
                WHEN ObjectLink_GoodsTag6.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsTag6.ChildObjectId <> COALESCE (ObjectLink_GoodsTag.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ObjectLink.ObjectId, ObjectLink_GoodsTag6.ChildObjectId) END
+                    THEN ObjectLink_GoodsTag6.ChildObjectId
                WHEN ObjectLink_GoodsTag7.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsTag7.ChildObjectId <> COALESCE (ObjectLink_GoodsTag.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ObjectLink.ObjectId, ObjectLink_GoodsTag7.ChildObjectId) END
+                    THEN ObjectLink_GoodsTag7.ChildObjectId
                WHEN ObjectLink_GoodsTag8.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsTag8.ChildObjectId <> COALESCE (ObjectLink_GoodsTag.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ObjectLink.ObjectId, ObjectLink_GoodsTag8.ChildObjectId) END
+                    THEN ObjectLink_GoodsTag8.ChildObjectId
                WHEN ObjectLink_GoodsTag9.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsTag9.ChildObjectId <> COALESCE (ObjectLink_GoodsTag.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ObjectLink.ObjectId, ObjectLink_GoodsTag9.ChildObjectId) END
+                    THEN ObjectLink_GoodsTag9.ChildObjectId
                WHEN ObjectLink_GoodsTag10.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsTag10.ChildObjectId <> COALESCE (ObjectLink_GoodsTag.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsTag(), ObjectLink.ObjectId, ObjectLink_GoodsTag10.ChildObjectId) END
-          END AS isGoodsTag
+                    THEN ObjectLink_GoodsTag10.ChildObjectId
+               ELSE 0
+          END AS GoodsTagId_new
 
           -- ***<Группа аналитики>
+        , COALESCE (ObjectLink_GoodsGroupAnalyst.ChildObjectId, 0) AS GoodsGroupAnalystId_curr
         , CASE WHEN ObjectLink_GoodsGroupAnalyst0.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsGroupAnalyst0.ChildObjectId <> COALESCE (ObjectLink_GoodsGroupAnalyst.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ObjectLink.ObjectId, ObjectLink_GoodsGroupAnalyst0.ChildObjectId) END
+                    THEN ObjectLink_GoodsGroupAnalyst0.ChildObjectId
                WHEN ObjectLink_GoodsGroupAnalyst1.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsGroupAnalyst1.ChildObjectId <> COALESCE (ObjectLink_GoodsGroupAnalyst.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ObjectLink.ObjectId, ObjectLink_GoodsGroupAnalyst1.ChildObjectId) END
+                    THEN ObjectLink_GoodsGroupAnalyst1.ChildObjectId
                WHEN ObjectLink_GoodsGroupAnalyst2.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsGroupAnalyst2.ChildObjectId <> COALESCE (ObjectLink_GoodsGroupAnalyst.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ObjectLink.ObjectId, ObjectLink_GoodsGroupAnalyst2.ChildObjectId) END
+                    THEN ObjectLink_GoodsGroupAnalyst2.ChildObjectId
                WHEN ObjectLink_GoodsGroupAnalyst3.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsGroupAnalyst3.ChildObjectId <> COALESCE (ObjectLink_GoodsGroupAnalyst.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ObjectLink.ObjectId, ObjectLink_GoodsGroupAnalyst3.ChildObjectId) END
+                    THEN ObjectLink_GoodsGroupAnalyst3.ChildObjectId
                WHEN ObjectLink_GoodsGroupAnalyst4.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsGroupAnalyst4.ChildObjectId <> COALESCE (ObjectLink_GoodsGroupAnalyst.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ObjectLink.ObjectId, ObjectLink_GoodsGroupAnalyst4.ChildObjectId) END
+                    THEN ObjectLink_GoodsGroupAnalyst4.ChildObjectId
                WHEN ObjectLink_GoodsGroupAnalyst5.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsGroupAnalyst5.ChildObjectId <> COALESCE (ObjectLink_GoodsGroupAnalyst.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ObjectLink.ObjectId, ObjectLink_GoodsGroupAnalyst5.ChildObjectId) END
+                    THEN ObjectLink_GoodsGroupAnalyst5.ChildObjectId
                WHEN ObjectLink_GoodsGroupAnalyst6.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsGroupAnalyst6.ChildObjectId <> COALESCE (ObjectLink_GoodsGroupAnalyst.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ObjectLink.ObjectId, ObjectLink_GoodsGroupAnalyst6.ChildObjectId) END
+                    THEN ObjectLink_GoodsGroupAnalyst6.ChildObjectId
                WHEN ObjectLink_GoodsGroupAnalyst7.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsGroupAnalyst7.ChildObjectId <> COALESCE (ObjectLink_GoodsGroupAnalyst.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ObjectLink.ObjectId, ObjectLink_GoodsGroupAnalyst7.ChildObjectId) END
+                    THEN ObjectLink_GoodsGroupAnalyst7.ChildObjectId
                WHEN ObjectLink_GoodsGroupAnalyst8.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsGroupAnalyst8.ChildObjectId <> COALESCE (ObjectLink_GoodsGroupAnalyst.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ObjectLink.ObjectId, ObjectLink_GoodsGroupAnalyst8.ChildObjectId) END
+                    THEN ObjectLink_GoodsGroupAnalyst8.ChildObjectId
                WHEN ObjectLink_GoodsGroupAnalyst9.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsGroupAnalyst9.ChildObjectId <> COALESCE (ObjectLink_GoodsGroupAnalyst.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ObjectLink.ObjectId, ObjectLink_GoodsGroupAnalyst9.ChildObjectId) END
+                    THEN ObjectLink_GoodsGroupAnalyst9.ChildObjectId
                WHEN ObjectLink_GoodsGroupAnalyst10.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsGroupAnalyst10.ChildObjectId <> COALESCE (ObjectLink_GoodsGroupAnalyst.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ObjectLink.ObjectId, ObjectLink_GoodsGroupAnalyst10.ChildObjectId) END
-          END AS isGoodsGroupAnalyst
+                    THEN ObjectLink_GoodsGroupAnalyst10.ChildObjectId
+               ELSE 0
+          END AS GoodsGroupAnalystId_new
 
           -- ***<Производственная площадка>
+        , COALESCE (ObjectLink_GoodsPlatform.ChildObjectId, 0) AS GoodsPlatformId_curr
         , CASE WHEN ObjectLink_GoodsPlatform0.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsPlatform0.ChildObjectId <> COALESCE (ObjectLink_GoodsPlatform.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(), ObjectLink.ObjectId, ObjectLink_GoodsPlatform0.ChildObjectId) END
+                    THEN ObjectLink_GoodsPlatform0.ChildObjectId
                WHEN ObjectLink_GoodsPlatform1.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsPlatform1.ChildObjectId <> COALESCE (ObjectLink_GoodsPlatform.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(), ObjectLink.ObjectId, ObjectLink_GoodsPlatform1.ChildObjectId) END
+                    THEN ObjectLink_GoodsPlatform1.ChildObjectId
                WHEN ObjectLink_GoodsPlatform2.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsPlatform2.ChildObjectId <> COALESCE (ObjectLink_GoodsPlatform.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(), ObjectLink.ObjectId, ObjectLink_GoodsPlatform2.ChildObjectId) END
+                    THEN ObjectLink_GoodsPlatform2.ChildObjectId
                WHEN ObjectLink_GoodsPlatform3.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsPlatform3.ChildObjectId <> COALESCE (ObjectLink_GoodsPlatform.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(), ObjectLink.ObjectId, ObjectLink_GoodsPlatform3.ChildObjectId) END
+                    THEN ObjectLink_GoodsPlatform3.ChildObjectId
                WHEN ObjectLink_GoodsPlatform4.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsPlatform4.ChildObjectId <> COALESCE (ObjectLink_GoodsPlatform.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(), ObjectLink.ObjectId, ObjectLink_GoodsPlatform4.ChildObjectId) END
+                    THEN ObjectLink_GoodsPlatform4.ChildObjectId
                WHEN ObjectLink_GoodsPlatform5.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsPlatform5.ChildObjectId <> COALESCE (ObjectLink_GoodsPlatform.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(), ObjectLink.ObjectId, ObjectLink_GoodsPlatform5.ChildObjectId) END
+                    THEN ObjectLink_GoodsPlatform5.ChildObjectId
                WHEN ObjectLink_GoodsPlatform6.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsPlatform6.ChildObjectId <> COALESCE (ObjectLink_GoodsPlatform.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(), ObjectLink.ObjectId, ObjectLink_GoodsPlatform6.ChildObjectId) END
+                    THEN ObjectLink_GoodsPlatform6.ChildObjectId
                WHEN ObjectLink_GoodsPlatform7.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsPlatform7.ChildObjectId <> COALESCE (ObjectLink_GoodsPlatform.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(), ObjectLink.ObjectId, ObjectLink_GoodsPlatform7.ChildObjectId) END
+                    THEN ObjectLink_GoodsPlatform7.ChildObjectId
                WHEN ObjectLink_GoodsPlatform8.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsPlatform8.ChildObjectId <> COALESCE (ObjectLink_GoodsPlatform.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(), ObjectLink.ObjectId, ObjectLink_GoodsPlatform8.ChildObjectId) END
+                    THEN ObjectLink_GoodsPlatform8.ChildObjectId
                WHEN ObjectLink_GoodsPlatform9.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsPlatform9.ChildObjectId <> COALESCE (ObjectLink_GoodsPlatform.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(), ObjectLink.ObjectId, ObjectLink_GoodsPlatform9.ChildObjectId) END
+                    THEN ObjectLink_GoodsPlatform9.ChildObjectId
                WHEN ObjectLink_GoodsPlatform10.ChildObjectId <> 0
-                    THEN CASE WHEN ObjectLink_GoodsPlatform10.ChildObjectId <> COALESCE (ObjectLink_GoodsPlatform.ChildObjectId, 0) THEN lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(), ObjectLink.ObjectId, ObjectLink_GoodsPlatform10.ChildObjectId) END
-          END AS isGoodsPlatform
+                    THEN ObjectLink_GoodsPlatform10.ChildObjectId
+               ELSE 0
+          END AS GoodsPlatformId_new
+          
+          --  Признак - ОС 
+        , COALESCE (ObjectBoolean_Asset.ValueData, FALSE) AS isAsset_curr
+        , CASE WHEN ObjectBoolean_Asset_0.ValueData = TRUE
+                    THEN ObjectBoolean_Asset_0.ValueData
+               WHEN ObjectBoolean_Asset_1.ValueData = TRUE
+                    THEN ObjectBoolean_Asset_1.ValueData
+               WHEN ObjectBoolean_Asset_2.ValueData = TRUE
+                    THEN ObjectBoolean_Asset_2.ValueData
+               WHEN ObjectBoolean_Asset_3.ValueData = TRUE
+                    THEN ObjectBoolean_Asset_3.ValueData
+               WHEN ObjectBoolean_Asset_4.ValueData = TRUE
+                    THEN ObjectBoolean_Asset_4.ValueData
+               WHEN ObjectBoolean_Asset_5.ValueData = TRUE
+                    THEN ObjectBoolean_Asset_5.ValueData
+               WHEN ObjectBoolean_Asset_6.ValueData = TRUE
+                    THEN ObjectBoolean_Asset_6.ValueData
+               WHEN ObjectBoolean_Asset_7.ValueData = TRUE
+                    THEN ObjectBoolean_Asset_7.ValueData
+               WHEN ObjectBoolean_Asset_8.ValueData = TRUE
+                    THEN ObjectBoolean_Asset_8.ValueData
+               WHEN ObjectBoolean_Asset_9.ValueData = TRUE
+                    THEN ObjectBoolean_Asset_9.ValueData
+               WHEN ObjectBoolean_Asset_10.ValueData = TRUE
+                    THEN ObjectBoolean_Asset_10.ValueData
+               ELSE FALSE
+          END AS isAsset_new
+          
 
    FROM ObjectLink
         INNER JOIN _tmpList ON _tmpList.GoodsGroupId = ObjectLink.ChildObjectId
@@ -314,6 +362,9 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
                              ON ObjectLink_InfoMoney.ObjectId = ObjectLink.ObjectId
                             AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset
+                                ON ObjectBoolean_Asset.ObjectId = ObjectLink.ObjectId
+                               AND ObjectBoolean_Asset.DescId   = zc_ObjectBoolean_Goods_Asset()
 
         --  св-ва Группы товаров - 0
         LEFT JOIN ObjectLink AS ObjectLink_TradeMark0
@@ -331,6 +382,9 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_InfoMoney0
                              ON ObjectLink_InfoMoney0.ObjectId = ObjectLink.ChildObjectId
                             AND ObjectLink_InfoMoney0.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset_0
+                                ON ObjectBoolean_Asset_0.ObjectId = ObjectLink.ChildObjectId
+                               AND ObjectBoolean_Asset_0.DescId   = zc_ObjectBoolean_GoodsGroup_Asset()
 
         --  св-ва Группы товаров - 1
         LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup1
@@ -351,6 +405,9 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_InfoMoney1
                              ON ObjectLink_InfoMoney1.ObjectId = ObjectLink_GoodsGroup1.ChildObjectId
                             AND ObjectLink_InfoMoney1.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset_1
+                                ON ObjectBoolean_Asset_1.ObjectId = ObjectLink_GoodsGroup1.ChildObjectId
+                               AND ObjectBoolean_Asset_1.DescId   = zc_ObjectBoolean_GoodsGroup_Asset()
 
         --  св-ва Группы товаров - 2
         LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup2
@@ -371,6 +428,9 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_InfoMoney2
                              ON ObjectLink_InfoMoney2.ObjectId = ObjectLink_GoodsGroup2.ChildObjectId
                             AND ObjectLink_InfoMoney2.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset_2
+                                ON ObjectBoolean_Asset_2.ObjectId = ObjectLink_GoodsGroup2.ChildObjectId
+                               AND ObjectBoolean_Asset_2.DescId   = zc_ObjectBoolean_GoodsGroup_Asset()
 
 
         --  св-ва Группы товаров - 3
@@ -392,6 +452,9 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_InfoMoney3
                              ON ObjectLink_InfoMoney3.ObjectId = ObjectLink_GoodsGroup3.ChildObjectId
                             AND ObjectLink_InfoMoney3.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset_3
+                                ON ObjectBoolean_Asset_3.ObjectId = ObjectLink_GoodsGroup3.ChildObjectId
+                               AND ObjectBoolean_Asset_3.DescId   = zc_ObjectBoolean_GoodsGroup_Asset()
 
         --  св-ва Группы товаров - 4
         LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup4
@@ -412,6 +475,9 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_InfoMoney4
                              ON ObjectLink_InfoMoney4.ObjectId = ObjectLink_GoodsGroup4.ChildObjectId
                             AND ObjectLink_InfoMoney4.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset_4
+                                ON ObjectBoolean_Asset_4.ObjectId = ObjectLink_GoodsGroup4.ChildObjectId
+                               AND ObjectBoolean_Asset_4.DescId   = zc_ObjectBoolean_GoodsGroup_Asset()
 
         --  св-ва Группы товаров - 5
         LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup5
@@ -432,6 +498,9 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_InfoMoney5
                              ON ObjectLink_InfoMoney5.ObjectId = ObjectLink_GoodsGroup5.ChildObjectId
                             AND ObjectLink_InfoMoney5.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset_5
+                                ON ObjectBoolean_Asset_5.ObjectId = ObjectLink_GoodsGroup5.ChildObjectId
+                               AND ObjectBoolean_Asset_5.DescId   = zc_ObjectBoolean_GoodsGroup_Asset()
 
         --  св-ва Группы товаров - 6
         LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup6
@@ -452,6 +521,9 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_InfoMoney6
                              ON ObjectLink_InfoMoney6.ObjectId = ObjectLink_GoodsGroup6.ChildObjectId
                             AND ObjectLink_InfoMoney6.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset_6
+                                ON ObjectBoolean_Asset_6.ObjectId = ObjectLink_GoodsGroup6.ChildObjectId
+                               AND ObjectBoolean_Asset_6.DescId   = zc_ObjectBoolean_GoodsGroup_Asset()
 
         --  св-ва Группы товаров - 7
         LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup7
@@ -472,6 +544,9 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_InfoMoney7
                              ON ObjectLink_InfoMoney7.ObjectId = ObjectLink_GoodsGroup7.ChildObjectId
                             AND ObjectLink_InfoMoney7.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset_7
+                                ON ObjectBoolean_Asset_7.ObjectId = ObjectLink_GoodsGroup7.ChildObjectId
+                               AND ObjectBoolean_Asset_7.DescId   = zc_ObjectBoolean_GoodsGroup_Asset()
 
         --  св-ва Группы товаров - 8
         LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup8
@@ -492,6 +567,9 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_InfoMoney8
                              ON ObjectLink_InfoMoney8.ObjectId = ObjectLink_GoodsGroup8.ChildObjectId
                             AND ObjectLink_InfoMoney8.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset_8
+                                ON ObjectBoolean_Asset_8.ObjectId = ObjectLink_GoodsGroup8.ChildObjectId
+                               AND ObjectBoolean_Asset_8.DescId   = zc_ObjectBoolean_GoodsGroup_Asset()
 
         --  св-ва Группы товаров - 9
         LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup9
@@ -512,6 +590,9 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_InfoMoney9
                              ON ObjectLink_InfoMoney9.ObjectId = ObjectLink_GoodsGroup9.ChildObjectId
                             AND ObjectLink_InfoMoney9.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset_9
+                                ON ObjectBoolean_Asset_9.ObjectId = ObjectLink_GoodsGroup9.ChildObjectId
+                               AND ObjectBoolean_Asset_9.DescId   = zc_ObjectBoolean_GoodsGroup_Asset()
 
         --  св-ва Группы товаров - 10
         LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup10
@@ -532,9 +613,14 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_InfoMoney10
                              ON ObjectLink_InfoMoney10.ObjectId = ObjectLink_GoodsGroup10.ChildObjectId
                             AND ObjectLink_InfoMoney10.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset_10
+                                ON ObjectBoolean_Asset_10.ObjectId = ObjectLink_GoodsGroup10.ChildObjectId
+                               AND ObjectBoolean_Asset_10.DescId   = zc_ObjectBoolean_GoodsGroup_Asset()
 
    WHERE ObjectLink.DescId = zc_ObjectLink_Goods_GoodsGroup()
-  ) AS tmp;
+  ) AS tmp
+  ) AS tmp
+   ;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

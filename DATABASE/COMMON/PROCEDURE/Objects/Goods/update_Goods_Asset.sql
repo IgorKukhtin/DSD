@@ -9,6 +9,6 @@ with tmp as (SELECT * FROM lfSelect_Object_Goods_byGoodsGroup (9354099 ) AS lfSe
                                          and ObjectBoolean.DescId = zc_ObjectBoolean_Goods_Asset()
             )
 select * 
-     , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Asset(), Id, isAsset_cacl)
+--     , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Asset(), Id, isAsset_cacl)
 from tmp3
 where isAsset_cacl <> isAsset

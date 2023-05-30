@@ -43,6 +43,8 @@ $BODY$
    DECLARE vbGroupNameFull TVarChar;   
    DECLARE vbIsUpdate Boolean;  
    DECLARE vbGoodsPlatformId Integer; -- ***Производственная площадка
+   DECLARE vbIsAsset Boolean;
+
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
@@ -93,6 +95,9 @@ BEGIN
    inGoodsGroupAnalystId:= lfGet_Object_GoodsGroup_GoodsGroupAnalystId (inGoodsGroupId);
    -- из ближайшей группы где установлено <Производственная площадка>
    vbGoodsPlatformId:= lfGet_Object_GoodsGroup_GoodsPlatformId (inGoodsGroupId);
+   -- из ближайшей группы где установлено <Производственная площадка>
+   vbIsAsset:= lfGet_Object_GoodsGroup_isAsset (inGoodsGroupId);
+   
 
    -- расчетно свойство <Полное название группы>
    vbGroupNameFull:= lfGet_Object_TreeNameFull (inGoodsGroupId, zc_ObjectLink_GoodsGroup_Parent());
@@ -142,6 +147,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ioId, inGoodsGroupAnalystId);
    -- изменили свойство ***<Производственная площадка>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(), ioId, vbGoodsPlatformId);
+   
+   -- изменили свойство <Признак - ОС>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Asset(), ioId, vbIsAsset);
+   
 
    -- сохранили свойство
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_ShortName(), ioId, inShortName);
