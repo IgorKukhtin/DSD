@@ -1982,7 +1982,7 @@ BEGIN
 end if;*/
 
 -- !!! ВРЕМЕННО !!!
- IF vbUserId = 5 AND 1=0 THEN
+ IF vbUserId = 5 AND 1=1 THEN
 -- IF inSession = '1162887' AND 1=1 THEN
     RAISE EXCEPTION 'Admin - Test = OK : %  %  %  %  % % % % %  % %'
   , vbIsSendOnPriceIn -- inBranchCode -- 'Повторите действие через 3 мин.'

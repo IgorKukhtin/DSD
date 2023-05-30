@@ -915,6 +915,14 @@ BEGIN
              ) AS _tmp;
 
 
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE COALESCE (_tmpItem.InfoMoneyDestinationId, 0) = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.УП статья не установлена. <%> <%>'
+                       , (SELECT COUNT(*) FROM _tmpItem WHERE COALESCE (_tmpItem.InfoMoneyDestinationId, 0) = 0)
+                       , (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId) FROM _tmpItem WHERE COALESCE (_tmpItem.InfoMoneyDestinationId, 0) = 0 LIMIT 1)
+                        ;
+     END IF;
+
      -- !!!надо определить - есть ли скидка в цене!!!
      vbIsChangePrice:= (SELECT _tmpItem.isChangePrice FROM _tmpItem LIMIT 1);
 

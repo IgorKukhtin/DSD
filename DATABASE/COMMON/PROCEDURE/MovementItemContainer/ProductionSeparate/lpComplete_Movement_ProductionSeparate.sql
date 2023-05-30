@@ -794,7 +794,15 @@ end if;
        FROM _tmpItemChild;
 
 
-    -- RAISE EXCEPTION 'Ошибка.<%>', (select count(*) FROM _tmpItemChild WHERE _tmpItemChild.InfoMoneyDestinationId = 8878);
+
+     IF EXISTS (SELECT 1 FROM _tmpItemChild WHERE COALESCE (_tmpItemChild.InfoMoneyDestinationId, 0) = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.УП статья не установлена. <%> <%>'
+                       , (SELECT COUNT(*) FROM _tmpItemChild WHERE COALESCE (_tmpItemChild.InfoMoneyDestinationId, 0) = 0)
+                       , (SELECT lfGet_Object_ValueData (_tmpItemChild.GoodsId) FROM _tmpItemChild WHERE COALESCE (_tmpItemChild.InfoMoneyDestinationId, 0) = 0 LIMIT 1)
+                        ;
+     END IF;
+
 
 
      -- определяется Счет(справочника) для проводок по суммовому учету - Кому

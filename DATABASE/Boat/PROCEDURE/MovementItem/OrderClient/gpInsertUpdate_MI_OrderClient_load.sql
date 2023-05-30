@@ -85,6 +85,122 @@ BEGIN
 --     END IF;
 
 
+-- 4871
+IF zfConvert_StringToFloat (inValue1) = 0 AND NOT EXISTS (SELECT 1
+                                                          FROM Object
+                                                               JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site()
+                                                                                      AND OS.ValueData ILIKE inValue1
+                                                          WHERE Object.DescId    = zc_Object_ProdOptions()
+                                                            AND Object.isErased  = FALSE
+                                                         )
+THEN
+     inValue1:= COALESCE ((SELECT DISTINCT LEFT (OS.ValueData, 4)
+                           FROM Object
+                                JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site()
+                                                       AND OS.ValueData <> ''
+                                -- Model
+                                JOIN ObjectLink AS OL_Model
+                                                ON OL_Model.ObjectId      = Object.Id
+                                               AND OL_Model.DescId        = zc_ObjectLink_ProdOptions_Model()
+                                               -- такая Model как для ProductId
+                                               AND OL_Model.ChildObjectId = (SELECT OL_find.ChildObjectId
+                                                                             FROM ObjectLink AS OL_find
+                                                                             WHERE OL_find.ObjectId = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioMovementId_OrderClient AND MLO.DescId = zc_MovementLinkObject_Product())
+                                                                               AND OL_find.DescId   = zc_ObjectLink_Product_Model()
+                                                                            )
+                           WHERE Object.DescId    = zc_Object_ProdOptions()
+                             AND Object.isErased  = FALSE
+                          ), '')
+                || inValue1;
+END IF;
+
+
+IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = ioMovementId_OrderClient AND Movement.InvNumber = '5079')
+   AND 1=0
+THEN
+    IF inValue1 = '_hp_c1'
+    THEN
+        inValue1:= 'b360_hp_c1';
+    END IF;
+    
+    IF inValue1 = '_hs_c1'
+    THEN
+        inValue1:= 'b360_hs_c1';
+    END IF;
+
+    IF inValue1 = '_m'
+    THEN
+        inValue1:= 'b360_m_1';
+    END IF;
+    
+    IF inValue1 = '_u_9'
+    THEN
+        inValue1:= 'b360_u_9';
+    END IF;
+    
+    IF inValue1 = '_t_0'
+    THEN
+        inValue1:= 'b360_t_0';
+    END IF;
+
+    IF inValue1 = '_hc'
+    THEN
+        inValue1:= 'b360_hc';
+    END IF;
+
+    IF inValue1 = '_dc'
+    THEN
+        inValue1:= 'b360_dc';
+    END IF;
+
+    IF inValue1 = '_sc'
+    THEN
+        inValue1:= 'b360_sc';
+    END IF;
+
+    IF inValue1 = '_doa_0'
+    THEN
+        inValue1:= 'b360_doa_0';
+    END IF;
+
+    IF inValue1 = '_doa_1'
+    THEN
+        inValue1:= 'b360_doa_1';
+    END IF;
+
+    IF inValue1 = '_doa_2'
+    THEN
+        inValue1:= 'b360_doa_2';
+    END IF;
+
+    IF inValue1 = '_doa_3'
+    THEN
+        inValue1:= 'b360_doa_3';
+    END IF;
+    
+    IF inValue1 = '_loa_0'
+    THEN
+        inValue1:= 'b360_loa_0';
+    END IF;
+
+    IF inValue1 = '_loa_1'
+    THEN
+        inValue1:= 'b360_loa_1';
+    END IF;
+    
+    IF inValue1 = '_aoa_0'
+    THEN
+        inValue1:= 'b360_aoa_0';
+    END IF;
+
+    IF inValue1 = '_aoa_3'
+    THEN
+        inValue1:= 'b360_aoa_3';
+    END IF;
+
+END IF;
+
+
      -- замена - временно - захардкодил
      IF inTitle ILIKE 'upholstery' AND inTitle2 ILIKE 'material_title' AND inValue2 ILIKE 'LIENZO' AND inValue3 ILIKE 'Black'
      THEN inValue2:= 'SILVERTEX®';
