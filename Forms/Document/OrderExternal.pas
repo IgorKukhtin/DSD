@@ -164,6 +164,8 @@ type
     bbUpdate_MIChild_AmountNull: TdxBarButton;
     bbUpdate_MIChild_AmountSecondNull: TdxBarButton;
     cbIsRemains: TcxCheckBox;
+    actPrintQty: TdsdPrintAction;
+    bbPrintQty: TdxBarButton;
   private
     { Private declarations }
   public
