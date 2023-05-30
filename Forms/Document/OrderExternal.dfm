@@ -995,7 +995,7 @@ inherited OrderExternalForm: TOrderExternalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintQty: TdsdPrintAction [12]
+    object actPrintSort: TdsdPrintAction [12]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1003,8 +1003,8 @@ inherited OrderExternalForm: TOrderExternalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' ('#1074#1077#1089')'
-      Hint = #1055#1077#1095#1072#1090#1100' ('#1074#1077#1089')'
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1089#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1074#1077#1089#1091' )'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1089#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1074#1077#1089#1091' )'
       ImageIndex = 15
       DataSets = <
         item
@@ -1894,7 +1894,7 @@ inherited OrderExternalForm: TOrderExternalForm
       Category = 0
     end
     object bbPrintQty: TdxBarButton
-      Action = actPrintQty
+      Action = actPrintSort
       Category = 0
     end
   end

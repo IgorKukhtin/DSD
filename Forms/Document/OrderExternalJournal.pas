@@ -119,6 +119,8 @@ type
     bbUpdateMIChild_AmountSecondNull: TdxBarButton;
     actOpenFormOrderExternalChild: TdsdInsertUpdateAction;
     bbOpenFormOrderExternalChild: TdxBarButton;
+    bbPrintSort: TdxBarButton;
+    actPrintSort: TdsdPrintAction;
   private
     { Private declarations }
   public
