@@ -756,14 +756,14 @@
     Left = 8
     Top = 140
     Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1094#1077#1085#1091' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-    TabOrder = 35
+    TabOrder = 33
     Width = 241
   end
   object cbisNotRealGoods: TcxCheckBox [33]
     Left = 8
     Top = 161
     Caption = #1053#1077#1090' c'#1093#1077#1084#1099' '#1089' '#1079#1072#1084#1077#1085#1086#1081' '#1092#1072#1082#1090'/'#1073#1091#1093#1075' '#1086#1090#1075#1088'.) ('#1076#1072'/'#1085#1077#1090')'
-    TabOrder = 37
+    TabOrder = 36
     Width = 272
   end
   object cxLabel25: TcxLabel [34]
@@ -1271,6 +1271,14 @@
         Value = ''
         Component = dsdPriceListPromoGuides
         ComponentItem = 'PriceListPromoId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSectionId'
+        Value = Null
+        Component = GuidesSection
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
