@@ -155,11 +155,13 @@ BEGIN
                    )
 
        , tmpReserve AS (SELECT MovementItem.ObjectId             AS GoodsId
-                         , SUM (MovementItem.Amount)::TFloat AS ReserveAmount
+                         , SUM (COALESCE(MIFloat_AmountOrder.ValueData, MovementItem.Amount))::TFloat AS ReserveAmount
                     FROM tmpMovementChek
                          INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementChek.Id
                                                 AND MovementItem.DescId     = zc_MI_Master()
-                                                AND MovementItem.isErased   = FALSE
+                         LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
+                                                     ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
                     GROUP BY MovementItem.ObjectId
                     )
        -- Отложенные технические переучеты
