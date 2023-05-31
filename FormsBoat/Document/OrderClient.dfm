@@ -529,14 +529,14 @@ object OrderClientForm: TOrderClientForm
       Width = 70
     end
     object edSummTax: TcxCurrencyEdit
-      Left = 783
-      Top = 94
+      Left = 784
+      Top = 95
       Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
       ParentShowHint = False
       Properties.Alignment.Horz = taRightJustify
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       ShowHint = True
       TabOrder = 53
       Width = 70
@@ -5176,6 +5176,21 @@ object OrderClientForm: TOrderClientForm
       end
       item
         Control = edPaidKind
+      end
+      item
+        Control = edSummTax
+      end
+      item
+        Control = edSummReal
+      end
+      item
+        Control = edBasis_summ
+      end
+      item
+        Control = edBasis_summ_orig
+      end
+      item
+        Control = edBasis_summ_transport
       end>
     GetStoredProc = spGet
     Left = 824

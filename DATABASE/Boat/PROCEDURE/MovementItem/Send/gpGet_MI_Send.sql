@@ -2,10 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpGet_MI_Send (Integer, Integer, TVarChar, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_MI_Send (Integer, Integer, Integer, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_Send (Integer, Integer, Integer, Integer, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_Send(
     IN inMovementId        Integer    , -- Ключ объекта <Документ>  
     IN inMovementId_OrderClient Integer, --докуметн заказ
+    IN inId                Integer    , --
     IN inGoodsId           Integer    , -- вариант когда вібирают товар из справочника
     IN inPartNumber        TVarChar   , --
     IN inAmount            TFloat     , --
@@ -83,12 +85,13 @@ BEGIN
                    AND MI.isErased   = FALSE
                    AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'') 
                    AND COALESCE (MIFloat_MovementId.ValueData,0)::Integer = COALESCE (inMovementId_OrderClient,0)
+                   AND (MI.Id = inId OR inId = 0)
                  GROUP BY MI.ObjectId
                         , COALESCE (MIString_PartNumber.ValueData, '')
-                        , MIFloat_MovementId.ValueData      :: Integer
+                        , MIFloat_MovementId.ValueData      :: Integer 
                 )
 
-           SELECT -1                               :: Integer AS Id
+           SELECT CASE WHEN COALESCE (inId,0) <> 0 THEN inId ELSE -1 END  :: Integer AS Id
                 , Object_Goods.Id                             AS GoodsId
                 , Object_Goods.ObjectCode                     AS GoodsCode
                 , Object_Goods.ValueData                      AS GoodsName
@@ -137,7 +140,7 @@ BEGIN
 
                 LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
            WHERE Object_Goods.Id = inGoodsId
-              AND inGoodsId <> 0
+              AND inGoodsId <> 0 
           UNION
            SELECT -1         :: Integer AS Id
                 , 0                     AS GoodsId
@@ -167,6 +170,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.05.23         * add inId
  12.05.22         *
  08.04.22         *
 */

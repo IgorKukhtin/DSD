@@ -3083,6 +3083,8 @@ object SendForm: TSendForm
         item
           Name = 'Id'
           Value = '-1'
+          Component = MasterCDS
+          ComponentItem = 'Id'
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end

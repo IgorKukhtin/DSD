@@ -708,6 +708,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProdColorPatternForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorPatternEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProdColorPatternEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdColorPatternGoodsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdColorPatternGoodsEditForm');
 end;
 procedure TLoadFormTest.LoadProdColorGroupFormTest;
 begin

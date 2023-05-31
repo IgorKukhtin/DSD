@@ -237,6 +237,8 @@ type
     actProtocol2: TdsdOpenForm;
     bbProtocol1: TdxBarButton;
     bbProtocol2: TdxBarButton;
+    actUpdateProdColPattetnGoods: TdsdInsertUpdateAction;
+    bbUpdateProdColPattetnGoods: TdxBarButton;
   private
     { Private declarations }
   public
