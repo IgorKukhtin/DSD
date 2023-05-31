@@ -70,14 +70,17 @@ BEGIN
                        AND ObjectBoolean.ValueData = TRUE
                      )
 
-       , tmpMIAll AS (SELECT CASE WHEN MIObject_WorkTimeKind.ObjectId IN (zc_Enum_WorkTimeKind_WorkD()
-                                                                        , zc_Enum_WorkTimeKind_WorkN()
-                                                                        , zc_Enum_WorkTimeKind_Work()
-                                                                        , zc_Enum_WorkTimeKind_Inventory()
-                                                                        , zc_Enum_WorkTimeKind_RemoteAccess()
-                                                                        ,7386821,7386812,7386818,7386819,12917,8302788,8302790     --стажеры
-                                                                        )
-                                  THEN COALESCE (MI_SheetWorkTime.Amount,0) ELSE 0 END AS Amount
+       , tmpMIAll AS (SELECT CASE WHEN MIObject_WorkTimeKind.ObjectId IN (zc_Enum_WorkTimeKind_WorkD()        -- день 12ч
+                                                                        , zc_Enum_WorkTimeKind_WorkN()        -- ночь 12ч
+                                                                        , zc_Enum_WorkTimeKind_Work()         -- Рабочие часы
+                                                                        , zc_Enum_WorkTimeKind_Inventory()    -- Инвентаризация
+                                                                        , zc_Enum_WorkTimeKind_RemoteAccess() -- Удаленый Доступ
+                                                                         -- Стажер50% + Стажеры 60% + Стажеры 70% + Стажеры 80% + Стажеры 90% + Стажер День50% + Стажер Ночь50%
+                                                                        , 7386821, 7386812, 7386818, 7386819, 12917, 8302788, 8302790
+                                                                         -- Санобработка 
+                                                                        , 7060854
+                                                                         )
+                                  THEN COALESCE (MI_SheetWorkTime.Amount, 0) ELSE 0 END AS Amount
 
                            , COALESCE(MI_SheetWorkTime.ObjectId, 0)        AS MemberId
                            , COALESCE(MIObject_Position.ObjectId, 0)       AS PositionId

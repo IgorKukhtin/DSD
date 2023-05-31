@@ -109,8 +109,8 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_Bank(), ioId, inBankId);
 
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_InfoMoney(), ioId, inInfoMoneyId);
+   -- сохранили свойство - Продажа лодки
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_InfoMoney(), ioId, CASE WHEN inInfoMoneyId > 0 THEN inInfoMoneyId ELSE 35016 END);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_TaxKind(), ioId, inTaxKindId);
    -- сохранили свойство <>

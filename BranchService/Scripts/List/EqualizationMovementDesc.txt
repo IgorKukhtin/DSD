@@ -1,0 +1,7 @@
+zc_Movement_SendOnPrice() 
+zc_Movement_OrderExternal()
+zc_Movement_QualityParams() 
+zc_Movement_QualityNumber()
+zc_Movement_EDI()
+zc_Movement_Promo()
+zc_Movement_Sale()

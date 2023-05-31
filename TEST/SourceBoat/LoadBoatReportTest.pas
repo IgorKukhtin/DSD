@@ -62,43 +62,41 @@ begin
 
     LoadReportFromFile('PrintReport_OrderClientByBoat', ReportPath + '\PrintReport_OrderClientByBoat.fr3');
     LoadReportFromFile('PrintReport_OrderClientByBoatMov', ReportPath + '\PrintReport_OrderClientByBoatMov.fr3');
-    exit;
+
     LoadReportFromFile('PrintMovement_ProductionUnionCalc', ReportPath + '\PrintMovement_ProductionUnionCalc.fr3');
 
     LoadReportFromFile('PrintMovement_ProductionUnion', ReportPath + '\PrintMovement_ProductionUnion.fr3');
-    exit;
+
     {LoadReportFromFile('PrintMovement_OrderInternal', ReportPath + '\PrintMovement_OrderInternal.fr3');
     exit;
     }
     LoadReportFromFile('Отчет Движение по комплектующим (партия заказ)', ReportPath + '\Отчет Движение по комплектующим (партия заказ).fr3');
-//    exit;
+
     LoadReportFromFile('Отчет Движение по комплектующим (кол-во)', ReportPath + '\Отчет Движение по комплектующим (кол-во).fr3');
     LoadReportFromFile('Отчет Движение по комплектующим (вх цена)', ReportPath + '\Отчет Движение по комплектующим (вх цена).fr3');
-    exit;
+
 
     LoadReportFromFile('PrintMovement_Send_3', ReportPath + '\PrintMovement_Send_3.fr3');
-    exit;
+
     {
     LoadReportFromFile('PrintMovement_Send_2', ReportPath + '\PrintMovement_Send_2.fr3');
     LoadReportFromFile('PrintMovement_Send', ReportPath + '\PrintMovement_Send.fr3');
     LoadReportFromFile('PrintMovement_IncomeSticker', ReportPath + '\PrintMovement_IncomeSticker.fr3');
     exit;
     LoadReportFromFile('PrintReport_ProductionPersonal', ReportPath + '\PrintReport_ProductionPersonal.fr3');
-    exit;
 
     LoadReportFromFile('PrintObject_Personal_barcode', ReportPath + '\PrintObject_Personal_barcode.fr3');
     LoadReportFromFile('PrintMovement_OrderClientBarcode', ReportPath + '\PrintMovement_OrderClientBarcode.fr3');
 
     LoadReportFromFile('PrintMovement_ProductionPersonal', ReportPath + '\PrintMovement_ProductionPersonal.fr3');
-    exit;
     }
     LoadReportFromFile('PrintReceiptGoods_Structure', ReportPath + '\PrintReceiptGoods_Structure.fr3');
     //LoadReportFromFile('PrintReceiptProdModel_StructureGoods', ReportPath + '\PrintReceiptProdModel_StructureGoods.fr3');
     LoadReportFromFile('PrintReceiptProdModelGoods_Structure', ReportPath + '\PrintReceiptProdModelGoods_Structure.fr3');
     LoadReportFromFile('PrintReceiptProdModel_Structure', ReportPath + '\PrintReceiptProdModel_Structure.fr3');
-    exit;
+
     LoadReportFromFile('PrintProduct_StructureGoods', ReportPath + '\PrintProduct_StructureGoods.fr3');
-    exit;
+
     LoadReportFromFile('PrintProduct_OrderConfirmation', ReportPath + '\PrintProduct_OrderConfirmation.fr3');
     LoadReportFromFile('PrintProduct_Structure', ReportPath + '\PrintProduct_Structure.fr3');
     LoadReportFromFile('PrintProduct_Offer', ReportPath + '\PrintProduct_Offer.fr3');
