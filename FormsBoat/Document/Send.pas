@@ -266,6 +266,9 @@ type
     dxBarSeparator1: TdxBarSeparator;
     dxBarSeparator2: TdxBarSeparator;
     actOrderClientChoiceForm: TOpenChoiceForm;
+    cxLabel17: TcxLabel;
+    edOrderClient: TcxButtonEdit;
+    GuidesOrderClient: TdsdGuides;
   private
   public
   end;

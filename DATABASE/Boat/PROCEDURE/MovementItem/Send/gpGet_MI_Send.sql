@@ -158,8 +158,8 @@ BEGIN
                 , 1  ::TFloat           AS TotalCount
                 , 1  :: TFloat          AS Amount
                 , 0  ::TFloat           AS AmountRemains
-                , 0                     AS MovementId_OrderClient
-                , '' ::TVarChar         AS InvNumberFull_OrderClient                
+                , inMovementId_OrderClient AS MovementId_OrderClient
+                , (SELECT zfCalc_InvNumber_isErased ('', Movement.InvNumber, Movement.OperDate, Movement.StatusId) FROM Movement WHERE Movement.Id = inMovementId_OrderClient)::TVarChar AS InvNumberFull_OrderClient                
            WHERE inGoodsId = 0
           ;
 

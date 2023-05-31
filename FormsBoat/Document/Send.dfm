@@ -325,6 +325,23 @@ object SendForm: TSendForm
       TabOrder = 21
       Width = 368
     end
+    object cxLabel17: TcxLabel
+      Left = 337
+      Top = 131
+      Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+    end
+    object edOrderClient: TcxButtonEdit
+      Left = 337
+      Top = 147
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 23
+      Width = 192
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -3134,8 +3151,10 @@ object SendForm: TSendForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'MovementId_OrderClient'
-          Value = '0'
+          Name = 'inMovementId_OrderClient'
+          Value = 0
+          Component = GuidesOrderClient
+          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -3740,6 +3759,21 @@ object SendForm: TSendForm
         Name = 'ReceiptGoodsName'
         Value = Null
         Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_OrderClient'
+        Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberFull_OrderClient'
+        Value = Null
+        Component = GuidesOrderClient
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -4553,5 +4587,44 @@ object SendForm: TSendForm
     PackSize = 1
     Left = 615
     Top = 256
+  end
+  object GuidesOrderClient: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderClient
+    Key = '0'
+    FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderClientJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_all'
+        Value = ''
+        Component = GuidesOrderClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductName_Full'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    Left = 416
+    Top = 128
   end
 end
