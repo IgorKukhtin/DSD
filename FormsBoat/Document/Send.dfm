@@ -4407,29 +4407,29 @@ object SendForm: TSendForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edReceiptGoods
-    FormNameParam.Value = 'TReceiptGoodsChoiceForm'
+    FormNameParam.Value = 'TOrderClientJournalChoiceItemForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TReceiptGoodsChoiceForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TOrderClientJournalChoiceItemForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
-        Name = 'GoodsId'
+        Name = 'ObjectId'
         Value = ''
         Component = GuidesGoods
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsName_all'
+        Name = 'ObjectName'
         Value = ''
         Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 560
-    Top = 120
+    Left = 720
+    Top = 152
   end
   object spInsert_MI_Send_byOrder: TdsdStoredProc
     StoredProcName = 'gpInsert_MI_Send_byOrder'
