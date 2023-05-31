@@ -442,6 +442,7 @@ type
     cxLabel40: TcxLabel;
     cxLabel8: TcxLabel;
     edBasis_summ_orig: TcxCurrencyEdit;
+    actUpdateDataSetProdOptItems: TdsdUpdateDataSet;
   private
   public
   end;

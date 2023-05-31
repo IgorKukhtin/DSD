@@ -1393,7 +1393,6 @@
       Color = clLime
       ParentBackground = False
       TabOrder = 1
-      ExplicitLeft = -2
     end
   end
   object cxSplitter1: TcxSplitter
@@ -3701,6 +3700,12 @@
         DataSet = Child1CDS
       end>
     Params = <
+      item
+        Name = 'inReceiptGoodsId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inReceiptLevelId'
         Value = Null

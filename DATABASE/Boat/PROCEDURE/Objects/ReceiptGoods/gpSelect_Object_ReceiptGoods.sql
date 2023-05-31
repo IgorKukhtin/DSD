@@ -102,7 +102,7 @@ BEGIN
                                             , 0 AS EKPrice_summ_colPat
                                             , 0 AS EKPriceWVAT_summ_colPat
 
-                                       FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (inIsShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
+                                       FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (inReceiptGoodsId:=0, inReceiptLevelId:=0, inIsShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
                                        GROUP BY gpSelect.ReceiptGoodsId
 
                                       UNION ALL

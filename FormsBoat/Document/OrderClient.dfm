@@ -1524,7 +1524,6 @@ object OrderClientForm: TOrderClientForm
                 Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
-                Options.Editing = False
                 Width = 110
               end
               object GoodsGroupNameFull_ch2: TcxGridDBColumn
@@ -3900,8 +3899,8 @@ object OrderClientForm: TOrderClientForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 227
-    Top = 31
+    Left = 219
+    Top = 135
     object macChangeSumm: TMultiAction
       Category = 'NPP'
       MoveParams = <>
@@ -4834,6 +4833,24 @@ object OrderClientForm: TOrderClientForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100
       ImageIndex = 43
+    end
+    object actUpdateDataSetProdOptItems: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateProdOptItems
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateProdOptItems
+        end
+        item
+          StoredProc = spSelect_ProdOptItems
+        end
+        item
+          StoredProc = spSelect_ProdColorItems
+        end>
+      Caption = 'actUpdateDataSetProdColorItems'
+      DataSource = ProdOptItemsDS
     end
   end
   object MasterDS: TDataSource
@@ -6188,7 +6205,7 @@ object OrderClientForm: TOrderClientForm
     PacketRecords = 0
     Params = <>
     Left = 744
-    Top = 408
+    Top = 392
   end
   object DBViewAddOnProdOptItems: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6345,12 +6362,12 @@ object OrderClientForm: TOrderClientForm
         Name = 'inProductId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inProdOptionsId'
+        Name = 'ioProdOptionsId'
         Value = Null
         Component = ProdOptItemsCDS
         ComponentItem = 'ProdOptionsId'
@@ -6370,6 +6387,22 @@ object OrderClientForm: TOrderClientForm
         Value = Null
         Component = ProdOptItemsCDS
         ComponentItem = 'ProdColorPatternId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaterialOptionsId'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'MaterialOptionsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -6453,8 +6486,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 632
-    Top = 392
+    Left = 656
+    Top = 408
   end
   object PrintItemsColorCDS: TClientDataSet
     Aggregates = <>
