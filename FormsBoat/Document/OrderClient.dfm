@@ -3447,7 +3447,7 @@ object OrderClientForm: TOrderClientForm
     Width = 70
   end
   object edTransportSumm_load: TcxCurrencyEdit
-    Left = 927
+    Left = 924
     Top = 95
     Hint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
     ParentShowHint = False
@@ -3968,6 +3968,38 @@ object OrderClientForm: TOrderClientForm
           Value = Null
           Component = FormParams
           ComponentItem = 'SummReal_real'
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountTax'
+          Value = Null
+          Component = edDiscountTax
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountNextTax'
+          Value = Null
+          Component = edDiscountNextTax
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'VATPercent'
+          Value = Null
+          Component = edVATPercent
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TransportSumm_load'
+          Value = Null
+          Component = edTransportSumm_load
           DataType = ftFloat
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
@@ -7015,6 +7047,38 @@ object OrderClientForm: TOrderClientForm
         ComponentItem = 'SummReal_real'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVATPercent'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountTax'
+        Value = Null
+        Component = edDiscountTax
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountNextTax'
+        Value = Null
+        Component = edDiscountNextTax
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTransportSumm_load'
+        Value = Null
+        Component = edTransportSumm_load
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

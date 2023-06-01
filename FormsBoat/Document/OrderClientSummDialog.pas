@@ -35,6 +35,14 @@ type
     cxLabel37: TcxLabel;
     cxLabel36: TcxLabel;
     edSummTax: TcxCurrencyEdit;
+    cxLabel33: TcxLabel;
+    edDiscountTax: TcxCurrencyEdit;
+    cxLabel34: TcxLabel;
+    edDiscountNextTax: TcxCurrencyEdit;
+    cxLabel29: TcxLabel;
+    edVATPercent: TcxCurrencyEdit;
+    cxLabel27: TcxLabel;
+    edTransportSumm_load: TcxCurrencyEdit;
   private
     { Private declarations }
   public
