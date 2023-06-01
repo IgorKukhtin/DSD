@@ -666,7 +666,7 @@ object ProductEditForm: TProductEditForm
     Width = 79
   end
   object edTransportSumm_load: TcxCurrencyEdit
-    Left = 497
+    Left = 500
     Top = 480
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
@@ -1268,6 +1268,14 @@ object ProductEditForm: TProductEditForm
         Component = edSummReal
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTransportSumm_load'
+        Value = Null
+        Component = edTransportSumm_load
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

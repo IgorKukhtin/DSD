@@ -5,6 +5,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar
                                                     , TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
                                                     , Integer, TVarChar, TDateTime, TFloat, Integer, TVarChar, TDateTime, TFloat, TFloat
                                                     , TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean
+                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                    , TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
+                                                    , Integer, TVarChar, TDateTime, TFloat, Integer, TVarChar, TDateTime, TFloat, TFloat
+                                                    , TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
  INOUT ioId                    Integer   ,    -- ключ объекта <Лодки>
@@ -22,6 +27,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
     IN inDiscountNextTax       TFloat    ,
  INOUT ioSummTax               TFloat    ,    -- Cумма откорректированной скидки, без НДС
  INOUT ioSummReal              TFloat    ,    -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
+    IN inTransportSumm_load    TFloat    ,    --транспорт
     IN inDateStart             TDateTime ,
     IN inDateBegin             TDateTime ,
     IN inDateSale              TDateTime ,
@@ -205,6 +211,7 @@ BEGIN
                                               , inDiscountNextTax    := inDiscountNextTax
                                               , ioSummTax            := ioSummTax
                                               , ioSummReal           := ioSummReal
+                                              , inTransportSumm_load := inTransportSumm_load
                                               , inFromId             := inClientId
                                               , inToId               := zc_Unit_Production()
                                               , inPaidKindId         := zc_Enum_PaidKind_FirstForm()
@@ -233,6 +240,7 @@ BEGIN
                                                  , inDiscountNextTax  := inDiscountNextTax         ::TFloat              --пересохраняем
                                                  , ioSummTax          := ioSummTax                 ::TFloat
                                                  , ioSummReal         := ioSummReal                ::TFloat
+                                                 , inTransportSumm_load := inTransportSumm_load
                                                  , inFromId           := inClientId                ::Integer             --пересохраняем
                                                  , inToId             := tmp.ToId                  ::Integer
                                                  , inPaidKindId       := tmp.PaidKindId            ::Integer
