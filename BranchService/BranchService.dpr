@@ -1,6 +1,7 @@
 program BranchService;
 
 uses
+  MidasLib,
   Vcl.Forms,
   MainUnit in 'MainUnit.pas' {MainForm},
   UnitSettings in 'UnitSettings.pas',

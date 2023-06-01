@@ -13,7 +13,8 @@ uses
   cxProgressBar, DataModul, cxStyles, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxNavigator, dxDateRanges, cxDBData, cxCheckBox, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses,
-  cxGridCustomView, cxGrid, Datasnap.DBClient;
+  cxGridCustomView, cxGrid, Datasnap.DBClient, cxCurrencyEdit,
+  DateUtils;
 
 type
   TMainForm = class(TForm)
@@ -126,6 +127,13 @@ type
     EqualizationCDSCounutSend: TIntegerField;
     EqualizationCDSCounutSendLast: TIntegerField;
     btnlInfoEqualizationView: TButton;
+    TimerEqualization: TTimer;
+    cxLabel6: TcxLabel;
+    cxLabel7: TcxLabel;
+    edRecordStep: TcxCurrencyEdit;
+    edTimerInterval: TcxCurrencyEdit;
+    edOffsetTimeEnd: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnScriptPathClick(Sender: TObject);
@@ -146,13 +154,22 @@ type
     procedure deDateSnapshotExit(Sender: TObject);
     procedure btnUpdateDataLogClick(Sender: TObject);
     procedure btnlInfoEqualizationViewClick(Sender: TObject);
+    procedure TimerEqualizationTimer(Sender: TObject);
+    procedure btnEqualizationAllClick(Sender: TObject);
+    procedure edRecordStepExit(Sender: TObject);
+    procedure edTimerIntervalExit(Sender: TObject);
+    procedure edOffsetTimeEndExit(Sender: TObject);
   private
     { Private declarations }
-    FEqualizationThreadError : String;
 
     FDateSnapshot : Variant;
     FDateSendDocument : Variant;
     FDateEqualization : Variant;
+    FRecordStep : Integer;
+    FOffsetTimeEnd : Integer;
+
+    FTimerEqualization : Boolean;
+    FCloseFoeFinish : Boolean;
 
     procedure ReadSettings;
     procedure ReadInfo;
@@ -161,10 +178,9 @@ type
     function GetInfoSlave(AShowError : boolean) : Boolean;
     function GetInfoSlavePostgres : Boolean;
 
-    procedure EqualizationThreadError(AError: string);
     procedure EqualizationThreadFinish;
     procedure EqualizationThreadMessage(AText: string);
-    procedure EqualizationThreadAddLog(AText: string);
+    procedure EqualizationThreadAddLog;
     procedure EqualizationThreadProgress;
   public
     { Public declarations }
@@ -172,6 +188,7 @@ type
     procedure SaveBranchEqualizationeLog(ALogMessage: string; AShowMessage: Boolean = False);
     function LiadScripts(AFileName : String) : String;
     function CheckDB : boolean;
+    procedure EqualizationAll(AMode: Integer);
   end;
 
 var
@@ -200,6 +217,12 @@ begin
   WriteLn(F, DateTimeToStr(Now) + ' : ' + StringReplace(ALogMessage, #13#10, ' ', [rfReplaceAll]));
   CloseFile(F);
   if AShowMessage then ShowMessage(ALogMessage);
+end;
+
+procedure TMainForm.TimerEqualizationTimer(Sender: TObject);
+begin
+  TimerEqualization.Enabled := False;
+  EqualizationAll(3);
 end;
 
 procedure TMainForm.SaveBranchEqualizationeLog(ALogMessage: string; AShowMessage: Boolean = False);
@@ -315,10 +338,46 @@ begin
     ZQueryExecute.SQL.Text := LiadScripts(cSQLTable_Equalization_ObjectId);
     ZQueryExecute.ExecSQL;
 
-        // Создаем (обновляем) cSQLEqualizationPrepareId
+    // Создаем (обновляем) gpBranchService_EqualizationPrepareId
     ZQueryExecute.Close;
     ZQueryExecute.SQL.Text := LiadScripts(cSQLEqualizationPrepareId);
     ZQueryExecute.ExecSQL;
+
+    // Создаем (обновляем) BranchService_DescId_ForMovement
+    ZQueryExecute.Close;
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLEqualizationForMovement);
+    ZQueryExecute.ExecSQL;
+
+    // Заполним BranchService_DescId_ForMovement
+    ZQueryExecute.SQL.Text := cSQLDelete_DescId_ForMovement;
+    ZQueryExecute.ExecSQL;
+
+    List := TStringList.Create;
+    try
+      List.Text := MainForm.LiadScripts(cMovementEqualizationDesc);
+      for I := 0 to List.Count - 1 do if (Trim(List.Strings[I]) <> '') and (Trim(List.Strings[I])[1] <> '#') then
+      begin
+        MovementDesc := Trim(List.Strings[I]);
+        if Copy(MovementDesc, Length(MovementDesc) - 1, 2) <> '()' then MovementDesc := MovementDesc + '()';
+
+        ZQueryExecute.Close;
+        ZQueryExecute.SQL.Text := Format(cSQLInsert_DescId_Movement_ForMovement, [MovementDesc, MovementDesc]);
+        ZQueryExecute.ExecSQL;
+      end;
+
+      List.Text := MainForm.LiadScripts(cMovementInsertDesc);
+      for I := 0 to List.Count - 1 do if (Trim(List.Strings[I]) <> '') and (Trim(List.Strings[I])[1] <> '#') then
+      begin
+        MovementDesc := Trim(List.Strings[I]);
+        if Copy(MovementDesc, Length(MovementDesc) - 1, 2) <> '()' then MovementDesc := MovementDesc + '()';
+
+        ZQueryExecute.Close;
+        ZQueryExecute.SQL.Text := Format(cSQLInsert_DescId_Movement_ForMovement, [MovementDesc, MovementDesc]);
+        ZQueryExecute.ExecSQL;
+      end;
+    finally
+      FreeAndNil(List);
+    end;
 
     // Ищем или создаем ID zc_Object_ReplServer
 //    if ReplServerId.Text = '' then
@@ -804,6 +863,80 @@ begin
   end;
 end;
 
+procedure TMainForm.edOffsetTimeEndExit(Sender: TObject);
+begin
+  if edOffsetTimeEnd.Value <> FOffsetTimeEnd then
+  begin
+    if not CheckDB then Exit;
+    try
+       try
+         if Round(edOffsetTimeEnd.Value) <= 0 then
+         begin
+           ShowMessage('Нижний преде по дате, мин должен быть больше или равен 0.');
+           Exit;
+         end;
+
+         // Создаем (обновляем) BranchService_Settings
+         ZQueryExecute.Close;
+         ZQueryExecute.SQL.Text := LiadScripts(cSQLBranchService_Settings);
+         ZQueryExecute.ExecSQL;
+
+         ZQuery.Close;
+         ZQuery.SQL.Text := cSQLUpdateOffsetTimeEnd;
+         ZQuery.ParamByName('OffsetTimeEnd').Value := Round(edOffsetTimeEnd.Value);
+         ZQuery.ExecSQL;
+       finally
+         ReadInfo;
+       end;
+     except
+      on E: Exception do
+        SaveBranchServiceLog(Format(cExceptionMsg, [E.ClassName, E.Message]));
+    end;
+  end;
+end;
+
+procedure TMainForm.edRecordStepExit(Sender: TObject);
+begin
+  if edRecordStep.Value <> FRecordStep then
+  begin
+    if not CheckDB then Exit;
+    try
+       try
+         if Round(edRecordStep.Value) < 1000 then
+         begin
+           ShowMessage('Обрабатывать записей за 1 проход менее 1000 нельзя.');
+           Exit;
+         end;
+
+         // Создаем (обновляем) BranchService_Settings
+         ZQueryExecute.Close;
+         ZQueryExecute.SQL.Text := LiadScripts(cSQLBranchService_Settings);
+         ZQueryExecute.ExecSQL;
+
+         ZQuery.Close;
+         ZQuery.SQL.Text := cSQLUpdateRecordStep;
+         ZQuery.ParamByName('RecordStep').Value := Round(edRecordStep.Value);
+         ZQuery.ExecSQL;
+       finally
+         ReadInfo;
+       end;
+     except
+      on E: Exception do
+        SaveBranchServiceLog(Format(cExceptionMsg, [E.ClassName, E.Message]));
+    end;
+  end;
+end;
+
+procedure TMainForm.edTimerIntervalExit(Sender: TObject);
+begin
+  if TSettings.TimerInterval <> Round(edTimerInterval.Value) then
+  begin
+    if Round(edTimerInterval.Value) > 0 then
+      TSettings.TimerInterval := Round(edTimerInterval.Value)
+    else edTimerInterval.Value := TSettings.TimerInterval;
+  end;
+end;
+
 procedure TMainForm.deDateEqualizationExit(Sender: TObject);
 begin
   if deDateEqualization.EditValue <> FDateEqualization then
@@ -829,6 +962,11 @@ begin
   end;
 end;
 
+procedure TMainForm.btnEqualizationAllClick(Sender: TObject);
+begin
+  EqualizationAll(3);
+end;
+
 procedure TMainForm.btnEqualizationBreakClick(Sender: TObject);
 begin
   if Assigned(EqualizationThread) then
@@ -838,15 +976,19 @@ begin
     begin
       EqualizationThread.Error := 'Прервано пользователем.';
       EqualizationThread.Terminate;
+      FTimerEqualization := False;
     end;
   end else
   begin
-    ShowMessage('Поток уравнивания не запущен.');
-    Exit;
+    if not FCloseFoeFinish then
+    begin
+      ShowMessage('Поток уравнивания не запущен.');
+      Exit;
+    end else Close;
   end;
 end;
 
-procedure TMainForm.btnEqualizationLoadClick(Sender: TObject);
+procedure TMainForm.EqualizationAll(AMode: Integer);
 begin
 
   if Assigned(EqualizationThread) then
@@ -857,13 +999,19 @@ begin
 
   try
 
-    EqualizationCDS.First;
-    while not EqualizationCDS.Eof do
-    begin
-      EqualizationCDS.Edit;
-      EqualizationCDS.FieldByName('CounutEqualizationLast').AsInteger := 0;
-      EqualizationCDS.Post;
-      EqualizationCDS.Next;
+    EqualizationCDS.DisableControls;
+    try
+      EqualizationCDS.First;
+      while not EqualizationCDS.Eof do
+      begin
+        EqualizationCDS.Edit;
+        EqualizationCDS.FieldByName('CounutEqualizationLast').AsInteger := 0;
+        EqualizationCDS.Post;
+        EqualizationCDS.Next;
+      end;
+    finally
+      EqualizationCDS.First;
+      EqualizationCDS.EnableControls
     end;
 
     mmoScriptLogEqualization.Text := '';
@@ -874,7 +1022,7 @@ begin
     try
 
       EqualizationThread := TEqualizationThread.Create(True);
-      EqualizationThread.Mode := 2;
+      EqualizationThread.Mode := AMode;
       EqualizationThread.FreeOnTerminate:=True;
       EqualizationThread.HostName := MainForm.edtSlaveServer.Text;
       EqualizationThread.Database := MainForm.edtSlaveDatabase.Text;
@@ -887,7 +1035,6 @@ begin
       else if deDateSnapshot.EditValue <> Null then
         EqualizationThread.StartDate := deDateSnapshot.Date;
 
-      EqualizationThread.OnError := EqualizationThreadError;
       EqualizationThread.OnFinish := EqualizationThreadFinish;
       EqualizationThread.OnMessage := EqualizationThreadMessage;
       EqualizationThread.OnAddLog := EqualizationThreadAddLog;
@@ -901,6 +1048,11 @@ begin
     end;
   finally
   end;
+end;
+
+procedure TMainForm.btnEqualizationLoadClick(Sender: TObject);
+begin
+  EqualizationAll(2);
 end;
 
 procedure TMainForm.btnFunctionClick(Sender: TObject);
@@ -1225,7 +1377,8 @@ begin
   mmoScriptLog.Lines.Clear;
   mmoScriptLogEqualization.Lines.Clear;
   EqualizationThread := Nil;
-  FEqualizationThreadError := '';
+  FTimerEqualization := False;
+  FCloseFoeFinish := False;
   SaveBranchServiceLog('Запуск программы - BranchService');
 
   ReadSettings;
@@ -1245,6 +1398,25 @@ begin
     EqualizationCDS.LoadFromFile(ExtractFilePath(ParamStr(0)) + '\BranchService.db');
 
   ReadInfo;
+
+  if (ParamCount >= 1) and (CompareText(ParamStr(1), 'equalization') = 0) then
+  begin
+    FTimerEqualization := True;
+    FCloseFoeFinish := True;
+    cxTabSheetDocSettings.TabVisible := False;
+    cxTabSheetSnapshot.TabVisible := False;
+
+    btnEqualizationAll.Enabled := False;
+    btnEqualizationLoad.Enabled := False;
+    btnEqualizationSend.Enabled := False;
+    btnlInfoEqualizationView.Enabled := False;
+
+    deDateSnapshot.Enabled := False;
+    deDateSendDocument.Enabled := False;
+    deDateEqualization.Enabled := False;
+
+    TimerEqualization.Enabled := True;
+  end;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -1271,6 +1443,7 @@ begin
   edtSlaveUserUpd.Text      := TSettings.SlaveUserUpd;
   edtSlavePasswordUpd.Text  := TSettings.SlavePasswordUpd;
 
+  edTimerInterval.Value     := TSettings.TimerInterval;
 end;
 
 procedure TMainForm.ReadInfo;
@@ -1281,9 +1454,12 @@ begin
       begin
 
         // Создаем (обновляем) BranchService_Settings
-        ZQueryExecute.Close;
-        ZQueryExecute.SQL.Text := LiadScripts(cSQLBranchService_Settings);
-        ZQueryExecute.ExecSQL;
+        if FileExists(cSQLBranchService_Settings) then
+        begin
+          ZQueryExecute.Close;
+          ZQueryExecute.SQL.Text := LiadScripts(cSQLBranchService_Settings);
+          ZQueryExecute.ExecSQL;
+        end;
 
         try
           ZQuery.Close;
@@ -1319,6 +1495,12 @@ begin
 
         FDateEqualization := ZQuery.FieldByName('DateEqualization').AsVariant;
         deDateEqualization.EditValue :=  ZQuery.FieldByName('DateEqualization').AsVariant;
+
+        FRecordStep := ZQuery.FieldByName('RecordStep').AsInteger;
+        edRecordStep.Value := ZQuery.FieldByName('RecordStep').AsInteger;
+
+        FOffsetTimeEnd := ZQuery.FieldByName('OffsetTimeEnd').AsInteger;
+        edOffsetTimeEnd.Value := ZQuery.FieldByName('OffsetTimeEnd').AsInteger;
 
         cxPageControl.Properties.ActivePage := cxTabSheetUpdate;
       end else cxPageControl.Properties.ActivePage := cxTabSheetSnapshot;
@@ -1356,31 +1538,37 @@ begin
 
 end;
 
-procedure TMainForm.EqualizationThreadError(AError: string);
-begin
-  FEqualizationThreadError := AError;
-end;
-
 procedure TMainForm.EqualizationThreadFinish;
+  var cError : string;
 begin
   TThread.CreateAnonymousThread(procedure
     begin
       TThread.Synchronize(nil,
         procedure
         begin
+          cError := EqualizationThread.Error;
           EqualizationThread := Nil;
-          lblActionTake.Caption := '';
+          lblActionTake.Caption := 'Ожидание задания';
           pbEqualization.Position := 0;
-          if FEqualizationThreadError <> '' then
+          if cError <> '' then
           begin
-            SaveBranchEqualizationeLog('Ошибка выполнения уравнивания данных:'#13#10 + FEqualizationThreadError);
-            FEqualizationThreadError := '';
+            SaveBranchEqualizationeLog('Ошибка выполнения уравнивания данных:'#13#10 + cError);
           end else
           begin
             SaveBranchEqualizationeLog('Уравнивание данных выполнено.');
           end;
 
           ReadInfo;
+
+          if FTimerEqualization then
+          begin
+            if edTimerInterval.Value > 0 then
+              TimerEqualization.Interval := Round(edTimerInterval.Value * 1000)
+            else TimerEqualization.Interval := 3 * 60 * 1000;
+            TimerEqualization.Enabled := True;
+            lblActionTake.Caption := 'Следующий запуск:' +
+              FormatDateTime('HH:NN:SS', IncSecond(Now, TimerEqualization.Interval div 1000));
+          end else if FCloseFoeFinish then Close;
         end)
     end).Start;
 end;
@@ -1391,9 +1579,28 @@ begin
   MainForm.SaveBranchEqualizationeLog(AText);
 end;
 
-procedure TMainForm.EqualizationThreadAddLog(AText: string);
+procedure TMainForm.EqualizationThreadAddLog;
 begin
-  MainForm.SaveBranchEqualizationeLog(AText);
+  MainForm.SaveBranchEqualizationeLog('Результат выполнение синхронизации:');
+
+  EqualizationCDS.DisableControls;
+  try
+    EqualizationCDS.First;
+    while not EqualizationCDS.Eof do
+    begin
+      if EqualizationCDS.FieldByName('CounutEqualizationLast').AsInteger > 0 then
+        MainForm.SaveBranchEqualizationeLog(EqualizationCDS.FieldByName('TableName').AsString + ' - ' +
+                                            EqualizationCDS.FieldByName('CounutEqualizationLast').AsString);
+
+      EqualizationCDS.Next;
+    end;
+  finally
+    EqualizationCDS.First;
+    EqualizationCDS.EnableControls
+  end;
+  MainForm.SaveBranchEqualizationeLog('Время выполнения: ' +
+    IntToStr(EqualizationThread.TimeSec div 60) + ' мин. ' + IntToStr(EqualizationThread.TimeSec mod 60) + ' сек. ');
+
 end;
 
 procedure TMainForm.EqualizationThreadProgress;
@@ -1433,6 +1640,7 @@ begin
       end;
     finally
       EqualizationCDS.SaveToFile(ExtractFilePath(ParamStr(0)) + '\BranchService.db', dfXML);
+      EqualizationCDS.First;
       EqualizationCDS.EnableControls;
     end;
   end;

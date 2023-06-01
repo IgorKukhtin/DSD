@@ -39,6 +39,9 @@ const
   cSQLReplication_Index = 'select * from _replica.gpBranchService_Replication_IndexProcessing(:inTableName, ''0'');';
   cSQLEqualizationTableMaster = 'select * from _replica.BranchService_Table_Equalization ORDER BY Id';
   cSQLEqualization_UpdateDataLog = 'select * from _replica.gpBranchService_Replication_UpdateDataLog(''0'');';
+  cSQLSELECT_CLOCK_TIMESTAMP = 'SELECT timezone(CAST(''utc'' AS text), CLOCK_TIMESTAMP()) - CAST((CAST((' +
+                               'SELECT BranchService_Settings.OffsetTimeEnd FROM _replica.BranchService_Settings ' +
+                               'WHERE BranchService_Settings.Id = 1) AS TEXT)||'' MIN'') AS INTERVAL) AS CurrDate';
 
   cSQLEqualization_MasterStep = 'select * from _replica.gpBranchService_Equalization_MasterStep(''0'');';
 
@@ -76,6 +79,16 @@ const
   // На мастере
   cSQLTable_Equalization_ObjectId = '\SQL_Master\BranchService_Equalization_Id.sql';
   cSQLEqualizationPrepareId = '\SQL_Master\gpBranchService_EqualizationPrepareId.sql';
+  cSQLEqualizationForMovement = '\SQL_Master\BranchService_DescId_ForMovement.sql';
+
+  cSQLDelete_DescId_ForMovement  = 'DELETE FROM _replica.BranchService_DescId_ForMovement';
+  cSQLInsert_DescId_Movement_ForMovement  = 'DO $$ ' +
+                                            'BEGIN ' +
+                                            '  IF NOT EXISTS(SELECT * FROM _replica.BranchService_DescId_ForMovement AS DFM WHERE DFM.DescId = %s) ' +
+                                            '  THEN ' +
+                                            '    INSERT INTO _replica.BranchService_DescId_ForMovement (DescId) VALUES (%s); ' +
+                                            '  END IF; ' +
+                                            'END $$;';
 
   // На слейве
   cSQLpg_get_tabledef  = '\SQL_Master\pg_get_tabledef.sql';
@@ -107,6 +120,8 @@ const
   cSQLUpdateDateEqualization = 'UPDATE _replica.BranchService_Settings SET DateEqualization = :Date, EqualizationLastId = 0;';
   cSQLUpdateDateSendDocument = 'UPDATE _replica.BranchService_Settings SET DateSendDocument = :Date, SendLastId = 0;';
   cSQLUpdateReplServer  = 'UPDATE _replica.BranchService_Settings SET ReplServerId = :ReplServerId;';
+  cSQLUpdateRecordStep  = 'UPDATE _replica.BranchService_Settings SET RecordStep = :RecordStep;';
+  cSQLUpdateOffsetTimeEnd  = 'UPDATE _replica.BranchService_Settings SET OffsetTimeEnd = :OffsetTimeEnd;';
 
   cTableListAll             = '\List\TableListAll.txt';
   cTableEqualizationList    = '\List\EqualizationList.txt';
