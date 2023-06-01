@@ -7,6 +7,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_TaxKind(
  INOUT ioCode            Integer,       -- свойство <Код >
     IN inCode_str        TVarChar,
     IN inName            TVarChar,      -- главное Название 
+    IN inInfo            TVarChar,
+    IN inComment         TVarChar,
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -34,6 +36,11 @@ BEGIN
    -- сохранили
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_TaxKind_Code(), ioId, inCode_str);
 
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_TaxKind_Info(), ioId, inInfo);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_TaxKind_Comment(), ioId, inComment);
+
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
@@ -51,6 +58,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.06.23         *
  15.11.20         *
 */
 

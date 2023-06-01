@@ -57,6 +57,8 @@ type
     bbShowAll: TdxBarButton;
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    Info: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public
