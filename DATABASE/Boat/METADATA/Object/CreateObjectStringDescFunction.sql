@@ -261,6 +261,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_TaxKind_Code() RETURNS Integer AS $BO
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_TaxKind_Code', zc_Object_TaxKind(), 'Код строка' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TaxKind_Code');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_TaxKind_Info() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TaxKind_Info'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_TaxKind_Info', zc_Object_TaxKind(), 'Описание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TaxKind_Info');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_TaxKind_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TaxKind_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_TaxKind_Comment', zc_Object_TaxKind(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TaxKind_Comment');
+
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptProdModel_Code() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptProdModel_Code'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_ReceiptProdModel_Code', zc_Object_ReceiptProdModel(), 'Пользовательский код' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptProdModel_Code');

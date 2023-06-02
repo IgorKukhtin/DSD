@@ -188,12 +188,12 @@ object OrderClientForm: TOrderClientForm
       Width = 86
     end
     object cxLabel15: TcxLabel
-      Left = 268
+      Left = 482
       Top = 45
       Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
     end
     object ceInvoice: TcxButtonEdit
-      Left = 268
+      Left = 482
       Top = 63
       Properties.Buttons = <
         item
@@ -202,19 +202,19 @@ object OrderClientForm: TOrderClientForm
         end>
       Properties.ReadOnly = True
       TabOrder = 20
-      Width = 208
+      Width = 192
     end
     object cxLabel9: TcxLabel
-      Left = 482
+      Left = 680
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1057#1095#1077#1090')'
     end
     object ceComment_Invoice: TcxTextEdit
-      Left = 482
+      Left = 680
       Top = 63
       Properties.ReadOnly = True
       TabOrder = 22
-      Width = 382
+      Width = 184
     end
     object cxLabel12: TcxLabel
       Left = 1137
@@ -529,14 +529,14 @@ object OrderClientForm: TOrderClientForm
       Width = 70
     end
     object edSummTax: TcxCurrencyEdit
-      Left = 783
-      Top = 94
+      Left = 784
+      Top = 95
       Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
       ParentShowHint = False
       Properties.Alignment.Horz = taRightJustify
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       ShowHint = True
       TabOrder = 53
       Width = 70
@@ -1524,7 +1524,6 @@ object OrderClientForm: TOrderClientForm
                 Visible = False
                 HeaderAlignmentHorz = taCenter
                 HeaderAlignmentVert = vaCenter
-                Options.Editing = False
                 Width = 110
               end
               object GoodsGroupNameFull_ch2: TcxGridDBColumn
@@ -3475,6 +3474,39 @@ object OrderClientForm: TOrderClientForm
     TabOrder = 12
     Width = 70
   end
+  object cxLabel7: TcxLabel
+    Left = 268
+    Top = 45
+    Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
+    Caption = #1053#1044#1057' (Kunden)'
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object edTaxKind_Value: TcxCurrencyEdit
+    Left = 268
+    Top = 63
+    Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
+    ParentShowHint = False
+    Properties.Alignment.Horz = taRightJustify
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = True
+    ShowHint = True
+    TabOrder = 14
+    Width = 70
+  end
+  object cxLabel14: TcxLabel
+    Left = 344
+    Top = 45
+    Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1053#1044#1057' (Kunden)'
+  end
+  object edInfo_TaxKind: TcxTextEdit
+    Left = 344
+    Top = 63
+    Properties.ReadOnly = True
+    TabOrder = 16
+    Width = 132
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -3548,8 +3580,8 @@ object OrderClientForm: TOrderClientForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 286
-    Top = 39
+    Left = 278
+    Top = 95
     DockControlHeights = (
       0
       0
@@ -3900,8 +3932,8 @@ object OrderClientForm: TOrderClientForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 227
-    Top = 31
+    Left = 219
+    Top = 135
     object macChangeSumm: TMultiAction
       Category = 'NPP'
       MoveParams = <>
@@ -3969,6 +4001,38 @@ object OrderClientForm: TOrderClientForm
           Value = Null
           Component = FormParams
           ComponentItem = 'SummReal_real'
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountTax'
+          Value = Null
+          Component = edDiscountTax
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountNextTax'
+          Value = Null
+          Component = edDiscountNextTax
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'VATPercent'
+          Value = Null
+          Component = edVATPercent
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TransportSumm_load'
+          Value = Null
+          Component = edTransportSumm_load
           DataType = ftFloat
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
@@ -4835,6 +4899,24 @@ object OrderClientForm: TOrderClientForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100
       ImageIndex = 43
     end
+    object actUpdateDataSetProdOptItems: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateProdOptItems
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateProdOptItems
+        end
+        item
+          StoredProc = spSelect_ProdOptItems
+        end
+        item
+          StoredProc = spSelect_ProdColorItems
+        end>
+      Caption = 'actUpdateDataSetProdColorItems'
+      DataSource = ProdOptItemsDS
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -5063,6 +5145,14 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inTransportSumm_load'
+        Value = Null
+        Component = edTransportSumm_load
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inFromId'
         Value = ''
         Component = GuidesFrom
@@ -5111,8 +5201,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 170
-    Top = 312
+    Left = 154
+    Top = 272
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -5159,6 +5249,21 @@ object OrderClientForm: TOrderClientForm
       end
       item
         Control = edPaidKind
+      end
+      item
+        Control = edSummTax
+      end
+      item
+        Control = edSummReal
+      end
+      item
+        Control = edBasis_summ
+      end
+      item
+        Control = edBasis_summ_orig
+      end
+      item
+        Control = edBasis_summ_transport
       end>
     GetStoredProc = spGet
     Left = 824
@@ -5333,13 +5438,6 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ProductId'
-        Value = Null
-        Component = GuidesProduct
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'ProductName'
         Value = Null
         Component = GuidesProduct
@@ -5351,6 +5449,13 @@ object OrderClientForm: TOrderClientForm
         Name = 'BrandId'
         Value = Null
         Component = GuidesBrand
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductId'
+        Value = Null
+        Component = GuidesProduct
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
@@ -5509,10 +5614,23 @@ object OrderClientForm: TOrderClientForm
         Component = edBasisWVAT_summ_transport
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value_TaxKind'
+        Value = Null
+        Component = edTaxKind_Value
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Info_TaxKind'
+        Value = Null
+        Component = edInfo_TaxKind
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 584
-    Top = 352
+    Left = 224
+    Top = 256
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
@@ -5883,8 +6001,8 @@ object OrderClientForm: TOrderClientForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 684
-    Top = 23
+    Left = 628
+    Top = 71
   end
   object GuidesProduct: TdsdGuides
     KeyField = 'Id'
@@ -6188,7 +6306,7 @@ object OrderClientForm: TOrderClientForm
     PacketRecords = 0
     Params = <>
     Left = 744
-    Top = 408
+    Top = 392
   end
   object DBViewAddOnProdOptItems: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -6345,12 +6463,12 @@ object OrderClientForm: TOrderClientForm
         Name = 'inProductId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inProdOptionsId'
+        Name = 'ioProdOptionsId'
         Value = Null
         Component = ProdOptItemsCDS
         ComponentItem = 'ProdOptionsId'
@@ -6370,6 +6488,22 @@ object OrderClientForm: TOrderClientForm
         Value = Null
         Component = ProdOptItemsCDS
         ComponentItem = 'ProdColorPatternId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaterialOptionsId'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'MaterialOptionsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -6453,8 +6587,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 632
-    Top = 392
+    Left = 656
+    Top = 408
   end
   object PrintItemsColorCDS: TClientDataSet
     Aggregates = <>
@@ -6959,6 +7093,38 @@ object OrderClientForm: TOrderClientForm
         ComponentItem = 'SummReal_real'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVATPercent'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountTax'
+        Value = Null
+        Component = edDiscountTax
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountNextTax'
+        Value = Null
+        Component = edDiscountNextTax
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTransportSumm_load'
+        Value = Null
+        Component = edTransportSumm_load
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

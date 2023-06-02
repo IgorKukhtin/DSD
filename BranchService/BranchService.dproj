@@ -4,7 +4,7 @@
         <ProjectVersion>19.2</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -87,6 +87,7 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <Debugger_RunParams>Equalization</Debugger_RunParams>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -104,21 +105,17 @@
         </DelphiCompile>
         <DCCReference Include="MainUnit.pas">
             <Form>MainForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="UnitSettings.pas"/>
         <DCCReference Include="UnitConst.pas"/>
         <DCCReference Include="ThreadSnapshotUnit.pas">
             <Form>ThreadSnapshotForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="ThreadFunctionUnit.pas">
             <Form>ThreadFunctionForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="ThreadIndexUnit.pas">
             <Form>ThreadIndexForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="ThreadbtnEqualizationUnit.pas"/>
         <BuildConfiguration Include="Release">

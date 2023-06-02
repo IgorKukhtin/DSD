@@ -45,6 +45,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , BrandId Integer, BrandName TVarChar, CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
              , Comment TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
+             , Value_TaxKind TFloat, Info_TaxKind TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , StateText TVarChar, StateColor Integer
@@ -290,6 +291,9 @@ BEGIN
              , Movement_Invoice.Id                          AS MovementId_Invoice
              , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
              , MovementString_Comment_Invoice.ValueData     AS Comment_Invoice
+             
+             , ObjectFloat_TaxKind_Value.ValueData          AS Value_TaxKind
+             , ObjectString_TaxKind_Info.ValueData          AS Info_TaxKind
 
              , Object_Insert.ValueData                      AS InsertName
              , MovementDate_Insert.ValueData                AS InsertDate
@@ -433,6 +437,17 @@ BEGIN
              LEFT JOIN tmpMIFloat_MovementId AS tmpOrderInternal_2   ON tmpOrderInternal_2.MovementId_OrderClient   = Movement_OrderClient.Id AND tmpOrderInternal_2.DescId   = zc_Movement_OrderInternal()   AND tmpOrderInternal_2.ObjectDescId   = zc_Object_Goods()
              LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion_1 ON tmpProductionUnion_1.MovementId_OrderClient = Movement_OrderClient.Id AND tmpProductionUnion_1.DescId = zc_Movement_ProductionUnion() AND tmpProductionUnion_1.ObjectDescId = zc_Object_Product()
              LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion_2 ON tmpProductionUnion_2.MovementId_OrderClient = Movement_OrderClient.Id AND tmpProductionUnion_2.DescId = zc_Movement_ProductionUnion() AND tmpProductionUnion_2.ObjectDescId = zc_Object_Goods()
+
+             LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                  ON ObjectLink_TaxKind.ObjectId = Object_From.Id
+                                 AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                   ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
+                                  AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()   
+             LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
+                                    ON ObjectString_TaxKind_Info.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                   AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
        ;
 
 END;

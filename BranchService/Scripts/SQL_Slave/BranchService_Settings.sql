@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS _replica.BranchService_Settings(
    DateEqualization      TIMESTAMP WITHOUT TIME ZONE,   -- Дата начала получения изменений
    EqualizationLastId    BIGINT,                        -- Id последней строки лога изменений отправки мастера
 
+   RecordStep            Integer NOT NULL DEFAULT 10000,-- Обрабатывать записей за раз
+
    OffsetTimeEnd         Integer NOT NULL DEFAULT 10    -- Смещение времени конца синхронизации
       
    );
@@ -33,21 +35,9 @@ BEGIN
 
   
   IF NOT EXISTS(SELECT * FROM information_schema.columns c 
-                WHERE c.table_schema = '_replica' AND c.table_name ILIKE 'BranchService_Settings' AND c.column_name ILIKE 'DateEqualization')
+                WHERE c.table_schema = '_replica' AND c.table_name ILIKE 'BranchService_Settings' AND c.column_name ILIKE 'RecordStep')
   THEN
-    ALTER TABLE _replica.BranchService_Settings ADD DateEqualization      TIMESTAMP WITHOUT TIME ZONE;
-  END IF;
-
-  IF NOT EXISTS(SELECT * FROM information_schema.columns c 
-                WHERE c.table_schema = '_replica' AND c.table_name ILIKE 'BranchService_Settings' AND c.column_name ILIKE 'SendLastId')
-  THEN
-    ALTER TABLE _replica.BranchService_Settings ADD SendLastId            BIGINT;
-  END IF;
-
-  IF NOT EXISTS(SELECT * FROM information_schema.columns c 
-                WHERE c.table_schema = '_replica' AND c.table_name ILIKE 'BranchService_Settings' AND c.column_name ILIKE 'EqualizationLastId')
-  THEN
-    ALTER TABLE _replica.BranchService_Settings ADD EqualizationLastId            BIGINT;
+    ALTER TABLE _replica.BranchService_Settings ADD RecordStep            Integer NOT NULL DEFAULT 10000;
   END IF;
 
   IF NOT EXISTS(SELECT * FROM _replica.BranchService_Settings)

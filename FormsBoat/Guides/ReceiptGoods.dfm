@@ -488,8 +488,8 @@
       ShowHint = True
     end
     object edReceiptGoods: TcxButtonEdit
-      Left = 296
-      Top = 23
+      Left = 232
+      Top = 46
       Properties.Buttons = <
         item
           Default = True
@@ -919,6 +919,8 @@
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
+      ExplicitLeft = 2
+      ExplicitTop = 1
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -1393,7 +1395,6 @@
       Color = clLime
       ParentBackground = False
       TabOrder = 1
-      ExplicitLeft = -2
     end
   end
   object cxSplitter1: TcxSplitter
@@ -1815,6 +1816,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbUpdateProdColPattetnGoods'
+        end
+        item
+          Visible = True
           ItemName = 'bbSetErasedColor'
         end
         item
@@ -1961,6 +1966,10 @@
       Action = actProtocol2
       Category = 0
     end
+    object bbUpdateProdColPattetnGoods: TdxBarButton
+      Action = actUpdateProdColPattetnGoods
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -2020,6 +2029,98 @@
         end>
       isShowModal = False
       DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdateProdColPattetnGoods: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      ImageIndex = 1
+      FormName = 'TProdColorPatternGoodsEditForm'
+      FormNameParam.Value = 'TProdColorPatternGoodsEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inReceiptGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inReceiptLevelId'
+          Component = GuidesReceiptLevel
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UserCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserCode'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Name'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Component = MasterCDS
+          ComponentItem = 'Article'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ColorPatternId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ColorPatternName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ColorPatternName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = Child1DS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -3398,14 +3499,16 @@
       item
         Name = 'inNPP'
         Value = 0
+        Component = Child1CDS
+        ComponentItem = 'NPP'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inReceiptGoodsId'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
+        Component = FormParams
+        ComponentItem = 'inReceiptGoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -3701,6 +3804,12 @@
         DataSet = Child1CDS
       end>
     Params = <
+      item
+        Name = 'inReceiptGoodsId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inReceiptLevelId'
         Value = Null
@@ -4006,6 +4115,7 @@
   object GuidesReceiptLevel: TdsdGuides
     KeyField = 'Id'
     LookupControl = edReceiptLevel
+    Key = '0'
     FormNameParam.Value = 'TReceiptLevelForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -4118,8 +4228,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 344
-    Top = 72
+    Left = 296
+    Top = 80
   end
   object spInsertUpdate_ReceiptGoods: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_ReceiptGoodsChild_byReceiptGoods'

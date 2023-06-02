@@ -17,6 +17,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderClient(
     IN inDiscountNextTax     TFloat    , --
  INOUT ioSummTax             TFloat    , -- Cумма откорректированной скидки, без НДС
  INOUT ioSummReal            TFloat    , -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
+    IN inTransportSumm_load  TFloat    , -- транспорт
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
     IN inPaidKindId          Integer   , -- ФО
@@ -65,7 +66,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountTax(), ioId, inDiscountTax);
      -- сохранили значение <% скидки доп>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountNextTax(), ioId, inDiscountNextTax);
-
+     -- сохранили значение <% скидки доп>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm_load(), ioId, inTransportSumm_load);
+     
      -- сохранили <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
      -- сохранили <Примечание>
@@ -255,6 +258,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.06.23         * inTransportSumm_load
  15.05.23         *
  23.02.21         *
  15.02.21         *

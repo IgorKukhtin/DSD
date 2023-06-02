@@ -55,12 +55,11 @@ BEGIN
      SELECT BranchService_Settings.ReplServerId
           , COALESCE(BranchService_Settings.DateEqualization, BranchService_Settings.DateSnapshot)
           , BranchService_Settings.EqualizationLastId
+          , BranchService_Settings.RecordStep
           , BranchService_Settings.OffsetTimeEnd
-     INTO vbReplServerId, vbDateEqualization, vbEqualizationLastId, vbOffsetTimeEnd
+     INTO vbReplServerId, vbDateEqualization, vbEqualizationLastId, vbRecordStep, vbOffsetTimeEnd
      FROM _replica.BranchService_Settings 
      WHERE BranchService_Settings.Id = 1;
-
-     vbRecordStep := 30000;
           
      IF COALESCE(vbReplServerId, 0) = 0
      THEN
@@ -149,10 +148,9 @@ BEGIN
         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
    END;
    
-   SELECT _replica.BranchService_Settings.DateEqualization
+   SELECT tmpEqualizationPrepare.DayeEnd
    INTO vbDateEqualization
-   FROM _replica.BranchService_Settings
-   WHERE _replica.BranchService_Settings.Id = 1;
+   FROM tmpEqualizationPrepare;
    
    -- Результат
    IF COALESCE(text_var1, '') <> '' OR vbRowCount = 0 

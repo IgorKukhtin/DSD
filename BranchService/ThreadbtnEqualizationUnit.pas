@@ -7,10 +7,8 @@ uses System.Classes, System.SysUtils, System.DateUtils, DB,
 
 type
 
-  TOnError = procedure(AError: string) of object;
   TOnFinish = procedure of object;
   TOnMessage = procedure(AText: string) of object;
-  TOnAddLog = procedure(AText: string) of object;
 
   // Поток для уравнивания данных (получение с мастера)
   TEqualizationThread = class(TThread)
@@ -28,6 +26,7 @@ type
     FRecordCountSelect : Integer;
     FRecordFull        : Int64;
     FRecordFullMax     : Int64;
+    FTimeSec           : Int64;
 
     FZConnection: TZConnection;
     FZQueryTable: TZQuery;
@@ -38,10 +37,9 @@ type
     FError: String;
     FStartDate : TDateTime;
 
-    FOnError: TOnError;
     FOnFinish: TOnFinish;
     FOnMessage: TOnMessage;
-    FOnAddLog: TOnAddLog;
+    FOnAddLog: TThreadProcedure;
     FOnProgress: TThreadProcedure;
     function GetDataSet : TDataSet;
   protected
@@ -63,11 +61,11 @@ type
     property DataSet : TDataSet read GetDataSet;
     property Progress: Int64 read FProgress;
     property Max: Int64 read FMax;
+    property TimeSec: Int64 read FTimeSec;
 
-    property OnError: TOnError read FOnError write FOnError;
     property OnFinish: TOnFinish read FOnFinish write FOnFinish;
     property OnMessage: TOnMessage read FOnMessage write FOnMessage;
-    property OnAddLog: TOnAddLog read FOnAddLog write FOnAddLog;
+    property OnAddLog: TThreadProcedure read FOnAddLog write FOnAddLog;
     property OnProgress: TThreadProcedure read FOnProgress write FOnProgress;
 
   end;
@@ -84,8 +82,11 @@ end;
 
 procedure TEqualizationThread.Execute;
   var S : String;
+      CurrDate : TDateTime;
+      StartDate : TDateTime;
 begin
   FError := '';
+  StartDate := Now;
 
   if Assigned(OnMessage) then OnMessage('Подключаемся к базе данных Slave.');
 
@@ -110,43 +111,58 @@ begin
 
       FZConnection.Connect;
 
-      if (Mode and 2) = 2 then
-      begin
+      // Получить дату конца
+      FZQueryTable.SQL.Text := cSQLSELECT_CLOCK_TIMESTAMP;
+      FZQueryTable.Open;
+      CurrDate := FZQueryTable.FieldByName('CurrDate').AsDateTime;
+      FZQueryTable.Close;
 
-        if Assigned(OnMessage) then OnMessage('Синхронизация данных с Мастера.');
+      try
 
-        FProgress := 0;
-        FMax := MinutesBetween(FStartDate, Now);
-
-        if Assigned(FOnProgress) then  Synchronize(FOnProgress);
-
-        while True do
+        if (Mode and 2) = 2 then
         begin
 
-          if Terminated then Exit;
+          if Assigned(OnMessage) then OnMessage('Синхронизация данных с Мастера.');
 
-          FZQueryTable.SQL.Text := cSQLEqualization_MasterStep;
-          FZQueryTable.Open;
-          if FZQueryTable.FieldByName('ErrorText').AsString <> '' then
-          begin
-            FError := FZQueryTable.FieldByName('ErrorText').AsString;
-            Exit;
-          end;
-          if FZQueryTable.FieldByName('RowCount').AsInteger <= 0 then
-          begin
-            Exit;
-          end;
-
-          FProgress := MinutesBetween(FStartDate, FZQueryTable.FieldByName('DateEqualization').AsDateTime);
+          FProgress := 0;
+          FMax := MinutesBetween(FStartDate, CurrDate);
 
           if Assigned(FOnProgress) then  Synchronize(FOnProgress);
 
+          while True do
+          begin
+
+            if Terminated then Exit;
+
+            FZQueryTable.Close;
+            FZQueryTable.SQL.Text := cSQLEqualization_MasterStep;
+            FZQueryTable.Open;
+            if FZQueryTable.FieldByName('ErrorText').AsString <> '' then
+            begin
+              FError := FZQueryTable.FieldByName('ErrorText').AsString;
+              Exit;
+            end;
+
+            FProgress := MinutesBetween(FStartDate, FZQueryTable.FieldByName('DateEqualization').AsDateTime);
+
+            if Assigned(FOnProgress) then  Synchronize(FOnProgress);
+
+            if FZQueryTable.FieldByName('RowCount').AsInteger <= 0 then
+            begin
+              Exit;
+            end;
+            if CurrDate <= FZQueryTable.FieldByName('DateEqualization').AsDateTime then
+            begin
+              Exit;
+            end;
+
+          end;
         end;
 
-
-//        if Assigned(OnAddLog) then OnAddLog(Format(cTableLogFinish, [IntToStr(FZQueryTable.RecordCount), IntToStr(nRowCount)]));
+      finally
+        FTimeSec := SecondsBetween(Now, StartDate);
+        if Assigned(OnAddLog) then Synchronize(OnAddLog);
       end;
-
 
     except
       on E: Exception do
@@ -164,7 +180,6 @@ begin
     FreeAndNil(FZQueryExecute);
     FreeAndNil(FZQueryTable);
     FreeAndNil(FZConnection);
-    if Assigned(FOnError) then FOnError(FError);
     if Assigned(FOnFinish) then OnFinish;
   end;
 

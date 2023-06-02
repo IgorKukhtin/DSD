@@ -3,7 +3,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientWidth = 850
   AddOnFormData.isSingle = False
   ExplicitWidth = 866
-  ExplicitHeight = 710
+  ExplicitHeight = 714
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

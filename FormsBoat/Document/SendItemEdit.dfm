@@ -386,6 +386,14 @@ object SendItemEditForm: TSendItemEditForm
         Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 227
     Top = 102
@@ -407,7 +415,15 @@ object SendItemEditForm: TSendItemEditForm
         Name = 'inMovementId_OrderClient'
         Value = Null
         Component = FormParams
-        ComponentItem = 'MovementId_OrderClient'
+        ComponentItem = 'inMovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

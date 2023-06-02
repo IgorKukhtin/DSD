@@ -4,8 +4,10 @@ DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo(
+    IN inReceiptGoodsId  Integer,
     IN inReceiptLevelId  Integer,
     IN inIsShowAll       Boolean,       --
     IN inIsErased        Boolean,       -- признак показать удаленные да / нет 
@@ -220,7 +222,8 @@ BEGIN
       AND (Object_ReceiptGoodsChild.isErased = FALSE OR inIsErased = TRUE)
       -- без этой структуры
       AND ObjectLink_ProdColorPattern.ChildObjectId IS NULL
-      AND (ObjectLink_ReceiptLevel.ChildObjectId = inReceiptLevelId OR inReceiptLevelId = 0)
+      AND (ObjectLink_ReceiptLevel.ChildObjectId = inReceiptLevelId OR inReceiptLevelId = 0)  
+      AND (ObjectLink_ReceiptGoods.ChildObjectId = inReceiptGoodsId OR inReceiptGoodsId = 0)
      ;
 END;
 $BODY$
@@ -230,6 +233,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.05.23         * add inReceiptGoodsId
  01.12.20         *
 */
 

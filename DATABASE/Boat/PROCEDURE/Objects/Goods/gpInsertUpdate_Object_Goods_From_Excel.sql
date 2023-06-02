@@ -274,6 +274,8 @@ else RETURN;
                                                                 , ioCode      := 0         :: Integer
                                                                 , inCode_str  := TRIM (inTaxKind) ::TVarChar
                                                                 , inName      := TRIM (inTaxKind) ::TVarChar
+                                                                , inInfo      := '' ::TVarChar
+                                                                , inComment   := '' ::TVarChar
                                                                 , inSession   := inSession :: TVarChar
                                                                  ) AS tmp);
        END IF;

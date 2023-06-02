@@ -54,6 +54,9 @@ type
     class function GetScriptPath: string; static;
     class procedure SetScriptPath(const AValue: string); static;
 
+    class function GetTimerInterval: integer; static;
+    class procedure SetTimerInterval(const AValue: integer); static;
+
   public
     class constructor Create;
     class destructor Destroy;
@@ -75,6 +78,8 @@ type
     class property SlavePasswordUpd: string read GetSlavePasswordUpd write SetSlavePasswordUpd;
 
     class property ScriptPath: string read GetScriptPath write SetScriptPath;
+
+    class property TimerInterval: Integer read GetTimerInterval write SetTimerInterval;
 
   end;
 
@@ -116,6 +121,7 @@ const
   // Settings
   cSettingsSection      = 'Settings';
   cScriptFilesPathParam = 'ScriptFilesPath';
+  cTimerIntervalParam   = 'TimerInterval';
 
 function IsService: Boolean;
 var
@@ -462,5 +468,16 @@ class procedure TSettings.SetScriptPath(const AValue: string);
 begin
   SetStrValue(cSettingsSection, cScriptFilesPathParam, AValue);
 end;
+
+class function TSettings.GetTimerInterval: integer;
+begin
+  Result := GetIntValue(cSettingsSection, cTimerIntervalParam, 180);
+end;
+
+class procedure TSettings.SetTimerInterval(const AValue: integer);
+begin
+  SetIntValue(cSettingsSection, cTimerIntervalParam, AValue);
+end;
+
 
 end.
