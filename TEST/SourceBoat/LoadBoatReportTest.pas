@@ -59,7 +59,8 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+    LoadReportFromFile('PrintMovement_Invoice', ReportPath + '\PrintMovement_Invoice.fr3');
+    exit;
     LoadReportFromFile('PrintReport_OrderClientByBoat', ReportPath + '\PrintReport_OrderClientByBoat.fr3');
     LoadReportFromFile('PrintReport_OrderClientByBoatMov', ReportPath + '\PrintReport_OrderClientByBoatMov.fr3');
 

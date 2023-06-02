@@ -718,15 +718,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1054#1090#1095#1077#1090' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
-      Hint = #1054#1090#1095#1077#1090' - '#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
-          UserName = 'frxDBDItems'
-          IndexFieldNames = 'AccountName;BankName;BankAccountName'
+          UserName = 'frxDBDHeader'
         end>
       Params = <
         item
@@ -743,8 +742,8 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
-      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
+      ReportName = 'PrintMovement_Invoice'
+      ReportNameParam.Value = 'PrintMovement_Invoice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1007,6 +1006,14 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1073,6 +1080,10 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     end
     object bbOpenIncomeCostByInvoice: TdxBarButton
       Action = actOpenIncomeCostByInvoice
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actPrint
       Category = 0
     end
   end
@@ -1142,56 +1153,19 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
     Top = 262
   end
   object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Invoice_Print'
     DataSet = PrintItemsCDS
     DataSets = <
       item
         DataSet = PrintItemsCDS
       end>
+    OutputType = otMultiDataSet
     Params = <
       item
-        Name = 'inStartDate'
+        Name = 'inMovementId'
         Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalBasisId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAccountId'
-        Value = 0
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBankAccountId'
-        Value = 0
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCurrencyId'
-        Value = 0
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsDetail'
-        Value = False
-        DataType = ftBoolean
+        Component = MasterCDS
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

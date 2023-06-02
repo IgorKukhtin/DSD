@@ -36,7 +36,8 @@ RETURNS TABLE (MovementSumm TFloat,
                ContractCode Integer,
                ContractName TVarChar,
                ContractTagName TVarChar,
-               ContractStateKindCode Integer, ContractComment TVarChar,
+               ContractStateKindCode Integer, ContractComment TVarChar, 
+               PartnerId Integer, PartnerCode Integer, PartnerName TVarChar,
                PaidKindId Integer, PaidKindName TVarChar,
                BranchId Integer, BranchName TVarChar,
 
@@ -105,7 +106,8 @@ BEGIN
                                 , CLO_InfoMoney.ObjectId                  AS InfoMoneyId
                                 , CLO_Branch.ObjectId                     AS BranchId
                                   -- "оригинал"
-                                , CLO_Contract.ObjectId                   AS ContractId
+                                , CLO_Contract.ObjectId                   AS ContractId 
+                                , CLO_Partner.ObjectId                    AS PartnerId
                                   -- подставили "главный", если есть
                                 , COALESCE (tmpContract.ContractId_Key, CLO_Contract.ObjectId) AS ContractId_Key
                                 , CLO_PaidKind.ObjectId                   AS PaidKindId
@@ -162,6 +164,7 @@ BEGIN
                                       tmpContainer.InfoMoneyId,
                                       tmpContainer.BranchId,
                                       tmpContainer.ContractId,
+                                      tmpContainer.PartnerId,
                                       tmpContainer.PaidKindId,
                                       tmpContainer.PartionMovementId,
                                       tmpContainer.CurrencyId,
@@ -180,6 +183,7 @@ BEGIN
                                       , MIContainer.MovementId, MIContainer.OperDate
                                       , tmpContainer.ContainerId
                                       , tmpContainer.isNotBalance
+                                      , tmpContainer.PartnerId
 
                                HAVING SUM (MIContainer.Amount) <> 0
                               UNION ALL
@@ -189,6 +193,7 @@ BEGIN
                                       tmpContainer.InfoMoneyId,
                                       tmpContainer.BranchId,
                                       tmpContainer.ContractId,
+                                      tmpContainer.PartnerId,
                                       tmpContainer.PaidKindId,
                                       tmpContainer.PartionMovementId,
                                       tmpContainer.CurrencyId,
@@ -208,6 +213,7 @@ BEGIN
                                       , MIContainer.MovementId, MIContainer.OperDate
                                       , tmpContainer.ContainerId
                                       , tmpContainer.isNotBalance
+                                      , tmpContainer.PartnerId
                                HAVING SUM (MIContainer.Amount) <> 0
                               )
         , tmpRemains AS (-- 2.1. остаток в валюте баланса
@@ -219,6 +225,7 @@ BEGIN
                                 tmpContainer.ContractId_Key AS ContractId,
                                 -- оставили "оригинал"
                                 -- tmpContainer.ContractId AS ContractId,
+                                tmpContainer.PartnerId,
                                 tmpContainer.PaidKindId,
                                 tmpContainer.PartionMovementId,
                                 tmpContainer.CurrencyId,
@@ -231,11 +238,13 @@ BEGIN
                               LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                              AND MIContainer.OperDate >= inStartDate
-                         GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.BranchId, tmpContainer.PaidKindId, tmpContainer.PartionMovementId, tmpContainer.CurrencyId
+                         GROUP BY tmpContainer.AccountId, tmpContainer.InfoMoneyId, tmpContainer.BranchId, tmpContainer.PaidKindId
+                                , tmpContainer.PartionMovementId, tmpContainer.CurrencyId
                                 , tmpContainer.ContainerId, tmpContainer.Amount
                                 , tmpContainer.ContractId_Key
                                 -- , tmpContainer.ContractId
                                 , tmpContainer.isNotBalance
+                                , tmpContainer.PartnerId
                         UNION ALL
                          -- 2.2. остаток в валюте операции - Currency
                          SELECT tmpContainer.ContainerId,
@@ -245,7 +254,8 @@ BEGIN
                                 -- объединили по "главному"
                                 tmpContainer.ContractId_Key AS ContractId,
                                 -- оставили "оригинал"
-                                -- tmpContainer.ContractId AS ContractId,
+                                -- tmpContainer.ContractId AS ContractId, 
+                                tmpContainer.PartnerId,
                                 tmpContainer.PaidKindId,
                                 tmpContainer.PartionMovementId,
                                 tmpContainer.CurrencyId,
@@ -264,6 +274,7 @@ BEGIN
                                 , tmpContainer.ContractId_Key
                                 -- , tmpContainer.ContractId
                                 , tmpContainer.isNotBalance
+                                , tmpContainer.PartnerId
                         )
         , Operation AS (SELECT -- tmpContainer.ContainerId,
                                0 AS ContainerId,
@@ -272,6 +283,7 @@ BEGIN
                                tmpContainer.BranchId,
                                -- оставили "оригинал"
                                tmpContainer.ContractId,
+                               tmpContainer.PartnerId,
                                tmpContainer.PaidKindId,
                                tmpContainer.PartionMovementId,
                                tmpContainer.CurrencyId,
@@ -300,6 +312,7 @@ BEGIN
                                  tmpContainer.MovementItemId
                                -- , tmpContainer.ContainerId
                                 , tmpContainer.isNotBalance
+                                , tmpContainer.PartnerId
                        UNION ALL
                         SELECT -- tmpRemains.ContainerId,
                                0 AS ContainerId,
@@ -308,6 +321,7 @@ BEGIN
                                tmpRemains.BranchId,
                                -- "главноый" или "оригинал"
                                tmpRemains.ContractId,
+                               tmpRemains.PartnerId,
                                tmpRemains.PaidKindId,
                                tmpRemains.PartionMovementId,
                                tmpRemains.CurrencyId,
@@ -323,9 +337,12 @@ BEGIN
                                -1 AS OperationSort
                              , tmpRemains.isNotBalance
                         FROM tmpRemains
-                        GROUP BY tmpRemains.AccountId, tmpRemains.InfoMoneyId, tmpRemains.BranchId, tmpRemains.ContractId, tmpRemains.PaidKindId, tmpRemains.PartionMovementId, tmpRemains.CurrencyId
+                        GROUP BY tmpRemains.AccountId, tmpRemains.InfoMoneyId, tmpRemains.BranchId
+                               , tmpRemains.ContractId, tmpRemains.PaidKindId, tmpRemains.PartionMovementId
+                               , tmpRemains.CurrencyId
                                -- , tmpRemains.ContainerId
-                               , tmpRemains.isNotBalance
+                               , tmpRemains.isNotBalance 
+                               , tmpRemains.PartnerId
                         HAVING SUM (tmpRemains.StartSumm) <> 0 OR SUM (tmpRemains.EndSumm) <> 0
                        )
 
@@ -379,6 +396,10 @@ BEGIN
           View_Contract_InvNumber.ContractTagName,
           View_Contract_InvNumber.ContractStateKindCode,
           ObjectString_Comment.ValueData AS ContractComment,
+          
+          Object_Partner.Id         AS PartnerId,
+          Object_Partner.ObjectCode AS PartnerCode,
+          Object_Partner.ValueData  AS PartnerName,
 
           Object_PaidKind.Id AS PaidKindId,
           Object_PaidKind.ValueData AS PaidKindName,
@@ -482,6 +503,7 @@ BEGIN
                                                       END
       LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Operation.PaidKindId
       LEFT JOIN Object AS Object_Branch   ON Object_Branch.Id   = Operation.BranchId
+      LEFT JOIN Object AS Object_Partner  ON Object_Partner.Id  = Operation.PartnerId
 
       -- путевой из реестра
       -- реестр
@@ -527,6 +549,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.06.23         *
  09.11.15         * add MovementComment
  14.11.14         * add inCurrencyId
  21.08.14                                        * add ContractComment

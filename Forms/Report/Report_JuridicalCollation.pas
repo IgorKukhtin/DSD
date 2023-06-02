@@ -113,6 +113,7 @@ type
     actOpenProtocol: TdsdOpenForm;
     bbOpenProtocol: TdxBarButton;
     BranchName: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public
