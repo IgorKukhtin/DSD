@@ -158,11 +158,12 @@ BEGIN
          , tmpGoods_limit AS (SELECT Object_Goods.*
                               FROM Object AS Object_Goods
                               WHERE Object_Goods.DescId = zc_Object_Goods()
+                                AND Object_Goods.isErased = FALSE
                               --AND Object_Goods.ObjectCode < 0
                               --AND (Object_Goods.isErased = FALSE OR inShowAll = TRUE)
                             --ORDER BY Object_Goods.Id ASC
-                              ORDER BY CASE WHEN vbUserId = 5 THEN Object_Goods.Id ELSE 0 END ASC, Object_Goods.Id DESC
-                              LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 WHEN vbUserId = 5 AND 1=1 THEN 20000 ELSE 350000 END
+                              ORDER BY CASE WHEN vbUserId = 5 AND 1=0 THEN Object_Goods.Id ELSE 0 END ASC, Object_Goods.Id DESC
+                              LIMIT CASE WHEN inIsLimit_100 = TRUE THEN 100 WHEN vbUserId = 5 AND 1=0 THEN 20000 ELSE 350000 END
                              )
          , tmpGoods AS (SELECT tmpGoods_limit.*
                         FROM tmpGoods_limit
@@ -209,8 +210,9 @@ BEGIN
                                                ON Object_Goods.Id     = MovementItem.ObjectId
                                               AND Object_Goods.DescId = zc_Object_Goods()
                         WHERE Movement.DescId = zc_Movement_OrderClient()
-                          AND vbUserId = 5
+                        --AND vbUserId = 5
                         --AND inIsLimit_100 = TRUE
+                        --AND 1=0
                        )
 
       , tmpReceipt AS (-- сборка узлов
