@@ -66,6 +66,7 @@ type
     DescName_parent: TcxGridDBColumn;
     actOpenIncomeCostByInvoice: TdsdOpenForm;
     bbOpenIncomeCostByInvoice: TdxBarButton;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
