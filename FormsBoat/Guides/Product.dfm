@@ -439,6 +439,23 @@
           Options.Editing = False
           Width = 80
         end
+        object Value_TaxKind: TcxGridDBColumn
+          Caption = #1053#1044#1057' (Kunden)'
+          DataBinding.FieldName = 'Value_TaxKind'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 90
+        end
+        object Info_TaxKind: TcxGridDBColumn
+          Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1053#1044#1057' (Kunden)'
+          DataBinding.FieldName = 'Info_TaxKind'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 99
+        end
         object Code: TcxGridDBColumn
           Caption = 'Interne Nr'
           DataBinding.FieldName = 'Code'

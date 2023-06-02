@@ -188,12 +188,12 @@ object OrderClientForm: TOrderClientForm
       Width = 86
     end
     object cxLabel15: TcxLabel
-      Left = 268
+      Left = 482
       Top = 45
       Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
     end
     object ceInvoice: TcxButtonEdit
-      Left = 268
+      Left = 482
       Top = 63
       Properties.Buttons = <
         item
@@ -202,19 +202,19 @@ object OrderClientForm: TOrderClientForm
         end>
       Properties.ReadOnly = True
       TabOrder = 20
-      Width = 208
+      Width = 192
     end
     object cxLabel9: TcxLabel
-      Left = 482
+      Left = 680
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1057#1095#1077#1090')'
     end
     object ceComment_Invoice: TcxTextEdit
-      Left = 482
+      Left = 680
       Top = 63
       Properties.ReadOnly = True
       TabOrder = 22
-      Width = 382
+      Width = 184
     end
     object cxLabel12: TcxLabel
       Left = 1137
@@ -3474,6 +3474,39 @@ object OrderClientForm: TOrderClientForm
     TabOrder = 12
     Width = 70
   end
+  object cxLabel7: TcxLabel
+    Left = 268
+    Top = 45
+    Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
+    Caption = #1053#1044#1057' (Kunden)'
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object edTaxKind_Value: TcxCurrencyEdit
+    Left = 268
+    Top = 63
+    Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
+    ParentShowHint = False
+    Properties.Alignment.Horz = taRightJustify
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.ReadOnly = True
+    ShowHint = True
+    TabOrder = 14
+    Width = 70
+  end
+  object cxLabel14: TcxLabel
+    Left = 344
+    Top = 45
+    Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1053#1044#1057' (Kunden)'
+  end
+  object edInfo_TaxKind: TcxTextEdit
+    Left = 344
+    Top = 63
+    Properties.ReadOnly = True
+    TabOrder = 16
+    Width = 132
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -3547,8 +3580,8 @@ object OrderClientForm: TOrderClientForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 286
-    Top = 39
+    Left = 278
+    Top = 95
     DockControlHeights = (
       0
       0
@@ -5405,13 +5438,6 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ProductId'
-        Value = Null
-        Component = GuidesProduct
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'ProductName'
         Value = Null
         Component = GuidesProduct
@@ -5423,6 +5449,13 @@ object OrderClientForm: TOrderClientForm
         Name = 'BrandId'
         Value = Null
         Component = GuidesBrand
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductId'
+        Value = Null
+        Component = GuidesProduct
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
@@ -5581,10 +5614,23 @@ object OrderClientForm: TOrderClientForm
         Component = edBasisWVAT_summ_transport
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value_TaxKind'
+        Value = Null
+        Component = edTaxKind_Value
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Info_TaxKind'
+        Value = Null
+        Component = edInfo_TaxKind
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 584
-    Top = 352
+    Left = 224
+    Top = 256
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
@@ -5955,8 +6001,8 @@ object OrderClientForm: TOrderClientForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 684
-    Top = 23
+    Left = 628
+    Top = 71
   end
   object GuidesProduct: TdsdGuides
     KeyField = 'Id'

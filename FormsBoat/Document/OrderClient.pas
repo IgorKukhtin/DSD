@@ -443,6 +443,10 @@ type
     cxLabel8: TcxLabel;
     edBasis_summ_orig: TcxCurrencyEdit;
     actUpdateDataSetProdOptItems: TdsdUpdateDataSet;
+    cxLabel7: TcxLabel;
+    edTaxKind_Value: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    edInfo_TaxKind: TcxTextEdit;
   private
   public
   end;
