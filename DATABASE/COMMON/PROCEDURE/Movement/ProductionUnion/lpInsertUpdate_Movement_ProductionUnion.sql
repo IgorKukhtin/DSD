@@ -25,7 +25,7 @@ BEGIN
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
    -- сохранили <Документ>
-   ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ProductionUnion(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+   ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ProductionUnion(), inInvNumber, inOperDate, NULL, vbAccessKeyId, inUserId);
 
    -- сохранили связь с <От кого (в документе)>
    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);

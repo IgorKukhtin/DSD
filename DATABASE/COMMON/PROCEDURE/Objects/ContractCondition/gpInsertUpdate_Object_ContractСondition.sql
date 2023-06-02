@@ -57,7 +57,7 @@ BEGIN
                                             AND ObjectDate_StartDate.ValueData = inStartDate
                        -- еще такая группировка
                        LEFT JOIN ObjectLink AS ObjectLink_BonusKind
-                                            ON ObjectLink_BonusKind.ObjectId      = ObjectLink_Contract.ObjectId
+                                            ON ObjectLink_BonusKind.ObjectId      = ObjectLink_ContractCondition_Contract.ObjectId
                                            AND ObjectLink_BonusKind.DescId        = zc_ObjectLink_ContractCondition_BonusKind()
                    WHERE ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
                      AND ObjectLink_ContractCondition_Contract.ObjectId <> ioId

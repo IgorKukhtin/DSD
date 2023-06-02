@@ -168,6 +168,7 @@ END IF;*/
   --AND inUserId <> zfCalc_UserAdmin() :: Integer
   --AND inMovementId <> 24732446 --
     AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
+    AND inUserId <> 8159525 -- Парфеєвець Н.В.
      THEN
          -- если есть хоть 1 товар у которого кол > на vbPersent_check% чем в заявка выдаем сообщение
          SELECT tmp.GoodsId

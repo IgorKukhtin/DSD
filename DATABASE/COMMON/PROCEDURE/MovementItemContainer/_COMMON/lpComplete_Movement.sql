@@ -60,6 +60,14 @@ BEGIN
                          AND vbDescId                <> zc_Movement_Service()
                       );
 
+
+  -- Проверка - Гриневич К.А.
+  IF inUserId IN (9031170)
+  THEN
+      PERFORM lpCheckPeriodClose_local (vbOperDate, inMovementId, vbDescId, inUserId);
+  END IF;
+
+
   -- 1.1. Проверка
   IF COALESCE (vbDescId, -1) <> COALESCE (inDescId, -2)
   THEN

@@ -12,8 +12,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem(
     IN inParentId     Integer,
     IN inUserId       Integer DEFAULT 0 -- Пользователь
 )
-  RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
+  DECLARE vbOperDate         TDateTime;
   DECLARE vbStatusId          Integer;
   DECLARE vbMovementDescId    Integer;
   DECLARE vbInvNumber         TVarChar;
@@ -40,7 +42,7 @@ BEGIN
 
 
      -- определяем <Статус>
-     SELECT StatusId, InvNumber, DescId INTO vbStatusId, vbInvNumber, vbMovementDescId FROM Movement WHERE Id = inMovementId;
+     SELECT StatusId, OperDate, InvNumber, DescId INTO vbStatusId, vbOperDate, vbInvNumber, vbMovementDescId FROM Movement WHERE Id = inMovementId;
      -- проверка - проведенные/удаленные документы Изменять нельзя + !!!временно захардкодил -12345!!!
      IF vbStatusId <> zc_Enum_Status_UnComplete() AND COALESCE (inUserId, 0) NOT IN (-12345, zc_Enum_Process_Auto_PartionClose()) -- , 5 
         AND inDescId <> zc_MI_Sign() AND inDescId <> zc_MI_Message() -- AND inDescId <> zc_MI_Detail()
@@ -59,6 +61,13 @@ BEGIN
      IF inObjectId IS NULL
      THEN
 --         RAISE EXCEPTION 'Ошибка-1.Не определен Объект в документе № <%>.', vbInvNumber;
+     END IF;
+
+
+     -- Проверка - Гриневич К.А.
+     IF inUserId IN (9031170)
+     THEN
+         PERFORM lpCheckPeriodClose_local (vbOperDate, inMovementId, vbMovementDescId, inUserId);
      END IF;
 
 

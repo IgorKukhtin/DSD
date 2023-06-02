@@ -70,6 +70,9 @@ BEGIN
 --then  inValue2:= 'RAL 9010';
 --end if;
 
+-- inValue2:= zfCalc_Text_replace (inValue2, '®', '');
+
+
      -- замена
      IF inValue3 ILIKE 'null' THEN inValue3:= ''; END IF;
      -- замена
@@ -475,7 +478,7 @@ END IF;
          ioMovementId_OrderClient:= lpInsertUpdate_Movement (ioMovementId_OrderClient, zc_Movement_OrderClient(), inInvNumber, CURRENT_DATE, NULL, vbUserId);
 
          -- сохранили значение <NPP>
-       /*PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NPP(), ioMovementId_OrderClient
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NPP(), ioMovementId_OrderClient
                                              , 1 + COALESCE ((SELECT MAX (COALESCE (MovementFloat.ValueData, 0))
                                                               FROM MovementFloat
                                                                    INNER JOIN Movement ON Movement.Id     = MovementFloat.MovementId
@@ -483,8 +486,6 @@ END IF;
                                                                                       AND Movement.StatusId <> zc_Enum_Status_Erased()
                                                               WHERE MovementFloat.DescId = zc_MovementFloat_NPP()
                                                              ), 0));
-         -- сохранили свойство <>
-         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Product_DateBegin(), inProductId, CURRENT_DATE + INTERVAL '3 MONTH');     */
 
          -- сохранили свойство <Дата создания>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioMovementId_OrderClient, CURRENT_TIMESTAMP);
@@ -737,7 +738,7 @@ END IF;
                                               , ioSummTax               := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_SummTax()), 0)
                                               , ioSummReal              := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_SummReal()), 0)
                                               , inDateStart             := NULL
-                                              , inDateBegin             := NULL
+                                              , inDateBegin             := COALESCE ((SELECT OD.ValueData FROM ObjectDate AS OD WHERE OD.DescId = zc_ObjectDate_Product_DateBegin() AND OD.ObjectId = ioProductId), CURRENT_DATE + INTERVAL '3 MONTH')
                                               , inDateSale              := NULL
                                               , inCIN                   := COALESCE ((SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Product_CIN() AND OS.ObjectId = ioProductId), '-')
                                               , inEngineNum             := COALESCE ((SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Product_EngineNum() AND OS.ObjectId = ioProductId), '')
@@ -863,7 +864,7 @@ END IF;
          -- 6.1. нашли ProdOptions
          IF inTitle1 ILIKE 'id' AND TRIM (inValue1) <> ''
          THEN
-             IF 1 < (SELECT COUNT(*) FROM Object JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue1 WHERE Object.DescId = zc_Object_ProdOptions() AND Object.isErased = FALSE)
+             IF vbColor_title <> '' AND 1 < (SELECT COUNT(*) FROM Object JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue1 WHERE Object.DescId = zc_Object_ProdOptions() AND Object.isErased = FALSE)
              THEN
                  -- поиск по Id_Site + color
                  vbProdOptionsId:= (SELECT Object.Id
@@ -887,6 +888,8 @@ END IF;
                                     FROM Object
                                          JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue1
                                     WHERE Object.DescId = zc_Object_ProdOptions() AND Object.isErased = FALSE
+                                    ORDER BY Object.Id
+                                    LIMIT 1
                                    );
              END IF;
 

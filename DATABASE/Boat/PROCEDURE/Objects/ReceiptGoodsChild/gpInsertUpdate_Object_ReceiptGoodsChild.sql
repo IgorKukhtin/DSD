@@ -56,7 +56,7 @@ BEGIN
    THEN
        ioForCount:= 1; 
    END IF;
-   
+
    -- замена
    IF vbValue = 0 AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId =  zc_Object_ReceiptService())
    THEN
