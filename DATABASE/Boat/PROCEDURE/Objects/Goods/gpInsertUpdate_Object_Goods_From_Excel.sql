@@ -147,33 +147,19 @@ else RETURN;
        THEN
             vbGoodsGroupId := (SELECT tmp.ioId
                                FROM gpInsertUpdate_Object_GoodsGroup (ioId              := 0         :: Integer
-                                                                    , ioCode            := inGoodsGroupCode    :: Integer
-                                                                    , inName            := CAST (inGoodsGroupCode AS TVarChar) ::TVarChar
+                                                                    , ioCode            := 0         :: Integer
+                                                                    , inName            := CAST (TRIM (inGoods) AS TVarChar) ::TVarChar
                                                                     , inParentId        := 0         :: Integer
                                                                     , inInfoMoneyId     := 0         :: Integer
                                                                     , inModelEtiketenId := 0         :: Integer
                                                                     , inSession         := inSession :: TVarChar
                                                                      ) AS tmp);
        END IF;
-   END IF;
-
-          --если не нашли ощибка
-   IF COALESCE (vbGoodsGroupId,0) = 0
-   THEN
-        --RAISE EXCEPTION 'Ошибка.Группа товара с кодом = <%> не найдена. Товар <%>', inGoodsGroupCode, inName;
-        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Группа товара с кодом = <%> не найдена. Товар (<%>)<%>' :: TVarChar
-                                              , inProcedureName := 'gpInsertUpdate_Object_Goods_From_Excel' :: TVarChar
-                                              , inUserId        := vbUserId
-                                              , inParam1        := inGoodsGroupCode    :: TVarChar
-                                              , inParam2        := inObjectCode :: TVarChar
-                                              , inParam3        := inName       :: TVarChar
-                                              );
-   END IF;
-
-   /*IF COALESCE (inPartnerCode, 0) <> 0
+  
+   IF COALESCE (inPartnerName, '') <> ''
    THEN
        -- пробуем найти 
-       vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Partner() AND Object.ObjectCode = inPartnerCode);
+       vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Partner() AND UPPER ( TRIM (Object.ValueData)) = UPPER ( TRIM (inPartnerName)) );
        --если не нашли ощибка
        IF COALESCE (vbPartnerId,0) = 0
        THEN

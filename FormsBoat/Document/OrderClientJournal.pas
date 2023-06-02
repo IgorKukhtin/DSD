@@ -137,6 +137,9 @@ type
     BasisPrice_load: TcxGridDBColumn;
     TransportSumm_load: TcxGridDBColumn;
     TotalSumm_transport: TcxGridDBColumn;
+    spSelectPrint_Invoice: TdsdStoredProc;
+    actPrintMovement_Invoice: TdsdPrintAction;
+    bb: TdxBarButton;
   private
   public
   end;
