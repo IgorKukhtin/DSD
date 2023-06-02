@@ -133,7 +133,7 @@ BEGIN
               IF COALESCE (inFarbe, '') <> ''
               THEN
                   -- пробуем найти 
-                  vbProdColorId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inFarbe)));
+                  vbProdColorId := (SELECT MIN (Object.Id) FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inFarbe)));
                   --если не находим создаем
                   IF COALESCE (vbProdColorId,0) = 0
                   THEN
