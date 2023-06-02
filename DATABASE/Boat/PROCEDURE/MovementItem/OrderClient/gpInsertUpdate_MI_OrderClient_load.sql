@@ -89,13 +89,14 @@ BEGIN
 
 
 -- 4871
-IF zfConvert_StringToFloat (inValue1) = 0 AND NOT EXISTS (SELECT 1
-                                                          FROM Object
-                                                               JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site()
-                                                                                      AND OS.ValueData ILIKE inValue1
-                                                          WHERE Object.DescId    = zc_Object_ProdOptions()
-                                                            AND Object.isErased  = FALSE
-                                                         )
+IF inTitle1 ILIKE 'id' AND SUBSTRING (inValue1 FROM 1  FOR 1) = '_'
+   AND NOT EXISTS (SELECT 1
+                   FROM Object
+                        JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site()
+                                               AND OS.ValueData ILIKE inValue1
+                   WHERE Object.DescId    = zc_Object_ProdOptions()
+                     AND Object.isErased  = FALSE
+                  )
 THEN
      inValue1:= COALESCE ((SELECT DISTINCT LEFT (OS.ValueData, 4)
                            FROM Object
