@@ -40,6 +40,13 @@ BEGIN
                          AND vbDescId                <> zc_Movement_Service()
                       );
 
+  -- Проверка - Гриневич К.А.
+  IF inUserId IN (9031170)
+  THEN
+      PERFORM lpCheckPeriodClose_local (vbOperDate, inMovementId, vbDescId, inUserId);
+  END IF;
+
+
   -- 1.3. !!!НОВАЯ СХЕМА ПРОВЕРКИ - Закрытый период!!!
   IF vbStatusId_old = zc_Enum_Status_Complete()
   THEN PERFORM lpCheckPeriodClose (inOperDate      := vbOperDate
