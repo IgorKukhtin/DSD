@@ -227,7 +227,6 @@ uses
   Income in '..\..\FormsBoat\Document\Income.pas' {IncomeForm: TParentForm},
   IncomeJournal in '..\..\FormsBoat\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
   IncomeJournalChoice in '..\..\FormsBoat\Document\IncomeJournalChoice.pas' {IncomeJournalChoiceForm: TParentForm},
-  TaxKindEdit in '..\..\FormsBoat\Kind\TaxKindEdit.pas' {TaxKindEditForm: TParentForm},
   OrderClientJournal in '..\..\FormsBoat\Document\OrderClientJournal.pas' {OrderClientJournalForm: TParentForm},
   Medoc_J1201011 in '..\..\SOURCE\MeDOC\Medoc_J1201011.pas',
   Medoc_J1201211 in '..\..\SOURCE\MeDOC\Medoc_J1201211.pas',
@@ -360,7 +359,8 @@ uses
   Report_OrderClient_byBoatDialog in '..\..\FormsBoat\Report\Report_OrderClient_byBoatDialog.pas' {Report_OrderClient_byBoatDialogForm: TParentForm},
   OrderClientSummDialog in '..\..\FormsBoat\Document\OrderClientSummDialog.pas' {OrderClientSummDialogForm: TParentForm},
   Report_OrderClient_byBoatChoice in '..\..\FormsBoat\Report\Report_OrderClient_byBoatChoice.pas' {Report_OrderClient_byBoatChoiceForm: TParentForm},
-  ProdColorPatternGoodsEdit in '..\..\FormsBoat\Guides\ProdColorPatternGoodsEdit.pas' {ProdColorPatternGoodsEditForm: TParentForm};
+  ProdColorPatternGoodsEdit in '..\..\FormsBoat\Guides\ProdColorPatternGoodsEdit.pas' {ProdColorPatternGoodsEditForm: TParentForm},
+  TaxKindEdit in '..\..\FormsBoat\Kind\TaxKindEdit.pas' {TaxKindEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -3,7 +3,7 @@ object TaxKindEditForm: TTaxKindEditForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1053#1044#1057'> ('#1082#1086#1088#1088'.)'
   ClientHeight = 376
-  ClientWidth = 541
+  ClientWidth = 646
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object TaxKindEditForm: TTaxKindEditForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 541
+    Width = 646
     Height = 350
     Align = alClient
     TabOrder = 0
@@ -56,7 +56,7 @@ object TaxKindEditForm: TTaxKindEditForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 83
+        Width = 53
       end
       object Name: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1053#1044#1057
@@ -64,14 +64,15 @@ object TaxKindEditForm: TTaxKindEditForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 211
+        Options.Editing = False
+        Width = 132
       end
       object NDS: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'NDS'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 233
+        Width = 116
       end
       object Info: TcxGridDBColumn
         Caption = #1054#1087#1080#1089#1072#1085#1080#1077
@@ -189,6 +190,10 @@ object TaxKindEditForm: TTaxKindEditForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -482,6 +487,7 @@ object TaxKindEditForm: TTaxKindEditForm
       item
         DataSet = MasterCDS
       end>
+    OutputType = otResult
     Params = <
       item
         Name = 'inId'
@@ -528,7 +534,7 @@ object TaxKindEditForm: TTaxKindEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
-    Top = 120
+    Left = 304
+    Top = 104
   end
 end
