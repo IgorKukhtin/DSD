@@ -97,6 +97,11 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
               Format = ',0.####'
               Kind = skSum
               Column = Remains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -173,6 +178,11 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
               Format = ',0.####'
               Kind = skSum
               Column = Remains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountIn
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -363,6 +373,16 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1052#1077#1089#1103#1094' '#1086#1089#1090#1072#1090#1082#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object AmountIn: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
+            DataBinding.FieldName = 'AmountIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end

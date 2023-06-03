@@ -68,6 +68,7 @@ type
     GuidesOrderClient: TdsdGuides;
     cxLabel15: TcxLabel;
     edOrderClient: TcxButtonEdit;
+    AmountIn: TcxGridDBColumn;
   private
     { Private declarations }
   public

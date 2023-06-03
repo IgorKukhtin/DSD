@@ -39,7 +39,8 @@ RETURNS TABLE  (MovementId Integer
               
               , MonthRemains Integer
               , ColorText    Integer
-              , Remains    TFloat
+              , Remains    TFloat 
+              , AmountIn   TFloat
               
               , Amount     TFloat
               , Amount1    TFloat
@@ -367,6 +368,27 @@ BEGIN
                             LEFT JOIN  tmpRemains ON tmpRemains.ObjectId = tmpGroupDetail2.ObjectId 
                         WHERE COALESCE (tmpRemains.Amount,0) - COALESCE (tmpGroupDetail2.AmountTotal,0)>= 0
                         )
+  --Приход на производство 
+  , tmpMIF_MovementId AS (SELECT MIFloat_MovementId.MovementItemId
+                               , MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
+                          FROM MovementItemFloat AS MIFloat_MovementId
+                          WHERE MIFloat_MovementId.ValueData :: Integer IN (SELECT DISTINCT tmpItem_Detail.MovementId FROM tmpItem_Detail)
+                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                          )
+  , tmpSend_ProductionUnion AS (SELECT CASE WHEN inisDetail = TRUE THEN MIFloat_MovementId.MovementId_OrderClient ELSE 0 END AS MovementId_OrderClient
+                                     , MovementItem.ObjectId
+                                     , SUM (COALESCE (MovementItem.Amount,0)) AS Amount
+                                FROM tmpMIF_MovementId AS MIFloat_MovementId
+                                     INNER JOIN MovementItem ON MovementItem.Id = MIFloat_MovementId.MovementItemId
+                                                            AND MovementItem.DescId = zc_MI_Master()
+                                                            AND MovementItem.isErased = FALSE 
+                                     INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                        AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
+                                                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                GROUP BY CASE WHEN inisDetail = TRUE THEN MIFloat_MovementId.MovementId_OrderClient ELSE 0 END
+                                       , MovementItem.ObjectId
+                                )
+  
   
       -- Результат
       SELECT tmp.MovementId ::Integer
@@ -401,7 +423,8 @@ BEGIN
                  ELSE zc_Color_White()
              END :: Integer AS ColorText
              
-           , tmpRemains.Amount ::TFloat AS Remains  
+           , tmpRemains.Amount              ::TFloat AS Remains
+           , tmpSend_ProductionUnion.Amount ::TFloat AS AmountIn  
 
            , tmp.Amount    :: TFloat
            , tmp.Amount1   :: TFloat
@@ -456,6 +479,8 @@ BEGIN
            
            LEFT JOIN tmpRemains ON (tmpRemains.ObjectId = tmp.ObjectId AND tmp.Ord = 1 AND inisDetail = TRUE) OR (tmpRemains.ObjectId = tmp.ObjectId AND inisDetail = FALSE)
            LEFT JOIN tmpRemainsMonth ON (tmpRemainsMonth.ObjectId = tmp.ObjectId AND tmp.Ord = 1 AND inisDetail = TRUE) OR (tmpRemainsMonth.ObjectId = tmp.ObjectId AND inisDetail = FALSE)
+           LEFT JOIN tmpSend_ProductionUnion ON tmpSend_ProductionUnion.MovementId_OrderClient = tmp.MovementId
+                                            AND tmpSend_ProductionUnion.ObjectId = tmp.ObjectId
      ;
 
 END;
