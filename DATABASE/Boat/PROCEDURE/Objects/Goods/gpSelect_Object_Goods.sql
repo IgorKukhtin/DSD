@@ -150,10 +150,25 @@ BEGIN
          , tmpReceiptGoods AS (SELECT DISTINCT ObjectLink_Goods.ChildObjectId AS GoodsId
                                FROM Object AS Object_ReceiptGoods
                                     LEFT JOIN ObjectLink AS ObjectLink_Goods
-                                                         ON ObjectLink_Goods.ObjectId = Object_ReceiptGoods.Id
-                                                        AND ObjectLink_Goods.DescId = zc_ObjectLink_ReceiptGoods_Object()
+                                                         ON ObjectLink_Goods.ObjectId      = Object_ReceiptGoods.Id
+                                                        AND ObjectLink_Goods.DescId        = zc_ObjectLink_ReceiptGoods_Object()
+                                                        AND ObjectLink_Goods.ChildObjectId > 0
                                WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
                                  AND Object_ReceiptGoods.isErased = FALSE
+                              UNION
+                               SELECT DISTINCT ObjectLink_GoodsChild.ChildObjectId AS GoodsId
+                               FROM Object AS Object_ReceiptGoodsChild
+                                    INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                                          ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                                         AND ObjectLink_ReceiptGoods.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                    INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id = ObjectLink_ReceiptGoods.ChildObjectId
+                                                                            AND Object_ReceiptGoods.isErased = FALSE
+                                    INNER JOIN ObjectLink AS ObjectLink_GoodsChild
+                                                          ON ObjectLink_GoodsChild.ObjectId      = Object_ReceiptGoodsChild.Id
+                                                         AND ObjectLink_GoodsChild.DescId        = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+                                                         AND ObjectLink_GoodsChild.ChildObjectId > 0
+                               WHERE Object_ReceiptGoodsChild.DescId   = zc_Object_ReceiptGoodsChild()
+                                 AND Object_ReceiptGoodsChild.isErased = FALSE
                               )
          , tmpGoods_limit AS (SELECT Object_Goods.*
                               FROM Object AS Object_Goods
@@ -172,7 +187,8 @@ BEGIN
                         FROM Object AS Object_Goods
                         WHERE Object_Goods.DescId = zc_Object_Goods()
                           AND Object_Goods.Id IN (SELECT DISTINCT tmpReceiptGoods.GoodsId FROM tmpReceiptGoods)
-                          AND Object_Goods.ObjectCode < 0
+                          AND inIsLimit_100 = FALSE
+
                        UNION
                         SELECT Object_Goods.*
                         FROM Object AS Object_Goods
@@ -201,6 +217,7 @@ BEGIN
                                                   --AND Object_Goods.ObjectCode < 0
                         WHERE Object_Goods.DescId = zc_Object_Goods()
                         --AND inIsLimit_100 = TRUE
+                          AND inIsLimit_100 = FALSE
                        UNION
                         SELECT DISTINCT Object_Goods.*
                         FROM Movement
@@ -210,6 +227,7 @@ BEGIN
                                                ON Object_Goods.Id     = MovementItem.ObjectId
                                               AND Object_Goods.DescId = zc_Object_Goods()
                         WHERE Movement.DescId = zc_Movement_OrderClient()
+                          AND inIsLimit_100 = FALSE
                         --AND vbUserId = 5
                         --AND inIsLimit_100 = TRUE
                         --AND 1=0

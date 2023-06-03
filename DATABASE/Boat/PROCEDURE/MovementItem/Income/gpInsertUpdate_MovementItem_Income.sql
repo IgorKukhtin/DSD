@@ -65,6 +65,8 @@ BEGIN
                                AND OF_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
      WHERE Movement.Id = inMovementId
     ;
+    
+     vbTaxKindId:= CASE WHEN vbTaxKindId > 0 THEN vbTaxKindId ELSE zc_TaxKind_Basis() END;
 
      -- проверка если не нашли TaxKindId - выдается ошибка
      IF COALESCE (vbTaxKindId,0) = 0
