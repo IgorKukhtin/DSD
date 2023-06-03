@@ -12,19 +12,19 @@ inherited Report_OrderClient_byBoatChoiceForm: TReport_OrderClient_byBoatChoiceF
     Width = 1071
     Height = 258
     TabOrder = 3
-    ExplicitTop = 55
+    ExplicitTop = 83
     ExplicitWidth = 1071
-    ExplicitHeight = 286
+    ExplicitHeight = 258
     ClientRectBottom = 258
     ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1071
-      ExplicitHeight = 286
+      ExplicitHeight = 258
       inherited cxGrid: TcxGrid
         Width = 1071
         Height = 258
         ExplicitWidth = 1071
-        ExplicitHeight = 286
+        ExplicitHeight = 258
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1017,6 +1017,14 @@ inherited Report_OrderClient_byBoatChoiceForm: TReport_OrderClient_byBoatChoiceF
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderClient'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'inMovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inObjectId'
         Value = '0'
         Component = GuidesObject
@@ -1030,12 +1038,6 @@ inherited Report_OrderClient_byBoatChoiceForm: TReport_OrderClient_byBoatChoiceF
         Component = cbisDetail
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = ''
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 112
@@ -1329,6 +1331,14 @@ inherited Report_OrderClient_byBoatChoiceForm: TReport_OrderClient_byBoatChoiceF
         Value = 44927d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_OrderClient'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
