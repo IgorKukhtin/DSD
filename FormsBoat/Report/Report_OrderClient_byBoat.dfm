@@ -626,14 +626,18 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 4
+      ExplicitWidth = 80
+      Width = 80
     end
     inherited deEnd: TcxDateEdit
-      Left = 334
+      Left = 319
       Top = 4
       EditValue = 44927d
       Properties.SaveTime = False
-      ExplicitLeft = 334
+      ExplicitLeft = 319
       ExplicitTop = 4
+      ExplicitWidth = 82
+      Width = 82
     end
     inherited cxLabel1: TcxLabel
       Left = 25
@@ -642,25 +646,42 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       ExplicitTop = 5
     end
     inherited cxLabel2: TcxLabel
-      Left = 218
+      Left = 208
       Top = 5
-      ExplicitLeft = 218
+      ExplicitLeft = 208
       ExplicitTop = 5
     end
     object cbisDetail: TcxCheckBox
-      Left = 441
+      Left = 407
       Top = 4
       Action = actRefreshEmpty
       Properties.ReadOnly = False
       TabOrder = 4
-      Width = 136
+      Width = 127
     end
     object cxLabel3: TcxLabel
-      Left = 754
+      Left = 840
       Top = 5
       Caption = #1055#1077#1088#1074#1099#1081' '#1084#1077#1089#1103#1094' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1091#1077#1090' '#1084#1077#1089#1103#1094#1091' '#1053#1072#1095#1072#1083#1072' '#1087#1077#1088#1080#1086#1076#1072
       Style.BorderColor = clHighlightText
       Style.TextColor = cl3DDkShadow
+    end
+    object cxLabel15: TcxLabel
+      Left = 552
+      Top = 5
+      Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+    end
+    object edOrderClient: TcxButtonEdit
+      Left = 629
+      Top = 4
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 200
     end
   end
   object lbSearchArticle: TcxLabel [2]
@@ -749,6 +770,23 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
           Value = ''
           Component = cbisDetail
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_OrderClient'
+          Value = Null
+          Component = GuidesOrderClient
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_OrderClient'
+          Value = Null
+          Component = GuidesOrderClient
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1069,6 +1107,14 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderClient'
+        Value = ''
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inObjectId'
         Value = '0'
         ParamType = ptInput
@@ -1080,12 +1126,6 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
         Component = cbisDetail
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = ''
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 112
@@ -1242,6 +1282,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
         Component = PeriodChoice
       end
       item
+        Component = GuidesOrderClient
       end
       item
       end
@@ -1434,5 +1475,85 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
     Params = <>
     Left = 1028
     Top = 86
+  end
+  object GuidesOrderClient: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderClient
+    FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderClientJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesOrderClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ClientId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ClientName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 724
+    Top = 7
   end
 end

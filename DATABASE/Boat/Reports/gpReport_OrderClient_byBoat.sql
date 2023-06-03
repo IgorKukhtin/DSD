@@ -3,13 +3,16 @@
 DROP FUNCTION IF EXISTS gpReport_OrderClient_byBoat (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_OrderClient_byBoat (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_OrderClient_byBoat (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderClient_byBoat (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderClient_byBoat (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_OrderClient_byBoat (
-    IN inStartDate    TDateTime ,
-    IN inEndDate      TDateTime ,
-    IN inObjectId     Integer   , 
-    IN inisDetail     Boolean   , -- развернуть по лодкам
-    IN inSession      TVarChar    -- сессия пользователя
+    IN inStartDate              TDateTime ,
+    IN inEndDate                TDateTime ,
+    IN inMovementId_OrderClient Integer,
+    IN inObjectId               Integer   , 
+    IN inisDetail               Boolean   , -- развернуть по лодкам
+    IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS TABLE  (MovementId Integer
               , InvNumber TVarChar
@@ -17,7 +20,7 @@ RETURNS TABLE  (MovementId Integer
               
               , ProductId Integer
               , ProductName TVarChar
-              , CIN              TVarChar
+              , CIN         TVarChar
               
               , ObjectId Integer
               , ObjectCode Integer
@@ -104,6 +107,24 @@ BEGIN
                         INNER JOIN Movement ON Movement.Id = MovementLinkObject_Product.MovementId
                                            AND Movement.DescId = zc_Movement_OrderClient()
                                            AND Movement.StatusId = zc_Enum_Status_Complete()
+                    WHERE COALESCE (inMovementId_OrderClient,0) = 0
+                  UNION
+                    SELECT Movement.Id
+                         , Movement.OperDate
+                         , Movement.InvNumber
+                         , MovementLinkObject_Product.ObjectId AS ProductId
+                         , ObjectDate.ValueData AS DateBegin
+                         , zfCalc_MonthName (ObjectDate.ValueData) AS MonthName
+                         , CASE WHEN EXTRACT (MONTH FROM ObjectDate.ValueData)-vbMonth >0 THEN EXTRACT (MONTH FROM ObjectDate.ValueData)-vbMonth ELSE EXTRACT (MONTH FROM ObjectDate.ValueData)-vbMonth+12 END AS MonthBegin
+                    FROM Movement
+                        INNER JOIN MovementLinkObject AS MovementLinkObject_Product
+                                                      ON MovementLinkObject_Product.MovementId = Movement.Id
+                                                     AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product() 
+                        INNER JOIN ObjectDate ON ObjectDate.ObjectId = MovementLinkObject_Product.ObjectId
+                                             AND ObjectDate.DescId = zc_ObjectDate_Product_DateBegin()
+                     WHERE COALESCE (inMovementId_OrderClient,0) <> 0 
+                      AND Movement.DescId = zc_Movement_OrderClient()
+                      AND Movement.Id = inMovementId_OrderClient  
                     )
     --
   , tmpMI_Detail AS (SELECT Movement.ProductId
@@ -449,4 +470,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inObjectId := 0, inisDetail := False ,inSession := '5');
--- SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inObjectId := 252790, inisDetail := true ,inSession := '5')
+-- SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inMovementId_OrderClient:=0 , inObjectId := 252790, inisDetail := true ,inSession := '5')

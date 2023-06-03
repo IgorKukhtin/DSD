@@ -65,6 +65,9 @@ type
     actReport_OC_ByBoatChoice: TdsdOpenForm;
     bbReport_OC_ByBoatChoice: TdxBarButton;
     ColorText: TcxGridDBColumn;
+    GuidesOrderClient: TdsdGuides;
+    cxLabel15: TcxLabel;
+    edOrderClient: TcxButtonEdit;
   private
     { Private declarations }
   public
