@@ -24,10 +24,21 @@ $BODY$
    DECLARE vbGoodsName TVarChar;
    DECLARE vbGoodsCode TVarChar;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptGoods());
    vbUserId:= lpGetUserBySession (inSession);
+
+   -- Проверка
+   IF COALESCE (inColorPatternId, 0) = 0
+   THEN
+       RAISE EXCEPTION '%', 'Ошибка.Значение <Конфигуратор - название шаблона> не установлено.';
+   END IF;
+   -- Проверка
+   IF COALESCE (inGoodsId, 0) = 0
+   THEN
+       RAISE EXCEPTION '%', 'Ошибка.Значение <Узел> не установлено.';
+   END IF;
+
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;

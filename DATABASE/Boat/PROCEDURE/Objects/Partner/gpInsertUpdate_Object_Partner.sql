@@ -101,9 +101,9 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_InfoMoney(), ioId, inInfoMoneyId);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_TaxKind(), ioId, inTaxKindId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_TaxKind(), ioId, CASE WHEN inTaxKindId > 0 THEN inTaxKindId ELSE zc_TaxKind_Basis() END);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_PaidKind(), ioId, inPaidKindId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_PaidKind(), ioId, CASE WHEN inPaidKindId > 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END);
    
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
