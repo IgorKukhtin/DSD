@@ -29,7 +29,14 @@ OPEN Cursor1 FOR
                                  LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId 
                                  LEFT JOIN Object ON Object.Id = tmp.ObjectId
                            )
-           , tmpProduct AS (SELECT tmpInvoice.ProductId
+           , tmpProduct AS (SELECT tmp.*
+                            FROM tmpInvoice
+                                 LEFT JOIN gpSelect_Object_Product (inMovementId_OrderClient:= tmpInvoice.MovementId_parent, inIsShowAll:= TRUE, inIsSale:= FALSE, inSession:= inSession) AS tmp  
+                                                                   ON tmp.MovementId_OrderClient = tmpInvoice.MovementId_parent
+                            WHERE tmp.Id = tmpInvoice.ProductId
+                            )
+           
+                          /*(SELECT tmpInvoice.ProductId
                                   , Object_Product.ObjectCode        AS ProductCode
                                   , Object_Brand.Id                  AS BrandId
                                   , Object_Brand.ValueData           AS BrandName
@@ -78,18 +85,43 @@ OPEN Cursor1 FOR
                                                        ON ObjectFloat_Volume.ObjectId = Object_Engine.Id
                                                       AND ObjectFloat_Volume.DescId = zc_ObjectFloat_ProdEngine_Volume() 
                                  LEFT JOIN Object AS Object_Product AS Object_Product.Id = tmpInvoice.ProductId
-                            )
+                            )*/
+
+     -- данные по оплате счета
+     , tmpBankAccount AS (SELECT SUM (MovementItem.Amount)   ::TFloat AS AmountIn
+                          FROM MovementLinkMovement
+                              INNER JOIN Movement AS Movement_BankAccount
+                                                  ON Movement_BankAccount.Id = MovementLinkMovement.MovementId
+                                                 AND Movement_BankAccount.StatusId = zc_Enum_Status_Complete()   ---<> zc_Enum_Status_Erased()
+                                                 AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
+                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id
+                                                     AND MovementItem.DescId = zc_MI_Master()
+                                                     AND MovementItem.isErased = FALSE
+                                                     AND COALESCE (MovementItem.Amount,0) > 0
+                          WHERE MovementLinkMovement.MovementChildId = inMovementId--IN (SELECT DISTINCT tmpInvoice.MovementId_Invoice FROM tmpInvoice)
+                            AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
+                          GROUP BY MovementLinkMovement.MovementChildId
+                          )
+ 
        -- Результат
        SELECT tmpProduct.*
             , LEFT (tmpProduct.CIN, 8) ::TVarChar AS PatternCIN
-            , tmpInvoice.*
-          
+            , EXTRACT (YEAR FROM tmpProduct.DateBegin)  ::TVarChar AS YearBegin 
+            , ''                                        ::TVarChar AS ModelGroupName
+            , ObjectFloat_Power.ValueData               ::TFloat   AS EnginePower
+            , ObjectFloat_Volume.ValueData              ::TFloat   AS EngineVolume
+            --
+            , tmpInvoice.* 
+            -- сумма счета
+            , tmpInvoice.AmountIn     ::TFloat AS Invoice_summ
+            -- сумма педоплаты
+            , tmpBankAccount.AmountIn ::TFloat AS Prepayment_summ
             --
             , tmpInfo.Mail           ::TVarChar AS Mail
             , tmpInfo.WWW            ::TVarChar AS WWW
             , tmpInfo.Name_main      ::TVarChar AS Name_main
             , tmpInfo.Street_main    ::TVarChar AS Street_main
-            , tmpInfo.City_main      ::TVarChar AS City_main                                   --*
+            , tmpInfo.City_main      ::TVarChar AS City_main
             , tmpInfo.Name_Firma2    ::TVarChar AS Name_Firma
             , tmpInfo.Street_Firma2  ::TVarChar AS Street_Firma
             , tmpInfo.City_Firma2    ::TVarChar AS City_Firma
@@ -109,12 +141,19 @@ OPEN Cursor1 FOR
 
 
        FROM tmpInvoice
-           LEFT JOIN tmpProduct ON tmpProduct.ProductId = tmpInvoice.ProductId
-           LEFT JOIN Object_Product_PrintInfo_View AS tmpInfo ON 1=1
+           LEFT JOIN tmpProduct ON tmpProduct.Id = tmpInvoice.ProductId
+           LEFT JOIN Object_Product_PrintInfo_View AS tmpInfo ON 1=1 
+           LEFT JOIN tmpBankAccount ON 1 = 1
 
            LEFT JOIN ObjectString AS ObjectString_TaxNumber
                                   ON ObjectString_TaxNumber.ObjectId = tmpInvoice.ObjectId
                                  AND ObjectString_TaxNumber.DescId = zc_ObjectString_Client_TaxNumber() 
+          LEFT JOIN ObjectFloat AS ObjectFloat_Power
+                                ON ObjectFloat_Power.ObjectId = tmpProduct.EngineId
+                               AND ObjectFloat_Power.DescId = zc_ObjectFloat_ProdEngine_Power()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Volume
+                                ON ObjectFloat_Volume.ObjectId = tmpProduct.EngineId
+                               AND ObjectFloat_Volume.DescId = zc_ObjectFloat_ProdEngine_Volume()
           
           ;
 

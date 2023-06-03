@@ -123,6 +123,12 @@ type
     actAdd_limit: TdsdInsertUpdateAction;
     mactAdd_limit: TMultiAction;
     bbAdd_limit: TdxBarButton;
+    spGetImportSettingId_RapidMarine: TdsdStoredProc;
+    ExecuteImportSettingsAction1: TExecuteImportSettingsAction;
+    actDoLoad_RapidMarine: TExecuteImportSettingsAction;
+    actGetImportSetting_RapidMarine: TdsdExecStoredProc;
+    mactStartLoad_RapidMarine: TMultiAction;
+    bbStartLoad_RapidMarine: TdxBarButton;
   private
     { Private declarations }
   public

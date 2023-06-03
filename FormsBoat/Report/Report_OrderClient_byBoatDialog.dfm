@@ -3,8 +3,8 @@ object Report_OrderClient_byBoatDialogForm: TReport_OrderClient_byBoatDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' '#1082#1083#1080#1077#1085#1090#1072'>'
-  ClientHeight = 162
-  ClientWidth = 253
+  ClientHeight = 220
+  ClientWidth = 287
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_OrderClient_byBoatDialogForm: TReport_OrderClient_byBoatDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 23
-    Top = 111
+    Left = 31
+    Top = 179
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_OrderClient_byBoatDialogForm: TReport_OrderClient_byBoatDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 138
-    Top = 111
+    Left = 146
+    Top = 179
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -70,6 +70,23 @@ object Report_OrderClient_byBoatDialogForm: TReport_OrderClient_byBoatDialogForm
     TabOrder = 6
     Width = 148
   end
+  object cxLabel15: TcxLabel
+    Left = 8
+    Top = 97
+    Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+  end
+  object edOrderClient: TcxButtonEdit
+    Left = 8
+    Top = 120
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 257
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -77,8 +94,8 @@ object Report_OrderClient_byBoatDialogForm: TReport_OrderClient_byBoatDialogForm
     Top = 32
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 192
-    Top = 72
+    Left = 200
+    Top = 140
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -90,8 +107,8 @@ object Report_OrderClient_byBoatDialogForm: TReport_OrderClient_byBoatDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 176
-    Top = 108
+    Left = 184
+    Top = 176
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -118,8 +135,105 @@ object Report_OrderClient_byBoatDialogForm: TReport_OrderClient_byBoatDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_OrderClient'
+        Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_OrderClient'
+        Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 64
-    Top = 96
+    Left = 72
+    Top = 164
+  end
+  object GuidesOrderClient: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edOrderClient
+    FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderClientJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesOrderClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterClientName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ClientId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ClientName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 140
+    Top = 83
   end
 end
