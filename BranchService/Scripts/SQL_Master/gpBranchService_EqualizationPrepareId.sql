@@ -192,7 +192,13 @@ BEGIN
           AND (UD.table_name NOT ILIKE ('Movement%') OR COALESCE(Movement.ID, 0) <> 0)
         ORDER BY UD.ID;    
       END IF;
-              
+    END IF;
+           
+    IF EXISTS(SELECT 1
+              FROM _replica.BranchService_Equalization_Id AS UD
+              WHERE UD.ReplServerId = inReplServerId
+              LIMIT 1)
+    THEN   
       -- Получили дату и ID последней транзакции          
       SELECT MAX(UD.ID), MAX(UD.Last_Modified) 
       INTO vbId, vbDayeEnd
@@ -200,7 +206,7 @@ BEGIN
       WHERE UD.ReplServerId = inReplServerId;
     ELSE
       vbId := inStartId;
-      vbDayeEnd := timezone('utc'::text, CLOCK_TIMESTAMP()) - (inOffsetTime::TEXT||' MIN')::INTERVAL;
+      vbDayeEnd :=  timezone('utc'::text, CLOCK_TIMESTAMP()) - (inOffsetTime::TEXT||' MIN')::INTERVAL;
     END IF;
     
     -- Результат
@@ -223,5 +229,4 @@ $BODY$
 */
 
 -- Тест
--- 
-select * from _replica.gpBranchService_EqualizationPrepareId(2326484, '', '01.03.2022', 222436718960, 10000, 10, '0');
+-- select * from _replica.gpBranchService_EqualizationPrepareId(1, '', '01.03.2022', 22247208873, 10000, 10, '0');

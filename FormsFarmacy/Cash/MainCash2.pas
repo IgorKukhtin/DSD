@@ -14960,7 +14960,8 @@ begin
         SalePromoGoodsCDS.Filter := 'EndPromo >= ' + FloatToStr(Date) + ' and GoodsPresentId = ' + CheckCDS.FieldByName('GoodsId').AsString;
         SalePromoGoodsCDS.Filtered := True;
 
-        if not SalePromoGoodsCDS.IsEmpty then
+        if not SalePromoGoodsCDS.IsEmpty and (not SalePromoGoodsCDS.FieldByName('isDiscountInformation').AsBoolean or
+          (CheckCDS.FieldByName('Price').AsCurrency <> CheckCDS.FieldByName('PriceSale').AsCurrency)) then
         begin
           CheckCDS.Edit;
           CheckCDS.FieldByName('isGoodsPresent').AsBoolean := True;
