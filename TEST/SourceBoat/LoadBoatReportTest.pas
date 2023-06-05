@@ -59,18 +59,22 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+   {
     LoadReportFromFile('PrintMovement_Invoice', ReportPath + '\PrintMovement_Invoice.fr3');
+    exit;
+    }
+    LoadReportFromFile('PrintReport_OrderClientByBoatGoods', ReportPath + '\PrintReport_OrderClientByBoatGoods.fr3');
     exit;
     LoadReportFromFile('PrintReport_OrderClientByBoat', ReportPath + '\PrintReport_OrderClientByBoat.fr3');
     LoadReportFromFile('PrintReport_OrderClientByBoatMov', ReportPath + '\PrintReport_OrderClientByBoatMov.fr3');
-
+    {
     LoadReportFromFile('PrintMovement_ProductionUnionCalc', ReportPath + '\PrintMovement_ProductionUnionCalc.fr3');
 
     LoadReportFromFile('PrintMovement_ProductionUnion', ReportPath + '\PrintMovement_ProductionUnion.fr3');
 
-    {LoadReportFromFile('PrintMovement_OrderInternal', ReportPath + '\PrintMovement_OrderInternal.fr3');
+    LoadReportFromFile('PrintMovement_OrderInternal', ReportPath + '\PrintMovement_OrderInternal.fr3');
     exit;
-    }
+
     LoadReportFromFile('Отчет Движение по комплектующим (партия заказ)', ReportPath + '\Отчет Движение по комплектующим (партия заказ).fr3');
 
     LoadReportFromFile('Отчет Движение по комплектующим (кол-во)', ReportPath + '\Отчет Движение по комплектующим (кол-во).fr3');
@@ -79,7 +83,7 @@ begin
 
     LoadReportFromFile('PrintMovement_Send_3', ReportPath + '\PrintMovement_Send_3.fr3');
 
-    {
+
     LoadReportFromFile('PrintMovement_Send_2', ReportPath + '\PrintMovement_Send_2.fr3');
     LoadReportFromFile('PrintMovement_Send', ReportPath + '\PrintMovement_Send.fr3');
     LoadReportFromFile('PrintMovement_IncomeSticker', ReportPath + '\PrintMovement_IncomeSticker.fr3');

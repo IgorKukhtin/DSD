@@ -261,7 +261,7 @@
     TabOrder = 1
   end
   object Main1: TcxPageControl
-    Left = 1
+    Left = 2
     Top = 8
     Width = 337
     Height = 655
@@ -695,6 +695,9 @@
     object Child: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1091#1079#1083#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid3: TcxGrid
         Left = 0
         Top = 0

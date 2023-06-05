@@ -37,7 +37,8 @@ BEGIN
    -- ЦЕХ упаковки
    --IF inUnitId IN (8451) THEN RETURN; END IF
    
-   --IF inStartDate <= '07.07.2022' THEN RETURN; END IF;
+   --IF inStartDate <= '03.05.2023' THEN RETURN; END IF;
+
 /*
 IF inUnitId NOT IN (951601) -- ЦЕХ упаковки мясо
 THEN

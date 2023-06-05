@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement (
     IN inInvNumber    TVarChar,
     IN inOperDate     TDateTime,
     IN inParentId     Integer,
-    IN inAccessKeyId  Integer,  DEFAULT NULL
-    IN inUserId       Integer   DEFAULT 0 -- Пользователь
+    IN inAccessKeyId  Integer DEFAULT NULL,
+    IN inUserId       Integer DEFAULT 0 -- Пользователь
 )
 RETURNS Integer
 AS
@@ -34,7 +34,7 @@ BEGIN
 
 
      -- Проверка - Гриневич К.А.
-     IF inUserId IN (9031170)
+     IF inUserId IN (9031170) OR inDescId = zc_Movement_Cash()
      THEN
          PERFORM lpCheckPeriodClose_local (inOperDate, ioId, inDescId, inUserId);
      END IF;
