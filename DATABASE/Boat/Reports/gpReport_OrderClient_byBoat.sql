@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpReport_OrderClient_byBoat (TDateTime, TDateTime, Boole
 DROP FUNCTION IF EXISTS gpReport_OrderClient_byBoat (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_OrderClient_byBoat (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_OrderClient_byBoat (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderClient_byBoat (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_OrderClient_byBoat (
     IN inStartDate              TDateTime ,
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpReport_OrderClient_byBoat (
     IN inMovementId_OrderClient Integer,
     IN inObjectId               Integer   , 
     IN inisDetail               Boolean   , -- развернуть по лодкам
+    IN inisOnlyChild            Boolean   , -- только Сhild или только Detail
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS TABLE  (MovementId Integer
@@ -138,10 +140,10 @@ BEGIN
                           , MILinkObject_Partner.ObjectId             AS PartnerId
 
                             -- какой узел собирается = zc_MI_Child.ObjectId, всегда заполнен
-                          , COALESCE (MILinkObject_Goods.ObjectId, 0)       AS GoodsId
+                          , CASE WHEN inisOnlyChild = TRUE THEN MovementItem.ObjectId ELSE COALESCE (MILinkObject_Goods.ObjectId, 0) END  AS GoodsId
                           , COALESCE (MILinkObject_Goods_basis.ObjectId, 0) AS GoodsId_basis
                             -- Комплектующие / Работы/Услуги
-                          , MovementItem.ObjectId                     AS ObjectId
+                          , CASE WHEN inisOnlyChild = TRUE THEN 0 ELSE MovementItem.ObjectId END AS ObjectId
                             --  Опция
                           , MILinkObject_ProdOptions.ObjectId         AS ProdOptionsId
                             -- Шаблон Boat Structure
@@ -156,7 +158,7 @@ BEGIN
                           , MIFloat_AmountPartner.ValueData           AS AmountPartner
                      FROM tmpMovement AS Movement
                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                 AND MovementItem.DescId = zc_MI_Detail()
+                                                 AND MovementItem.DescId = CASE WHEN inisOnlyChild = TRUE THEN zc_MI_Child() ELSE zc_MI_Detail() END
                                                  AND MovementItem.isErased = FALSE
                                                  AND (MovementItem.ObjectId = inObjectId OR inObjectId = 0)
 
@@ -207,6 +209,7 @@ BEGIN
                              , tmpItem_Detail.MonthBegin
                         FROM tmpMI_Detail AS tmpItem_Detail
                         WHERE tmpItem_Detail.GoodsId_basis > 0
+                           AND inisOnlyChild = FALSE
                        UNION ALL
                         -- уровень 2 - собираем узлы и подставляем "виртуальные" узлы
                         SELECT DISTINCT
@@ -235,19 +238,19 @@ BEGIN
                           , CASE WHEN inisDetail = TRUE THEN tmp.GoodsId_basis ELSE 0 END AS GoodsId_basis
                           , CASE WHEN inisDetail = TRUE THEN tmp.GoodsId ELSE 0 END AS GoodsId
                           , CASE WHEN inisDetail = TRUE THEN tmp.ReceiptLevelId ELSE 0 END AS ReceiptLevelId
-                          , SUM (tmp.Amount) AS Amount
-                          , SUM (CASE WHEN tmp.MonthBegin = 1 THEN tmp.Amount ELSE 0 END) AS Amount1
-                          , SUM (CASE WHEN tmp.MonthBegin = 2 THEN tmp.Amount ELSE 0 END) AS Amount2
-                          , SUM (CASE WHEN tmp.MonthBegin = 3 THEN tmp.Amount ELSE 0 END) AS Amount3
-                          , SUM (CASE WHEN tmp.MonthBegin = 4 THEN tmp.Amount ELSE 0 END) AS Amount4
-                          , SUM (CASE WHEN tmp.MonthBegin = 5 THEN tmp.Amount ELSE 0 END) AS Amount5
-                          , SUM (CASE WHEN tmp.MonthBegin = 6 THEN tmp.Amount ELSE 0 END) AS Amount6
-                          , SUM (CASE WHEN tmp.MonthBegin = 7 THEN tmp.Amount ELSE 0 END) AS Amount7
-                          , SUM (CASE WHEN tmp.MonthBegin = 8 THEN tmp.Amount ELSE 0 END) AS Amount8
-                          , SUM (CASE WHEN tmp.MonthBegin = 9 THEN tmp.Amount ELSE 0 END) AS Amount9
-                          , SUM (CASE WHEN tmp.MonthBegin = 10 THEN tmp.Amount ELSE 0 END) AS Amount10
-                          , SUM (CASE WHEN tmp.MonthBegin = 11 THEN tmp.Amount ELSE 0 END) AS Amount11
-                          , SUM (CASE WHEN tmp.MonthBegin = 12 THEN tmp.Amount ELSE 0 END) AS Amount12
+                          , SUM (COALESCE (tmp.Amount,0)) AS Amount
+                          , SUM (CASE WHEN tmp.MonthBegin = 1 THEN COALESCE (tmp.Amount,0) ELSE 0 END) AS Amount1
+                          , SUM (CASE WHEN tmp.MonthBegin = 2 THEN COALESCE (tmp.Amount,0) ELSE 0 END) AS Amount2
+                          , SUM (CASE WHEN tmp.MonthBegin = 3 THEN COALESCE (tmp.Amount,0) ELSE 0 END) AS Amount3
+                          , SUM (CASE WHEN tmp.MonthBegin = 4 THEN COALESCE (tmp.Amount,0) ELSE 0 END) AS Amount4
+                          , SUM (CASE WHEN tmp.MonthBegin = 5 THEN COALESCE (tmp.Amount,0) ELSE 0 END) AS Amount5
+                          , SUM (CASE WHEN tmp.MonthBegin = 6 THEN COALESCE (tmp.Amount,0) ELSE 0 END) AS Amount6
+                          , SUM (CASE WHEN tmp.MonthBegin = 7 THEN COALESCE (tmp.Amount,0) ELSE 0 END) AS Amount7
+                          , SUM (CASE WHEN tmp.MonthBegin = 8 THEN COALESCE (tmp.Amount,0) ELSE 0 END) AS Amount8
+                          , SUM (CASE WHEN tmp.MonthBegin = 9 THEN COALESCE (tmp.Amount,0) ELSE 0 END) AS Amount9
+                          , SUM (CASE WHEN tmp.MonthBegin = 10 THEN COALESCE (tmp.Amount,0) ELSE 0 END) AS Amount10
+                          , SUM (CASE WHEN tmp.MonthBegin = 11 THEN COALESCE (tmp.Amount,0) ELSE 0 END) AS Amount11
+                          , SUM (CASE WHEN tmp.MonthBegin = 12 THEN COALESCE (tmp.Amount,0) ELSE 0 END) AS Amount12
                           , ROW_Number() OVER (PARTITION BY tmp.ObjectId) AS Ord
                     FROM tmpItem_Detail AS tmp
                     GROUP BY CASE WHEN inisDetail = TRUE THEN tmp.ProductId ELSE 0 END
@@ -495,4 +498,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inObjectId := 0, inisDetail := False ,inSession := '5');
--- SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inMovementId_OrderClient:=0 , inObjectId := 252790, inisDetail := true ,inSession := '5')
+-- SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inMovementId_OrderClient:=0 , inObjectId := 252790, inisDetail := true, inisOnlyChild:= FALSE ,inSession := '5')

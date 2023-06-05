@@ -69,6 +69,11 @@ type
     cxLabel15: TcxLabel;
     edOrderClient: TcxButtonEdit;
     AmountIn: TcxGridDBColumn;
+    actPrint4: TdsdPrintAction;
+    bbPrint4: TdxBarButton;
+    spSelectPrint4: TdsdStoredProc;
+    cbisOnlyChild: TcxCheckBox;
+    actRefreshGoods: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

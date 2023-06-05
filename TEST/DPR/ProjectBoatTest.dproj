@@ -727,10 +727,6 @@
 				<Form>IncomeJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Kind\TaxKindEdit.pas">
-				<Form>TaxKindEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\OrderClientJournal.pas">
 				<Form>OrderClientJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1230,6 +1226,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Guides\ProdColorPatternGoodsEdit.pas">
 				<Form>ProdColorPatternGoodsEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Kind\TaxKindEdit.pas">
+				<Form>TaxKindEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
