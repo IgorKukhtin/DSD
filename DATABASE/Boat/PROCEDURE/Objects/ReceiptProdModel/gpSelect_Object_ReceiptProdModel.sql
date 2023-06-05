@@ -340,7 +340,7 @@ BEGIN
                       ON tmpMaterialOptions.ReceiptProdModelId = Object_ReceiptProdModel.Id
 
           LEFT JOIN (SELECT tmpChild.ReceiptProdModelId
-                          , STRING_AGG (tmpChild.ProdColorName, ';') AS ProdColorName
+                          , STRING_AGG (DISTINCT tmpChild.ProdColorName, ';') AS ProdColorName
                      FROM (SELECT tmpReceiptProdModelChild.ReceiptProdModelId, tmpReceiptGoodsChild.ProdColorName
                            FROM tmpReceiptProdModelChild
                                 INNER JOIN tmpReceiptGoodsChild ON tmpReceiptGoodsChild.ReceiptProdModelChildId = tmpReceiptProdModelChild.ReceiptProdModelChildId

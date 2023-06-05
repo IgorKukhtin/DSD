@@ -537,8 +537,8 @@ END IF;
      END IF;
 
 
-     -- 4. Клиент
-     IF inTitle ILIKE 'client'
+     -- 4. Клиент - !!!не загружать!!!
+     IF inTitle ILIKE 'client' AND 1=0
      THEN
          -- Проверка
          IF inTitle1 ILIKE 'name' AND TRIM (inValue1) = ''
@@ -713,7 +713,7 @@ END IF;
                                                                              WHERE Object_ReceiptProdModel.DescId = zc_Object_ReceiptProdModel()
                                                                                AND Object_ReceiptProdModel.isErased = FALSE
                                                                             )
-                                              , inClientId              := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_From() AND MLO.MovementId = ioMovementId_OrderClient)
+                                              , inClientId              := -1 -- (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_From() AND MLO.MovementId = ioMovementId_OrderClient)
                                               , inIsBasicConf           := -- включать базовую Комплектацию
                                                                            COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.DescId = zc_ObjectBoolean_Product_BasicConf() AND OB.ObjectId = ioProductId)
                                                                                    , TRUE)
@@ -738,6 +738,7 @@ END IF;
                                               , inDiscountNextTax       := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_DiscountNextTax()), 0)
                                               , ioSummTax               := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_SummTax()), 0)
                                               , ioSummReal              := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_SummReal()), 0)
+                                              , inTransportSumm_load    := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_TransportSumm_load()), 0)
                                               , inDateStart             := NULL
                                               , inDateBegin             := COALESCE ((SELECT OD.ValueData FROM ObjectDate AS OD WHERE OD.DescId = zc_ObjectDate_Product_DateBegin() AND OD.ObjectId = ioProductId), CURRENT_DATE + INTERVAL '3 MONTH')
                                               , inDateSale              := NULL
@@ -792,7 +793,7 @@ END IF;
                                                                              , ioSummTax            := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_SummTax()), 0)
                                                                              , ioSummReal           := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_SummReal()), 0)
                                                                              , inTransportSumm_load := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioMovementId_OrderClient AND MF.DescId = zc_MovementFloat_TransportSumm_load()), 0)
-                                                                             , inFromId             := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_From() AND MLO.MovementId = ioMovementId_OrderClient)
+                                                                             , inFromId             := -1 -- (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_From() AND MLO.MovementId = ioMovementId_OrderClient)
                                                                              , inToId               := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_To() AND MLO.MovementId = ioMovementId_OrderClient), zc_Unit_Production())
                                                                              , inPaidKindId         := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_PaidKind() AND MLO.MovementId = ioMovementId_OrderClient), zc_Enum_PaidKind_FirstForm())
                                                                              , inProductId          := ioProductId
@@ -865,6 +866,7 @@ END IF;
          -- 6.1. нашли ProdOptions
          IF inTitle1 ILIKE 'id' AND TRIM (inValue1) <> ''
          THEN
+             -- если есть Цвет + несколько Id_Site
              IF vbColor_title <> '' AND 1 < (SELECT COUNT(*) FROM Object JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue1 WHERE Object.DescId = zc_Object_ProdOptions() AND Object.isErased = FALSE)
              THEN
                  -- поиск по Id_Site + color
@@ -889,8 +891,12 @@ END IF;
                                     FROM Object
                                          JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue1
                                     WHERE Object.DescId = zc_Object_ProdOptions() AND Object.isErased = FALSE
+                                      -- !!!временно ошибка Id_Site одинаковый!!!
+                                      AND (Object.ValueData ILIKE CASE WHEN inTitle4 ILIKE 'variant_title' THEN inValue4 ELSE inValue2 END
+                                        OR SUBSTRING (inValue1 FROM LENGTH(inValue1) FOR 1) <> '_'
+                                          )
                                     ORDER BY Object.Id
-                                    LIMIT 1
+                                    LIMIT CASE WHEN SUBSTRING (inValue1 FROM LENGTH(inValue1) FOR 1) = '_' THEN 2 ELSE 1 END
                                    );
              END IF;
 
@@ -966,6 +972,8 @@ END IF;
          -- 6.1. Проверка - Name Options должен соответствовать
          IF (inTitle ILIKE 'devices' OR inTitle ILIKE 'light' OR inTitle ILIKE 'accessories' OR inTitle ILIKE 'title')
             AND NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbProdOptionsId AND Object.ValueData ILIKE CASE WHEN inTitle4 ILIKE 'variant_title' THEN inValue4 ELSE inValue2 END AND Object.isErased = FALSE)
+            -- !!!временно ошибка Id_Site одинаковый!!!
+            AND SUBSTRING (inValue1 FROM LENGTH(inValue1) FOR 1) <> '_'
          THEN
              --***
              -- !!!временно замена, т.к. другой Name!!!

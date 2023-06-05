@@ -65,6 +65,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceLviv() RETUR
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PersonalServiceIrna() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_PersonalServiceIrna' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Cash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Cash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashAll' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashOfficialDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashOfficialDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -109,6 +110,14 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentIrna() RETURNS Inte
 
 DO $$
 BEGIN
+
+ -- дл€ ....
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Cash()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 2
+                                   , inName:= '–азрешено изменение кассы больше чем за 1 день.'
+                                   , inEnumName:= 'zc_Enum_Process_Update_Cash');
+                                   
 
  -- дл€ ....
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_MI_OperPrice()

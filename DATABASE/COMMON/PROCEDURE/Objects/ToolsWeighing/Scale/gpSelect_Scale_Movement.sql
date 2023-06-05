@@ -183,6 +183,7 @@ BEGIN
                                           ON MovementLinkObject_User.MovementId = Movement.Id
                                          AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
                                          AND (MovementLinkObject_User.ObjectId = vbUserId OR vbUserId = 0)
+                                         
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
 
             INNER JOIN MovementFloat AS MovementFloat_BranchCode

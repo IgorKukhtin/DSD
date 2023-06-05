@@ -41,7 +41,7 @@ BEGIN
                       );
 
   -- Проверка - Гриневич К.А.
-  IF inUserId IN (9031170)
+  IF inUserId IN (9031170) OR vbDescId = zc_Movement_Cash()
   THEN
       PERFORM lpCheckPeriodClose_local (vbOperDate, inMovementId, vbDescId, inUserId);
   END IF;

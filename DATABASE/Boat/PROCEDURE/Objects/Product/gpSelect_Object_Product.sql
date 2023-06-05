@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_Product()
+16:32 03.06.2023-- Function: gpSelect_Object_Product()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Product (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Product (Boolean, Boolean, TVarChar);
