@@ -21,7 +21,8 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   dsdGuides, cxMaskEdit, cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxDropDownEdit, cxCalendar, cxCheckBox, dxSkinsdxBarPainter, dxBarExtItems,
-  dxBar, cxClasses, Vcl.ExtCtrls, Data.DB, Datasnap.DBClient;
+  dxBar, cxClasses, Vcl.ExtCtrls, Data.DB, Datasnap.DBClient,
+  dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxPC;
 
 type
   TProductEditForm = class(TParentForm)
@@ -164,6 +165,27 @@ type
     edSummTax: TcxCurrencyEdit;
     cxLabel37: TcxLabel;
     edSummReal: TcxCurrencyEdit;
+    cxLabel38: TcxLabel;
+    cxLabel39: TcxLabel;
+    ceAmountInInvoice2: TcxCurrencyEdit;
+    ceAmountInInvoiceAll2: TcxCurrencyEdit;
+    cxLabel40: TcxLabel;
+    ceAmountInBankAccount2: TcxCurrencyEdit;
+    ceAmountInBankAccountAll2: TcxCurrencyEdit;
+    cxLabel41: TcxLabel;
+    edSummaBank: TcxCurrencyEdit;
+    cxLabel42: TcxLabel;
+    cxLabel43: TcxLabel;
+    edOperDateBankAccount: TcxDateEdit;
+    spInsertUpdateBank: TdsdStoredProc;
+    edInvNumberBankAccount3: TcxTextEdit;
+    edInvNumberBankAccountText: TcxLabel;
+    cxLabel45: TcxLabel;
+    ceBankAccount: TcxButtonEdit;
+    GuidesBankAccount: TdsdGuides;
+    cxPageControl1: TcxPageControl;
+    cxTabSheet1: TcxTabSheet;
+    cxTabSheet2: TcxTabSheet;
   private
     { Private declarations }
   public
