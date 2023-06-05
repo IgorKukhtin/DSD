@@ -103,16 +103,13 @@ BEGIN
                                             , inUserId        := vbUserId
                                              );
    END IF;
-   
+
    -- Проверка
-   IF COALESCE (inClientId, 0) = 0
+   IF COALESCE (inClientId, 0) = 0 AND COALESCE (inClientId, 0) <> -1
    THEN
-       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть определен <Kunden>.' :: TVarChar
-                                             , inProcedureName := 'gpInsertUpdate_Object_Product'
-                                             , inUserId        := vbUserId
-                                              );
+       RAISE EXCEPTION 'Ошибка.Должен быть определен <Kunden>(%).', inClientId ;
    END IF;
-   
+
 
    -- Проверка
    IF COALESCE (inModelId, 0) = 0
@@ -241,7 +238,7 @@ BEGIN
                                                  , ioSummTax          := ioSummTax                 ::TFloat
                                                  , ioSummReal         := ioSummReal                ::TFloat
                                                  , inTransportSumm_load := inTransportSumm_load
-                                                 , inFromId           := inClientId                ::Integer             --пересохраняем
+                                                 , inFromId           := inClientId
                                                  , inToId             := tmp.ToId                  ::Integer
                                                  , inPaidKindId       := tmp.PaidKindId            ::Integer
                                                  , inProductId        := ioId                      ::Integer
@@ -350,7 +347,7 @@ BEGIN
                                                                , inInvNumberPartner := ''                                  ::TVarChar
                                                                , inReceiptNumber    := ''                                  ::TVarChar
                                                                , inComment          := ''                                  ::TVarChar
-                                                               , inObjectId         := inClientId
+                                                               , inObjectId         := CASE WHEN inClientId < 0 THEN NULL ELSE inClientId END
                                                                , inUnitId           := Null                                ::Integer
                                                                , inInfoMoneyId      := ObjectLink_InfoMoney.ChildObjectId  ::Integer
                                                                , inPaidKindId       := zc_Enum_PaidKind_FirstForm()        ::Integer
@@ -446,7 +443,7 @@ BEGIN
                 HAVING COUNT(*) > 1
                )
                ;
-               
+
      END IF;
 
 

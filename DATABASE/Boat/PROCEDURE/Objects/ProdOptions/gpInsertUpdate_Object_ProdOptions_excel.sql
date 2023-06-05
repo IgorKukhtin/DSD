@@ -147,6 +147,7 @@ END IF;
                                              , inCodeVergl         := zfConvert_StringToNumber (inCodeVergl)
                                              , inName              := COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = vbId), inOptName)
                                              , inSalePrice         := inSalePrice
+                                             , inAmount            := COALESCE ((SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = vbId AND OFl.DescId = zc_ObjectFloat_ProdOptions_Amount()), 0)
                                              , inComment           := ''
                                              , inId_Site           := inId_site
                                              , inGoodsId           := NULL

@@ -35,12 +35,9 @@ $BODY$
    DECLARE vbisComplete_Invoice Boolean;
 BEGIN
      -- Проверка
-     IF COALESCE (inFromId, 0) = 0
+     IF COALESCE (inFromId, 0) = 0 AND COALESCE (inFromId, 0) <> -1
      THEN
-         RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть определен <Kunden>.' :: TVarChar
-                                               , inProcedureName := 'lpInsertUpdate_Movement_OrderClient'
-                                               , inUserId        := inUserId
-                                                );
+         RAISE EXCEPTION 'Ошибка.Должен быть определен <Kunden>(%).', inFromId;
      END IF;
 
      -- определяем признак Создание/Корректировка
@@ -52,7 +49,7 @@ BEGIN
      -- сохранили свойство <Цена с НДС (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
      -- сохранили связь с <От кого (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
+     IF COALESCE (inFromId, 0) <> -1 THEN PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId); END IF;
      -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
      -- сохранили связь с <ФО>
@@ -214,7 +211,7 @@ BEGIN
                                                                 , inBasisPrice    := (SELECT gpSelect.Basis_summ1_orig FROM gpSelect)
                                                                   --
                                                                 , inCountForPrice := 1  ::TFloat
-                                                                , inComment       := '' ::TVarChar
+                                                                , inComment       := COALESCE ((SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbMI_Id AND MIS.DescId = zc_MIString_Comment()), '')
                                                                 , inUserId        := inUserId
                                                                  ) AS tmp
                    );

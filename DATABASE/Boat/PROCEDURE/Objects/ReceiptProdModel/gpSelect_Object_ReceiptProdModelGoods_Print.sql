@@ -430,6 +430,26 @@ BEGIN
                        FROM tmpItems
                             FULL JOIN tmpObject ON tmpObject.ReceiptGoodsId     = tmpItems.ReceiptGoodsId
                                                AND tmpObject.ProdColorPatternId = tmpItems.ProdColorPatternId
+                      UNION ALL
+                       SELECT DISTINCT
+                              0                                                                    AS ReceiptGoodsChildId
+                            , tmpItems.GoodsMainId                                                 AS GoodsMainId
+                            , tmpItems.GoodsChildId                                                AS ObjectId
+                            , tmpItems.ReceiptGoodsId                                              AS ReceiptGoodsId
+
+                            , 0 AS ProdColorPatternId
+                              -- нашли Этап сборки
+                            , 0 AS ReceiptLevelId
+                              -- нашли Комплектующие
+                            , 0 AS GoodsChildId
+
+                            , 1       AS Value
+                            , ''      AS Comment
+                            , FALSE   AS isErased
+                            , TRUE    AS isEnabled
+
+                       FROM tmpItems
+                       WHERE tmpItems.GoodsChildId > 0
                       ),
           -- существующие элементы Boat Structure
           tmpItemsGoodsChild AS (SELECT DISTINCT ObjectLink_ReceiptGoods.ChildObjectId                     AS ReceiptGoodsId
@@ -498,12 +518,14 @@ BEGIN
                     Object_GoodsMainGroup.ValueData)    ::TVarChar  AS GoodsGroupNameShow
                               
          , CASE WHEN COALESCE(tmpProdColorPattern.GoodsChildId, 0) = 0
-                THEN COALESCE(ObjectString_ArticleChildMain.ValueData, '')||
-                     CASE WHEN COALESCE(ObjectString_ArticleChildMain.ValueData, '') <> '' AND COALESCE(Object_GoodsMain.ValueData, '') <> '' THEN ' - ' ELSE '' END||
-                     COALESCE(Object_GoodsMain.ValueData, '')
-                ELSE COALESCE(ObjectString_ArticleChild.ValueData, '')||
-                     CASE WHEN COALESCE(ObjectString_ArticleChild.ValueData, '') <> '' AND COALESCE(Object_GoodsChildGroup.ValueData, '') <> '' THEN ' - ' ELSE '' END||
-                     COALESCE(Object_GoodsChildGroup.ValueData, '') END:: TVarChar AS TitleGroup
+                THEN COALESCE(ObjectString_ArticleChildMain.ValueData, '')
+                  || CASE WHEN COALESCE(ObjectString_ArticleChildMain.ValueData, '') <> '' AND COALESCE(Object_GoodsMain.ValueData, '') <> '' THEN ' - ' ELSE '' END
+                  || COALESCE(Object_GoodsMain.ValueData, '')
+                ELSE COALESCE(ObjectString_ArticleChild.ValueData, '')
+                  || CASE WHEN COALESCE(ObjectString_ArticleChild.ValueData, '') <> '' AND COALESCE(Object_GoodsChildGroup.ValueData, '') <> '' THEN ' - ' ELSE '' END
+                  || COALESCE(Object_GoodsChild.ValueData, '')
+                --|| COALESCE(Object_GoodsChildGroup.ValueData, '')
+           END :: TVarChar AS TitleGroup
                      
          , COALESCE (tmpItemsGoodsChild.ReceiptGoodsId, 0) <> 0  AS isGoodsChild
      FROM tmpProdColorPattern
