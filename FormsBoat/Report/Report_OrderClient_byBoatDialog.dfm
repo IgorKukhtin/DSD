@@ -63,8 +63,8 @@ object Report_OrderClient_byBoatDialogForm: TReport_OrderClient_byBoatDialogForm
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cbisProduct: TcxCheckBox
-    Left = 45
-    Top = 67
+    Left = 8
+    Top = 70
     Caption = #1055#1086' '#1083#1086#1076#1082#1072#1084' ('#1044#1072'/'#1053#1077#1090')'
     Properties.ReadOnly = False
     TabOrder = 6
@@ -86,6 +86,15 @@ object Report_OrderClient_byBoatDialogForm: TReport_OrderClient_byBoatDialogForm
     Properties.ReadOnly = True
     TabOrder = 8
     Width = 257
+  end
+  object cbisOnlyChild: TcxCheckBox
+    Left = 146
+    Top = 70
+    Hint = #1058#1086#1083#1100#1082#1086' '#1091#1079#1083#1099' ('#1044#1072'/'#1053#1077#1090')'
+    Caption = #1058#1086#1083#1100#1082#1086' '#1091#1079#1083#1099' ('#1044#1072'/'#1053#1077#1090')'
+    Properties.ReadOnly = False
+    TabOrder = 9
+    Width = 141
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -150,6 +159,14 @@ object Report_OrderClient_byBoatDialogForm: TReport_OrderClient_byBoatDialogForm
         Component = GuidesOrderClient
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOnlyChild'
+        Value = Null
+        Component = cbisOnlyChild
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

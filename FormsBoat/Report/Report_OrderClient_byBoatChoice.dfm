@@ -1039,6 +1039,13 @@ inherited Report_OrderClient_byBoatChoiceForm: TReport_OrderClient_byBoatChoiceF
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOnlyChild'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 208
@@ -1353,6 +1360,13 @@ inherited Report_OrderClient_byBoatChoiceForm: TReport_OrderClient_byBoatChoiceF
       item
         Name = 'inisDetail'
         Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOnlyChild'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

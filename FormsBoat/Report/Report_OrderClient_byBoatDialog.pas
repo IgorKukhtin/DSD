@@ -37,6 +37,7 @@ type
     cxLabel15: TcxLabel;
     edOrderClient: TcxButtonEdit;
     GuidesOrderClient: TdsdGuides;
+    cbisOnlyChild: TcxCheckBox;
   private
     { Private declarations }
   public

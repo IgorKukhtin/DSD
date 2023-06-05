@@ -1,29 +1,29 @@
 inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
   Caption = #1054#1090#1095#1077#1090' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' '#1082#1083#1080#1077#1085#1090#1072'>'
   ClientHeight = 341
-  ClientWidth = 1071
+  ClientWidth = 972
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1087
+  ExplicitWidth = 988
   ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 55
-    Width = 1071
-    Height = 286
+    Top = 79
+    Width = 972
+    Height = 262
     TabOrder = 3
     ExplicitTop = 55
     ExplicitWidth = 1071
     ExplicitHeight = 286
-    ClientRectBottom = 286
-    ClientRectRight = 1071
+    ClientRectBottom = 262
+    ClientRectRight = 972
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1071
       ExplicitHeight = 286
       inherited cxGrid: TcxGrid
-        Width = 1071
-        Height = 286
+        Width = 972
+        Height = 262
         ExplicitWidth = 1071
         ExplicitHeight = 286
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -635,10 +635,10 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
     end
   end
   inherited Panel: TPanel
-    Width = 1071
-    Height = 29
+    Width = 972
+    Height = 53
     ExplicitWidth = 1071
-    ExplicitHeight = 29
+    ExplicitHeight = 53
     inherited deStart: TcxDateEdit
       Left = 118
       Top = 4
@@ -650,14 +650,14 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       Width = 80
     end
     inherited deEnd: TcxDateEdit
-      Left = 319
-      Top = 4
+      Left = 118
+      Top = 28
       EditValue = 44927d
       Properties.SaveTime = False
-      ExplicitLeft = 319
-      ExplicitTop = 4
-      ExplicitWidth = 82
-      Width = 82
+      ExplicitLeft = 118
+      ExplicitTop = 28
+      ExplicitWidth = 80
+      Width = 80
     end
     inherited cxLabel1: TcxLabel
       Left = 25
@@ -666,33 +666,33 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       ExplicitTop = 5
     end
     inherited cxLabel2: TcxLabel
-      Left = 208
-      Top = 5
-      ExplicitLeft = 208
-      ExplicitTop = 5
+      Left = 3
+      Top = 29
+      ExplicitLeft = 3
+      ExplicitTop = 29
     end
     object cbisDetail: TcxCheckBox
-      Left = 407
-      Top = 4
+      Left = 212
+      Top = 28
       Action = actRefreshEmpty
       Properties.ReadOnly = False
       TabOrder = 4
       Width = 127
     end
     object cxLabel3: TcxLabel
-      Left = 840
+      Left = 643
       Top = 5
       Caption = #1055#1077#1088#1074#1099#1081' '#1084#1077#1089#1103#1094' '#1089#1086#1086#1090#1074#1077#1090#1089#1090#1074#1091#1077#1090' '#1084#1077#1089#1103#1094#1091' '#1053#1072#1095#1072#1083#1072' '#1087#1077#1088#1080#1086#1076#1072
       Style.BorderColor = clHighlightText
       Style.TextColor = cl3DDkShadow
     end
     object cxLabel15: TcxLabel
-      Left = 552
+      Left = 212
       Top = 5
-      Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+      Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079':'
     end
     object edOrderClient: TcxButtonEdit
-      Left = 629
+      Left = 297
       Top = 4
       Properties.Buttons = <
         item
@@ -701,7 +701,15 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 200
+      Width = 232
+    end
+    object cbisOnlyChild: TcxCheckBox
+      Left = 371
+      Top = 28
+      Action = actRefreshGoods
+      Properties.ReadOnly = False
+      TabOrder = 8
+      Width = 141
     end
   end
   object lbSearchArticle: TcxLabel [2]
@@ -744,7 +752,20 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       end>
   end
   inherited ActionList: TActionList
-    object actRefreshEmpty: TdsdDataSetRefresh [0]
+    object actRefreshGoods: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1058#1086#1083#1100#1082#1086' '#1091#1079#1083#1099' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1058#1086#1083#1100#1082#1086' '#1091#1079#1083#1099' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshEmpty: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -753,7 +774,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
           StoredProc = spSelect
         end>
       Caption = #1055#1086' '#1083#1086#1076#1082#1072#1084' ('#1044#1072'/'#1053#1077#1090')'
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1055#1086' '#1083#1086#1076#1082#1072#1084' ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
@@ -807,6 +828,14 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
           Component = GuidesOrderClient
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isOnlyChild'
+          Value = Null
+          Component = cbisOnlyChild
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -999,6 +1028,52 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint4: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint4
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint4
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1051#1086#1076#1082#1072#1084
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1051#1086#1076#1082#1072#1084
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'ProductName;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReport_OrderClientByBoatGoods'
+      ReportNameParam.Value = 'PrintReport_OrderClientByBoatGoods'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PictureFields.Strings = (
+        'photo1')
+    end
     object actPrint3: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -1112,8 +1187,8 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
     Top = 208
   end
   inherited MasterCDS: TClientDataSet
-    Left = 40
-    Top = 208
+    Left = 32
+    Top = 192
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_OrderClient_byBoat'
@@ -1152,6 +1227,14 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
         Name = 'inisDetail'
         Value = Null
         Component = cbisDetail
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOnlyChild'
+        Value = Null
+        Component = cbisOnlyChild
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1206,10 +1289,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
           ItemName = 'bbReport_OC_ByBoatChoice'
         end
         item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -1219,21 +1299,26 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint2'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint3'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbPrint2'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbPrint4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbGridToExcel'
         end
@@ -1288,6 +1373,10 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
     end
     object bbReport_OC_ByBoatChoice: TdxBarButton
       Action = actReport_OC_ByBoatChoice
+      Category = 0
+    end
+    object bbPrint4: TdxBarButton
+      Action = actPrint4
       Category = 0
     end
   end
@@ -1501,6 +1590,13 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOnlyChild'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 464
@@ -1591,5 +1687,61 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       end>
     Left = 724
     Top = 7
+  end
+  object spSelectPrint4: TdsdStoredProc
+    StoredProcName = 'gpReport_OrderClient_byBoat'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 44927d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 44927d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = ''
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inObjectId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDetail'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOnlyChild'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 536
+    Top = 168
   end
 end
