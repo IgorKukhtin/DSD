@@ -197,6 +197,7 @@ BEGIN
       WHERE OL_Partner_Juridical.ChildObjectId = ioId
         AND OL_Partner_Juridical.DescId        = zc_ObjectLink_Partner_Juridical()
         AND vbName_old                         <> inName
+        AND Object_Street_View.CityName        <> ''
      ;
 
    -- проверка
