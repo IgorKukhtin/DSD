@@ -220,6 +220,11 @@ type
     Basis_summ_orig: TcxGridDBColumn;
     Basis_summ_transport: TcxGridDBColumn;
     BasisWVAT_summ_transport: TcxGridDBColumn;
+    actUpdate_BankAccount: TdsdInsertUpdateAction;
+    actUpdate_Invoice: TdsdInsertUpdateAction;
+    bbUpdateMov: TdxBarSubItem;
+    bbUpdate_Invoice: TdxBarButton;
+    bbUpdate_BankAccount: TdxBarButton;
   private
     { Private declarations }
   public

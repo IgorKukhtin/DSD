@@ -22,7 +22,7 @@ OPEN Cursor1 FOR
              tmpInvoice AS (SELECT tmp.*
                                  , Object_Insert.ValueData AS InsertName
                                  , Object.ObjectCode
-                            FROM gpGet_Movement_Invoice (inMovementId, CURRENT_DATE, inSession) AS tmp
+                            FROM gpGet_Movement_Invoice (inMovementId, 0 , 0 , 0 ,  CURRENT_DATE, inSession) AS tmp
                                  LEFT JOIN MovementLinkObject AS MLO_Insert
                                                               ON MLO_Insert.MovementId = tmp.Id
                                                              AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()

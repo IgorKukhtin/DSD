@@ -1,9 +1,13 @@
 -- Function: gpGet_Movement_Invoice()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Invoice (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Invoice (Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Invoice(
-    IN inMovementId        Integer  , -- ключ Документа
+    IN inMovementId        Integer  , -- ключ Документа 
+    IN inMovementId_OrderClient Integer,
+    IN inProductId         Integer,
+    IN inClientId          Integer,
     IN inOperDate          TDateTime , --
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -63,12 +67,12 @@ BEGIN
            , 0::TFloat                  AS AmountIn
            , 0::TFloat                  AS AmountOut
 
-           , 0                          AS ObjectId
-           , CAST ('' as TVarChar)      AS ObjectName
+           , Object_Object.Id           AS ObjectId
+           , Object_Object.ValueData    AS ObjectName
            , 0                          AS InfoMoneyId
            , CAST ('' as TVarChar)      AS InfoMoneyName
-           , 0                          AS ProductId
-           , CAST ('' as TVarChar)      AS ProductName
+           , Object_Product.Id          AS ProductId
+           , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
            , 0                          AS PaidKindId
            , CAST ('' as TVarChar)      AS PaidKindName
            , 0                          AS UnitId
@@ -77,10 +81,14 @@ BEGIN
            , CAST ('' as TVarChar)      AS InvNumberPartner
            , vbReceiptNumber:: TVarChar AS ReceiptNumber
            , CAST ('' as TVarChar)      AS Comment
-           , 0                          AS MovementId_parent
-           , CAST ('' as TVarChar)      AS InvNumber_parent
+           , Movement_Parent.Id ::Integer  AS MovementId_parent
+           , zfCalc_InvNumber_isErased (MovementDesc_Parent.ItemName, Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
 
-       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status 
+           LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = inMovementId_OrderClient
+           LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
+           LEFT JOIN Object AS Object_Object ON Object_Object.Id = inClientId
+           LEFT JOIN Object AS Object_Product ON Object_Product.Id = inProductId 
       ;
      ELSE
 

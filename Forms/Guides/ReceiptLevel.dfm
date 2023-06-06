@@ -64,7 +64,7 @@ object ReceiptLevelForm: TReceiptLevelForm
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'('#1054#1090' '#1082#1086#1075#1086')'
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentVert = vaCenter
-        Width = 209
+        Width = 156
       end
       object ToName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'('#1050#1086#1084#1091')'
@@ -92,7 +92,15 @@ object ReceiptLevelForm: TReceiptLevelForm
         DataBinding.FieldName = 'MovementDescName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 150
+        Width = 103
+      end
+      object DocumentKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+        DataBinding.FieldName = 'DocumentKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 119
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

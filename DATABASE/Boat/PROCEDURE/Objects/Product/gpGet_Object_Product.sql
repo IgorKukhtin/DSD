@@ -36,11 +36,16 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , OperDate_Invoice   TDateTime
              , InvNumber_Invoice  TVarChar
              , StatusCode_Invoice Integer
-             , StatusName_Invoice TVarChar
+             , StatusName_Invoice TVarChar  
+             , MovementId_BankAccount Integer
+             , InvNumber_BankAccount  TVarChar
+             , OperDate_BankAccount   TDateTime
+             , BankAccountId Integer, BankAccountName TVarChar
              , AmountIn_Invoice TFloat
              , AmountIn_InvoiceAll TFloat
              , AmountIn_BankAccount TFloat
              , AmountIn_BankAccountAll TFloat
+             , AmountIn_BankAccountLast TFloat
              , AmountIn_rem  TFloat
              , AmountIn_remAll  TFloat
               ) AS
@@ -120,9 +125,15 @@ BEGIN
            , Object_Status.Code        AS StatusCode_Invoice
            , Object_Status.Name        AS StatusName_Invoice
            , CAST (0 AS TFloat)        AS AmountIn_Invoice
-           , CAST (0 AS TFloat)        AS AmountIn_InvoiceAll
+           , CAST (0 AS TFloat)        AS AmountIn_InvoiceAll   
+           , CAST (0 AS Integer)       AS MovementId_BankAccount
+           , CAST ('' AS TVarChar)     AS InvNumber_BankAccount
+           , CAST (NULL AS TDateTime)  AS OperDate_BankAccount
+           , CAST (0 AS Integer)       AS BankAccountId
+           , CAST ('' AS TVarChar)     AS BankAccountName
            , CAST (0 AS TFloat)        AS AmountIn_BankAccount
            , CAST (0 AS TFloat)        AS AmountIn_BankAccountAll
+           , CAST (0 AS TFloat)        AS AmountIn_BankAccountLast
 
            , CAST (0 AS TFloat)        AS AmountIn_rem
            , CAST (0 AS TFloat)        AS AmountIn_remAll
@@ -216,8 +227,14 @@ BEGIN
                          )
 
        -- данные по оплате счетов
-     , tmpBankAccount AS (SELECT MovementLinkMovement.MovementChildId AS MovementId_Invoice
-                               , SUM (MovementItem.Amount)   ::TFloat AS AmountIn
+     , tmpBankAccount AS (SELECT MovementLinkMovement.MovementId AS MovementId_BankAccount
+                               , Movement_BankAccount.OperDate
+                               , Movement_BankAccount.InvNumber 
+                               , MovementItem.ObjectId AS BankAccountId
+                               , MovementLinkMovement.MovementChildId AS MovementId_Invoice
+                               , SUM (MovementItem.Amount)   ::TFloat AS AmountIn 
+                                -- последний док. оплаты
+                               , ROW_NUMBER () OVER (PARTITION BY MovementLinkMovement.MovementChildId ORDER BY MovementLinkMovement.MovementId Desc) AS Ord
                           FROM MovementLinkMovement
                                INNER JOIN Movement AS Movement_BankAccount
                                                    ON Movement_BankAccount.Id       = MovementLinkMovement.MovementId
@@ -229,6 +246,10 @@ BEGIN
                           WHERE MovementLinkMovement.MovementChildId IN (SELECT DISTINCT tmpInvoice.MovementId_Invoice FROM tmpInvoice)
                             AND MovementLinkMovement.DescId          = zc_MovementLinkMovement_Invoice()
                           GROUP BY MovementLinkMovement.MovementChildId
+                                 , MovementLinkMovement.MovementId
+                               , Movement_BankAccount.OperDate
+                               , Movement_BankAccount.InvNumber 
+                               , MovementItem.ObjectId 
                           )
 
 
@@ -310,8 +331,14 @@ BEGIN
          , tmpInvoice_First.OperDate           :: TDateTime  AS OperDate_Invoice
          , zfCalc_InvNumber_isErased ('', tmpInvoice_First.InvNumber, tmpInvoice_First.OperDate, tmpInvoice_First.StatusId) AS InvNumber_Invoice
          , tmpInvoice_First.StatusCode         :: Integer    AS StatusCode_Invoice
-         , tmpInvoice_First.StatusName         :: TVarChar   AS StatusName_Invoice
-
+         , tmpInvoice_First.StatusName         :: TVarChar   AS StatusName_Invoice   
+         
+         , tmpBankAccount_last.MovementId_BankAccount ::Integer    AS MovementId_BankAccount
+         , tmpBankAccount_last.InvNumber              :: TVarChar  AS InvNumber_BankAccount
+         , tmpBankAccount_last.OperDate               :: TDateTime AS OperDate_BankAccount 
+         , Object_BankAccount.Id                      ::Integer    AS BankAccountId
+         , Object_BankAccount.ValueData               :: TVarChar  AS BankAccountName
+         
           -- Сумма первого счета
          , tmpInvoice_First.AmountIn           ::TFloat AS AmountIn_Invoice
            -- ИТОГО по всем счетам
@@ -321,6 +348,8 @@ BEGIN
          , tmpBankAccount_First.AmountIn       ::TFloat AS AmountIn_BankAccount
            -- ИТОГО по всем оплатам
          , tmpBankAccount.AmountIn             ::TFloat AS AmountIn_BankAccountAll
+           -- оплата gjcktlybq ljrevtyn
+         , tmpBankAccount_last.AmountIn        ::TFloat AS AmountIn_BankAccountLast
 
            -- итого остаток к оплате по всем счетам
          , (COALESCE (tmpInvoice.AmountIn, 0) - COALESCE (tmpBankAccount.AmountIn,0))              ::TFloat AS AmountIn_rem
@@ -413,11 +442,16 @@ BEGIN
           -- данные первого счета
           LEFT JOIN tmpInvoice AS tmpInvoice_First ON tmpInvoice_First.Ord = 1
           -- ИТОГО оплата по первому счету
-          LEFT JOIN tmpBankAccount AS tmpBankAccount_first ON tmpBankAccount_first.MovementId_Invoice = tmpInvoice_First.MovementId_Invoice
+          LEFT JOIN (SELECT tmpBankAccount.MovementId_Invoice, SUM (tmpBankAccount.AmountIn) AS AmountIn
+                     FROM tmpBankAccount
+                     GROUP BY tmpBankAccount.MovementId_Invoice) AS tmpBankAccount_first ON tmpBankAccount_first.MovementId_Invoice = tmpInvoice_First.MovementId_Invoice
           -- ИТОГО по всем счетам
           LEFT JOIN (SELECT SUM (COALESCE (tmpInvoice.AmountIn,0)) AS AmountIn FROM tmpInvoice) AS tmpInvoice ON 1 = 1
           -- ИТОГО по всем оплатам
-          LEFT JOIN (SELECT SUM (COALESCE (tmpBankAccount.AmountIn,0)) AS AmountIn FROM tmpBankAccount) AS tmpBankAccount ON 1 = 1
+          LEFT JOIN (SELECT SUM (COALESCE (tmpBankAccount.AmountIn,0)) AS AmountIn FROM tmpBankAccount) AS tmpBankAccount ON 1 = 1 
+          
+          LEFT JOIN tmpBankAccount AS tmpBankAccount_last ON tmpBankAccount_last.ord = 1
+          LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = tmpBankAccount_last.BankAccountId
 
        WHERE Object_Product.Id = inId
       ;

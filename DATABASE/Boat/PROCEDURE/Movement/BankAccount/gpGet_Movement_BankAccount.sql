@@ -1,10 +1,14 @@
 -- Function: gpGet_Movement_Cash()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_BankAccount (Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_BankAccount (Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_BankAccount(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inMovementId_Value  Integer   ,
+    IN inMovementId_Value  Integer   ,  
+    IN inMovementId_Invoice   Integer   ,
+    IN inMovementId_parent Integer   ,
+    IN inMoneyPlaceId      Integer   ,
     IN inOperDate          TDateTime , --
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -46,14 +50,22 @@ BEGIN
            , '':: TVarChar                                     AS BankAccountName
            , 0                                                 AS BankId
            , '':: TVarChar                                     AS BankName
-           , 0                                                 AS MoneyPlaceId
-           , CAST ('' as TVarChar)                             AS MoneyPlaceName
-           , 0                                                 AS MovementId_Invoice
-           , CAST ('' as TVarChar)                             AS InvNumber_Invoice
-           , CAST ('' as TVarChar)                             AS Comment_Invoice
-           , 0                                                 AS MovementId_parent
-           , CAST ('' as TVarChar)                             AS InvNumber_parent
+           , Object_MoneyPlace.Id                              AS MoneyPlaceId
+           , Object_MoneyPlace.ValueData                       AS MoneyPlaceName
+           , Movement_Invoice.Id                               AS MovementId_Invoice
+           , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
+           , MovementString_Comment_Invoice.ValueData          AS Comment_Invoice
+           , Movement_Parent.Id             ::Integer  AS MovementId_parent
+           , zfCalc_InvNumber_isErased (MovementDesc_Parent.ItemName, Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+            LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = inMovementId_Invoice
+            LEFT JOIN MovementString AS MovementString_Comment_Invoice
+                                     ON MovementString_Comment_Invoice.MovementId = Movement_Invoice.Id
+                                    AND MovementString_Comment_Invoice.DescId = zc_MovementString_Comment()
+            LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = inMoneyPlaceId
+            LEFT JOIN Movement AS Movement_Parent
+                           ON Movement_Parent.Id = inMovementId_parent
+            LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
       ;
      ELSE
 
@@ -143,3 +155,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_Movement_BankAccount (inMovementId:= 271, inMovementId_Value:= 258394, inOperDate:= NULL :: TDateTime, inSession:= zfCalc_UserAdmin());
+--select * from gpGet_Movement_Invoice(inMovementId := 0 , inMovementId_OrderClient := 705 , inProductId := 254931 , inClientId := 253190 , inOperDate := ('01.01.1900')::TDateTime ,  inSession := '5');

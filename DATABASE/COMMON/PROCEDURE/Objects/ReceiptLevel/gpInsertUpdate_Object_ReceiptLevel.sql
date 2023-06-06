@@ -1,13 +1,15 @@
 -- Function: gpInsertUpdate_Object_ReceiptLevel()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptLevel(Integer, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptLevel(Integer, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptLevel(Integer, Integer, TVarChar, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptLevel(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
     IN inCode                Integer   ,    -- Код объекта 
     IN inName                TVarChar  ,    -- Название объекта 
     IN inFromId              Integer   ,    -- 
-    IN inToId                Integer   ,    -- 
+    IN inToId                Integer   ,    --
+    IN inDocumentKindId      Integer   ,    -- 
     IN inMovementDesc        TFloat   ,     -- 
     IN inComment             TVarChar  ,    -- Примечание
     IN inSession             TVarChar       -- сессия пользователя
@@ -33,6 +35,8 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ReceiptLevel_To(), ioId, inToId);
    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ReceiptLevel_DocumentKind(), ioId, inDocumentKindId);
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ReceiptLevel_MovementDesc(), ioId, inMovementDesc);
    
    -- сохранили протокол
@@ -45,6 +49,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.06.23         *
  14.06.21         *
 */
 
