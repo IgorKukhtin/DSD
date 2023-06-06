@@ -80,7 +80,7 @@ object AssetGoods_ObjectForm: TAssetGoods_ObjectForm
         DataBinding.FieldName = 'SerialNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 150
       end
       object PassportNumber: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1087#1072#1089#1087#1086#1088#1090#1072
@@ -511,10 +511,13 @@ object AssetGoods_ObjectForm: TAssetGoods_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 440
     Top = 112
   end
