@@ -234,7 +234,7 @@ BEGIN
                                , MovementLinkMovement.MovementChildId AS MovementId_Invoice
                                , SUM (MovementItem.Amount)   ::TFloat AS AmountIn 
                                 -- последний док. оплаты
-                               , ROW_NUMBER () OVER (ORDER BY MovementLinkMovement.MovementId Desc) AS Ord
+                               , ROW_NUMBER () OVER (PARTITION BY MovementLinkMovement.MovementChildId ORDER BY MovementLinkMovement.MovementId Desc) AS Ord
                           FROM MovementLinkMovement
                                INNER JOIN Movement AS Movement_BankAccount
                                                    ON Movement_BankAccount.Id       = MovementLinkMovement.MovementId

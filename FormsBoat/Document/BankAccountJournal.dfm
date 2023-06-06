@@ -5,7 +5,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 851
-  ExplicitHeight = 394
+  ExplicitHeight = 395
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -476,6 +476,24 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_parent'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMoneyPlaceId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Invoice'
+          Value = Null
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
     end
@@ -1122,9 +1140,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-    end
-    inherited dxBarStatic: TdxBarStatic
-      ShowCaption = False
     end
     object bbAddBonus: TdxBarButton
       Action = mactInsertProfitLossService

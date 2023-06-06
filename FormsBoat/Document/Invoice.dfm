@@ -2,8 +2,9 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>'
   ClientHeight = 503
   ClientWidth = 351
+  AddOnFormData.isSingle = False
   ExplicitWidth = 357
-  ExplicitHeight = 531
+  ExplicitHeight = 532
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -233,7 +234,7 @@
   end
   object ceParent: TcxButtonEdit [31]
     Left = 15
-    Top = 322
+    Top = 321
     Properties.Buttons = <
       item
         Default = True
@@ -282,6 +283,45 @@
         Name = 'inOperDate'
         Value = Null
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_OrderClient'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_OrderClient'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ClientId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ClientName'
+        Value = Null
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -422,6 +462,30 @@
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProductId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ProductId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inClientId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ClientId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -856,8 +920,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 48
+    Left = 160
+    Top = 40
   end
   object GuidesParent: TdsdGuides
     KeyField = 'Id'

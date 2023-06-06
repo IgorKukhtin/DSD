@@ -660,6 +660,24 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_OrderClient'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ClientId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
     end
     inherited actInsertMask: TdsdInsertUpdateAction
