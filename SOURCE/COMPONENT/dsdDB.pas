@@ -216,7 +216,7 @@ uses Storage, CommonData, TypInfo, UtilConvert, System.SysUtils, cxTextEdit, VCL
      dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
      cxButtonEdit, EDI, ExternalSave, Medoc, UnilWin, FormStorage, cxDateNavigator,
      cxMemo, cxImage, cxDropDownEdit, cxMaskEdit, dsdInternetAction, ParentForm,
-     Vcl.ActnList, System.Rtti, Log, StorageSQLite;
+     Vcl.ActnList, System.Rtti, Log, StorageSQLite, cxDBEdit;
 
 procedure Register;
 begin
@@ -888,6 +888,8 @@ begin
         result := (Component as TPivotAddOn).GetCurrentData;
      if Component is TcxTextEdit then
         Result := (Component as TcxTextEdit).Text;
+     if Component is TcxDBTextEdit then
+        Result := (Component as TcxDBTextEdit).Text;
      if Component is TcxMemo then
         Result := (Component as TcxMemo).Text;
      if Component is TcxMaskEdit then
@@ -1093,6 +1095,8 @@ begin
         SetInDataSet(TDataSet(Component), ComponentItem, FValue);
      if Component is TcxTextEdit then
         (Component as TcxTextEdit).Text := FValue;
+     if Component is TcxDBTextEdit then
+        (Component as TcxDBTextEdit).Text := FValue;
      if Component is TcxMemo then
         (Component as TcxMemo).Text := FValue;
      if Component is TcxMaskEdit then

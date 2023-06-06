@@ -102,15 +102,19 @@ BEGIN
 
                                        INNER JOIN Container ON Container.ID = ContainerLinkObject_MovementItem.ContainerId
                                                            AND Container.DescId = zc_Container_Count()
-                                                           AND Container.Amount <> 0
+                                                           AND (Container.Amount <> 0
+                                                            OR EXISTS(SELECT 1
+                                                               FROM MovementItemContainer 
+                                                               WHERE MovementItemContainer.ContainerID =ContainerLinkObject_MovementItem.ContainerId
+                                                                 AND MovementItemContainer.OperDate >= inOperDate))
 
                                        LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerID = Container.ID
                                                                       AND MovementItemContainer.OperDate >= inOperDate
-                                                                      AND MovementItemContainer.MovementItemId <> Object_PartionMovementItem.ObjectCode
+                                                                     -- AND MovementItemContainer.MovementItemId <> Object_PartionMovementItem.ObjectCode
 
                              WHERE Object_PartionMovementItem.ObjectCode IN (SELECT DISTINCT tmpIncomeList.MovementItemId FROM tmpIncomeList)
                                AND Object_PartionMovementItem.DescId = zc_object_PartionMovementItem()
-                             GROUP BY Container.ID, Object_PartionMovementItem.ObjectCode
+                             GROUP BY Object_PartionMovementItem.ObjectCode, Container.ID, Container.Amount
                              ),
         tmpContainerRemains AS ( --Остатки по приходу
                              SELECT tmpContainerRemainsAll.MovementItemId         AS MovementItemId
@@ -118,10 +122,12 @@ BEGIN
                              FROM tmpContainerRemainsAll
                              GROUP BY tmpContainerRemainsAll.MovementItemId
                              ),
-        tmpIncomeRemains AS (SELECT tmpIncomeList.MovementId, Sum(Round(tmpIncomeList.Price * tmpContainerRemains.Remains, 2)) AS  SummaRemains
+        tmpIncomeRemains AS (SELECT tmpIncomeList.MovementId
+                                  , Sum(Round(tmpIncomeList.Price * tmpContainerRemains.Remains, 2)) AS  SummaRemains
                              FROM tmpIncomeList
 
-                                  LEFT JOIN tmpContainerRemains ON tmpContainerRemains.MovementItemId = tmpIncomeList.MovementItemId
+                                  INNER JOIN tmpContainerRemains ON tmpContainerRemains.MovementItemId = tmpIncomeList.MovementItemId
+                                  
                              GROUP BY tmpIncomeList.MovementId),
 
         tmpContainerAll AS ( --Остатки по приходу
@@ -139,7 +145,7 @@ BEGIN
                              ),
 
         tmpContainerInv AS ( --Приход по инвентаризации
-                             SELECT tmpContainerRemainsAll.MovementItemId
+                             SELECT DISTINCT tmpContainerRemainsAll.MovementItemId
                                   , CLI_MI.ContainerId
                                   , Container.Amount
                              FROM tmpContainerAll AS tmpContainerRemainsAll
@@ -157,7 +163,12 @@ BEGIN
 
                                   INNER JOIN Container ON Container.ID = CLI_MI.ContainerId
                                                       AND Container.DescId = zc_Container_Count()
-                                                      AND Container.Amount <> 0
+                                                      AND (Container.Amount <> 0 
+                                                       OR EXISTS(SELECT 1
+                                                                 FROM MovementItemContainer 
+                                                                 WHERE MovementItemContainer.ContainerID = CLI_MI.ContainerId
+                                                                   AND MovementItemContainer.OperDate >= inOperDate))
+                                                      
 
                              GROUP BY tmpContainerRemainsAll.MovementItemId, CLI_MI.ContainerId, Container.Amount
                              ),
@@ -212,9 +223,9 @@ BEGIN
                            , COALESCE(SUM(tmpIncomeRemainsInv.SummaRemains), 0)                              AS SummaRemainsInv
                       FROM tmpContainerPartialPay
 
-                           INNER JOIN tmpIncomeRemains ON tmpIncomeRemains.MovementId = tmpContainerPartialPay.MovementId
+                           LEFT JOIN tmpIncomeRemains ON tmpIncomeRemains.MovementId = tmpContainerPartialPay.MovementId
 
-                           INNER JOIN tmpIncome ON tmpIncome.MovementId = tmpContainerPartialPay.MovementId
+                           LEFT JOIN tmpIncome ON tmpIncome.MovementId = tmpContainerPartialPay.MovementId
 
                            LEFT JOIN tmpIncomeRemainsInv ON tmpIncomeRemainsInv.MovementId = tmpContainerPartialPay.MovementId
 
@@ -238,7 +249,7 @@ BEGIN
 
         LEFT JOIN Object AS Object_From ON Object_From.Id = tmpNoPay.FromId
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpNoPay.JuridicalId
-   WHERE (tmpNoPay.Summa - COALESCE(tmpPartialSale.Amount, 0)) > 0
+   WHERE (COALESCE(tmpNoPay.Summa, 0) - COALESCE(tmpPartialSale.Amount, 0)) > 0
   ;
 END;
 $BODY$
@@ -253,6 +264,5 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Calculation_PartialSale (inOperDate := CURRENT_DATE + INTERVAL '10 day', inSession:= '3')
+SELECT * FROM gpSelect_Calculation_PartialSale (inOperDate := CURRENT_DATE, inSession:= '3')
 where FromId = 9526799
-                              

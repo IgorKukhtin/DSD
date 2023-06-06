@@ -52,7 +52,7 @@ BEGIN
                      AND ObjectBoolean_CommentSun_SendPartionDate.ValueData = TRUE
                      AND COALESCE(MIFloat_MISendPDChangeId.ValueData, 0) = 0
                      AND MovementLinkObject_From.ObjectId = inUnitID
-                     AND MovementDate_Insert.ValueData >= CURRENT_DATE - INTERVAL '30 DAY')
+                     AND MovementDate_Insert.ValueData >= CURRENT_DATE - INTERVAL '10 DAY')
        , tmpPresent AS (SELECT tmpMI.Id
                              , Sum(Container.Amount) AS Amount
                         FROM tmpMI
