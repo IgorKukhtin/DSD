@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptLevel(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
-             , MovementDesc TFloat , MovementDescName TVarChar
+             , MovementDesc TFloat , MovementDescName TVarChar 
+             , DocumentKindId Integer, DocumentKindName TVarChar
              , Comment TVarChar
              , isErased boolean) AS
 $BODY$
@@ -33,6 +34,10 @@ BEGIN
 
          , ObjectFloat_MovementDesc.ValueData :: TFloat AS MovementDesc
          , MovementDesc.ItemName          AS MovementDescName
+
+         , Object_DocumentKind.Id           AS DocumentKindId
+         , Object_DocumentKind.ValueData    AS DocumentKindName
+         
          , ObjectString_Comment.ValueData AS Comment
 
          , Object_ReceiptLevel.isErased   AS isErased
@@ -47,6 +52,11 @@ BEGIN
                                ON ObjectLink_ReceiptLevel_To.ObjectId = Object_ReceiptLevel.Id
                               AND ObjectLink_ReceiptLevel_To.DescId = zc_ObjectLink_ReceiptLevel_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_ReceiptLevel_To.ChildObjectId          
+
+          LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_DocumentKind
+                               ON ObjectLink_ReceiptLevel_DocumentKind.ObjectId = Object_ReceiptLevel.Id
+                              AND ObjectLink_ReceiptLevel_DocumentKind.DescId = zc_ObjectLink_ReceiptLevel_DocumentKind()
+          LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = ObjectLink_ReceiptLevel_DocumentKind.ChildObjectId
 
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ReceiptLevel.Id
@@ -73,7 +83,9 @@ BEGIN
          , ''  :: TVarChar AS ToName
 
          , NULL :: TFloat AS MovementDesc
-         , '' :: TVarChar AS MovementDescName
+         , '' :: TVarChar AS MovementDescName 
+         , CAST (0 as Integer)    AS DocumentKindId
+         , CAST ('' as TVarChar)  AS DocumentKindName
          , '' :: TVarChar AS Comment
 
          , FALSE AS isErased

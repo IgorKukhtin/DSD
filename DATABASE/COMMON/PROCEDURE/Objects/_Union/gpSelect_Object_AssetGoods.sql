@@ -37,7 +37,7 @@ BEGIN
             , Object_GoodsGroup.ValueData  AS AssetGroupName
 
             , 0    :: Integer  AS JuridicalId
-            , NULL :: Integer  AS JuridicalCode
+            , NULL :: Integer  AS JuridicalCode                                                                 
             , ''   :: TVarChar AS JuridicalName
 
             , 0    :: Integer  AS MakerId
@@ -58,10 +58,10 @@ BEGIN
             , Object_Goods.isErased  AS isErased
 
        FROM Object AS Object_Goods
-             INNER JOIN ObjectBoolean AS ObjectBoolean_Goods_Asset
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Asset
                                       ON ObjectBoolean_Goods_Asset.ObjectId = Object_Goods.Id 
                                      AND ObjectBoolean_Goods_Asset.DescId = zc_ObjectBoolean_Goods_Asset()
-                                     AND COALESCE (ObjectBoolean_Goods_Asset.ValueData, FALSE) = TRUE
+                                     --AND COALESCE (ObjectBoolean_Goods_Asset.ValueData, FALSE) = TRUE
  
              LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
              LEFT JOIN ObjectFloat AS ObjectFloat_Weight

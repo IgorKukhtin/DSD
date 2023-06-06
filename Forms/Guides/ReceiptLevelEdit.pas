@@ -52,6 +52,9 @@ type
     cxLabel2: TcxLabel;
     edMovementDescName: TcxButtonEdit;
     GuidesMovementDesc: TdsdGuides;
+    cxLabel3: TcxLabel;
+    edDocumentKind: TcxButtonEdit;
+    GuidesDocumentKind: TdsdGuides;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@
   ClientHeight = 329
   ClientWidth = 463
   ExplicitWidth = 469
-  ExplicitHeight = 357
+  ExplicitHeight = 358
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -207,6 +207,24 @@
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Invoice'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMoneyPlaceId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_parent'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 268
@@ -321,6 +339,30 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'inMovementId_Value'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Invoice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_Invoice'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_parent'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMovementId_parent'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMoneyPlaceId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMoneyPlaceId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

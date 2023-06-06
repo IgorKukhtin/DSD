@@ -13,7 +13,7 @@ AS
 $BODY$
 BEGIN
 
-if EXTRACT (MONTH FROM inStartDate) IN (2, 3) then return; end if;
+-- if EXTRACT (MONTH FROM inStartDate) IN (2, 3) then return; end if;
 
      RETURN QUERY 
      WITH tmpUnit AS (SELECT tmp.UnitId,       TRUE AS isMain FROM lfSelect_Object_Unit_byGroup (8446) AS tmp -- ЦЕХ колбаса+дел-сы
@@ -57,4 +57,4 @@ END;$BODY$
  04.11.14                                        *
 */
 
--- SELECT * FROM gpComplete_SelectAll_Sybase_CEH (inStartDate:= '01.03.2017', inEndDate:= '15.03.2017', inIsBefoHistoryCost:= FALSE) WHERE MovementId = 5438021
+-- SELECT * FROM gpComplete_SelectAll_Sybase_CEH (inStartDate:= '01.05.2023', inEndDate:= '31.05.2023', inIsBefoHistoryCost:= FALSE) WHERE MovementId = 5438021

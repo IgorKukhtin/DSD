@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, ItemName TVarChar, Id Integer, Code Integer, Name TVa
              , MakerId Integer, MakerCode Integer, MakerName TVarChar
              , CarId Integer, CarCode Integer, CarName TVarChar, CarModelName TVarChar
              , ReceiptLevelTypeId Integer, ReceiptLevelTypeCode Integer, ReceiptLevelTypeName TVarChar
+             , DocumentKindId Integer, DocumentKindCode Integer, DocumentKindName TVarChar
              , Release TDateTime
              , InvNumber TVarChar, FullName TVarChar, SerialNumber TVarChar, PassportNumber TVarChar, Comment TVarChar
              , PeriodUse TFloat, Production TFloat, KW TFloat
@@ -44,10 +45,12 @@ BEGIN
                                                         ON CLO_Unit.ContainerId = Container.Id
                                                        AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                                                        AND (CLO_Unit.ObjectId = inUnitId OR inUnitId = 0)
-                         LEFT JOIN ContainerLinkObject AS CLO_ReceiptLevelTo ON CLO_ReceiptLevelTo.ContainerId = Container.Id
-                                                                     AND CLO_ReceiptLevelTo.DescId = zc_ContainerLinkObject_ReceiptLevelTo()
-                         LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
-                                                                          AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                         LEFT JOIN ContainerLinkObject AS CLO_ReceiptLevelTo
+                                                       ON CLO_ReceiptLevelTo.ContainerId = Container.Id
+                                                      AND CLO_ReceiptLevelTo.DescId = zc_ContainerLinkObject_lTo()
+                         LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                       ON CLO_PartionGoods.ContainerId = Container.Id
+                                                      AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                          LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
                     WHERE (Object_PartionGoods.ObjectCode > 0 OR CLO_ReceiptLevelTo.ObjectId > 0 OR tmpReceiptLevel.DescId = zc_Object_ReceiptLevel())
                     GROUP BY Container.Id
@@ -81,6 +84,10 @@ BEGIN
          , Object_ReceiptLevelType.Id             AS ReceiptLevelTypeId
          , Object_ReceiptLevelType.ObjectCode     AS ReceiptLevelTypeCode
          , Object_ReceiptLevelType.ValueData      AS ReceiptLevelTypeName
+         
+         , Object_DocumentKind.Id           AS DocumentKindId
+         , Object_DocumentKind.ObjectCode   AS DocumentKindCode
+         , Object_DocumentKind.ValueData    AS DocumentKindName
 
          , COALESCE (ObjectDate_Release.ValueData, CAST (CURRENT_DATE as TDateTime)) AS Release
          
@@ -111,7 +118,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_To
                                ON ObjectLink_ReceiptLevel_To.ObjectId = Object_ReceiptLevel.Id
                               AND ObjectLink_ReceiptLevel_To.DescId = zc_ObjectLink_ReceiptLevel_To()
-          LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_ReceiptLevel_To.ChildObjectId          
+          LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_ReceiptLevel_To.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_Maker
                                ON ObjectLink_ReceiptLevel_Maker.ObjectId = Object_ReceiptLevel.Id
@@ -132,6 +139,11 @@ BEGIN
                                ON ObjectLink_ReceiptLevel_ReceiptLevelType.ObjectId = Object_ReceiptLevel.Id
                               AND ObjectLink_ReceiptLevel_ReceiptLevelType.DescId = zc_ObjectLink_ReceiptLevel_ReceiptLevelType()
           LEFT JOIN Object AS Object_ReceiptLevelType ON Object_ReceiptLevelType.Id = ObjectLink_ReceiptLevel_ReceiptLevelType.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_DocumentKind
+                               ON ObjectLink_ReceiptLevel_DocumentKind.ObjectId = Object_ReceiptLevel.Id
+                              AND ObjectLink_ReceiptLevel_DocumentKind.DescId = zc_ObjectLink_ReceiptLevel_DocumentKind()
+          LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = ObjectLink_ReceiptLevel_DocumentKind.ChildObjectId
 
           LEFT JOIN ObjectDate AS ObjectDate_Release
                                 ON ObjectDate_Release.ObjectId = Object_ReceiptLevel.Id

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100' / '#1048#1079#1084#1077#1085#1080#1090#1100' '#1069#1090#1072#1087#1099' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
-  ClientHeight = 327
+  ClientHeight = 370
   ClientWidth = 380
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 79
-    Top = 285
+    Top = 334
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 229
-    Top = 285
+    Top = 334
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -63,12 +63,12 @@
   end
   object cxLabel4: TcxLabel
     Left = 40
-    Top = 140
+    Top = 189
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'('#1054#1090' '#1082#1086#1075#1086')'
   end
   object ceFrom: TcxButtonEdit
     Left = 40
-    Top = 159
+    Top = 208
     Properties.Buttons = <
       item
         Default = True
@@ -79,23 +79,23 @@
   end
   object cxLabel8: TcxLabel
     Left = 40
-    Top = 224
+    Top = 273
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit
     Left = 40
-    Top = 241
+    Top = 290
     TabOrder = 9
     Width = 295
   end
   object cxLabel9: TcxLabel
     Left = 40
-    Top = 184
+    Top = 233
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'('#1050#1086#1084#1091')'
   end
   object ceTo: TcxButtonEdit
     Left = 40
-    Top = 202
+    Top = 251
     Properties.Buttons = <
       item
         Default = True
@@ -129,7 +129,7 @@
     Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object edMovementDescName: TcxButtonEdit
-    Left = 159
+    Left = 152
     Top = 111
     Properties.Buttons = <
       item
@@ -139,9 +139,25 @@
     TabOrder = 15
     Width = 176
   end
+  object cxLabel3: TcxLabel
+    Left = 40
+    Top = 141
+    Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+  end
+  object edDocumentKind: TcxButtonEdit
+    Left = 40
+    Top = 160
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 17
+    Width = 295
+  end
   object ActionList: TActionList
     Left = 344
-    Top = 204
+    Top = 253
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -217,6 +233,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDocumentKindId'
+        Value = Null
+        Component = GuidesDocumentKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMovementDesc'
         Value = Null
         Component = edMovementDesc
@@ -245,7 +269,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 344
-    Top = 160
+    Top = 209
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ReceiptLevel'
@@ -323,6 +347,21 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DocumentKindId'
+        Value = Null
+        Component = GuidesDocumentKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DocumentKindName'
+        Value = Null
+        Component = GuidesDocumentKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 336
@@ -330,7 +369,7 @@
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 344
-    Top = 255
+    Top = 304
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -374,7 +413,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 233
-    Top = 154
+    Top = 203
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -403,7 +442,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 169
-    Top = 186
+    Top = 235
   end
   object GuidesMovementDesc: TdsdGuides
     KeyField = 'Id'
@@ -432,5 +471,34 @@
       end>
     Left = 247
     Top = 106
+  end
+  object GuidesDocumentKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edDocumentKind
+    FormNameParam.Value = 'TDocumentKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TDocumentKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = 0.000000000000000000
+        Component = GuidesDocumentKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesDocumentKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 184
+    Top = 154
   end
 end

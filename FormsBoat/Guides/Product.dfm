@@ -1833,6 +1833,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbUpdateMov'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2116,6 +2120,28 @@
     end
     object bbUpdate_NPP_Minus: TdxBarButton
       Action = actUpdate_NPP_Minus
+      Category = 0
+    end
+    object bbUpdateMov: TdxBarSubItem
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Invoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_BankAccount'
+        end>
+    end
+    object bbUpdate_Invoice: TdxBarButton
+      Action = actUpdate_Invoice
+      Category = 0
+    end
+    object bbUpdate_BankAccount: TdxBarButton
+      Action = actUpdate_BankAccount
       Category = 0
     end
   end
@@ -3392,7 +3418,7 @@
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object actUpdate_OrderClient: TdsdInsertUpdateAction
-      Category = 'DSDLib'
+      Category = 'Movement'
       MoveParams = <>
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079
       Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079
@@ -3566,6 +3592,153 @@
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1055#1086#1079#1078#1077
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1055#1086#1079#1078#1077' (+1)'
       ImageIndex = 82
+    end
+    object actUpdate_BankAccount: TdsdInsertUpdateAction
+      Category = 'Movement'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1087#1083#1072#1090#1091
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1087#1083#1072#1090#1091
+      ImageIndex = 1
+      FormName = 'TBankAccountMovementForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_BankAccount'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_BankAccount'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 44197d
+          Component = MasterCDS
+          ComponentItem = 'OperDate_BankAccount'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMoneyPlaceId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ClientId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_parent'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_OrderClient'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId_Invoice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Invoice'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate_Invoice: TdsdInsertUpdateAction
+      Category = 'Movement'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1095#1077#1090
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1095#1077#1090
+      ImageIndex = 1
+      FormName = 'TInvoiceForm'
+      FormNameParam.Value = 'TInvoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Invoice'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 44197d
+          Component = MasterCDS
+          ComponentItem = 'OperDate_Invoice'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ClientId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ClientId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ClientName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ClientName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_OrderClient'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_OrderClient'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_OrderClient'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_OrderClient'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
   end
   object spSelect: TdsdStoredProc
