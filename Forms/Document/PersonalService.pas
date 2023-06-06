@@ -306,6 +306,12 @@ type
     bbLoad_Compens: TdxBarButton;
     AmountCash_rem: TcxGridDBColumn;
     AmountCash_pay: TcxGridDBColumn;
+    spGetImportSetting_fine: TdsdStoredProc;
+    actDoLoad_fine: TExecuteImportSettingsAction;
+    actGetImportSetting_fine: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    macStartLoad_fine: TMultiAction;
+    bbStartLoad_fine: TdxBarButton;
   private
     { Private declarations }
   public
