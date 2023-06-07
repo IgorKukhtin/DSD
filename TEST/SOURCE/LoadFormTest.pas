@@ -2392,7 +2392,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-{
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashPersonal_toPayForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CashPersonal_toPayForm');
+  exit;
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Remains_PartionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Remains_PartionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Remains_PartionDialogForm'));

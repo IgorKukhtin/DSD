@@ -5010,6 +5010,10 @@
 				<Form>AssetGroup_GoodsGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_CashPersonal_toPay.pas">
+				<Form>Report_CashPersonal_toPayForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

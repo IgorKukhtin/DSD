@@ -3,7 +3,6 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   ClientHeight = 507
   ClientWidth = 982
   AddOnFormData.isSingle = True
-  ExplicitLeft = -105
   ExplicitWidth = 998
   ExplicitHeight = 546
   PixelsPerInch = 96
@@ -1198,6 +1197,44 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1083#1103' '#1054#1044#1053#1054#1043#1054' <'#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077'>'
       ImageIndex = 47
     end
+    object actReport_Open: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1042#1099#1087#1083#1072#1090#1099' '#1092#1080#1079'.'#1083#1080#1094#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1042#1099#1087#1083#1072#1090#1099' '#1092#1080#1079'.'#1083#1080#1094#1091'>'
+      ImageIndex = 26
+      FormName = 'TReport_CashPersonal_toPayForm'
+      FormNameParam.Value = 'TReport_CashPersonal_toPayForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ServiceDate'
+          Value = 44927d
+          Component = edServiceDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1301,6 +1338,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_Open'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMIAmount_One'
         end
         item
@@ -1317,7 +1362,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbInsertUpdateMICardSecondCash_AllGrid'
         end
         item
           Visible = True
@@ -1362,8 +1407,12 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       Action = mactInsertUpdateMIAmount_AllGrid
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbInsertUpdateMICardSecondCash_AllGrid: TdxBarButton
       Action = mactInsertUpdateMICardSecondCash_AllGrid
+      Category = 0
+    end
+    object bbReport_Open: TdxBarButton
+      Action = actReport_Open
       Category = 0
     end
   end
