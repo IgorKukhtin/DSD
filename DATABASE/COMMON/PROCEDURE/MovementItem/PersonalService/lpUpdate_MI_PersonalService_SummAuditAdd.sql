@@ -251,9 +251,12 @@ BEGIN
      ;
      
      -- test
-     IF inUserId = 5 AND 1=0
+     IF inUserId = 5 AND 1=1
      THEN
-         RAISE EXCEPTION 'Ошибка. ok - lpUpdate_MI_PersonalService_SummAuditAdd';
+         RAISE EXCEPTION 'Ошибка. ok - lpUpdate_MI_PersonalService_SummAuditAdd   (%)   (%)'
+         , (SELECT ValueData FROM MovementItemFloat where DescId = zc_MIFloat_SummSkip() and MovementItemId = 255446911)
+         , (SELECT ValueData FROM MovementItemFloat where DescId = zc_MIFloat_DaySkip() and MovementItemId = 255446911)
+;
      END IF;
 
 
@@ -268,4 +271,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_MI_PersonalService_SummAuditAdd (0, 0, 5)
+-- SELECT * FROM lpUpdate_MI_PersonalService_SummAuditAdd (24770685 , 293425, 5)

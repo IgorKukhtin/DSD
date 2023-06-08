@@ -178,6 +178,10 @@ BEGIN
          PERFORM lpUpdate_Object_Enum_byCode (inCode:= COALESCE ((SELECT ObjectCode FROM Object WHERE DescId = zc_Object_DocumentKind() AND Id = zc_Enum_DocumentKind_RealDelicMsg()), 6), inDescId:= zc_Object_DocumentKind(), inEnumName:= 'zc_Enum_DocumentKind_RealDelicMsg');
      END IF;
 
+     -- !!! Типы документов - !!! Элементы справочника добавляет НЕ Пользователь!!!
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentKind_LakTo(),  inDescId:= zc_Object_DocumentKind(), inCode:= 11, inName:= 'Перемещение на лакирование', inEnumName:= 'zc_Enum_DocumentKind_LakTo');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentKind_LakFrom(),  inDescId:= zc_Object_DocumentKind(), inCode:= 12, inName:= 'Перемещение с лакирования', inEnumName:= 'zc_Enum_DocumentKind_LakFrom');
+
 
      -- !!! Типы аналитик для проводок
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AnalyzerId_SaleCount_10400(),  inDescId:= zc_Object_AnalyzerId(), inCode:= 101, inName:= 'Кол-во, реализация, у покупателя', inEnumName:= 'zc_Enum_AnalyzerId_SaleCount_10400');
