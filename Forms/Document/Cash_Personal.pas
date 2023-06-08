@@ -100,7 +100,7 @@ type
     actGetMICardSecondCash: TdsdExecStoredProc;
     mactListCardSecondCash: TMultiAction;
     mactInsertUpdateMICardSecondCash_AllGrid: TMultiAction;
-    bb: TdxBarButton;
+    bbInsertUpdateMICardSecondCash_AllGrid: TdxBarButton;
     isCalculated: TcxGridDBColumn;
     SummCardSecondRemains: TcxGridDBColumn;
     Amount_avance_ret: TcxGridDBColumn;
@@ -110,6 +110,8 @@ type
     SummAvance: TcxGridDBColumn;
     SummAvCardSecond: TcxGridDBColumn;
     AmountCardSecond_avance: TcxGridDBColumn;
+    actReport_Open: TdsdOpenForm;
+    bbReport_Open: TdxBarButton;
   private
     { Private declarations }
   public

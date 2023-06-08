@@ -129,7 +129,7 @@
     Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object edMovementDescName: TcxButtonEdit
-    Left = 159
+    Left = 152
     Top = 111
     Properties.Buttons = <
       item
@@ -146,7 +146,7 @@
   end
   object edDocumentKind: TcxButtonEdit
     Left = 40
-    Top = 161
+    Top = 160
     Properties.Buttons = <
       item
         Default = True
@@ -482,6 +482,14 @@
     PositionDataSet = 'MasterCDS'
     Params = <
       item
+        Name = 'Key'
+        Value = 0.000000000000000000
+        Component = GuidesDocumentKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'TextValue'
         Value = ''
         Component = GuidesDocumentKind
@@ -489,15 +497,8 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Key'
-        Value = 0.000000000000000000
-        Component = edMovementDesc
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
-    Left = 120
+    Left = 184
     Top = 154
   end
 end
