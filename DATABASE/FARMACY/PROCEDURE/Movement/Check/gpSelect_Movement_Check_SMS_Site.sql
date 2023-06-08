@@ -74,7 +74,7 @@ BEGIN
                                           AND MovementLinkObject_ConfirmedKind.DescId     = zc_MovementLinkObject_ConfirmedKind()
                                           AND MovementLinkObject_ConfirmedKind.ObjectId   = zc_Enum_ConfirmedKind_Complete()
              INNER JOIN Movement ON Movement.Id = MovementLinkObject_ConfirmedKindClient.MovementId
-                                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                AND Movement.StatusId = zc_Enum_Status_UnComplete()
 
              LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                        ON MovementBoolean_Deferred.MovementId = Movement.Id
@@ -149,6 +149,9 @@ BEGIN
              INNER JOIN MovementLinkObject AS MovementLinkObject_CancelReason
                                            ON MovementLinkObject_CancelReason.MovementId = MovementLinkObject_ConfirmedKindClient.MovementId
                                           AND MovementLinkObject_CancelReason.DescId     = zc_MovementLinkObject_CancelReason()
+             INNER JOIN Object AS Object_CancelReason 
+                               ON Object_CancelReason.Id = MovementLinkObject_CancelReason.ObjectId
+                              AND Object_CancelReason.ObjectCode IN (2, 3, 4, 5)
              INNER JOIN MovementBoolean AS MovementBoolean_MobileApplication
                                         ON MovementBoolean_MobileApplication.MovementId = MovementLinkObject_ConfirmedKindClient.MovementId
                                        AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
@@ -220,5 +223,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Movement_Check_SMS_Site (inUnitId_list:= '377605,16240371,11769526,183292,4135547,14422124,14422095,377606,6128298,9951517,13338606,377595,12607257,494882,10779386,394426,183289,8393158,16001195,6309262,13311246,377613,7117700,377610,377594,377574,15212291,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,10128935,472116', inSession:= '2')
-
+SELECT * FROM gpSelect_Movement_Check_SMS_Site (inUnitId_list:= '377605,16240371,11769526,183292,4135547,14422124,14422095,377606,6128298,9951517,13338606,377595,12607257,494882,10779386,394426,183289,8393158,16001195,6309262,13311246,377613,7117700,377610,377594,377574,15212291,13711869,183291,1781716,5120968,9771036,6608396,375626,375627,11152911,472116', inSession:= '2')

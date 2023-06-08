@@ -23,7 +23,6 @@ BEGIN
       vbUnitKey := '0';
    END IF;
    vbUnitId := vbUnitKey::Integer;
-   vbUnitId := 0;
 
    SELECT COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
    INTO vbLanguage
@@ -54,10 +53,15 @@ BEGIN
                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
                                 AND COALESCE(MovementFloat_ChangePercent.ValueData, 0) > 0
                                 AND COALESCE(MovementFloat_ChangePercent.ValueData, 0) < 100
+
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                     ON MovementLinkObject_CashRegister.MovementId = Movement.Id
+                                    AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
                                     
    WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
-    -- AND Movement.StatusId = zc_Enum_Status_Complete()
-     AND Movement.DescId = zc_Movement_Sale();
+     AND Movement.StatusId <> zc_Enum_Status_Erased()
+     AND Movement.DescId = zc_Movement_Sale()
+     AND COALESCE(MovementLinkObject_CashRegister.ObjectId, 0) = 0;
       
   ANALYSE tmpMov;
 
@@ -230,3 +234,4 @@ $BODY$
 -- тест
 --
 select * from gpSelect_Movement_Sale_InsuranceCompanies(inSession := '3');
+

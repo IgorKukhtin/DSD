@@ -2790,7 +2790,7 @@ inherited MainCashForm2: TMainCashForm2
       Width = 348
     end
     object edName_inn_ua: TcxTextEdit
-      Left = 349
+      Left = 344
       Top = 0
       TabStop = False
       Anchors = [akLeft, akTop, akRight]
@@ -21055,5 +21055,32 @@ inherited MainCashForm2: TMainCashForm2
     StoreDefs = True
     Left = 864
     Top = 572
+  end
+  object spDivideGoodsLots: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Check_DivideGoodsLots'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = ''
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisReload'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 408
+    Top = 296
   end
 end

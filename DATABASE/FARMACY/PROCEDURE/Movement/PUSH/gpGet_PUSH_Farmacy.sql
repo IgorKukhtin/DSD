@@ -575,7 +575,7 @@ BEGIN
                                                           AND MovementLinkObject_CancelReason.DescId = zc_MovementLinkObject_CancelReason()
                               INNER JOIN Object AS Object_CancelReason 
                                                 ON Object_CancelReason.Id = MovementLinkObject_CancelReason.ObjectId
-                                               AND Object_CancelReason.ObjectCode = 2
+                                               AND Object_CancelReason.ObjectCode IN (2, 3)
                                                                 
                               LEFT JOIN MovementBoolean AS MovementBoolean_MobileApplication
                                                         ON MovementBoolean_MobileApplication.MovementId = Movement.Id
