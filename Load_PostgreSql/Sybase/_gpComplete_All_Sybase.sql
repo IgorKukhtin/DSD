@@ -20,7 +20,7 @@ BEGIN
      -- !!!выход!!!
      IF vbStatusId <> zc_Enum_Status_Complete() THEN RETURN; END IF;
 
-    --IF vbMovementDescId NOT IN (zc_Movement_ReturnIn()) THEN RETURN; END IF;
+   --IF vbMovementDescId IN (zc_Movement_SendOnPrice()) THEN RETURN; END IF;
 
    --IF vbMovementDescId NOT IN (zc_Movement_ReturnIn()) THEN RETURN; END IF;
 

@@ -493,6 +493,8 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_two
                                   ON ObjectLink_PersonalServiceList_two.ObjectId = MI_Child.ObjectId
                                  AND ObjectLink_PersonalServiceList_two.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
+                                  -- !!!исключить Ведомость Больничные соц страх БН!!!
+                                 AND MILinkObject_MoneyPlace.ObjectId <> 1064330 
                                   -- !!!вот он БН!!!
                                  AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
 

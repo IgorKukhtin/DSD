@@ -1619,6 +1619,15 @@ begin
          Execute;
          zc_Enum_DocumentKind_RealDelicMsg:=DataSet.FieldByName('Value').asInteger;
 
+         // DocumentKind - перемещение на лакирование
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Enum_DocumentKind_LakTo() :: TVarChar';
+         Execute;
+         zc_Enum_DocumentKind_LakTo:=DataSet.FieldByName('Value').asInteger;
+         // DocumentKind - перемещение с лакирования
+         Params.ParamByName('inSqlText').Value:='SELECT zc_Enum_DocumentKind_LakFrom() :: TVarChar';
+         Execute;
+         zc_Enum_DocumentKind_LakFrom:=DataSet.FieldByName('Value').asInteger;
+
          // InfoMoney
          // 30201 Доходы + Мясное сырье + Мясное сырье
          Params.ParamByName('inSqlText').Value:='SELECT zc_Enum_InfoMoney_30201() :: TVarChar';

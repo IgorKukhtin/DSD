@@ -28,9 +28,11 @@ RETURNS TABLE (MovementItemId Integer, GoodsId Integer, GoodsCode Integer, Goods
               )
 AS
 $BODY$
+    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Scale_MI());
+     vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY
        WITH tmpMI AS
@@ -168,8 +170,14 @@ BEGIN
            , Object_Measure.ValueData         AS MeasureName
 
            , Object_GoodsKind.Id              AS GoodsKindId
+
            , Object_GoodsKind.ObjectCode      AS GoodsKindCode
-           , Object_GoodsKind.ValueData       AS GoodsKindName
+           , CASE WHEN Object_GoodsKind.ValueData <> ''
+                       THEN Object_GoodsKind.ValueData
+                  WHEN MI_Partion.Id > 0
+                       THEN Object_GoodsKindComplete.ValueData
+             END :: TVarChar AS GoodsKindName
+
            , Object_StorageLine.ValueData     AS StorageLineName
 
            , Object_Asset.Id                 AS  AssetId
@@ -210,6 +218,12 @@ BEGIN
            , tmpMI.HeadCount   :: TFloat AS HeadCount
            , tmpMI.LiveWeight  :: TFloat AS LiveWeight
 
+--                  , CASE WHEN MIString_PartionGoods.ValueData = (MIFloat_MovementItemId.ValueData :: Integer) :: TVarChar THEN '*' || MIString_PartionGoods.ValueData
+--                         WHEN vbUserId <> 5 AND MIString_PartionGoods.ValueData <> '' THEN MIString_PartionGoods.ValueData
+--                         WHEN MIFloat_MovementItemId.ValueData > 0 THEN '*' || (MIFloat_MovementItemId.ValueData :: Integer) :: TVarChar
+--                         ELSE NULL
+--                    END :: TVarChar AS PartionGoods
+
            , CASE WHEN tmpMI.PartionGoods <> ''
                        THEN tmpMI.PartionGoods
                   WHEN MI_Partion.Id > 0
@@ -222,7 +236,12 @@ BEGIN
                        )
                   ELSE tmpMI.MovementItemId_Partion :: TVarChar
              END :: TVarChar AS PartionGoods
-           , tmpMI.PartionGoodsDate :: TDateTime  AS PartionGoodsDate
+
+           , CASE WHEN COALESCE (tmpMI.PartionGoodsDate, zc_DateStart()) <> zc_DateStart()
+                       THEN tmpMI.PartionGoodsDate
+                  WHEN MI_Partion.Id > 0
+                       THEN Movement_Partion.OperDate
+             END :: TDateTime  AS PartionGoodsDate
 
 
            , tmpMI.InsertDate :: TDateTime AS InsertDate
@@ -287,3 +306,4 @@ ALTER FUNCTION gpSelect_ScaleCeh_MI (Boolean, Integer, TVarChar) OWNER TO postgr
 
 -- тест
 -- SELECT * FROM gpSelect_ScaleCeh_MI (TRUE, inMovementId:= 25173, inSession:= '2')
+-- SELECT * FROM gpSelect_ScaleCeh_MI (inIsGoodsComplete:= 'True', inMovementId:= 25410219, inSession:= '5');

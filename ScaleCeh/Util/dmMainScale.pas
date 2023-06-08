@@ -13,6 +13,7 @@ type
     function gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean; CountMovement,CountAccount,CountTransport,CountQuality,CountPack,CountSpec,CountTax : Integer): Boolean;
     function gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
     function gpGet_Scale_PSW_delete (inPSW: String): String;
+    function gpGet_Scale_Movement_OperDatePartner(var execParamsMovement:TParams): Boolean;
   end;
 
   // !!!Scale + ScaleCeh!!!
@@ -54,6 +55,8 @@ begin
      or (ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_RealWeight)
      or (ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_RealDelicShp)
      or (ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_RealDelicMsg)
+     or (ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_LakTo)
+     or (ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_LakFrom)
      then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible := TRUE;
 end;
 {------------------------------------------------------------------------}
@@ -78,6 +81,11 @@ begin
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
+begin
+  Result:=false;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpGet_Scale_Movement_OperDatePartner(var execParamsMovement:TParams): Boolean;
 begin
   Result:=false;
 end;

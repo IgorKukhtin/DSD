@@ -180,10 +180,16 @@ END IF;
      -- Результат
      SELECT tmp.MovementId
           , tmp.OperDate
-          , tmp.InvNumber
+          , (tmp.InvNumber || ' - ' || CASE WHEN tmp.BranchCode IN (1)     THEN tmp.BranchCode 
+                                            WHEN tmp.BranchCode IN (2, 12) THEN tmp.BranchCode + 100
+                                            ELSE tmp.BranchCode + 1000
+                                       END :: TVarChar) :: TVarChar AS InvNumber
           , tmp.Code
           , tmp.ItemName
-          , tmp.BranchCode
+          , CASE WHEN tmp.BranchCode IN (1)     THEN tmp.BranchCode 
+                 WHEN tmp.BranchCode IN (2, 12) THEN tmp.BranchCode + 100
+                 ELSE tmp.BranchCode + 1000
+            END :: Integer AS BranchCode
           , tmp.BranchName
      FROM (
      -- 1.0. zc_Movement_IncomeCost

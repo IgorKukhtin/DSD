@@ -563,6 +563,8 @@ begin
                            and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_RealWeight)
                            and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_RealDelicShp)
                            and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_RealDelicMsg)
+                           and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_LakTo)
+                           and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_LakFrom)
                              );
      //
      //if GoodsKindWeighingGroupId = 0 then exit;
@@ -1018,6 +1020,8 @@ begin
         and(ParamsMovement.ParamByName('DocumentKindId').AsInteger <> zc_Enum_DocumentKind_RealWeight)
         and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_RealDelicShp)
         and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_RealDelicMsg)
+        and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_LakTo)
+        and(ParamsMovement.ParamByName('DocumentKindId').asInteger <> zc_Enum_DocumentKind_LakFrom)
        then ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
        ParamsMI.ParamByName('isStartWeighing').AsBoolean:=gbStartWeighing.ItemIndex = 0;
 
@@ -1156,6 +1160,8 @@ begin
              or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight)
              or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicShp)
              or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicMsg)
+             or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_LakTo)
+             or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_LakFrom)
             then begin
                   Create_ParamsWorkProgress(ParamsWorkProgress);
 
@@ -1257,6 +1263,8 @@ begin
       or(ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_RealWeight)
       or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicShp)
       or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicMsg)
+      or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_LakTo)
+      or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_LakFrom)
      then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible := TRUE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('StorageLineName').Index].Visible := (ParamsMovement.ParamByName('isStorageLine').AsBoolean = TRUE) or (SettingMain.isModeSorting = TRUE);
 end;
@@ -2073,6 +2081,8 @@ begin
        or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight)
        or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicShp)
        or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicMsg)
+       or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_LakTo)
+       or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_LakFrom)
         )
      then
      begin
@@ -3008,6 +3018,8 @@ begin
                           or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight)
                           or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicShp)
                           or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealDelicMsg)
+                          or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_LakTo)
+                          or (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_LakFrom)
                             ;
   //
   if PanelArticleLoss.Visible = true

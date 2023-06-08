@@ -204,6 +204,9 @@ var
   zc_Enum_DocumentKind_RealDelicShp: Integer; // взвешивание п/ф факт после шприцевания
   zc_Enum_DocumentKind_RealDelicMsg : Integer; // взвешивание п/ф факт после массажера
 
+  zc_Enum_DocumentKind_LakTo  : Integer; // перемещение на лакирование
+  zc_Enum_DocumentKind_LakFrom: Integer; // перемещение с лакирования
+
   zc_Object_Partner    : Integer;
   zc_Object_ArticleLoss: Integer;
   zc_Object_Member     : Integer;

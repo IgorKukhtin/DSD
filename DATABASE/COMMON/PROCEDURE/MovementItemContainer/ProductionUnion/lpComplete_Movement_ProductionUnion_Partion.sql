@@ -211,12 +211,18 @@ BEGIN
                               LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptLevel_MovementDesc
                                                     ON ObjectFloat_ReceiptLevel_MovementDesc.ObjectId  = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
                                                    AND ObjectFloat_ReceiptLevel_MovementDesc.DescId    = zc_ObjectFloat_ReceiptLevel_MovementDesc()
+                              --  Тип документов
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_DocumentKind
+                                                   ON ObjectLink_ReceiptLevel_DocumentKind.ObjectId = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                  AND ObjectLink_ReceiptLevel_DocumentKind.DescId   = zc_ObjectLink_ReceiptLevel_DocumentKind()
                          WHERE (ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId IS NULL
                               OR (ObjectLink_ReceiptLevel_From.ChildObjectId      = inFromId
                               AND ObjectLink_ReceiptLevel_To.ChildObjectId        = inToId
                               AND ObjectFloat_ReceiptLevel_MovementDesc.ValueData = zc_Movement_ProductionUnion()
                                  )
                                )
+                           -- нет Типа документов
+                           AND ObjectLink_ReceiptLevel_DocumentKind.ChildObjectId IS NULL
                          GROUP BY _tmpItem_Partion.MovementItemId
                                 , _tmpItem_Partion.PartionGoodsDate
                                 , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, _tmpItem_Partion.GoodsId)

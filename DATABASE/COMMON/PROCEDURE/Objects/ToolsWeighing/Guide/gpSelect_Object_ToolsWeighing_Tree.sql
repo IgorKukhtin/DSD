@@ -10,9 +10,11 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
               )
 AS
 $BODY$
+    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ToolsWeighing());
+   vbUserId:= lpGetUserBySession (inSession);
 
    RETURN QUERY
        SELECT
@@ -54,6 +56,12 @@ BEGIN
 
                   WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_104'
                        THEN 'Производство - (104)ЦЕХ Упаковки (маркировка+сортировка)'
+
+                  WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_105'
+                       THEN 'Производство - (105)Склад База ГП (инвентаризация)'
+
+                  WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_106'
+                       THEN 'Производство - (106)Лакирование'
 
                   --
                   WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_111'

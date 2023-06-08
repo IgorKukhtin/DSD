@@ -228,8 +228,11 @@ BEGIN
                                  AND ObjectString_OnFlowType.DescId = zc_ObjectString_PersonalServiceList_OnFlowType()
 
    WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
-      AND (ObjectLink_PersonalServiceList_Branch.ChildObjectId = vbBranchId_Constraint
+      AND ((ObjectLink_PersonalServiceList_Branch.ChildObjectId = vbBranchId_Constraint
            OR vbBranchId_Constraint IS NULL)
+           --OR (Object_PersonalServiceList.Id = 4409489
+             -- AND vbUserId = 9457)
+              )
    ;
 
 END;

@@ -3280,8 +3280,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = []
         ParentFont = False
-        ExplicitLeft = 1
-        ExplicitTop = 3
+        ExplicitWidth = 91
       end
       object EditAsset_two: TcxButtonEdit
         Left = 4

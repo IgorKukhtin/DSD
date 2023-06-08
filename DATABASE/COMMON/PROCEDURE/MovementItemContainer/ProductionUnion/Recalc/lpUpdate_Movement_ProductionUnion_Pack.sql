@@ -1466,6 +1466,10 @@ BEGIN
                               LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptLevel_MovementDesc
                                                     ON ObjectFloat_ReceiptLevel_MovementDesc.ObjectId  = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
                                                    AND ObjectFloat_ReceiptLevel_MovementDesc.DescId    = zc_ObjectFloat_ReceiptLevel_MovementDesc()
+                              --  “ип документов
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_DocumentKind
+                                                   ON ObjectLink_ReceiptLevel_DocumentKind.ObjectId = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                  AND ObjectLink_ReceiptLevel_DocumentKind.DescId   = zc_ObjectLink_ReceiptLevel_DocumentKind()
                              
 
      WHERE _tmpResult.DescId_mi = zc_MI_Master()
@@ -1478,6 +1482,8 @@ BEGIN
           AND ObjectFloat_ReceiptLevel_MovementDesc.ValueData = zc_Movement_ProductionUnion()
              )
            )
+       -- нет “ипа документов
+       AND ObjectLink_ReceiptLevel_DocumentKind.ChildObjectId IS NULL
       ;
 
      -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок

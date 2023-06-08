@@ -115,7 +115,10 @@ uses
   DialogDateValue in '..\Scale\DialogDateValue.pas' {DialogDateValueForm},
   GoogleOTP in '..\SOURCE\GoogleOTP.pas',
   GoogleOTPDialogPsw in '..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
-  GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm};
+  GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
+  StorageSQLite in '..\SOURCE\StorageSQLite.pas',
+  PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
+  UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas';
 
 {$R *.res}
 
