@@ -43,13 +43,14 @@ BEGIN
                       AND ObjectLink_Personal_Member.ChildObjectId = vbMemberId 
                     )
  , tmpMovement AS (SELECT Movement.* 
-                   FROM  Movement
+                   FROM Movement
                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
                               INNER JOIN MovementItemDate AS MIDate_ServiceDate
                                                           ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
                                                          AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
                                                          AND MIDate_ServiceDate.ValueData = inServiceDate
-                   WHERE Movement.DescId = zc_Movement_Cash()
+                   WHERE Movement.DescId = zc_Movement_Cash() 
+                     AND Movement.StatusId <> zc_Enum_Status_Erased()
                    )
  , tmpMI AS (SELECT tmpMovement.Id
                   , tmpMovement.ParentId

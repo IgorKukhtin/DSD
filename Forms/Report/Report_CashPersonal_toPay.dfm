@@ -13,17 +13,17 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
     Height = 392
     TabOrder = 3
     ExplicitTop = 91
-    ExplicitWidth = 1077
+    ExplicitWidth = 840
     ExplicitHeight = 392
     ClientRectBottom = 392
     ClientRectRight = 840
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1077
+      ExplicitWidth = 840
       ExplicitHeight = 392
       inherited cxGrid: TcxGrid
         Width = 840
         Height = 392
-        ExplicitWidth = 1077
+        ExplicitWidth = 840
         ExplicitHeight = 392
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -279,8 +279,7 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
   inherited Panel: TPanel
     Width = 840
     Height = 65
-    ExplicitLeft = 8
-    ExplicitWidth = 1077
+    ExplicitWidth = 840
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
       Left = 992
@@ -444,10 +443,11 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1072#1089#1089#1072', '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1072#1089#1089#1072', '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
       ImageIndex = 28
-      FormName = 'TPersonalServiceForm'
+      FormName = 'TCash_PersonalForm'
+      FormNameParam.Value = 'TCash_PersonalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -539,6 +539,10 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenMovementForm'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -556,7 +560,6 @@ inherited Report_CashPersonal_toPayForm: TReport_CashPersonal_toPayForm
     end
     object bbOpenMovementForm: TdxBarButton
       Action = actOpenMovementForm
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
       Category = 0
     end
   end
