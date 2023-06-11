@@ -863,7 +863,8 @@ BEGIN
                                                         , inModel               := NULL
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inGoodsKindId_Complete   := NULL
-                                                        , inStorageId              := NULL
+                                                        , inStorageId              := -- !!!криво передали партию !!!
+                                                                                      CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom()) THEN tmp.MovementItemId_Partion ELSE 0 END
                                                         , inUserId              := vbUserId
                                                          )
                        WHEN vbMovementDescId = zc_Movement_ProductionSeparate() AND vbIsProductionIn = FALSE
@@ -1567,7 +1568,7 @@ BEGIN
      END IF;
 
 
-if (vbUserId = 5 AND 1=1)
+if (vbUserId = 5 AND 1=0)
 then
     RAISE EXCEPTION 'Admin - Errr _end <%>', (select Movement.InvNumber from Movement where Movement.Id = vbMovementId_begin);
     -- 'Повторите действие через 3 мин.'

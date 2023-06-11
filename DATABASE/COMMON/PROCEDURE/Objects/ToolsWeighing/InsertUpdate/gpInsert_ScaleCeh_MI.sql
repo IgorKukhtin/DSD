@@ -191,6 +191,13 @@ BEGIN
               RAISE EXCEPTION 'Ошибка.Партия прозводства ПФ-ГП не определена. <%>', inPartionGoods;
           END IF;
      END IF;
+     -- проверка
+     IF vbDocumentKindId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom())
+     THEN IF COALESCE (inCount, 0) <= 0
+          THEN
+              RAISE EXCEPTION 'Ошибка.Кол-во батонов не введено.';
+          END IF;
+     END IF;
 
      -- сохранили
      vbId:= gpInsertUpdate_MovementItem_WeighingProduction (ioId                  := 0
