@@ -986,6 +986,7 @@ object SendForm: TSendForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -1708,9 +1709,6 @@ object SendForm: TSendForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIMaster
-        end
-        item
-          StoredProc = spSelectMI
         end
         item
           StoredProc = spBarcode_null
@@ -3434,6 +3432,14 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderTop'
+        Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS
@@ -3501,6 +3507,45 @@ object SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId_OrderClient'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_OrderClient'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInvNumber_OrderClient'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumberFull_OrderClient'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFromName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'FromName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outProductName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ProductName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCIN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CIN'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -3959,6 +4004,14 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementId_OrderTop'
+        Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = MasterCDS
@@ -4016,6 +4069,45 @@ object SendForm: TSendForm
         ComponentItem = 'isOn'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId_OrderClient'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_OrderClient'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInvNumber_OrderClient'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumberFull_OrderClient'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFromName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'FromName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outProductName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ProductName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCIN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CIN'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

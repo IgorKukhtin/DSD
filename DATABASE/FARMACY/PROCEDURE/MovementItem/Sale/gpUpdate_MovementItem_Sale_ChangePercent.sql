@@ -16,7 +16,7 @@ BEGIN
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
     vbUserId := inSession;
 
-    IF 3 <> inSession::Integer AND 4183126 <> inSession::Integer AND 235009  <> inSession::Integer AND 183242  <> inSession::Integer 
+    IF inSession::Integer NOT IN (3, 183242, 235009, 4183126, 6828543 )
     THEN
       RAISE EXCEPTION 'Изменение <Процента скидки> вам запрещено.';
     END IF;
@@ -25,7 +25,17 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Документ не записан.';
     END IF;
-
+    
+    IF COALESCE((SELECT MovementLinkObject_SPKind.ObjectId
+                 FROM MovementLinkObject AS MovementLinkObject_SPKind
+                 WHERE MovementLinkObject_SPKind.MovementId = inId
+                   AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()), 0) =
+       zc_Enum_SPKind_InsuranceCompanies()
+    THEN
+      -- сохранили <% Скидки>
+      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), inId, inChangePercent);
+    END IF;
+    
      -- сохранили
     PERFORM lpInsertUpdate_MovementItem_Sale (ioId                 := T.Id
                                             , inMovementId         := inId
@@ -53,4 +63,6 @@ $BODY$
 */
 
 -- 
-select * from gpUpdate_MovementItem_Sale_ChangePercent(inId := 540915992 , inChangePercent := 50.0 ,  inSession := '3');
+
+
+select * from gpUpdate_MovementItem_Sale_ChangePercent(inId := 32321893 , inChangePercent := 80 ,  inSession := '3');

@@ -222,6 +222,9 @@ type
 
   end;
 
+
+  TEDINActionsType = (edinSendETTN, edinGetDocETTN, edinSignDcuETTNConsignor);
+
   TdsdEDINAction = class(TdsdCustomAction)
   private
     FHostParam: TdsdParam;
@@ -232,16 +235,23 @@ type
 
     FHeaderDataSet: TDataSet;
     FListDataSet: TDataSet;
-    FEDIDocType: TEDIDocType;
 
     FUpdateUuid: TdsdStoredProc;
 
+    FEDINActions : TEDINActionsType;
+
   protected
     function GetToken: Boolean;
-    function PostTTN(AGLN, AXML : String): Boolean;
-    procedure UAECMREDI(var AXML: String);
+    function SendETTN(AGLN, AUuId, AXML : String): Boolean;
+    function GetDocETTN(AGLN, AUuId : String): Boolean;
+    function SignDcuETTNConsignor(AGLN, AUuId : String): Boolean;
 
-    function TTNSave: Boolean;
+    procedure UAECMREDI(var AXML: String);
+    function SignData(UserSign : String): Boolean;
+
+    function DoSendETTN: Boolean;
+    function DoGetDocETTN: Boolean;
+    function DoSignDcuETTNConsignor: Boolean;
     function LocalExecute: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -260,11 +270,13 @@ type
     property Token: TdsdParam read FTokenParam write FTokenParam;
     property Result: TdsdParam read FResultParam write FResultParam;
 
-    property EDIDocType: TEDIDocType read FEDIDocType write FEDIDocType;
     property HeaderDataSet: TDataSet read FHeaderDataSet write FHeaderDataSet;
     property ListDataSet: TDataSet read FListDataSet write FListDataSet;
 
     property UpdateUuid: TdsdStoredProc read FUpdateUuid write FUpdateUuid;
+
+    property EDINActions : TEDINActionsType read FEDINActions write FEDINActions default edinSendETTN;
+
   end;
 
 
@@ -287,7 +299,7 @@ uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML, UAECMRXML,
   Vcl.Forms, System.IOUtils, System.RegularExpressions, ZLib, Math,
   IdHTTP, IdSSLOpenSSL, IdURI, IdCTypes, IdSSLOpenSSLHeaders,
-  IdMultipartFormData, Xml.XMLDoc;
+  IdMultipartFormData, Xml.XMLDoc, Soap.EncdDecd;
 
 procedure Register;
 begin
@@ -5507,7 +5519,7 @@ begin
   FResultParam.Value := '';
 
 
-  FEDIDocType:= ediOrder;
+  FEDINActions:= edinSendETTN;
 end;
 
 destructor TdsdEDINAction.Destroy;
@@ -5518,125 +5530,6 @@ begin
   FreeAndNil(FTokenParam);
   FreeAndNil(FResultParam);
   inherited;
-end;
-
-function TdsdEDINAction.GetToken: Boolean;
-  var IdHTTP: TCustomIdHTTP;
-      S: String;
-      SL: TStringList;
-      jsonObj: TJSONObject;
-begin
-  inherited;
-  Result := False;
-  FTokenParam.Value := '';
-
-  if (FPasswordParam.Value = '') or
-     (FLoginParam.Value = '') or
-     (FHostParam.Value = '') then
-  begin
-    ShowMessage('Не заполнены Host, логин или пароль.');
-    Exit;
-  end;
-
-  // Непосредственно отправка
-
-  IdHTTP := TCustomIdHTTP.Create(Nil);
-  try
-
-    IdHTTP.Request.Clear;
-    IdHTTP.Request.ContentType := 'application/x-www-form-urlencoded';
-    IdHTTP.Request.ContentEncoding := 'utf-8';
-    IdHTTP.Request.CustomHeaders.FoldLines := False;
-    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
-
-    SL := TStringList.Create;
-    try
-      try
-        SL.Add('email=' + FLoginParam.Value);
-        SL.Add('password=' + FPasswordParam.Value);
-        S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + '/api/authorization/hash'), SL);
-      except on E:EIdHTTPProtocolException  do
-                  ShowMessage(e.ErrorMessage);
-      end;
-    finally
-      SL.Free;
-    end;
-
-    if IdHTTP.ResponseCode = 200 then
-    begin
-      jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
-      try
-        if jsonObj.Get('SID') <> nil then
-        begin
-          FTokenParam.Value := jsonObj.Get('SID').JsonValue.Value;
-          Result := True;
-        end;
-      finally
-        FreeAndNil(jsonObj);
-      end;
-    end;
-  finally
-    IdHTTP.Free;
-  end;
-end;
-
-function TdsdEDINAction.PostTTN(AGLN, AXML : String): Boolean;
-  var IdHTTP: TCustomIdHTTP;
-      S, Params: String;
-      Steam: TStringStream;
-      jsonObj: TJSONObject;
-begin
-  inherited;
-  Result := False;
-
-  if FTokenParam.Value = '' then
-  begin
-    ShowMessage('Не получен токе. Отправка заказа невозможна.');
-    Exit;
-  end;
-
-  // Непосредственно отправка
-
-  IdHTTP := TCustomIdHTTP.Create(Nil);
-  try
-
-    IdHTTP.Request.Clear;
-    IdHTTP.Request.ContentType := 'application/xml';
-    IdHTTP.Request.ContentEncoding := 'utf-8';
-    IdHTTP.Request.CustomHeaders.FoldLines := False;
-    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
-    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
-
-    Params := '?gln=' + AGLN;
-    if FResultParam.Value <> '' then Params := Params + '&doc_uuid=' + FResultParam.Value;
-
-    Steam := TStringStream.Create(AXML, TEncoding.UTF8);
-    try
-      try
-        S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + '/api/eds/doc/ettn/ttn' + Params), Steam);
-      except on E:EIdHTTPProtocolException  do
-                  ShowMessage(e.ErrorMessage);
-      end;
-    finally
-      Steam.Free;
-    end;
-
-    if IdHTTP.ResponseCode = 200 then
-    begin
-      jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
-      try
-        if jsonObj.Get('doc_uuid') <> nil then
-        begin
-          FResultParam.Value := jsonObj.Get('doc_uuid').JsonValue.Value;
-          Result := True;
-        end;
-      finally
-        FreeAndNil(jsonObj);
-      end;
-    end;
-  finally
-    IdHTTP.Free;
-  end;
 end;
 
 procedure TdsdEDINAction.UAECMREDI(var AXML: String);
@@ -5922,8 +5815,298 @@ begin
   end;
 end;
 
+function TdsdEDINAction.SignData(UserSign : String) : boolean;
+var
+  privateKey: string;
+  FileName, Error: string;
+  ComSigner: OleVariant;
 
-function TdsdEDINAction.TTNSave: Boolean;
+begin
+  ComSigner := CreateOleObject('EUTaxServiceFile.Library.1');
+
+  try
+
+    ComSigner.Initialize(caType);
+
+   ComSigner.SetUIMode(true);
+   ComSigner.SetSettings;
+
+    ComSigner.SetUIMode(false);
+
+    try
+      ComSigner.ResetPrivateKey(euKeyTypeAccountant);
+    except
+      on E: Exception do
+      begin
+        raise Exception.Create
+          ('Ошибка библиотеки Exite. EUTaxService.ResetPrivateKey(euKeyTypeAccountant)'#10#13 +
+          E.Message);
+      end;
+    end;
+
+    try
+      // 1.Установка ключей
+      if UserSign <> ''
+      then if ExtractFilePath(UserSign) <> ''
+           then FileName := UserSign
+           else FileName := ExtractFilePath(ParamStr(0)) + UserSign
+      //else FileName := ExtractFilePath(ParamStr(0)) + 'Ключ - Неграш О.В..ZS2';
+      else FileName := ExtractFilePath(ParamStr(0)) + '24447183_2992217209_SU211210105333.ZS2';
+      // проверка
+      if not FileExists(FileName) then raise Exception.Create('Файл не найден : <'+FileName+'>');
+
+      ComSigner.SetPrivateKeyFile (euKeyTypeAccountant, FileName, '24447183', false); // бухгалтер
+      Error := ComSigner.GetLastErrorDescription;
+      if Error <> okError then
+         raise Exception.Create(Error);
+    except
+      on E: Exception do
+      begin
+        raise Exception.Create('Ошибка библиотеки Exite.ComSigner.SetPrivateKeyFile.euKeyTypeAccountant'
+          + FileName + #10#13 + E.Message);
+      end;
+    end;
+
+  finally
+    if not VarIsNull(ComSigner) then ComSigner.Finalize;
+  end;
+end;
+
+function TdsdEDINAction.GetToken: Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      S: String;
+      SL: TStringList;
+      jsonObj: TJSONObject;
+begin
+  inherited;
+  Result := False;
+  FTokenParam.Value := '';
+
+  if (FPasswordParam.Value = '') or
+     (FLoginParam.Value = '') or
+     (FHostParam.Value = '') then
+  begin
+    ShowMessage('Не заполнены Host, логин или пароль.');
+    Exit;
+  end;
+
+  // Непосредственно отправка
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  try
+
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.ContentType := 'application/x-www-form-urlencoded';
+    IdHTTP.Request.ContentEncoding := 'utf-8';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    SL := TStringList.Create;
+    try
+      try
+        SL.Add('email=' + FLoginParam.Value);
+        SL.Add('password=' + FPasswordParam.Value);
+        S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + '/api/authorization/hash'), SL);
+      except on E:EIdHTTPProtocolException  do
+                  ShowMessage(e.ErrorMessage);
+      end;
+    finally
+      SL.Free;
+    end;
+
+    if IdHTTP.ResponseCode = 200 then
+    begin
+      jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
+      try
+        if jsonObj.Get('SID') <> nil then
+        begin
+          FTokenParam.Value := jsonObj.Get('SID').JsonValue.Value;
+          Result := True;
+        end;
+      finally
+        FreeAndNil(jsonObj);
+      end;
+    end;
+  finally
+    IdHTTP.Free;
+  end;
+end;
+
+function TdsdEDINAction.SendETTN(AGLN, AUuId, AXML : String): Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      S, Params: String;
+      Steam: TStringStream;
+      jsonObj: TJSONObject;
+begin
+  inherited;
+  Result := False;
+
+  if FTokenParam.Value = '' then
+  begin
+    ShowMessage('Не получен токе. Отправка еЕЕТ невозможна.');
+    Exit;
+  end;
+
+  // Непосредственно отправка
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  try
+
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.ContentType := 'application/xml';
+    IdHTTP.Request.ContentEncoding := 'utf-8';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    Params := '?gln=' + AGLN;
+    if AUuId <> '' then Params := Params + '&doc_uuid=' + AUuId;
+
+    Steam := TStringStream.Create(AXML, TEncoding.UTF8);
+    try
+      try
+        S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + '/api/eds/doc/ettn/ttn' + Params), Steam);
+      except on E:EIdHTTPProtocolException  do
+                  ShowMessage(e.ErrorMessage);
+      end;
+    finally
+      Steam.Free;
+    end;
+
+    if IdHTTP.ResponseCode = 200 then
+    begin
+      jsonObj := TJSONObject.ParseJSONValue(S) as TJSONObject;
+      try
+        if jsonObj.Get('doc_uuid') <> nil then
+        begin
+          FResultParam.Value := jsonObj.Get('doc_uuid').JsonValue.Value;
+          Result := True;
+        end;
+      finally
+        FreeAndNil(jsonObj);
+      end;
+    end;
+  finally
+    IdHTTP.Free;
+  end;
+end;
+
+function TdsdEDINAction.GetDocETTN(AGLN, AUuId : String): Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      Params: String;
+      Steam: TMemoryStream;
+      jsonObj: TJSONObject;
+begin
+  inherited;
+  Result := False;
+
+  if FTokenParam.Value = '' then
+  begin
+    ShowMessage('Не получен токе. Загрузка файла еЕЕТ невозможна.');
+    Exit;
+  end;
+
+  // Непосредственно загрузка файла для подписи
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  try
+
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.ContentType := 'application/json';
+    IdHTTP.Request.ContentEncoding := 'utf-8';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    Params := '?gln=' + AGLN + '&doc_uuid=' + AUuId + '&format=ecmr&response_type=file';
+
+    Steam := TMemoryStream.Create;
+    try
+      try
+        IdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + '/api/eds/doc/ettn/body' + Params), Steam);
+      except on E:EIdHTTPProtocolException  do
+                  ShowMessage(e.ErrorMessage);
+      end;
+
+      if IdHTTP.ResponseCode = 200 then
+      begin
+        FResultParam.Value := IdHTTP.Response.RawHeaders.Params['Content-Disposition', 'filename'];
+        Steam.SaveToFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value);
+        Result := True;
+      end;
+    finally
+      Steam.Free;
+    end;
+  finally
+    IdHTTP.Free;
+  end;
+end;
+
+function TdsdEDINAction.SignDcuETTNConsignor(AGLN, AUuId : String): Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      S, Params: String;
+      fileStream: TFileStream;
+      base64Stream: TStringStream;
+      Stream: TStringStream;
+begin
+  inherited;
+  Result := False;
+
+  if FTokenParam.Value = '' then
+  begin
+    ShowMessage('Не получен токе. Подпись еЕЕТ невозможна.');
+    Exit;
+  end;
+
+  // Непосредственно загрузка файла для подписи
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  try
+
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.ContentType := 'application/json';
+    IdHTTP.Request.ContentEncoding := 'utf-8';
+    IdHTTP.Request.AcceptEncoding := 'gzip, deflate, br';
+    //IdHTTP.Request.Accept := '*/*';
+    //IdHTTP.Request.Connection := 'keep-alive';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    Params := '?gln=' + AGLN + '&role_code=CZ&doc_uuid=' + AUuId;
+
+    // Steam.DataString
+    // Steam.SaveToFile('c:\DSD\BIN\111_ettn.xml');
+    fileStream := TFileStream.Create('c:\Work\Temp\Диалог\ttn_ecmr_32d2bc90-577e-4e4c-af17-722b49cf1c86.ecmr.p7s', fmOpenRead);
+    base64Stream := TStringStream.Create('', TEncoding.UTF8);
+    try
+      try
+        EncodeStream(fileStream, base64Stream);
+        Stream := TStringStream.Create('["' + base64Stream.DataString + '"]', TEncoding.UTF8);
+        Stream.SaveToFile(ExtractFilePath(ParamStr(0)) + '1.txt');
+        try
+          S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + '/api/eds/doc/ettn/sign' + Params), Stream);
+        finally
+          FreeAndNil(Stream);
+        end;
+      except on E:EIdHTTPProtocolException  do
+                  ShowMessage(e.ErrorMessage);
+      end;
+    finally
+      FreeAndNil(fileStream);
+      FreeAndNil(base64Stream);
+    end;
+
+    if IdHTTP.ResponseCode = 200 then
+    begin
+      Result := True;
+    end;
+  finally
+    IdHTTP.Free;
+  end;
+end;
+
+function TdsdEDINAction.DoSendETTN: Boolean;
   var cXML : String;
 begin
   Result := False;
@@ -5933,12 +6116,38 @@ begin
   UAECMREDI(cXML);
 
   // Отправим eTTN
-  FResultParam.Value := HeaderDataSet.FieldByName('TransportGoods_UuId').AsString;
-  PostTTN(HeaderDataSet.FieldByName('GLN_from').asString, cXML);
+  Result := SendETTN(HeaderDataSet.FieldByName('GLN_from').asString, HeaderDataSet.FieldByName('TransportGoods_UuId').AsString, cXML);
 
   // Запишем в базу Uuid
   if (FResultParam.Value <> HeaderDataSet.FieldByName('TransportGoods_UuId').AsString) and
      Assigned(FUpdateUuid) then FUpdateUuid.Execute;
+
+end;
+
+function TdsdEDINAction.DoGetDocETTN: Boolean;
+  var cXML : String;
+begin
+  Result := False;
+  if not GetToken then Exit;
+
+  // Получим файл eTTN
+  //Result := GetDocETTN(HeaderDataSet.FieldByName('GLN_from').asString, HeaderDataSet.FieldByName('TransportGoods_UuId').AsString);
+ // Result := GetDocETTN('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
+  //Result := SignData('');
+
+  Result := SignDcuETTNConsignor('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
+
+end;
+
+function TdsdEDINAction.DoSignDcuETTNConsignor: Boolean;
+  var cXML : String;
+begin
+  Result := False;
+  if not GetToken then Exit;
+
+  // Получим файл eTTN
+  //Result := GetDocETTN(HeaderDataSet.FieldByName('GLN_from').asString, HeaderDataSet.FieldByName('TransportGoods_UuId').AsString);
+  Result := SignDcuETTNConsignor('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
 
 end;
 
@@ -5947,8 +6156,10 @@ function TdsdEDINAction.LocalExecute: Boolean;
 begin
   Result := False;
 
-  case FEDIDocType of
-    ediTTN : Result := TTNSave;
+  case FEDINActions of
+    edinSendETTN : Result := DoSendETTN;
+    edinGetDocETTN : Result := DoGetDocETTN;
+    //edinSignDcuETTNConsignor : Result := DoSignDcuETTNConsignor;
 
   else raise Exception.Create('Не описано метод обработки типа документов.');
   end;

@@ -652,6 +652,7 @@ type
     actSaleInsuranceCompaniesCash: TdsdOpenForm;
     N56: TMenuItem;
     MainisOrder408: TcxGridDBColumn;
+    spDivideGoodsLots: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -3551,9 +3552,37 @@ begin
     end;
   if not Result then
   begin
-    actShowMessage.MessageText := spCheck_RemainsError.ParamByName
-      ('outMessageText').Value;
-    actShowMessage.Execute;
+
+    if (Pos('другими сроками', spCheck_RemainsError.ParamByName('outMessageText').Value) > 0) and
+       (Self.FormParams.ParamByName('CheckId').Value <> 0) and
+       (Self.FormParams.ParamByName('InvNumberOrder').Value <> '')  then
+    begin
+      if (MessageDlg(spCheck_RemainsError.ParamByName('outMessageText').Value + #13#10#13#10 +
+         'Перераспределить товар в заказе по партиям ?', mtInformation, mbOKCancel, 0) = mrOk) then
+      begin
+        spDivideGoodsLots.ParamByName('inMovementId').Value := Self.FormParams.ParamByName('CheckId').Value;
+        spDivideGoodsLots.ParamByName('outMessageText').Value := '';
+        spDivideGoodsLots.ParamByName('outisReload').Value := False;
+        spDivideGoodsLots.Execute;
+        if spDivideGoodsLots.ParamByName('outisReload').Value = True then
+        begin
+           CheckCDS.EmptyDataSet;
+           NewCheck(True);
+           spSelectCheckId.ParamByName('inMovementId').Value := spDivideGoodsLots.ParamByName('inMovementId').Value;
+           spSelectCheckId.Execute;
+           spSelectCheck.Execute;
+           LoadVIPCheck;
+        end else
+        begin
+          actShowMessage.MessageText := spDivideGoodsLots.ParamByName('outMessageText').Value;
+          actShowMessage.Execute;
+        end;
+      end;
+    end else
+    begin
+     actShowMessage.MessageText := spCheck_RemainsError.ParamByName('outMessageText').Value;
+     actShowMessage.Execute;
+    end;
   end;
 end;
 
