@@ -776,6 +776,7 @@ end;
 procedure TMainForm.TimerTimer(Sender: TObject);
 begin
      if fStartProcess = true then begin {myLogMemo_add('!!! not BeginVACUUM');} exit; end;
+     //
      try
         Timer.Enabled:= false;
         //
@@ -1653,7 +1654,7 @@ begin
      beginVACUUM:=0;
      beginVACUUM_ii:=0;
      Timer.Enabled:= ((ParamStr(2)='autoALL') and (BranchEdit.Text = 'BranchId : 0'))
-                  or (cbHistoryCost_8379.Checked or cbHistoryCost_8374.Checked or cbHistoryCost_oth.Checked)
+                //or (cbHistoryCost_8379.Checked or cbHistoryCost_8374.Checked or cbHistoryCost_oth.Checked)
                   ;
      fStartProcess:= false;
      //

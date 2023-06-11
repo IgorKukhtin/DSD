@@ -1622,7 +1622,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
-    ExplicitTop = -6
     object Label3: TLabel
       Left = 6
       Top = 22
