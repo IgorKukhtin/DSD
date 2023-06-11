@@ -1536,8 +1536,8 @@ object MainForm: TMainForm
       TabOrder = 50
     end
     object BranchEdit: TEdit
-      Left = 3
-      Top = 585
+      Left = 6
+      Top = 586
       Width = 222
       Height = 21
       TabOrder = 51
@@ -1622,6 +1622,7 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
+    ExplicitTop = -6
     object Label3: TLabel
       Left = 6
       Top = 22
@@ -1638,7 +1639,7 @@ object MainForm: TMainForm
     end
     object Label5: TLabel
       Left = 15
-      Top = 609
+      Top = 611
       Width = 95
       Height = 13
       Caption = #1057#1082#1083#1072#1076' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1080
@@ -1649,6 +1650,19 @@ object MainForm: TMainForm
       Width = 46
       Height = 13
       Caption = 'SessionId'
+    end
+    object Label7: TLabel
+      Left = 16
+      Top = 517
+      Width = 106
+      Height = 13
+      Caption = 'MovementId_start:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
     end
     object cbAllCompleteDocument: TCheckBox
       Tag = 3
@@ -1893,9 +1907,9 @@ object MainForm: TMainForm
     end
     object cbCompleteSaleInt: TCheckBox
       Tag = 30
-      Left = 15
-      Top = 501
-      Width = 200
+      Left = 55
+      Top = 536
+      Width = 34
       Height = 17
       Caption = '3.3.'#1055#1088#1086#1076'.'#1087#1086#1082'.Int - '#1041#1053
       Font.Charset = DEFAULT_CHARSET
@@ -1905,13 +1919,14 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 16
+      Visible = False
       OnClick = cbCompleteIncomeBNClick
     end
     object cbCompleteReturnInInt: TCheckBox
       Tag = 30
-      Left = 15
-      Top = 519
-      Width = 200
+      Left = 111
+      Top = 536
+      Width = 37
       Height = 17
       Caption = '3.4.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Int - '#1041#1053
       Font.Charset = DEFAULT_CHARSET
@@ -1921,13 +1936,14 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 17
+      Visible = False
       OnClick = cbCompleteIncomeBNClick
     end
     object cbCompleteTaxFl: TCheckBox
       Tag = 30
-      Left = 162
-      Top = 503
-      Width = 194
+      Left = 26
+      Top = 497
+      Width = 34
       Height = 17
       Caption = '8.1. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Fl'
       Enabled = False
@@ -1943,9 +1959,9 @@ object MainForm: TMainForm
     end
     object cbCompleteTaxCorrective: TCheckBox
       Tag = 30
-      Left = 162
-      Top = 519
-      Width = 194
+      Left = 69
+      Top = 497
+      Width = 36
       Height = 17
       Caption = '8.2. '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' Fl'
       Enabled = False
@@ -1961,9 +1977,9 @@ object MainForm: TMainForm
     end
     object cbCompleteTaxInt: TCheckBox
       Tag = 30
-      Left = 15
-      Top = 536
-      Width = 194
+      Left = 128
+      Top = 497
+      Width = 37
       Height = 17
       Caption = '8.3. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Int'
       Font.Charset = DEFAULT_CHARSET
@@ -1973,6 +1989,7 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 20
+      Visible = False
       OnClick = cbCompleteIncomeBNClick
     end
     object cbSelectData_afterLoad: TCheckBox
@@ -2036,8 +2053,8 @@ object MainForm: TMainForm
       WordWrap = True
     end
     object UnitIdEdit: TEdit
-      Left = 15
-      Top = 625
+      Left = 14
+      Top = 626
       Width = 98
       Height = 21
       TabOrder = 25
@@ -2058,8 +2075,8 @@ object MainForm: TMainForm
       TabOrder = 26
     end
     object SessionIdEdit: TEdit
-      Left = 127
-      Top = 625
+      Left = 128
+      Top = 626
       Width = 48
       Height = 21
       TabOrder = 27
@@ -2186,7 +2203,7 @@ object MainForm: TMainForm
       Tag = 30
       Left = 15
       Top = 482
-      Width = 176
+      Width = 218
       Height = 17
       Caption = '!!! C'#1087#1080#1089#1086#1082' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' !!!'
       Font.Charset = DEFAULT_CHARSET
@@ -2325,6 +2342,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 43
+      Visible = False
     end
     object cb100MSec: TCheckBox
       Left = 153
@@ -2431,6 +2449,14 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 50
+    end
+    object MovementId_startEdit: TEdit
+      Left = 128
+      Top = 513
+      Width = 92
+      Height = 21
+      TabOrder = 51
+      Text = '0'
     end
   end
   object LogPanel: TPanel
@@ -3110,5 +3136,15 @@ object MainForm: TMainForm
       Message.DataType = ftString
       Message.MultiSelectSeparator = ','
     end
+  end
+  object toSqlQuery_three: TZQuery
+    Connection = toZConnection
+    SQL.Strings = (
+      'select  * from Object')
+    Params = <>
+    Properties.Strings = (
+      'select * from Object order by 1 desc')
+    Left = 152
+    Top = 552
   end
 end
