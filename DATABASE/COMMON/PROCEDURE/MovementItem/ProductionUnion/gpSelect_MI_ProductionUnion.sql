@@ -12,13 +12,17 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionUnion(
 RETURNS SETOF refcursor AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbDocumentKindId Integer;
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpGetUserBySession (inSession);
    
-   --PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_MovementItem_ProductionUnion());
+   -- определили <Тип документа>
+   vbDocumentKindId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_DocumentKind());
+
+
    IF inShowAll THEN
     OPEN Cursor1 FOR
        SELECT
@@ -39,6 +43,7 @@ BEGIN
             , CAST (NULL AS TVarchar)               AS Comment
             , CAST (NULL AS TFloat)                 AS Count
             , CAST (NULL AS TFloat)                 AS CountReal
+            , CAST (NULL AS TFloat)                 AS CountReal_LAK
             , CAST (NULL AS TFloat)                 AS RealWeight
 
             , CAST (NULL AS TFloat)                 AS CuterCount
@@ -136,7 +141,9 @@ BEGIN
 
             , MIString_Comment.ValueData        AS Comment
             , MIFloat_Count.ValueData           AS Count
-            , MIFloat_CountReal.ValueData       AS CountReal
+            , CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom()) THEN 0 ELSE MIFloat_CountReal.ValueData END :: TFloat AS CountReal
+            , CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom()) THEN MIFloat_CountReal.ValueData ELSE 0 END :: TFloat AS CountReal_LAK
+
             , MIFloat_RealWeight.ValueData      AS RealWeight
             , MIFloat_CuterCount.ValueData      AS CuterCount
             , MIFloat_CuterWeight.ValueData     AS CuterWeight
@@ -331,7 +338,8 @@ BEGIN
 
             , MIString_Comment.ValueData        AS Comment
             , MIFloat_Count.ValueData           AS Count
-            , MIFloat_CountReal.ValueData       AS CountReal
+            , CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom()) THEN 0 ELSE MIFloat_CountReal.ValueData END :: TFloat AS CountReal
+            , CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom()) THEN MIFloat_CountReal.ValueData ELSE 0 END :: TFloat AS CountReal_LAK
             , MIFloat_RealWeight.ValueData      AS RealWeight
             , MIFloat_CuterCount.ValueData      AS CuterCount
             , MIFloat_CuterWeight.ValueData     AS CuterWeight
