@@ -39,7 +39,7 @@ BEGIN
            , Object_MobileEmployee.Id           AS MobileEmployeeId
            , Object_MobileEmployee.ObjectCode   AS MobileEmployeeCode
            , Object_MobileEmployee.ValueData    AS MobileEmployeeName
-           , ObjectString_Comment.ValueData     AS MobileEmployeeComment
+           , LEFT (ObjectString_Comment.ValueData, 125) :: TVarChar AS MobileEmployeeComment
 
            , MovementItem.Amount                AS Amount
            , (CASE WHEN ObjectDesc.Id = zc_Object_Founder() OR ObjectLink_Unit_Contract.ChildObjectId > 0 THEN 0 ELSE COALESCE (MovementItem.Amount, 0) - COALESCE (MIFloat_Overlimit.ValueData, 0) END) :: TFloat AS Amount_ProfitLoss

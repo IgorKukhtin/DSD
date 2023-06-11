@@ -39,7 +39,12 @@ BEGIN
 
 
      -- сохранили <ƒокумент>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_OrderGoodsDetail(), '', inOperDate, inParentId);
+     ioId := lpInsertUpdate_Movement (ioId
+                                    , zc_Movement_OrderGoodsDetail()
+                                    , '*' || COALESCE ((SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inParentId), '')
+                                    , inOperDate
+                                    , inParentId
+                                     );
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), ioId, inOperDateStart);

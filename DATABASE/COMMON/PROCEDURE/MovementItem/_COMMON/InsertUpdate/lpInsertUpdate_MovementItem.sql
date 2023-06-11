@@ -55,7 +55,7 @@ BEGIN
      -- проверка - inAmount
      IF inAmount IS NULL
      THEN
-         RAISE EXCEPTION 'Ошибка-1.Не определено количество/сумма в документе № <%>.', vbInvNumber;
+         RAISE EXCEPTION 'Ошибка-1.Не определено количество/сумма в документе № <%>.(%)(%)(%)', vbInvNumber, inMovementId, inObjectId, inDescId;
      END IF;
      -- проверка - inObjectId
      IF inObjectId IS NULL

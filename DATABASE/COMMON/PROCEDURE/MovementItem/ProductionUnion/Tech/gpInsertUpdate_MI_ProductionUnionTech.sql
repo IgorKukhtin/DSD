@@ -175,8 +175,37 @@ BEGIN
                              LEFT JOIN ObjectBoolean AS ObjectBoolean_Real
                                                      ON ObjectBoolean_Real.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
                                                     AND ObjectBoolean_Real.DescId   = zc_ObjectBoolean_ReceiptChild_Real()
+
+                             -- этап Пр-ва
+                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_ReceiptLevel
+                                                  ON ObjectLink_ReceiptChild_ReceiptLevel.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                 AND ObjectLink_ReceiptChild_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptChild_ReceiptLevel()
+                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_From
+                                                  ON ObjectLink_ReceiptLevel_From.ObjectId = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                 AND ObjectLink_ReceiptLevel_From.DescId   = zc_ObjectLink_ReceiptLevel_From()
+                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_To
+                                                  ON ObjectLink_ReceiptLevel_To.ObjectId = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                 AND ObjectLink_ReceiptLevel_To.DescId   = zc_ObjectLink_ReceiptLevel_To()
+                             LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptLevel_MovementDesc
+                                                   ON ObjectFloat_ReceiptLevel_MovementDesc.ObjectId  = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                  AND ObjectFloat_ReceiptLevel_MovementDesc.DescId    = zc_ObjectFloat_ReceiptLevel_MovementDesc()
+                             --  Тип документов
+                             LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_DocumentKind
+                                                  ON ObjectLink_ReceiptLevel_DocumentKind.ObjectId = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                 AND ObjectLink_ReceiptLevel_DocumentKind.DescId   = zc_ObjectLink_ReceiptLevel_DocumentKind()
+
                         WHERE ObjectLink_ReceiptChild_Receipt.ChildObjectId = inReceiptId
-                          AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
+                          AND ObjectLink_ReceiptChild_Receipt.DescId        = zc_ObjectLink_ReceiptChild_Receipt()
+
+                          -- пустой этап Пр-ва или тот что нужен
+                          AND (ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId IS NULL
+                             OR (ObjectLink_ReceiptLevel_From.ChildObjectId      = inFromId
+                             AND ObjectLink_ReceiptLevel_To.ChildObjectId        = inToId
+                             AND ObjectFloat_ReceiptLevel_MovementDesc.ValueData = zc_Movement_ProductionUnion()
+                                )
+                              )
+                          -- нет Типа документов
+                          AND ObjectLink_ReceiptLevel_DocumentKind.ChildObjectId IS NULL
                        )
       , tmpReceipt_old AS
                        (SELECT MILO_Receipt.ObjectId AS ReceiptId
