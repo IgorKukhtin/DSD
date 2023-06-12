@@ -149,3 +149,4 @@ $BODY$
 
 
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_CheckTaxCorrective',inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_MIProtocolUpdate',inSession:= zfCalc_UserAdmin()); -- +
