@@ -169,6 +169,12 @@ type
     bbPrintDays1_test: TdxBarButton;
     actPrintDays2_cuter: TdsdPrintAction;
     bbPrintDays2_cuter: TdxBarButton;
+    OperDate_LakTo: TcxGridDBColumn;
+    Amount_LakTo: TcxGridDBColumn;
+    CuterCount_LakTo: TcxGridDBColumn;
+    OperDate_LakFrom: TcxGridDBColumn;
+    Amount_LakFrom: TcxGridDBColumn;
+    CuterCount_LakFrom: TcxGridDBColumn;
   private
     { Private declarations }
   public
