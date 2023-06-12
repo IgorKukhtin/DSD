@@ -43,9 +43,9 @@ BEGIN
                                              ON MovementFloat_ZReport.MovementId =  Movement.Id
                                             AND MovementFloat_ZReport.DescId = zc_MovementFloat_ZReport()
 
-                WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '1 DAY' 
-                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                  AND Movement.DescId = zc_Movement_Check()
+                WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY' 
+                  AND Movement.StatusId <> zc_Enum_Status_Erased()
+                  AND Movement.DescId in (zc_Movement_Check(), zc_Movement_ReturnIn(), zc_Movement_Sale())
                   AND MovementLinkObject_Unit.ObjectId = vbUnitId
                   AND Object_CashRegister.ValueData = inCashRegisterName
                   AND COALESCE(MovementFloat_ZReport.ValueData, - 1)::Integer = inZReport - 1)
@@ -237,13 +237,62 @@ BEGIN
                            AND MovementLinkObject_Unit.ObjectId = vbUnitId
                            AND Object_CashRegister.ValueData = inCashRegisterName
                            AND COALESCE(MovementFloat_ZReport.ValueData, - 1)::Integer = inZReport)
+       , tmpSale AS (SELECT Movement.*
+                          , MovementString_FiscalCheckNumber.ValueData                                          AS FiscalCheckNumber
+                          , CASE WHEN MovementLinkObject_PaidType.ObjectId = zc_Enum_PaidType_Cash()
+                                 THEN COALESCE(MovementFloat_TotalSumm.ValueData, 0)
+                                 ELSE COALESCE(MovementFloat_TotalSummPayAdd.ValueData, 0) END                  AS SummCash
+                          , CASE WHEN MovementLinkObject_PaidType.ObjectId = zc_Enum_PaidType_Cash()
+                                 THEN 0
+                                 ELSE COALESCE(MovementFloat_TotalSumm.ValueData, 0) - 
+                                      COALESCE(MovementFloat_TotalSummPayAdd.ValueData, 0) END                  AS SummCard
+                     FROM Movement
+
+                          LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()    
+                                                                                               
+                          LEFT JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                                       ON MovementLinkObject_CashRegister.MovementId = Movement.Id
+                                                      AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+                          LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = MovementLinkObject_CashRegister.ObjectId
+                         		                      
+                          LEFT JOIN MovementString AS MovementString_FiscalCheckNumber
+                                                   ON MovementString_FiscalCheckNumber.MovementId = Movement.Id
+                                                  AND MovementString_FiscalCheckNumber.DescId = zc_MovementString_FiscalCheckNumber()
+                                                                 
+                          LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                  ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                                 AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                          LEFT JOIN MovementFloat AS MovementFloat_TotalSummPayAdd
+                                                  ON MovementFloat_TotalSummPayAdd.MovementId =  Movement.Id
+                                                 AND MovementFloat_TotalSummPayAdd.DescId = zc_MovementFloat_TotalSummPayAdd()
+         
+                          LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
+                                                       ON MovementLinkObject_PaidType.MovementId = Movement.Id
+                                                      AND MovementLinkObject_PaidType.DescId = zc_MovementLinkObject_PaidType()
+
+                          LEFT JOIN MovementFloat AS MovementFloat_ZReport
+                                                  ON MovementFloat_ZReport.MovementId =  Movement.Id
+                                                 AND MovementFloat_ZReport.DescId = zc_MovementFloat_ZReport()
+
+                     WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY' 
+                       AND Movement.StatusId <> zc_Enum_Status_Erased()
+                       AND Movement.DescId = zc_Movement_Sale()
+                       AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                       AND Object_CashRegister.ValueData = inCashRegisterName
+                       AND COALESCE(MovementFloat_ZReport.ValueData, - 1)::Integer = inZReport)
        , tmpSum AS (SELECT sum(tmpCheck.SummCash) AS SummCash
                          , sum(tmpCheck.SummCard) AS SummCard
                     FROM tmpCheck
                     UNION ALL
                     SELECT - sum(tmpReturnIn.SummCash) 
                          , - sum(tmpReturnIn.SummCard) 
-                    FROM tmpReturnIn)
+                    FROM tmpReturnIn
+                    UNION ALL
+                    SELECT sum(tmpSale.SummCash) 
+                         , sum(tmpSale.SummCard) 
+                    FROM tmpSale)
                         
     SELECT COALESCE(sum(tmpSum.SummCash), 0), COALESCE(sum(tmpSum.SummCard), 0)
     INTO outSummsCash, outSummsCard
@@ -266,4 +315,4 @@ ALTER FUNCTION gpGet_Money_CashRegister (TVarChar, Integer, Integer, TVarChar) O
 
 -- тест
 -- 
-select * from gpGet_Money_CashRegister(inCashRegisterName := '3000799232' , inZReport := 1727 , inCheckOut := 20 , inCheckIn := 0 ,  inSession := '6002014');
+select * from gpGet_Money_CashRegister(inCashRegisterName := '3000381611' , inZReport := 2010 , inCheckOut := 20 , inCheckIn := 0 ,  inSession := '3');

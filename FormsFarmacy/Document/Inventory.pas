@@ -120,6 +120,7 @@ type
     spGetInventoryHouseholdInventoryID: TdsdStoredProc;
     actPUSHInventBarcode: TdsdShowPUSHMessage;
     spPUSHInventBarcode: TdsdStoredProc;
+    spPUSHCompileFull: TdsdStoredProc;
   private
     { Private declarations }
   public

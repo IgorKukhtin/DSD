@@ -153,6 +153,9 @@ type
     InfoisAuto: TcxGridDBColumn;
     InfoDiff: TcxGridDBColumn;
     spUpdate_Comment: TdsdStoredProc;
+    cxButton3: TcxButton;
+    actRefreshItog: TAction;
+    ManualPrice: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);
@@ -175,6 +178,7 @@ type
       var Action: TDataAction);
     procedure InfoCDSBeforePost(DataSet: TDataSet);
     procedure InfoCDSAfterPost(DataSet: TDataSet);
+    procedure actRefreshItogExecute(Sender: TObject);
   protected
     procedure FormClose(Sender: TObject; var Action: TCloseAction); override;
   private
@@ -484,6 +488,56 @@ begin
 
   CreateInventoryTable;
 
+end;
+
+procedure TMainInventoryForm.actRefreshItogExecute(Sender: TObject);
+  var Params : TdsdParams;
+begin
+  inherited;
+  if PageControl.ActivePage = tsInfo then
+  begin
+
+    gc_User.Local := False;
+
+    try
+      spGet_User_IsAdmin.Execute;
+    except
+    end;
+
+    if gc_User.Local then
+    begin
+      ShowMessage('В локальном режиме не работает');
+      Exit;
+    end;
+
+    Params := TdsdParams.Create(Self, TdsdParam);
+    try
+      Params.AddParam('Id', TFieldType.ftInteger, ptOutput, 0);
+      Params.AddParam('OperDate', TFieldType.ftDateTime, ptOutput, FormParams.ParamByName('OperDate').Value);
+      Params.AddParam('UnitId', TFieldType.ftInteger, ptOutput, FormParams.ParamByName('UnitId').Value);
+      Params.AddParam('UnitName', TFieldType.ftString, ptOutput, '');
+      if not SQLite_Get(InventoryGetActiveSQL, Params) then Exit;
+      FormParams.ParamByName('Id').Value := Params.ParamByName('Id').Value;
+      FormParams.ParamByName('OperDate').Value := Params.ParamByName('OperDate').Value;
+      FormParams.ParamByName('UnitId').Value := Params.ParamByName('UnitId').Value;
+      FormParams.ParamByName('UnitName').Value := Params.ParamByName('UnitName').Value;
+    finally
+      FreeAndNil(Params);
+    end;
+
+    StartSplash('Старт', 'Проведение инвентаризации');
+    try
+      ChangeStatus('Получение "Получение данных инвентаризации"');
+      if not SaveInventory(FormParams.ParamByName('UnitId').Value, FormParams.ParamByName('OperDate').Value) then Exit;
+    finally
+      EndSplash;
+    end;
+
+    edOperDateInfo.Date := FormParams.ParamByName('OperDate').Value;
+    edUnitNameInfo.Text := FormParams.ParamByName('UnitName').Value;
+
+    spSelectInfo.Execute;
+  end;
 end;
 
 procedure TMainInventoryForm.actSendInventChildExecute(Sender: TObject);

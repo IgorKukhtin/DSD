@@ -142,7 +142,8 @@ uses
   EnterBuyerForSite in '..\FormsFarmacy\Cash\EnterBuyerForSite.pas' {EnterBuyerForSiteForm},
   SalePromoGoodsDialog in '..\FormsFarmacy\Cash\SalePromoGoodsDialog.pas' {SalePromoGoodsForm: TParentForm},
   InternshipConfirmation in '..\FormsFarmacy\Cash\InternshipConfirmation.pas' {InternshipConfirmationFormЬфшт},
-  CashCloseSaleInsuranceCompaniesDialog in '..\FormsFarmacy\Cash\CashCloseSaleInsuranceCompaniesDialog.pas' {CashCloseSaleInsuranceCompaniesDialogForm: TParentForm};
+  CashCloseSaleInsuranceCompaniesDialog in '..\FormsFarmacy\Cash\CashCloseSaleInsuranceCompaniesDialog.pas' {CashCloseSaleInsuranceCompaniesDialogForm: TParentForm},
+  Pos_PrivatBank_JSON in '..\FormsFarmacy\Cash\Pos_PrivatBank_JSON.pas';
 
 {$R *.res}
 
@@ -207,7 +208,7 @@ begin
 
       //
       Application.CreateForm(TdmMain, dmMain);
-      // определяет главную форму
+  // определяет главную форму
       // Форма работате в связке с FarmacyCashServise.exe
       Application.CreateForm(TMainCashForm2, MainCashForm);
 

@@ -2436,4 +2436,38 @@ inherited InventoryForm: TInventoryForm
     Left = 650
     Top = 368
   end
+  object spPUSHCompileFull: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowCompilePUSH_InventoryFull'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 642
+    Top = 448
+  end
 end
