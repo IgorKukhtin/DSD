@@ -76,7 +76,20 @@ BEGIN
        -- для некоторых случаев блокируем создание новой статьи ОПиУ
        IF inInsert = FALSE
        THEN
-           RAISE EXCEPTION 'Ошибка.В данном документе невозможно создать новую статью ОПиУ с параметрами: <%>, <%>, <%>, <%>', lfGet_Object_ValueData (inProfitLossGroupId), lfGet_Object_ValueData (inProfitLossDirectionId), lfGet_Object_ValueData (inInfoMoneyDestinationId), lfGet_Object_ValueData (inInfoMoneyId);
+           RAISE EXCEPTION 'Ошибка.В данном документе невозможно создать новую статью ОПиУ с параметрами: %<%> %<%> %<%> %<%> %(%)(%)(%)'
+                         , CHR (13)
+                         , lfGet_Object_ValueData (inProfitLossGroupId)
+                         , CHR (13)
+                         , lfGet_Object_ValueData (inProfitLossDirectionId)
+                         , CHR (13)
+                         , lfGet_Object_ValueData (inInfoMoneyDestinationId)
+                         , CHR (13)
+                         , lfGet_Object_ValueData (inInfoMoneyId)
+                         , CHR (13)
+                         , inProfitLossGroupId
+                         , inProfitLossDirectionId
+                         , inInfoMoneyDestinationId
+                          ;
        END IF;
 
        -- Определяем Id 2-ий уровень по <Группа ОПиУ> и <Аналитика ОПиУ - направление>

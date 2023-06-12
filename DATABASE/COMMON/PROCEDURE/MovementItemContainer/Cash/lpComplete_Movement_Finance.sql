@@ -404,7 +404,7 @@ end if;
                                          -- Капитальные Затраты - по оплате
                                          WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Инвестиции + Капитальные инвестиции
                                           AND _tmpItem.ProfitLossGroupId IN (zc_Enum_ProfitLossGroup_20000(), zc_Enum_ProfitLossGroup_30000(), zc_Enum_ProfitLossGroup_65000()) -- Общепроизводственные расходы
-                                          AND _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_LossDebt(), zc_Movement_PersonalReport())
+                                          AND _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_LossDebt(), zc_Movement_PersonalReport(), zc_Movement_SendDebt())
 
                                               THEN CASE WHEN _tmpItem.ProfitLossGroupId IN (zc_Enum_ProfitLossGroup_20000(), zc_Enum_ProfitLossGroup_65000()) -- Общепроизводственные расходы
                                                              THEN zc_Enum_ProfitLoss_65201() -- Производственные ОС + Основные средства
@@ -430,7 +430,7 @@ end if;
 
                                          -- Капитальные Затраты - по оплате
                                          WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
-                                          AND _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_LossDebt(), zc_Movement_PersonalReport())
+                                          AND _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_LossDebt(), zc_Movement_PersonalReport(), zc_Movement_SendDebt())
                                           AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_70500() -- НМА
                                           AND _tmpItem.ProfitLossDirectionId > 0
 
@@ -469,7 +469,7 @@ end if;
 
                                          ELSE
                                     lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := CASE WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
-                                                                                                      AND _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_LossDebt(), zc_Movement_PersonalReport())
+                                                                                                      AND _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_LossDebt(), zc_Movement_PersonalReport(), zc_Movement_SendDebt())
                                                                                                           THEN zc_Enum_ProfitLossGroup_70000() -- Капитальные Затраты
 
                                                                                                      WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
@@ -478,7 +478,7 @@ end if;
                                                                                                      ELSE _tmpItem.ProfitLossGroupId
                                                                                                 END
                                                                   , inProfitLossDirectionId  := CASE WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
-                                                                                                      AND _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_LossDebt(), zc_Movement_PersonalReport())
+                                                                                                      AND _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_LossDebt(), zc_Movement_PersonalReport(), zc_Movement_SendDebt())
 
                                                                                                           THEN CASE WHEN _tmpItem.ProfitLossGroupId = zc_Enum_ProfitLossGroup_20000() -- Общепроизводственные расходы
                                                                                                                          THEN zc_Enum_ProfitLossDirection_65200() -- Капитальные Затраты + Производственные ОС
