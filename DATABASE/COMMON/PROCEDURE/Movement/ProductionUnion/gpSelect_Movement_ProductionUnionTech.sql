@@ -278,7 +278,75 @@ BEGIN
           , tmpMIString     AS (SELECT * FROM MovementItemString     AS MIS  WHERE MIS.MovementItemId  IN (SELECT DISTINCT _tmpListMaster.MovementItemId FROM _tmpListMaster))
           , tmpMIDate       AS (SELECT * FROM MovementItemDate       AS MID  WHERE MID.MovementItemId  IN (SELECT DISTINCT _tmpListMaster.MovementItemId FROM _tmpListMaster))
           , tmpMILinkObject AS (SELECT * FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId IN (SELECT DISTINCT _tmpListMaster.MovementItemId FROM _tmpListMaster))
-       -- 
+       
+         --сначала выбираем для строк мастера zc_MIFloat_MovementItemId, по ним получаем строки док Lak и самb документы Lak
+         , tmpMIFloat_lak AS (SELECT MIFloat_MovementItemId.MovementItemId AS MovementItemId
+                                  ,  MIFloat_MovementItemId.ValueData::Integer AS MovementItemId_master
+                              FROM MovementItemFloat AS MIFloat_MovementItemId
+                              WHERE MIFloat_MovementItemId.ValueData IN (SELECT DISTINCT _tmpListMaster.MovementItemId FROM _tmpListMaster) 
+                                AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+                              )
+         , tmpMI_all AS (SELECT MovementItem.Id  AS MovementItemId
+                              , tmpMIFloat_lak.MovementItemId_master
+                              , MovementItem.Amount
+                              , MovementItem.MovementId
+                         FROM tmpMIFloat_lak
+                             INNER JOIN MovementItem ON MovementItem.Id = tmpMIFloat_lak.MovementItemId
+                                                    AND MovementItem.isErased   = FALSE
+                                                    AND MovementItem.DescId     = zc_MI_Master()
+                         ) 
+         , tmpMLO_DocumentKind AS (SELECT MovementLinkObject_DocumentKind.*
+                                   FROM MovementLinkObject AS MovementLinkObject_DocumentKind
+                                   WHERE MovementLinkObject_DocumentKind.MovementId IN (SELECT DISTINCT tmpMI_all.MovementId FROM tmpMI_all)
+                                     AND MovementLinkObject_DocumentKind.DescId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom())
+                                   )
+         , tmpMLO AS (SELECT MovementLinkObject.*
+                      FROM MovementLinkObject
+                      WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMI_all.MovementId FROM tmpMI_all)
+                        AND MovementLinkObject.DescId IN (zc_MovementLinkObject_From(), zc_MovementLinkObject_To())
+                      )
+         , tmpMIFloat_CuterCount AS (SELECT MovementItemFloat.*
+                           FROM MovementItemFloat 
+                           WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_all.MovementItemId FROM tmpMI_all)
+                             AND MovementItemFloat.DescId = zc_MIFloat_CuterCount()
+                           )                 
+         , tmpMI_lak AS (SELECT MovementLinkObject_DocumentKind.DescId 
+                              , tmpMI_all.MovementItemId
+                              , tmpMI_all.MovementItemId_master
+                              , tmpMI_all.Amount
+                              , MIFloat_CuterCount.ValueData AS CuterCount
+                              , Movement.OperDate
+                         FROM tmpMI_all
+                             INNER JOIN tmpMLO_DocumentKind AS MovementLinkObject_DocumentKind
+                                                            ON MovementLinkObject_DocumentKind.MovementId = tmpMI_all.MovementId
+                                                           AND MovementLinkObject_DocumentKind.DescId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom())
+                             INNER JOIN tmpMLO AS MLO_From
+                                               ON MLO_From.MovementId = MovementLinkObject_DocumentKind.MovementId
+                                              AND MLO_From.DescId = zc_MovementLinkObject_From()
+                                              AND MLO_From.ObjectId = inFromId
+                             INNER JOIN tmpMLO AS MLO_To
+                                               ON MLO_To.MovementId = MovementLinkObject_DocumentKind.MovementId
+                                              AND MLO_To.DescId = zc_MovementLinkObject_To()
+                                              AND MLO_To.ObjectId = inToId
+                             INNER JOIN Movement ON Movement.Id = tmpMI_all.MovementId
+                                                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                
+                             LEFT JOIN tmpMIFloat_CuterCount AS MIFloat_CuterCount
+                                                             ON MIFloat_CuterCount.MovementItemId = tmpMI_all.MovementItemId
+                                                            AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+                         )
+         , tmpData_Lak AS (SELECT tmpMI.MovementItemId_master
+                                , max (CASE WHEN tmpMI.DescId = zc_Enum_DocumentKind_LakTo() THEN tmpMI.OperDate ELSE zc_DateStart() END)   AS OperDate_to
+                                , SUM (CASE WHEN tmpMI.DescId = zc_Enum_DocumentKind_LakTo() THEN tmpMI.Amount ELSE 0 END)                  AS Amount_to
+                                , SUM (CASE WHEN tmpMI.DescId = zc_Enum_DocumentKind_LakTo() THEN tmpMI.CuterCount ELSE 0 END)              AS CuterCount_to
+                                , max (CASE WHEN tmpMI.DescId = zc_Enum_DocumentKind_LakFrom() THEN tmpMI.OperDate ELSE zc_DateStart() END) AS OperDate_from
+                                , SUM (CASE WHEN tmpMI.DescId = zc_Enum_DocumentKind_LakFrom() THEN tmpMI.Amount ELSE 0 END)                AS Amount_from
+                                , SUM (CASE WHEN tmpMI.DescId = zc_Enum_DocumentKind_LakFrom() THEN tmpMI.CuterCount ELSE 0 END)            AS CuterCount_from  
+                           FROM tmpMI_lak AS tmpMI
+                           GROUP BY tmpMI.MovementItemId_master
+                          ) 
+
+
        SELECT
               CASE WHEN _tmpListMaster.MovementId <> 0 THEN row_number() OVER (ORDER BY CASE WHEN _tmpListMaster.MovementId <> 0 THEN _tmpListMaster.MovementItemId ELSE NULL END) ELSE 0 END :: Integer AS LineNum
             , _tmpListMaster.MovementId
@@ -344,7 +412,17 @@ BEGIN
             , MIDate_Update.ValueData             AS UpdateDate
 
             , FALSE                               AS isErased
-
+            
+            --данные док Lak 
+            --перед лакирование
+            , tmpData_Lak.OperDate_to     AS OperDate_LakTo
+            , tmpData_Lak.Amount_to       AS Amount_LakTo
+            , tmpData_Lak.CuterCount_to   AS CuterCount_LakTo
+            --после лакирования
+            , tmpData_Lak.OperDate_from   AS OperDate_LakFrom
+            , tmpData_Lak.Amount_from     AS Amount_LakFrom
+            , tmpData_Lak.CuterCount_from AS CuterCount_LakFrom
+            
        FROM _tmpListMaster
              INNER JOIN tmpStatus ON tmpStatus.StatusId = _tmpListMaster.StatusId
 
@@ -440,7 +518,9 @@ BEGIN
                                     AND ObjectBoolean_Receipt_Main.DescId = zc_ObjectBoolean_Receipt_Main()
              LEFT JOIN ObjectFloat AS ObjectFloat_Receipt_Value
                                    ON ObjectFloat_Receipt_Value.ObjectId = Object_Receipt.Id
-                                  AND ObjectFloat_Receipt_Value.DescId = zc_ObjectFloat_Receipt_Value()
+                                  AND ObjectFloat_Receipt_Value.DescId = zc_ObjectFloat_Receipt_Value() 
+             
+             LEFT JOIN tmpData_Lak ON tmpData_Lak.MovementItemId_master = _tmpListMaster.MovementItemId 
 
            ;
 
@@ -780,6 +860,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
 
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.06.23         * add Lak
  13.09.22         *
  05.10.16         * add inJuridicalBasisId
  13.06.16         *

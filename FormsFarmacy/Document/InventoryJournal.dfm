@@ -3,8 +3,8 @@ inherited InventoryJournalForm: TInventoryJournalForm
   ClientHeight = 535
   ClientWidth = 819
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 835
-  ExplicitHeight = 574
+  ExplicitWidth = 837
+  ExplicitHeight = 582
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -398,6 +398,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
       FileNameParam.DataType = ftString
       FileNameParam.MultiSelectSeparator = ','
       TitleHeight = 1.000000000000000000
+      SignHeight = 1.000000000000000000
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -11
@@ -408,6 +409,11 @@ inherited InventoryJournalForm: TInventoryJournalForm
       HeaderFont.Height = -11
       HeaderFont.Name = 'Tahoma'
       HeaderFont.Style = []
+      SignFont.Charset = DEFAULT_CHARSET
+      SignFont.Color = clWindowText
+      SignFont.Height = -11
+      SignFont.Name = 'Tahoma'
+      SignFont.Style = []
       ColumnParams = <
         item
           Caption = #1053#1086#1084#1077#1088
@@ -419,6 +425,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -430,6 +437,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
           Font.Name = 'Tahoma'
           Font.Style = []
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -442,6 +450,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
           Font.Style = []
           Width = 30
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1042#1074#1077#1083
@@ -454,6 +463,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
           Font.Style = []
           Width = 18
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1044#1072#1090#1072' '#1074#1074#1086#1076#1072
@@ -466,6 +476,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
           Font.Style = []
           Width = 18
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1055#1088#1086#1074#1077#1083
@@ -478,6 +489,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
           Font.Style = []
           Width = 18
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1044#1072#1090#1072' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103
@@ -490,6 +502,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
           Font.Style = []
           Width = 18
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1048#1085#1090#1077#1088#1074#1072#1083
@@ -502,6 +515,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
           Font.Style = []
           Width = 18
           CalcColumnLists = <>
+          DetailedTexts = <>
         end>
       Caption = #1054#1090#1095#1077#1090' '#1088#1072#1079#1085#1080#1094#1072' '#1087#1086'  '#1074#1088#1077#1084#1077#1085#1080' '#1084#1077#1078#1076#1091' '#1089#1086#1079#1076#1072#1085#1080#1077#1084' '#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077#1084
       Hint = #1054#1090#1095#1077#1090' '#1088#1072#1079#1085#1080#1094#1072' '#1087#1086'  '#1074#1088#1077#1084#1077#1085#1080' '#1084#1077#1078#1076#1091' '#1089#1086#1079#1076#1072#1085#1080#1077#1084' '#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077#1084
@@ -554,7 +568,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
@@ -873,7 +887,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
       end>
     PackSize = 1
     Left = 706
-    Top = 344
+    Top = 328
   end
   object spInventoryTime: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Inventory_Time'
@@ -885,7 +899,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -893,7 +907,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -902,5 +916,39 @@ inherited InventoryJournalForm: TInventoryJournalForm
     PackSize = 1
     Left = 535
     Top = 336
+  end
+  object spPUSHCompileFull: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowCompilePUSH_InventoryFull'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 706
+    Top = 384
   end
 end

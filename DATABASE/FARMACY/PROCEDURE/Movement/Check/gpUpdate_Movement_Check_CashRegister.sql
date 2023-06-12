@@ -22,6 +22,12 @@ BEGIN
     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
     vbUserId:= inSession;
     
+    IF EXISTS(SELECT * FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Send())
+    THEN
+      UPDATE Movement SET OperDate = CURRENT_DATE
+      WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Send();
+    END IF;
+    
     -- сохранили связь с <Тип оплаты>
     IF inPaidType <> -1
     THEN

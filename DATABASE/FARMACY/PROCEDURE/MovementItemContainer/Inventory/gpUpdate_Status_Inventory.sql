@@ -10,6 +10,11 @@ CREATE OR REPLACE FUNCTION gpUpdate_Status_Inventory(
 RETURNS VOID AS
 $BODY$
 BEGIN
+
+   -- Запрет запуска второй копии
+   PERFORM  zfCheckRunProc ('gpUpdate_Status_Inventory', 1);
+
+
      CASE inStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
             PERFORM gpUnComplete_Movement_Inventory (inMovementId, inSession);

@@ -50,7 +50,7 @@ BEGIN
   IF COALESCE(vbText, '') <> ''
   THEN
     outShowMessage := True;
-    outPUSHType := 4;
+    outPUSHType := zc_TypePUSH_Confirmation();
     outText := 'По подразделению есть отложенные перемещения, возвраты поставщику или продажи датой инвентаризации или ранее. Необходимо их переотложить датой познее даты инвентаризации т.к. они могут исказить результат инвентаризации.'||CHR(13)||vbText;
   END IF;
 

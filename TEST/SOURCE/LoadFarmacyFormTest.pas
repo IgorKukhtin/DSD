@@ -1186,10 +1186,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BanToTransferTimeGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BanToTransferTimeGoodsForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaymentHelsiForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaymentHelsiForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PaymentHelsiForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppUserForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FulfillmentPlanMobileAppUserForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppForm'));

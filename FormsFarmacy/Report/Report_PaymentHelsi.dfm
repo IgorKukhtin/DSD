@@ -248,6 +248,16 @@ inherited Report_PaymentHelsiForm: TReport_PaymentHelsiForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
+            end
+            item
+              Format = ',0;-,0; ;'
+              Kind = skSum
+              Column = Count_Recipe
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = Summa_Recipe
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -286,6 +296,25 @@ inherited Report_PaymentHelsiForm: TReport_PaymentHelsiForm
             Options.Editing = False
             VisibleForCustomization = False
             Width = 100
+          end
+          object Count_Recipe: TcxGridDBColumn
+            DataBinding.FieldName = 'Count_Recipe'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+          end
+          object Summa_Recipe: TcxGridDBColumn
+            DataBinding.FieldName = 'Summa_Recipe'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
           end
         end
       end
@@ -426,6 +455,9 @@ inherited Report_PaymentHelsiForm: TReport_PaymentHelsiForm
     DataSets = <
       item
         DataSet = HeaderCDS
+      end
+      item
+        DataSet = Header2CDS
       end
       item
         DataSet = MasterCDS
@@ -593,5 +625,45 @@ inherited Report_PaymentHelsiForm: TReport_PaymentHelsiForm
     Params = <>
     Left = 16
     Top = 216
+  end
+  object Header2CDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 104
+    Top = 216
+  end
+  object CrossDBViewReportAddOn: TCrossDBViewReportAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
+    MultiplyColumnList = <>
+    TemplateColumnList = <
+      item
+        HeaderColumnName = 'Title1'
+        TemplateColumn = Count_Recipe
+        IsCross.Value = True
+        IsCross.DataType = ftBoolean
+        IsCross.MultiSelectSeparator = ','
+      end
+      item
+        HeaderColumnName = 'Title2'
+        TemplateColumn = Summa_Recipe
+        IsCross.Value = True
+        IsCross.DataType = ftBoolean
+        IsCross.MultiSelectSeparator = ','
+      end>
+    HeaderDataSet = Header2CDS
+    Left = 552
+    Top = 312
   end
 end

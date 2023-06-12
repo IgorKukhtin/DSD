@@ -40,6 +40,10 @@ type
     FormParams: TdsdFormParams;
     CrossDBViewAddOn: TCrossDBViewAddOn;
     HeaderCDS: TClientDataSet;
+    Header2CDS: TClientDataSet;
+    CrossDBViewReportAddOn: TCrossDBViewReportAddOn;
+    Count_Recipe: TcxGridDBColumn;
+    Summa_Recipe: TcxGridDBColumn;
   private
     { Private declarations }
   public
