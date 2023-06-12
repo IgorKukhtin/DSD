@@ -182,7 +182,7 @@ END IF;
           , tmp.OperDate
           , (tmp.InvNumber || ' - ' || CASE WHEN tmp.BranchCode IN (1)     THEN tmp.BranchCode 
                                             WHEN tmp.BranchCode IN (2, 12) THEN tmp.BranchCode + 100
-                                            ELSE tmp.BranchCode + 1000
+                                            ELSE COALESCE (tmp.BranchCode, 0) + 1000
                                        END :: TVarChar) :: TVarChar AS InvNumber
           , tmp.Code
           , tmp.ItemName

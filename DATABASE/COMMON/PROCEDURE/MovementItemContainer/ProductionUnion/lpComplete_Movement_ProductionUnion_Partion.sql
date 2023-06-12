@@ -199,6 +199,7 @@ BEGIN
                                                     ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
                                                    AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
 
+                              -- этап Пр-ва
                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_ReceiptLevel
                                                    ON ObjectLink_ReceiptChild_ReceiptLevel.ObjectId = Object_ReceiptChild.Id
                                                   AND ObjectLink_ReceiptChild_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptChild_ReceiptLevel()
@@ -215,6 +216,7 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_DocumentKind
                                                    ON ObjectLink_ReceiptLevel_DocumentKind.ObjectId = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
                                                   AND ObjectLink_ReceiptLevel_DocumentKind.DescId   = zc_ObjectLink_ReceiptLevel_DocumentKind()
+                          -- пустой этап Пр-ва или тот что нужен
                          WHERE (ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId IS NULL
                               OR (ObjectLink_ReceiptLevel_From.ChildObjectId      = inFromId
                               AND ObjectLink_ReceiptLevel_To.ChildObjectId        = inToId

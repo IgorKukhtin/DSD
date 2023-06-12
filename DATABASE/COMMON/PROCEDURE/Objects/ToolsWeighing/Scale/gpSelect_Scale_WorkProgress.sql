@@ -223,7 +223,10 @@ BEGIN
             || ' вид=<' || COALESCE (Object_GoodsKindComplete.ValueData, '') || '>'
             || ' кут.=<' || zfConvert_FloatToString (tmpMI.CuterCount) || '>'
             || ' кол.=<' || zfConvert_FloatToString (tmpMI.Amount) || '>'
-            || ' итого взвеш.=<' || CASE -- вес куттер - Итого
+            || CASE WHEN inDocumentKindId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom())
+                    THEN ''
+                    ELSE
+               ' итого взвеш.=<' || CASE -- вес куттер - Итого
                                          WHEN inDocumentKindId = zc_Enum_DocumentKind_CuterWeight()
                                               THEN zfConvert_FloatToString (tmpMI.CuterWeight + COALESCE (tmpMI_Weighing.CuterWeight, 0)) || '>'
                                          -- вес сырой - Итого
@@ -251,6 +254,7 @@ BEGIN
                                          THEN zfConvert_FloatToString (-1 * tmpMI.Amount + tmpMI.RealDelicMsg  + COALESCE (tmpMI_Weighing.RealDelicMsg, 0)) || '>'
                                     ELSE '?'
                                END
+               END
               ) :: TVarChar AS MovementInfo
 
             , tmpMI.DocumentKindId
@@ -307,7 +311,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Scale_WorkProgress (TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

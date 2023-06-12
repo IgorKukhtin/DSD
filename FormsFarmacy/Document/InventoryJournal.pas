@@ -54,6 +54,7 @@ type
     spInventoryTime: TdsdStoredProc;
     actExecInventoryTime: TdsdExecStoredProc;
     dxBarButton2: TdxBarButton;
+    spPUSHCompileFull: TdsdStoredProc;
   private
     { Private declarations }
   public

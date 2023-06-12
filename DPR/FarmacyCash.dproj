@@ -417,6 +417,7 @@
             <FormType>dfm</FormType>
             <DesignClass>TParentForm</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\FormsFarmacy\Cash\Pos_PrivatBank_JSON.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -46,14 +46,14 @@ BEGIN
                                         -- ввели ВЕС, переводим в ШТ
                                         THEN MovementItem.Amount / ObjectFloat_Weight.ValueData
                                         -- ввели ШТ
-                                        ELSE MIFloat_AmountSecond.ValueData
+                                        ELSE COALESCE (MIFloat_AmountSecond.ValueData, 0)
                                    END
                               -- это Весовой товар
                               ELSE CASE WHEN COALESCE (MovementItem.Amount,0) <> 0
                                         -- ввели  Вес
                                         THEN MovementItem.Amount
                                         -- ввели ШТ, переводим в ВЕС - но такого быть не может, надо сделать проверку при вводе
-                                        ELSE MIFloat_AmountSecond.ValueData * COALESCE (ObjectFloat_Weight.ValueData, 1)
+                                        ELSE COALESCE (MIFloat_AmountSecond.ValueData, 0) * COALESCE (ObjectFloat_Weight.ValueData, 1)
                                    END
                          END AS NUMERIC (16,0))
                    )AS Amount
@@ -385,6 +385,96 @@ BEGIN
     ;
 
 
+
+     IF EXISTS (SELECT 1
+                FROM tmpMI_plan
+                     -- Статистика Заявки + Продажи по видам упаковки
+                     LEFT JOIN (SELECT tmpMI_stat.*
+                                       -- № п/п, т.к. если продаж нет - запишем в первый
+                                     , ROW_NUMBER() OVER (PARTITION BY tmpMI_stat.GoodsId ORDER BY tmpMI_stat.AmountOrder DESC, tmpMI_stat.AmountOrderPromo DESC) AS Ord
+                                FROM tmpMI_stat
+                                ORDER BY tmpMI_stat.AmountSale DESC
+                              --LIMIT 1
+                               ) AS tmpMI_stat ON tmpMI_stat.GoodsId = tmpMI_plan.GoodsId
+                     -- Статистика Заявки + Продажи ИТОГО
+                     LEFT JOIN (SELECT tmpMI_stat.GoodsId, SUM (tmpMI_stat.Amount_calc) AS Amount_calc FROM tmpMI_stat GROUP BY tmpMI_stat.GoodsId
+                               ) AS tmpMI_stat_total ON tmpMI_stat_total.GoodsId = tmpMI_plan.GoodsId
+                     -- уже сохраненные - нужен Id
+                     LEFT JOIN tmpMI_Master ON tmpMI_Master.GoodsId     = tmpMI_stat.GoodsId
+                                           AND tmpMI_Master.GoodsKindId = tmpMI_stat.GoodsKindId
+                                         --AND 1=0
+                     -- округление для ШТ.
+                     LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                          ON ObjectLink_Goods_Measure.ObjectId = tmpMI_plan.GoodsId
+                                         AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+                WHERE CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                           THEN
+                              CAST (CASE -- есть продажи - распределяем tmpMI_plan
+                                         WHEN tmpMI_stat_total.Amount_calc <> 0
+                                              THEN tmpMI_plan.Amount * tmpMI_stat.Amount_calc / tmpMI_stat_total.Amount_calc
+                                         -- запишем в первый
+                                         WHEN tmpMI_stat.Ord = 1
+                                              THEN tmpMI_plan.Amount
+                                         ELSE 0
+                                    END AS NUMERIC (16,0))
+                           ELSE
+                              CAST (CASE -- есть продажи - распределяем
+                                         WHEN tmpMI_stat_total.Amount_calc <> 0
+                                              THEN tmpMI_plan.Amount * tmpMI_stat.Amount_calc / tmpMI_stat_total.Amount_calc
+                                         -- запишем в первый
+                                         WHEN tmpMI_stat.Ord = 1
+                                              THEN tmpMI_plan.Amount
+                                         ELSE 0
+                                    END AS NUMERIC (16,2))
+                      END IS NULL)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Пустое расчетное значение для <%>.'
+                       , (SELECT lfGet_Object_ValueData (tmpMI_plan.GoodsId) || '  ' || lfGet_Object_ValueData_sh (CASE WHEN tmpMI_stat.GoodsKindId > 0 THEN tmpMI_stat.GoodsKindId ELSE zc_GoodsKind_Basis() END)
+                          FROM tmpMI_plan
+                               -- Статистика Заявки + Продажи по видам упаковки
+                               LEFT JOIN (SELECT tmpMI_stat.*
+                                                 -- № п/п, т.к. если продаж нет - запишем в первый
+                                               , ROW_NUMBER() OVER (PARTITION BY tmpMI_stat.GoodsId ORDER BY tmpMI_stat.AmountOrder DESC, tmpMI_stat.AmountOrderPromo DESC) AS Ord
+                                          FROM tmpMI_stat
+                                          ORDER BY tmpMI_stat.AmountSale DESC
+                                        --LIMIT 1
+                                         ) AS tmpMI_stat ON tmpMI_stat.GoodsId = tmpMI_plan.GoodsId
+                               -- Статистика Заявки + Продажи ИТОГО
+                               LEFT JOIN (SELECT tmpMI_stat.GoodsId, SUM (tmpMI_stat.Amount_calc) AS Amount_calc FROM tmpMI_stat GROUP BY tmpMI_stat.GoodsId
+                                         ) AS tmpMI_stat_total ON tmpMI_stat_total.GoodsId = tmpMI_plan.GoodsId
+                               -- уже сохраненные - нужен Id
+                               LEFT JOIN tmpMI_Master ON tmpMI_Master.GoodsId     = tmpMI_stat.GoodsId
+                                                     AND tmpMI_Master.GoodsKindId = tmpMI_stat.GoodsKindId
+                                                   --AND 1=0
+                               -- округление для ШТ.
+                               LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                    ON ObjectLink_Goods_Measure.ObjectId = tmpMI_plan.GoodsId
+                                                   AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+                          WHERE CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                     THEN
+                                        CAST (CASE -- есть продажи - распределяем tmpMI_plan
+                                                   WHEN tmpMI_stat_total.Amount_calc <> 0
+                                                        THEN tmpMI_plan.Amount * tmpMI_stat.Amount_calc / tmpMI_stat_total.Amount_calc
+                                                   -- запишем в первый
+                                                   WHEN tmpMI_stat.Ord = 1
+                                                        THEN tmpMI_plan.Amount
+                                                   ELSE 0
+                                              END AS NUMERIC (16,0))
+                                     ELSE
+                                        CAST (CASE -- есть продажи - распределяем
+                                                   WHEN tmpMI_stat_total.Amount_calc <> 0
+                                                        THEN tmpMI_plan.Amount * tmpMI_stat.Amount_calc / tmpMI_stat_total.Amount_calc
+                                                   -- запишем в первый
+                                                   WHEN tmpMI_stat.Ord = 1
+                                                        THEN tmpMI_plan.Amount
+                                                   ELSE 0
+                                              END AS NUMERIC (16,2))
+                                END IS NULL
+                          LIMIT 1
+                         );
+     END IF;
+
+
      -- MI_Master - распределяем - План по видам упаковки (детализация)
      PERFORM lpInsert_MI_OrderGoodsDetail_Master(inId                       := tmpMI_Master.Id
                                                , inMovementId               := vbMovementId
@@ -409,7 +499,7 @@ BEGIN
                                                                                                        THEN tmpMI_plan.Amount
                                                                                                   ELSE 0
                                                                                              END AS NUMERIC (16,2))
-                                                                                    END
+                                                                               END
                                                , inAmountForecast           := COALESCE (tmpMI_stat.AmountSale,0)       ::TFloat
                                                , inAmountForecastOrder      := COALESCE (tmpMI_stat.AmountOrder,0)      ::TFloat
                                                , inAmountForecastPromo      := COALESCE (tmpMI_stat.AmountSalePromo,0)  ::TFloat

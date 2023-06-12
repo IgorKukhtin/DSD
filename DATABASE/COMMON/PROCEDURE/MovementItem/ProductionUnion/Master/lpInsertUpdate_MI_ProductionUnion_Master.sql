@@ -28,12 +28,19 @@ RETURNS Integer
 AS
 $BODY$
   DECLARE vbIsInsert Boolean;
+  DECLARE vbDocumentKindId Integer;
+  DECLARE vbFromId    Integer;
+  DECLARE vbToId      Integer;
 BEGIN
-   -- проверка
-   IF COALESCE (inGoodsId, 0) = 0
-   THEN 
-       RAISE EXCEPTION 'Ошибка.Не определено значение параметра <Товар>.';
-   END IF;
+     -- проверка
+     IF COALESCE (inGoodsId, 0) = 0
+     THEN 
+         RAISE EXCEPTION 'Ошибка.Не определено значение параметра <Товар>.';
+     END IF;
+
+     -- определили <Тип документа>
+     vbDocumentKindId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_DocumentKind());
+
 
      ---Проверка zc_ObjectBoolean_GoodsByGoodsKind_Order для подразделений из Object_Unit_check_isOrder_View
      IF EXISTS (SELECT 1
@@ -78,7 +85,119 @@ BEGIN
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
    -- сохранили <Элемент документа>
-   ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
+   ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId
+                                      , CASE WHEN vbDocumentKindId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom()) THEN 0 ELSE inAmount END
+                                      , NULL, inUserId
+                                       );
+
+
+   -- Схема для лакирования
+   IF vbDocumentKindId IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom())
+   THEN
+       -- Вес для лакирования
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountReal(), ioId, inAmount);
+       -- !!!криво передали партию !!!
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementItemId(), ioId, inStorageId);
+       --  Рецептуры 
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), ioId, (SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = inStorageId AND MILO.DescId = zc_MILinkObject_Receipt()));
+       
+       inGoodsKindId:=          (SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = inStorageId AND MILO.DescId = zc_MILinkObject_GoodsKind());
+       inGoodsKindId_Complete:= (SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = inStorageId AND MILO.DescId = zc_MILinkObject_GoodsKindComplete());
+       
+       vbFromId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
+       vbToId  := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To());
+
+
+       PERFORM lpInsertUpdate_MI_ProductionUnion_Child (ioId                  := tmp.MovementItemId
+                                                      , inMovementId          := inMovementId
+                                                      , inGoodsId             := tmp.GoodsId
+                                                      , inAmount              := tmp.Amount
+                                                      , inParentId            := ioId
+                                                      , inPartionGoodsDate    := NULL
+                                                      , inPartionGoods        := NULL
+                                                      , inGoodsKindId         := tmp.GoodsKindId
+                                                      , inGoodsKindCompleteId := NULL
+                                                      , inCount_onCount       := 0
+                                                      , inUserId              := inUserId
+                                                       )
+       FROM (WITH tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
+                                 , MovementItem.ObjectId                         AS GoodsId
+                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                            FROM MovementItem
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                            WHERE MovementItem.MovementId = inMovementId
+                              AND MovementItem.DescId = zc_MI_Child()
+                              AND MovementItem.isErased = FALSE
+                              AND MovementItem.ParentId = ioId
+                           )
+             , tmpReceipt AS (SELECT COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)     AS GoodsId
+                                   , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                                   , COALESCE (inAmount / ObjectFloat_Value_master.ValueData * ObjectFloat_Value.ValueData, 0) AS Amount
+       
+                              FROM MovementItemLinkObject AS MILO
+                              
+                                   INNER JOIN ObjectFloat AS ObjectFloat_Value_master
+                                                          ON ObjectFloat_Value_master.ObjectId = MILO.ObjectId
+                                                         AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
+                                                         AND ObjectFloat_Value_master.ValueData <> 0
+                                   LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
+                                                        ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = MILO.ObjectId
+                                                       AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
+                                   LEFT JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                                          AND Object_ReceiptChild.isErased = FALSE
+                                   LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
+                                                        ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectLink_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
+                                   LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_GoodsKind
+                                                        ON ObjectLink_ReceiptChild_GoodsKind.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectLink_ReceiptChild_GoodsKind.DescId = zc_ObjectLink_ReceiptChild_GoodsKind()
+                                   LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                         ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
+                                                        AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
+                                   -- этап Пр-ва
+                                   LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_ReceiptLevel
+                                                        ON ObjectLink_ReceiptChild_ReceiptLevel.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectLink_ReceiptChild_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptChild_ReceiptLevel()
+                                   LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_From
+                                                        ON ObjectLink_ReceiptLevel_From.ObjectId = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                       AND ObjectLink_ReceiptLevel_From.DescId   = zc_ObjectLink_ReceiptLevel_From()
+                                   LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_To
+                                                        ON ObjectLink_ReceiptLevel_To.ObjectId = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                       AND ObjectLink_ReceiptLevel_To.DescId   = zc_ObjectLink_ReceiptLevel_To()
+                                   LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptLevel_MovementDesc
+                                                         ON ObjectFloat_ReceiptLevel_MovementDesc.ObjectId  = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                        AND ObjectFloat_ReceiptLevel_MovementDesc.DescId    = zc_ObjectFloat_ReceiptLevel_MovementDesc()
+                                   --  Тип документов
+                                   LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel_DocumentKind
+                                                        ON ObjectLink_ReceiptLevel_DocumentKind.ObjectId = ObjectLink_ReceiptChild_ReceiptLevel.ChildObjectId
+                                                       AND ObjectLink_ReceiptLevel_DocumentKind.DescId   = zc_ObjectLink_ReceiptLevel_DocumentKind()
+                              -- выбранная партия
+                              WHERE MILO.MovementItemId = inStorageId
+                                AND MILO.DescId         = zc_MILinkObject_Receipt()
+                                -- этап Пр-ва  тот что нужен
+                                AND ObjectLink_ReceiptLevel_From.ChildObjectId      = vbFromId
+                                AND ObjectLink_ReceiptLevel_To.ChildObjectId        = vbToId
+                                AND ObjectFloat_ReceiptLevel_MovementDesc.ValueData = zc_Movement_ProductionUnion()
+                                -- Тип документов
+                                AND ObjectLink_ReceiptLevel_DocumentKind.ChildObjectId = vbDocumentKindId
+                             )
+              SELECT tmpMI.MovementItemId
+                   , COALESCE (tmpMI.GoodsId, tmpReceipt.GoodsId)         AS GoodsId
+                   , COALESCE (tmpMI.GoodsKindId, tmpReceipt.GoodsKindId) AS GoodsKindId
+                   , COALESCE (tmpReceipt.Amount, 0)                      AS Amount
+              FROM tmpMI
+                   FULL JOIN tmpReceipt ON tmpReceipt.GoodsId     = tmpMI.GoodsId
+                                       AND tmpReceipt.GoodsKindId = tmpMI.GoodsKindId
+            ) AS tmp;
+
+       -- !!!обнулили !!!
+       inStorageId:= 0;
+
+
+   END IF;
+
 
    -- сохранили связь с <Виды товаров>
    IF inGoodsKindId > 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_GoodsKind())

@@ -256,6 +256,9 @@ type
     cbHistoryCost_0: TCheckBox;
     cbHistoryCost_8374: TCheckBox;
     cbHistoryCost_oth: TCheckBox;
+    toSqlQuery_three: TZQuery;
+    Label7: TLabel;
+    MovementId_startEdit: TEdit;
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
@@ -284,6 +287,7 @@ type
     zc_Enum_GlobalConst_StartDate_Auto_PrimeCost : TDateTime;
     zc_Enum_Process_Auto_PrimeCost:String;
 
+    MovementId_start : Integer;
     GroupId_branch : Integer;
     beginVACUUM : Integer;
     beginVACUUM_ii : Integer;
@@ -321,6 +325,7 @@ type
     function fOpenSqToQuery_two (mySql:String):Boolean;
     function fExecSqToQuery_two (mySql:String):Boolean;
     function fExecSqToQuery_noErr_two (mySql:String):Boolean;
+    function fExecSqToQuery_noErr_three (mySql:String):Boolean;
 
     function fTryOpenSq (myComponent:TZQuery):Boolean;
     function fTryExecStoredProc(toStoredProc:TdsdStoredProc):Boolean;
@@ -771,6 +776,7 @@ end;
 procedure TMainForm.TimerTimer(Sender: TObject);
 begin
      if fStartProcess = true then begin {myLogMemo_add('!!! not BeginVACUUM');} exit; end;
+     //
      try
         Timer.Enabled:= false;
         //
@@ -1064,6 +1070,41 @@ begin
                 else MyDelay(1 * 60 * 1000);
                 //
                 if fStop = true then exit;
+              end;
+           end;
+     end;
+     Result:=true;
+end;
+//---
+function TMainForm.fExecSqToQuery_noErr_three(mySql:String):Boolean;
+var i:LongInt;
+    fExec:Boolean;
+begin
+     i:=0;
+     fExec:=false;
+     //
+     with toSqlQuery_three,Sql do begin
+        Clear;
+        Add(mySql);
+        //try ExecSql except Result:=false;exit;end;
+        while not fExec do
+           try
+               if Connection.Connected = false then Connection.Connected:=true;
+               ExecSql;fExec:=true;
+           except on E:Exception
+              do begin
+                Connection.Connected:= false;
+                //
+                myLogMemo_add(' err fExecSqToQuery_noErr_three ' +#10+#13+mySql);
+                myLogMemo_add('');
+                myLogMemo_add(E.Message);
+                //
+                // !!! ONLY ONE !!!
+                Result:=false;
+                fExec:=true;
+                exit;
+                //
+                //
               end;
            end;
      end;
@@ -1609,10 +1650,11 @@ begin
             BranchEdit.Text:= '!!!ERROR!!! BranchId : ???';
      end;
      //
+     //
      beginVACUUM:=0;
      beginVACUUM_ii:=0;
      Timer.Enabled:= ((ParamStr(2)='autoALL') and (BranchEdit.Text = 'BranchId : 0'))
-                  or (cbHistoryCost_8379.Checked or cbHistoryCost_8374.Checked or cbHistoryCost_oth.Checked)
+                //or (cbHistoryCost_8379.Checked or cbHistoryCost_8374.Checked or cbHistoryCost_oth.Checked)
                   ;
      fStartProcess:= false;
      //
@@ -1726,6 +1768,12 @@ begin
      end;
      //
      //cbAllGuide.Checked:=true;
+     //
+     // открыли
+     fOpenSqToQuery ('select Id from _RecalcPG_log WHERE GroupId = '+IntToStr(GroupId_branch));
+     try MovementId_start:= toSqlQuery.FieldByName('Id').AsInteger; except MovementId_start:= 0;end;
+     MovementId_startEdit.Text:= IntToStr(MovementId_start);
+     MovementId_start:=0;
      //
      //
      try
@@ -2104,6 +2152,7 @@ end;
 function TMainForm.fBeginVACUUM : Boolean;
 var Second, MSec: word;
     Hour_calc, Minute_calc: word;
+    MIN_stop: word;
     ZQuery: TZQuery;
 
           function lVACUUM (lStr : String): Boolean;
@@ -2169,6 +2218,34 @@ var Second, MSec: word;
 begin
      //расчет начальные дата + врем€
      DecodeTime(NOW, Hour_calc, Minute_calc, Second, MSec);
+     //
+     //
+     MIN_stop:=0;
+     if Pos('stop-', ParamStr(4)) = 1 then try MIN_stop:= StrToInt(myReplaceStr(ParamStr(4), 'stop-', '')); except MIN_stop:= 70;end;
+     if Pos('stop-', ParamStr(5)) = 1 then try MIN_stop:= StrToInt(myReplaceStr(ParamStr(5), 'stop-', '')); except MIN_stop:= 70;end;
+     if Pos('stop-', ParamStr(6)) = 1 then try MIN_stop:= StrToInt(myReplaceStr(ParamStr(6), 'stop-', '')); except MIN_stop:= 70;end;
+     if Pos('stop-', ParamStr(7)) = 1 then try MIN_stop:= StrToInt(myReplaceStr(ParamStr(7), 'stop-', '')); except MIN_stop:= 70;end;
+     if Pos('stop-', ParamStr(8)) = 1 then try MIN_stop:= StrToInt(myReplaceStr(ParamStr(8), 'stop-', '')); except MIN_stop:= 70;end;
+     if Pos('stop-', ParamStr(9)) = 1 then try MIN_stop:= StrToInt(myReplaceStr(ParamStr(9), 'stop-', '')); except MIN_stop:= 70;end;
+     if Pos('stop-', ParamStr(10)) = 1 then try MIN_stop:= StrToInt(myReplaceStr(ParamStr(10), 'stop-', '')); except MIN_stop:= 70;end;
+     if Pos('stop-', ParamStr(11)) = 1 then try MIN_stop:= StrToInt(myReplaceStr(ParamStr(11), 'stop-', '')); except MIN_stop:= 70;end;
+     if Pos('stop-', ParamStr(12)) = 1 then try MIN_stop:= StrToInt(myReplaceStr(ParamStr(12), 'stop-', '')); except MIN_stop:= 70;end;
+     if Pos('stop-', ParamStr(13)) = 1 then try MIN_stop:= StrToInt(myReplaceStr(ParamStr(13), 'stop-', '')); except MIN_stop:= 70;end;
+     if Pos('stop-', ParamStr(14)) = 1 then try MIN_stop:= StrToInt(myReplaceStr(ParamStr(14), 'stop-', '')); except MIN_stop:= 70;end;
+     if Pos('stop-', ParamStr(15)) = 1 then try MIN_stop:= StrToInt(myReplaceStr(ParamStr(15), 'stop-', '')); except MIN_stop:= 70;end;
+     //
+     if (Hour_calc = 6)  and (MIN_stop > 0) then
+     begin
+          myLogMemo_add('start stop ('+IntToStr(MIN_stop)+') min');
+          MyDelay(MIN_stop*60*1000);
+          myLogMemo_add('end stop');
+     end
+     else if (Hour_calc = 6)
+          then
+              myLogMemo_add('!!! not stop !!!');
+          ;
+
+     //
      //
      if (Hour_calc = 22) and (beginVACUUM > 0) then beginVACUUM:= 0;
      if ((Hour_calc = 0) or (Hour_calc = 1)) and (beginVACUUM > 0) then beginVACUUM:= 0;
@@ -2398,10 +2475,15 @@ begin
                exit;
      end;}
      //
+
+      // открыли
+     try MovementId_start:= StrToInt(MovementId_startEdit.Text); except MovementId_start:= 0;end;
+     //
      //
      if (System.Pos('auto',ParamStr(2))<=0)
      and (not cbHistoryCost_8379.Checked and not cbHistoryCost_8374.Checked and not cbHistoryCost_oth.Checked)
      then begin
+               //
                if (cbInsertHistoryCost.Checked)
                then if MessageDlg('ƒействительно расчитать <—≈Ѕ≈—“ќ»ћќ—“№ по ћ≈—я÷јћ> за период с <'+DateToStr(StrToDate(StartDateCompleteEdit.Text))+'> по <'+DateToStr(StrToDate(EndDateCompleteEdit.Text))+'> ?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
                else
@@ -2472,6 +2554,7 @@ begin
                StrTime:=IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec);
      end;
      //
+     MovementId_start:= 0;
      //
      if (saveMonth <> Month2) and ((ParamStr(6)<>'next-'))
      and (not cbHistoryCost_8379.Checked and not cbHistoryCost_8374.Checked and not cbHistoryCost_oth.Checked)
@@ -2905,10 +2988,10 @@ begin
      //
      if (ParamStr(6)<>'next-') or (isPeriodTwo = FALSE) then
      begin
-       if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Defroster;
-       if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Pack;
-       if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Partion;
-       if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Kopchenie;
+       if (not fStop) and (isPeriodTwo = FALSE) and (MovementId_start = 0) then pCompleteDocument_Defroster;
+       if (not fStop) and (isPeriodTwo = FALSE) and (MovementId_start = 0) then pCompleteDocument_Pack;
+       if (not fStop) and (isPeriodTwo = FALSE) and (MovementId_start = 0) then pCompleteDocument_Partion;
+       if (not fStop) and (isPeriodTwo = FALSE) and (MovementId_start = 0) then pCompleteDocument_Kopchenie;
      end;
      //
      //
@@ -2918,10 +3001,12 @@ begin
          and ((ParamStr(6)<>'next-') or (isPeriodTwo = FALSE))
      then begin
            // сам расчет с/с - 1-ый - “ќЋ№ ќ производство
-           if (not fStop)and(GroupId_branch <= 0) then pInsertHistoryCost(TRUE);
+           if (not fStop)and(GroupId_branch <= 0) and (MovementId_start = 0) then pInsertHistoryCost(TRUE);
            //
            // перепроведение
            if (not fStop)and(GroupId_branch <= 0) then pCompleteDocument_List(TRUE, FALSE, FALSE);
+           //
+           MovementId_start:= 0;
      end;
      //
      // сам расчет с/с - 2-ой - производство + ‘»Ћ»јЋџ
@@ -3169,6 +3254,7 @@ procedure TMainForm.pCompleteDocument_List(isBefoHistoryCost,isPartion,isDiff:Bo
 var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
     i,SaveRecord:Integer;
     MSec_complete:Integer;
+    count_begin:Integer;
     isSale_str:String;
     strErr:String;
     strExec:String;
@@ -3186,6 +3272,8 @@ begin
      // !!!заливка в сибасе!!!
 
      addOrder:= '';
+
+     count_begin:=0;
 
      // Get Data
      if (ParamStr(2)='autoReComplete') and (isBefoHistoryCost = TRUE)
@@ -3228,7 +3316,20 @@ begin
      Gauge.Progress:=0;
      Gauge.MaxValue:=SaveRecord;
      cbComplete_List.Caption:='('+IntToStr(SaveRecord)+') !!!Cписок накладных!!!';
+     //
 
+     if Pos('time-', ParamStr(4)) = 1 then begin cb100MSec.Checked:= true; SessionIdEdit.Text:= myReplaceStr(ParamStr(4), 'time-', ''); end;
+     if Pos('time-', ParamStr(5)) = 1 then begin cb100MSec.Checked:= true; SessionIdEdit.Text:= myReplaceStr(ParamStr(5), 'time-', ''); end;
+     if Pos('time-', ParamStr(6)) = 1 then begin cb100MSec.Checked:= true; SessionIdEdit.Text:= myReplaceStr(ParamStr(6), 'time-', ''); end;
+     if Pos('time-', ParamStr(7)) = 1 then begin cb100MSec.Checked:= true; SessionIdEdit.Text:= myReplaceStr(ParamStr(7), 'time-', ''); end;
+     if Pos('time-', ParamStr(8)) = 1 then begin cb100MSec.Checked:= true; SessionIdEdit.Text:= myReplaceStr(ParamStr(8), 'time-', ''); end;
+     if Pos('time-', ParamStr(9)) = 1 then begin cb100MSec.Checked:= true; SessionIdEdit.Text:= myReplaceStr(ParamStr(9), 'time-', ''); end;
+     if Pos('time-', ParamStr(10)) = 1 then begin cb100MSec.Checked:= true; SessionIdEdit.Text:= myReplaceStr(ParamStr(10), 'time-', ''); end;
+     if Pos('time-', ParamStr(11)) = 1 then begin cb100MSec.Checked:= true; SessionIdEdit.Text:= myReplaceStr(ParamStr(11), 'time-', ''); end;
+     if Pos('time-', ParamStr(12)) = 1 then begin cb100MSec.Checked:= true; SessionIdEdit.Text:= myReplaceStr(ParamStr(12), 'time-', ''); end;
+     if Pos('time-', ParamStr(13)) = 1 then begin cb100MSec.Checked:= true; SessionIdEdit.Text:= myReplaceStr(ParamStr(13), 'time-', ''); end;
+     if Pos('time-', ParamStr(14)) = 1 then begin cb100MSec.Checked:= true; SessionIdEdit.Text:= myReplaceStr(ParamStr(14), 'time-', ''); end;
+     if Pos('time-', ParamStr(15)) = 1 then begin cb100MSec.Checked:= true; SessionIdEdit.Text:= myReplaceStr(ParamStr(15), 'time-', ''); end;
      //
      with fromZQuery,Sql do begin
 
@@ -3267,78 +3368,109 @@ begin
                        beginVACUUM_ii:= beginVACUUM_ii + 1;
                        if beginVACUUM_ii > 25 then fBeginVACUUM;
                        //
-                       toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
-                       toStoredProc_two.Params.ParamByName('inIsNoHistoryCost').Value:=cbLastComplete.Checked;
-
-                       // 1-а€ попытка
-                       try
-                          strErr:= '';
-                          if not myExecToStoredProc_two then ;//exit;
-                       except on E:Exception do
-                              strErr:= E.Message;
-                       end;
-                       // обработка
-                       if strErr <> '' then begin AddToLog(1, FieldByName('MovementId').AsInteger, strErr); MyDelay(3 * 1000); end;
-
-                       //
-                       // 2-а€ попытка
-                       if strErr <> ''
-                       then
-                       try
-                          strErr:= '';
-                          if not myExecToStoredProc_two then ;//exit;
-                       except on E:Exception do
-                              strErr:= E.Message;
-                       end;
-                       // обработка
-                       if strErr <> '' then begin AddToLog(2, FieldByName('MovementId').AsInteger, strErr); MyDelay(3 * 1000); end;
-                       //
-                       // 3-ь€ попытка
-                       if strErr <> ''
-                       then
-                       try
-                          strErr:= '';
-                          if not myExecToStoredProc_two then ;//exit;
-                       except on E:Exception do
-                              strErr:= E.Message;
-                       end;
-                       // обработка
-                       if strErr <> '' then AddToLog(3, FieldByName('MovementId').AsInteger, strErr);
-                       //
-                       // 4-а€ попытка
-                       if strErr <> ''
-                       then
-                       try
-                          strErr:= '';
-                          if not myExecToStoredProc_two then ;//exit;
-                       except on E:Exception do
-                              strErr:= E.Message;
-                       end;
-                       // обработка
-                       if strErr <> '' then AddToLog(4, FieldByName('MovementId').AsInteger, strErr);
-                       //
-                       // ѕќ—Ћ≈ƒЌяя попытка
-                       if strErr <> ''
-                       then
-                       try
-                          strErr:= '';
-                          if not myExecToStoredProc_two then ;//exit;
-                       except on E:Exception do
-                              strErr:= E.Message;
-                       end;
-                       // обработка
-                       if strErr <> '' then
+                       if (MovementId_start = 0) or (FieldByName('MovementId').AsInteger = MovementId_start) then
                        begin
-                            AddToLog(5, FieldByName('MovementId').AsInteger, strErr);
-                            //
-                            // сохранили айди, потом проведем руками
-                            strExec:= 'insert into HistoryCost_err(InsertDate,MovementId)'
-                                     +'  select CURRENT_TIMESTAMP, ' + IntToStr(FieldByName('MovementId').AsInteger);
-                            if not fExecSqToQuery_noErr_two(strExec)
-                            then
-                                AddToLog(55, FieldByName('MovementId').AsInteger, strExec);
+                           MovementId_start:= 0;
 
+                           //
+                           toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+                           toStoredProc_two.Params.ParamByName('inIsNoHistoryCost').Value:=cbLastComplete.Checked;
+
+                           // 1-а€ попытка
+                           try
+                              strErr:= '';
+                              if not myExecToStoredProc_two then ;//exit;
+                           except on E:Exception do
+                                  strErr:= E.Message;
+                           end;
+                           // обработка
+                           if strErr <> '' then begin AddToLog(1, FieldByName('MovementId').AsInteger, strErr); MyDelay(3 * 1000); end;
+
+                           //
+                           // 2-а€ попытка
+                           if strErr <> ''
+                           then
+                           try
+                              strErr:= '';
+                              if not myExecToStoredProc_two then ;//exit;
+                           except on E:Exception do
+                                  strErr:= E.Message;
+                           end;
+                           // обработка
+                           if strErr <> '' then begin AddToLog(2, FieldByName('MovementId').AsInteger, strErr); MyDelay(3 * 1000); end;
+                           //
+                           // 3-ь€ попытка
+                           if strErr <> ''
+                           then
+                           try
+                              strErr:= '';
+                              if not myExecToStoredProc_two then ;//exit;
+                           except on E:Exception do
+                                  strErr:= E.Message;
+                           end;
+                           // обработка
+                           if strErr <> '' then AddToLog(3, FieldByName('MovementId').AsInteger, strErr);
+                           //
+                           // 4-а€ попытка
+                           if strErr <> ''
+                           then
+                           try
+                              strErr:= '';
+                              if not myExecToStoredProc_two then ;//exit;
+                           except on E:Exception do
+                                  strErr:= E.Message;
+                           end;
+                           // обработка
+                           if strErr <> '' then AddToLog(4, FieldByName('MovementId').AsInteger, strErr);
+                           //
+                           // ѕќ—Ћ≈ƒЌяя попытка
+                           if strErr <> ''
+                           then
+                           try
+                              strErr:= '';
+                              if not myExecToStoredProc_two then ;//exit;
+                           except on E:Exception do
+                                  strErr:= E.Message;
+                           end;
+                           // обработка
+                           if strErr <> '' then
+                           begin
+                                AddToLog(5, FieldByName('MovementId').AsInteger, strErr);
+                                //
+                                // сохранили айди, потом проведем руками
+                                strExec:= 'insert into HistoryCost_err(InsertDate,MovementId)'
+                                         +'  select CURRENT_TIMESTAMP, ' + IntToStr(FieldByName('MovementId').AsInteger);
+                                if not fExecSqToQuery_noErr_two(strExec)
+                                then
+                                    AddToLog(55, FieldByName('MovementId').AsInteger, strExec);
+
+                           end;
+                           //
+                           //
+                           if isPartion = false then
+                           begin
+                               count_begin:= count_begin + 1;
+                               //
+                               if count_begin >= 80 then
+                               begin
+                                    count_begin:= 0;
+                                    fExecSqToQuery_noErr_three(' DO $$ BEGIN'
+                                    + ' UPDATE _RecalcPG_log SET Id = ' + IntToStr(FieldByName('MovementId').AsInteger) + ', OperDate = CURRENT_TIMESTAMP WHERE GroupId = '+IntToStr(GroupId_branch)+';'
+                                    + ' IF NOT FOUND THEN '
+                                    + ' insert into _RecalcPG_log (Id, GroupId, OperDate)'
+                                                           + 'values ('+IntToStr(FieldByName('MovementId').AsInteger)
+                                                                 +', ' + IntToStr(GroupId_branch)
+                                                                 +', CURRENT_TIMESTAMP'
+                                                           +' ); '
+                                                           +' END IF; '
+                                                           +' END $$; '
+                                                           );
+
+                               end;
+                           end;
                        end;
+                       //
+                       //
                   end;
              end;
              //
@@ -3364,6 +3496,11 @@ begin
      //if fromZQuery.Active = true
      //then myLogMemo_add('fromZQuery.Active = true')
      //else myLogMemo_add('fromZQuery.Active = false');
+     //
+     //
+     if isPartion = false
+     then fExecSqToQuery_noErr_three(' UPDATE _RecalcPG_log SET Id = 0 WHERE GroupId = '+IntToStr(GroupId_branch));
+     //
      //
      myDisabledCB(cbComplete_List);
 end;

@@ -30,8 +30,10 @@ inherited MainInventoryForm: TMainInventoryForm
       BiDiMode = bdLeftToRight
       ParentBiDiMode = False
       TabOrder = 0
-      Properties.ActivePage = tsInventory
+      Properties.ActivePage = tsInventoryManual
       Properties.CustomButtons.Buttons = <>
+      ExplicitLeft = 2
+      ExplicitTop = 2
       ClientRectBottom = 391
       ClientRectLeft = 4
       ClientRectRight = 835
@@ -304,8 +306,8 @@ inherited MainInventoryForm: TMainInventoryForm
             Width = 121
           end
           object cxButton2: TcxButton
-            Left = 4
-            Top = 2
+            Left = 1
+            Top = 0
             Width = 33
             Height = 25
             Action = actShowAll
@@ -344,6 +346,7 @@ inherited MainInventoryForm: TMainInventoryForm
           Height = 314
           Align = alClient
           TabOrder = 1
+          ExplicitTop = 58
           object cxGridDBTableView2: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ManualDS
@@ -397,6 +400,14 @@ inherited MainInventoryForm: TMainInventoryForm
               Options.Editing = False
               Width = 444
             end
+            object ManualPrice: TcxGridDBColumn
+              Caption = #1062#1077#1085#1072
+              DataBinding.FieldName = 'Price'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              Properties.DisplayFormat = ',0.00;-,0.00; ;'
+              HeaderAlignmentHorz = taCenter
+              Width = 120
+            end
             object ManualRemains: TcxGridDBColumn
               Caption = #1054#1089#1090#1072#1090#1086#1082
               DataBinding.FieldName = 'Remains'
@@ -431,17 +442,17 @@ inherited MainInventoryForm: TMainInventoryForm
           Left = 0
           Top = 0
           Width = 831
-          Height = 41
+          Height = 34
           Align = alTop
           ShowCaption = False
           TabOrder = 0
           object cxLabel10: TcxLabel
-            Left = 16
+            Left = 52
             Top = 6
             Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1086#1090
           end
           object edOperDateInfo: TcxDateEdit
-            Left = 125
+            Left = 161
             Top = 5
             TabStop = False
             EditValue = 45033d
@@ -450,21 +461,35 @@ inherited MainInventoryForm: TMainInventoryForm
             Width = 121
           end
           object edUnitNameInfo: TcxTextEdit
-            Left = 252
+            Left = 288
             Top = 5
             TabStop = False
             Properties.ReadOnly = True
             TabOrder = 2
-            Width = 565
+            Width = 525
+          end
+          object cxButton3: TcxButton
+            Left = 13
+            Top = 3
+            Width = 33
+            Height = 25
+            Action = actRefreshItog
+            PaintStyle = bpsGlyph
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 3
+            TabStop = False
           end
         end
         object cxGridInfo: TcxGrid
           Left = 0
-          Top = 41
+          Top = 34
           Width = 831
-          Height = 326
+          Height = 333
           Align = alClient
           TabOrder = 1
+          ExplicitTop = 41
+          ExplicitHeight = 326
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = InfoDS
@@ -738,6 +763,9 @@ inherited MainInventoryForm: TMainInventoryForm
     Images = dmMain.ImageList
     Left = 15
     Top = 71
+    inherited actRefresh: TdsdDataSetRefresh
+      ShortCut = 0
+    end
     object actDoLoadData: TAction
       Category = 'DSDLib'
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1076#1083#1103' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103' '#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
@@ -960,6 +988,14 @@ inherited MainInventoryForm: TMainInventoryForm
       Caption = 'actSetEditAmount'
       OnExecute = actSetEditAmountExecute
     end
+    object actRefreshItog: TAction
+      Category = 'DSDLib'
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 115
+      OnExecute = actRefreshItogExecute
+    end
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -1154,16 +1190,16 @@ inherited MainInventoryForm: TMainInventoryForm
           '     , G.Name  AS GoodsName'
           '     , ID.Remains '
           '     , ID.ExpirationDate'
-          '     , ID.Price'
+          '     , CAST(COALESCE(ID.Price, R.Price, 0) AS Float)    AS Price'
           
-            '     , CAST(COALESCE (ID.Remains, 0) * COALESCE(ID.Price, 0) AS ' +
-            'Float)   AS Remains_Summ'
+            '     , CAST(COALESCE (ID.Remains, 0) * COALESCE(ID.Price, R.Pric' +
+            'e, 0) AS Float)   AS Remains_Summ'
           
             '     , CAST(COALESCE (ID.Amount, 0) + COALESCE (IC.Amount, 0) AS' +
             ' Float)  AS Amount'
           
             '     , CAST((COALESCE (ID.Amount, 0) + COALESCE (IC.Amount, 0)) ' +
-            '* COALESCE(ID.Price, 0) AS Float)   AS Summ'
+            '* COALESCE(ID.Price, R.Price, 0) AS Float)   AS Summ'
           
             '     , CAST(COALESCE (ID.AmountUser, 0) + COALESCE (IC.Amount, 0' +
             ') AS Float)                         AS AmountUser'
@@ -1185,7 +1221,7 @@ inherited MainInventoryForm: TMainInventoryForm
           
             '                 THEN (COALESCE (ID.Remains, 0) - CAST(COALESCE ' +
             '(ID.Amount, 0) + COALESCE (IC.Amount, 0) AS Float)) * COALESCE(I' +
-            'D.Price, 0)'
+            'D.Price, R.Price, 0)'
           
             '                 ELSE 0 END AS Float)                           ' +
             '                            AS DeficitSumm'
@@ -1204,7 +1240,7 @@ inherited MainInventoryForm: TMainInventoryForm
           
             '                 THEN (CAST(COALESCE (ID.Amount, 0) + COALESCE (' +
             'IC.Amount, 0) AS Float) - COALESCE (ID.Remains, 0)) * COALESCE(I' +
-            'D.Price, 0)'
+            'D.Price, R.Price, 0)'
           
             '                 ELSE 0 END AS Float)                           ' +
             '                            AS ProficitSumm'
@@ -1215,8 +1251,8 @@ inherited MainInventoryForm: TMainInventoryForm
             '     , CAST(( CAST(COALESCE (ID.Amount, 0) + COALESCE (IC.Amount' +
             ', 0) - COALESCE (ID.Remains, 0) AS Float))'
           
-            '                 * COALESCE(ID.Price, 0) AS Float)              ' +
-            '                                  AS DiffSumm'
+            '                 * COALESCE(ID.Price, R.Price, 0) AS Float)     ' +
+            '                                           AS DiffSumm'
           '     , ID.MIComment'
           '     , ID.isAuto'
           'FROM InventoryDate AS ID'
@@ -1233,6 +1269,10 @@ inherited MainInventoryForm: TMainInventoryForm
           
             #9'INNER JOIN Goods AS G ON G.id = COALESCE (ID.GoodsId, IC.GoodsI' +
             'd) '
+          
+            #9'LEFT JOIN Remains AS R ON R.Goodsid = COALESCE (ID.GoodsId, IC.' +
+            'GoodsId)'
+          #9'                     AND R.UnitId  =  :inUnitId'
           'WHERE ID.UnitId =  :inUnitId OR COALESCE (IC.GoodsId, 0) <> 0'
           'ORDER BY 3')
       end>
@@ -1588,6 +1628,7 @@ inherited MainInventoryForm: TMainInventoryForm
           '     , G.Code           AS GoodsCode'
           '     , G.Name           AS GoodsName'
           '     , R.Remains        AS Remains'
+          '     , R.Price          AS Price'
           '     , CAST(COALESCE (SUM(IC.Amount), 0.0) as Float)  AS Amount'
           'FROM  Goods AS G'
           

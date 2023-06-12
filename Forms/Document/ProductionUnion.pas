@@ -114,6 +114,7 @@ type
     bbInsertRecordAsset: TdxBarButton;
     bbPartionGoodsAssetChoice: TdxBarButton;
     actPartionGoodsAssetChoiceMaster: TOpenChoiceForm;
+    CountReal_LAK: TcxGridDBColumn;
   private
     { Private declarations }
   public
