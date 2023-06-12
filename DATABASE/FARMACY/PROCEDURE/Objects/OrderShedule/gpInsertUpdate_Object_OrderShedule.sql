@@ -68,30 +68,30 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderShedule_Unit(), ioId, inUnitId);
 
  -- инф. названия дней недели заказ
- outInf_Text1:= (CASE WHEN CAST(inValue1 AS TFloat) in (1,3) THEN 'Понедельник,' ELSE '' END ||
-                 CASE WHEN CAST(inValue2 AS TFloat) in (1,3) THEN 'Вторник,'     ELSE '' END ||
-                 CASE WHEN CAST(inValue3 AS TFloat) in (1,3) THEN 'Среда,'       ELSE '' END ||
-                 CASE WHEN CAST(inValue4 AS TFloat) in (1,3) THEN 'Четверг,'     ELSE '' END ||
-                 CASE WHEN CAST(inValue5 AS TFloat) in (1,3) THEN 'Пятница,'     ELSE '' END ||
-                 CASE WHEN CAST(inValue6 AS TFloat) in (1,3) THEN 'Суббота,'     ELSE '' END ||
-                 CASE WHEN CAST(inValue7 AS TFloat) in (1,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar;
+ outInf_Text1:= (CASE WHEN CAST('0'||inValue1 AS TFloat) in (1,3) THEN 'Понедельник,' ELSE '' END ||
+                 CASE WHEN CAST('0'||inValue2 AS TFloat) in (1,3) THEN 'Вторник,'     ELSE '' END ||
+                 CASE WHEN CAST('0'||inValue3 AS TFloat) in (1,3) THEN 'Среда,'       ELSE '' END ||
+                 CASE WHEN CAST('0'||inValue4 AS TFloat) in (1,3) THEN 'Четверг,'     ELSE '' END ||
+                 CASE WHEN CAST('0'||inValue5 AS TFloat) in (1,3) THEN 'Пятница,'     ELSE '' END ||
+                 CASE WHEN CAST('0'||inValue6 AS TFloat) in (1,3) THEN 'Суббота,'     ELSE '' END ||
+                 CASE WHEN CAST('0'||inValue7 AS TFloat) in (1,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar;
  -- инф. названия дней недели доставка
- outInf_Text2:= (CASE WHEN CAST(inValue1 AS TFloat) in (2,3) THEN 'Понедельник,' ELSE '' END ||
-                 CASE WHEN CAST(inValue2 AS TFloat) in (2,3) THEN 'Вторник,'     ELSE '' END ||
-                 CASE WHEN CAST(inValue3 AS TFloat) in (2,3) THEN 'Среда,'       ELSE '' END ||
-                 CASE WHEN CAST(inValue4 AS TFloat) in (2,3) THEN 'Четверг,'     ELSE '' END ||
-                 CASE WHEN CAST(inValue5 AS TFloat) in (2,3) THEN 'Пятница,'     ELSE '' END ||
-                 CASE WHEN CAST(inValue6 AS TFloat) in (2,3) THEN 'Суббота,'     ELSE '' END ||
-                 CASE WHEN CAST(inValue7 AS TFloat) in (2,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar;
+ outInf_Text2:= (CASE WHEN CAST('0'||inValue1 AS TFloat) in (2,3) THEN 'Понедельник,' ELSE '' END ||
+                 CASE WHEN CAST('0'||inValue2 AS TFloat) in (2,3) THEN 'Вторник,'     ELSE '' END ||
+                 CASE WHEN CAST('0'||inValue3 AS TFloat) in (2,3) THEN 'Среда,'       ELSE '' END ||
+                 CASE WHEN CAST('0'||inValue4 AS TFloat) in (2,3) THEN 'Четверг,'     ELSE '' END ||
+                 CASE WHEN CAST('0'||inValue5 AS TFloat) in (2,3) THEN 'Пятница,'     ELSE '' END ||
+                 CASE WHEN CAST('0'||inValue6 AS TFloat) in (2,3) THEN 'Суббота,'     ELSE '' END ||
+                 CASE WHEN CAST('0'||inValue7 AS TFloat) in (2,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar;
 
  -- возвращаем цвет             
- outColor_Calc1:= CASE WHEN CAST(inValue1 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue1 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue1 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
- outColor_Calc2:= CASE WHEN CAST(inValue2 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue2 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue2 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
- outColor_Calc3:= CASE WHEN CAST(inValue3 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue3 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue3 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
- outColor_Calc4:= CASE WHEN CAST(inValue4 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue4 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue4 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
- outColor_Calc5:= CASE WHEN CAST(inValue5 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue5 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue5 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
- outColor_Calc6:= CASE WHEN CAST(inValue6 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue6 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue6 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
- outColor_Calc7:= CASE WHEN CAST(inValue7 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue7 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue7 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
+ outColor_Calc1:= CASE WHEN CAST('0'||inValue1 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST('0'||inValue1 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST('0'||inValue1 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
+ outColor_Calc2:= CASE WHEN CAST('0'||inValue2 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST('0'||inValue2 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST('0'||inValue2 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
+ outColor_Calc3:= CASE WHEN CAST('0'||inValue3 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST('0'||inValue3 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST('0'||inValue3 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
+ outColor_Calc4:= CASE WHEN CAST('0'||inValue4 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST('0'||inValue4 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST('0'||inValue4 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
+ outColor_Calc5:= CASE WHEN CAST('0'||inValue5 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST('0'||inValue5 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST('0'||inValue5 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
+ outColor_Calc6:= CASE WHEN CAST('0'||inValue6 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST('0'||inValue6 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST('0'||inValue6 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
+ outColor_Calc7:= CASE WHEN CAST('0'||inValue7 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST('0'||inValue7 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST('0'||inValue7 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

@@ -210,12 +210,20 @@ BEGIN
        -- выбираем продажи по товарам соц.проекта
     ,  tmpMI AS (SELECT MI_Sale.ObjectId            AS GoodsId
                       , SUM(MI_Sale.Amount)::TFloat AS Amount
-                      , COALESCE (MIFloat_Price.ValueData, 0)                                                                               AS Price
-                      , COALESCE (MIFloat_PriceSale.ValueData, 0)                                                                           AS PriceSale
-                      , ROUND(COALESCE (MIFloat_PriceSale.ValueData, 0) * 100.0 / (100.0 + inInvoiceNDS), 2)                                AS PriceWithVAT
-                      , SUM(ROUND(MI_Sale.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0), 2)::TFloat)::TFloat                           AS SummSale
-                      , SUM(ROUND(MI_Sale.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0) * 100.0 / (100.0 + inInvoiceNDS), 2))::TFloat  AS SummSaleWithVAT
-                      , SUM(MI_Sale.Amount * (COALESCE (MIFloat_PriceSale.ValueData, 0) * inInvoiceNDS / (100.0 + inInvoiceNDS)))::TFloat   AS SummNDS
+                      , COALESCE (MIFloat_Price.ValueData, 0)                                                              AS Price
+                      , COALESCE (MIFloat_PriceSale.ValueData, 0)                                                          AS PriceSale
+                      
+                      , SUM(ROUND(MIFloat_PriceSale.ValueData * 100.0 / (100.0 + ObjectFloat_NDSKind_NDS.ValueData), 2))::TFloat AS PriceWithVAT
+                      , SUM(ROUND(MI_Sale.Amount * MIFloat_PriceSale.ValueData, 2)::TFloat)::TFloat AS SummSale
+
+                      , SUM(ROUND(MI_Sale.Amount * MIFloat_PriceSale.ValueData * 100.0 / (100.0 + ObjectFloat_NDSKind_NDS.ValueData), 2)::TFloat)::TFloat AS SummSaleWithVAT
+                      , SUM(MI_Sale.Amount * (MIFloat_PriceSale.ValueData * ObjectFloat_NDSKind_NDS.ValueData / (100.0 + ObjectFloat_NDSKind_NDS.ValueData)))::TFloat AS SummNDS
+
+                      , SUM(ROUND((MI_Sale.Amount * MIFloat_PriceSale.ValueData-
+                                   COALESCE (MIFloat_Summ.ValueData, 0)) * 100.0 / (100.0 + ObjectFloat_NDSKind_NDS.ValueData), 2)::TFloat)::TFloat AS SummSaleWithVATIC
+                      , SUM(MI_Sale.Amount * ((MIFloat_PriceSale.ValueData - COALESCE (MIFloat_Price.ValueData, 0)) * ObjectFloat_NDSKind_NDS.ValueData / (100.0 + ObjectFloat_NDSKind_NDS.ValueData)))::TFloat AS SummNDSIC
+                      , SUM(ROUND(MI_Sale.Amount * MIFloat_PriceSale.ValueData - COALESCE (MIFloat_Summ.ValueData, 0), 2)::TFloat)::TFloat AS SummSaleIC
+
                     FROM tmpSaleAll AS Movement
                     
                          INNER JOIN MovementItem AS MI_Sale
@@ -230,7 +238,11 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_Price
                                 ON MIFloat_Price.MovementItemId = MI_Sale.Id
                                AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                        
+                               
+                         LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                                     ON MIFloat_Summ.MovementItemId = MI_Sale.Id
+                                                    AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+                                          
                          LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MI_Sale.ObjectId
                          LEFT JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
 
@@ -252,13 +264,12 @@ BEGIN
           , MI_Sale.SummSale
           , MI_Sale.SummSaleWithVAT
           , MI_Sale.SummNDS
+          , MI_Sale.SummSaleWithVATIC
+          , MI_Sale.SummNDSIC
+          , MI_Sale.SummSaleIC
           , ROW_NUMBER()OVER(ORDER BY Object_Name.ValueData)::Integer as ORD
           , Object_Measure.ValueData            AS MeasureName
 
-          , ROUND((MI_Sale.Amount * MI_Sale.PriceSale-
-                       COALESCE (MI_Sale.SummSale, 0)) * 100.0 / (100.0 + inInvoiceNDS), 2)::TFloat AS SummSaleWithVATIC
-          , MI_Sale.Amount * ((MI_Sale.PriceSale - COALESCE (MI_Sale.Price, 0)) * inInvoiceNDS / (100.0 + inInvoiceNDS)) AS SummNDSIC
-          , ROUND(MI_Sale.Amount * MI_Sale.PriceSale - COALESCE (MI_Sale.SummSale, 0), 2)::TFloat AS SummSaleIC
 
         FROM tmpMI AS MI_Sale
         
@@ -287,5 +298,6 @@ ALTER FUNCTION gpSelect_Movement_SaleAll_PrintInvoiceIC (TDateTime, TDateTime, I
 -- 
 
 
-select * from gpSelect_Movement_SaleAll_PrintInvoiceIC(inStartDate := ('16.01.2023')::TDateTime , inEndDate := ('31.01.2023')::TDateTime , inJuridicalId := 393054 , inUnitId := 0 , inInsuranceCompaniesId := 18616031 , inInvoiceNDS := 7 ,  inSession := '3');
+select * from gpSelect_Movement_SaleAll_PrintInvoiceIC(inStartDate := ('01.06.2023')::TDateTime , inEndDate := ('12.06.2023')::TDateTime , inJuridicalId := 1311462 , inUnitId := 0 , inInsuranceCompaniesId := 18944516 , inInvoiceNDS := 0 ,  inSession := '3');
+
 

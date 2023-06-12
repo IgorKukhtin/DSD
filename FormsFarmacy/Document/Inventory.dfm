@@ -1,28 +1,28 @@
 inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 643
-  ClientWidth = 878
+  ClientWidth = 863
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 896
+  ExplicitWidth = 881
   ExplicitHeight = 690
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 119
-    Width = 878
+    Width = 863
     Height = 524
     ExplicitTop = 119
-    ExplicitWidth = 878
+    ExplicitWidth = 1116
     ExplicitHeight = 524
     ClientRectBottom = 524
-    ClientRectRight = 878
+    ClientRectRight = 863
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 878
+      ExplicitWidth = 1116
       ExplicitHeight = 500
       inherited cxGrid: TcxGrid
-        Width = 878
+        Width = 863
         Height = 500
-        ExplicitWidth = 878
+        ExplicitWidth = 1116
         ExplicitHeight = 500
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -467,13 +467,15 @@ inherited InventoryForm: TInventoryForm
     object cxTabSheetChild: TcxTabSheet
       Caption = #1048#1089#1090#1086#1088#1080#1103' '#1096'/'#1082
       ImageIndex = 2
+      ExplicitWidth = 1116
       object cxGridChild: TcxGrid
         Left = 0
         Top = 54
-        Width = 878
+        Width = 863
         Height = 446
         Align = alClient
         TabOrder = 1
+        ExplicitWidth = 1116
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -570,7 +572,14 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 85
+            Width = 66
+          end
+          object isCheck: TcxGridDBColumn
+            Caption = #1063#1077#1082
+            DataBinding.FieldName = 'isCheck'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 42
           end
           object Num: TcxGridDBColumn
             Caption = #8470' '#1087'.'#1087'.'
@@ -578,7 +587,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 46
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -586,7 +595,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 84
+            Width = 67
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -594,7 +603,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 209
+            Width = 164
           end
           object chAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -605,7 +614,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 180
+            Width = 142
           end
           object UserName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
@@ -613,7 +622,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 272
+            Width = 213
           end
           object Date_Insert: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
@@ -621,7 +630,7 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 139
+            Width = 109
           end
         end
         object cxGridChildLevel: TcxGridLevel
@@ -631,21 +640,23 @@ inherited InventoryForm: TInventoryForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 46
-        Width = 878
+        Width = 863
         Height = 8
         HotZoneClassName = 'TcxXPTaskBarStyle'
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = Panel1
+        ExplicitWidth = 1116
       end
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 878
+        Width = 863
         Height = 46
         Align = alTop
         ShowCaption = False
         TabOrder = 0
+        ExplicitWidth = 1116
         object edBarCode: TcxTextEdit
           Left = 16
           Top = 22
@@ -710,10 +721,10 @@ inherited InventoryForm: TInventoryForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 878
+    Width = 863
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 878
+    ExplicitWidth = 1116
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1270,6 +1281,34 @@ inherited InventoryForm: TInventoryForm
         end>
       Caption = 'actPUSHInventBarcode'
     end
+    object actInsert_InventoryCheck: TdsdExecStoredProc
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetChild
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actPUSHLoadCheckFull
+      Enabled = False
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_InventoryCheck
+      StoredProcList = <
+        item
+          StoredProc = spInsert_InventoryCheck
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1089#1077' '#1095#1077#1082#1080' '#1079#1072' '#1076#1077#1085#1100
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1089#1077' '#1095#1077#1082#1080' '#1079#1072' '#1076#1077#1085#1100
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1089#1077' '#1095#1077#1082#1080' '#1079#1072' '#1076#1077#1085#1100'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
+    object actPUSHLoadCheckFull: TdsdShowPUSHMessage
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPUSHLoadCheckFull
+      StoredProcList = <
+        item
+          StoredProc = spPUSHLoadCheckFull
+        end>
+      Caption = 'actPUSHCompile'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1326,7 +1365,7 @@ inherited InventoryForm: TInventoryForm
   end
   inherited BarManager: TdxBarManager
     Left = 88
-    Top = 207
+    Top = 231
     DockControlHeights = (
       0
       0
@@ -1452,6 +1491,14 @@ inherited InventoryForm: TInventoryForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_InventoryCheck'
         end>
     end
     inherited bbAddMask: TdxBarButton
@@ -1487,6 +1534,11 @@ inherited InventoryForm: TInventoryForm
     object bbOpenInventoryHouseholdInventory: TdxBarButton
       Action = actOpenInventoryHouseholdInventory
       Category = 0
+    end
+    object bbInsert_InventoryCheck: TdxBarButton
+      Action = actInsert_InventoryCheck
+      Category = 0
+      ImageIndex = 27
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2468,6 +2520,57 @@ inherited InventoryForm: TInventoryForm
       end>
     PackSize = 1
     Left = 642
-    Top = 448
+    Top = 440
+  end
+  object spInsert_InventoryCheck: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_InventoryCheck'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 316
+    Top = 484
+  end
+  object spPUSHLoadCheckFull: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowLoadCheckPUSH_InventoryFull'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 634
+    Top = 496
   end
 end
