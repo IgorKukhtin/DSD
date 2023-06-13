@@ -20,49 +20,61 @@ $BODY$
 BEGIN
 
     PERFORM lpCheckingUser_Juridical(inOurJuridicalId, inSession);
+    
+    raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+    
+    -- документы прихода
+    CREATE TEMP TABLE tmpIncome ON COMMIT DROP AS
+     SELECT MovementDate_Payment.ValueData               AS Date_Payment
+          , MovementLinkObject_From.ObjectId             AS JuridicalId_Income             -- поставщик
+          , MovementFloat_TotalSumm.ValueData            AS TotalSumm
+          , Movement.Id                                  AS MovementId
+          , MovementLinkObject_Juridical_Income.ObjectId AS JuridicalId                    -- наше юр.лицо
+     FROM Movement
+          --дата оплаты                       
+          INNER JOIN MovementDate AS MovementDate_Payment
+                                  ON MovementDate_Payment.MovementId =  Movement.Id
+                                 AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
+                                 AND MovementDate_Payment.ValueData >= inStartDate 
+                                 AND MovementDate_Payment.ValueData < inEndDate + INTERVAL '1 day'
+          -- на какое наше юр лицо был приход
+          INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical_Income
+                                        ON MovementLinkObject_Juridical_Income.MovementId = Movement.Id
+                                       AND MovementLinkObject_Juridical_Income.DescId = zc_MovementLinkObject_Juridical()          
+                                       AND (MovementLinkObject_Juridical_Income.ObjectId = inOurJuridicalId OR inOurJuridicalId = 0)
+          -- от кого приход Поставщик                   
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+               
+          LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                  ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                 AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+      WHERE Movement.DescId = zc_Movement_Income()
+        AND Movement.StatusId = zc_Enum_Status_Complete();
+    
+    ANALYSE tmpIncome;
+    
+    raise notice 'Value 2: %', CLOCK_TIMESTAMP();
+    
+    -- выбираем оплаты приходов
+    CREATE TEMP TABLE tmpPayment ON COMMIT DROP AS
+     SELECT Movement_Payment.* 
+     FROM Movement AS Movement_Payment
+          INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                        ON MovementLinkObject_Juridical.MovementId = Movement_Payment.Id
+                                       AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                                       AND (MovementLinkObject_Juridical.ObjectId = inOurJuridicalId OR inOurJuridicalId = 0)
+     WHERE Movement_Payment.DescId = zc_Movement_Payment()
+       AND Movement_Payment.StatusId = zc_Enum_Status_Complete();
+                     
+    ANALYSE tmpPayment;
   
+    raise notice 'Value 3: %', CLOCK_TIMESTAMP();
+
     RETURN QUERY
         WITH
-         -- документы прихода
-      tmpIncome AS ( SELECT MovementDate_Payment.ValueData               AS Date_Payment
-                          , MovementLinkObject_From.ObjectId             AS JuridicalId_Income             -- поставщик
-                          , MovementFloat_TotalSumm.ValueData            AS TotalSumm
-                          , Movement.Id                                  AS MovementId
-                          , MovementLinkObject_Juridical_Income.ObjectId AS JuridicalId                    -- наше юр.лицо
-                     FROM Movement
-                          --дата оплаты                       
-                          INNER JOIN MovementDate AS MovementDate_Payment
-                                                  ON MovementDate_Payment.MovementId =  Movement.Id
-                                                 AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
-                                                 AND MovementDate_Payment.ValueData >= inStartDate AND MovementDate_Payment.ValueData < inEndDate + INTERVAL '1 day'
-                          -- на какое наше юр лицо был приход
-                          INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical_Income
-                                                        ON MovementLinkObject_Juridical_Income.MovementId = Movement.Id
-                                                       AND MovementLinkObject_Juridical_Income.DescId = zc_MovementLinkObject_Juridical()          
-                                                       AND (MovementLinkObject_Juridical_Income.ObjectId = inOurJuridicalId OR inOurJuridicalId = 0)
-                          -- от кого приход Поставщик                   
-                          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                       ON MovementLinkObject_From.MovementId = Movement.Id
-                                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-               
-                          LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                                  ON MovementFloat_TotalSumm.MovementId = Movement.Id
-                                                 AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-                      WHERE Movement.DescId = zc_Movement_Income()
-                        AND Movement.StatusId = zc_Enum_Status_Complete() 
-                    )
-    -- выбираем оплаты приходов
-    , tmpPayment AS (SELECT Movement_Payment.* 
-                     FROM Movement AS Movement_Payment
-                          INNER JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                                       ON MovementLinkObject_Juridical.MovementId = Movement_Payment.Id
-                                                      AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-                                                      AND (MovementLinkObject_Juridical.ObjectId = inOurJuridicalId OR inOurJuridicalId = 0)
-                     WHERE Movement_Payment.DescId = zc_Movement_Payment()
-                       AND Movement_Payment.StatusId = zc_Enum_Status_Complete() 
-                     )
-                   
-    , tmpMIPayment_All AS (SELECT MovementItem.*
+      tmpMIPayment_All AS (SELECT MovementItem.*
                         FROM tmpPayment
                              INNER JOIN MovementItem ON MovementItem.MovementId = tmpPayment.Id
                                                     AND MovementItem.DescId = zc_MI_Master()
@@ -143,8 +155,10 @@ BEGIN
              , tmpFull.PaySumm    ::TFloat
              , tmpFull.PaymentSum ::TFloat
         FROM tmpFull
-            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpFull.JuridicalId_Income
-;
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpFull.JuridicalId_Income;
+            
+    raise notice 'Value 20: %', CLOCK_TIMESTAMP();
+            
 
 END;
 $BODY$
@@ -158,4 +172,7 @@ $BODY$
  09.09.16         *
 */
 --test
---select * from gpReport_Payment_Plan(inStartDate := ('01.05.2018')::TDateTime , inEndDate := ('31.08.2018')::TDateTime , inOurJuridicalId := 7433752 ,  inSession := '3');
+--
+
+select * from gpReport_Payment_Plan(inStartDate := ('01.06.2023')::TDateTime , inEndDate := ('30.06.2023')::TDateTime , inOurJuridicalId := 393052 ,  inSession := '3');
+

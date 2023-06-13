@@ -66,6 +66,8 @@ begin
      then cbPrintMovement.Checked:= TRUE
      else cbPrintMovement.Checked:= isMovement;
      //
+     PanelDateValue.Visible:= (SettingMain.isCeh = FALSE) or (ParamsMovement.ParamByName('isOperDatePartner').AsBoolean = true);
+     //
      cbPrintPackGross.Checked:= FALSE;
      cbPrintDiffOrder.Checked:= FALSE;//(MovementDescId=zc_Movement_Sale)or(MovementDescId=zc_Movement_SendOnPrice);
      //
@@ -94,33 +96,38 @@ begin
      //
      ActiveControl:=PrintCountEdit;
      //
+     //
      Result:=(ShowModal=mrOk);
 end;
-{------------------------------------------------------------------------------}
+
+
 function TDialogPrintForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
      Result:=false;
      //
-     try ParamsMovement.ParamByName('OperDatePartner').AsDateTime:= StrToDate(DateValueEdit.Text)
-     except if ParamsMovement.ParamByName('isOperDatePartner').AsBoolean = true
-            then begin
-                 ShowMessage('Ошибка.Дата у покупателя сформирована неверно.');
-                 exit;
-            end
-            // еще раз
-            else ParamsMovement.ParamByName('isOperDatePartner').AsBoolean:= DMMainScaleForm.gpGet_Scale_Movement_OperDatePartner(ParamsMovement);
-     end;
-     //
-     if (ParamsMovement.ParamByName('OperDatePartner').AsDateTime < ParamsMovement.ParamByName('OperDate').AsDateTime)
-        and (ParamsMovement.ParamByName('MovementId_find').AsInteger = 0)
-     then begin
-                 ShowMessage('Ошибка.Дата у покупателя = <'+DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime)+'> не может быть раньше даты документа = <'+DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime)+'>.');
-                 exit;
-     end;
-     if ParamsMovement.ParamByName('OperDatePartner').AsDateTime > 14 + ParamsMovement.ParamByName('OperDate').AsDateTime
-     then begin
-                 ShowMessage('Ошибка.Дата у покупателя = <'+DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime)+'> не может быть позже даты документа = <'+DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime)+'> более чем на 14 дней.');
-                 exit;
+     if PanelDateValue.Visible = TRUE then
+     begin
+         try ParamsMovement.ParamByName('OperDatePartner').AsDateTime:= StrToDate(DateValueEdit.Text)
+         except if ParamsMovement.ParamByName('isOperDatePartner').AsBoolean = true
+                then begin
+                     ShowMessage('Ошибка.Дата у покупателя сформирована неверно.');
+                     exit;
+                end
+                // еще раз
+                else ParamsMovement.ParamByName('isOperDatePartner').AsBoolean:= DMMainScaleForm.gpGet_Scale_Movement_OperDatePartner(ParamsMovement);
+         end;
+         //
+         if (ParamsMovement.ParamByName('OperDatePartner').AsDateTime < ParamsMovement.ParamByName('OperDate').AsDateTime)
+            and (ParamsMovement.ParamByName('MovementId_find').AsInteger = 0)
+         then begin
+                     ShowMessage('Ошибка.Дата у покупателя = <'+DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime)+'> не может быть раньше даты документа = <'+DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime)+'>.');
+                     exit;
+         end;
+         if ParamsMovement.ParamByName('OperDatePartner').AsDateTime > 14 + ParamsMovement.ParamByName('OperDate').AsDateTime
+         then begin
+                     ShowMessage('Ошибка.Дата у покупателя = <'+DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime)+'> не может быть позже даты документа = <'+DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime)+'> более чем на 14 дней.');
+                     exit;
+         end;
      end;
      //
      try Result:=(StrToInt(PrintCountEdit.Text)>0) and (StrToInt(PrintCountEdit.Text)<11);

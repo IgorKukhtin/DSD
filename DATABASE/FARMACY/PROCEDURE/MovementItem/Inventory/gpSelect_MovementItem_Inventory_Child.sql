@@ -15,6 +15,8 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , isErased Boolean
              , isLast Boolean
              , Num Integer
+             , MovementCheckId Integer
+             , isCheck Boolean
              )
 AS
 $BODY$
@@ -49,6 +51,7 @@ BEGIN
                                 , MovementItem.ObjectId      AS UserId
                                 , MovementItem.Amount        AS Amount
                                 , MIDate_Insert.ValueData    AS Date_Insert
+                                , MIFloat_MovementId.ValueData::Integer AS MovementCheckId
                                 , MovementItem.isErased 
                                 , CAST (ROW_NUMBER() OVER (PARTITION BY  MovementItem.ObjectId ORDER BY MovementItem.ObjectId, MovementItem.Id) AS Integer) AS Num
                                 , CAST (ROW_NUMBER() OVER (PARTITION BY  MovementItem.ParentId,MovementItem.ObjectId ORDER BY MovementItem.ParentId, MovementItem.ObjectId, MIDate_Insert.ValueData DESC) AS Integer) AS NumLast
@@ -56,6 +59,9 @@ BEGIN
                                  LEFT JOIN MovementItemDate AS MIDate_Insert
                                                             ON MIDate_Insert.MovementItemId = MovementItem.Id
                                                            AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                             ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
                             WHERE MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId     = zc_MI_Child()
                            )
@@ -74,6 +80,8 @@ BEGIN
               , COALESCE (tmpMI.isErased, FALSE)       :: Boolean   AS isErased
               , CASE WHEN tmpMI_Child.NumLast = 1 THEN TRUE ELSE FALSE END isLast
               , tmpMI_Child.Num
+              , tmpMI_Child.MovementCheckId
+              , COALESCE (tmpMI_Child.MovementCheckId, 0) <> 0      AS isCheck
              
             FROM tmpMI
                 INNER JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id

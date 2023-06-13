@@ -18,11 +18,13 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPenMobApp TFloat;
+   DECLARE vbDateStart TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
      
+     vbDateStart := date_trunc('month', inOperDate);
      
      vbPenMobApp := COALESCE ((SELECT History_CashSettings.PenMobApp 
                                FROM gpSelect_ObjectHistory_CashSettings (0, inSession) AS History_CashSettings
@@ -145,7 +147,22 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       WITH tmpMovPlan AS (SELECT Movement.UnitId
+       WITH tmpUser AS (SELECT MIMaster.ObjectId                                                                     AS UserId
+                             , MIN(Movement.OperDate + ((MIChild.Amount - 1)::Integer::tvarchar||' DAY')::INTERVAL)  AS DateIn
+                        FROM Movement
+                        
+                             INNER JOIN MovementItem AS MIMaster
+                                                     ON MIMaster.MovementId = Movement.ID
+                                                    AND MIMaster.DescId = zc_MI_Master()
+                             
+                             INNER JOIN MovementItem AS MIChild
+                                                     ON MIChild.MovementId = Movement.ID
+                                                    AND MIChild.ParentId = MIMaster.ID
+                                                    AND MIChild.DescId = zc_MI_Child()
+                                                     
+                        WHERE Movement.DescId = zc_Movement_EmployeeSchedule()
+                        GROUP BY MIMaster.ObjectId),
+          tmpMovPlan AS (SELECT Movement.UnitId
                                 , SUM(Movement.TotalSumm)::TFloat                                             AS CountChech
                                 , SUM(CASE WHEN Movement.isSite THEN Movement.TotalSumm ELSE 0 END)::TFloat   AS CountSite
                            FROM tmpMov AS Movement
@@ -187,20 +204,21 @@ BEGIN
            , tmpMovFact.CountChech                                 AS CountChechUser
            , tmpMovFact.CountMobile                                AS CountMobileUser
            
-           , CASE WHEN Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
+           , CASE WHEN (Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
                        COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 1) > 
                        Round(1.0 * tmpMovFact.CountMobile / 
-                       NullIf(tmpMovFact.CountChech, 0) * 100, 1)
+                       NullIf(tmpMovFact.CountChech, 0) * 100, 1))
                   THEN Round(tmpMovFact.CountChech * Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
                        COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 1) / 100 - tmpMovFact.CountMobile, 2) END::TFloat AS CountShortage
               
            , tmpMovFact.QuantityMobile                             AS QuantityMobile
            , Round(1.0 * tmpMovFact.CountMobile / 
              NullIf(tmpMovFact.CountChech, 0) * 100, 1)::TFloat    AS ProcFact
-           , CASE WHEN Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
+           , CASE WHEN date_part('day', vbDateStart - tmpUser.DateIn)::INTEGER > 90 AND (
+                       Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
                              COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 1) - 
                        Round(1.0 * tmpMovFact.CountMobile / 
-                             NullIf(tmpMovFact.CountChech, 0) * 100, 1) > 0
+                             NullIf(tmpMovFact.CountChech, 0) * 100, 1) > 0)
                   THEN Round((Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
                               COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 1) -
                               Round(1.0 * tmpMovFact.CountMobile / 
@@ -216,6 +234,8 @@ BEGIN
              LEFT JOIN tmpMovFact ON tmpMovFact.UnitId = MovPlan.UnitId
 
              LEFT JOIN Object AS Object_User ON Object_User.Id = tmpMovFact.UserId
+
+             LEFT JOIN tmpUser ON tmpUser.UserID = tmpMovFact.UserId
 
              LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowPlanMobileAppUser
                                      ON ObjectBoolean_ShowPlanMobileAppUser.ObjectId = MovPlan.UnitId
@@ -246,5 +266,6 @@ ALTER FUNCTION gpReport_Check_TabletkiRecreate (TDateTime, TDateTime, Integer, T
 */            
 
 -- 
-select * from gpReport_FulfillmentPlanMobileApp (('01.03.2023')::TDateTime, 0, 0, '3');
 
+
+select * from gpReport_FulfillmentPlanMobileApp(inOperDate := ('01.06.2023')::TDateTime , inUnitId := 0 , inUserId := 0 ,  inSession := '3');

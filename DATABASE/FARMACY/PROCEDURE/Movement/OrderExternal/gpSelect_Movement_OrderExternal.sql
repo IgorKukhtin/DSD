@@ -59,13 +59,13 @@ BEGIN
                           )
       , tmpOrderShedule AS (SELECT ObjectLink_OrderShedule_Unit.ChildObjectId              AS UnitId  --To 
                                  , ObjectLink_OrderShedule_Contract.ChildObjectId          AS ContractId --
-                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1) ::TFloat AS Value1
-                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2) ::TFloat AS Value2
-                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3) ::TFloat AS Value3
-                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4) ::TFloat AS Value4
-                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5) ::TFloat AS Value5
-                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6) ::TFloat AS Value6
-                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7) ::TFloat AS Value7
+                                 , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1)) ::TFloat AS Value1
+                                 , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2)) ::TFloat AS Value2
+                                 , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3)) ::TFloat AS Value3
+                                 , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4)) ::TFloat AS Value4
+                                 , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5)) ::TFloat AS Value5
+                                 , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6)) ::TFloat AS Value6
+                                 , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7)) ::TFloat AS Value7
                                  , Object_OrderShedule.ValueData AS Value8
 
                             FROM Object AS Object_OrderShedule
@@ -291,3 +291,5 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, T
 -- SELECT * FROM gpSelect_Movement_OrderExternal (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= '2')
 
 --select * from gpSelect_Movement_OrderExternal(instartdate := ('27.12.2016')::TDateTime , inenddate := ('27.12.2016')::TDateTime , inIsErased := 'False' ,  inSession := '3');
+
+select * from gpSelect_Movement_OrderExternal(instartdate := ('01.03.2023')::TDateTime , inenddate := ('31.03.2023')::TDateTime , inIsErased := 'False' ,  inSession := '3');

@@ -144,8 +144,10 @@ BEGIN
                               , MI_Sale.ObjectId                                   AS GoodsId
                               , MIFloat_ChangePercent.ValueData                    AS ChangePercent
                               , MI_Sale.Amount
-                              , MIFloat_PriceSale.ValueData                                  AS PriceSale
-                              , MI_Sale.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0)   AS SummSale
+                              , ROUND((ROUND(MI_Sale.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0), 2) -
+                                COALESCE (MIFloat_Summ.ValueData, 0)) / MI_Sale.Amount, 2) ::TFloat   AS PriceSale
+                              , ROUND(MI_Sale.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0), 2) -
+                                COALESCE (MIFloat_Summ.ValueData, 0)::TFloat       AS SummSale
                          FROM tmpSaleAll AS Movement_Sale
                               INNER JOIN MovementItem AS MI_Sale
                                                       ON MI_Sale.MovementId = Movement_Sale.Id
@@ -161,6 +163,9 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_Price
                                      ON MIFloat_Price.MovementItemId = MI_Sale.Id
                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                              LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                                          ON MIFloat_Summ.MovementItemId = MI_Sale.Id
+                                                         AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
                         )                        
                           
  , tmpMovDetails AS (SELECT tmpSale.Id                              AS MovementId
@@ -298,4 +303,6 @@ $BODY$
 -- тест
 -- 
 
-select * from gpReport_InsuranceCompanies(inStartDate := ('01.10.2021')::TDateTime , inEndDate := ('31.10.2021')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inInsuranceCompaniesId := 17988780 ,  inSession := '3');
+
+select * from gpReport_InsuranceCompanies(inStartDate := ('01.06.2023')::TDateTime , inEndDate := ('12.06.2023')::TDateTime , inJuridicalId := 1311462 , inUnitId := 0 , inInsuranceCompaniesId := 18944516 ,  inSession := '3');
+
