@@ -145,11 +145,11 @@ BEGIN
                             -- Комплектующие / Работы/Услуги
                           , CASE WHEN inisOnlyChild = TRUE THEN 0 ELSE MovementItem.ObjectId END AS ObjectId
                             --  Опция
-                          , MILinkObject_ProdOptions.ObjectId         AS ProdOptionsId
+                          --, MILinkObject_ProdOptions.ObjectId         AS ProdOptionsId
                             -- Шаблон Boat Structure
-                          , MILinkObject_ColorPattern.ObjectId        AS ColorPatternId
+                          --, MILinkObject_ColorPattern.ObjectId        AS ColorPatternId
                             --  Boat Structure
-                          , MILinkObject_ProdColorPattern.ObjectId    AS ProdColorPatternId
+                          --, MILinkObject_ProdColorPattern.ObjectId    AS ProdColorPatternId
                             --
                           , MILinkObject_ReceiptLevel.ObjectId        AS ReceiptLevelId
                             -- Количество для сборки Узла
@@ -171,7 +171,7 @@ BEGIN
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods_basis
                                                            ON MILinkObject_Goods_basis.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_Goods_basis.DescId         = zc_MILinkObject_GoodsBasis()
-                          LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdOptions
+                          /*LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdOptions
                                                            ON MILinkObject_ProdOptions.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_ColorPattern
@@ -179,7 +179,8 @@ BEGIN
                                                           AND MILinkObject_ColorPattern.DescId         = zc_MILinkObject_ColorPattern()
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_ProdColorPattern
                                                            ON MILinkObject_ProdColorPattern.MovementItemId = MovementItem.Id
-                                                          AND MILinkObject_ProdColorPattern.DescId         = zc_MILinkObject_ProdColorPattern()
+                                                          AND MILinkObject_ProdColorPattern.DescId         = zc_MILinkObject_ProdColorPattern() 
+                          */
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_ReceiptLevel
                                                            ON MILinkObject_ReceiptLevel.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_ReceiptLevel.DescId         = zc_MILinkObject_ReceiptLevel()
@@ -200,7 +201,7 @@ BEGIN
                              , tmpItem_Detail.AmountPartner
                              , tmpItem_Detail.GoodsId_basis
                              , tmpItem_Detail.ReceiptLevelId
-                             , tmpItem_Detail.ProdColorPatternId
+                             --, tmpItem_Detail.ProdColorPatternId
                              , tmpItem_Detail.ProductId
                              , tmpItem_Detail.MovementId
                              , tmpItem_Detail.InvNumber
@@ -220,14 +221,14 @@ BEGIN
                              , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 0 ELSE tmpItem_Detail.AmountPartner END AS AmountPartner
                              , 0 AS GoodsId_basis
                              , 0 AS ReceiptLevelId
-                             , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 0 ELSE tmpItem_Detail.ProdColorPatternId END AS ProdColorPatternId
+                             --, CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 0 ELSE tmpItem_Detail.ProdColorPatternId END AS ProdColorPatternId
                              , tmpItem_Detail.ProductId
                              , tmpItem_Detail.MovementId
                              , tmpItem_Detail.InvNumber
                              , tmpItem_Detail.OperDate
                              , tmpItem_Detail.MonthName
                              , tmpItem_Detail.MonthBegin
-                        FROM tmpMI_Detail AS tmpItem_Detail
+                        FROM tmpMI_Detail AS tmpItem_Detail 
                        )
                       
   , tmpMI_group AS (SELECT  CASE WHEN inisDetail = TRUE THEN tmp.ProductId  ELSE 0    END AS ProductId
@@ -252,6 +253,8 @@ BEGIN
                           , SUM (CASE WHEN tmp.MonthBegin = 11 THEN COALESCE (tmp.Amount,0) ELSE 0 END) AS Amount11
                           , SUM (CASE WHEN tmp.MonthBegin = 12 THEN COALESCE (tmp.Amount,0) ELSE 0 END) AS Amount12
                           , ROW_Number() OVER (PARTITION BY tmp.ObjectId) AS Ord
+                          , ROW_Number() OVER (PARTITION BY CASE WHEN inisDetail = TRUE THEN tmp.MovementId ELSE 0 END, tmp.ObjectId) AS Ord2 --
+                          
                     FROM tmpItem_Detail AS tmp
                     GROUP BY CASE WHEN inisDetail = TRUE THEN tmp.ProductId ELSE 0 END
                            , CASE WHEN inisDetail = TRUE THEN tmp.MovementId ELSE 0 END
@@ -262,6 +265,29 @@ BEGIN
                            , CASE WHEN inisDetail = TRUE THEN tmp.GoodsId_basis ELSE 0 END
                            , CASE WHEN inisDetail = TRUE THEN tmp.GoodsId ELSE 0 END
                     )
+
+  --Приход на производство 
+  , tmpMIF_MovementId AS (SELECT MIFloat_MovementId.MovementItemId
+                               , MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
+                          FROM MovementItemFloat AS MIFloat_MovementId
+                          WHERE MIFloat_MovementId.ValueData :: Integer IN (SELECT DISTINCT tmpItem_Detail.MovementId FROM tmpItem_Detail)
+                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                             AND inisOnlyChild = FALSE  
+                          )
+  , tmpSend_ProductionUnion AS (SELECT CASE WHEN inisDetail = TRUE THEN MIFloat_MovementId.MovementId_OrderClient ELSE 0 END AS MovementId_OrderClient
+                                     , MovementItem.ObjectId
+                                     , SUM (COALESCE (MovementItem.Amount,0)) AS Amount
+                                FROM tmpMIF_MovementId AS MIFloat_MovementId
+                                     INNER JOIN MovementItem ON MovementItem.Id = MIFloat_MovementId.MovementItemId
+                                                            AND MovementItem.DescId = zc_MI_Master()
+                                                            AND MovementItem.isErased = FALSE 
+                                     INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                        AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
+                                                        AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                GROUP BY CASE WHEN inisDetail = TRUE THEN MIFloat_MovementId.MovementId_OrderClient ELSE 0 END
+                                       , MovementItem.ObjectId
+                                )
+
 
     -- Параметры - Комплектующие
   , tmpGoodsParams AS (SELECT tmpGoods.ObjectId
@@ -284,7 +310,10 @@ BEGIN
                             , Object_Engine.Id                   AS EngineId
                             , Object_Engine.ValueData            AS EngineName
                             , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice  -- Цена вх. без НДС   
-                       FROM (SELECT DISTINCT tmpMI_group.ObjectId FROM tmpMI_group) AS tmpGoods
+                       FROM (SELECT DISTINCT tmpMI_group.ObjectId FROM tmpMI_group
+                            UNION
+                             SELECT DISTINCT tmpSend_ProductionUnion.ObjectId FROM tmpSend_ProductionUnion
+                            ) AS tmpGoods
                            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.ObjectId
                            LEFT JOIN ObjectString AS ObjectString_Article
                                                   ON ObjectString_Article.ObjectId = tmpGoods.ObjectId
@@ -342,12 +371,14 @@ BEGIN
                       )
      --текущий остаток
    , tmpRemains AS (SELECT Container.ObjectId
-                         , COALESCE(Container.Amount,0) AS Amount
+                         , SUM (COALESCE(Container.Amount,0)) AS Amount
                     FROM Container
                     WHERE Container.DescId = zc_Container_Count()
                       AND COALESCE(Container.Amount,0) <> 0
                       AND Container.ObjectId IN (SELECT DISTINCT tmpMI_group.ObjectId FROM tmpMI_group)
                       AND (Container.ObjectId = inObjectId OR inObjectId = 0)
+                    GROUP BY Container.ObjectId
+                    HAVING SUM (COALESCE(Container.Amount,0)) <> 0
                     )
   , tmpGroupDetail1 AS (SELECT tmp.ObjectId
                             , tmp.MonthBegin
@@ -371,12 +402,13 @@ BEGIN
                             LEFT JOIN  tmpRemains ON tmpRemains.ObjectId = tmpGroupDetail2.ObjectId 
                         WHERE COALESCE (tmpRemains.Amount,0) - COALESCE (tmpGroupDetail2.AmountTotal,0)>= 0
                         )
-  --Приход на производство 
+  /*--Приход на производство 
   , tmpMIF_MovementId AS (SELECT MIFloat_MovementId.MovementItemId
                                , MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
                           FROM MovementItemFloat AS MIFloat_MovementId
                           WHERE MIFloat_MovementId.ValueData :: Integer IN (SELECT DISTINCT tmpItem_Detail.MovementId FROM tmpItem_Detail)
-                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()   
+                           
                           )
   , tmpSend_ProductionUnion AS (SELECT CASE WHEN inisDetail = TRUE THEN MIFloat_MovementId.MovementId_OrderClient ELSE 0 END AS MovementId_OrderClient
                                      , MovementItem.ObjectId
@@ -391,16 +423,16 @@ BEGIN
                                 GROUP BY CASE WHEN inisDetail = TRUE THEN MIFloat_MovementId.MovementId_OrderClient ELSE 0 END
                                        , MovementItem.ObjectId
                                 )
-  
+      */
   
       -- Результат
-      SELECT tmp.MovementId ::Integer
-           , tmp.InvNumber  ::TVarChar
-           , tmp.OperDate   ::TDateTime
+      SELECT COALESCE (tmp.MovementId, tmpMovement.Id) ::Integer
+           , COALESCE (tmp.InvNumber, tmpMovement.InvNumber)  ::TVarChar
+           , COALESCE (tmp.OperDate, tmpMovement.OperDate)    ::TDateTime
            , Object_Product.Id                   AS ProductId
            , Object_Product.ValueData ::TVarChar AS ProductName
            , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) ::TVarChar AS CIN
-           , tmp.ObjectId
+           , tmpGoodsParams.ObjectId
            , tmpGoodsParams.ObjectCode
            , tmpGoodsParams.ObjectName  ::TVarChar
            , tmpGoodsParams.Article     ::TVarChar
@@ -457,9 +489,14 @@ BEGIN
            , zfCalc_MonthName (inStartDate+ INTERVAL '11 MONTH') ::TVarChar AS MonthName12
 
       FROM tmpMI_group AS tmp
-           LEFT JOIN tmpGoodsParams ON tmpGoodsParams.ObjectId = tmp.ObjectId
+           FULL JOIN tmpSend_ProductionUnion ON tmpSend_ProductionUnion.MovementId_OrderClient = tmp.MovementId
+                                            AND tmpSend_ProductionUnion.ObjectId = tmp.ObjectId
+                                            AND tmp.Ord2 = 1
+                                              
+           LEFT JOIN tmpMovement ON tmpMovement.Id = tmpSend_ProductionUnion.MovementId_OrderClient AND inisDetail = TRUE
 
-           LEFT JOIN Object AS Object_Product ON Object_Product.Id = tmp.ProductId
+           LEFT JOIN tmpGoodsParams ON tmpGoodsParams.ObjectId = COALESCE (tmp.ObjectId, tmpSend_ProductionUnion.ObjectId)
+           LEFT JOIN Object AS Object_Product ON Object_Product.Id = COALESCE (tmp.ProductId, tmpMovement.ProductId)
            LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = tmp.GoodsId_basis
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
            LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = tmp.ReceiptLevelId 
@@ -469,7 +506,7 @@ BEGIN
                                  AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
 
            LEFT JOIN ObjectString AS ObjectString_Object_Comment
-                                  ON ObjectString_Object_Comment.ObjectId = tmp.ObjectId
+                                  ON ObjectString_Object_Comment.ObjectId = COALESCE (tmp.ObjectId, tmpSend_ProductionUnion.ObjectId)
                                  AND ObjectString_Object_Comment.DescId   = zc_ObjectString_Goods_Comment()
 
            LEFT JOIN ObjectString AS ObjectString_Goods_Comment
@@ -482,8 +519,7 @@ BEGIN
            
            LEFT JOIN tmpRemains ON (tmpRemains.ObjectId = tmp.ObjectId AND tmp.Ord = 1 AND inisDetail = TRUE) OR (tmpRemains.ObjectId = tmp.ObjectId AND inisDetail = FALSE)
            LEFT JOIN tmpRemainsMonth ON (tmpRemainsMonth.ObjectId = tmp.ObjectId AND tmp.Ord = 1 AND inisDetail = TRUE) OR (tmpRemainsMonth.ObjectId = tmp.ObjectId AND inisDetail = FALSE)
-           LEFT JOIN tmpSend_ProductionUnion ON tmpSend_ProductionUnion.MovementId_OrderClient = tmp.MovementId
-                                            AND tmpSend_ProductionUnion.ObjectId = tmp.ObjectId
+           
      ;
 
 END;
@@ -499,3 +535,7 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inObjectId := 0, inisDetail := False ,inSession := '5');
 -- SELECT * FROM gpReport_OrderClient_byBoat(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('03.05.2023')::TDateTime , inMovementId_OrderClient:=0 , inObjectId := 252790, inisDetail := true, inisOnlyChild:= FALSE ,inSession := '5')
+
+
+--select * from gpReport_OrderClient_byBoat(inStartDate := ('01.01.2023')::TDateTime , inEndDate := ('31.12.2023')::TDateTime , inMovementId_OrderClient := 706 , inObjectId := 0 , inisDetail := 'True' , inisOnlyChild := 'False' ,  inSession := '5');
+
