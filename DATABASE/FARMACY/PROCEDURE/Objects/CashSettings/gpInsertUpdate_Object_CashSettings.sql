@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, B
                                                            Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, TFloat, TFloat, Boolean, TFloat, Integer, 
                                                            Integer, Integer, TFloat, TFloat, TFloat, Boolean, Integer, Integer, TFloat, TFloat, Boolean, 
                                                            TFloat, TFloat, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, 
-                                                           Boolean, TVarChar, Boolean, TVarChar);
+                                                           Boolean, TVarChar, Boolean, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName         TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -67,6 +67,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inisOnlyColdSUA              Boolean   ,     -- Только по Холоду СУA
     IN inSendCashErrorTelId         TVarChar  ,     -- ID в телеграм для отправки ошибок на кассах
     IN inisCancelBansSUN            Boolean   ,     -- Отмена запретов по всем СУН
+    
+    IN inAntiTOPMP_Count            Integer   ,     -- Анти ТОП моб. прил. Количество сотрудников для отображения
+    IN inAntiTOPMP_CountFine        Integer   ,     -- Анти ТОП моб. прил. Количество сотрудников для начисления штрафа
+    IN inAntiTOPMP_SumFine          TFloat    ,     -- Анти ТОП моб. прил. Сумма штрафа
+
 
     IN inSession                    TVarChar        -- сессия пользователя
 )
@@ -235,6 +240,13 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_OnlyColdSUA(), vbID, inisOnlyColdSUA);
    -- Отмена запретов по всем СУН
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_CancelBansSUN(), vbID, inisCancelBansSUN);
+
+    -- Анти ТОП моб. прил. Количество сотрудников для отображения
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_AntiTOPMP_Count(), vbID, inAntiTOPMP_Count);
+    -- Анти ТОП моб. прил. Количество сотрудников для начисления штрафа
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_AntiTOPMP_CountFine(), vbID, inAntiTOPMP_CountFine);
+    -- Анти ТОП моб. прил. Сумма штрафа
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_AntiTOPMP_SumFine(), vbID, inAntiTOPMP_SumFine);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);

@@ -19,9 +19,9 @@ object OrderSheduleForm: TOrderSheduleForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 58
+    Top = 59
     Width = 779
-    Height = 318
+    Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
@@ -123,6 +123,9 @@ object OrderSheduleForm: TOrderSheduleForm
       object Value1: TcxGridDBColumn
         Caption = #1055#1085
         DataBinding.FieldName = 'Value1'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0;-,0; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
@@ -130,6 +133,9 @@ object OrderSheduleForm: TOrderSheduleForm
       object Value2: TcxGridDBColumn
         Caption = #1042#1090
         DataBinding.FieldName = 'Value2'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0;-,0; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
@@ -137,6 +143,9 @@ object OrderSheduleForm: TOrderSheduleForm
       object Value3: TcxGridDBColumn
         Caption = #1057#1088
         DataBinding.FieldName = 'Value3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0;-,0; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
@@ -144,6 +153,9 @@ object OrderSheduleForm: TOrderSheduleForm
       object Value4: TcxGridDBColumn
         Caption = #1063#1090
         DataBinding.FieldName = 'Value4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0;-,0; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
@@ -151,6 +163,9 @@ object OrderSheduleForm: TOrderSheduleForm
       object Value5: TcxGridDBColumn
         Caption = #1055#1090
         DataBinding.FieldName = 'Value5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0;-,0; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
@@ -158,6 +173,9 @@ object OrderSheduleForm: TOrderSheduleForm
       object Value6: TcxGridDBColumn
         Caption = #1057#1073
         DataBinding.FieldName = 'Value6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0;-,0; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
@@ -165,6 +183,9 @@ object OrderSheduleForm: TOrderSheduleForm
       object Value7: TcxGridDBColumn
         Caption = #1042#1089
         DataBinding.FieldName = 'Value7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = ',0;-,0; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
@@ -381,7 +402,7 @@ object OrderSheduleForm: TOrderSheduleForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -15
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -400,7 +421,7 @@ object OrderSheduleForm: TOrderSheduleForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'

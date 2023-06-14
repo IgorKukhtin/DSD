@@ -58,6 +58,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isEliminateColdSUN2 Boolean, isEliminateColdSUN3 Boolean, isEliminateColdSUN4 Boolean, isEliminateColdSUA Boolean
              , isOnlyColdSUN Boolean, isOnlyColdSUN2 Boolean, isOnlyColdSUN3 Boolean, isOnlyColdSUN4 Boolean, isOnlyColdSUA Boolean
              , isCancelBansSUN Boolean
+             , AntiTOPMP_Count Integer, AntiTOPMP_CountFine Integer, AntiTOPMP_SumFine TFloat
              ) AS
 $BODY$
 BEGIN
@@ -128,6 +129,11 @@ BEGIN
         , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUN4.ValueData, FALSE)       AS isOnlyColdSUN4
         , COALESCE(ObjectBoolean_CashSettings_OnlyColdSUA.ValueData, FALSE)        AS isOnlyColdSUA
         , COALESCE(ObjectBoolean_CashSettings_CancelBansSUN.ValueData, FALSE)      AS isCancelBansSUN
+        
+        , ObjectFloat_CashSettings_AntiTOPMP_Count.ValueData::Integer              AS AntiTOPMP_Count
+        , ObjectFloat_CashSettings_AntiTOPMP_CountFine.ValueData::Integer          AS AntiTOPMP_CountFine
+        , ObjectFloat_CashSettings_AntiTOPMP_SumFine.ValueData                     AS AntiTOPMP_SumFine
+
 
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
@@ -324,6 +330,16 @@ BEGIN
                ON ObjectLink_CashSettings_UserUpdateMarketing.ObjectId = Object_CashSettings.Id
               AND ObjectLink_CashSettings_UserUpdateMarketing.DescId = zc_ObjectLink_CashSettings_UserUpdateMarketing()
         LEFT JOIN Object AS Object_UserUpdateMarketing ON Object_UserUpdateMarketing.Id = ObjectLink_CashSettings_UserUpdateMarketing.ChildObjectId
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_Count
+                              ON ObjectFloat_CashSettings_AntiTOPMP_Count.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_AntiTOPMP_Count.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_Count()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_CountFine
+                              ON ObjectFloat_CashSettings_AntiTOPMP_CountFine.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_AntiTOPMP_CountFine.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_CountFine()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_SumFine
+                              ON ObjectFloat_CashSettings_AntiTOPMP_SumFine.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_AntiTOPMP_SumFine.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_SumFine()
 
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;

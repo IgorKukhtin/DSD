@@ -653,6 +653,8 @@ type
     N56: TMenuItem;
     MainisOrder408: TcxGridDBColumn;
     spDivideGoodsLots: TdsdStoredProc;
+    actReport_FulfillmentPlanMobileAppAntiTOP: TdsdOpenForm;
+    N69: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

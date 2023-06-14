@@ -537,8 +537,12 @@ BEGIN
     GROUP BY Container.ObjectId;
                              
     ANALYSE tmpContainer;
-                            
-    
+
+    CREATE TEMP TABLE tmpAsinoPharmaSP ON COMMIT DROP AS 
+    SELECT * FROM gpSelect_AsinoPharmaSPAllGoods_Cash(inSession := '3');
+
+    ANALYZE tmpAsinoPharmaSP;
+                                
     --raise notice 'Value 7: %', CLOCK_TIMESTAMP();
     
     OPEN Cursor2 FOR (
@@ -784,6 +788,8 @@ BEGIN
            , MovementItem.PriceLoad
            , Object_CommentCheck.Id                                              AS CommentCheckId
            , Object_CommentCheck.ValueData                                       AS CommentCheckName
+           , COALESCE (tmpAsinoPharmaSP.IsAsinoMain , FALSE)                     AS IsAsinoMain
+           , COALESCE (tmpAsinoPharmaSP.IsAsinoPresent , FALSE)                  AS IsAsinoPresent
 
        FROM tmpMI_Sum AS MovementItem
 
@@ -855,6 +861,8 @@ BEGIN
                                            ON MILinkObject_CommentCheck.MovementItemId = MovementItem.Id
                                           AND MILinkObject_CommentCheck.DescId         = zc_MILinkObject_CommentCheck()
           LEFT JOIN Object AS Object_CommentCheck ON Object_CommentCheck.Id = MILinkObject_CommentCheck.ObjectId
+
+          LEFT JOIN tmpAsinoPharmaSP ON tmpAsinoPharmaSP.GoodsId = MovementItem.ObjectId 
 
        WHERE Movement.isDeferred = True
          AND (inType = 0 OR inType = 1 AND Movement.isShowVIP = TRUE OR inType = 2 AND Movement.isShowTabletki = TRUE OR inType = 3 AND Movement.isShowLiki24 = TRUE)

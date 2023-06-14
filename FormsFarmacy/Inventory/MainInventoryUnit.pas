@@ -156,6 +156,8 @@ type
     cxButton3: TcxButton;
     actRefreshItog: TAction;
     ManualPrice: TcxGridDBColumn;
+    cxButton4: TcxButton;
+    actInsert_InventoryCheck: TAction;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);
@@ -179,6 +181,7 @@ type
     procedure InfoCDSBeforePost(DataSet: TDataSet);
     procedure InfoCDSAfterPost(DataSet: TDataSet);
     procedure actRefreshItogExecute(Sender: TObject);
+    procedure actInsert_InventoryCheckExecute(Sender: TObject);
   protected
     procedure FormClose(Sender: TObject; var Action: TCloseAction); override;
   private
@@ -443,6 +446,21 @@ begin
   actSetEditAmount.Execute;
   MasterCDS.Close;
   ManualCDS.Close;
+end;
+
+procedure TMainInventoryForm.actInsert_InventoryCheckExecute(Sender: TObject);
+  var OperDate: TDateTime; UnitName : String; isSave: boolean;
+begin
+  inherited;
+  //
+  if ChechActiveInv(OperDate, UnitName, isSave) then
+  begin
+    if not isSave then
+    begin
+      ShowMessage('Перед загрузкой чеков надо отправить все данные');
+      Exit;
+    end;
+  end;
 end;
 
 procedure TMainInventoryForm.actSetEditAmountExecute(Sender: TObject);

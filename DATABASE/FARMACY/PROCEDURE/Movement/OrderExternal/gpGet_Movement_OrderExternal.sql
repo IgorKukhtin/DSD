@@ -76,20 +76,20 @@ BEGIN
        tmpOrderShedule AS (SELECT ObjectLink_OrderShedule_Unit.ChildObjectId      AS UnitId
                                 , ObjectLink_OrderShedule_Contract.ChildObjectId  AS ContractId      
 
-                                , (CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1) ::TFloat in (1,3) THEN 'Понедельник,' ELSE '' END ||
-                                   CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2) ::TFloat in (1,3) THEN 'Вторник,'     ELSE '' END ||
-                                   CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3) ::TFloat in (1,3) THEN 'Среда,'       ELSE '' END ||
-                                   CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4) ::TFloat in (1,3) THEN 'Четверг,'     ELSE '' END ||
-                                   CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5) ::TFloat in (1,3) THEN 'Пятница,'     ELSE '' END ||
-                                   CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6) ::TFloat in (1,3) THEN 'Суббота,'     ELSE '' END ||
-                                   CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7) ::TFloat in (1,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar   AS Zakaz_Text   --День заказа (информативно)
-                                , (CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1) ::TFloat in (2,3) THEN 'Понедельник,' ELSE '' END ||
-                                   CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2) ::TFloat in (2,3) THEN 'Вторник,'     ELSE '' END ||
-                                   CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3) ::TFloat in (2,3) THEN 'Среда,'       ELSE '' END ||
-                                   CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4) ::TFloat in (2,3) THEN 'Четверг,'     ELSE '' END ||
-                                   CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5) ::TFloat in (2,3) THEN 'Пятница,'     ELSE '' END ||
-                                   CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6) ::TFloat in (2,3) THEN 'Суббота,'     ELSE '' END ||
-                                   CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7) ::TFloat in (2,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar   AS Dostavka_Text   --День доставки (информативно)
+                                , (CASE WHEN ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1)) ::TFloat in (1,3) THEN 'Понедельник,' ELSE '' END ||
+                                   CASE WHEN ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2)) ::TFloat in (1,3) THEN 'Вторник,'     ELSE '' END ||
+                                   CASE WHEN ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3)) ::TFloat in (1,3) THEN 'Среда,'       ELSE '' END ||
+                                   CASE WHEN ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4)) ::TFloat in (1,3) THEN 'Четверг,'     ELSE '' END ||
+                                   CASE WHEN ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5)) ::TFloat in (1,3) THEN 'Пятница,'     ELSE '' END ||
+                                   CASE WHEN ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6)) ::TFloat in (1,3) THEN 'Суббота,'     ELSE '' END ||
+                                   CASE WHEN ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7)) ::TFloat in (1,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar   AS Zakaz_Text   --День заказа (информативно)
+                                , (CASE WHEN ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1)) ::TFloat in (2,3) THEN 'Понедельник,' ELSE '' END ||
+                                   CASE WHEN ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2)) ::TFloat in (2,3) THEN 'Вторник,'     ELSE '' END ||
+                                   CASE WHEN ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3)) ::TFloat in (2,3) THEN 'Среда,'       ELSE '' END ||
+                                   CASE WHEN ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4)) ::TFloat in (2,3) THEN 'Четверг,'     ELSE '' END ||
+                                   CASE WHEN ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5)) ::TFloat in (2,3) THEN 'Пятница,'     ELSE '' END ||
+                                   CASE WHEN ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6)) ::TFloat in (2,3) THEN 'Суббота,'     ELSE '' END ||
+                                   CASE WHEN ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7)) ::TFloat in (2,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar   AS Dostavka_Text   --День доставки (информативно)
 
                            FROM Object AS Object_OrderShedule
                               LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Contract

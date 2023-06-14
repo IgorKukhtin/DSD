@@ -151,6 +151,13 @@ type
     edSendCashErrorTelId: TcxTextEdit;
     cxLabel40: TcxLabel;
     cbCancelBansSUN: TcxCheckBox;
+    cxTabSheet3: TcxTabSheet;
+    ceAntiTOPMP_Count: TcxCurrencyEdit;
+    cxLabel41: TcxLabel;
+    ceAntiTOPMP_CountFine: TcxCurrencyEdit;
+    cxLabel42: TcxLabel;
+    ceAntiTOPMP_SumFine: TcxCurrencyEdit;
+    cxLabel43: TcxLabel;
   private
     { Private declarations }
   public

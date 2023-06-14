@@ -3,12 +3,12 @@ unit Pos_PrivatBank_JSON;
 interface
 
 uses Winapi.Windows, Winapi.ActiveX, System.Variants, System.SysUtils, System.Win.ComObj,
-     PosInterface;
+     PosInterface, IdHTTP;
 
 type
   TPos_PrivatBank_JSON = class(TInterfacedObject, IPos)
   private
-    FPOS : Variant;
+    FIdHTTP: TIdHTTP;
     FLastPosError : String;
     FLastPosRRN : String;
     FCancel : Boolean;
@@ -19,7 +19,6 @@ type
     function GetMsgDescriptionProc: TMsgDescriptionProc;
     function GetLastPosError : string;
   protected
-    function WaitPosResponsePrivat() : Integer;
     function Payment(ASumma : Currency) : Boolean;
     procedure Cancel;
   public
@@ -54,46 +53,17 @@ begin
 end;
 
 procedure TPos_PrivatBank_JSON.AfterConstruction;
-var
-  ClassID : TCLSID;
-  aResult : hResult;
 begin
   inherited AfterConstruction;
 
-  FPOS := Unassigned;
+  FIdHTTP := TIdHTTP.Create;
   FCancel := False;
-  aResult := CLSIDFromProgID(PWideChar(WideString('ECRCommX.BPOS1Lib')), ClassID);
-  if aResult <> S_OK then
-    raise Exception.Create('Ќе установлена ECRCommX библиотека~ дл€ POS-терминала.')
-  else FPOS := CreateOLEObject('ECRCommX.BPOS1Lib');
 end;
 
 procedure TPos_PrivatBank_JSON.BeforeDestruction;
 begin
-  FPOS := Unassigned;
+  FreeAndNil(FIdHTTP);
   inherited BeforeDestruction;
-end;
-
-function TPos_PrivatBank_JSON.WaitPosResponsePrivat() : Integer;
-begin
-  while FPOS.LastResult = 2 do
-  begin
-    if FCancel then
-    begin
-      if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('ѕрервано пользователем...');
-      FPOS.Cancel;
-      Result := -1;
-      Exit;
-    end;
-    if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc(FPOS.LastStatMsgDescription);
-  end;
-
-  Result := FPOS.LastResult;
-
-  if FPOS.LastResult = 1 then
-  begin
-    FLastPosError := IntToStr(FPOS.LastErrorCode) + ' ( ' + FPOS.LastErrorDescription + ' )';
-  end;
 end;
 
 function TPos_PrivatBank_JSON.Payment(ASumma : Currency) : Boolean;
@@ -102,27 +72,27 @@ var
 begin
   Result := False;
   Summa := StrToInt(FloatToStr(ASumma * 100));
-  FPOS.SetErrorLang(2);                                                    // язык сообщений. 2-”кр
-  try
-    FPOS.CommOpen(iniPosPortNumber(FPOSTerminalCode), iniPosPortSpeed(FPOSTerminalCode));
-    if WaitPosResponsePrivat() = 0 then
-    begin
-      FPOS.Purchase( Summa, 0, 0 );
-      if WaitPosResponsePrivat() <> 0 then Exit;
-
-      FLastPosRRN := FPOS.RRN;
-
-      FPOS.Confirm;
-      if WaitPosResponsePrivat() = 0 then
-        Result := True;
-    end
-    else begin
-      FPOS.Cancel;
-      Result := False;
-    end;
-  finally
-   FPOS.CommClose;
-  end;
+//  FPOS.SetErrorLang(2);                                                    // язык сообщений. 2-”кр
+//  try
+//    FPOS.CommOpen(iniPosPortNumber(FPOSTerminalCode), iniPosPortSpeed(FPOSTerminalCode));
+//    if WaitPosResponsePrivat() = 0 then
+//    begin
+//      FPOS.Purchase( Summa, 0, 0 );
+//      if WaitPosResponsePrivat() <> 0 then Exit;
+//
+//      FLastPosRRN := FPOS.RRN;
+//
+//      FPOS.Confirm;
+//      if WaitPosResponsePrivat() = 0 then
+//        Result := True;
+//    end
+//    else begin
+//      FPOS.Cancel;
+//      Result := False;
+//    end;
+//  finally
+//   FPOS.CommClose;
+//  end;
 end;
 
 procedure TPos_PrivatBank_JSON.Cancel;

@@ -2916,10 +2916,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_CommentCheck_CommentTR() RETURNS Intege
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_CommentCheck_CommentTR', 'Связь с Комментарием строк технического переучета', zc_Object_CommentCheck(), zc_Object_CommentTR() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CommentCheck_CommentTR');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_CashSettings_UnitComplInvent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CashSettings_UnitComplInvent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_CashSettings_UnitComplInvent', 'Проведение полной инвентаризациии по аптеке', zc_Object_CashSettings(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CashSettings_UnitComplInvent');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 13.06.23                                                                                      * zc_ObjectLink_CashSettings_UnitComplInvent
  18.05.23         * zc_ObjectLink_Storage_AreaUnit
  18.04.23                                                                                      * zc_ObjectLink_CommentCheck_CommentTR
  18.01.23                                                                                      * zc_ObjectLink_PartionDateWages_PartionDateKind
