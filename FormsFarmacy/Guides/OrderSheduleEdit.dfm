@@ -58,8 +58,8 @@
   object ceValue1: TcxCurrencyEdit
     Left = 98
     Top = 145
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0;-,0; ;'
     TabOrder = 5
     Width = 57
   end
@@ -105,8 +105,8 @@
   object ceValue2: TcxCurrencyEdit
     Left = 98
     Top = 170
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0;-,0; ;'
     TabOrder = 11
     Width = 57
   end
@@ -118,16 +118,16 @@
   object ceValue3: TcxCurrencyEdit
     Left = 98
     Top = 195
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0;-,0; ;'
     TabOrder = 13
     Width = 57
   end
   object ceValue4: TcxCurrencyEdit
     Left = 98
     Top = 220
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0;-,0; ;'
     TabOrder = 14
     Width = 57
   end
@@ -139,8 +139,8 @@
   object ceValue5: TcxCurrencyEdit
     Left = 254
     Top = 144
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0;-,0; ;'
     TabOrder = 16
     Width = 57
   end
@@ -152,8 +152,8 @@
   object ceValue6: TcxCurrencyEdit
     Left = 254
     Top = 169
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0;-,0; ;'
     TabOrder = 18
     Width = 57
   end
@@ -165,8 +165,8 @@
   object ceValue7: TcxCurrencyEdit
     Left = 254
     Top = 195
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0;-,0; ;'
     TabOrder = 20
     Width = 57
   end

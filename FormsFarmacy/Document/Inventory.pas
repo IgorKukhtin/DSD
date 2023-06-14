@@ -121,6 +121,12 @@ type
     actPUSHInventBarcode: TdsdShowPUSHMessage;
     spPUSHInventBarcode: TdsdStoredProc;
     spPUSHCompileFull: TdsdStoredProc;
+    spInsert_InventoryCheck: TdsdStoredProc;
+    actInsert_InventoryCheck: TdsdExecStoredProc;
+    bbInsert_InventoryCheck: TdxBarButton;
+    spPUSHLoadCheckFull: TdsdStoredProc;
+    actPUSHLoadCheckFull: TdsdShowPUSHMessage;
+    isCheck: TcxGridDBColumn;
   private
     { Private declarations }
   public

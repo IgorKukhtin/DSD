@@ -22,7 +22,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls, cxCurrencyEdit;
 
 type
   TOrderSheduleForm = class(TParentForm)

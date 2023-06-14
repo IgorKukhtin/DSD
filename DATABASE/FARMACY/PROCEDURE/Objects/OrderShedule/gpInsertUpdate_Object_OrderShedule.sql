@@ -56,6 +56,14 @@ BEGIN
  
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_OrderShedule(), vbCode_calc);
+   
+   IF inValue1 = '' THEN inValue1 := '0'; END IF;
+   IF inValue2 = '' THEN inValue2 := '0'; END IF;
+   IF inValue3 = '' THEN inValue3 := '0'; END IF;
+   IF inValue4 = '' THEN inValue4 := '0'; END IF;
+   IF inValue5 = '' THEN inValue5 := '0'; END IF;
+   IF inValue6 = '' THEN inValue6 := '0'; END IF;
+   IF inValue7 = '' THEN inValue7 := '0'; END IF;
 
    vbName:= (inValue1||';'||inValue2||';'||inValue3||';'||inValue4||';'||inValue5||';'||inValue6||';'||inValue7) :: TVarChar;
 
@@ -112,3 +120,6 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_OrderShedule ()                            
+
+
+
