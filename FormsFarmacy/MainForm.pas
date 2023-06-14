@@ -1026,6 +1026,8 @@ type
     N378: TMenuItem;
     actReport_BanToTransferTimeGoods: TdsdOpenForm;
     N379: TMenuItem;
+    actReport_FulfillmentPlanMobileAppAntiTOP: TdsdOpenForm;
+    N380: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

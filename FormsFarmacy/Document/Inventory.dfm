@@ -12,17 +12,17 @@ inherited InventoryForm: TInventoryForm
     Width = 863
     Height = 524
     ExplicitTop = 119
-    ExplicitWidth = 1116
+    ExplicitWidth = 863
     ExplicitHeight = 524
     ClientRectBottom = 524
     ClientRectRight = 863
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1116
+      ExplicitWidth = 863
       ExplicitHeight = 500
       inherited cxGrid: TcxGrid
         Width = 863
         Height = 500
-        ExplicitWidth = 1116
+        ExplicitWidth = 863
         ExplicitHeight = 500
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -467,7 +467,6 @@ inherited InventoryForm: TInventoryForm
     object cxTabSheetChild: TcxTabSheet
       Caption = #1048#1089#1090#1086#1088#1080#1103' '#1096'/'#1082
       ImageIndex = 2
-      ExplicitWidth = 1116
       object cxGridChild: TcxGrid
         Left = 0
         Top = 54
@@ -475,7 +474,6 @@ inherited InventoryForm: TInventoryForm
         Height = 446
         Align = alClient
         TabOrder = 1
-        ExplicitWidth = 1116
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -646,7 +644,6 @@ inherited InventoryForm: TInventoryForm
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = Panel1
-        ExplicitWidth = 1116
       end
       object Panel1: TPanel
         Left = 0
@@ -656,7 +653,6 @@ inherited InventoryForm: TInventoryForm
         Align = alTop
         ShowCaption = False
         TabOrder = 0
-        ExplicitWidth = 1116
         object edBarCode: TcxTextEdit
           Left = 16
           Top = 22
@@ -724,7 +720,7 @@ inherited InventoryForm: TInventoryForm
     Width = 863
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 1116
+    ExplicitWidth = 863
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -907,11 +903,16 @@ inherited InventoryForm: TInventoryForm
     end
     inherited actCompleteMovement: TChangeGuidesStatus
       BeforeAction = actPUSHCompile
+      StoredProc = spCompileUnitFull_Start
       StoredProcList = <
+        item
+          StoredProc = spCompileUnitFull_Start
+        end
         item
           StoredProc = spChangeStatus
         end
         item
+          StoredProc = spCompileUnitFull_Finish
         end>
       QuestionBeforeExecute = #1055#1077#1088#1077#1076' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077#1084' '#1085#1077' '#1079#1072#1073#1091#1076#1100#1090#1077' '#1089#1086#1093#1088#1072#1085#1080#1090#1100' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1074' Exel-'#1092#1072#1081#1083
       InfoAfterExecute = #1053#1077' '#1079#1072#1073#1091#1076#1100#1090#1077' '#1089#1086#1093#1088#1072#1085#1080#1090#1100' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1074' Exel'
@@ -1308,6 +1309,17 @@ inherited InventoryForm: TInventoryForm
           StoredProc = spPUSHLoadCheckFull
         end>
       Caption = 'actPUSHCompile'
+    end
+    object actCompileUnitFull_Finish: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCompileUnitFull_Finish
+      StoredProcList = <
+        item
+          StoredProc = spCompileUnitFull_Finish
+        end>
+      Caption = 'spCompete'
     end
   end
   inherited MasterDS: TDataSource
@@ -2572,5 +2584,87 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 634
     Top = 496
+  end
+  object spCompileUnitFull_Start: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Inventory_CompileUnitFull'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 66
+    Top = 384
+  end
+  object spCompileUnitFull_Finish: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Inventory_CompileUnitFull'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 66
+    Top = 440
   end
 end

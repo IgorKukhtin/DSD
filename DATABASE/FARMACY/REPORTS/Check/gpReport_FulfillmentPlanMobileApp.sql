@@ -57,6 +57,11 @@ BEGIN
      
      -- raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMov'))
+     THEN
+       DROP TABLE tmpMov;
+     END IF;
+
      CREATE TEMP TABLE tmpMov ON COMMIT DROP AS 
      SELECT Movement.*
           , MovementLinkObject_Unit.ObjectId                                     AS UnitId
@@ -93,6 +98,11 @@ BEGIN
      ANALYSE tmpMov;
      
      -- raise notice 'Value 2: %', CLOCK_TIMESTAMP();
+
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpESCount'))
+     THEN
+       DROP TABLE tmpESCount;
+     END IF;
      
      CREATE TEMP TABLE tmpESCount ON COMMIT DROP AS 
      SELECT MILinkObject_Unit.ObjectId                                              AS UnitId
@@ -129,6 +139,11 @@ BEGIN
      ANALYSE tmpESCount;
      
      -- raise notice 'Value 3: %', CLOCK_TIMESTAMP();
+
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpEmployeeSchedule'))
+     THEN
+       DROP TABLE tmpEmployeeSchedule;
+     END IF;
      
      CREATE TEMP TABLE tmpEmployeeSchedule ON COMMIT DROP AS 
      SELECT DISTINCT
@@ -151,6 +166,11 @@ BEGIN
      ANALYSE tmpEmployeeSchedule;
      
      -- raise notice 'Value 4: %', CLOCK_TIMESTAMP();
+
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMovementProtocol'))
+     THEN
+       DROP TABLE tmpMovementProtocol;
+     END IF;
 
      CREATE TEMP TABLE tmpMovementProtocol ON COMMIT DROP AS 
      SELECT MovementProtocol.MovementId

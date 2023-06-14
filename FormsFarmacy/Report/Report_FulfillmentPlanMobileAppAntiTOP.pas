@@ -54,6 +54,7 @@ type
     CountShortage: TcxGridDBColumn;
     AntiTOPMP_Place: TcxGridDBColumn;
     Color_Calc: TcxGridDBColumn;
+    isBold: TcxGridDBColumn;
   private
     { Private declarations }
   public

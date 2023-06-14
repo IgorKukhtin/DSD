@@ -293,6 +293,17 @@ inherited InventoryJournalForm: TInventoryJournalForm
     end
     inherited actComplete: TdsdChangeMovementStatus
       BeforeAction = actPUSHCompile
+      StoredProc = spCompileUnitFull_Start
+      StoredProcList = <
+        item
+          StoredProc = spCompileUnitFull_Start
+        end
+        item
+          StoredProc = spMovementComplete
+        end
+        item
+          StoredProc = spCompileUnitFull_Finish
+        end>
       QuestionBeforeExecute = #1055#1077#1088#1077#1076' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077#1084' '#1085#1077' '#1079#1072#1073#1091#1076#1100#1090#1077' '#1089#1086#1093#1088#1072#1085#1080#1090#1100' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1074' Exel-'#1092#1072#1081#1083
       InfoAfterExecute = #1053#1077' '#1079#1072#1073#1091#1076#1100#1090#1077' '#1089#1086#1093#1088#1072#1085#1080#1090#1100' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1074' Exel-'#1092#1072#1081#1083
     end
@@ -531,6 +542,17 @@ inherited InventoryJournalForm: TInventoryJournalForm
           StoredProc = spInventoryTime
         end>
       Caption = 'actExecInventoryTime'
+    end
+    object actCompileUnitFull_Finish: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCompileUnitFull_Finish
+      StoredProcList = <
+        item
+          StoredProc = spCompileUnitFull_Finish
+        end>
+      Caption = 'spCompete'
     end
   end
   inherited MasterDS: TDataSource
@@ -950,5 +972,87 @@ inherited InventoryJournalForm: TInventoryJournalForm
     PackSize = 1
     Left = 706
     Top = 384
+  end
+  object spCompileUnitFull_Finish: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Inventory_CompileUnitFull'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 314
+    Top = 400
+  end
+  object spCompileUnitFull_Start: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Inventory_CompileUnitFull'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 314
+    Top = 344
   end
 end

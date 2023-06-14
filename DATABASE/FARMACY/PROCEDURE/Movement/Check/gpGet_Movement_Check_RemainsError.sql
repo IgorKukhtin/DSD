@@ -41,6 +41,23 @@ BEGIN
     INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
     FROM lpSelect_PartionDateKind_SetDate ();
     
+    IF EXISTS(SELECT 1  
+              FROM pg_stat_activity
+              WHERE state = 'active'
+                AND (query ilike '%gpComplete_Movement_Inventory%' OR query ilike '%gpUpdate_Status_Inventory%'))
+    THEN
+      IF EXISTS(SELECT ObjectLink.* 
+                FROM Object AS Object_CashSettings
+                     INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_CashSettings.Id
+                                          AND ObjectLink.DescId =  zc_ObjectLink_CashSettings_UnitComplInvent()
+                                          AND ObjectLink.ChildObjectId = vbUnitId
+                WHERE Object_CashSettings.DescId = zc_Object_CashSettings())
+      THEN
+        outMessageText := 'Дождитесь проведения полной инвентаризации...';
+        RETURN;
+      END IF;    
+    END IF;
+    
     IF inSPKindId = zc_Enum_SPKind_SP()
     THEN
       SELECT COALESCE(ObjectFloat_CashSettings_PriceSamples.ValueData, 0)                          AS PriceSamples
@@ -291,4 +308,5 @@ $BODY$
 -- тест
 
 
-select * from gpGet_Movement_Check_RemainsError(inSPKindId := 0 , inJSON := '[{"goodsid":334,"amount":7,"partiondatekindid":null,"ndskindid":9,"divisionpartiesid":null,"juridicalid":null}]' ,  inSession := '3');
+select * from gpGet_Movement_Check_RemainsError(inSPKindId := 0 , inJSON := '[{"goodsid":2095,"amount":1,"partiondatekindid":null,"ndskindid":9,"divisionpartiesid":null,"juridicalid":null}]' ,  inSession := '3');
+

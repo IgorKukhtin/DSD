@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Wages_Summa()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages_Summa(INTEGER, INTEGER, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages_Summa(INTEGER, INTEGER, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Wages_Summa(
     IN ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Wages_Summa(
     IN inIlliquidAssets      TFloat    , -- Неликвиды
     IN inPenaltySUN          TFloat    , -- Персональный штраф по СУН
     IN inPenaltyExam         TFloat    , -- Штраф по сдаче экзамена
+    IN inApplicationAward    TFloat    , -- Моб. приложение
     IN inAmountCard          TFloat    , -- На карту
     IN inisIssuedBy          Boolean   , -- Выдана
    OUT outAmountHand         TFloat    , -- На руки
@@ -82,6 +83,7 @@ BEGIN
          COALESCE(inIlliquidAssets, 0) <> 0 OR
          COALESCE(inPenaltySUN, 0) <> 0 OR
          COALESCE(inPenaltyExam, 0) <> 0 OR
+         COALESCE(inApplicationAward, 0) <> 0 OR
          COALESCE(inAmountCard, 0) <> 0
       THEN
         RAISE EXCEPTION 'Ошибка. Для дополнительных расходов можно изменять только признак "Выдано".';      
@@ -171,6 +173,7 @@ BEGIN
           vbIlliquidAssets <>  COALESCE (inIlliquidAssets, 0) OR
           vbPenaltySUN <>  COALESCE (inPenaltySUN, 0) OR
           vbPenaltyExam <>  COALESCE (inPenaltyExam, 0) OR
+          vbApplicationAward <>  COALESCE (inApplicationAward, 0) OR
           vbAmountCard <>  COALESCE (inAmountCard, 0))
       THEN
         RAISE EXCEPTION 'Ошибка. Зарплата выдана. Изменение сумм запрещено.';            
@@ -181,6 +184,7 @@ BEGIN
          vbDirector <>  COALESCE (inDirector, 0) OR
          vbPenaltySUN <>  COALESCE (inPenaltySUN, 0) OR
          vbPenaltyExam <>  COALESCE (inPenaltyExam, 0) OR
+         vbApplicationAward <>  COALESCE (inApplicationAward, 0) OR
          vbAmountCard <>  COALESCE (inAmountCard, 0)
       THEN
         vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Wages());
@@ -206,6 +210,8 @@ BEGIN
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PenaltySUN(), ioId, inPenaltySUN);
        -- сохранили свойство <Штраф по сдаче экзамена>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PenaltyExam(), ioId, inPenaltyExam);
+       -- сохранили свойство <Штраф по сдаче экзамена>
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ApplicationAward(), ioId, inApplicationAward);
 
        -- сохранили свойство <На карту>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountCard(), ioId, inAmountCard);

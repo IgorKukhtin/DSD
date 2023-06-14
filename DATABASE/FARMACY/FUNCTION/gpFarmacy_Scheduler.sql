@@ -276,6 +276,15 @@ BEGIN
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_MovementItem_Wages_IlliquidAssets', True, text_var1::TVarChar, vbUserId);
       END;    
 
+      -- Штраф за моб. приложение
+      BEGIN
+         PERFORM gpSelect_Movement_Wages_ApplicationAward(inOperDate := CURRENT_DATE,  inSession := inSession);
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Movement_Wages_ApplicationAward', True, text_var1::TVarChar, vbUserId);
+      END;
+
       -- Заполнение суммы СП в дополнительные расходы
       BEGIN
          PERFORM gpInsertUpdate_MovementItem_WagesAdditionalExpenses_SP (inOperDate := CURRENT_DATE - INTERVAL '1 DAY', inSession:=  zfCalc_UserAdmin());
@@ -529,16 +538,7 @@ BEGIN
            GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_WagesVIP_CalculationAllDay', True, text_var1::TVarChar, vbUserId);
       END;          
-      
-      -- Премия за приложение
-/*      BEGIN
-         PERFORM gpSelect_Movement_Wages_ApplicationAward(inOperDate := CURRENT_DATE,  inSession := inSession);
-      EXCEPTION
-         WHEN others THEN
-           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
-         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Movement_Wages_ApplicationAward', True, text_var1::TVarChar, vbUserId);
-      END;    */
-      
+            
     END IF;    
 
     IF date_part('DAY',  CURRENT_DATE)::Integer <= 3 AND date_part('HOUR',  CURRENT_TIME)::Integer = 18 AND 

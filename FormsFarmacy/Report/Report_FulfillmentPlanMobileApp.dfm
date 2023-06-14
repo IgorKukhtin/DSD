@@ -219,7 +219,7 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
               Kind = skSum
             end
             item
-              Format = #1047#1072#1082#1072#1079#1086#1074' 0'
+              Format = #1057#1090#1088#1086#1082' 0'
               Kind = skCount
               Column = UnitName
             end
@@ -713,8 +713,8 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
     object actReport_FulfillmentPlanMobileAppAntiTOP: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1040#1085#1090#1080#1090#1086#1087'. '#1087#1083#1072#1085#1072' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1086#1073#1080#1083#1100#1085#1086#1084#1091' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102
-      Hint = #1040#1085#1090#1080#1090#1086#1087'. '#1087#1083#1072#1085#1072' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1086#1073#1080#1083#1100#1085#1086#1084#1091' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102
+      Caption = #1040#1085#1090#1080#1058#1054#1055' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
+      Hint = #1040#1085#1090#1080#1058#1054#1055' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
       ImageIndex = 3
       FormName = 'TReport_FulfillmentPlanMobileAppAntiTOPForm'
       FormNameParam.Value = 'TReport_FulfillmentPlanMobileAppAntiTOPForm'

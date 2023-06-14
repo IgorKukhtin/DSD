@@ -11,7 +11,7 @@ RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar
              , UserId Integer, UserCode Integer, UserName TVarChar
              , CountChechUser TFloat, CountMobileUser TFloat, CountShortage TFloat, QuantityMobile Integer, ProcFact TFloat
              , PenaltiMobApp TFloat, isShowPlanMobileAppUser Boolean
-             , AntiTOPMP_Place Integer, SumPlace Integer, Place Integer, Color_Calc Integer
+             , AntiTOPMP_Place Integer, SumPlace Integer, Place Integer, Color_Calc Integer, isBold Boolean
               )
 AS
 $BODY$
@@ -42,6 +42,7 @@ BEGIN
           , T1.CountChechUser, T1.CountMobileUser, T1.CountShortage, T1.QuantityMobile, T1.ProcFact 
           , CASE WHEN T1.Color_Calc = zfCalc_Color (255, 69, 0) THEN - vbAntiTOPMP_SumFine END::TFloat, T1.isShowPlanMobileAppUser
           , T1.AntiTOPMP_Place, T1.SumPlace, T1.Place, T1.Color_Calc 
+          , True AS isBold
      FROM gpReport_FulfillmentPlanMobileApp(inOperDate, 0, 0, inSession) AS T1
      WHERE COALESCE(T1.AntiTOPMP_Place, 0) > 0
      ORDER BY T1.AntiTOPMP_Place;     
