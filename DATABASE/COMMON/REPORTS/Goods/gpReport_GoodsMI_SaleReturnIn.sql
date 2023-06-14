@@ -284,7 +284,7 @@ BEGIN
 
 
 
-    IF inIsOLAP = TRUE -- AND vbUserId = 5
+    IF inIsOLAP = TRUE -- AND vbUserId <> 5
     AND EXISTS (SELECT 1 FROM SoldTable WHERE SoldTable.OperDate >= inStartDate)
    -- AND EXISTS (SELECT 1 FROM (SELECT MAX (SoldTable.OperDate) AS OperDate FROM SoldTable) AS tmp WHERE inStartDate >= '01.07.2015' AND inEndDate <= tmp.OperDate)
     THEN
@@ -520,6 +520,7 @@ BEGIN
     END IF;
 
 
+-- if vbUserId = 5 then     RETURN; end if;
 
     -- Результат
     RETURN QUERY
@@ -642,7 +643,7 @@ BEGIN
 , tmpOperationGroup2 AS (SELECT CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END AS ContainerId_Analyzer
                               , MIContainer.ObjectId_Analyzer                 AS GoodsId
                               , MIContainer.ObjectIntId_Analyzer              AS GoodsKindId -- COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                              , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END AS PartnerId
+                              , CASE WHEN MIContainer.MovementDescId = zc_Movement_ChangePercent() THEN ContainerLO_Juridical.ObjectId WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END AS PartnerId
                               , COALESCE (MILinkObject_Branch.ObjectId, 0)   AS BranchId
                               , COALESCE (MILinkObject_Business.ObjectId, 0) AS BusinessId
                               , COALESCE (ContainerLO_Juridical.ObjectId, 0) AS JuridicalId
@@ -682,10 +683,15 @@ BEGIN
                               INNER JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
                                                               AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+-- and (MIContainer.MovementDescId = zc_Movement_ChangePercent() or vbUserId <> 5)
+-- and (MIContainer.MovementId = 24930561  or vbUserId <> 5)
+-- and (MIContainer.MovementId = 24930340  or vbUserId <> 5)
+
                               INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                              ON ContainerLO_Juridical.ContainerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END
                                                             AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                                                             AND (ContainerLO_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+
                               INNER JOIN ContainerLinkObject AS ContainerLO_InfoMoney
                                                              ON ContainerLO_InfoMoney.ContainerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END
                                                             AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -719,7 +725,7 @@ BEGIN
                          GROUP BY CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END
                                 , MIContainer.ObjectId_Analyzer
                                 , MIContainer.ObjectIntId_Analyzer -- MILinkObject_GoodsKind.ObjectId
-                                , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END
+                                , CASE WHEN MIContainer.MovementDescId = zc_Movement_ChangePercent() THEN ContainerLO_Juridical.ObjectId WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END
                                 , MILinkObject_Branch.ObjectId
                                 , MILinkObject_Business.ObjectId
                                 , ContainerLO_Juridical.ObjectId
@@ -866,9 +872,9 @@ BEGIN
           , View_Partner_Address.StreetKindName
           , View_Partner_Address.StreetName*/
 
-          , View_Partner_Address.PartnerId
-          , View_Partner_Address.PartnerCode
-          , View_Partner_Address.PartnerName
+          , COALESCE (View_Partner_Address.PartnerId, Object_Partner.Id) :: Integer
+          , COALESCE (View_Partner_Address.PartnerCode, Object_Partner.ObjectCode) :: Integer
+          , COALESCE (View_Partner_Address.PartnerName, Object_Partner.ValueData) :: TVarChar
 
           , View_Contract_InvNumber.ContractId
           , View_Contract_InvNumber.ContractCode
@@ -1094,7 +1100,7 @@ $BODY$
 Прод, шт (покуп, с %ск.)
 Учтен только %скидки за вес
 -- 2.2.
-Прод, грн (с %ск.вес)
+Прод, грн (с %ск.вес)9
 С учетом %скидки за вес
 
 -- 3.
