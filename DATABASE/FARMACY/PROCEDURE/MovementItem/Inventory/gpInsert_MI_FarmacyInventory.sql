@@ -1,6 +1,6 @@
 -- Function: gpInsert_MI_FarmacyInventory()
 
-DROP FUNCTION IF EXISTS gpInsert_MI_FarmacyInventory (Integer, TDateTime, Integer, TFloat, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_MI_FarmacyInventory (Integer, TDateTime, Integer, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_MI_FarmacyInventory(
     IN inUnitId      Integer   , -- Подразделение
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsert_MI_FarmacyInventory(
     IN inAmount      TFloat    , -- Количество тек.пользователя
     IN inDateInput   TVarChar  , -- Дата ввода
     IN inUserInputId Integer   , -- Кто ввел
+    IN inCheckId     Integer   , -- Чек
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -62,8 +63,12 @@ BEGIN
                                                 ON MIDate_Insert.MovementItemId = MovementItem.Id
                                                AND MIDate_Insert.DescId = zc_MIDate_Insert()
                                                AND MIDate_Insert.ValueData = inDateInput::TDateTime
+                    LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                               AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
                WHERE MovementItem.ParentId = vbId
                  AND MovementItem.DescId   = zc_MI_Child()
+                 AND COALESCE(MIFloat_MovementId.ValueData, 0)::Integer = COALESCE(inCheckId, 0) 
                  AND MovementItem.isErased = FALSE
                )
     THEN
@@ -127,6 +132,9 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), vbChildId, inDateInput::TDateTime);
 
 
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), vbChildId, inCheckId);
+
        -- сохранили протокол
        PERFORM lpInsert_MovementItemProtocol (vbChildId, vbUserId, True);
                                                   
@@ -151,5 +159,6 @@ $BODY$
 
 -- тест
 
--- select * from gpInsert_MI_FarmacyInventory(inUnitId := 377610 , inOperDate := ('28.04.2023')::TDateTime , inGoodsId := 8674 , inAmount := 1 , inDateInput := '2023-04-28 00:36:33.858' , inUserInputId := 3 ,  inSession := '3');
+-- select * from gpInsert_MI_FarmacyInventory(inUnitId := 377610 , inOperDate := ('15.06.2023')::TDateTime , inGoodsId := 6307 , inAmount := -2 , inDateInput := '2023-06-15 08:12:03.000' , inUserInputId := 4085760 , inCheckId := 32399450 ,  inSession := '3');
+
 

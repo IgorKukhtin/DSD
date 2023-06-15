@@ -21,7 +21,6 @@ inherited MainInventoryForm: TMainInventoryForm
     Caption = 'Panel3'
     ShowCaption = False
     TabOrder = 0
-    ExplicitWidth = 841
     object PageControl: TcxPageControl
       Left = 1
       Top = 1
@@ -33,7 +32,6 @@ inherited MainInventoryForm: TMainInventoryForm
       TabOrder = 0
       Properties.ActivePage = tsInventoryManual
       Properties.CustomButtons.Buttons = <>
-      ExplicitWidth = 839
       ClientRectBottom = 391
       ClientRectLeft = 4
       ClientRectRight = 834
@@ -97,7 +95,7 @@ inherited MainInventoryForm: TMainInventoryForm
               DataBinding.FieldName = 'IsSend'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 43
+              Width = 40
             end
             object ChildisLast: TcxGridDBColumn
               Caption = #1055#1086#1089#1083#1077#1076#1085#1080#1081
@@ -109,28 +107,40 @@ inherited MainInventoryForm: TMainInventoryForm
               Properties.ValueUnchecked = '0'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 59
+              Width = 54
+            end
+            object ChildisCheck: TcxGridDBColumn
+              Caption = #1063#1077#1082
+              DataBinding.FieldName = 'isCheck'
+              PropertiesClassName = 'TcxCheckBoxProperties'
+              Properties.DisplayChecked = '1'
+              Properties.DisplayUnchecked = '0'
+              Properties.ValueChecked = '1'
+              Properties.ValueUnchecked = '0'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 41
             end
             object ChildNum: TcxGridDBColumn
               Caption = #8470' '#1087'.'#1087'.'
               DataBinding.FieldName = 'Num'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 41
+              Width = 39
             end
             object ChildGoodsCode: TcxGridDBColumn
               Caption = #1050#1086#1076
               DataBinding.FieldName = 'GoodsCode'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 58
+              Width = 55
             end
             object ChildGoodsName: TcxGridDBColumn
               Caption = #1058#1086#1074#1072#1088
               DataBinding.FieldName = 'GoodsName'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 210
+              Width = 200
             end
             object chAmountGoods: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' '#1080#1085#1074#1077#1085#1090'.'
@@ -140,7 +150,7 @@ inherited MainInventoryForm: TMainInventoryForm
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 65
+              Width = 62
             end
             object ChildAmount: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' '#1089#1082#1072#1085'.'
@@ -150,21 +160,21 @@ inherited MainInventoryForm: TMainInventoryForm
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 61
+              Width = 59
             end
             object ChildUserName: TcxGridDBColumn
               Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
               DataBinding.FieldName = 'UserName'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 129
+              Width = 122
             end
             object ChildDate_Insert: TcxGridDBColumn
               Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
               DataBinding.FieldName = 'Date_Insert'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 151
+              Width = 144
             end
           end
           object cxGridChildLevel: TcxGridLevel
@@ -284,7 +294,6 @@ inherited MainInventoryForm: TMainInventoryForm
       object tsInventoryManual: TcxTabSheet
         Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1088#1091#1095#1085#1086#1081' '#1074#1074#1086#1076
         ImageIndex = 3
-        ExplicitWidth = 831
         object Panel4: TPanel
           Left = 0
           Top = 0
@@ -293,7 +302,6 @@ inherited MainInventoryForm: TMainInventoryForm
           Align = alTop
           ShowCaption = False
           TabOrder = 0
-          ExplicitWidth = 831
           object cxLabel11: TcxLabel
             Left = 76
             Top = 5
@@ -308,7 +316,7 @@ inherited MainInventoryForm: TMainInventoryForm
             Width = 108
           end
           object cxButton2: TcxButton
-            Left = 1
+            Left = -1
             Top = 0
             Width = 33
             Height = 25
@@ -335,7 +343,6 @@ inherited MainInventoryForm: TMainInventoryForm
             Top = 31
             Align = alBottom
             TabOrder = 4
-            ExplicitWidth = 829
             DesignSize = (
               828
               21)
@@ -361,7 +368,6 @@ inherited MainInventoryForm: TMainInventoryForm
           Height = 314
           Align = alClient
           TabOrder = 1
-          ExplicitTop = 58
           object cxGridDBTableView2: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ManualDS
@@ -1143,19 +1149,27 @@ inherited MainInventoryForm: TMainInventoryForm
           '     , us.Name          AS UserName'
           '     , IC.IsSend        AS IsSend'
           
-            '     , CAST (ROW_NUMBER() OVER (PARTITION BY IC.UserInputId ORDE' +
-            'R BY IC.Id) AS Integer) AS Num'
+            '     , CAST (ROW_NUMBER() OVER (ORDER BY IC.DateInput) AS Intege' +
+            'r) AS Num'
           
             '     , CASE WHEN CAST (ROW_NUMBER() OVER (PARTITION BY IC.GoodsI' +
-            'd ORDER BY IC.GoodsId, IC.Id DESC) AS Integer) = 1 THEN 1 ELSE 0' +
-            ' END  AS isLast'
+            'd ORDER BY IC.GoodsId, IC.DateInput DESC) AS Integer) = 1 THEN 1' +
+            ' ELSE 0 END  AS isLast'
+          
+            '     , CASE WHEN COALESCE (IC.CheckId, 0) = 0 THEN 0 ELSE 1 END ' +
+            'AS isCheck'
           'FROM InventoryChild AS IC'
           '     LEFT JOIN Goods AS G ON G.Id = IC.GoodsId'
           '     LEFT JOIN UserSettings AS us ON us.Id = IC.UserInputId'
           
-            '     LEFT JOIN (SELECT MAX(IC.Id) AS ID, CAST(SUM(IC.Amount) AS ' +
-            'Float) AS AmountGoods FROM InventoryChild AS IC GROUP BY IC.Inve' +
-            'ntory, IC.GoodsId) AS ICS ON ICS.Id = IC.Id  '
+            '     LEFT JOIN (SELECT IC.GoodsId, MAX(IC.DateInput) AS DateInpu' +
+            't, CAST(SUM(IC.Amount) AS Float) AS AmountGoods '
+          
+            '                FROM InventoryChild AS IC GROUP BY IC.Inventory,' +
+            ' IC.GoodsId) AS ICS ON ICS.DateInput = IC.DateInput  '
+          
+            '                                                                ' +
+            '                   AND ICS.GoodsId = IC.GoodsId  '
           'WHERE IC.Inventory = :inId'
           'ORDER BY IC.DateInput DESC')
       end>
@@ -1371,7 +1385,8 @@ inherited MainInventoryForm: TMainInventoryForm
         SQL.Strings = (
           
             'SELECT i.UnitId, i.OperDate, ic.Id, ic.GoodsId, ic.Amount, CAST(' +
-            'ic.DateInput AS TVarChar) AS DateInput, ic.UserInputId '
+            'ic.DateInput AS TVarChar) AS DateInput, ic.UserInputId, ic.Check' +
+            'Id '
           'FROM InventoryChild AS ic'
           '     INNER JOIN Inventory AS i ON i.ID = ic.Inventory'
           'WHERE ic.IsSend = '#39'N'#39
@@ -1433,6 +1448,14 @@ inherited MainInventoryForm: TMainInventoryForm
         Value = 0.000000000000000000
         Component = SendInventCDS
         ComponentItem = 'UserInputId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCheckId'
+        Value = Null
+        Component = SendInventCDS
+        ComponentItem = 'CheckId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1733,5 +1756,41 @@ inherited MainInventoryForm: TMainInventoryForm
     PackSize = 1
     Left = 136
     Top = 318
+  end
+  object InventoryCheckCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    OnPostError = ManualCDSPostError
+    Left = 488
+    Top = 33
+  end
+  object spInventoryCheck: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_InventoryLocalCheck'
+    DataSet = InventoryCheckCDS
+    DataSets = <
+      item
+        DataSet = InventoryCheckCDS
+      end>
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 368
+    Top = 38
   end
 end

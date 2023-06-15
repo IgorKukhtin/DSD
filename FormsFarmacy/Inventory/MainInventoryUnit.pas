@@ -158,6 +158,9 @@ type
     ManualPrice: TcxGridDBColumn;
     cxButton4: TcxButton;
     actInsert_InventoryCheck: TAction;
+    InventoryCheckCDS: TClientDataSet;
+    spInventoryCheck: TdsdStoredProc;
+    ChildisCheck: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);
@@ -450,16 +453,87 @@ end;
 
 procedure TMainInventoryForm.actInsert_InventoryCheckExecute(Sender: TObject);
   var OperDate: TDateTime; UnitName : String; isSave: boolean;
+      Params : TdsdParams;
 begin
   inherited;
-  //
-  if ChechActiveInv(OperDate, UnitName, isSave) then
-  begin
-    if not isSave then
+
+  try
+
+    gc_User.Local := False;
+
+    try
+      spGet_User_IsAdmin.Execute;
+    except
+    end;
+
+    if gc_User.Local then
     begin
-      ShowMessage('Перед загрузкой чеков надо отправить все данные');
+      ShowMessage('В локальном режиме не работает');
       Exit;
     end;
+
+    if ChechActiveInv(OperDate, UnitName, isSave) then
+    begin
+      if not isSave then
+      begin
+        ShowMessage('Перед загрузкой чеков надо отправить все данные');
+        Exit;
+      end;
+    end;
+
+    spInventoryCheck.Execute;
+
+    if InventoryCheckCDS.IsEmpty then
+    begin
+      ShowMessage('Нет данных для загрузки.');
+      Exit;
+    end;
+
+    if MessageDlg('Уточните у первостольника сумма чеков икс отчета совпадает с программой?' +
+      #13#10#13#10'Производить загрузку чеков?', mtInformation, [mbYes, mbCancel], 0) <> mrYes then Exit;
+
+
+    Params := TdsdParams.Create(Self, TdsdParam);
+    Params.AddParam('Id', TFieldType.ftInteger, ptOutput, 0);
+    Params.AddParam('Inventory', TFieldType.ftInteger, ptInput, 0);
+    Params.AddParam('GoodsId', TFieldType.ftInteger, ptInput, 0);
+    Params.AddParam('Amount', TFieldType.ftFloat, ptInput, 0);
+    Params.AddParam('DateInput', TFieldType.ftDateTime, ptInput, Now);
+    Params.AddParam('UserInputId', TFieldType.ftInteger, ptInput, 0);
+    Params.AddParam('CheckId', TFieldType.ftInteger, ptInput, 0);
+    Params.AddParam('IsSend', TFieldType.ftBoolean, ptInput, False);
+
+    try
+      InventoryCheckCDS.First;
+      while not InventoryCheckCDS.Eof do
+      begin
+
+        Params.ParamByName('Id').Value := 0;
+        Params.ParamByName('Inventory').Value := FormParams.ParamByName('Id').Value;
+        Params.ParamByName('GoodsId').Value := InventoryCheckCDS.FieldByName('GoodsId').AsInteger;
+        Params.ParamByName('Amount').Value := InventoryCheckCDS.FieldByName('Amount').AsCurrency;
+        Params.ParamByName('DateInput').Value := InventoryCheckCDS.FieldByName('OperDate').AsDateTime;
+        Params.ParamByName('UserInputId').Value := InventoryCheckCDS.FieldByName('UserId').AsInteger;
+        Params.ParamByName('CheckId').Value := InventoryCheckCDS.FieldByName('MovementId').AsInteger;
+        Params.ParamByName('IsSend').ParamType := ptOutput;
+        if not SQLite_Exists(InventoryChild_Table, Params) then
+        begin
+          Params.ParamByName('IsSend').ParamType := ptInput;
+          Params.ParamByName('IsSend').Value := False;
+          SQLite_Insert(InventoryChild_Table, Params);
+        end;
+
+        InventoryCheckCDS.Next;
+      end;
+      ShowMessage('Загружено.');
+    finally
+      FreeAndNil(Params);
+      spSelectManual.Execute;
+      actSetEditAmount.Execute;
+    end;
+
+  finally
+    actSetFocusedManualAmount.Execute;
   end;
 end;
 

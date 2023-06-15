@@ -53,6 +53,14 @@ BEGIN
      	vbUnitId := 0;
      END IF;
 
+     IF EXISTS(SELECT 1  
+               FROM pg_stat_activity
+               WHERE state = 'active'
+                 AND (query ilike '%gpLoadPriceList%'))
+     THEN
+        RAISE EXCEPTION 'Идет перенос прайс листа. Попробуйте через минуту.';
+     END IF;
+
      SELECT COALESCE (ObjectString_Language.ValueData, 'RU')::TVarChar                AS Language
      INTO vbLanguage
      FROM Object AS Object_User
@@ -113,6 +121,49 @@ BEGIN
      
      -- RAISE notice '21 <%>', CLOCK_TIMESTAMP();
      
+     
+     CREATE TEMP TABLE MarginCondition ON COMMIT DROP AS
+     WITH DD AS (SELECT DISTINCT
+            Object_MarginCategoryItem_View.MarginPercent,
+            Object_MarginCategoryItem_View.MinPrice,
+            Object_MarginCategoryItem_View.MarginCategoryId,
+            ROW_NUMBER()OVER(PARTITION BY Object_MarginCategoryItem_View.MarginCategoryId ORDER BY Object_MarginCategoryItem_View.MinPrice) as ORD
+        FROM Object_MarginCategoryItem_View
+             INNER JOIN Object AS Object_MarginCategoryItem ON Object_MarginCategoryItem.Id = Object_MarginCategoryItem_View.Id
+                                                           AND Object_MarginCategoryItem.isErased = FALSE
+                )
+     SELECT D1.MarginCategoryId,
+            D1.MarginPercent,
+            D1.MinPrice,
+            COALESCE(D2.MinPrice, 1000000) AS MaxPrice
+        FROM DD AS D1
+            LEFT OUTER JOIN DD AS D2 ON D1.MarginCategoryId = D2.MarginCategoryId AND D1.ORD = D2.ORD-1;
+
+     ANALYSE MarginCondition;                                         
+
+     -- RAISE notice '22 <%>', CLOCK_TIMESTAMP();
+
+     CREATE TEMP TABLE tmpContractSettings ON COMMIT DROP AS
+      SELECT Object_ContractSettings.Id               AS Id
+           , Object_ContractSettings.isErased         AS isErased
+           , ObjectLink_MainJuridical.ChildObjectId   AS MainJuridicalId
+           , ObjectLink_Contract.ChildObjectId        AS ContractId
+           , ObjectLink_Area.ChildObjectId            AS AreaId
+      FROM ObjectLink AS ObjectLink_MainJuridical
+         INNER JOIN ObjectLink AS ObjectLink_Contract
+                               ON ObjectLink_Contract.ObjectId = ObjectLink_MainJuridical.ObjectId
+                              AND ObjectLink_Contract.DescId = zc_ObjectLink_ContractSettings_Contract()
+         LEFT JOIN ObjectLink AS ObjectLink_Area
+                              ON ObjectLink_Area.ObjectId = ObjectLink_MainJuridical.ObjectId
+                             AND ObjectLink_Area.DescId = zc_ObjectLink_ContractSettings_Area()
+
+         LEFT JOIN Object AS Object_ContractSettings ON Object_ContractSettings.Id = ObjectLink_MainJuridical.ObjectId
+      WHERE ObjectLink_MainJuridical.DescId = zc_ObjectLink_ContractSettings_MainJuridical();
+
+     ANALYSE tmpContractSettings;                                         
+
+     -- RAISE notice '23 <%>', CLOCK_TIMESTAMP();
+     
      --
      CREATE TEMP TABLE _GoodsPriceAll (
                              GoodsId Integer,
@@ -131,41 +182,7 @@ BEGIN
                              isSecond Boolean,
                              isResolution_224 Boolean) ON COMMIT DROP;
 
-     WITH DD AS (SELECT DISTINCT
-            Object_MarginCategoryItem_View.MarginPercent,
-            Object_MarginCategoryItem_View.MinPrice,
-            Object_MarginCategoryItem_View.MarginCategoryId,
-            ROW_NUMBER()OVER(PARTITION BY Object_MarginCategoryItem_View.MarginCategoryId ORDER BY Object_MarginCategoryItem_View.MinPrice) as ORD
-        FROM Object_MarginCategoryItem_View
-             INNER JOIN Object AS Object_MarginCategoryItem ON Object_MarginCategoryItem.Id = Object_MarginCategoryItem_View.Id
-                                                           AND Object_MarginCategoryItem.isErased = FALSE
-                )
-        , MarginCondition AS (SELECT
-            D1.MarginCategoryId,
-            D1.MarginPercent,
-            D1.MinPrice,
-            COALESCE(D2.MinPrice, 1000000) AS MaxPrice
-        FROM DD AS D1
-            LEFT OUTER JOIN DD AS D2 ON D1.MarginCategoryId = D2.MarginCategoryId AND D1.ORD = D2.ORD-1)
-
-          , tmpContractSettings AS (SELECT Object_ContractSettings.Id               AS Id
-                                         , Object_ContractSettings.isErased         AS isErased
-                                         , ObjectLink_MainJuridical.ChildObjectId   AS MainJuridicalId
-                                         , ObjectLink_Contract.ChildObjectId        AS ContractId
-                                         , ObjectLink_Area.ChildObjectId            AS AreaId
-                                    FROM ObjectLink AS ObjectLink_MainJuridical
-                                       INNER JOIN ObjectLink AS ObjectLink_Contract
-                                                             ON ObjectLink_Contract.ObjectId = ObjectLink_MainJuridical.ObjectId
-                                                            AND ObjectLink_Contract.DescId = zc_ObjectLink_ContractSettings_Contract()
-                                       LEFT JOIN ObjectLink AS ObjectLink_Area
-                                                            ON ObjectLink_Area.ObjectId = ObjectLink_MainJuridical.ObjectId
-                                                           AND ObjectLink_Area.DescId = zc_ObjectLink_ContractSettings_Area()
-
-                                       LEFT JOIN Object AS Object_ContractSettings ON Object_ContractSettings.Id = ObjectLink_MainJuridical.ObjectId
-                                    WHERE ObjectLink_MainJuridical.DescId = zc_ObjectLink_ContractSettings_MainJuridical()
-                                    )
-
-          , tmpMainJuridicalArea AS (SELECT DISTINCT ObjectLink_JuridicalRetail.ObjectId      AS MainJuridicalId
+     WITH   tmpMainJuridicalArea AS (SELECT DISTINCT ObjectLink_JuridicalRetail.ObjectId      AS MainJuridicalId
                                           , ObjectLink_Unit_Area.ChildObjectId                AS AreaId
                                      FROM ObjectLink AS ObjectLink_JuridicalRetail
                                           LEFT JOIN ObjectLink AS OL_Unit_Juridical
@@ -402,9 +419,9 @@ BEGIN
           OR COALESCE(tmpExpirationDate.ExpirationDate, zc_DateEnd()) <=
              CURRENT_DATE + (COALESCE(tmpExpirationDateMonth.DateMonth::Integer, 0)::tvarchar||' MONTH')::INTERVAL);
 
-     -- RAISE notice '3 <%>', CLOCK_TIMESTAMP();
-
      ANALYSE _GoodsPriceAll;
+
+     -- RAISE notice '3 <%>', CLOCK_TIMESTAMP();
      
      
      CREATE TEMP TABLE GoodsPriceAll ON COMMIT DROP AS 

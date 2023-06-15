@@ -78,6 +78,8 @@ const
       'DateInput     datetime,'#13#10 +
       'UserInputId   integer,'#13#10 +
 
+      'CheckId       integer,'#13#10 +
+
       'IsSend        Boolean        not null default False,'#13#10 +
 
       'FOREIGN KEY (GoodsId) REFERENCES Goods)';

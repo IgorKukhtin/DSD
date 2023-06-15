@@ -34,6 +34,8 @@ function SQLite_Insert(ATableName: String; AParams : TdsdParams) : Boolean;
 function SQLite_Update(ATableName: String; AId : Integer; AParams : TdsdParams) : Boolean;
 // Считать строку с таблицы
 function SQLite_Get(ASQL: String; AParams : TdsdParams) : Boolean;
+// Проверить наличие записи
+function SQLite_Exists(ATableName: String; AParams : TdsdParams) : Boolean;
 
 implementation
 
@@ -684,6 +686,71 @@ begin
   end;
 end;
 
+// Проверить наличие записи
+function SQLite_Exists(ATableName: String; AParams : TdsdParams) : Boolean;
+  var  ZQuery: TZQuery; I, J : Integer;
+       cMessages, S : String;
+begin
+  Result := False;
+
+  try
+    Add_SQLiteLog('Start MutexSQLite SQL');
+    WaitForSingleObject(MutexSQLite, INFINITE);
+    try
+      ZSQLiteConnection.Database := SQLiteFile;
+      ZSQLiteConnection.Connect;
+      ZQuery := TZQuery.Create(Nil);
+      ZQuery.Connection := ZSQLiteConnection;
+      try
+
+        if gc_isDebugMode then
+        begin
+          cMessages :=  'SELECT * FROM ' + ATableName;
+          if Assigned(AParams) then
+            for I := 0 to AParams.Count - 1 do if AParams[I].ParamType in [ptInput, ptInputOutput] then
+              cMessages :=  cMessages + #13#10 + AParams[I].Name + ' = ' + AParams[I].AsString;
+          cMessages :=  cMessages + ' LIMIT 1';
+          TMessagesForm.Create(nil).Execute(cMessages, cMessages, true);
+        end;
+
+        S := 'SELECT * FROM ' + ATableName;
+        if Assigned(AParams) then
+        begin
+          J := 0;
+          for I := 0 to AParams.Count - 1 do if AParams[I].ParamType in [ptInput, ptInputOutput] then
+          begin
+            if J = 0 then S := S + ' WHERE ' else S := S + ' AND ';
+            S := S + AParams[I].Name + ' = :' + AParams[I].Name;
+            Inc(J);
+          end;
+        end;
+        S := S + ' LIMIT 1';
+
+        // Получили
+        ZQuery.SQL.Text := S;
+
+        if Assigned(AParams) then
+          for I := 0 to AParams.Count - 1 do if AParams[I].ParamType in [ptInput, ptInputOutput] then
+            if Assigned(ZQuery.Params.FindParam(AParams[I].Name)) then
+              ZQuery.ParamByName(AParams[I].Name).Value := AParams[I].Value;
+
+        ZQuery.Open;
+
+        if not ZQuery.IsEmpty then Result := True;
+
+      finally
+        ZQuery.Free;
+        ZSQLiteConnection.Disconnect;
+      end;
+    finally
+      ReleaseMutex(MutexSQLite);
+      Add_SQLiteLog('End MutexSQLite');
+    end;
+  Except on E: Exception do
+     Add_SQLiteLog('Ошибка получения данных ' + S + ' - ' + E.Message, True);
+  end;
+
+end;
 
 initialization
 
