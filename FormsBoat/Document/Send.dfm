@@ -3494,12 +3494,12 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisOn'
+        Name = 'ioisOn'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isOn'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -4064,12 +4064,12 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisOn'
+        Name = 'ioisOn'
         Value = False
         Component = MasterCDS
         ComponentItem = 'isOn'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

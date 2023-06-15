@@ -21,7 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
     IN inCountForPrice       TFloat    , -- Цена за кол.
     IN inPartNumber          TVarChar  , --№ по тех паспорту 
     IN inComment             TVarChar  , --
-    IN inIsOn                Boolean   , -- вкл
+ INOUT ioIsOn                Boolean   , -- вкл
    OUT outIsErased           Boolean   , -- удален 
    OUT outMovementId_OrderClient Integer   , --
    OUT outInvNumber_OrderClient  TVarChar  ,
@@ -72,7 +72,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- замена
-     IF vbIsInsert = TRUE THEN inIsOn:= TRUE; END IF;
+     IF vbIsInsert = TRUE THEN ioIsOn:= TRUE; END IF;
 
      IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = ioId AND MovementItem.isErased = TRUE)
      THEN
@@ -101,7 +101,7 @@ BEGIN
                                            ) AS tmp;
      
      -- (разделила т.к. если внесут еще какие-то изменения в строку то ощибка что элемент удален)
-     IF COALESCE (inIsOn, FALSE) = FALSE
+     IF COALESCE (ioIsOn, FALSE) = FALSE
      THEN
          -- ставим отметку об удалении 
          outIsErased := gpMovementItem_Send_SetErased (ioId, inSession);
