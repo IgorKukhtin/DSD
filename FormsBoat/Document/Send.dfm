@@ -22,7 +22,7 @@ object SendForm: TSendForm
     Left = 0
     Top = 0
     Width = 1053
-    Height = 169
+    Height = 173
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -345,26 +345,30 @@ object SendForm: TSendForm
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 195
+    Top = 199
     Width = 1053
-    Height = 372
+    Height = 368
     Align = alClient
     TabOrder = 3
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 372
+    ExplicitTop = 198
+    ExplicitHeight = 369
+    ClientRectBottom = 368
     ClientRectRight = 1053
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 345
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1053
-        Height = 216
+        Height = 212
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 213
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -644,6 +648,7 @@ object SendForm: TSendForm
             DataBinding.FieldName = 'AmountSecond'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090
@@ -808,7 +813,7 @@ object SendForm: TSendForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 224
+        Top = 220
         Width = 1053
         Height = 124
         Align = alBottom
@@ -816,6 +821,7 @@ object SendForm: TSendForm
         LookAndFeel.Kind = lfStandard
         LookAndFeel.NativeStyle = False
         LookAndFeel.SkinName = ''
+        ExplicitTop = 221
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1098,12 +1104,13 @@ object SendForm: TSendForm
       end
       object cxTopSplitter: TcxSplitter
         Left = 0
-        Top = 216
+        Top = 212
         Width = 1053
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 206
       end
     end
   end

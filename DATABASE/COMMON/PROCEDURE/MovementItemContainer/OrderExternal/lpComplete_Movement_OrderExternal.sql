@@ -156,6 +156,7 @@ BEGIN
        AND Movement.DescId = zc_Movement_OrderExternal()
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
+
      -- проверка
      IF COALESCE (vbContractId, 0) = 0 AND vbUnitId_From = 0 AND vbArticleLoss_From = 0
      THEN
@@ -486,6 +487,7 @@ order by Movement.OperDate*/
 
      -- проверка - если не разрешен вес < 5 и в документе < 5
      IF vbIsLessWeigth = FALSE AND COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0) < vbCriticalWeight
+        AND COALESCE (vbSummOrderMin, 0) = 0
      THEN
        /*RAISE EXCEPTION 'Ошибка.Разрешены заявки с общим весом >= % кг.%Проведение заявки с весом = % кг. невозможно.'
                         , zfConvert_FloatToString (vbCriticalWeight)
@@ -545,10 +547,18 @@ order by Movement.OperDate*/
          outMessageText:= 'Сообщение.Разрешены заявки с суммой >= ' || zfConvert_FloatToString (vbSummOrderMin) || ' грн.'
           --|| CHR(13) || 'Проведение заявки с весом = ' || zfConvert_FloatToString (COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0))  || ' кг. невозможно.'
             || CHR(13) || 'В текущей заявке сумма = ' || zfConvert_FloatToString (vbOperSumm_Partner)  || ' грн.'
+             ;
 
          -- !!! выход !!!
          RETURN;
       END IF;
+
+     -- проверка
+     IF inUserId = 5 AND 1=0
+     THEN
+         RAISE EXCEPTION 'Ошибка. %  %' , vbOperSumm_Partner , vbSummOrderMin;
+
+     END IF;
 
 
      -- Расчет Итоговых сумм по Контрагенту (по элементам)

@@ -129,7 +129,7 @@ BEGIN
                                LEFT JOIN tmpMember ON tmpMember.MemberId = MovementLinkObject_Member.ObjectId
                                LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = tmpMember.PersonalId
                            WHERE Movement.Id = inMovementId_mh
-                           )
+                          )
          , tmpOperDate AS (SELECT GENERATE_SERIES (vbStartDate, vbEndDate, '1 DAY' :: INTERVAL) AS OperDate)
          
          SELECT tmpOperDate.OperDate

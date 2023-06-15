@@ -246,11 +246,13 @@ BEGIN
                )
        AND ioTypeId NOT IN (zc_Enum_WorkTimeKind_Holiday(), zc_Enum_WorkTimeKind_HolidayNoZp())
     THEN
-        RAISE EXCEPTION 'Ошибка. У сотрудника <%> <%>  <%> на <%> есть отпуск.'
+        RAISE EXCEPTION 'Ошибка.У сотрудника <%> <%>  <%> на <%> есть отпуск.%Нельзя установить значение <%>.'
                                , lfGet_Object_ValueData_sh (inMemberId)
                                , lfGet_Object_ValueData_sh (inPositionId)
                                , lfGet_Object_ValueData_sh (inUnitId)
                                , zfConvert_DateToString(inOperDate)
+                               , CHR (13)
+                               , lfGet_Object_ValueData_sh (ioTypeId)
                                 ;
     END IF;
 
