@@ -2,29 +2,30 @@ inherited MainInventoryForm: TMainInventoryForm
   Action = actExit
   Caption = #1042#1099#1093#1086#1076
   ClientHeight = 397
-  ClientWidth = 841
+  ClientWidth = 840
   Menu = MainMenu
   OnClick = actExitExecute
   OnClose = nil
   OnCreate = FormCreate
   OnDestroy = ParentFormDestroy
-  ExplicitWidth = 857
+  ExplicitWidth = 856
   ExplicitHeight = 456
   PixelsPerInch = 96
   TextHeight = 13
   object Panel3: TPanel [0]
     Left = 0
     Top = 0
-    Width = 841
+    Width = 840
     Height = 397
     Align = alClient
     Caption = 'Panel3'
     ShowCaption = False
     TabOrder = 0
+    ExplicitWidth = 841
     object PageControl: TcxPageControl
       Left = 1
       Top = 1
-      Width = 839
+      Width = 838
       Height = 395
       Align = alClient
       BiDiMode = bdLeftToRight
@@ -32,11 +33,10 @@ inherited MainInventoryForm: TMainInventoryForm
       TabOrder = 0
       Properties.ActivePage = tsInventoryManual
       Properties.CustomButtons.Buttons = <>
-      ExplicitLeft = 2
-      ExplicitTop = 2
+      ExplicitWidth = 839
       ClientRectBottom = 391
       ClientRectLeft = 4
-      ClientRectRight = 835
+      ClientRectRight = 834
       ClientRectTop = 24
       object tsStart: TcxTabSheet
         Caption = #1057#1090#1072#1088#1090#1086#1074#1072#1103' '#1089#1090#1088#1072#1085#1080#1094#1072
@@ -48,7 +48,7 @@ inherited MainInventoryForm: TMainInventoryForm
         object cxGridChild: TcxGrid
           Left = 0
           Top = 65
-          Width = 831
+          Width = 830
           Height = 302
           Align = alClient
           TabOrder = 0
@@ -174,7 +174,7 @@ inherited MainInventoryForm: TMainInventoryForm
         object Panel1: TPanel
           Left = 0
           Top = 0
-          Width = 831
+          Width = 830
           Height = 65
           Align = alTop
           ShowCaption = False
@@ -284,26 +284,28 @@ inherited MainInventoryForm: TMainInventoryForm
       object tsInventoryManual: TcxTabSheet
         Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1088#1091#1095#1085#1086#1081' '#1074#1074#1086#1076
         ImageIndex = 3
+        ExplicitWidth = 831
         object Panel4: TPanel
           Left = 0
           Top = 0
-          Width = 831
+          Width = 830
           Height = 53
           Align = alTop
           ShowCaption = False
           TabOrder = 0
+          ExplicitWidth = 831
           object cxLabel11: TcxLabel
-            Left = 56
-            Top = 7
+            Left = 76
+            Top = 5
             Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1086#1090
           end
           object edOperDateManual: TcxDateEdit
-            Left = 165
-            Top = 6
+            Left = 185
+            Top = 4
             TabStop = False
             EditValue = 45033d
             TabOrder = 1
-            Width = 121
+            Width = 108
           end
           object cxButton2: TcxButton
             Left = 1
@@ -318,31 +320,44 @@ inherited MainInventoryForm: TMainInventoryForm
             TabStop = False
           end
           object edUnitNameManual: TcxButtonEdit
-            Left = 292
-            Top = 6
+            Left = 300
+            Top = 4
             Properties.Buttons = <
               item
                 Default = True
                 Kind = bkEllipsis
               end>
             TabOrder = 3
-            Width = 525
+            Width = 507
           end
           object TextEdit: TcxTextEdit
             Left = 1
             Top = 31
             Align = alBottom
             TabOrder = 4
+            ExplicitWidth = 829
             DesignSize = (
-              829
+              828
               21)
-            Width = 829
+            Width = 828
+          end
+          object cxButton4: TcxButton
+            Left = 38
+            Top = 0
+            Width = 33
+            Height = 25
+            Action = actInsert_InventoryCheck
+            PaintStyle = bpsGlyph
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 5
+            TabStop = False
           end
         end
         object cxGridManual: TcxGrid
           Left = 0
           Top = 53
-          Width = 831
+          Width = 830
           Height = 314
           Align = alClient
           TabOrder = 1
@@ -441,7 +456,7 @@ inherited MainInventoryForm: TMainInventoryForm
         object Panel2: TPanel
           Left = 0
           Top = 0
-          Width = 831
+          Width = 830
           Height = 34
           Align = alTop
           ShowCaption = False
@@ -484,12 +499,10 @@ inherited MainInventoryForm: TMainInventoryForm
         object cxGridInfo: TcxGrid
           Left = 0
           Top = 34
-          Width = 831
+          Width = 830
           Height = 333
           Align = alClient
           TabOrder = 1
-          ExplicitTop = 41
-          ExplicitHeight = 326
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = InfoDS
@@ -995,6 +1008,13 @@ inherited MainInventoryForm: TMainInventoryForm
       ImageIndex = 4
       ShortCut = 115
       OnExecute = actRefreshItogExecute
+    end
+    object actInsert_InventoryCheck: TAction
+      Category = 'DSDLib'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1089#1077' '#1095#1077#1082#1080' '#1079#1072' '#1076#1077#1085#1100
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1089#1077' '#1095#1077#1082#1080' '#1079#1072' '#1076#1077#1085#1100
+      ImageIndex = 27
+      OnExecute = actInsert_InventoryCheckExecute
     end
   end
   object MasterCDS: TClientDataSet

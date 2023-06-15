@@ -57,13 +57,13 @@ BEGIN
                       , ObjectLink_OrderShedule_Unit.ChildObjectId       AS UnitId 
                       , ObjectLink_OrderShedule_Contract.ChildObjectId   AS ContractId
                       , ObjectLink_Contract_Juridical.ChildObjectId      AS JuridicalId
-                      , NULLIF(('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1))::TFloat, 0) ::TFloat AS Value1
-                      , NULLIF(('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2))::TFloat, 0) ::TFloat AS Value2
-                      , NULLIF(('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3))::TFloat, 0) ::TFloat AS Value3
-                      , NULLIF(('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4))::TFloat, 0) ::TFloat AS Value4
-                      , NULLIF(('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5))::TFloat, 0) ::TFloat AS Value5
-                      , NULLIF(('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6))::TFloat, 0) ::TFloat AS Value6
-                      , NULLIF(('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7))::TFloat, 0) ::TFloat AS Value7
+                      , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1))::TFloat AS Value1
+                      , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2))::TFloat AS Value2
+                      , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3))::TFloat AS Value3
+                      , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4))::TFloat AS Value4
+                      , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5))::TFloat AS Value5
+                      , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6))::TFloat AS Value6
+                      , ('0'||zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7))::TFloat AS Value7
         
                       , Object_OrderShedule.isErased     AS isErased
                  FROM Object AS Object_OrderShedule

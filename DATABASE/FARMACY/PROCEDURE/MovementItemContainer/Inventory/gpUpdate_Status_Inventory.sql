@@ -13,6 +13,7 @@ BEGIN
 
    -- Запрет запуска второй копии
    PERFORM  zfCheckRunProc ('gpUpdate_Status_Inventory', 1);
+   PERFORM  zfCheckRunProc ('gpComplete_Movement_Inventory', 1);
 
 
      CASE inStatusCode

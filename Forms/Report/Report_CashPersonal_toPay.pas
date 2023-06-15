@@ -39,6 +39,13 @@ type
     edPersonal: TcxButtonEdit;
     GuidesPersonal: TdsdGuides;
     actOpenMovementForm: TdsdOpenForm;
+    BranchName: TcxGridDBColumn;
+    PersonalServiceListName_parent: TcxGridDBColumn;
+    AnalyzerName: TcxGridDBColumn;
+    AnalyzerName_enum: TcxGridDBColumn;
+    Amount_Service: TcxGridDBColumn;
+    Amount_Bank: TcxGridDBColumn;
+    Amount_rem: TcxGridDBColumn;
   private
     { Private declarations }
   public

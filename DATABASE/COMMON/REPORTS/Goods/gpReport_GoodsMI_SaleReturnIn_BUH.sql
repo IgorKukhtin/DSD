@@ -441,9 +441,9 @@ BEGIN
                            SELECT -1 * MovementLinkObject_Contract.ObjectId        AS ContainerId_Analyzer
                                 , MovementItem.ObjectId                            AS GoodsId
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)    AS GoodsKindId
-                                , 0                                                AS PartnerId
-                             -- , zc_Branch_Basis()                                AS BranchId
-                                , 0                                                AS BranchId
+                                , MovementLinkObject_To.ObjectId                   AS PartnerId
+                                , zc_Branch_Basis()                                AS BranchId
+                              --, 0                                                AS BranchId
                                 , MovementLinkObject_To.ObjectId                   AS JuridicalId
                                 , COALESCE (ObjectLink_InfoMoney.ChildObjectId, 0) AS InfoMoneyId
 
@@ -505,7 +505,7 @@ BEGIN
                              AND (MovementLinkObject_To.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                              AND (ObjectLink_InfoMoney.ChildObjectId    = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
                              AND (COALESCE (inPaidKindId, 0) <> zc_Enum_PaidKind_SecondForm())
-                           --AND vbUserId = 5
+--                           AND vbUserId <> 5
                           )
 
   , tmpOperationGroup AS (SELECT CASE WHEN inIsPartner = TRUE THEN tmpOperationGroup2.JuridicalId ELSE 0 END AS JuridicalId
@@ -602,49 +602,119 @@ BEGIN
               )
        -- результат
        SELECT tmp.GoodsGroupName, tmp.GoodsGroupNameFull
+            , tmp.GoodsCode
+            , tmp.GoodsName
+            , tmp.GoodsKindName
+            , tmp.MeasureName
+            , tmp.TradeMarkName
+            , tmp.GoodsGroupAnalystName, tmp.GoodsTagName
+            , tmp.GoodsGroupStatName
+            , tmp.GoodsPlatformName
+            , tmp.JuridicalGroupName
+            , tmp.BranchCode
+            , tmp.BranchName
+            , tmp.JuridicalCode
+            , tmp.JuridicalName
+            , tmp.RetailName, tmp.RetailReportName
+            , tmp.AreaName, tmp.PartnerTagName
+            , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
+            , tmp.PartnerId, tmp.PartnerCode, tmp.PartnerName
+            , tmp.ContractCode
+            , tmp.ContractNumber
+            , tmp.ContractTagName, tmp.ContractTagGroupName
+            , tmp.PersonalName, tmp.UnitName_Personal, tmp.BranchName_Personal
+            , tmp.PersonalTradeName, tmp.UnitName_PersonalTrade
+            , tmp.InfoMoneyGroupName, tmp.InfoMoneyDestinationName
+            , tmp.InfoMoneyCode
+            , tmp.InfoMoneyName
+            , tmp.InfoMoneyName_all
+
+            , SUM (COALESCE (tmp.Promo_Summ, 0))   :: TFloat
+              --
+              -- сумма c НДС
+            , SUM (COALESCE (tmp.Sale_Summ, 0))   :: TFloat
+              --
+              -- сумма c НДС
+            , SUM (COALESCE (tmp.Sale_SummReal, 0))   :: TFloat
+              --
+            , SUM (COALESCE (tmp.Sale_Summ_10200, 0))   :: TFloat, SUM (COALESCE (tmp.Sale_Summ_10250, 0))   :: TFloat, SUM (COALESCE (tmp.Sale_Summ_10300, 0))   :: TFloat
+            , SUM (COALESCE (tmp.Promo_SummCost, 0))   :: TFloat, SUM (COALESCE (tmp.Sale_SummCost, 0))   :: TFloat, SUM (COALESCE (tmp.Sale_SummCost_10500, 0))   :: TFloat, SUM (COALESCE (tmp.Sale_SummCost_40200, 0))   :: TFloat
+            , SUM (COALESCE (tmp.Sale_Amount_Weight, 0))   :: TFloat, SUM (COALESCE (tmp.Sale_Amount_Sh, 0))   :: TFloat
+            , SUM (COALESCE (tmp.Promo_AmountPartner_Weight, 0))   :: TFloat, SUM (COALESCE (tmp.Promo_AmountPartner_Sh, 0))   :: TFloat, SUM (COALESCE (tmp.Sale_AmountPartner_Weight, 0))   :: TFloat
+            , SUM (COALESCE (tmp.Sale_AmountPartner_Sh, 0))   :: TFloat, SUM (COALESCE (tmp.Sale_AmountPartnerR_Weight, 0))   :: TFloat, SUM (COALESCE (tmp.Sale_AmountPartnerR_Sh, 0))   :: TFloat
+            , SUM (COALESCE (tmp.Return_Summ, 0))   :: TFloat, SUM (COALESCE (tmp.Return_Summ_10300, 0))   :: TFloat, SUM (COALESCE (tmp.Return_Summ_10700, 0))   :: TFloat, SUM (COALESCE (tmp.Return_SummCost, 0))   :: TFloat, SUM (COALESCE (tmp.Return_SummCost_40200, 0))   :: TFloat
+            , SUM (COALESCE (tmp.Return_Amount_Weight, 0))   :: TFloat, SUM (COALESCE (tmp.Return_Amount_Sh, 0))   :: TFloat, SUM (COALESCE (tmp.Return_AmountPartner_Weight, 0))   :: TFloat, SUM (COALESCE (tmp.Return_AmountPartner_Sh, 0))   :: TFloat
+            , SUM (COALESCE (tmp.Sale_Amount_10500_Weight, 0))   :: TFloat
+            , SUM (COALESCE (tmp.Sale_Amount_40200_Weight, 0))   :: TFloat
+            , SUM (COALESCE (tmp.Return_Amount_40200_Weight, 0))   :: TFloat
+            , MAX (tmp.ReturnPercent)  :: TFloat
+              --
+              -- сумма без НДС
+            , SUM (COALESCE (tmp.Sale_SummMVAT, 0))   :: TFloat
+              --
+              -- сумма НДС
+            , SUM (COALESCE (tmp.Sale_SummVAT, 0))   :: TFloat
+              --
+              -- сумма без НДС
+            , SUM (COALESCE (tmp.Return_Summ, 0) - COALESCE (tmp.Return_SummVAT, 0)) :: TFloat AS Return_SummMVAT
+              --
+              -- сумма НДС
+            , SUM (COALESCE (tmp.Return_SummVAT, 0)) :: TFloat
+       FROM (
+       SELECT Object_GoodsGroup.ValueData AS GoodsGroupName, ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
             , CASE WHEN COALESCE (tmp.Sale_Summ, 0) = 0 AND COALESCE (_tmpMI.Sale_SummVAT, 0) > 0
                    THEN _tmpMI.MovementId_test
                    ELSE COALESCE (_tmpMI.GoodsCode, tmp.GoodsCode)
               END:: Integer AS GoodsCode
             , COALESCE (_tmpMI.GoodsName, tmp.GoodsName) :: TVarChar AS GoodsName
             , COALESCE (_tmpMI.GoodsKindName, tmp.GoodsKindName) :: TVarChar AS GoodsKindName
-            , tmp.MeasureName
+            , Object_Measure.ValueData            AS MeasureName
             , COALESCE (_tmpMI.TradeMarkName, tmp.TradeMarkName) :: TVarChar AS TradeMarkName
-            , tmp.GoodsGroupAnalystName, tmp.GoodsTagName
-            , Object_GoodsGroupStat.ValueData AS GoodsGroupStatName
-            , tmp.GoodsPlatformName
-            , tmp.JuridicalGroupName
-            , tmp.BranchCode
+            , Object_GoodsGroupAnalyst.ValueData  AS GoodsGroupAnalystName
+            , Object_GoodsTag.ValueData           AS GoodsTagName
+            , Object_GoodsGroupStat.ValueData     AS GoodsGroupStatName
+            , Object_GoodsPlatform.ValueData      AS GoodsPlatformName
+            , Object_JuridicalGroup.ValueData     AS JuridicalGroupName
+
+            , COALESCE (_tmpMI.BranchCode, tmp.BranchCode)         :: Integer  AS BranchCode
             , COALESCE (_tmpMI.BranchName, tmp.BranchName)         :: TVarChar AS BranchName
-            , tmp.JuridicalCode
+            , COALESCE (_tmpMI.JuridicalCode, tmp.JuridicalCode)   :: Integer  AS JuridicalCode
             , COALESCE (_tmpMI.JuridicalName, tmp.JuridicalName)   :: TVarChar AS JuridicalName
-            , tmp.RetailName, tmp.RetailReportName
+
+            , COALESCE (tmp.RetailName, Object_Retail.ValueData)             :: TVarChar AS RetailName
+            , COALESCE (tmp.RetailReportName, Object_RetailReport.ValueData) :: TVarChar AS RetailReportName
+
             , tmp.AreaName, tmp.PartnerTagName
             , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
-            , tmp.PartnerId, tmp.PartnerCode, COALESCE (tmp.PartnerName, Object_Partner.ValueData) :: TVarChar AS PartnerName
+
+            , COALESCE (tmp.PartnerId,   Object_Partner.Id)         :: Integer AS PartnerId
+            , COALESCE (tmp.PartnerCode, Object_Partner.ObjectCode) :: Integer AS PartnerCode
+            , COALESCE (tmp.PartnerName, Object_Partner.ValueData) :: TVarChar AS PartnerName
+
             , COALESCE (_tmpMI.ContractCode, tmp.ContractCode)     :: Integer  AS ContractCode
             , COALESCE (_tmpMI.ContractNumber, tmp.ContractNumber) :: TVarChar AS ContractNumber
             , tmp.ContractTagName, tmp.ContractTagGroupName
             , tmp.PersonalName, tmp.UnitName_Personal, tmp.BranchName_Personal
             , tmp.PersonalTradeName, tmp.UnitName_PersonalTrade
-            , tmp.InfoMoneyGroupName, tmp.InfoMoneyDestinationName
-            , COALESCE (_tmpMI.InfoMoneyCode, tmp.InfoMoneyCode) :: Integer  AS InfoMoneyCode
-            , COALESCE (_tmpMI.InfoMoneyName, tmp.InfoMoneyName) :: TVarChar AS InfoMoneyName
-            , tmp.InfoMoneyName_all
+
+            , View_InfoMoney.InfoMoneyGroupName, View_InfoMoney.InfoMoneyDestinationName
+            , View_InfoMoney.InfoMoneyCode
+            , View_InfoMoney.InfoMoneyName
+            , View_InfoMoney.InfoMoneyName_all
 
             , tmp.Promo_Summ
               --
               -- сумма c НДС
             , CASE WHEN _tmpMI.MovementDescId = zc_Movement_ChangePercent()
                         --  так для док.скидки
-                        THEN COALESCE (_tmpMI.Sale_SummMVAT, 0) + COALESCE (_tmpMI.Sale_SummVAT, 0)
+                        THEN 0 -- COALESCE (_tmpMI.Sale_SummMVAT, 0) + COALESCE (_tmpMI.Sale_SummVAT, 0)
                    ELSE tmp.Sale_Summ
               END :: TFloat AS Sale_Summ
               --
               -- сумма c НДС
             , CASE WHEN _tmpMI.MovementDescId = zc_Movement_ChangePercent()
                         --  так для док.скидки
-                        THEN COALESCE (_tmpMI.Sale_SummMVAT, 0) + COALESCE (_tmpMI.Sale_SummVAT, 0)
+                        THEN 0 -- COALESCE (_tmpMI.Sale_SummMVAT, 0) + COALESCE (_tmpMI.Sale_SummVAT, 0)
                    ELSE tmp.Sale_SummReal
               END :: TFloat AS Sale_SummReal
               --
@@ -663,18 +733,18 @@ BEGIN
               -- сумма без НДС
             , CASE WHEN _tmpMI.MovementDescId = zc_Movement_ChangePercent()
                         --  так для док.скидки
-                        THEN COALESCE (_tmpMI.Sale_SummMVAT, 0)
+                        THEN -1 * COALESCE (_tmpMI.Sale_SummVAT, 0) -- COALESCE (_tmpMI.Sale_SummMVAT, 0)
                    ELSE (COALESCE (tmp.Sale_Summ, 0)   - COALESCE (_tmpMI.Sale_SummVAT, 0))
               END :: TFloat AS Sale_SummMVAT
               --
               -- сумма НДС
-            , _tmpMI.Sale_SummVAT   :: TFloat
+            , _tmpMI.Sale_SummVAT   :: TFloat AS Sale_SummVAT
               --
               -- сумма без НДС
             , (COALESCE (tmp.Return_Summ, 0) - COALESCE (_tmpMI.Return_SummVAT, 0)) :: TFloat AS Return_SummMVAT
               --
               -- сумма НДС
-            , _tmpMI.Return_SummVAT :: TFloat
+            , _tmpMI.Return_SummVAT :: TFloat AS Return_SummVAT
 
        FROM gpReport_GoodsMI_SaleReturnIn (inStartDate
                                          , inEndDate
@@ -692,6 +762,7 @@ BEGIN
                                          , inIsGoodsKind
                                          , inIsContract
                                          , inIsOLAP
+                                         , FALSE
                                          , inSession
                                           ) AS tmp
            FULL JOIN _tmpMI ON COALESCE (_tmpMI.JuridicalId,0)  = COALESCE (tmp.JuridicalId, 0)
@@ -702,12 +773,87 @@ BEGIN
                            AND COALESCE (_tmpMI.TradeMarkId,0)  = COALESCE (tmp.TradeMarkId,0)
                            AND COALESCE (_tmpMI.GoodsId, 0)     = COALESCE (tmp.GoodsId, 0)
                            AND COALESCE (_tmpMI.GoodsKindId, 0) = COALESCE (tmp.GoodsKindId, 0)
+                           AND _tmpMI.MovementDescId <> zc_Movement_ChangePercent()
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = _tmpMI.PartnerId
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
                                ON ObjectLink_Goods_GoodsGroupStat.ObjectId = COALESCE (_tmpMI.GoodsId, tmp.GoodsId)
                               AND ObjectLink_Goods_GoodsGroupStat.DescId   = zc_ObjectLink_Goods_GoodsGroupStat()
           LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
-;
+
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                               ON ObjectLink_Juridical_Retail.ObjectId = COALESCE (_tmpMI.JuridicalId, tmp.JuridicalId)
+                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_RetailReport
+                               ON ObjectLink_Juridical_RetailReport.ObjectId = COALESCE (_tmpMI.JuridicalId, tmp.JuridicalId)
+                              AND ObjectLink_Juridical_RetailReport.DescId = zc_ObjectLink_Juridical_RetailReport()
+          LEFT JOIN Object AS Object_RetailReport ON Object_RetailReport.Id = ObjectLink_Juridical_RetailReport.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
+                                 ON ObjectString_Goods_GroupNameFull.ObjectId = COALESCE (_tmpMI.GoodsId, tmp.GoodsId)
+                                AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                               ON ObjectLink_Goods_GoodsGroup.ObjectId = COALESCE (_tmpMI.GoodsId, tmp.GoodsId)
+                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
+                               ON ObjectLink_Goods_GoodsPlatform.ObjectId = COALESCE (_tmpMI.GoodsId, tmp.GoodsId)
+                              AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
+          LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = ObjectLink_Goods_GoodsPlatform.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
+                               ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = COALESCE (_tmpMI.GoodsId, tmp.GoodsId)
+                              AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
+          LEFT JOIN Object AS Object_GoodsGroupAnalyst ON Object_GoodsGroupAnalyst.Id = ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
+                               ON ObjectLink_Goods_GoodsTag.ObjectId = COALESCE (_tmpMI.GoodsId, tmp.GoodsId)
+                              AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
+          LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Goods_GoodsTag.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                               ON ObjectLink_Goods_Measure.ObjectId = COALESCE (_tmpMI.GoodsId, tmp.GoodsId)
+                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                               ON ObjectLink_Juridical_JuridicalGroup.ObjectId = COALESCE (_tmpMI.JuridicalId, tmp.JuridicalId)
+                              AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+          LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+
+          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (_tmpMI.InfoMoneyId, tmp.InfoMoneyId)
+
+         ) AS tmp
+       GROUP BY tmp.GoodsGroupName, tmp.GoodsGroupNameFull
+            , tmp.GoodsCode
+            , tmp.GoodsName
+            , tmp.GoodsKindName
+            , tmp.MeasureName
+            , tmp.TradeMarkName
+            , tmp.GoodsGroupAnalystName, tmp.GoodsTagName
+            , tmp.GoodsGroupStatName
+            , tmp.GoodsPlatformName
+            , tmp.JuridicalGroupName
+            , tmp.BranchCode
+            , tmp.BranchName
+            , tmp.JuridicalCode
+            , tmp.JuridicalName
+            , tmp.RetailName, tmp.RetailReportName
+            , tmp.AreaName, tmp.PartnerTagName
+            , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
+            , tmp.PartnerId, tmp.PartnerCode, tmp.PartnerName
+            , tmp.ContractCode
+            , tmp.ContractNumber
+            , tmp.ContractTagName, tmp.ContractTagGroupName
+            , tmp.PersonalName, tmp.UnitName_Personal, tmp.BranchName_Personal
+            , tmp.PersonalTradeName, tmp.UnitName_PersonalTrade
+            , tmp.InfoMoneyGroupName, tmp.InfoMoneyDestinationName
+            , tmp.InfoMoneyCode
+            , tmp.InfoMoneyName
+            , tmp.InfoMoneyName_all
+     ;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -719,4 +865,4 @@ $BODY$
 */
 -- тест
 --
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_BUH (inStartDate:= '01.02.2023', inEndDate:= '01.02.2023', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_BUH (inStartDate:= '31.05.2023', inEndDate:= '31.05.2023', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inSession:= zfCalc_UserAdmin());

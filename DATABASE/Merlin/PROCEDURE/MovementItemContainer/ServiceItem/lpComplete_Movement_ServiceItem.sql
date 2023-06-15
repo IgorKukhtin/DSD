@@ -148,6 +148,7 @@ BEGIN
                                               AND tmpMovement_Service.UnitId      = tmpMI.UnitId
                                               AND tmpMovement_Service.InfoMoneyId = tmpMI.InfoMoneyId
             WHERE tmpListDate.OperDate >= '01.02.2022'
+               OR tmpMovement_Service.OperDate IS NULL
             ORDER BY tmpListDate.OperDate
            ) AS tmpMovement
     ;

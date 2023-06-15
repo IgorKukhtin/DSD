@@ -1293,7 +1293,8 @@ uses
   CommentCheck in '..\..\FormsFarmacy\Guides\CommentCheck.pas' {CommentCheckForm: TParentForm},
   CommentCheckEdit in '..\..\FormsFarmacy\Guides\CommentCheckEdit.pas' {CommentCheckEditForm: TParentForm},
   GoodsInventory in '..\..\FormsFarmacy\Inventory\GoodsInventory.pas' {GoodsInventoryForm: TParentForm},
-  Report_BanToTransferTimeGoods in '..\..\FormsFarmacy\Report\Report_BanToTransferTimeGoods.pas' {Report_BanToTransferTimeGoodsForm: TParentForm};
+  Report_BanToTransferTimeGoods in '..\..\FormsFarmacy\Report\Report_BanToTransferTimeGoods.pas' {Report_BanToTransferTimeGoodsForm: TParentForm},
+  Report_FulfillmentPlanMobileAppAntiTOP in '..\..\FormsFarmacy\Report\Report_FulfillmentPlanMobileAppAntiTOP.pas' {Report_FulfillmentPlanMobileAppAntiTOPForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

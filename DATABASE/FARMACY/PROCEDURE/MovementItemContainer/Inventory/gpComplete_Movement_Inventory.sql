@@ -1,6 +1,6 @@
 -- Function: gpComplete_Movement_Inventory()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_Inventory  (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Inventory  (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Inventory(
     IN inMovementId        Integer               , -- ключ Документа
@@ -20,7 +20,8 @@ BEGIN
 
    -- Запрет запуска второй копии
    PERFORM  zfCheckRunProc ('gpComplete_Movement_Inventory', 1);
-  
+   PERFORM  zfCheckRunProc ('gpUpdate_Status_Inventory', 1);
+   
    SELECT MLO_Unit.ObjectId, Movement.ParentId, Movement.StatusId
    INTO vbUnitId, vbParentId, vbStatusId
    FROM  Movement

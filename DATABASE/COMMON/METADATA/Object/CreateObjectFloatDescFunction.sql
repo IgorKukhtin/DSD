@@ -2447,9 +2447,22 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_AccountSalesDE_Amount() RETURNS Intege
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_AccountSalesDE(), 'zc_ObjectFloat_AccountSalesDE_Amount', 'Сумма акта' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_AccountSalesDE_Amount');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_AntiTOPMP_Count() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AntiTOPMP_Count'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_AntiTOPMP_Count', 'Анти ТОП моб. прил. Количество сотрудников для отображения' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AntiTOPMP_Count');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_AntiTOPMP_CountFine() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AntiTOPMP_CountFine'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_AntiTOPMP_CountFine', 'Анти ТОП моб. прил. Количество сотрудников для начисления штрафа' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AntiTOPMP_CountFine');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_AntiTOPMP_SumFine() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AntiTOPMP_SumFine'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_AntiTOPMP_SumFine', 'Анти ТОП моб. прил. Сумма штрафа' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_AntiTOPMP_SumFine');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 13.06.23                                                                                      * zc_ObjectFloat_CashSettings_AntiTOPMP_...
  21.03.23                                                                                      * zc_ObjectFloat_AccountSalesDE_Amount
  14.03.23         * zc_ObjectFloat_PersonalServiceList_SummAvance
                     zc_ObjectFloat_PersonalServiceList_SummAvanceMax
