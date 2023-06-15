@@ -66,7 +66,8 @@ BEGIN
   
 
   IF COALESCE (vbMISendId, 0) <> 0 AND COALESCE (vbAmount, 0) <> 0 AND 
-   (vbDescId <> zc_Movement_Check() or vbSaldo >= vbAmount)
+   (vbDescId <> zc_Movement_Check() or vbSaldo >= vbAmount) AND 
+   NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
   THEN
     IF vbDescId = zc_Movement_Check()
     THEN

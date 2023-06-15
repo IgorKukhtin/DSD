@@ -127,6 +127,9 @@ type
     spPUSHLoadCheckFull: TdsdStoredProc;
     actPUSHLoadCheckFull: TdsdShowPUSHMessage;
     isCheck: TcxGridDBColumn;
+    spCompileUnitFull_Start: TdsdStoredProc;
+    spCompileUnitFull_Finish: TdsdStoredProc;
+    actCompileUnitFull_Finish: TdsdExecStoredProc;
   private
     { Private declarations }
   public

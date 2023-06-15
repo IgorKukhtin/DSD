@@ -5500,6 +5500,18 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_FulfillmentPlanMobileAppAntiTOP: TdsdOpenForm
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      MoveParams = <>
+      Caption = #1040#1085#1090#1080#1058#1054#1055' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
+      Hint = #1040#1085#1090#1080#1058#1054#1055' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
+      FormName = 'TReport_FulfillmentPlanMobileAppAntiTOPForm'
+      FormNameParam.Value = 'TReport_FulfillmentPlanMobileAppAntiTOPForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6684,6 +6696,9 @@
       end
       object N375: TMenuItem
         Action = acTReport_FulfillmentPlanMobileAppUser
+      end
+      object N380: TMenuItem
+        Action = actReport_FulfillmentPlanMobileAppAntiTOP
       end
       object miReport_IncomeSample: TMenuItem
         Action = actReport_IncomeSample

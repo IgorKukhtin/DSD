@@ -42,7 +42,7 @@ BEGIN
     
     IF vbUserId = 3
     THEN
-      vbUserId  := 12113514;
+      vbUserId  := 5294897;
     END IF;
 
     IF EXISTS(SELECT 1 FROM Movement WHERE Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_Wages())
@@ -243,6 +243,7 @@ BEGIN
                                                                           inSession) AS T1
                                          GROUP BY T1.UnitId)
               , tmpImplementationPlanEmployee AS (select * from gpReport_ImplementationPlanEmployeeUser(inStartDate := inOperDate,  inSession := inSession))
+              , tmpFulfillmentPlanMobileApp AS (select * from gpReport_FulfillmentPlanMobileAppAntiTOP(inOperDate := inOperDate,  inSession := inSession))
 
             SELECT MovementItem.Id                    AS Id
                  , MovementItem.ObjectId              AS UserID
@@ -322,7 +323,10 @@ BEGIN
                          AND COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
                         THEN '; ' ELSE '' END||
                    CASE WHEN COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
-                        THEN 'Прил: '||zfConvert_FloatToString(COALESCE(Round(tmpImplementationPlanEmployee.PenaltiMobApp, 2), 0)) ELSE '' END||
+                        THEN 'Прил: '||zfConvert_FloatToString(COALESCE(Round(tmpFulfillmentPlanMobileApp.PenaltiMobApp, 2), 0)) ELSE '' END||
+                   CASE WHEN COALESCE (tmpFulfillmentPlanMobileApp.AntiTOPMP_Place, 0) <> 0 
+                         AND COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
+                        THEN '; Позиция в антиТОпе №: '||tmpFulfillmentPlanMobileApp.AntiTOPMP_Place::TVarChar ELSE '' END||
                    CASE WHEN COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE) = TRUE 
                           OR COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
                         THEN '>' ELSE '' END):: TVarChar AS FormCaptionLeft
@@ -395,6 +399,8 @@ BEGIN
                   LEFT JOIN tmpAdditionalExpenses ON 1 = 1
                   
                   LEFT JOIN tmpImplementationPlanEmployee ON 1 = 1
+                  
+                  LEFT JOIN tmpFulfillmentPlanMobileApp ON tmpFulfillmentPlanMobileApp.UserId = MovementItem.ObjectId
 
                   LEFT JOIN ObjectString AS ObjectString_PasswordEHels
                          ON ObjectString_PasswordEHels.DescId = zc_ObjectString_User_Helsi_PasswordEHels() 
@@ -429,4 +435,5 @@ $BODY$
  28.08.19                                                        *
 */
 -- 
-select * from gpGet_MovementItem_WagesUser(inOperDate := ('01.03.2023')::TDateTime ,  inSession := '3');
+
+select * from gpGet_MovementItem_WagesUser(inOperDate := ('14.06.2023')::TDateTime ,  inSession := '3');

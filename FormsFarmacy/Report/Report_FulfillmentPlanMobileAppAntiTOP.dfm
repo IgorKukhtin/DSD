@@ -1,5 +1,5 @@
 inherited Report_FulfillmentPlanMobileAppAntiTOPForm: TReport_FulfillmentPlanMobileAppAntiTOPForm
-  Caption = #1054#1090#1095#1077#1090' <'#1040#1085#1090#1080#1090#1086#1087'. '#1087#1083#1072#1085#1072' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1086#1073#1080#1083#1100#1085#1086#1084#1091' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102'>'
+  Caption = #1040#1085#1090#1080#1058#1054#1055' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
   ClientHeight = 599
   ClientWidth = 935
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -14,18 +14,18 @@ inherited Report_FulfillmentPlanMobileAppAntiTOPForm: TReport_FulfillmentPlanMob
     Height = 540
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 924
-    ExplicitHeight = 502
+    ExplicitWidth = 935
+    ExplicitHeight = 540
     ClientRectBottom = 540
     ClientRectRight = 935
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 924
-      ExplicitHeight = 502
+      ExplicitWidth = 935
+      ExplicitHeight = 540
       inherited cxGrid: TcxGrid
         Width = 935
         Height = 540
-        ExplicitWidth = 924
-        ExplicitHeight = 502
+        ExplicitWidth = 935
+        ExplicitHeight = 540
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -220,7 +220,7 @@ inherited Report_FulfillmentPlanMobileAppAntiTOPForm: TReport_FulfillmentPlanMob
               Kind = skSum
             end
             item
-              Format = #1047#1072#1082#1072#1079#1086#1074' 0'
+              Format = #1057#1090#1088#1086#1082' 0'
               Kind = skCount
               Column = UnitName
             end
@@ -266,14 +266,6 @@ inherited Report_FulfillmentPlanMobileAppAntiTOPForm: TReport_FulfillmentPlanMob
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object UnitName: TcxGridDBColumn
-            Caption = #1040#1087#1090#1077#1082#1072
-            DataBinding.FieldName = 'UnitName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 246
-          end
           object AntiTOPMP_Place: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088' '#1087#1086#1079'.'
             DataBinding.FieldName = 'AntiTOPMP_Place'
@@ -283,6 +275,14 @@ inherited Report_FulfillmentPlanMobileAppAntiTOPForm: TReport_FulfillmentPlanMob
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 56
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1040#1087#1090#1077#1082#1072
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 246
           end
           object UserName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
@@ -349,6 +349,12 @@ inherited Report_FulfillmentPlanMobileAppAntiTOPForm: TReport_FulfillmentPlanMob
             Visible = False
             VisibleForCustomization = False
           end
+          object isBold: TcxGridDBColumn
+            DataBinding.FieldName = 'isBold'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+          end
         end
       end
     end
@@ -356,7 +362,7 @@ inherited Report_FulfillmentPlanMobileAppAntiTOPForm: TReport_FulfillmentPlanMob
   inherited Panel: TPanel
     Width = 935
     Height = 33
-    ExplicitWidth = 924
+    ExplicitWidth = 935
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 107
@@ -660,6 +666,12 @@ inherited Report_FulfillmentPlanMobileAppAntiTOPForm: TReport_FulfillmentPlanMob
       item
         BackGroundValueColumn = Color_Calc
         ColorValueList = <>
+      end
+      item
+        ColorColumn = AntiTOPMP_Place
+        BackGroundValueColumn = Color_Calc
+        ColorValueList = <>
+        ValueBoldColumn = isBold
       end>
   end
   inherited PeriodChoice: TPeriodChoice

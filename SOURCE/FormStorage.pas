@@ -17,6 +17,7 @@ type
     StringStream: TStringStream;
     MemoryStream: TMemoryStream;
     SaveStoredProc: TdsdStoredProc;
+//    SavePartsStoredProc: TdsdStoredProc;
     LoadStoredProc: TdsdStoredProc;
     LoadProgramProc: TdsdStoredProc;
     LoadProgramVersionProc: TdsdStoredProc;
@@ -102,6 +103,12 @@ begin
     Instance.SaveStoredProc.Params.AddParam('FormName', ftString, ptInput, '');
     Instance.SaveStoredProc.Params.AddParam('FormData', ftBlob, ptInput, '');
 
+//    Instance.SavePartsStoredProc := TdsdStoredProc.Create(nil);
+//    Instance.SavePartsStoredProc.StoredProcName := 'gpInsertUpdate_Object_FormParts';
+//    Instance.SavePartsStoredProc.OutputType := otResult;
+//    Instance.SavePartsStoredProc.Params.AddParam('FormName', ftString, ptInput, '');
+//    Instance.SavePartsStoredProc.Params.AddParam('FormData', ftBlob, ptInput, '');
+
     Instance.LoadStoredProc := TdsdStoredProc.Create(nil);
     Instance.LoadStoredProc.StoredProcName := 'gpGet_Object_Form';
     Instance.LoadStoredProc.OutputType := otBlob;
@@ -144,6 +151,7 @@ begin
   StringStream.Free;
   MemoryStream.Free;
   SaveStoredProc.Free;
+//  SavePartsStoredProc.Free;
   LoadStoredProc.Free;
   SaveUserFormSettingsStoredProc.Free;
   LoadUserFormSettingsStoredProc.Free;
@@ -322,10 +330,30 @@ begin
 end;
 
 procedure TdsdFormStorage.SaveToFormData(DataKey: string);
+//  var s : String;  i : Integer;
 begin
-  SaveStoredProc.ParamByName('FormName').Value := DataKey;
-  SaveStoredProc.ParamByName('FormData').Value := ConvertConvert(StringStream.DataString);
-  SaveStoredProc.Execute;
+//  if (dsdProject = prBoat) and (Length(StringStream.DataString) > 80000) then
+//  begin
+//    s := ConvertConvert(StringStream.DataString);
+//
+//    SaveStoredProc.ParamByName('FormName').Value := DataKey;
+//    SaveStoredProc.ParamByName('FormData').Value := Copy(S, 1, 15000);
+//    SaveStoredProc.Execute;
+//
+//    i := 15001;
+//    while Copy(S, i, 15000) <> '' do
+//    begin
+//      SavePartsStoredProc.ParamByName('FormName').Value := DataKey;
+//      SavePartsStoredProc.ParamByName('FormData').Value := Copy(S, i, 15000);
+//      SavePartsStoredProc.Execute;
+//      Inc(i, 15000);
+//    end;
+//  end else
+  begin
+    SaveStoredProc.ParamByName('FormName').Value := DataKey;
+    SaveStoredProc.ParamByName('FormData').Value := ConvertConvert(StringStream.DataString);
+    SaveStoredProc.Execute;
+  end;
 end;
 
 procedure TdsdFormStorage.SaveUserFormSettings(FormName: String; Data: String);

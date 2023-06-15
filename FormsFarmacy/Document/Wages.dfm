@@ -3,27 +3,27 @@ inherited WagesForm: TWagesForm
   ClientHeight = 626
   ClientWidth = 1134
   AddOnFormData.AddOnFormRefresh.ParentList = 'Wages'
-  ExplicitWidth = 1150
-  ExplicitHeight = 665
+  ExplicitWidth = 1152
+  ExplicitHeight = 673
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 77
+    Top = 78
     Width = 1134
-    Height = 549
-    ExplicitTop = 77
+    Height = 548
+    ExplicitTop = 78
     ExplicitWidth = 1134
-    ExplicitHeight = 549
-    ClientRectBottom = 549
+    ExplicitHeight = 548
+    ClientRectBottom = 548
     ClientRectRight = 1134
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1134
-      ExplicitHeight = 525
+      ExplicitHeight = 524
       inherited cxGrid: TcxGrid
         Width = 1134
-        Height = 328
+        Height = 327
         ExplicitWidth = 1134
-        ExplicitHeight = 328
+        ExplicitHeight = 327
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -101,6 +101,11 @@ inherited WagesForm: TWagesForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = ApplicationAward
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -335,6 +340,18 @@ inherited WagesForm: TWagesForm
             Position.ColIndex = 8
             Position.RowIndex = 0
           end
+          object ApplicationAward: TcxGridDBBandedColumn
+            Caption = #1052#1086#1073'. '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077
+            DataBinding.FieldName = 'ApplicationAward'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 51
+            Position.BandIndex = 1
+            Position.ColIndex = 9
+            Position.RowIndex = 0
+          end
           object AmountCard: TcxGridDBBandedColumn
             Caption = #1053#1072' '#1082#1072#1088#1090#1091
             DataBinding.FieldName = 'AmountCard'
@@ -344,7 +361,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentVert = vaCenter
             Width = 46
             Position.BandIndex = 1
-            Position.ColIndex = 9
+            Position.ColIndex = 10
             Position.RowIndex = 0
           end
           object AmountHand: TcxGridDBBandedColumn
@@ -357,7 +374,7 @@ inherited WagesForm: TWagesForm
             Options.Editing = False
             Width = 49
             Position.BandIndex = 1
-            Position.ColIndex = 10
+            Position.ColIndex = 11
             Position.RowIndex = 0
           end
           object isIssuedBy: TcxGridDBBandedColumn
@@ -367,7 +384,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentVert = vaCenter
             Width = 47
             Position.BandIndex = 1
-            Position.ColIndex = 11
+            Position.ColIndex = 12
             Position.RowIndex = 0
           end
           object DateIssuedBy: TcxGridDBBandedColumn
@@ -378,7 +395,7 @@ inherited WagesForm: TWagesForm
             Options.Editing = False
             Width = 74
             Position.BandIndex = 1
-            Position.ColIndex = 12
+            Position.ColIndex = 13
             Position.RowIndex = 0
           end
           object Color_Calc: TcxGridDBBandedColumn
@@ -413,7 +430,7 @@ inherited WagesForm: TWagesForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 336
+        Top = 335
         Width = 1134
         Height = 189
         Align = alBottom
@@ -509,7 +526,7 @@ inherited WagesForm: TWagesForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 328
+        Top = 327
         Width = 1134
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -1252,7 +1269,7 @@ inherited WagesForm: TWagesForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1756,6 +1773,15 @@ inherited WagesForm: TWagesForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PenaltySUN'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inApplicationAward'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ApplicationAward'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

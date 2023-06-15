@@ -50,7 +50,7 @@ BEGIN
         AND MovementItem.ObjectID = inUserId
         AND MovementItem.DescId = zc_MI_Master();
 
-       -- сохранили свойство <ѕреми€ за приложение>
+       -- сохранили свойство <Ўтраф за моб. приложение>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ApplicationAward(), vbId, inApplicationAward);
 
       -- сохранили протокол
