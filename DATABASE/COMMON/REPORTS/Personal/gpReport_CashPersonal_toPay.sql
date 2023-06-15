@@ -16,7 +16,13 @@ RETURNS TABLE (MovementId Integer, ParentId Integer, OperDate TDateTime, InvNumb
              , PersonalServiceListCode_parent Integer, PersonalServiceListName_parent TVarChar
              , DateIn TDateTime, DateOut TDateTime
              , isMain Boolean, isOfficial Boolean
-             , Amount TFloat
+             , Amount            TFloat
+             , Amount_Service    TFloat
+             , Amount_Bank       TFloat
+             , Amount_rem        TFloat
+             , AnalyzerName      TVarChar
+             , AnalyzerName_enum TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
               )
 AS
 $BODY$
@@ -77,11 +83,10 @@ BEGIN
                            -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CLO_InfoMoney.ObjectId
                       WHERE CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
                      )
- , tmpMovement AS (SELECT Movement.Id AS  MovementId
-                        , Movement.ParentId
-                        , Movement.OperDate
-                        , Movement.InvNumber
-                        , MIContainer.Amount
+ , tmpMovement AS (SELECT MIContainer.MovementId
+                        , MIContainer.MovementDescId
+                        , CASE WHEN MIContainer.MovementDescId = zc_Movement_PersonalService() THEN NULL ELSE MIContainer.MovementId END AS MovementId_begin
+                        , MIContainer.AnalyzerId
                         , tmpContainer.AccountId
                         , tmpContainer.Amount AS Amount_rem
                         , tmpContainer.PersonalId
@@ -90,17 +95,30 @@ BEGIN
                         , tmpContainer.PositionId
                         , tmpContainer.PersonalServiceListId
                         , tmpContainer.BranchId
+                        , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Cash()            THEN  1 * MIContainer.Amount ELSE 0 END) AS Amount
+                        , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_PersonalService() THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Service
+                        , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_BankAccount()     THEN  1 * MIContainer.Amount ELSE 0 END) AS Amount_Bank
                    FROM tmpContainer
                         INNER JOIN MovementItemContainer AS MIContainer
-                                                         ON MIContainer.ContainerId    = tmpContainer.ContainerId
-                                                        AND MIContainer.MovementDescId = zc_Movement_Cash()
-                        LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
+                                                         ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                        AND MIContainer.DescId      = zc_MIContainer_Summ()
+                   GROUP BY MIContainer.MovementId
+                          , MIContainer.MovementDescId
+                          , MIContainer.AnalyzerId
+                          , tmpContainer.AccountId
+                          , tmpContainer.Amount
+                          , tmpContainer.PersonalId
+                          , tmpContainer.InfoMoneyId
+                          , tmpContainer.UnitId
+                          , tmpContainer.PositionId
+                          , tmpContainer.PersonalServiceListId
+                          , tmpContainer.BranchId
                   )
     --
     SELECT tmpMovement.MovementId
-         , tmpMovement.ParentId
-         , tmpMovement.OperDate
-         , tmpMovement.InvNumber
+         , Movement.ParentId
+         , Movement.OperDate
+         , Movement.InvNumber
          , tmpMovement.PersonalId
          , Object_Personal.ObjectCode AS PersonalCode
          , Object_Personal.ValueData  AS PersonalName
@@ -116,10 +134,20 @@ BEGIN
          , Object_PersonalServiceList.ObjectCode     AS PersonalServiceListCode
          , Object_PersonalServiceList.ValueData      AS PersonalServiceListName
 
-         , Object_PersonalServiceList_parent.ObjectCode     AS PersonalServiceListCode_parent
-         , CASE WHEN COALESCE (Object_PersonalServiceList_master.Id, 0) <> COALESCE (Object_PersonalServiceList_parent.Id, 0)
+         , CASE WHEN MovementDescId = zc_Movement_PersonalService()
+                     THEN Object_PersonalServiceList_parent.ObjectCode
+                WHEN MovementDescId = zc_Movement_BankAccount()
+                     THEN Object_PersonalServiceList_master.ObjectCode
+                ELSE Object_PersonalServiceList_parent.ObjectCode
+           END :: Integer AS PersonalServiceListCode_parent
+
+         , CASE WHEN MovementDescId = zc_Movement_PersonalService()
+                     THEN Object_PersonalServiceList_parent.ValueData
+                WHEN MovementDescId = zc_Movement_BankAccount()
+                     THEN Object_PersonalServiceList_master.ValueData
+                WHEN COALESCE (Object_PersonalServiceList_master.Id, 0) <> COALESCE (Object_PersonalServiceList_parent.Id, 0)
                      THEN COALESCE (Object_PersonalServiceList_master.ValueData, '???') || ' - ' || COALESCE (Object_PersonalServiceList_parent.ValueData, '???')
-                ELSE Object_PersonalServiceList.ValueData
+                ELSE Object_PersonalServiceList_parent.ValueData
            END :: TVarChar AS PersonalServiceListName_parent
 
          , COALESCE (ObjectDate_DateIn.ValueData, zc_DateEnd()) ::TDateTime AS DateIn
@@ -127,9 +155,21 @@ BEGIN
          , COALESCE (ObjectBoolean_Main.ValueData, FALSE)           AS isMain
          , COALESCE (ObjectBoolean_Official.ValueData, FALSE)       AS isOfficial
 
-         , tmpMovement.Amount :: TFloat AS Amount
+         , tmpMovement.Amount         :: TFloat AS Amount
+         , tmpMovement.Amount_Service :: TFloat AS Amount_Service
+         , tmpMovement.Amount_Bank    :: TFloat AS Amount_Bank
+         , CASE WHEN tmpMovement.Amount_Service <> 0 THEN tmpMovement.Amount_rem ELSE 0 END    :: TFloat AS Amount_rem
+         
+         , Object_Analyzer.ValueData    AS AnalyzerName
+         , OS_Analyzer.ValueData        AS AnalyzerName_enum
+
+         , Object_InfoMoney_View.InfoMoneyCode
+         , Object_InfoMoney_View.InfoMoneyName
+         , Object_InfoMoney_View.InfoMoneyName_all AS InfoMoneyName_all
 
     FROM tmpMovement
+         LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
+
          LEFT JOIN Object AS Object_Personal            ON Object_Personal.Id            = tmpMovement.PersonalId
          LEFT JOIN Object AS Object_Position            ON Object_Position.Id            = tmpMovement.PositionId
          LEFT JOIN Object AS Object_Unit                ON Object_Unit.Id                = tmpMovement.UnitId
@@ -151,7 +191,7 @@ BEGIN
                                 AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
 
          LEFT JOIN MovementItem AS MI_Master
-                                ON MI_Master.MovementId = tmpMovement.MovementId
+                                ON MI_Master.MovementId = tmpMovement.MovementId_begin
                                AND MI_Master.DescId     = zc_MI_Master()
          LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                           ON MILinkObject_MoneyPlace.MovementItemId = MI_Master.Id
@@ -159,11 +199,24 @@ BEGIN
          LEFT JOIN Object AS Object_PersonalServiceList_master ON Object_PersonalServiceList_master.Id = MILinkObject_MoneyPlace.ObjectId
 
          LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
-                                      ON MLO_PersonalServiceList.MovementId = tmpMovement.ParentId
+                                      ON MLO_PersonalServiceList.MovementId = CASE WHEN tmpMovement.MovementDescId = zc_Movement_PersonalService()
+                                                                                   THEN Movement.Id
+                                                                                   ELSE Movement.ParentId
+                                                                              END
                                      AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
          LEFT JOIN Object AS Object_PersonalServiceList_parent ON Object_PersonalServiceList_parent.Id = MLO_PersonalServiceList.ObjectId
 
-     ;
+         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpMovement.InfoMoneyId
+
+         LEFT JOIN Object AS Object_Analyzer ON Object_Analyzer.Id = tmpMovement.AnalyzerId
+         LEFT JOIN ObjectString AS OS_Analyzer ON OS_Analyzer.ObjectId = tmpMovement.AnalyzerId
+                                              AND OS_Analyzer.DescId   = zc_ObjectString_Enum()
+
+    WHERE tmpMovement.Amount         <> 0
+       OR tmpMovement.Amount_Service <> 0
+       OR tmpMovement.Amount_Bank    <> 0
+       OR tmpMovement.Amount_rem     <> 0
+   ;
 
 END;
 $BODY$
@@ -177,3 +230,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_CashPersonal_toPay(inServiceDate:= '01.05.2023', inPersonalId:= 7117901, inSession:= '5');
+-- SELECT * FROM gpReport_CashPersonal_toPay(inServiceDate := ('01.05.2023')::TDateTime , inPersonalId := 3442965 ,  inSession := '5');

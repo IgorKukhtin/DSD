@@ -101,7 +101,7 @@ BEGIN
                  SELECT inGoodsId WHERE inGoodsId > 0
                UNION
                  SELECT Object.Id FROM Object
-                 WHERE Object.DescId = zc_Object_Goods() AND (inStartDate + INTERVAL '3 DAY') >= inEndDate
+                 WHERE Object.DescId = zc_Object_Goods() --AND (inStartDate + INTERVAL '3 DAY') >= inEndDate
                    AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0
                UNION
                  SELECT Object.Id FROM Object
@@ -165,7 +165,8 @@ BEGIN
                               )
                           AND (tmpUnit_from.UnitId > 0  OR tmpUnit_to.UnitId > 0)
                           AND MovementItemProtocol.IsInsert = FALSE
-                     /*--пока без архива 
+  
+                      --пока без архива 
                       UNION ALL
                        SELECT MovementItemProtocol.UserId
                             , MovementItemProtocol.OperDate        AS OperDate_Protocol
@@ -220,7 +221,6 @@ BEGIN
                                 (inIsMovement = TRUE AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate + INTERVAL '1 DAY')
                               )
                           AND (tmpUnit_from.UnitId > 0  OR tmpUnit_to.UnitId > 0)
-                      */
                       )
    ------------------------
     , tmpProtocol AS (SELECT tmpMI_Protocol.*
