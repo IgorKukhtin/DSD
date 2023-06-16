@@ -358,10 +358,6 @@
 				<Form>ProductForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\ProductEdit.pas">
-				<Form>ProductEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Import\ImportSettings.pas">
 				<Form>ImportSettingsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1230,6 +1226,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Kind\TaxKindEdit.pas">
 				<Form>TaxKindEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\ProductEdit.pas">
+				<Form>ProductEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
