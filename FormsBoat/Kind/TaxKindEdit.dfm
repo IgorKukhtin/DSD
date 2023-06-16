@@ -1,9 +1,9 @@
 object TaxKindEditForm: TTaxKindEditForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1053#1044#1057'> ('#1082#1086#1088#1088'.)'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1053#1044#1057'>'
   ClientHeight = 376
-  ClientWidth = 646
+  ClientWidth = 830
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object TaxKindEditForm: TTaxKindEditForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 646
+    Width = 830
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 646
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -44,19 +45,26 @@ object TaxKindEditForm: TTaxKindEditForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object Code: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object Code_str: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1089#1090#1088#1086#1082#1072
+        Caption = '***'#1050#1086#1076
         DataBinding.FieldName = 'Code_str'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 53
+        Width = 70
       end
       object Name: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1053#1044#1057
@@ -67,19 +75,22 @@ object TaxKindEditForm: TTaxKindEditForm
         Options.Editing = False
         Width = 132
       end
-      object NDS: TcxGridDBColumn
-        Caption = #1047#1085#1072#1095#1077#1085#1080#1077
-        DataBinding.FieldName = 'NDS'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 116
-      end
       object Info: TcxGridDBColumn
         Caption = #1054#1087#1080#1089#1072#1085#1080#1077
         DataBinding.FieldName = 'Info'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 175
+      end
+      object NDS: TcxGridDBColumn
+        Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'NDS'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; '
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077

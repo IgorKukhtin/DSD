@@ -111,7 +111,6 @@ type
     bbOpenFormService: TdxBarButton;
     actCompleteCost: TdsdChangeMovementStatus;
     actSetErasedCost: TdsdChangeMovementStatus;
-    actUnCompleteCost: TdsdChangeMovementStatus;
     actMovementCostProtocolOpenForm: TdsdOpenForm;
     cxLabel12: TcxLabel;
     edInsertDate: TcxDateEdit;
@@ -264,11 +263,11 @@ type
     bbInsert_MI_Send_byOrderInternal_All: TdxBarButton;
     bbInsert: TdxBarSubItem;
     dxBarSeparator1: TdxBarSeparator;
-    dxBarSeparator2: TdxBarSeparator;
     actOrderClientChoiceForm: TOpenChoiceForm;
     cxLabel17: TcxLabel;
     edOrderClient: TcxButtonEdit;
     GuidesOrderClient: TdsdGuides;
+    dxBarSeparator2: TdxBarSeparator;
   private
   public
   end;

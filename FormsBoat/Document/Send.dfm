@@ -22,7 +22,7 @@ object SendForm: TSendForm
     Left = 0
     Top = 0
     Width = 1053
-    Height = 173
+    Height = 175
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -279,8 +279,8 @@ object SendForm: TSendForm
       end
     end
     object Panel1: TPanel
-      Left = 9
-      Top = 133
+      Left = 11
+      Top = 141
       Width = 320
       Height = 32
       TabOrder = 19
@@ -309,7 +309,7 @@ object SendForm: TSendForm
     object cxLabel15: TcxLabel
       Left = 578
       Top = 131
-      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1091#1079#1083#1072' ('#1040#1074#1090#1086'):'
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' ***'#1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1091#1079#1083#1072':'
       ParentShowHint = False
       ShowHint = True
     end
@@ -345,30 +345,30 @@ object SendForm: TSendForm
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 199
+    Top = 201
     Width = 1053
-    Height = 368
+    Height = 366
     Align = alClient
     TabOrder = 3
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 198
-    ExplicitHeight = 369
-    ClientRectBottom = 368
+    ExplicitTop = 199
+    ExplicitHeight = 368
+    ClientRectBottom = 366
     ClientRectRight = 1053
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 345
+      ExplicitHeight = 344
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1053
-        Height = 212
+        Height = 210
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 213
+        ExplicitHeight = 212
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -503,6 +503,7 @@ object SendForm: TSendForm
           object isOn: TcxGridDBColumn
             Caption = 'Yes/no'
             DataBinding.FieldName = 'isOn'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 38
@@ -813,7 +814,7 @@ object SendForm: TSendForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 220
+        Top = 218
         Width = 1053
         Height = 124
         Align = alBottom
@@ -821,7 +822,7 @@ object SendForm: TSendForm
         LookAndFeel.Kind = lfStandard
         LookAndFeel.NativeStyle = False
         LookAndFeel.SkinName = ''
-        ExplicitTop = 221
+        ExplicitTop = 220
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1104,13 +1105,13 @@ object SendForm: TSendForm
       end
       object cxTopSplitter: TcxSplitter
         Left = 0
-        Top = 212
+        Top = 210
         Width = 1053
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 206
+        ExplicitTop = 212
       end
     end
   end
@@ -1450,8 +1451,11 @@ object SendForm: TSendForm
       Category = 0
     end
     object bbactUnCompleteCost: TdxBarButton
-      Action = actUnCompleteCost
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
       Category = 0
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
+      Visible = ivAlways
+      ImageIndex = 11
     end
     object bbactSetErasedCost: TdxBarButton
       Action = actSetErasedCost
@@ -1589,10 +1593,6 @@ object SendForm: TSendForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert_MI_Send_byOrder'
-        end
-        item
-          Visible = True
           ItemName = 'bbInsert_MI_Send_byOrderDetail'
         end
         item
@@ -1605,6 +1605,10 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert_MI_Send_byOrderInternal_All'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert_MI_Send_byOrderInternal'
         end
         item
@@ -1613,7 +1617,7 @@ object SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bbInsert_MI_Send_byOrderInternal_All'
+          ItemName = 'bbInsert_MI_Send_byOrder'
         end>
     end
     object TdxBarButton
@@ -2141,116 +2145,6 @@ object SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actOrderInternalInsertForm_All: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'TOrderInternalJournalChoiceForm'
-      ImageIndex = 69
-      FormName = 'TOrderInternalJournalChoiceForm'
-      FormNameParam.Value = 'TOrderInternalJournalChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'MovementId_OrderInternal'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actOrderInternalInsertForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'TOrderInternalJournalChoiceForm'
-      ImageIndex = 49
-      FormName = 'TOrderInternalJournalChoiceForm'
-      FormNameParam.Value = 'TOrderInternalJournalChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'MovementId_OrderInternal'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsId'
-          Value = Null
-          Component = GuidesGoods
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName_all'
-          Value = Null
-          Component = GuidesGoods
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actOrderClientInsertForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'OrderClientJournalChoiceForm'
-      ImageIndex = 47
-      FormName = 'TOrderClientJournalChoiceForm'
-      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'MovementId_OrderClient'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actOrderClientChoiceItemFormDet: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'OrderClientJournalChoiceForm2'
-      ImageIndex = 68
-      FormName = 'TOrderClientJournalChoiceItemForm'
-      FormNameParam.Value = 'TOrderClientJournalChoiceItemForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'MovementId_OrderClient'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ObjectId'
-          Value = Null
-          Component = GuidesGoods
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ObjectName'
-          Value = Null
-          Component = GuidesGoods
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
     object actOrderClientChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2482,6 +2376,95 @@ object SendForm: TSendForm
       ImageIndex = 13
       Status = mtDelete
     end
+    object macInsert_MI_Send_byOrder: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOrderClientInsertForm
+        end
+        item
+          Action = actInsert_MI_Send_byOrder
+        end
+        item
+          Action = actRefreshMI
+        end>
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
+      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+      ImageIndex = 69
+    end
+    object actInsert_MI_Send_byOrder: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_Send_byOrder
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_Send_byOrder
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
+        end>
+      Caption = 'actInsert_MI_Send'
+    end
+    object macInsert_MI_Send_byOrderDetail: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOrderClientInsertForm
+        end
+        item
+          Action = actInsert_MI_Send_byOrderDetail
+        end
+        item
+          Action = actRefreshMI
+        end>
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
+      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1057#1045' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1086#1074') '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1057#1045' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1086#1074') '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+      ImageIndex = 47
+    end
+    object actOrderClientInsertForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'OrderClientJournalChoiceForm'
+      FormName = 'TOrderClientJournalChoiceForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MovementId_OrderClient'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actInsert_MI_Send_byOrderDetail: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_Send_byOrder_Detail
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_Send_byOrder_Detail
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
+        end>
+      Caption = 'actInsert_MI_Send'
+    end
     object macInsert_MI_Send_byOrderDetail_2: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -2496,20 +2479,47 @@ object SendForm: TSendForm
           Action = actRefreshMI
         end>
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
-      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1074#1099#1073#1086#1088' '#1091#1079#1083#1072') '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1074#1099#1073#1086#1088' '#1091#1079#1083#1072') '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-      ImageIndex = 49
+      Caption = 
+        #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' (***'#1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1091#1079#1083#1072') '#1080#1079' '#1047#1072#1082#1072#1079 +
+        ' '#1050#1083#1080#1077#1085#1090#1072
+      Hint = 
+        #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' (***'#1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1091#1079#1083#1072') '#1080#1079' '#1047#1072#1082#1072#1079 +
+        ' '#1050#1083#1080#1077#1085#1090#1072
+      ImageIndex = 48
     end
-    object actUnCompleteCost: TdsdChangeMovementStatus
+    object actOrderClientChoiceItemFormDet: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <
+      PostDataSetBeforeExecute = False
+      Caption = 'OrderClientJournalChoiceForm2'
+      FormName = 'TOrderClientJournalChoiceItemForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceItemForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
         item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MovementId_OrderClient'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectId'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectName'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
-      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1090#1088#1072#1090#1099
-      ImageIndex = 11
-      Status = mtUncomplete
+      isShowModal = True
     end
     object macInsert_MI_Send_byOrderInternal_All: TMultiAction
       Category = 'DSDLib'
@@ -2531,25 +2541,43 @@ object SendForm: TSendForm
       Hint = 
         #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1057#1045' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1086#1074') '#1080#1079' '#1047#1072#1082#1072#1079' '#1055#1088#1086#1080#1079#1074#1086#1076 +
         #1089#1090#1074#1072
-      ImageIndex = 69
+      ImageIndex = 49
     end
-    object macInsert_MI_Send_byOrderDetail: TMultiAction
+    object actOrderInternalInsertForm_All: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      ActionList = <
+      PostDataSetBeforeExecute = False
+      Caption = 'TOrderInternalJournalChoiceForm'
+      FormName = 'TOrderInternalJournalChoiceForm'
+      FormNameParam.Value = 'TOrderInternalJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
         item
-          Action = actOrderClientInsertForm
-        end
-        item
-          Action = actInsert_MI_Send_byOrderDetail
-        end
-        item
-          Action = actRefreshMI
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementId_OrderInternal'
+          MultiSelectSeparator = ','
         end>
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
-      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1057#1045' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1086#1074') '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1057#1045' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1076#1083#1103' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1086#1074') '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-      ImageIndex = 48
+      isShowModal = True
+    end
+    object actInsert_MI_Send_byOrderInternal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_Send_byOrderInternal
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_Send_byOrderInternal
+        end
+        item
+          StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
+        end>
+      Caption = 'actInsert_MI_Send_byOrderInternal'
     end
     object macInsert_MI_Send_byOrderInternal: TMultiAction
       Category = 'DSDLib'
@@ -2565,63 +2593,47 @@ object SendForm: TSendForm
           Action = actRefreshMI
         end>
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
-      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1074#1099#1073#1086#1088' '#1091#1079#1083#1072') '#1080#1079' '#1047#1072#1082#1072#1079' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
-      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' ('#1074#1099#1073#1086#1088' '#1091#1079#1083#1072') '#1080#1079' '#1047#1072#1082#1072#1079' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+      Caption = 
+        #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' (***'#1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1091#1079#1083#1072') '#1080#1079' '#1047#1072#1082#1072#1079 +
+        ' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
+      Hint = 
+        #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' (***'#1090#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' '#1091#1079#1083#1072') '#1080#1079' '#1047#1072#1082#1072#1079 +
+        ' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
       ImageIndex = 68
     end
-    object actInsert_MI_Send_byOrderDetail: TdsdExecStoredProc
+    object actOrderInternalInsertForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsert_MI_Send_byOrder_Detail
-      StoredProcList = <
+      Caption = 'TOrderInternalJournalChoiceForm'
+      FormName = 'TOrderInternalJournalChoiceForm'
+      FormNameParam.Value = 'TOrderInternalJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
         item
-          StoredProc = spInsert_MI_Send_byOrder_Detail
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementId_OrderInternal'
+          MultiSelectSeparator = ','
         end
         item
-          StoredProc = spSelectMI
+          Name = 'GoodsId'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
-          StoredProc = spSelectMIChild
+          Name = 'GoodsName_all'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
-      Caption = 'actInsert_MI_Send'
-      ImageIndex = 48
-    end
-    object macInsert_MI_Send_byOrder: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actOrderClientInsertForm
-        end
-        item
-          Action = actInsert_MI_Send_byOrder
-        end
-        item
-          Action = actRefreshMI
-        end>
-      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
-      Caption = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-      Hint = #1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1042#1089#1077' '#1091#1079#1083#1099' '#1080#1079' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-      ImageIndex = 47
-    end
-    object actInsert_MI_Send_byOrder: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsert_MI_Send_byOrder
-      StoredProcList = <
-        item
-          StoredProc = spInsert_MI_Send_byOrder
-        end
-        item
-          StoredProc = spSelectMI
-        end
-        item
-          StoredProc = spSelectMIChild
-        end>
-      Caption = 'actInsert_MI_Send'
-      ImageIndex = 47
+      isShowModal = True
     end
     object macInsert_MI_Send: TMultiAction
       Category = 'DSDLib'
@@ -3293,24 +3305,6 @@ object SendForm: TSendForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
       DataSource = MasterDS
-    end
-    object actInsert_MI_Send_byOrderInternal: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsert_MI_Send_byOrderInternal
-      StoredProcList = <
-        item
-          StoredProc = spInsert_MI_Send_byOrderInternal
-        end
-        item
-          StoredProc = spSelectMI
-        end
-        item
-          StoredProc = spSelectMIChild
-        end>
-      Caption = 'actInsert_MI_Send_byOrderInternal'
-      ImageIndex = 68
     end
     object actPrint3: TdsdPrintAction
       Category = 'DSDLib'
