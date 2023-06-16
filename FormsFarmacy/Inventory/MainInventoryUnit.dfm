@@ -30,7 +30,7 @@ inherited MainInventoryForm: TMainInventoryForm
       BiDiMode = bdLeftToRight
       ParentBiDiMode = False
       TabOrder = 0
-      Properties.ActivePage = tsInventoryManual
+      Properties.ActivePage = tsInfo
       Properties.CustomButtons.Buttons = <>
       ClientRectBottom = 391
       ClientRectLeft = 4
@@ -109,18 +109,6 @@ inherited MainInventoryForm: TMainInventoryForm
               Options.Editing = False
               Width = 54
             end
-            object ChildisCheck: TcxGridDBColumn
-              Caption = #1063#1077#1082
-              DataBinding.FieldName = 'isCheck'
-              PropertiesClassName = 'TcxCheckBoxProperties'
-              Properties.DisplayChecked = '1'
-              Properties.DisplayUnchecked = '0'
-              Properties.ValueChecked = '1'
-              Properties.ValueUnchecked = '0'
-              HeaderAlignmentHorz = taCenter
-              Options.Editing = False
-              Width = 41
-            end
             object ChildNum: TcxGridDBColumn
               Caption = #8470' '#1087'.'#1087'.'
               DataBinding.FieldName = 'Num'
@@ -133,14 +121,14 @@ inherited MainInventoryForm: TMainInventoryForm
               DataBinding.FieldName = 'GoodsCode'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 55
+              Width = 54
             end
             object ChildGoodsName: TcxGridDBColumn
               Caption = #1058#1086#1074#1072#1088
               DataBinding.FieldName = 'GoodsName'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 200
+              Width = 199
             end
             object chAmountGoods: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' '#1080#1085#1074#1077#1085#1090'.'
@@ -150,7 +138,7 @@ inherited MainInventoryForm: TMainInventoryForm
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 62
+              Width = 61
             end
             object ChildAmount: TcxGridDBColumn
               Caption = #1050#1086#1083'-'#1074#1086' '#1089#1082#1072#1085'.'
@@ -167,14 +155,14 @@ inherited MainInventoryForm: TMainInventoryForm
               DataBinding.FieldName = 'UserName'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 122
+              Width = 121
             end
             object ChildDate_Insert: TcxGridDBColumn
               Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
               DataBinding.FieldName = 'Date_Insert'
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
-              Width = 144
+              Width = 143
             end
           end
           object cxGridChildLevel: TcxGridLevel
@@ -303,12 +291,12 @@ inherited MainInventoryForm: TMainInventoryForm
           ShowCaption = False
           TabOrder = 0
           object cxLabel11: TcxLabel
-            Left = 76
+            Left = 43
             Top = 5
             Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1086#1090
           end
           object edOperDateManual: TcxDateEdit
-            Left = 185
+            Left = 152
             Top = 4
             TabStop = False
             EditValue = 45033d
@@ -328,7 +316,7 @@ inherited MainInventoryForm: TMainInventoryForm
             TabStop = False
           end
           object edUnitNameManual: TcxButtonEdit
-            Left = 300
+            Left = 269
             Top = 4
             Properties.Buttons = <
               item
@@ -336,7 +324,7 @@ inherited MainInventoryForm: TMainInventoryForm
                 Kind = bkEllipsis
               end>
             TabOrder = 3
-            Width = 507
+            Width = 532
           end
           object TextEdit: TcxTextEdit
             Left = 1
@@ -347,18 +335,6 @@ inherited MainInventoryForm: TMainInventoryForm
               828
               21)
             Width = 828
-          end
-          object cxButton4: TcxButton
-            Left = 38
-            Top = 0
-            Width = 33
-            Height = 25
-            Action = actInsert_InventoryCheck
-            PaintStyle = bpsGlyph
-            ParentShowHint = False
-            ShowHint = True
-            TabOrder = 5
-            TabStop = False
           end
         end
         object cxGridManual: TcxGrid
@@ -468,12 +444,12 @@ inherited MainInventoryForm: TMainInventoryForm
           ShowCaption = False
           TabOrder = 0
           object cxLabel10: TcxLabel
-            Left = 52
+            Left = 96
             Top = 6
             Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1086#1090
           end
           object edOperDateInfo: TcxDateEdit
-            Left = 161
+            Left = 205
             Top = 5
             TabStop = False
             EditValue = 45033d
@@ -482,12 +458,12 @@ inherited MainInventoryForm: TMainInventoryForm
             Width = 121
           end
           object edUnitNameInfo: TcxTextEdit
-            Left = 288
+            Left = 332
             Top = 5
             TabStop = False
             Properties.ReadOnly = True
             TabOrder = 2
-            Width = 525
+            Width = 465
           end
           object cxButton3: TcxButton
             Left = 13
@@ -499,6 +475,18 @@ inherited MainInventoryForm: TMainInventoryForm
             ParentShowHint = False
             ShowHint = True
             TabOrder = 3
+            TabStop = False
+          end
+          object cxButton4: TcxButton
+            Left = 52
+            Top = 3
+            Width = 33
+            Height = 25
+            Action = actInsert_InventoryCheck
+            PaintStyle = bpsGlyph
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 4
             TabStop = False
           end
         end
@@ -605,6 +593,18 @@ inherited MainInventoryForm: TMainInventoryForm
               HeaderAlignmentHorz = taCenter
               Options.Editing = False
               Width = 219
+            end
+            object InfoisCheck: TcxGridDBColumn
+              Caption = #1063#1077#1082
+              DataBinding.FieldName = 'isCheck'
+              PropertiesClassName = 'TcxCheckBoxProperties'
+              Properties.DisplayChecked = '1'
+              Properties.DisplayUnchecked = '0'
+              Properties.ValueChecked = '1'
+              Properties.ValueUnchecked = '0'
+              HeaderAlignmentHorz = taCenter
+              Options.Editing = False
+              Width = 41
             end
             object InfoExpirationDate: TcxGridDBColumn
               Caption = #1052#1080#1085'. '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
@@ -1019,8 +1019,16 @@ inherited MainInventoryForm: TMainInventoryForm
       Category = 'DSDLib'
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1089#1077' '#1095#1077#1082#1080' '#1079#1072' '#1076#1077#1085#1100
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1074#1089#1077' '#1095#1077#1082#1080' '#1079#1072' '#1076#1077#1085#1100
-      ImageIndex = 27
+      ImageIndex = 30
       OnExecute = actInsert_InventoryCheckExecute
+    end
+    object actSetFocusedInfoAmount: TdsdSetFocusedAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetFocusedInfoAmount'
+      ControlName.Value = 'InfoAmountUser'
+      ControlName.DataType = ftString
+      ControlName.MultiSelectSeparator = ','
     end
   end
   object MasterCDS: TClientDataSet
@@ -1036,7 +1044,7 @@ inherited MainInventoryForm: TMainInventoryForm
   end
   object MainMenu: TMainMenu
     Images = dmMain.ImageList
-    Left = 144
+    Left = 232
     Top = 72
     object N3: TMenuItem
       Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
@@ -1289,6 +1297,9 @@ inherited MainInventoryForm: TMainInventoryForm
             '                                           AS DiffSumm'
           '     , ID.MIComment'
           '     , ID.isAuto'
+          
+            '     , COALESCE(ICC.isCheck, 0)                                 ' +
+            '                                                  AS isCheck'
           'FROM InventoryDate AS ID'
           '     FULL JOIN (SELECT IC.GoodsId       AS GoodsId'
           
@@ -1301,11 +1312,20 @@ inherited MainInventoryForm: TMainInventoryForm
           #9#9#9#9'  AND IC.IsSend = '#39'N'#39
           #9#9#9#9'GROUP BY IC.GoodsId) AS IC ON IC.GoodsId = ID.GoodsId '
           
-            #9'INNER JOIN Goods AS G ON G.id = COALESCE (ID.GoodsId, IC.GoodsI' +
-            'd) '
+            '    INNER JOIN Goods AS G ON G.id = COALESCE (ID.GoodsId, IC.Goo' +
+            'dsId) '
+          '     LEFT JOIN (SELECT IC.GoodsId       AS GoodsId'
           
-            #9'LEFT JOIN Remains AS R ON R.Goodsid = COALESCE (ID.GoodsId, IC.' +
-            'GoodsId)'
+            #9#9#9#9'     , CASE WHEN MAX(COALESCE(IC.CheckId, 0)) > 0 THEN 1 ELS' +
+            'E 0 END AS isCheck'
+          
+            #9#9#9#9'FROM InventoryChild AS IC                                   ' +
+            ' '
+          #9#9#9#9'WHERE IC.Inventory = :inInventory'
+          #9#9#9#9'GROUP BY IC.GoodsId) AS ICC ON ICC.GoodsId = ID.GoodsId '
+          
+            '    LEFT JOIN Remains AS R ON R.Goodsid = COALESCE (ID.GoodsId, ' +
+            'IC.GoodsId)'
           #9'                     AND R.UnitId  =  :inUnitId'
           'WHERE ID.UnitId =  :inUnitId OR COALESCE (IC.GoodsId, 0) <> 0'
           'ORDER BY 3')
@@ -1792,5 +1812,22 @@ inherited MainInventoryForm: TMainInventoryForm
     PackSize = 1
     Left = 368
     Top = 38
+  end
+  object spUnitComplInventFull: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Inventory_UnitComplInventFull'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 310
   end
 end

@@ -70,8 +70,8 @@
         <DCC_ExeOutput>..\BIN</DCC_ExeOutput>
         <DCC_DcuOutput>..\DCU\$(Config)\$(ProductVersion)\$(Platform)</DCC_DcuOutput>
         <VerInfo_MajorVer>0</VerInfo_MajorVer>
-        <VerInfo_Build>16</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileVersion=0.0.0.16;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Build>18</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=0.0.0.18;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <DCC_UsePackage>dxdborRS16;dxTileControlRS16;dxPScxVGridLnkRS16;cxLibraryRS16;dxLayoutControlRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;dxBarRS16;dxSkinsdxNavBarPainterRS16;ZComponentD16;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;TeeDB;dxDBXServerModeRS16;ProjectComponent;ZParseSqlD16;vclib;cxPivotGridOLAPRS16;dxPSCoreRS16;dxPScxGridLnkRS16;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;dxPScxTLLnkRS16;vclimg;dxPsPrVwAdvRS16;cxTreeListRS16;dxComnRS16;vcldb;dxSkinsdxRibbonPainterRS16;dxADOServerModeRS16;vcldsnap;dxBarExtDBItemsRS16;DBXDb2Driver;dxSkinscxSchedulerPainterRS16;GMLib_DXE2_VCL;vcl;DBXMSSQLDriver;cxDataRS16;cxBarEditItemRS16;cxPageControldxBarPopupMenuRS16;dxDockingRS16;dxPSDBTeeChartRS16;cxSchedulerGridRS16;webdsnap;dxBarExtItemsRS16;dxtrmdRS16;dxPSLnksRS16;ZCoreD16;dxSkinsdxDLPainterRS16;dxPSTeeChartRS16;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;ProjectDesignComponent;dxPScxExtCommonRS16;dxNavBarRS16;dxPSdxDBOCLnkRS16;dxSkinsdxBarPainterRS16;Tee;DBXOdbcDriver;dxdbtrRS16;dxSkinsCoreRS16;cxPivotGridChartRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;ZDbcD16;TeeUI;vclactnband;dxServerModeRS16;bindcompvcl;cxEditorsRS16;cxGridRS16;cxPivotGridRS16;vclie;dxPScxSchedulerLnkRS16;dxPSdxDBTVLnkRS16;cxSchedulerRS16;dxPSPrVwRibbonRS16;dxSkinscxPCPainterRS16;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;DataSnapConnectors;dxPSdxOCLnkRS16;dsnapcon;GMLib_DXE2;dxPSdxFCLnkRS16;dxThemeRS16;dcldxSkinsCoreRS16;vclx;dxFlowChartRS16;ZPlainD16;dxGDIPlusRS16;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
@@ -94,8 +94,8 @@
         <UWP_DelphiLogo44>..\FormsFarmacy\Inventory\FarmacyInventory_150.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>..\FormsFarmacy\Inventory\FarmacyInventory_40.png</UWP_DelphiLogo150>
         <VerInfo_MajorVer>0</VerInfo_MajorVer>
-        <VerInfo_Build>16</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileVersion=0.0.0.16;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Build>18</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=0.0.0.18;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <Debugger_RunParams>/skipcheckconnect</Debugger_RunParams>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -108,8 +108,8 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <VerInfo_MajorVer>0</VerInfo_MajorVer>
-        <VerInfo_Build>16</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileVersion=0.0.0.16;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Build>18</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=0.0.0.18;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
         <Icon_MainIcon>FarmacyInventory.ico</Icon_MainIcon>
         <UWP_DelphiLogo44>..\FormsFarmacy\Inventory\FarmacyInventory_150.png</UWP_DelphiLogo44>

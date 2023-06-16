@@ -160,7 +160,9 @@ type
     actInsert_InventoryCheck: TAction;
     InventoryCheckCDS: TClientDataSet;
     spInventoryCheck: TdsdStoredProc;
-    ChildisCheck: TcxGridDBColumn;
+    InfoisCheck: TcxGridDBColumn;
+    actSetFocusedInfoAmount: TdsdSetFocusedAction;
+    spUnitComplInventFull: TdsdStoredProc;
     procedure FormCreate(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
     procedure actDoLoadDataExecute(Sender: TObject);
@@ -492,6 +494,7 @@ begin
     if MessageDlg('Уточните у первостольника сумма чеков икс отчета совпадает с программой?' +
       #13#10#13#10'Производить загрузку чеков?', mtInformation, [mbYes, mbCancel], 0) <> mrYes then Exit;
 
+    spUnitComplInventFull.Execute;
 
     Params := TdsdParams.Create(Self, TdsdParam);
     Params.AddParam('Id', TFieldType.ftInteger, ptOutput, 0);
@@ -525,15 +528,16 @@ begin
 
         InventoryCheckCDS.Next;
       end;
+
       ShowMessage('Загружено.');
     finally
       FreeAndNil(Params);
-      spSelectManual.Execute;
-      actSetEditAmount.Execute;
+      spSelectInfo.Execute;
     end;
 
   finally
-    actSetFocusedManualAmount.Execute;
+    spSelectInfo.Execute;
+    actSetFocusedInfoAmount.Execute;
   end;
 end;
 
@@ -587,7 +591,7 @@ procedure TMainInventoryForm.actRefreshItogExecute(Sender: TObject);
 begin
   inherited;
   if PageControl.ActivePage = tsInfo then
-  begin
+  try
 
     gc_User.Local := False;
 
@@ -629,6 +633,8 @@ begin
     edUnitNameInfo.Text := FormParams.ParamByName('UnitName').Value;
 
     spSelectInfo.Execute;
+  finally
+    actSetFocusedInfoAmount.Execute;
   end;
 end;
 

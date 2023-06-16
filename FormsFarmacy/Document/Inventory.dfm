@@ -903,11 +903,7 @@ inherited InventoryForm: TInventoryForm
     end
     inherited actCompleteMovement: TChangeGuidesStatus
       BeforeAction = actPUSHCompile
-      StoredProc = spCompileUnitFull_Start
       StoredProcList = <
-        item
-          StoredProc = spCompileUnitFull_Start
-        end
         item
           StoredProc = spChangeStatus
         end
