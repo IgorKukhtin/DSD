@@ -134,7 +134,6 @@ uses
   ProdColor_goods in '..\..\FormsBoat\Guides\ProdColor_goods.pas' {ProdColor_goodsForm: TParentForm},
   ProdColorEdit in '..\..\FormsBoat\Guides\ProdColorEdit.pas' {ProdColorEditForm: TParentForm},
   Product in '..\..\FormsBoat\Guides\Product.pas' {ProductForm: TParentForm},
-  ProductEdit in '..\..\FormsBoat\Guides\ProductEdit.pas' {ProductEditForm: TParentForm},
   ImportSettings in '..\..\FormsBoat\Import\ImportSettings.pas' {ImportSettingsForm: TParentForm},
   ImportType in '..\..\FormsBoat\Import\ImportType.pas' {ImportTypeForm: TParentForm},
   ProdOptItemsEdit in '..\..\FormsBoat\Guides\ProdOptItemsEdit.pas' {ProdOptItemsEditForm: TParentForm},
@@ -360,7 +359,8 @@ uses
   OrderClientSummDialog in '..\..\FormsBoat\Document\OrderClientSummDialog.pas' {OrderClientSummDialogForm: TParentForm},
   Report_OrderClient_byBoatChoice in '..\..\FormsBoat\Report\Report_OrderClient_byBoatChoice.pas' {Report_OrderClient_byBoatChoiceForm: TParentForm},
   ProdColorPatternGoodsEdit in '..\..\FormsBoat\Guides\ProdColorPatternGoodsEdit.pas' {ProdColorPatternGoodsEditForm: TParentForm},
-  TaxKindEdit in '..\..\FormsBoat\Kind\TaxKindEdit.pas' {TaxKindEditForm: TParentForm};
+  TaxKindEdit in '..\..\FormsBoat\Kind\TaxKindEdit.pas' {TaxKindEditForm: TParentForm},
+  ProductEdit in '..\..\FormsBoat\Guides\ProductEdit.pas' {ProductEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

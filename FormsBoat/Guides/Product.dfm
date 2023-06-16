@@ -964,6 +964,8 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitLeft = 6
+      ExplicitWidth = 653
       object cxGridDBTableViewProdOptItems: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdOptItemsDS
