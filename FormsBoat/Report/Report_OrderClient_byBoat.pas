@@ -74,6 +74,7 @@ type
     spSelectPrint4: TdsdStoredProc;
     cbisOnlyChild: TcxCheckBox;
     actRefreshGoods: TdsdDataSetRefresh;
+    Comment_mov: TcxGridDBColumn;
   private
     { Private declarations }
   public

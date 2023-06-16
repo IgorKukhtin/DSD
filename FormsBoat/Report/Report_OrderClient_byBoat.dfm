@@ -13,19 +13,19 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
     Width = 972
     Height = 262
     TabOrder = 3
-    ExplicitTop = 55
-    ExplicitWidth = 1071
-    ExplicitHeight = 286
+    ExplicitTop = 79
+    ExplicitWidth = 972
+    ExplicitHeight = 262
     ClientRectBottom = 262
     ClientRectRight = 972
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1071
-      ExplicitHeight = 286
+      ExplicitWidth = 972
+      ExplicitHeight = 262
       inherited cxGrid: TcxGrid
         Width = 972
         Height = 262
-        ExplicitWidth = 1071
-        ExplicitHeight = 286
+        ExplicitWidth = 972
+        ExplicitHeight = 262
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -205,6 +205,9 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'InvNumber'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -365,6 +368,14 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             HeaderHint = #1048#1090#1086#1075#1086' '#1054#1089#1090#1072#1090#1086#1082' '#1090#1077#1082#1091#1097#1080#1081
             Width = 70
           end
+          object Comment_mov: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
+            DataBinding.FieldName = 'Comment_mov'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object MonthRemains: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094' '#1086#1089#1090'.'
             DataBinding.FieldName = 'MonthRemains'
@@ -372,7 +383,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
             Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1052#1077#1089#1103#1094' '#1086#1089#1090#1072#1090#1082#1072
+            HeaderHint = #1053#1072' '#1089#1082#1086#1083#1100#1082#1086' '#1084#1077#1089#1103#1094#1077#1074' '#1077#1089#1090#1100' '#1086#1089#1090#1072#1090#1086#1082
             Options.Editing = False
             Width = 70
           end
@@ -637,7 +648,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
   inherited Panel: TPanel
     Width = 972
     Height = 53
-    ExplicitWidth = 1071
+    ExplicitWidth = 972
     ExplicitHeight = 53
     inherited deStart: TcxDateEdit
       Left = 118
@@ -763,6 +774,7 @@ inherited Report_OrderClient_byBoatForm: TReport_OrderClient_byBoatForm
       Caption = #1058#1086#1083#1100#1082#1086' '#1091#1079#1083#1099' ('#1044#1072'/'#1053#1077#1090')'
       Hint = #1058#1086#1083#1100#1082#1086' '#1091#1079#1083#1099' ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actRefreshEmpty: TdsdDataSetRefresh [1]
