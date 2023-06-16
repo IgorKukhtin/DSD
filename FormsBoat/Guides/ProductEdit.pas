@@ -217,7 +217,6 @@ type
     spSelectInvoice: TdsdStoredProc;
     actShowErasedInv: TBooleanStoredProcAction;
     bbShowErasedInv: TdxBarButton;
-    dsdDataSetRefresh1: TdsdDataSetRefresh;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     colStatus: TcxGridDBColumn;
