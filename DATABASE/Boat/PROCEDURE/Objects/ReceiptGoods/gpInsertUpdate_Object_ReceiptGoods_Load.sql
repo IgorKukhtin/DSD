@@ -499,6 +499,9 @@ end if;
 
                              WHEN 'Hypalon' ILIKE (SELECT gpSelect.ProdColorGroupName FROM gpSelect_Object_ProdColorPattern (0, FALSE, FALSE, inSession) AS gpSelect WHERE gpSelect.Id = vbProdColorPatternId)
                                   THEN 'Hypalon'
+
+                             WHEN 'Upholstery' ILIKE (SELECT gpSelect.ProdColorGroupName FROM gpSelect_Object_ProdColorPattern (0, FALSE, FALSE, inSession) AS gpSelect WHERE gpSelect.Id = vbProdColorPatternId)
+                                  THEN 'Kreslo'
                         END;
 
      -- ********* Комплектующее 2 уровня *********

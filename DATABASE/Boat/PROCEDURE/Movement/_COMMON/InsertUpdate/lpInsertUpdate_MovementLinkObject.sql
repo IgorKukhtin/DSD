@@ -17,6 +17,12 @@ BEGIN
         inObjectId := NULL;
     END IF;
 
+    -- заменили
+    IF inObjectId < 0
+    THEN
+         RAISE EXCEPTION 'Ошибка.inObjectId < 0 WHERE inDescId = <%> AND inMovementId = <%> AND inObjectId = <%>.', inDescId, inMovementId, inObjectId;
+    END IF;
+
     -- изменить <свойство>
     UPDATE MovementLinkObject SET ObjectId = inObjectId WHERE MovementId = inMovementId AND DescId = inDescId;
 
