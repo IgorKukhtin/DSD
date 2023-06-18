@@ -41,17 +41,26 @@ BEGIN
     INTO vbDate_6, vbDate_3, vbDate_1, vbDate_0
     FROM lpSelect_PartionDateKind_SetDate ();
     
-    IF EXISTS(SELECT 1  
-              FROM pg_stat_activity
-              WHERE state = 'active'
-                AND (query ilike '%gpComplete_Movement_Inventory%' OR query ilike '%gpUpdate_Status_Inventory%'))
+    IF EXISTS(SELECT ObjectLink.* 
+              FROM Object AS Object_CashSettings
+                   INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_CashSettings.Id
+                                        AND ObjectLink.DescId =  zc_ObjectLink_CashSettings_UnitComplInvent()
+                                        AND ObjectLink.ChildObjectId = vbUnitId
+              WHERE Object_CashSettings.DescId = zc_Object_CashSettings())
     THEN
-      IF EXISTS(SELECT ObjectLink.* 
-                FROM Object AS Object_CashSettings
-                     INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_CashSettings.Id
-                                          AND ObjectLink.DescId =  zc_ObjectLink_CashSettings_UnitComplInvent()
-                                          AND ObjectLink.ChildObjectId = vbUnitId
-                WHERE Object_CashSettings.DescId = zc_Object_CashSettings())
+      IF EXISTS(SELECT Movement.Id
+                FROM Movement
+                     INNER JOIN MovementLinkObject AS MLO_Unit
+                                                   ON MLO_Unit.MovementId = Movement.Id
+                                                  AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                  AND MLO_Unit.ObjectId = vbUnitId
+                     INNER JOIN MovementBoolean AS MovementBoolean_FullInvent
+                                                ON MovementBoolean_FullInvent.MovementId = Movement.Id
+                                               AND MovementBoolean_FullInvent.DescId = zc_MovementBoolean_FullInvent()
+                                               AND MovementBoolean_FullInvent.ValueData = True
+                WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
+                  AND Movement.DescId = zc_Movement_Inventory()
+                  AND Movement.StatusId = zc_Enum_Status_UnComplete())
       THEN
         outMessageText := 'Дождитесь проведения полной инвентаризации...';
         RETURN;
@@ -309,4 +318,3 @@ $BODY$
 
 
 select * from gpGet_Movement_Check_RemainsError(inSPKindId := 0 , inJSON := '[{"goodsid":2095,"amount":1,"partiondatekindid":null,"ndskindid":9,"divisionpartiesid":null,"juridicalid":null}]' ,  inSession := '3');
-

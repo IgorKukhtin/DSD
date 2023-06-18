@@ -247,6 +247,8 @@
         <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201111.pas"/>
         <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
         <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
+        <DCCReference Include="..\SOURCE\EUSignCP\EUSignCP.pas"/>
+        <DCCReference Include="..\SOURCE\EUSignCP\EUSignCPOwnUI.pas"/>
         <None Include="ModelSupport_ProjectComponent_D27\default.txaPackage"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

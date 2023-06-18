@@ -293,11 +293,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
     end
     inherited actComplete: TdsdChangeMovementStatus
       BeforeAction = actPUSHCompile
-      StoredProc = spCompileUnitFull_Start
       StoredProcList = <
-        item
-          StoredProc = spCompileUnitFull_Start
-        end
         item
           StoredProc = spMovementComplete
         end

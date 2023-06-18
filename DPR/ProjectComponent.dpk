@@ -198,6 +198,8 @@ contains
   PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
   StorageSQLite in '..\SOURCE\StorageSQLite.pas',
   EDI in '..\SOURCE\EDI\EDI.pas',
-  UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas';
+  UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas',
+  EUSignCP in '..\SOURCE\EUSignCP\EUSignCP.pas',
+  EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
 
 end.
