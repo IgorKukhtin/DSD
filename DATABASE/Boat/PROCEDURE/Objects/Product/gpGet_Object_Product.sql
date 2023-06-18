@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ModelId Integer, ModelName TVarChar, ModelName_full TVarChar
              , EngineId Integer, EngineName TVarChar
              , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
-             , ClientId Integer, ClientName TVarChar
+             , ClientId Integer, ClientName TVarChar     --25
              , MovementId_OrderClient Integer
              , OperDate_OrderClient  TDateTime
              , InvNumber_OrderClient TVarChar
@@ -26,11 +26,12 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , StatusCode_OrderClient Integer
              , StatusName_OrderClient TVarChar
              , VATPercent_OrderClient TFloat
-             , NPP_OrderClient TFloat
-             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSummVAT TFloat
+             , NPP_OrderClient TFloat      --33
+             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSummVAT TFloat     
+             
              , OperPrice_load       TFloat
              , TransportSumm_load   TFloat
-             , isBasicConf Boolean, isProdColorPattern Boolean
+             , isBasicConf Boolean, isProdColorPattern Boolean   --40
 
              , MovementId_Invoice Integer
              , OperDate_Invoice   TDateTime
@@ -85,7 +86,7 @@ BEGIN
            , CAST (NULL AS TDateTime)  AS DateSale
            , CAST ('' AS TVarChar)     AS CIN
            , CAST ('' AS TVarChar)     AS EngineNum
-           , CAST ('' AS TVarChar)     AS Comment
+           , CAST ('' AS TVarChar)     AS Comment       --14
 
           -- , CAST (0 AS Integer)    AS ProdGroupId
           -- , CAST ('' AS TVarChar)  AS ProdGroupName
@@ -99,7 +100,7 @@ BEGIN
            , CAST (0 AS Integer)       AS ReceiptProdModelId
            , CAST ('' AS TVarChar)     AS ReceiptProdModelName
            , CAST (0 AS Integer)       AS ClientId
-           , CAST ('' AS TVarChar)     AS ClientId
+           , CAST ('' AS TVarChar)     AS ClientName           --25
 
            , CAST (0 AS Integer)       AS MovementId_OrderClient
            , CAST (CURRENT_DATE AS TDateTime)  AS OperDate_OrderClient
@@ -119,18 +120,22 @@ BEGIN
            , CAST (TRUE AS Boolean)    AS isBasicConf
            , CAST (TRUE AS Boolean)    AS isProdColorPattern
 
-           , CAST (0 AS Integer)       AS MovementId_Invoice
+           , CAST (0 AS Integer)       AS MovementId_Invoice --41
            , CAST (NULL AS TDateTime)  AS OperDate_Invoice
            , CAST ('' AS TVarChar)     AS InvNumber_Invoice
            , Object_Status.Code        AS StatusCode_Invoice
-           , Object_Status.Name        AS StatusName_Invoice
-           , CAST (0 AS TFloat)        AS AmountIn_Invoice
-           , CAST (0 AS TFloat)        AS AmountIn_InvoiceAll   
+           , Object_Status.Name        AS StatusName_Invoice   
+           
+
+              
            , CAST (0 AS Integer)       AS MovementId_BankAccount
            , CAST ('' AS TVarChar)     AS InvNumber_BankAccount
            , CAST (NULL AS TDateTime)  AS OperDate_BankAccount
-           , CAST (0 AS Integer)       AS BankAccountId
+           , CAST (0 AS Integer)       AS BankAccountId   --
            , CAST ('' AS TVarChar)     AS BankAccountName
+                      , CAST (0 AS TFloat)        AS AmountIn_Invoice
+           , CAST (0 AS TFloat)        AS AmountIn_InvoiceAll
+
            , CAST (0 AS TFloat)        AS AmountIn_BankAccount
            , CAST (0 AS TFloat)        AS AmountIn_BankAccountAll
            , CAST (0 AS TFloat)        AS AmountIn_BankAccountLast

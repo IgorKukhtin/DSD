@@ -11,6 +11,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar
                                                     , Integer, TVarChar, TDateTime, TFloat, Integer, TVarChar, TDateTime, TFloat, TFloat
                                                     , TVarChar);
 
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean
+                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                    , TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
+                                                    , Integer, TVarChar, TDateTime, TFloat, Integer, TVarChar, TDateTime, TFloat, TFloat
+                                                    , TVarChar);*/
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
  INOUT ioId                    Integer   ,    -- ключ объекта <Лодки>
     IN inCode                  Integer   ,    -- Код объекта
@@ -40,12 +46,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
     IN inOperDate_OrderClient    TDateTime,
     IN inNPP_OrderClient         TFloat,
 
-    IN inMovementId_Invoice      Integer,
+   /* IN inMovementId_Invoice      Integer,
     IN inInvNumber_Invoice       TVarChar ,  -- Номер документа
     IN inOperDate_Invoice        TDateTime,  --
     IN inAmountIn_Invoice        TFloat   ,  --
     IN inAmountOut_Invoice       TFloat   ,  --
-
+    */
     IN inSession               TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -319,6 +325,7 @@ BEGIN
         RETURN;
     END IF;
 
+/*
      -- !!!
      IF inAmountIn_Invoice <> 0 THEN
         vbAmount := inAmountIn_Invoice;
@@ -393,7 +400,7 @@ BEGIN
 
      -- сохранили связь документа <Заказ> с документом <Счет>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inMovementId_OrderClient, inMovementId_Invoice);
-
+    */
 
      -- Проверка - Boat Structure
      IF EXISTS (SELECT ObjectLink_ProdColorPattern.ChildObjectId
