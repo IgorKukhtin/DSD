@@ -32,7 +32,7 @@ BEGIN
                                                              ON MLO_Partner.MovementId = Movement.Id
                                                             AND MLO_Partner.DescId     = zc_MovementLinkObject_Partner()
                                                             AND (MLO_Partner.ObjectId  = inPartnerId OR COALESCE (inPartnerId, 0) = 0)
-                          WHERE Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '12 MONTH') AND inOperDate
+                          WHERE Movement.OperDate BETWEEN DATE_TRUNC ('YEAR', CURRENT_DATE - INTERVAL '24 MONTH') AND inOperDate
                             AND Movement.DescId    = zc_Movement_PriceList()
                             AND Movement.StatusId  = zc_Enum_Status_Complete()
                          )
@@ -49,6 +49,7 @@ BEGIN
                                INNER JOIN MovementItem ON MovementItem.MovementId = tmpData.MovementId
                                                       AND MovementItem.DescId     = zc_MI_Master()
                                                       AND MovementItem.isErased   = FALSE
+                                                      AND MovementItem.Amount     <> 0
                           WHERE tmpData.Ord = 1
                          )
          -- Результат

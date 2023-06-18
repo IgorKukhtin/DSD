@@ -59,6 +59,7 @@ BEGIN
                                                       AND MovementItem.DescId     = zc_MI_Master()
                                                       AND MovementItem.isErased   = FALSE
                                                       AND (MovementItem.ObjectId  = inGoodsId OR COALESCE (inGoodsId, 0) = 0)
+                                                      AND MovementItem.Amount     <> 0
                                -- Цена без ндс (упакови)
                                LEFT JOIN MovementItemFloat AS MIF_PriceParent
                                                            ON MIF_PriceParent.MovementItemId = MovementItem.Id
@@ -80,7 +81,7 @@ BEGIN
                                                            ON MIF_MeasureMult.MovementItemId = MovementItem.Id
                                                           AND MIF_MeasureMult.DescId         = zc_MIFloat_MeasureMult()
 
-                          WHERE Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '12 MONTH') AND inOperDate
+                          WHERE Movement.OperDate BETWEEN DATE_TRUNC ('YEAR', CURRENT_DATE - INTERVAL '24 MONTH') AND inOperDate
                             AND Movement.DescId    = zc_Movement_PriceList()
                             AND Movement.StatusId  = zc_Enum_Status_Complete()
                          )

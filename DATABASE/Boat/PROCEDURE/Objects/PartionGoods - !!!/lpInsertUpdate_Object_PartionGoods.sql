@@ -326,8 +326,8 @@ AND 1=0
               , GoodsSizeId          = zfConvert_IntToNull (vbGoodsSizeId)
               , ProdColorId          = zfConvert_IntToNull (vbProdColorId)
               , MeasureId            = vbMeasureId
-              , TaxKindId            = inTaxKindId
-              , TaxValue             = inTaxKindValue
+              , TaxKindId            = CASE WHEN inTaxKindId > 0 THEN inTaxKindId ELSE zc_TaxKind_Basis() END
+              , TaxValue             = COALESCE (inTaxKindValue, 0)
               , isErased             = FALSE
               , isArc                = FALSE
      WHERE Object_PartionGoods.MovementItemId = inMovementItemId;
@@ -350,7 +350,8 @@ AND 1=0
                                                             END*/
                                        , vbGoodsGroupId, zfConvert_IntToNull (vbGoodsTagId), zfConvert_IntToNull (vbGoodsTypeId)
                                        , zfConvert_IntToNull (vbGoodsSizeId), zfConvert_IntToNull (vbProdColorId), vbMeasureId
-                                       , inTaxKindId, inTaxKindValue
+                                       , CASE WHEN inTaxKindId > 0 THEN inTaxKindId ELSE zc_TaxKind_Basis() END
+                                       , COALESCE (inTaxKindValue, 0)
                                        , FALSE, FALSE
                                         );
         -- сохранили партию

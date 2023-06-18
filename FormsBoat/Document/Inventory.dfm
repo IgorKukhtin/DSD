@@ -39,7 +39,6 @@ object InventoryForm: TInventoryForm
         Height = 341
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 5
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -151,6 +150,7 @@ object InventoryForm: TInventoryForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 'EAN'
@@ -287,6 +287,36 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1074#1093'.'
             Width = 55
+          end
+          object Price_find: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1074#1093'. ('#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'Price_find'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1072#1081#1076#1077#1085#1085#1072#1103' '#1094#1077#1085#1072' '#1074' '#1087#1088#1072#1081#1089#1072#1093' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object isPrice_diff: TcxGridDBColumn
+            Caption = '***'#1055#1086#1089#1090'.'
+            DataBinding.FieldName = 'isPrice_diff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1088#1091#1075#1086#1081' '#1087#1086#1089#1090#1072#1074#1097#1080#1082' '#1074' '#1085#1072#1081#1076#1077#1085#1085#1086#1084' '#1087#1088#1072#1081#1089#1077
+            Options.Editing = False
+            Width = 70
+          end
+          object isPrice_goods: TcxGridDBColumn
+            Caption = '***Artikel'
+            DataBinding.FieldName = 'isPrice_goods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1085#1072#1081#1076#1077#1085#1072' '#1087#1086' Artikel Nr'
+            Options.Editing = False
+            Width = 70
           end
           object Summa: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1086#1089#1090'. '#1092#1072#1082#1090')'

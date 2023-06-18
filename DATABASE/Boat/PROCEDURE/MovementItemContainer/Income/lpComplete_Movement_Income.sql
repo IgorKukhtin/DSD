@@ -22,6 +22,7 @@ $BODY$
 
   DECLARE vbPriceWithVAT            Boolean;
   DECLARE vbVATPercent              TFloat;
+  DECLARE vbTaxKindId               Integer;
   
   DECLARE vbSummMVAT                TFloat;
   DECLARE vbSummTaxMVAT_1           TFloat;
@@ -55,7 +56,7 @@ BEGIN
      SELECT tmp.MovementDescId, tmp.StatusId, tmp.OperDate, tmp.PartnerId, tmp.PartnerId_VAT, tmp.UnitId, tmp.PaidKindId
           , tmp.InfoMoneyId_Partner, tmp.InfoMoneyId_Partner_VAT
           , tmp.AccountDirectionId_To
-          , tmp.PriceWithVAT, tmp.VATPercent
+          , tmp.PriceWithVAT, tmp.VATPercent, tmp.TaxKindId
           , tmp.SummTaxMVAT, tmp.TotalSummTaxMVAT, tmp.TotalSumm_cost
 
             INTO vbMovementDescId, vbStatusId
@@ -65,7 +66,7 @@ BEGIN
                , vbPaidKindId
                , vbInfoMoneyId_Partner, vbInfoMoneyId_Partner_VAT
                , vbAccountDirectionId_To
-               , vbPriceWithVAT, vbVATPercent
+               , vbPriceWithVAT, vbVATPercent, vbTaxKindId
                , vbSummTaxMVAT_1, vbTotalSummTaxMVAT, vbTotalSumm_cost
 
      FROM (SELECT Movement.DescId AS MovementDescId
@@ -89,6 +90,7 @@ BEGIN
 
                 , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
                 , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
+                , COALESCE (ObjectLink_Partner_TaxKind.ChildObjectId, zc_TaxKind_Basis()) AS TaxKindId
 
                   -- Сумма скидки без НДС
                 , COALESCE (MovementFloat_SummTaxMVAT.ValueData, 0) AS SummTaxMVAT
@@ -142,6 +144,9 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_Partner_InfoMoney
                                      ON ObjectLink_Partner_InfoMoney.ObjectId = MovementLinkObject_From.ObjectId
                                     AND ObjectLink_Partner_InfoMoney.DescId   = zc_ObjectLink_Partner_InfoMoney()
+                LEFT JOIN ObjectLink AS ObjectLink_Partner_TaxKind
+                                     ON ObjectLink_Partner_TaxKind.ObjectId = MovementLinkObject_From.ObjectId
+                                    AND ObjectLink_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
                 LEFT JOIN ObjectLink AS ObjectLink_Unit_AccountDirection
                                      ON ObjectLink_Unit_AccountDirection.ObjectId = MovementLinkObject_To.ObjectId
                                     AND ObjectLink_Unit_AccountDirection.DescId   = zc_ObjectLink_Unit_AccountDirection()
@@ -717,10 +722,11 @@ BEGIN
 
 
 
-     -- дописали - КОЛ-ВО + Цену
-     UPDATE Object_PartionGoods SET Amount             = _tmpItem.OperCount
+     -- дописали - КОЛ-ВО + Цену + Дату + Поставщика + НДС
+     UPDATE Object_PartionGoods SET ObjectId           = _tmpItem.GoodsId
+                                  , Amount             = _tmpItem.OperCount
                                   , CountForPrice      = _tmpItem.CountForPrice
-                                   -- Цена вх. без НДС, с учетом скидки по элементу
+                                    -- Цена вх. без НДС, с учетом скидки по элементу
                                   , EKPrice_orig       = _tmpItem.OperPrice_orig
                                     -- Цена вх. без НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка
                                   , EKPrice            = CASE WHEN _tmpItem.OperCount > 0 THEN (_tmpItem.OperSumm + _tmpItem.OperSumm_cost) / _tmpItem.OperCount ELSE 0 END
@@ -729,11 +735,37 @@ BEGIN
                                     -- Цена затрат без НДС (затраты + расходы: Почтовые + Упаковка + Страховка)
                                   , CostPrice          = CASE WHEN _tmpItem.OperCount > 0 THEN _tmpItem.OperSumm_cost / _tmpItem.OperCount ELSE 0 END
                                     --
-                                  , OperDate      = vbOperDate
-                                  , isErased      = FALSE
-                                  , isArc         = FALSE
+                                --, inEmpfPrice         =       -- Цена рекоменд. без НДС
+                                --, inOperPriceList     =       -- Цена продажи, если = 0, тогда lpGet_ObjectHistory_PriceListItem
+                                --, inOperPriceList_old =       -- Цена продажи, ДО изменения строки
+                                    --
+                                  , FromId         = vbPartnerId
+                                  , UnitId         = vbUnitId
+                                  , OperDate       = vbOperDate
+                                  , TaxKindId      = vbTaxKindId
+                                  , TaxValue       = vbVATPercent
+                                    --
+                                  , isErased       = FALSE
+                                  , isArc          = FALSE
      FROM _tmpItem
      WHERE Object_PartionGoods.MovementItemId = _tmpItem.MovementItemId
+    ;
+
+     -- дописали - Поставщика
+     PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Partner(), _tmpItem.GoodsId, vbPartnerId)
+     FROM _tmpItem
+    ;
+     -- дописали - EKPrice
+     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_EKPrice(), _tmpItem.GoodsId, _tmpItem.OperPrice_orig)
+     FROM _tmpItem
+     WHERE _tmpItem.OperPrice_orig <> 0
+    ;
+
+     -- восстановили - если надо
+     UPDATE Object SET isErased = FALSE
+     FROM _tmpItem
+     WHERE Object.Id       = _tmpItem.GoodsId
+       AND Object.isErased = TRUE
     ;
 
      -- Сохранили "новый" Резерв

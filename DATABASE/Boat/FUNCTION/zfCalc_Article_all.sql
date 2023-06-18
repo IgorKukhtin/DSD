@@ -6,9 +6,11 @@ CREATE OR REPLACE FUNCTION zfCalc_Article_all (inValueData TVarChar)
 RETURNS TVarChar
 AS
 $BODY$
+  DECLARE vbRetV TVarChar;
 BEGIN
-      RETURN (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (inValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '') :: TVarChar
-             );
+      vbRetV:= REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (inValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '');
+
+      RETURN (CASE WHEN vbRetV <> inValueData THEN  vbRetV || '___' || inValueData ELSE inValueData END);
 
 END;
 $BODY$

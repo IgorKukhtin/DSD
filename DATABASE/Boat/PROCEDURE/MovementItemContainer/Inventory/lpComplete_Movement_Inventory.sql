@@ -90,13 +90,14 @@ BEGIN
                          , PartnerId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                           )
-        WITH tmpPriceList AS (SELECT lpGet.GoodsId, lpGet.ValuePrice, lpGet.PartnerId FROM lpGet_MovementItem_PriceList (inOperDate:= vbOperDate, inGoodsId:= 0, inUserId:= inUserId) AS lpGet)
+        --WITH tmpPriceList AS (SELECT lpGet.GoodsId, lpGet.ValuePrice, lpGet.PartnerId FROM lpGet_MovementItem_PriceList (inOperDate:= vbOperDate, inGoodsId:= 0, inUserId:= inUserId) AS lpGet)
         -- результат
         SELECT tmp.MovementItemId
              , tmp.GoodsId
              , tmp.PartNumber
              , tmp.OperCount
-             , COALESCE ((SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = tmp.GoodsId), 0) AS OperPrice
+          -- , COALESCE ((SELECT tmpPriceList.ValuePrice FROM tmpPriceList WHERE tmpPriceList.GoodsId = tmp.GoodsId), 0) AS OperPrice
+             , tmp.OperPrice
              , tmp.PartnerId
                -- УП
              , tmp.InfoMoneyGroupId
@@ -107,8 +108,10 @@ BEGIN
                    , MovementItem.ObjectId            AS GoodsId
                      -- факт остаток
                    , MovementItem.Amount              AS OperCount
+                   
+                   , COALESCE (MIFloat_Price.ValueData, 0) AS OperPrice
                      --
-                   , COALESCE (MILinkObject_Partner.ObjectId, (SELECT tmpPriceList.PartnerId  FROM tmpPriceList WHERE tmpPriceList.GoodsId = MovementItem.ObjectId), 0) AS PartnerId
+                   , COALESCE (MILinkObject_Partner.ObjectId, 0) AS PartnerId -- (SELECT tmpPriceList.PartnerId  FROM tmpPriceList WHERE tmpPriceList.GoodsId = MovementItem.ObjectId), 0) AS PartnerId
                      -- 
                    , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
                      -- Управленческая группа
@@ -125,6 +128,11 @@ BEGIN
                    LEFT JOIN MovementItemString AS MIString_PartNumber
                                                 ON MIString_PartNumber.MovementItemId = MovementItem.Id
                                                AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
+
+                   LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                              AND MIFloat_Price.DescId         = zc_MIFloat_Price()
+                                            --AND MIFloat_Price.ValueData      <> 0
 
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                         ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
@@ -192,6 +200,8 @@ BEGIN
                                         INNER JOIN Object_PartionGoods ON Object_PartionGoods.ObjectId = _tmpItem.GoodsId
                                                                       -- Поставщик, по которому взяли цену
                                                                       AND Object_PartionGoods.FromId   = _tmpItem.PartnerId
+                                                                      -- !!!если есть цена!!!
+                                                                      AND Object_PartionGoods.EKPrice  = _tmpItem.OperPrice
                                         LEFT JOIN MovementItemString AS MIString_PartNumber
                                                                      ON MIString_PartNumber.MovementItemId = Object_PartionGoods.MovementItemId
                                                                     AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()

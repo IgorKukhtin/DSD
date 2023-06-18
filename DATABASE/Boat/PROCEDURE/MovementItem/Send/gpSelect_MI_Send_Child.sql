@@ -10,15 +10,14 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_Send_Child(
 RETURNS TABLE (Id Integer, ParentId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Article TVarChar
              , Amount TFloat
-             , MovementId_OrderClient  Integer, InvNumber_OrderClient_Full  TVarChar
-             , MovementId_OrderPartner Integer, InvNumber_OrderPartner_Full TVarChar
-             , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
              , isErased Boolean
-
+             , MovementId_OrderPartner Integer, InvNumber_OrderPartner_Full TVarChar
+               -- Данные из партии
              , OperPrice_cost        TFloat
-             , TotalOperPrice_cost   TFloat
              , EKPrice               TFloat
              , CountForPrice_partion TFloat
+             , TotalOperPrice        TFloat
+
              , OperDate_partion      TDateTime
              , InvNumber_partion     TVarChar
              , PartnerName_partion   TVarChar
@@ -39,7 +38,7 @@ BEGIN
                                 UNION ALL
                                SELECT inIsErased AS isErased WHERE inIsErased = TRUE
                               )
-             -- Существующие Элементы Резерв
+             -- Существующие Элементы Партий
            , tmpMI AS (SELECT MovementItem.Id
                             , MovementItem.PartionId
                             , MovementItem.ParentId
@@ -66,7 +65,7 @@ BEGIN
                             JOIN MovementItem ON MovementItem.MovementId = tmpMI.MovementId_order
                                              AND MovementItem.DescId     = zc_MI_Child()
                                              AND MovementItem.isErased   = FALSE
-                            -- ValueData - MovementId заказа Поставщику
+                            -- ValueData - MovementId заказ Поставщику
                             LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                        AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
@@ -76,13 +75,12 @@ BEGIN
      , tmpPartionGoods AS (SELECT Object_PartionGoods.*
                                 , MIString_PartNumber.ValueData AS PartNumber
                            FROM Object_PartionGoods
-                                 LEFT JOIN MovementItemString AS MIString_PartNumber
-                                                              ON MIString_PartNumber.MovementItemId = Object_PartionGoods.MovementItemId
-                                                             AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                             ON MIString_PartNumber.MovementItemId = Object_PartionGoods.MovementItemId
+                                                            AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
                            WHERE Object_PartionGoods.MovementItemId IN (SELECT tmpMI.PartionId FROM tmpMI)
                              AND Object_PartionGoods.isErased = FALSE
                            )
-
         -- Результат
         SELECT MovementItem.Id
              , MovementItem.ParentId
@@ -91,32 +89,21 @@ BEGIN
              , Object_Goods.ValueData          AS GoodsName
              , ObjectString_Article.ValueData  AS Article
              , MovementItem.Amount
-
-             , Movement_OrderClient.Id         AS MovementId_OrderClient
-             , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumber_OrderClient_Full
+             , MovementItem.isErased
 
              , Movement_OrderPartner.Id        AS MovementId_OrderPartner
              , zfCalc_InvNumber_isErased ('', Movement_OrderPartner.InvNumber, Movement_OrderPartner.OperDate, Movement_OrderPartner.StatusId) AS InvNumber_OrderPartner_Full
 
-             , Object_Product.Id                          AS ProductId
-             , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
-             , Object_Brand.Id                            AS BrandId
-             , Object_Brand.ValueData                     AS BrandName
-             , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased)       AS CIN
-             , zfCalc_ValueData_isErased (ObjectString_EngineNum.ValueData, Object_Product.isErased) AS EngineNum
-             , Object_Engine.ValueData                    AS EngineName
-
-             , MovementItem.isErased
-
-              --Данные из партии
-              -- Цена вх. с затратами без НДС
-             , (tmpPartionGoods.EKPrice / tmpPartionGoods.CountForPrice + COALESCE (tmpPartionGoods.CostPrice,0) ) ::TFloat AS OperPrice_cost
-             , (MovementItem.Amount * (tmpPartionGoods.EKPrice / tmpPartionGoods.CountForPrice + COALESCE (tmpPartionGoods.CostPrice,0) )) ::TFloat AS TotalOperPrice_cost
-              --Цена вх. без НДС
+               -- Цена затрат без НДС
+             , tmpPartionGoods.CostPrice ::TFloat AS OperPrice_cost
+              -- Цена вх. без НДС, с учетом ВСЕХ скидок + затраты + расходы: Почтовые + Упаковка + Страховка
              , tmpPartionGoods.EKPrice       ::TFloat
              , tmpPartionGoods.CountForPrice ::TFloat    AS CountForPrice_partion
+               --
+             , (MovementItem.Amount * (tmpPartionGoods.EKPrice / tmpPartionGoods.CountForPrice)) ::TFloat AS TotalOperPrice
+               --
              , Movement_Partion.OperDate      ::TDateTime AS OperDate_partion
-             , (zfCalc_InvNumber_isErased ('', Movement_Partion.InvNumber, Movement_Partion.OperDate, Movement_Partion.StatusId) || ' (' || MovementItem.PartionId :: TVarChar || ')') :: TVarChar AS InvNumber_partion
+             , (zfCalc_InvNumber_isErased (MovementDesc_Partion.ItemName, Movement_Partion.InvNumber, Movement_Partion.OperDate, Movement_Partion.StatusId) || ' (' || MovementItem.PartionId :: TVarChar || ')') :: TVarChar AS InvNumber_partion
              , Object_Partner.ValueData       ::TVarChar  AS PartnerName_partion
              , tmpPartionGoods.PartNumber    ::TVarChar
         FROM tmpMI AS MovementItem
@@ -125,32 +112,13 @@ BEGIN
                                     ON ObjectString_Article.ObjectId = Object_Goods.Id
                                    AND ObjectString_Article.DescId   = zc_ObjectString_Article()
 
-             LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = MovementItem.MovementId_order
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
-                                          ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
-                                         AND MovementLinkObject_Product.DescId     = zc_MovementLinkObject_Product()
-             LEFT JOIN Object AS Object_Product  ON Object_Product.Id  = MovementLinkObject_Product.ObjectId
-             LEFT JOIN ObjectString AS ObjectString_CIN
-                                    ON ObjectString_CIN.ObjectId = Object_Product.Id
-                                   AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
-             LEFT JOIN ObjectString AS ObjectString_EngineNum
-                                    ON ObjectString_EngineNum.ObjectId = Object_Product.Id
-                                   AND ObjectString_EngineNum.DescId   = zc_ObjectString_Product_EngineNum()
-             LEFT JOIN ObjectLink AS ObjectLink_Engine
-                                  ON ObjectLink_Engine.ObjectId = Object_Product.Id
-                                 AND ObjectLink_Engine.DescId   = zc_ObjectLink_Product_Engine()
-             LEFT JOIN Object AS Object_Engine ON Object_Engine.Id = ObjectLink_Engine.ChildObjectId
-             LEFT JOIN ObjectLink AS ObjectLink_Brand
-                                  ON ObjectLink_Brand.ObjectId = Object_Product.Id
-                                 AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
-             LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
-
              LEFT JOIN tmpMI_order ON tmpMI_order.GoodsId          = MovementItem.GoodsId
                                   AND tmpMI_order.MovementId_order = MovementItem.MovementId_order
              LEFT JOIN Movement AS Movement_OrderPartner ON Movement_OrderPartner.Id = tmpMI_order.MovementId_order_income
              
              LEFT JOIN tmpPartionGoods ON tmpPartionGoods.MovementItemId = MovementItem.PartionId
              LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = tmpPartionGoods.MovementId
+             LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId
              LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpPartionGoods.FromId
        ;
 

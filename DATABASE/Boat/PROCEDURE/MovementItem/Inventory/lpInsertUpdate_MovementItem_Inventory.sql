@@ -29,7 +29,10 @@ $BODY$
    DECLARE vbUnitId   Integer;
 BEGIN
      -- замена
-     ioPrice:= (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId), inGoodsId, inUserId) AS lpGet);
+     IF COALESCE (ioPrice, 0) = 0
+     THEN
+         ioPrice:= (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId), inGoodsId, inUserId) AS lpGet);
+     END IF;
 
      -- определяются параметры из документа
      -- vbUnitId:= (SELECT MLO_Unit.ObjectId FROM MovementLinkObject AS MLO_Unit WHERE MLO_Unit.MovementId = inMovementId AND MLO_Unit.DescId = zc_MovementLinkObject_Unit());

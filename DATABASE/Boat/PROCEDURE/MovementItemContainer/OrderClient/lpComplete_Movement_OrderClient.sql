@@ -378,7 +378,7 @@ BEGIN
                    --
                --, lpSelect.GoodsId_child
                    -- Кол-во опций
-                 , lpSelect.Amount
+                 , lpSelect.Amount_goods AS Amount
                    -- Кол-во для сборки узла
                  , lpSelect.AmountBasis
                    -- Цена вх. для GoodsId
@@ -874,7 +874,7 @@ BEGIN
                                                                                       ||   '-' || LEFT (tmpColor_1.MaterialOptionsName, 2)
                                                                                         || '-' || tmpColor_1.ProdColorName
 
-                                                                                   WHEN ObjectString_Comment.ValueData ILIKE 'HULL/DECK'
+                                                                                   /*WHEN ObjectString_Comment.ValueData ILIKE 'HULL/DECK'
                                                                                    THEN
                                                                                         'Корпус '
                                                                                       ||'AGL-' || Object_Model.ValueData
@@ -895,6 +895,7 @@ BEGIN
                                                                                         'Капот '
                                                                                       ||'AGL-' || Object_Model.ValueData
                                                                                       ||   '-' || tmpColor_1.ProdColorName_goods
+                                                                                      */
 
                                                                                    WHEN ObjectString_Comment.ValueData ILIKE 'Kreslo'
                                                                                    THEN
@@ -902,6 +903,15 @@ BEGIN
                                                                                       ||   '-' || tmpColor_1.Article_goods
                                                                                       ||   '-' || LOWER (LEFT (tmpColor_2.ProdColorName, 3))
                                                                                       ||   '-' || LOWER (LEFT (tmpColor_3.ProdColorName, 3))
+
+                                                                                   -- для Стеклопластик
+                                                                                   ELSE TRIM (SPLIT_PART (Object_Goods.ValueData, 'AGL', 1))
+                                                                                     ||' AGL-' || Object_Model.ValueData
+                                                                                     ||   ' '  || tmpColor_1.ProdColorName_goods
+                                                                                               || CASE WHEN tmpColor_2.ProdColorName_goods <> tmpColor_1.ProdColorName_goods
+                                                                                                       THEN '-'  || tmpColor_2.ProdColorName_goods
+                                                                                                       ELSE ''
+                                                                                                  END
 
                                                                               END
 

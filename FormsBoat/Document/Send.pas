@@ -134,10 +134,9 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
-    CountForPrice: TcxGridDBColumn;
     OperPrice: TcxGridDBColumn;
     Amount_unit: TcxGridDBColumn;
-    Summ: TcxGridDBColumn;
+    TotalOperPrice: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     InsertName: TcxGridDBColumn;
@@ -150,15 +149,11 @@ type
     GoodsName_ch2: TcxGridDBColumn;
     MeasureName_ch2: TcxGridDBColumn;
     Amount_ch2: TcxGridDBColumn;
-    InvNumber_OrderClientFull_ch2: TcxGridDBColumn;
     IsErased_ch2: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     cxTopSplitter: TcxSplitter;
     Artikel_ch2: TcxGridDBColumn;
     InvNumber_OrderPartner_Full_ch2: TcxGridDBColumn;
-    CIN_ch2: TcxGridDBColumn;
-    ProductName_ch2: TcxGridDBColumn;
-    BrandName_ch2: TcxGridDBColumn;
     spInsert_MI_Send: TdsdStoredProc;
     actInsert_MI_Send: TdsdExecStoredProc;
     macInsert_MI_Send: TMultiAction;
@@ -168,8 +163,6 @@ type
     bbOpenFormOrderClient: TdxBarButton;
     bbOpenFormOrderPartner: TdxBarButton;
     isOn: TcxGridDBColumn;
-    EngineNum_ch2: TcxGridDBColumn;
-    EngineName_ch2: TcxGridDBColumn;
     spUnErasedMIchild: TdsdStoredProc;
     actSetUnErasedChild: TdsdUpdateErased;
     bbUnErasedChild: TdxBarButton;
@@ -177,7 +170,6 @@ type
     actReport_Goods_child: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     bbReport_Goods_child: TdxBarButton;
-    AmountSecond: TcxGridDBColumn;
     actPrint2: TdsdPrintAction;
     bbPrint2: TdxBarButton;
     Panel2: TPanel;

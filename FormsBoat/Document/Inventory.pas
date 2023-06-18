@@ -187,6 +187,9 @@ type
     actChoiceFormOrderClientItem: TOpenChoiceForm;
     actReport_Price: TdsdOpenForm;
     bbReport_Price: TdxBarButton;
+    Price_find: TcxGridDBColumn;
+    isPrice_diff: TcxGridDBColumn;
+    isPrice_goods: TcxGridDBColumn;
   private
   public
   end;
