@@ -189,11 +189,19 @@ BEGIN
             , tmpInfo.Name_main      ::TVarChar AS Name_main
             , tmpInfo.Street_main    ::TVarChar AS Street_main
             , tmpInfo.City_main      ::TVarChar AS City_main                                   --*
+/*
             , tmpInfo.Name_Firma2    ::TVarChar AS Name_Firma
             , tmpInfo.Street_Firma2  ::TVarChar AS Street_Firma
             , tmpInfo.City_Firma2    ::TVarChar AS City_Firma
             , tmpInfo.Country_Firma2 ::TVarChar AS Country_Firma
             , tmpInfo.Text_tax2      ::TVarChar AS Text1   --**
+  */          
+            , Object_Client.ValueData        ::TVarChar AS Name_Firma
+            , ObjectString_Street.ValueData  ::TVarChar AS Street_Firma
+            , ObjectString_City.ValueData    ::TVarChar AS City_Firma
+            , Object_Country.ValueData       ::TVarChar AS Country_Firma
+            , ''                             ::TVarChar AS Text1   --**
+
             , tmpInfo.Text_Freight   ::TVarChar AS Text2
             , (' '||tmpInfo.Text_sign ||' '||vbInsertName::TVarChar)     ::TVarChar AS Text3
             
@@ -232,6 +240,7 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_TaxNumber
                                  ON ObjectString_TaxNumber.ObjectId = tmpProduct.ClientId
                                 AND ObjectString_TaxNumber.DescId = zc_ObjectString_Client_TaxNumber()
+
           LEFT JOIN (SELECT SUM (zfCalc_SummDiscountTax (tmpProdOptItems.Sale_summ, COALESCE (tmpProdOptItems.DiscountTax,0)) ) AS Sale_summ_OptItems
                           , SUM (zfCalc_SummDiscountTax (tmpProdOptItems.SaleWVAT_summ, COALESCE (tmpProdOptItems.DiscountTax,0)) ) AS SaleWVAT_summ_OptItems
                      FROM tmpProdOptItems
@@ -246,6 +255,54 @@ BEGIN
           LEFT JOIN (SELECT SUM (tmpInvoice.AmountIn) AS AmountIn FROM tmpInvoice) AS tmpInvoice ON 1 = 1
           LEFT JOIN tmpBankAccount ON 1 = 1
           LEFT JOIN tmp_OrderInfo ON 1=1
+
+
+          LEFT JOIN Object AS Object_Client ON Object_Client.Id = tmpProduct.ClientId
+          LEFT JOIN ObjectString AS ObjectString_Comment
+                                 ON ObjectString_Comment.ObjectId = Object_Client.Id
+                                AND ObjectString_Comment.DescId = zc_ObjectString_Client_Comment()  
+
+          LEFT JOIN ObjectString AS ObjectString_Fax
+                                 ON ObjectString_Fax.ObjectId = Object_Client.Id
+                                AND ObjectString_Fax.DescId = zc_ObjectString_Client_Fax()  
+          LEFT JOIN ObjectString AS ObjectString_Phone
+                                 ON ObjectString_Phone.ObjectId = Object_Client.Id
+                                AND ObjectString_Phone.DescId = zc_ObjectString_Client_Phone()
+          LEFT JOIN ObjectString AS ObjectString_Mobile
+                                 ON ObjectString_Mobile.ObjectId = Object_Client.Id
+                                AND ObjectString_Mobile.DescId = zc_ObjectString_Client_Mobile()
+          LEFT JOIN ObjectString AS ObjectString_IBAN
+                                 ON ObjectString_IBAN.ObjectId = Object_Client.Id
+                                AND ObjectString_IBAN.DescId = zc_ObjectString_Client_IBAN()
+          LEFT JOIN ObjectString AS ObjectString_Street
+                                 ON ObjectString_Street.ObjectId = Object_Client.Id
+                                AND ObjectString_Street.DescId = zc_ObjectString_Client_Street()
+          LEFT JOIN ObjectString AS ObjectString_Member
+                                 ON ObjectString_Member.ObjectId = Object_Client.Id
+                                AND ObjectString_Member.DescId = zc_ObjectString_Client_Member()
+          LEFT JOIN ObjectString AS ObjectString_WWW
+                                 ON ObjectString_WWW.ObjectId = Object_Client.Id
+                                AND ObjectString_WWW.DescId = zc_ObjectString_Client_WWW()
+          LEFT JOIN ObjectString AS ObjectString_Email
+                                 ON ObjectString_Email.ObjectId = Object_Client.Id
+                                AND ObjectString_Email.DescId = zc_ObjectString_Client_Email()
+          LEFT JOIN ObjectString AS ObjectString_CodeDB
+                                 ON ObjectString_CodeDB.ObjectId = Object_Client.Id
+                                AND ObjectString_CodeDB.DescId = zc_ObjectString_Client_CodeDB()
+
+          LEFT JOIN ObjectLink AS ObjectLink_PLZ
+                               ON ObjectLink_PLZ.ObjectId = Object_Client.Id
+                              AND ObjectLink_PLZ.DescId = zc_ObjectLink_Client_PLZ()
+          LEFT JOIN Object AS Object_PLZ ON Object_PLZ.Id = ObjectLink_PLZ.ChildObjectId
+          LEFT JOIN ObjectString AS ObjectString_City
+                                 ON ObjectString_City.ObjectId = Object_PLZ.Id
+                                AND ObjectString_City.DescId = zc_ObjectString_PLZ_City()
+          LEFT JOIN ObjectLink AS ObjectLink_Country
+                               ON ObjectLink_Country.ObjectId = Object_PLZ.Id
+                              AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
+          LEFT JOIN Object AS Object_Country ON Object_Country.Id = ObjectLink_Country.ChildObjectId
+
+
        ;
 
      RETURN NEXT Cursor1;
