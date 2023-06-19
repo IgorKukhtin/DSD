@@ -964,8 +964,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = 6
-      ExplicitWidth = 653
       object cxGridDBTableViewProdOptItems: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProdOptItemsDS
@@ -4648,8 +4646,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 226
-    Top = 120
+    Left = 250
+    Top = 96
   end
   object spUpdate_NPP_Plus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_OrderClient_NPP_Plus'

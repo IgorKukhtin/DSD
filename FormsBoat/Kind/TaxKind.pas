@@ -59,6 +59,7 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     Info: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
+    spUpdate_Code: TdsdStoredProc;
   private
     { Private declarations }
   public
