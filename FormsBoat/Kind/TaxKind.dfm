@@ -26,7 +26,6 @@ object TaxKindForm: TTaxKindForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 541
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -44,7 +43,6 @@ object TaxKindForm: TTaxKindForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
@@ -57,7 +55,6 @@ object TaxKindForm: TTaxKindForm
         DataBinding.FieldName = 'Code_str'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 53
       end
       object Name: TcxGridDBColumn
@@ -74,6 +71,7 @@ object TaxKindForm: TTaxKindForm
         DataBinding.FieldName = 'NDS'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 116
       end
       object Info: TcxGridDBColumn
@@ -81,6 +79,7 @@ object TaxKindForm: TTaxKindForm
         DataBinding.FieldName = 'Info'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 175
       end
       object Comment: TcxGridDBColumn
@@ -88,6 +87,7 @@ object TaxKindForm: TTaxKindForm
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 156
       end
       object InsertDate: TcxGridDBColumn
@@ -384,8 +384,10 @@ object TaxKindForm: TTaxKindForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Code
       StoredProcList = <
         item
+          StoredProc = spUpdate_Code
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -483,5 +485,70 @@ object TaxKindForm: TTaxKindForm
     PackSize = 1
     Left = 432
     Top = 128
+  end
+  object spUpdate_Code: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_TaxKind'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Code'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode_str'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'Code_str'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Info'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 274
+    Top = 112
   end
 end
