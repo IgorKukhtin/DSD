@@ -75,6 +75,8 @@ type
     cbisOnlyChild: TcxCheckBox;
     actRefreshGoods: TdsdDataSetRefresh;
     Comment_mov: TcxGridDBColumn;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
     { Private declarations }
   public
