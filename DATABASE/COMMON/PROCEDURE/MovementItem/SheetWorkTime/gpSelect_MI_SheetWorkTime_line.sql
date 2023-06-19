@@ -1191,12 +1191,12 @@ BEGIN
            , tmpMI.isErased
 
            , tmpMI.AmountHours
-           , tmpMI..CountDay      ::TFloat
-           , tmpMI..Amount_3 ::TFloat
-           , tmpMI..Amount_4 ::TFloat
-           , tmpMI..Amount_5 ::TFloat
-           , tmpMI..Amount_6 ::TFloat 
-           , tmpMI..PersonalId
+           , tmpMI.CountDay      ::TFloat
+           , tmpMI.Amount_3      ::TFloat
+           , tmpMI.Amount_4      ::TFloat
+           , tmpMI.Amount_5      ::TFloat
+           , tmpMI.Amount_6      ::TFloat 
+           , tmpMI.PersonalId
            
            , tmpMI.KeyId
 

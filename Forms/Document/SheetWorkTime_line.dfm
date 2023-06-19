@@ -113,12 +113,14 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
   end
   object cxGrid2: TcxGrid
     Left = 0
-    Top = 90
+    Top = 313
     Width = 971
-    Height = 183
-    Align = alTop
+    Height = 63
+    Align = alClient
     TabOrder = 1
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 304
+    ExplicitHeight = 72
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -200,7 +202,6 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
@@ -211,7 +212,6 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         DataBinding.FieldName = 'MemberCode'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Options.Filtering = False
         Width = 30
       end
       object MemberName: TcxGridDBColumn
@@ -221,7 +221,6 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         HeaderAlignmentVert = vaCenter
         MinWidth = 70
         Options.Editing = False
-        Options.Filtering = False
         Width = 183
       end
       object DateOut: TcxGridDBColumn
@@ -239,7 +238,6 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         HeaderHint = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
         MinWidth = 70
         Options.Editing = False
-        Options.Filtering = False
         Width = 123
       end
       object PositionName: TcxGridDBColumn
@@ -249,7 +247,6 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         HeaderAlignmentVert = vaCenter
         MinWidth = 70
         Options.Editing = False
-        Options.Filtering = False
         Width = 103
       end
       object PositionLevelName: TcxGridDBColumn
@@ -259,7 +256,6 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         HeaderAlignmentVert = vaCenter
         MinWidth = 64
         Options.Editing = False
-        Options.Filtering = False
         Width = 101
       end
       object PersonalGroupName: TcxGridDBColumn
@@ -279,7 +275,6 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         HeaderAlignmentVert = vaCenter
         MinWidth = 64
         Options.Editing = False
-        Options.Filtering = False
         Width = 127
       end
       object WorkTimeKindName_key: TcxGridDBColumn
@@ -386,10 +381,10 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
   end
   object cxGrid1: TcxGrid
     Left = 0
-    Top = 281
+    Top = 90
     Width = 971
-    Height = 82
-    Align = alClient
+    Height = 215
+    Align = alTop
     TabOrder = 3
     LookAndFeel.NativeStyle = False
     object cxGridDBTableView1: TcxGridDBTableView
@@ -414,6 +409,94 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object MemberCode_ch1: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'MemberCode'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 30
+      end
+      object MemberName_ch1: TcxGridDBColumn
+        Caption = #1060#1048#1054
+        DataBinding.FieldName = 'MemberName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        MinWidth = 70
+        Options.Editing = False
+        Width = 183
+      end
+      object AmountHours_ch: TcxGridDBColumn
+        Caption = '1.'#1095#1072#1089#1099
+        DataBinding.FieldName = 'AmountHours'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1095#1072#1089#1086#1074
+        MinWidth = 15
+        Options.Editing = False
+        Width = 48
+      end
+      object CountDay_ch: TcxGridDBColumn
+        Caption = '2.'#1089#1084'.'
+        DataBinding.FieldName = 'CountDay'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1084#1077#1085
+        MinWidth = 15
+        Options.Editing = False
+        Width = 43
+      end
+      object Amount_3_ch: TcxGridDBColumn
+        Caption = '3.'#1096#1090'.'#1077#1076
+        DataBinding.FieldName = 'Amount_3'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1096#1090#1072#1090#1085#1099#1093' '#1077#1076#1080#1085#1080#1094
+        MinWidth = 15
+        Options.Editing = False
+        Width = 58
+      end
+      object Amount_4_ch: TcxGridDBColumn
+        Caption = '4.'#1041#1051
+        DataBinding.FieldName = 'Amount_4'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1041#1086#1083#1100#1085#1080#1095#1085#1099#1077
+        MinWidth = 15
+        Options.Editing = False
+        Width = 64
+      end
+      object Amount_5_ch: TcxGridDBColumn
+        Caption = '5.'#1086#1090#1087'.'
+        DataBinding.FieldName = 'Amount_5'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1086#1090#1087#1091#1089#1082
+        MinWidth = 15
+        Options.Editing = False
+        Width = 64
+      end
+      object Amount_6_ch: TcxGridDBColumn
+        Caption = '6.'#1087#1088#1086#1075'.'
+        DataBinding.FieldName = 'Amount_6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1087#1088#1086#1075#1091#1083#1086#1074
+        MinWidth = 15
+        Options.Editing = False
+        Width = 64
+      end
       object ShortName_1: TcxGridDBColumn
         Caption = '1'
         DataBinding.FieldName = 'ShortName_1'
@@ -1103,17 +1186,18 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
   end
   object cxSplitter1: TcxSplitter
     Left = 0
-    Top = 273
+    Top = 305
     Width = 971
     Height = 8
     AlignSplitter = salTop
-    Control = cxGrid2
+    Control = cxGrid1
+    ExplicitTop = 257
   end
   object cxGrid3: TcxGrid
     Left = 0
-    Top = 371
+    Top = 384
     Width = 971
-    Height = 137
+    Height = 124
     Align = alBottom
     TabOrder = 8
     LookAndFeel.NativeStyle = False
@@ -1443,12 +1527,13 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
   end
   object cxSplitter2: TcxSplitter
     Left = 0
-    Top = 363
+    Top = 376
     Width = 971
     Height = 8
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = cxGrid3
+    ExplicitTop = 363
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -3327,13 +3412,17 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
   object MasterDS: TDataSource
     DataSet = MasterCDS
     Left = 94
-    Top = 127
+    Top = 279
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
+    IndexFieldNames = 'KeyId'
+    MasterFields = 'KeyId'
+    MasterSource = DayDS
+    PacketRecords = 0
     Params = <>
-    Left = 56
-    Top = 159
+    Left = 48
+    Top = 287
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -3989,8 +4078,8 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 400
-    Top = 296
+    Left = 392
+    Top = 264
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMI_SheetWorkTime_SetErased'
@@ -4323,18 +4412,14 @@ object SheetWorkTime_lineForm: TSheetWorkTime_lineForm
   end
   object DayDS: TDataSource
     DataSet = DayCDS
-    Left = 48
-    Top = 288
+    Left = 40
+    Top = 144
   end
   object DayCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'KeyId'
-    MasterFields = 'KeyId'
-    MasterSource = MasterDS
-    PacketRecords = 0
     Params = <>
-    Left = 104
-    Top = 280
+    Left = 72
+    Top = 120
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
