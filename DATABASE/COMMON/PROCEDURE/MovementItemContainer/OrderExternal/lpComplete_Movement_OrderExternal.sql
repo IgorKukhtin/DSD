@@ -75,6 +75,7 @@ BEGIN
             
           , CASE -- временно
                  WHEN Object_Route.ValueData ILIKE 'Самов%'
+                   OR MovementString_Comment.ValueData ILIKE 'Самов%'
                       THEN TRUE
                  ELSE FALSE
             END AS IsSamoV
@@ -87,8 +88,11 @@ BEGIN
           , CASE WHEN COALESCE (Object_Route.ValueData, '')    ILIKE '%самовывоз%'
                    OR COALESCE (Object_Contract.ValueData, '') ILIKE '%обмен%'
                    OR COALESCE (ObjectBoolean_isOrderMin.ValueData, FALSE) = TRUE
-                   OR COALESCE (vbCriticalWeight, 0) = 0
-                   OR COALESCE (ObjectFloat_SummOrderMin.ValueData, 0) = 0
+                   --OR COALESCE (vbCriticalWeight, 0) = 0
+                   --OR COALESCE (ObjectFloat_SummOrderMin.ValueData, 0) = 0
+                   --
+                   OR MovementString_Comment.ValueData ILIKE 'Самов%'
+
                       THEN TRUE
                  ELSE FALSE
             END AS isLessWeigth
@@ -113,6 +117,9 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                   ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+          LEFT JOIN MovementString AS MovementString_Comment
+                                   ON MovementString_Comment.MovementId = Movement.Id
+                                  AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -543,6 +550,7 @@ order by Movement.OperDate*/
 
      -- проверка - если не разрешен Минимальный заказ с суммой <
      IF vbSummOrderMin > 0 AND vbSummOrderMin > vbOperSumm_Partner
+        AND vbIsLessWeigth = FALSE
      THEN
          outMessageText:= 'Сообщение.Разрешены заявки с суммой >= ' || zfConvert_FloatToString (vbSummOrderMin) || ' грн.'
           --|| CHR(13) || 'Проведение заявки с весом = ' || zfConvert_FloatToString (COALESCE ((SELECT SUM (_tmpItem.OperCount_Weight) FROM _tmpItem), 0))  || ' кг. невозможно.'

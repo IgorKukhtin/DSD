@@ -280,6 +280,9 @@ BEGIN
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
          OR vbAccessKeyAll = TRUE
          OR Object_Personal_View.BranchId = vbObjectId_Constraint
+         -- если филиал Киев + еще  филиал Львов
+         OR (Object_Personal_View.BranchId = 3080683 AND vbObjectId_Constraint = 8379)
+         --
          OR Object_Personal_View.UnitId     = 8429  -- Отдел логистики
          OR Object_Personal_View.PositionId = 81178 -- экспедитор
          OR Object_Personal_View.PositionId = 8466  -- водитель
@@ -289,6 +292,9 @@ BEGIN
        AND (View_RoleAccessKeyGuide.UnitId_PersonalService > 0
             OR vbIsAllUnit = TRUE
             OR Object_Personal_View.BranchId = vbObjectId_Constraint
+         -- если филиал Киев + еще  филиал Львов
+         OR (Object_Personal_View.BranchId = 3080683 AND vbObjectId_Constraint = 8379)
+         --
             OR Object_Personal_View.PositionId = 12436 -- бухгалтер
             OR Object_Personal_View.UnitId     = 8386  -- Бухгалтерия
             OR Object_Personal_View.UnitId     = 8408  -- Отдел коммерции ф.Днепр

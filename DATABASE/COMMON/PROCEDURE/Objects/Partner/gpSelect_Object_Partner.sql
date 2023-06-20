@@ -463,7 +463,13 @@ BEGIN
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-”слуги
                                                                 )
+           -- филиал
            OR Object_PersonalTrade.BranchId = vbBranchId_Constraint
+           -- если филиал Ћьвов + еще  филиал  иев
+           -- OR (vbBranchId_Constraint = 3080683 AND Object_PersonalTrade.BranchId = 8379)
+           -- если филиал  иев + еще  филиал Ћьвов
+           OR (vbBranchId_Constraint = 8379 AND Object_PersonalTrade.BranchId = 3080683)
+           --
            OR ObjectLink_Partner_PersonalTrade.ChildObjectId IS NULL
            OR ObjectBoolean_isBranchAll.ValueData = TRUE
            OR vbIsConstraint = FALSE

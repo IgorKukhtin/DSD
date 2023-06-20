@@ -430,7 +430,13 @@ end if;
       AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                , 8359 -- 04-”слуги
                                                                 )
+           -- филиал
            OR View_PersonalTrade.BranchId = vbObjectId_Branch_Constraint
+           -- если филиал Ћьвов + еще  филиал  иев
+           -- OR (vbObjectId_Branch_Constraint = 3080683 AND View_PersonalTrade.BranchId = 8379)
+           -- если филиал  иев + еще  филиал Ћьвов
+           OR (vbObjectId_Branch_Constraint = 8379 AND View_PersonalTrade.BranchId = 3080683)
+           --
            OR tmpMovement.PartnerId > 0
            OR vbIsConstraint = FALSE
            OR ObjectLink_Partner_PersonalTrade.ChildObjectId IS NULL
