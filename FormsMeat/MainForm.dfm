@@ -8417,6 +8417,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actTransportGoods_EDIN: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      MoveParams = <>
+      Caption = #1058#1086#1074#1072#1088#1086'-'#1090#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1088#1072#1073#1086#1090#1072' '#1089'  e-'#1058#1058#1053
+      Hint = #1058#1086#1074#1072#1088#1086'-'#1090#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1088#1072#1073#1086#1090#1072' '#1089'  e-'#1058#1058#1053
+      FormName = 'TTransportGoods_EDINJournalForm'
+      FormNameParam.Value = 'TTransportGoods_EDINJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
     object actLoadStatusFromMedoc: TdsdOpenForm
       Category = #1047#1072#1075#1088#1091#1079#1082#1080
       MoveParams = <>
@@ -10303,6 +10315,9 @@ inherited MainForm: TMainForm
       end
       object miTransportGoods: TMenuItem
         Action = actTransportGoods
+      end
+      object miTransportGoods_EDIN: TMenuItem
+        Action = actTransportGoods_EDIN
       end
       object N19: TMenuItem
         Caption = '-'

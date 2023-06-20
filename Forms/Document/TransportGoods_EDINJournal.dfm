@@ -1,34 +1,34 @@
-inherited TransportGoods_EDINForm: TTransportGoods_EDINForm
+inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
   Caption = 
     #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1058#1086#1074#1072#1088#1085#1086'-'#1090#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1088#1072#1073#1086#1090#1072' '#1089'  e-'#1058#1058 +
     #1053'>'
-  ClientHeight = 537
+  ClientHeight = 531
   ClientWidth = 972
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 990
-  ExplicitHeight = 584
+  ExplicitHeight = 578
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 61
     Width = 972
-    Height = 476
+    Height = 470
     TabOrder = 3
     ExplicitTop = 61
     ExplicitWidth = 972
-    ExplicitHeight = 476
-    ClientRectBottom = 476
+    ExplicitHeight = 470
+    ClientRectBottom = 470
     ClientRectRight = 972
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 972
-      ExplicitHeight = 476
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
         Width = 972
-        Height = 476
+        Height = 470
         ExplicitWidth = 972
-        ExplicitHeight = 476
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -114,7 +114,7 @@ inherited TransportGoods_EDINForm: TTransportGoods_EDINForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
-          OptionsView.HeaderHeight = 40
+          OptionsView.HeaderHeight = 50
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -440,6 +440,78 @@ inherited TransportGoods_EDINForm: TTransportGoods_EDINForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1080#1081#1085#1103#1074' ('#1074#1110#1076#1087#1086#1074#1110#1076#1072#1083#1100#1085#1072' '#1086#1089#1086#1073#1072' '#1074#1072#1085#1090#1072#1078#1086#1086#1076#1077#1088#1078#1091#1074#1072#1095#1072') - '#1087#1091#1089#1090#1086
+            Options.Editing = False
+            Width = 80
+          end
+          object isSend_eTTN: TcxGridDBColumn
+            Caption = 'e-'#1058#1058#1053' '#1086#1090#1087#1088#1072#1074#1083'.'
+            DataBinding.FieldName = 'isSend_eTTN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object Uuid: TcxGridDBColumn
+            Caption = 'Uuid e-'#1058#1058#1053
+            DataBinding.FieldName = 'Uuid'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object GLN_car: TcxGridDBColumn
+            Caption = 'GLN '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
+            DataBinding.FieldName = 'GLN_car'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object GLN_Driver: TcxGridDBColumn
+            Caption = 'GLN '#1074#1086#1076#1080#1090#1077#1083#1103
+            DataBinding.FieldName = 'GLN_Driver'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object GLN_from: TcxGridDBColumn
+            Caption = 'GLN '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+            DataBinding.FieldName = 'GLN_from'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object GLN_Unloading: TcxGridDBColumn
+            Caption = 'GLN '#1084#1077#1089#1090#1072' '#1087#1086#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'GLN_Unloading'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object GLN_to: TcxGridDBColumn
+            Caption = 'GLN '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'GLN_to'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object KATOTTG_Unit: TcxGridDBColumn
+            Caption = #1050#1040#1058#1054#1058#1058#1043' '#1084#1077#1089#1090#1072' '#1087#1086#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'KATOTTG_Unit'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object KATOTTG_Unloading: TcxGridDBColumn
+            Caption = #1050#1040#1058#1054#1058#1058#1043' '#1084#1077#1089#1090#1072' '#1074#1099#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'KATOTTG_Unloading'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
           end
@@ -823,7 +895,7 @@ inherited TransportGoods_EDINForm: TTransportGoods_EDINForm
           Action = actGet_DefaultEDIN
         end
         item
-          Action = actExecSelect_eTTN_Send
+          Action = actExecSelect_eTTN_Sign
         end
         item
           Action = actSignConsignorETTN
@@ -872,7 +944,7 @@ inherited TransportGoods_EDINForm: TTransportGoods_EDINForm
           Action = actGet_DefaultEDIN
         end
         item
-          Action = actExecSelect_eTTN_Send
+          Action = actExecSelect_eTTN_Sign
         end
         item
           Action = actSignCarrierETTN
@@ -926,29 +998,40 @@ inherited TransportGoods_EDINForm: TTransportGoods_EDINForm
         item
           Name = 'Id'
           Value = '0'
-          Component = FormParams
-          ComponentItem = 'MovementId_TransportGoods'
+          Component = MasterCDS
+          ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'MovementId_Sale'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Sale'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'OperDate_TransportGoods'
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actExecSelect_eTTN_Sign: TdsdExecStoredProc
+      Category = 'Send_ETTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect_eTTN_Sing
+      StoredProcList = <
+        item
+          StoredProc = spSelect_eTTN_Sing
+        end>
+      Caption = 'actExecSelect_eTTN_Sign'
     end
   end
   inherited MasterDS: TDataSource
@@ -959,7 +1042,7 @@ inherited TransportGoods_EDINForm: TTransportGoods_EDINForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_TransportGoods'
+    StoredProcName = 'gpSelect_Movement_TransportGoods_EDIN'
     Params = <
       item
         Name = 'instartdate'
@@ -1402,7 +1485,7 @@ inherited TransportGoods_EDINForm: TTransportGoods_EDINForm
     Top = 352
   end
   object spSelect_eTTN_Send: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_eTTN_Send'
+    StoredProcName = 'gpSelect_Movement_TransportGoods_EDIN_Send'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1416,13 +1499,33 @@ inherited TransportGoods_EDINForm: TTransportGoods_EDINForm
       item
         Name = 'inMovementId'
         Value = '0'
-        Component = FormParams
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 651
+    Top = 368
+  end
+  object spSelect_eTTN_Sing: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TransportGoods_EDIN_Sign'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 811
     Top = 368
   end
 end

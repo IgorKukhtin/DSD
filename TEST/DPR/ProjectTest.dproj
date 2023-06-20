@@ -5015,7 +5015,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\TransportGoods_EDINJournal.pas">
-				<Form>TransportGoods_EDINForm</Form>
+				<Form>TransportGoods_EDINJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

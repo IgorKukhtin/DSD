@@ -510,7 +510,7 @@ BEGIN
                   ELSE COALESCE(ObjectString_GLNCode_To.ValueData, ObjectString_Juridical_GLNCode_To.ValueData)  END)        :: TVarChar AS GLN_car
            
            , tmpTransportGoods.InvNumber
-           , COALESCE(MovementString_Uuid.ValueData, '')::TVarChar AS TransportGoods_UuId
+           , COALESCE(MovementString_Uuid.ValueData, '')::TVarChar AS UuId
              -- параметр для Склад ГП ф.Киев + Львов - !!!временно!!!
            , CASE WHEN MovementLinkObject_From.ObjectId IN (8411, 3080691) THEN COALESCE (MovementDate_OperDatePartner.ValueData, tmpTransportGoods.OperDate) ELSE tmpTransportGoods.OperDate END :: TDateTime AS OperDate
            , tmpTransportGoods.InvNumberMark

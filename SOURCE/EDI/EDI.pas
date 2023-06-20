@@ -5551,6 +5551,7 @@ begin
              [HeaderDataSet.FieldByName('GLN_car').asString,
               HeaderDataSet.FieldByName('GLN_from').asString,
               HeaderDataSet.FieldByName('GLN_to').asString,
+              HeaderDataSet.FieldByName('GLN_Unloading').asString,
               HeaderDataSet.FieldByName('GLN_Driver').asString]));
 
     if (HeaderDataSet.FieldByName('KATOTTG_Unit').asString = '') or
@@ -6185,21 +6186,34 @@ end;
 
 
 function TdsdEDINAction.DoSignDcuETTN: Boolean;
+  var GLN_Sign : String;
 begin
   Result := False;
+
+  if (HeaderDataSet.FieldByName('UuId').asString = '') then
+     raise Exception.Create('ТТН не отправлена. Подпись невозиожна.');
+
+    case FEDINActions of
+      edinSignConsignor : GLN_Sign := HeaderDataSet.FieldByName('GLN_from').asString;
+      edinSignCarrier  : GLN_Sign := HeaderDataSet.FieldByName('GLN_car').asString;
+    else raise Exception.Create('Не описана роль пдписи eTTN.');
+    end;
+
+  if GLN_Sign = '' then raise Exception.Create('Не заполнено GLN подписанта.');
+
   if not GetToken then Exit;
 
   try
 
     // Получим файл eTTN
-    Result := GetDocETTN(HeaderDataSet.FieldByName('GLN_from').asString, HeaderDataSet.FieldByName('TransportGoods_UuId').AsString);
+    Result := GetDocETTN(GLN_Sign, HeaderDataSet.FieldByName('UuId').AsString);
     //Result := GetDocETTN('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
 
     // Подпись файла
-    Result := SignData(HeaderDataSet.FieldByName('UserSign').asString);
+    if Result then Result := SignData(HeaderDataSet.FieldByName('UserSign').asString);
 
     // Отправка подписанного файла eTTN
-    Result := SignDcuETTN(HeaderDataSet.FieldByName('GLN_from').asString, HeaderDataSet.FieldByName('TransportGoods_UuId').AsString);
+    if Result then Result := SignDcuETTN(GLN_Sign, HeaderDataSet.FieldByName('UuId').AsString);
     //Result := SignDcuETTN('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
   finally
     // удалим временные файлы

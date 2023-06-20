@@ -1929,6 +1929,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportGoodsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportGoodsJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportGoods_EDINJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTransportGoods_EDINJournalForm');
 end;
 
 procedure TLoadFormTest.LoadTransferDebtOutFormTest;

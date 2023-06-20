@@ -1,4 +1,4 @@
-unit TransportGoods_EDIN;
+unit TransportGoods_EDINJournal;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, EDI;
 
 type
-  TTransportGoods_EDINForm = class(TAncestorJournalForm)
+  TTransportGoods_EDINJournalForm = class(TAncestorJournalForm)
     TotalCountSh: TcxGridDBColumn;
     bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
@@ -81,6 +81,17 @@ type
     bsSignETTN: TdxBarSubItem;
     bbSignConsignorETTN: TdxBarButton;
     bbSignCarrierETTN: TdxBarButton;
+    isSend_eTTN: TcxGridDBColumn;
+    Uuid: TcxGridDBColumn;
+    GLN_car: TcxGridDBColumn;
+    GLN_from: TcxGridDBColumn;
+    GLN_Unloading: TcxGridDBColumn;
+    GLN_to: TcxGridDBColumn;
+    GLN_Driver: TcxGridDBColumn;
+    KATOTTG_Unloading: TcxGridDBColumn;
+    KATOTTG_Unit: TcxGridDBColumn;
+    spSelect_eTTN_Sing: TdsdStoredProc;
+    actExecSelect_eTTN_Sign: TdsdExecStoredProc;
   private
     { Private declarations }
   public
@@ -91,5 +102,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TTransportGoods_EDINForm);
+  RegisterClass(TTransportGoods_EDINJournalForm);
 end.
