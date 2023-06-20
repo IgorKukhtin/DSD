@@ -223,7 +223,7 @@ type
   end;
 
 
-  TEDINActionsType = (edinSendETTN, edinGetDocETTN, edinSignDcuETTNConsignor);
+  TEDINActionsType = (edinSendETTN, edinSignConsignor, edinSignCarrier);
 
   TdsdEDINAction = class(TdsdCustomAction)
   private
@@ -244,14 +244,13 @@ type
     function GetToken: Boolean;
     function SendETTN(AGLN, AUuId, AXML : String): Boolean;
     function GetDocETTN(AGLN, AUuId : String): Boolean;
-    function SignDcuETTNConsignor(AGLN, AUuId : String): Boolean;
+    function SignDcuETTN(AGLN, AUuId : String): Boolean;
 
     procedure UAECMREDI(var AXML: String);
     function SignData(UserSign : String): Boolean;
 
     function DoSendETTN: Boolean;
-    function DoGetDocETTN: Boolean;
-    function DoSignDcuETTNConsignor: Boolean;
+    function DoSignDcuETTN: Boolean;
     function LocalExecute: Boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
@@ -295,11 +294,11 @@ implementation
 uses Windows, VCL.ActnList, DesadvXML, SysUtils, Dialogs, SimpleGauge,
   Variants, UtilConvert, ComObj, DeclarXML, InvoiceXML, DateUtils,
   FormStorage, UnilWin, OrdrspXML, StrUtils, StatusXML, RecadvXML,
-  DesadvFozzXML, OrderSpFozzXML, IftminFozzXML,
+  DesadvFozzXML, OrderSpFozzXML, IftminFozzXML, Registry,
   DOCUMENTINVOICE_TN_XML, DOCUMENTINVOICE_PRN_XML, UAECMRXML,
   Vcl.Forms, System.IOUtils, System.RegularExpressions, ZLib, Math,
   IdHTTP, IdSSLOpenSSL, IdURI, IdCTypes, IdSSLOpenSSLHeaders,
-  IdMultipartFormData, Xml.XMLDoc, Soap.EncdDecd;
+  IdMultipartFormData, Xml.XMLDoc, Soap.EncdDecd, EUSignCP, EUSignCPOwnUI;
 
 procedure Register;
 begin
@@ -4971,7 +4970,9 @@ begin
   with IOHandler as TIdSSLIOHandlerSocketOpenSSL do begin
     OnStatusInfoEx := Self.OnStatusInfoEx;
     SSLOptions.Method := sslvSSLv23;
+    {$if CompilerVersion < 30}
     SSLOptions.SSLVersions := [sslvSSLv2, sslvSSLv23, sslvSSLv3, sslvTLSv1];
+    {$ifend}
   end;
 end;
 
@@ -4984,7 +4985,7 @@ end;
 procedure TCustomIdHTTP.OnStatusInfoEx(ASender: TObject; const AsslSocket: PSSL; const AWhere, Aret: TIdC_INT;
   const AType, AMsg: String);
 begin
-  SSL_set_tlsext_host_name(AsslSocket, Request.Host);
+  SSL_set_tlsext_host_name(AsslSocket, AnsiString(Request.Host));
 end;
 
   {TdsdVchasnoEDIAction}
@@ -5413,6 +5414,7 @@ end;
 function TdsdVchasnoEDIAction.OrdrspSave : Boolean;
   var Stream: TMemoryStream;
 begin
+  Result := False;
   if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
   begin
 
@@ -5435,6 +5437,7 @@ end;
 function TdsdVchasnoEDIAction.DESADVSave : Boolean;
   var Stream: TMemoryStream;
 begin
+  Result := False;
   if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
   begin
 
@@ -5457,6 +5460,7 @@ end;
 function TdsdVchasnoEDIAction.ComDocSave : Boolean;
   var Stream: TMemoryStream;
 begin
+  Result := False;
   if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
   begin
 
@@ -5477,9 +5481,7 @@ begin
 end;
 
 function TdsdVchasnoEDIAction.LocalExecute: Boolean;
-  var DataSetCDS: TClientDataSet;
 begin
-  Result := False;
 
   case FEDIDocType of
     ediOrder : Result := OrderLoad;
@@ -5534,22 +5536,28 @@ end;
 
 procedure TdsdEDINAction.UAECMREDI(var AXML: String);
 var UAECMR: IXMLUAECMRType;
-    i: integer;
     cDS : Char;
 begin
+  cDS := FormatSettings.DecimalSeparator;
   try
-    cDS := FormatSettings.DecimalSeparator;
     FormatSettings.DecimalSeparator := '.';
 
     if (HeaderDataSet.FieldByName('GLN_car').asString = '') or
        (HeaderDataSet.FieldByName('GLN_from').asString = '') or
        (HeaderDataSet.FieldByName('GLN_to').asString = '') or
+       (HeaderDataSet.FieldByName('GLN_Unloading').asString = '') or
        (HeaderDataSet.FieldByName('GLN_Driver').asString = '') then
-       raise Exception.Create(Format('Не заполнено GLN для Перевізник <%s>, Замовник <%s>, Вантажоодержувач <%s>, Водій <%s>',
+       raise Exception.Create(Format('Не заполнено GLN для Перевізник <%s>, Замовник <%s>, Вантажоодержувач <%s>, Пункт розвантаження <%s>, Водій <%s>',
              [HeaderDataSet.FieldByName('GLN_car').asString,
               HeaderDataSet.FieldByName('GLN_from').asString,
               HeaderDataSet.FieldByName('GLN_to').asString,
               HeaderDataSet.FieldByName('GLN_Driver').asString]));
+
+    if (HeaderDataSet.FieldByName('KATOTTG_Unit').asString = '') or
+       (HeaderDataSet.FieldByName('KATOTTG_Unloading').asString = '') then
+       raise Exception.Create(Format('Не заполнено КАТОТТГ для Пункт навантаження <%s>, Пункт розвантаження <%s>',
+             [HeaderDataSet.FieldByName('KATOTTG_Unit').asString,
+              HeaderDataSet.FieldByName('KATOTTG_Unloading').asString]));
 
     // Создать XML
     UAECMR := UAECMRXML.NewUAECMR;
@@ -5817,30 +5825,58 @@ end;
 
 function TdsdEDINAction.SignData(UserSign : String) : boolean;
 var
-  privateKey: string;
-  FileName, Error: string;
-  ComSigner: OleVariant;
-
+  FileName: AnsiString;
+  apath: String;
+  CPInterface: PEUSignCP;
+  CertOwnerInfo : TEUCertOwnerInfo;
+  nError : integer;
 begin
-  ComSigner := CreateOleObject('EUTaxServiceFile.Library.1');
 
+  Result := False;
+
+  apath := 'c:\Program Files (x86)\Institute of Informational Technologies\Certificate Authority-1.3\End User\';
+  if not FileExists(apath + String(EUDLLName)) then
+  begin
+    apath := 'c:\Program Files\Institute of Informational Technologies\Certificate Authority-1.3\End User\';
+    if not FileExists(apath + String(EUDLLName)) then
+    begin
+      raise Exception.Create('Ошибка Не найден файл библиотеки подписи: ' + EUDLLName);
+    end;
+  end;
+
+  if not EULoadDLL(apath) then
+  begin
+    raise Exception.Create('Ошибка Не загружена библиотеки подписи: ' + EUDLLName);
+  end;
+  CPInterface := EUGetInterface();
+  if CPInterface = nil then
+  begin
+    EUUnloadDLL();
+    raise Exception.Create('Ошибка Не загружена библиотеки подписи: ' + EUDLLName);
+  end;
+  CPInterface.SetUIMode(false);
+  EUInitializeOwnUI(CPInterface, true);
   try
 
-    ComSigner.Initialize(caType);
+    nError := CPInterface.Initialize();
+    if nError <> EU_ERROR_NONE then
+    begin
+      raise Exception.Create('Ошибка Инициализации библиотеки подписи: ' + EUDLLName);
+    end;
+    if ShiftDown then
+    begin
+       CPInterface.SetUIMode(true);
+       CPInterface.SetSettings;
+    end;
 
-   ComSigner.SetUIMode(true);
-   ComSigner.SetSettings;
-
-    ComSigner.SetUIMode(false);
+    CPInterface.SetUIMode(false);
 
     try
-      ComSigner.ResetPrivateKey(euKeyTypeAccountant);
+      CPInterface.ResetPrivateKey;
     except
       on E: Exception do
       begin
-        raise Exception.Create
-          ('Ошибка библиотеки Exite. EUTaxService.ResetPrivateKey(euKeyTypeAccountant)'#10#13 +
-          E.Message);
+        raise Exception.Create('Ошибка В библиотеке подписи: ' + E.Message);
       end;
     end;
 
@@ -5848,27 +5884,46 @@ begin
       // 1.Установка ключей
       if UserSign <> ''
       then if ExtractFilePath(UserSign) <> ''
-           then FileName := UserSign
-           else FileName := ExtractFilePath(ParamStr(0)) + UserSign
-      //else FileName := ExtractFilePath(ParamStr(0)) + 'Ключ - Неграш О.В..ZS2';
-      else FileName := ExtractFilePath(ParamStr(0)) + '24447183_2992217209_SU211210105333.ZS2';
+           then FileName := AnsiString(UserSign)
+           else FileName := AnsiString(ExtractFilePath(ParamStr(0)) + UserSign)
+      else FileName := AnsiString(ExtractFilePath(ParamStr(0)) + '24447183_2992217209_SU211210105333.ZS2');
       // проверка
-      if not FileExists(FileName) then raise Exception.Create('Файл не найден : <'+FileName+'>');
+      if not FileExists(String(FileName)) then raise Exception.Create('Файл не найден : <'+String(FileName)+'>');
 
-      ComSigner.SetPrivateKeyFile (euKeyTypeAccountant, FileName, '24447183', false); // бухгалтер
-      Error := ComSigner.GetLastErrorDescription;
-      if Error <> okError then
-         raise Exception.Create(Error);
+      nError := CPInterface.ReadPrivateKeyFile (PAnsiChar(FileName), PAnsiChar('24447183'), @CertOwnerInfo); // бухгалтер
+      if nError <> EU_ERROR_NONE then
+      begin
+        raise Exception.Create('Ошибка В библиотеке при загрузке электронного ключа: ' + CPInterface.GetErrorDesc(nError));
+      end;
     except
       on E: Exception do
       begin
-        raise Exception.Create('Ошибка библиотеки Exite.ComSigner.SetPrivateKeyFile.euKeyTypeAccountant'
-          + FileName + #10#13 + E.Message);
+        raise Exception.Create('Ошибка В библиотеке при загрузке электронного ключа:' + E.Message);
       end;
     end;
 
+    try
+      // 2.Неарспедственно подпись
+      FileName := AnsiString(ExtractFilePath(ParamStr(0)) + FResultParam.Value);
+      // проверка
+      if not FileExists(String(FileName)) then raise Exception.Create('Файл tTTN не найден : <'+String(FileName)+'>');
+
+      nError := CPInterface.SignFile(PAnsiChar(FileName), PAnsiChar(FileName + '.p7s'), True);
+      if nError <> EU_ERROR_NONE then
+      begin
+        raise Exception.Create('Ошибка В библиотеке при надожении подписи: ' + CPInterface.GetErrorDesc(nError));
+      end;
+    except
+      on E: Exception do
+      begin
+        raise Exception.Create('Ошибка В библиотеке при надожении подписи:' + E.Message);
+      end;
+    end;
+
+    Result := True;
   finally
-    if not VarIsNull(ComSigner) then ComSigner.Finalize;
+    CPInterface.Finalize;
+    EUUnloadDLL();
   end;
 end;
 
@@ -5995,7 +6050,6 @@ function TdsdEDINAction.GetDocETTN(AGLN, AUuId : String): Boolean;
   var IdHTTP: TCustomIdHTTP;
       Params: String;
       Steam: TMemoryStream;
-      jsonObj: TJSONObject;
 begin
   inherited;
   Result := False;
@@ -6042,7 +6096,7 @@ begin
   end;
 end;
 
-function TdsdEDINAction.SignDcuETTNConsignor(AGLN, AUuId : String): Boolean;
+function TdsdEDINAction.SignDcuETTN(AGLN, AUuId : String): Boolean;
   var IdHTTP: TCustomIdHTTP;
       S, Params: String;
       fileStream: TFileStream;
@@ -6073,17 +6127,22 @@ begin
     IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
     IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
 
-    Params := '?gln=' + AGLN + '&role_code=CZ&doc_uuid=' + AUuId;
+    Params := '?gln=' + AGLN;
 
-    // Steam.DataString
-    // Steam.SaveToFile('c:\DSD\BIN\111_ettn.xml');
-    fileStream := TFileStream.Create('c:\Work\Temp\Диалог\ttn_ecmr_32d2bc90-577e-4e4c-af17-722b49cf1c86.ecmr.p7s', fmOpenRead);
+    case FEDINActions of
+      edinSignConsignor : Params := Params + '&role_code=CZ';
+      edinSignCarrier  : Params := Params + '&role_code=CA';
+    else raise Exception.Create('Не описана роль пдписи eTTN.');
+    end;
+
+    Params := Params + '&doc_uuid=' + AUuId;
+
+    fileStream := TFileStream.Create(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s', fmOpenRead);
     base64Stream := TStringStream.Create('', TEncoding.UTF8);
     try
       try
         EncodeStream(fileStream, base64Stream);
         Stream := TStringStream.Create('["' + base64Stream.DataString + '"]', TEncoding.UTF8);
-        Stream.SaveToFile(ExtractFilePath(ParamStr(0)) + '1.txt');
         try
           S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + '/api/eds/doc/ettn/sign' + Params), Stream);
         finally
@@ -6124,42 +6183,38 @@ begin
 
 end;
 
-function TdsdEDINAction.DoGetDocETTN: Boolean;
-  var cXML : String;
+
+function TdsdEDINAction.DoSignDcuETTN: Boolean;
 begin
   Result := False;
   if not GetToken then Exit;
 
-  // Получим файл eTTN
-  //Result := GetDocETTN(HeaderDataSet.FieldByName('GLN_from').asString, HeaderDataSet.FieldByName('TransportGoods_UuId').AsString);
- // Result := GetDocETTN('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
-  //Result := SignData('');
+  try
 
-  Result := SignDcuETTNConsignor('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
+    // Получим файл eTTN
+    Result := GetDocETTN(HeaderDataSet.FieldByName('GLN_from').asString, HeaderDataSet.FieldByName('TransportGoods_UuId').AsString);
+    //Result := GetDocETTN('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
 
-end;
+    // Подпись файла
+    Result := SignData(HeaderDataSet.FieldByName('UserSign').asString);
 
-function TdsdEDINAction.DoSignDcuETTNConsignor: Boolean;
-  var cXML : String;
-begin
-  Result := False;
-  if not GetToken then Exit;
-
-  // Получим файл eTTN
-  //Result := GetDocETTN(HeaderDataSet.FieldByName('GLN_from').asString, HeaderDataSet.FieldByName('TransportGoods_UuId').AsString);
-  Result := SignDcuETTNConsignor('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
+    // Отправка подписанного файла eTTN
+    Result := SignDcuETTN(HeaderDataSet.FieldByName('GLN_from').asString, HeaderDataSet.FieldByName('TransportGoods_UuId').AsString);
+    //Result := SignDcuETTN('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
+  finally
+    // удалим временные файлы
+    if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value) then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value);
+    if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s') then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value + '.p7s');
+  end;
 
 end;
 
 function TdsdEDINAction.LocalExecute: Boolean;
-  var DataSetCDS: TClientDataSet;
 begin
-  Result := False;
 
   case FEDINActions of
     edinSendETTN : Result := DoSendETTN;
-    edinGetDocETTN : Result := DoGetDocETTN;
-    //edinSignDcuETTNConsignor : Result := DoSignDcuETTNConsignor;
+    edinSignConsignor, edinSignCarrier  : Result := DoSignDcuETTN;
 
   else raise Exception.Create('Не описано метод обработки типа документов.');
   end;

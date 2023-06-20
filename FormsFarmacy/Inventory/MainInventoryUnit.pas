@@ -538,6 +538,7 @@ begin
   finally
     spSelectInfo.Execute;
     actSetFocusedInfoAmount.Execute;
+    actSetEditAmount.Execute;
   end;
 end;
 
@@ -633,6 +634,7 @@ begin
     edUnitNameInfo.Text := FormParams.ParamByName('UnitName').Value;
 
     spSelectInfo.Execute;
+    actSetEditAmount.Execute;
   finally
     actSetFocusedInfoAmount.Execute;
   end;

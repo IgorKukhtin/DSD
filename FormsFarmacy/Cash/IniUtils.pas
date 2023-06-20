@@ -42,6 +42,8 @@ function iniTaxGroup7:Integer;
 
 //возвраащет тип POS-терминала;
 function iniPosType(ACode : integer):String;
+//возвращает хост POS-терминала
+function iniPosHost(ACode : integer):String;
 //возвращает порт POS-терминала
 function iniPosPortNumber(ACode : integer):Integer;
 //возвращает скорость порта POS-терминала
@@ -411,6 +413,12 @@ End;
 function iniPosType(ACode : integer):String;
 begin
   Result := GetValue('TSoldWithCompMainForm','PosType' + IntToStr(ACode),'');
+end;
+
+//возвращает хост POS-терминала
+function iniPosHost(ACode : integer):String;
+begin
+  Result := GetValue('TSoldWithCompMainForm', 'PosHost' + IntToStr(ACode), 'http://localhost:3000');
 end;
 
 //возвращает порт POS-терминала

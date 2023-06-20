@@ -63,6 +63,16 @@ BEGIN
      END IF;
 
      CREATE TEMP TABLE tmpMov ON COMMIT DROP AS 
+     WITH tmpSpecial AS (SELECT DISTINCT MovementItemContainer.MovementId
+                         FROM MovementItemContainer
+                         WHERE  MovementItemContainer.OperDate >= date_trunc('MONTH', inOperDate) - INTERVAL '1 MONTH'
+                           AND MovementItemContainer.OperDate < date_trunc('MONTH', inOperDate) + INTERVAL '1 MONTH'
+                           AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                           AND MovementItemContainer.ObjectId_Analyzer IN (SELECT Object_Goods_Retail.ID
+                                                                           FROM Object_Goods_Retail
+                                                                           WHERE (COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
+                                                                              OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0))
+                         )     
      SELECT Movement.*
           , MovementLinkObject_Unit.ObjectId                                     AS UnitId
           , MovementFloat_TotalSumm.ValueData                                    AS TotalSumm
@@ -93,7 +103,8 @@ BEGIN
      WHERE Movement.DescId = zc_Movement_Check()
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.OperDate >= date_trunc('MONTH', inOperDate) - INTERVAL '1 MONTH'
-       AND Movement.OperDate < date_trunc('MONTH', inOperDate) + INTERVAL '1 MONTH';
+       AND Movement.OperDate < date_trunc('MONTH', inOperDate) + INTERVAL '1 MONTH'
+       AND Movement.Id NOT IN (SELECT tmpSpecial.MovementId FROM tmpSpecial);
         
      ANALYSE tmpMov;
      

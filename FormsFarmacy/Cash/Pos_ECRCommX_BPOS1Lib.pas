@@ -21,6 +21,7 @@ type
   protected
     function WaitPosResponsePrivat() : Integer;
     function Payment(ASumma : Currency) : Boolean;
+    function Refund(ASumma : Currency) : Boolean;
     procedure Cancel;
   public
     constructor Create(APOSTerminalCode : Integer);
@@ -108,6 +109,35 @@ begin
     if WaitPosResponsePrivat() = 0 then
     begin
       FPOS.Purchase( Summa, 0, 0 );
+      if WaitPosResponsePrivat() <> 0 then Exit;
+
+      FLastPosRRN := FPOS.RRN;
+
+      FPOS.Confirm;
+      if WaitPosResponsePrivat() = 0 then
+        Result := True;
+    end
+    else begin
+      FPOS.Cancel;
+      Result := False;
+    end;
+  finally
+   FPOS.CommClose;
+  end;
+end;
+
+function TPos_ECRCommX_BPOS1Lib.Refund(ASumma : Currency) : Boolean;
+var
+  Summa : Integer;
+begin
+  Result := False;
+  Summa := StrToInt(FloatToStr(ASumma * 100));
+  FPOS.SetErrorLang(2);                                                    // язык сообщений. 2-”кр
+  try
+    FPOS.CommOpen(iniPosPortNumber(FPOSTerminalCode), iniPosPortSpeed(FPOSTerminalCode));
+    if WaitPosResponsePrivat() = 0 then
+    begin
+      FPOS.Refund( Summa, 0, 0 );
       if WaitPosResponsePrivat() <> 0 then Exit;
 
       FLastPosRRN := FPOS.RRN;

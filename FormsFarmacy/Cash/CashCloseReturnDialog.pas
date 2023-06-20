@@ -336,7 +336,7 @@ begin
             exit;
           end;
 
-          if not PayPosTerminal(pPosTerm, SalerCash - SalerCashAdd) then
+          if not PayPosTerminal(pPosTerm, SalerCash - SalerCashAdd, True) then
             exit;
         finally
           if pPosTerm <> Nil then

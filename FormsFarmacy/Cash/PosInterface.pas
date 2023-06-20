@@ -12,6 +12,7 @@ type
       function GetLastPosError : string;
 
       function Payment(ASumma : Currency) : Boolean;
+      function Refund(ASumma : Currency) : Boolean;
       procedure Cancel;
       property OnMsgDescriptionProc: TMsgDescriptionProc read GetMsgDescriptionProc write SetMsgDescriptionProc;
       property LastPosError : String read GetLastPosError;

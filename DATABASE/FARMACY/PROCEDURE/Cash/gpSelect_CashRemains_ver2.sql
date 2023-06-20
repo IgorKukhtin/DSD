@@ -1081,7 +1081,20 @@ BEGIN
                  THEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
                              CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
-            ELSE
+                 ELSE
+            CASE WHEN CashSessionSnapShot.PartionDateKindId IN (zc_Enum_PartionDateKind_1(), zc_Enum_PartionDateKind_3(), zc_Enum_PartionDateKind_6())
+                  AND COALESCE(tmpMIPromoBonus.PromoBonus, 0) <> 0
+                  AND Object_Goods_Retail.IsTop = False 
+                  AND (COALESCE(tmpPriceChange.PriceChange, 0) = 0 AND
+                       COALESCE(tmpPriceChange.FixPercent, 0) = 0 AND
+                       COALESCE(tmpPriceChange.FixDiscount, 0) = 0 OR
+                       COALESCE(tmpPriceChange.Multiplicity, 0) > 1)
+                 THEN zfCalc_PriceCash(Round(CashSessionSnapShot.Price * 100.0 / (100.0 + tmpMIPromoBonus.MarginPercent) * 
+                                       (100.0 - tmpMIPromoBonus.PromoBonus + tmpMIPromoBonus.MarginPercent) / 100, 2), 
+                                       CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 
+                                            THEN FALSE ELSE TRUE END OR
+                                       COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
+                 ELSE
             CASE WHEN COALESCE(CashSessionSnapShot.PartionDateKindId, 0) <> 0 AND COALESCE(CashSessionSnapShot.PartionDateDiscount, 0) <> 0 THEN
                  CASE WHEN zfCalc_PriceCash(CashSessionSnapShot.Price, 
                          CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True THEN FALSE ELSE TRUE END OR
@@ -1111,7 +1124,7 @@ BEGIN
                          COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)
                  END
                  ELSE NULL
-            END END                                      :: TFloat AS PricePartionDate
+            END END END                                  :: TFloat AS PricePartionDate
           , CashSessionSnapShot.PartionDateDiscount                AS PartionDateDiscount
           , COALESCE(tmpNotSold.GoodsID, 0) <> 0                   AS NotSold
           , COALESCE(tmpIlliquidUnit.GoodsID, 0) <> 0              AS NotSold60
@@ -1163,7 +1176,7 @@ BEGIN
             AND Object_Goods_Retail.DiscontSiteEnd IS NOT NULL  
             AND Object_Goods_Retail.DiscontSiteStart <= CURRENT_DATE
             AND Object_Goods_Retail.DiscontSiteEnd >= CURRENT_DATE    AS isSpecial
-          , zfCalc_PriceCash(CASE WHEN COALESCE(NULLIF (CashSessionSnapShot.PartionDateKindId, 0), zc_Enum_PartionDateKind_Good()) = zc_Enum_PartionDateKind_Good()
+          , zfCalc_PriceCash(CASE WHEN COALESCE(tmpMIPromoBonus.PromoBonus, 0) <> 0
                                    AND Object_Goods_Retail.IsTop = False 
                                    AND (COALESCE(tmpPriceChange.PriceChange, 0) = 0 AND
                                         COALESCE(tmpPriceChange.FixPercent, 0) = 0 AND
@@ -1171,12 +1184,13 @@ BEGIN
                                         COALESCE(tmpPriceChange.Multiplicity, 0) > 1)
                                   THEN Round(CashSessionSnapShot.Price * 100.0 / (100.0 + tmpMIPromoBonus.MarginPercent) * 
                                        (100.0 - tmpMIPromoBonus.PromoBonus + tmpMIPromoBonus.MarginPercent) / 100, 2) END , 
-                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
+                             CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 
+                                  THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)  AS PromoBonusPrice
           , COALESCE (tmpAsinoPharmaSP.IsAsinoMain , FALSE)                       AS IsAsinoMain
           , COALESCE (tmpAsinoPharmaSP.IsAsinoPresent , FALSE)                    AS IsAsinoPresent
           , zfCalc_PriceCash(COALESCE(
-                             CASE WHEN COALESCE(NULLIF (CashSessionSnapShot.PartionDateKindId, 0), zc_Enum_PartionDateKind_Good()) = zc_Enum_PartionDateKind_Good()
+                             CASE WHEN COALESCE(tmpMIPromoBonus.PromoBonus, 0) <> 0
                                    AND Object_Goods_Retail.IsTop = False 
                                    AND (COALESCE(tmpPriceChange.PriceChange, 0) = 0 AND
                                         COALESCE(tmpPriceChange.FixPercent, 0) = 0 AND
@@ -1352,4 +1366,13 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 -- тест
 -- тест SELECT * FROM  gpDelete_CashSession ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3');
 --
-SELECT * FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3')
+SELECT GoodsCode 
+     , GoodsName
+     , PartionDateKindName
+     , Price
+     , PricePartionDate
+     , PromoBonusPrice
+     , PriceView
+FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3') --where COALESCE (PromoBonusPrice, 0) <> 0
+order by GoodsName
+       , PartionDateKindName
