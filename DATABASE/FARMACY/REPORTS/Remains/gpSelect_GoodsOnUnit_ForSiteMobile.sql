@@ -636,7 +636,8 @@ BEGIN
                                           PriceChange       TFloat,
                                           FixPrice          TFloat,
                                           FixPercent        TFloat,
-                                          FixDiscount       TFloat
+                                          FixDiscount       TFloat,
+                                          Multiplicity      TFloat
                                           ) ON COMMIT DROP;
     ELSE
         DELETE FROM Price_Unit_all;
@@ -807,6 +808,7 @@ BEGIN
                      , COALESCE (tmpPriceChangeUnit.PriceChange, tmpPriceChange.PriceChange, 0)   AS FixPrice
                      , COALESCE (tmpPriceChangeUnit.FixPercent, tmpPriceChange.FixPercent, 0)     AS FixPercent
                      , COALESCE (tmpPriceChangeUnit.FixDiscount, tmpPriceChange.FixDiscount, 0)   AS FixDiscount
+                     , COALESCE (tmpPriceChangeUnit.Multiplicity, tmpPriceChange.Multiplicity, 0) AS Multiplicity
 
 
                 FROM _tmpList
@@ -1187,6 +1189,17 @@ BEGIN
                                                CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                                                COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
                     ELSE
+               CASE WHEN COALESCE(tmpPromoBonus.BonusInetOrder, 0) <> 0
+                     AND Object_Goods_Retail.IsTop = False 
+                     AND (COALESCE(Price_Unit.PriceChange, 0) = 0 AND
+                          COALESCE(Price_Unit.FixPercent, 0) = 0 AND
+                          COALESCE(Price_Unit.FixDiscount, 0) = 0 OR
+                          COALESCE(Price_Unit.Multiplicity, 0) > 1)
+                    THEN zfCalc_PriceCash(Round(Price_Unit.Price * 100.0 / (100.0 + tmpPromoBonus.MarginPercent) * 
+                                          (100.0 - tmpPromoBonus.BonusInetOrder + tmpPromoBonus.MarginPercent) / 100, 2), 
+                                          CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                               COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
+                    ELSE
                     CASE WHEN COALESCE(ContainerCountPD_1.PartionDateKindId, 0) <> 0 AND COALESCE(ContainerCountPD_1.PartionDateDiscount, 0) <> 0 THEN
                          CASE WHEN zfCalc_PriceCash(COALESCE (tmpPrice_Site.Price, Price_Unit.Price), 
                                  CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
@@ -1226,7 +1239,7 @@ BEGIN
                                  COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
                          END
                          ELSE NULL 
-               END END                                      :: TFloat AS  Price_unit_1
+               END END END                                  :: TFloat AS  Price_unit_1
 
              , ContainerCountPD_3.PartionDateKindId    AS PartionDateKindId_3
              , ContainerCountPD_3.Remains              AS Remains_3
@@ -1241,6 +1254,17 @@ BEGIN
                                                THEN COALESCE (tmpPrice_Site.Price, Price_Unit.Price)
                                                ELSE Price_Unit.Price END,
                                                CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                               COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
+                    ELSE
+               CASE WHEN COALESCE(tmpPromoBonus.BonusInetOrder, 0) <> 0
+                     AND Object_Goods_Retail.IsTop = False 
+                     AND (COALESCE(Price_Unit.PriceChange, 0) = 0 AND
+                          COALESCE(Price_Unit.FixPercent, 0) = 0 AND
+                          COALESCE(Price_Unit.FixDiscount, 0) = 0 OR
+                          COALESCE(Price_Unit.Multiplicity, 0) > 1)
+                    THEN zfCalc_PriceCash(Round(Price_Unit.Price * 100.0 / (100.0 + tmpPromoBonus.MarginPercent) * 
+                                          (100.0 - tmpPromoBonus.BonusInetOrder + tmpPromoBonus.MarginPercent) / 100, 2), 
+                                          CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                                                COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
                     ELSE
                     CASE WHEN COALESCE(ContainerCountPD_3.PartionDateKindId, 0) <> 0 AND COALESCE(ContainerCountPD_3.PartionDateDiscount, 0) <> 0 THEN
@@ -1282,7 +1306,7 @@ BEGIN
                                  COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
                          END
                          ELSE NULL 
-               END END                                      :: TFloat AS  Price_unit_3
+               END END END                                  :: TFloat AS  Price_unit_3
 
              , ContainerCountPD_6.PartionDateKindId    AS PartionDateKindId_6
              , ContainerCountPD_6.Remains              AS Remains_6
@@ -1297,6 +1321,17 @@ BEGIN
                                                THEN COALESCE (tmpPrice_Site.Price, Price_Unit.Price)
                                                ELSE Price_Unit.Price END,
                                                CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
+                                               COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
+                    ELSE
+               CASE WHEN COALESCE(tmpPromoBonus.BonusInetOrder, 0) <> 0
+                     AND Object_Goods_Retail.IsTop = False 
+                     AND (COALESCE(Price_Unit.PriceChange, 0) = 0 AND
+                          COALESCE(Price_Unit.FixPercent, 0) = 0 AND
+                          COALESCE(Price_Unit.FixDiscount, 0) = 0 OR
+                          COALESCE(Price_Unit.Multiplicity, 0) > 1)
+                    THEN zfCalc_PriceCash(Round(Price_Unit.Price * 100.0 / (100.0 + tmpPromoBonus.MarginPercent) * 
+                                          (100.0 - tmpPromoBonus.BonusInetOrder + tmpPromoBonus.MarginPercent) / 100, 2), 
+                                          CASE WHEN tmpGoodsSP.GoodsId IS NULL THEN FALSE ELSE TRUE END OR
                                                COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
                     ELSE
                     CASE WHEN COALESCE(ContainerCountPD_6.PartionDateKindId, 0) <> 0 AND COALESCE(ContainerCountPD_6.PartionDateDiscount, 0) <> 0 THEN
@@ -1338,7 +1373,7 @@ BEGIN
                                  COALESCE(GoodsDiscount.GoodsId, 0) <> 0)
                          END
                          ELSE NULL 
-               END END                                      :: TFloat AS  Price_unit_6
+               END END END                                  :: TFloat AS  Price_unit_6
                
              , COALESCE(tmpList.Multiplicity, 0) :: TFloat AS Multiplicity
 
@@ -1425,6 +1460,6 @@ $BODY$
 
 -- тест
 
-SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '14881', zfCalc_UserSite()) AS p
+SELECT OBJECT_Unit.valuedata, p.* FROM gpSelect_GoodsOnUnit_ForSiteMobile ('', '15704764', zfCalc_UserSite()) AS p
  LEFT JOIN OBJECT AS OBJECT_Unit ON OBJECT_Unit.ID = p.UnitId
  

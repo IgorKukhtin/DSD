@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_Sale_eTTN_Send()
+-- Function: gpSelect_Movement_TransportGoods_EDIN_Send()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_eTTN_Send (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_TransportGoods_EDIN_Send (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_eTTN_Send(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_TransportGoods_EDIN_Send(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar    -- сессия пользователя
 )
@@ -32,6 +32,7 @@ $BODY$
     DECLARE vbToId_find Integer;
 
     DECLARE vbOperDate_Begin1 TDateTime;
+    DECLARE vbMovementSaleId Integer;
     DECLARE vbMovementDescId Integer;
     
 BEGIN
@@ -42,22 +43,28 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
      
+     vbMovementSaleId := COALESCE((SELECT MovementId FROM MovementLinkMovement  
+                                   WHERE MovementChildId = inMovementId 
+                                     AND DescId = zc_MovementLinkMovement_TransportGoods()), 0);
+
+     vbMovementDescId := COALESCE((SELECT Movement.DescId FROM Movement WHERE Movement.Id = vbMovementSaleId), 0);
+     
+     IF COALESCE (vbMovementDescId, 0) <> zc_Movement_Sale()
+     THEN
+       RAISE EXCEPTION 'Ошибка. Отправлять разрешено только ТТН по продаже покупателю. ';     
+     END IF;
      
      vbJuricalId_car:= 
-      (WITH tmpTransport AS (SELECT MovementChildId FROM MovementLinkMovement  WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_TransportGoods())
-          , tmpTransportGoods AS (SELECT * 
-                                  FROM gpGet_Movement_TransportGoods (inMovementId       := (SELECT MovementChildId FROM tmpTransport)
-                                                                    , inMovementId_Sale  := inMovementId
+      (WITH tmpTransportGoods AS (SELECT * 
+                                  FROM gpGet_Movement_TransportGoods (inMovementId       := inMovementId
+                                                                    , inMovementId_Sale  := vbMovementSaleId
                                                                     , inOperDate         := NULL
                                                                     , inSession          := inSession
                                                                      )
-                                  WHERE EXISTS (SELECT MovementChildId FROM tmpTransport)
                                  )
        SELECT tmpTransportGoods.JuricalId_car FROM tmpTransportGoods
       );
 
-     vbMovementDescId := (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
-     
      -- параметры из документа
      SELECT Movement.DescId
           , Movement.StatusId
@@ -116,12 +123,6 @@ BEGIN
                                ON ObjectLink_Partner_Juridical_From.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_Partner_Juridical_From.DescId = zc_ObjectLink_Partner_Juridical()
 
-          /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
-                               ON ObjectLink_Juridical_GoodsProperty.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
-                              AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
-          LEFT JOIN ObjectLink AS ObjectLink_JuridicalBasis_GoodsProperty
-                               ON ObjectLink_JuridicalBasis_GoodsProperty.ObjectId = zc_Juridical_Basis()
-                              AND ObjectLink_JuridicalBasis_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()*/
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -132,22 +133,28 @@ BEGIN
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId -- MovementLinkObject_Contract.ObjectId
 
-     WHERE Movement.Id = inMovementId
+     WHERE Movement.Id = vbMovementSaleId
        -- AND Movement.StatusId = zc_Enum_Status_Complete()
     ;
 
---   RAISE EXCEPTION 'Ошибка.<%>', vbJuricalId_car;
+   -- RAISE EXCEPTION 'Ошибка.<%>', vbJuricalId_car;
 
     -- очень важная проверка
     IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
     THEN
         IF vbStatusId = zc_Enum_Status_Erased()
         THEN
-            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
+            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', 
+                   (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), 
+                   (SELECT InvNumber FROM Movement WHERE Id = vbMovementSaleId), 
+                   (SELECT DATE (OperDate) FROM Movement WHERE Id = vbMovementSaleId);
         END IF;
         IF vbStatusId = zc_Enum_Status_UnComplete()
         THEN
-            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
+            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', 
+                   (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), 
+                   (SELECT InvNumber FROM Movement WHERE Id = vbMovementSaleId), 
+                   (SELECT DATE (OperDate) FROM Movement WHERE Id = vbMovementSaleId);
         END IF;
         -- это уже странная ошибка
         RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
@@ -157,14 +164,12 @@ BEGIN
 
      --
     OPEN Cursor1 FOR
-       WITH tmpTransport AS (SELECT MovementChildId FROM MovementLinkMovement  WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_TransportGoods())
-          , tmpTransportGoods AS (SELECT * 
-                                  FROM gpGet_Movement_TransportGoods (inMovementId       := (SELECT MovementChildId FROM tmpTransport)
-                                                                    , inMovementId_Sale  := inMovementId
+       WITH tmpTransportGoods AS (SELECT * 
+                                  FROM gpGet_Movement_TransportGoods (inMovementId       := inMovementId
+                                                                    , inMovementId_Sale  := vbMovementSaleId
                                                                     , inOperDate         := NULL
                                                                     , inSession          := inSession
                                                                      )
-                                  WHERE EXISTS (SELECT MovementChildId FROM tmpTransport)
                                  )
 
      , tmpPackage AS (SELECT 
@@ -203,7 +208,7 @@ BEGIN
                                                      AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                                  LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-                           WHERE MovementItem.MovementId = inMovementId
+                           WHERE MovementItem.MovementId = vbMovementSaleId
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = FALSE
                            GROUP BY MovementItem.ObjectId
@@ -312,13 +317,19 @@ BEGIN
            , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn() THEN OH_JuridicalDetails_From.FullName ELSE OH_JuridicalDetails_To.FullName END AS JuridicalName_Basis             --Замовник Алан
 
            , OH_JuridicalDetails_To.FullName   AS JuridicalName_To
+           
+           --, 'Новус Україна ТОВ'::tvarchar  AS JuridicalName_To
           
            , CASE WHEN vbDescId = zc_Movement_SendOnPrice() AND ObjectString_Unit_Address_to.ValueData <> '' AND ObjectString_Unit_Address_to.ValueData NOT ILIKE '% - O - %'
                     THEN ObjectString_Unit_Address_to.ValueData
                    ELSE OH_JuridicalDetails_To.JuridicalAddress
               END      :: TVarChar AS JuridicalAddress_To
+              
+          -- , 'Україна, 04208, м. Київ, проспект Правди, 47'::tvarchar   AS JuridicalAddress_To
 
            , OH_JuridicalDetails_To.OKPO AS OKPO_To
+           
+           --, '36003603'::tvarchar AS OKPO_To
 
            , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn()
                THEN
@@ -334,14 +345,20 @@ BEGIN
                  OH_Juridical_Basis.JuridicalAddress
              END   :: TVarChar            AS PartnerAddress_Unloading
              
+           --, 'Україна, #, м. Київ, пр. Академіка Палладіна,7-А' :: TVarChar            AS PartnerAddress_Unloading
+             
            , CASE WHEN COALESCE (View_Partner_Address.PartnerId, 0) <> 0 
                   THEN TRIM (ObjectString_PostalCode.ValueData) 
                   ELSE ParseAddress_To.PostcodeCode END :: TVarChar                 AS PostcodeCode_To  
+                  
+           --, '04208':: TVarChar                 AS PostcodeCode_To 
 
            , CASE WHEN COALESCE (View_Partner_Address.PartnerId, 0) <> 0 
                   THEN TRIM (COALESCE ((SELECT ValueData FROM ObjectString WHERE ObjectId = View_Partner_Address.CityKindId AND DescId = zc_ObjectString_CityKind_ShortName()), '')
                                || ' ' || COALESCE (View_Partner_Address.CityName, ''))
                   ELSE ParseAddress_To.CityName END :: TVarChar                 AS CityName_To  
+                  
+           --, 'м. Київ':: TVarChar                 AS CityName_To  
               
            , CASE WHEN COALESCE (View_Partner_Address.PartnerId, 0) <> 0 
                   THEN TRIM (COALESCE ((SELECT ValueData FROM ObjectString WHERE ObjectId = View_Partner_Address.StreetKindId AND DescId = zc_ObjectString_StreetKind_ShortName()), '')
@@ -358,7 +375,9 @@ BEGIN
                                         THEN ' кв.' || COALESCE (ObjectString_RoomNumber.ValueData, '')
                                    ELSE ''
                               END)
-                  ELSE ParseAddress_To.StreetName END :: TVarChar                 AS StreetName_To  
+                  ELSE ParseAddress_To.StreetName END :: TVarChar                 AS StreetName_To
+                  
+           --, 'проспект Правди, 47' :: TVarChar                 AS StreetName_To  
                        
            , CASE WHEN COALESCE (View_Partner_Address.PartnerId, 0) <> 0 
                   THEN TRIM (CASE WHEN View_Partner_Address.RegionName <> '' 
@@ -369,12 +388,15 @@ BEGIN
                   ELSE ParseAddress_To.CountrySubDivisionName END :: TVarChar                 AS CountrySubDivisionName_To  
              
            , COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_GLNCode_To.ValueData, ObjectString_Juridical_GLNCode_To.ValueData) AS GLN_Unloading
+           --, '9863576637923':: TVarChar  AS GLN_Unloading
 
            , COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_Juridical_GLNCode_To.ValueData, ObjectString_GLNCode_To.ValueData) AS GLN_To
+           --, '9863577638028':: TVarChar  AS GLN_To
 
            , COALESCE(ObjectString_Unit_KATOTTG_To.ValueData, '')  AS KATOTTG_Unloading
+           
+           --, 'UA80000000000093317' :: TVarChar  AS KATOTTG_Unloading
              
-
            , OH_JuridicalDetails_From.FullName AS JuridicalName_From
 
            , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn()
@@ -773,7 +795,7 @@ BEGIN
 
             LEFT JOIN tmpPackage ON 1=1
 
-       WHERE Movement.Id = inMovementId
+       WHERE Movement.Id = vbMovementSaleId
          AND Movement.StatusId = zc_Enum_Status_Complete()
       ;
     RETURN NEXT Cursor1;
@@ -860,7 +882,7 @@ BEGIN
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                 WHERE MovementItem.MovementId = inMovementId
+                 WHERE MovementItem.MovementId = vbMovementSaleId
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.isErased   = FALSE
                  GROUP BY MovementItem.ObjectId
@@ -1002,4 +1024,4 @@ $BODY$
 -- тест
 
 
-select * from gpSelect_Movement_Sale_eTTN_Send(inMovementId := 22084908 ,  inSession := '14610');
+select * from gpSelect_Movement_TransportGoods_EDIN_Send(inMovementId := 22086098 ,  inSession := '14610');

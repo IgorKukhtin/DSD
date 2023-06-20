@@ -68,15 +68,20 @@ BEGIN
                                , MovementItemContainer.ObjectId_Analyzer 
                                , COALESCE(MLO_Insert.ObjectId, MLO_UserConfirmedKind.ObjectId)),
          tmpMI_Child AS (SELECT MovementItem.Id            AS Id
+                              , MovementItem.ObjectId      AS UserId
                               , MI_Master.ObjectId         AS GoodsId
                               , MovementItem.Amount        AS Amount
                               , MIDate_Insert.ValueData    AS Date_Insert
+                              , MIFloat_MovementId.ValueData::Integer AS MovementCheckId
                           FROM MovementItem
                                LEFT JOIN MovementItemDate AS MIDate_Insert
                                                           ON MIDate_Insert.MovementItemId = MovementItem.Id
                                                          AND MIDate_Insert.DescId = zc_MIDate_Insert()
                                LEFT JOIN MovementItem AS MI_Master
                                                       ON MI_Master.ID = MovementItem.ParentId
+                               LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                           ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()                                                      
                           WHERE MovementItem.MovementId = inMovementId
                             AND MovementItem.DescId     = zc_MI_Child()
                             AND MovementItem.isErased   = False
@@ -87,12 +92,24 @@ BEGIN
          , tmpMICheck.GoodsId
          , COALESCE(tmpMICheck.UserId, vbUserId) AS UserId
          , tmpMICheck.MovementId
-         , tmpMICheck.Amount::TFloat
+         , CASE WHEN DATE_TRUNC ('DAY', tmpMICheck.OperDate) = vbOperDate THEN tmpMICheck.Amount ELSE - tmpMICheck.Amount END::TFloat
     FROM tmpMICheck
-    WHERE EXISTS(SELECT * 
+    WHERE NOT EXISTS(SELECT * 
+                     FROM tmpMI_Child 
+                     WHERE tmpMI_Child.GoodsId = tmpMICheck.GoodsId 
+                       AND tmpMI_Child.MovementCheckId = tmpMICheck.MovementId)
+      AND (EXISTS(SELECT * 
                  FROM tmpMI_Child 
                  WHERE tmpMI_Child.GoodsId = tmpMICheck.GoodsId 
-                   AND tmpMI_Child.Date_Insert < tmpMICheck.OperDate);
+                   AND tmpMI_Child.Date_Insert <= tmpMICheck.OperDate
+                   AND COALESCE(tmpMI_Child.MovementCheckId, 0) = 0)
+      AND DATE_TRUNC ('DAY', tmpMICheck.OperDate) = vbOperDate           
+       OR NOT EXISTS(SELECT * 
+                     FROM tmpMI_Child 
+                     WHERE tmpMI_Child.GoodsId = tmpMICheck.GoodsId 
+                       AND tmpMI_Child.Date_Insert <= tmpMICheck.OperDate
+                       AND COALESCE(tmpMI_Child.MovementCheckId, 0) = 0)
+      AND DATE_TRUNC ('DAY', tmpMICheck.OperDate) > vbOperDate);
     
 
 END;
@@ -109,5 +126,5 @@ $BODY$
 
 --
 
-select * from gpSelect_Movement_InventoryCheck(inMovementId := 31882953 , inSession := '3');
+select * from gpSelect_Movement_InventoryCheck(inMovementId := 32406899  , inSession := '3') left join Object ON Object.Id = GoodsId;
     
