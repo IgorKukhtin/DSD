@@ -817,11 +817,11 @@ BEGIN
           ;
 
 
-/*        RAISE EXCEPTION 'Ошибка.<%>  <%> <%>'
-        , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) = 0 and Key_Id_text ilike '%9005%')
-        , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) > 0 and Key_Id_text ilike '%9005%')
+        RAISE EXCEPTION 'Ошибка.<%>  <%> <%>'
+        , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) = 0 and Key_Id_text ilike '%magenta%')
+        , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) > 0 and Key_Id_text ilike '%magenta%')
         , (select count(*) from _tmpReceiptItems_new )
-         ;*/
+         ;
 
 
 
