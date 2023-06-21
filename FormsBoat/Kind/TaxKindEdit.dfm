@@ -26,7 +26,8 @@ object TaxKindEditForm: TTaxKindEditForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 646
+    ExplicitLeft = 8
+    ExplicitTop = 34
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -63,7 +64,6 @@ object TaxKindEditForm: TTaxKindEditForm
         DataBinding.FieldName = 'Code_str'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 70
       end
       object Name: TcxGridDBColumn
@@ -72,8 +72,13 @@ object TaxKindEditForm: TTaxKindEditForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
         Width = 132
+      end
+      object Enum: TcxGridDBColumn
+        DataBinding.FieldName = 'Enum'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 123
       end
       object Info: TcxGridDBColumn
         Caption = #1054#1087#1080#1089#1072#1085#1080#1077
@@ -518,6 +523,15 @@ object TaxKindEditForm: TTaxKindEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCode_str'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Code_str'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inValue'
         Value = Null
         Component = MasterCDS
@@ -531,6 +545,15 @@ object TaxKindEditForm: TTaxKindEditForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Info'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEnum'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Enum'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

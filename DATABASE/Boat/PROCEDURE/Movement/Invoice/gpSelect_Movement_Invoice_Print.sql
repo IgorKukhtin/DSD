@@ -122,11 +122,19 @@ OPEN Cursor1 FOR
             , tmpInfo.Name_main      ::TVarChar AS Name_main
             , tmpInfo.Street_main    ::TVarChar AS Street_main
             , tmpInfo.City_main      ::TVarChar AS City_main
+            /*
             , tmpInfo.Name_Firma2    ::TVarChar AS Name_Firma
             , tmpInfo.Street_Firma2  ::TVarChar AS Street_Firma
             , tmpInfo.City_Firma2    ::TVarChar AS City_Firma
             , tmpInfo.Country_Firma2 ::TVarChar AS Country_Firma
-            , tmpInfo.Text_tax2      ::TVarChar AS Text1   --**
+            , tmpInfo.Text_tax2      ::TVarChar AS Text1   --**  
+            */
+            , Object_Client.ValueData        ::TVarChar AS Name_Firma
+            , ObjectString_Street.ValueData  ::TVarChar AS Street_Firma
+            , ObjectString_City.ValueData    ::TVarChar AS City_Firma
+            , Object_Country.ValueData       ::TVarChar AS Country_Firma
+            , ''                             ::TVarChar AS Text1   --**
+
             , tmpInfo.Text_Freight   ::TVarChar AS Text2
             , (' '||tmpInfo.Text_sign ||' '|| tmpInvoice.InsertName ::TVarChar)  ::TVarChar AS Text3
             
@@ -153,7 +161,26 @@ OPEN Cursor1 FOR
                                AND ObjectFloat_Power.DescId = zc_ObjectFloat_ProdEngine_Power()
           LEFT JOIN ObjectFloat AS ObjectFloat_Volume
                                 ON ObjectFloat_Volume.ObjectId = tmpProduct.EngineId
-                               AND ObjectFloat_Volume.DescId = zc_ObjectFloat_ProdEngine_Volume()
+                               AND ObjectFloat_Volume.DescId = zc_ObjectFloat_ProdEngine_Volume() 
+          --
+          LEFT JOIN Object AS Object_Client ON Object_Client.Id = tmpInvoice.ObjectId
+          LEFT JOIN ObjectString AS ObjectString_Street
+                                 ON ObjectString_Street.ObjectId = Object_Client.Id
+                                AND ObjectString_Street.DescId = zc_ObjectString_Client_Street()
+
+          LEFT JOIN ObjectLink AS ObjectLink_PLZ
+                               ON ObjectLink_PLZ.ObjectId = Object_Client.Id
+                              AND ObjectLink_PLZ.DescId = zc_ObjectLink_Client_PLZ()
+          LEFT JOIN Object AS Object_PLZ ON Object_PLZ.Id = ObjectLink_PLZ.ChildObjectId
+          LEFT JOIN ObjectString AS ObjectString_City
+                                 ON ObjectString_City.ObjectId = Object_PLZ.Id
+                                AND ObjectString_City.DescId = zc_ObjectString_PLZ_City()
+          LEFT JOIN ObjectLink AS ObjectLink_Country
+                               ON ObjectLink_Country.ObjectId = Object_PLZ.Id
+                              AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
+          LEFT JOIN Object AS Object_Country ON Object_Country.Id = ObjectLink_Country.ChildObjectId
+
+
           
           ;
 

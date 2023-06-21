@@ -213,4 +213,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Invoice (inMovementId:= 1, inOperDate:= NULL :: TDateTime, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_Invoice (inMovementId:= 1, inMovementId_OrderClient :=0, inProductId:=0, inClientId:=0, inOperDate:= NULL :: TDateTime, inSession:= zfCalc_UserAdmin());
