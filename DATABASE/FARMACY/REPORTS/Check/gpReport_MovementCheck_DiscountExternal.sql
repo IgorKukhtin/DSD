@@ -28,6 +28,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Statu
              , InvNumberIncome TVarChar
              , OperDateIncome TDateTime
              , PriceWithVAT TFloat
+             , AccountSalesDEId Integer
              , ActNumber TVarChar
              , AmountAct TFloat
              , isClosed boolean
@@ -266,6 +267,8 @@ BEGIN
            , Movement_Income.InvNumber                  AS InvNumberIncome
            , Movement_Income.OperDate                   AS OperDateIncome
            , MIFloat_PriceWithVAT.ValueData             AS PriceWithVAT
+           
+           , Object_AccountSalesDE.Id                                                              AS AccountSalesDEId
            , COALESCE(Object_AccountSalesDE.ValueData, MovementString_ActNumber.ValueData)         AS ActNumber
            , COALESCE (AccountSalesDE_Amount.ValueData, MovementFloat_AmountAct.ValueData)         AS AmountAct
            , COALESCE (MovementBoolean_Closed.ValueData, False) AS isClosed
@@ -361,4 +364,4 @@ $BODY$
 */
 
 
-select * from gpReport_MovementCheck_DiscountExternal(inStartDate := ('01.03.2023')::TDateTime , inEndDate := ('31.03.2023')::TDateTime , inUnitId := 1529734 , inDiscountExternalId := 0 ,  inSession := '3');
+select * from gpReport_MovementCheck_DiscountExternal(inStartDate := ('07.01.2023')::TDateTime , inEndDate := ('07.01.2023')::TDateTime , inUnitId := 0 , inDiscountExternalId := 4521216 ,  inSession := '3');

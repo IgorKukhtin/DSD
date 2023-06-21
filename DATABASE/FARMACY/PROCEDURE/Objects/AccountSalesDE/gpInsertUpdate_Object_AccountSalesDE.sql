@@ -8,9 +8,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_AccountSalesDE(
 )
 RETURNS VOID AS
 $BODY$
-   DECLARE vbUserId   Integer;
-   DECLARE vbId       Integer;
-   DECLARE vbIsUpdate Boolean;   
+   DECLARE vbUserId    Integer;
+   DECLARE vbId        Integer;
+   DECLARE vbActNumber TVarChar;
+   DECLARE vbIsUpdate  Boolean;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpGetUserBySession(inSession);
@@ -20,14 +21,19 @@ BEGIN
        RAISE EXCEPTION 'Не указана ID движение по контейнеру';
    END IF;
     
-   SELECT Object.Id
-   INTO vbId
+   SELECT Object.Id, Object.ValueData
+   INTO vbId, vbActNumber
    FROM Object
    WHERE Object.DescId = zc_Object_AccountSalesDE()
      AND Object.ObjectCode = inMovementItemContainerId;
    
    -- определили <Признак>
    vbIsUpdate:= COALESCE (vbId, 0) > 0;
+   
+   IF COALESCE (vbId, 0) <> 0 AND COALESCE(inActNumber, '') = '' AND COALESCE(vbActNumber, '') <> ''
+   THEN
+     inActNumber := vbActNumber;
+   END IF;
 
    -- сохранили <Объект>
    vbId := lpInsertUpdate_Object (vbId, zc_Object_AccountSalesDE(), inMovementItemContainerId, inActNumber);
