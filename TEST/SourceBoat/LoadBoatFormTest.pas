@@ -880,6 +880,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderClient_byBoatChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderClient_byBoatChoiceForm');
 
@@ -888,7 +889,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderClient_byBoatDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderClient_byBoatDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PriceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceListDialogForm'));
@@ -903,12 +904,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderInternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_OrderInternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderInternalDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_PriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_PriceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_PriceListDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_PriceListDialogForm');
-  }
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMotionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMotionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMotionDialogForm'));

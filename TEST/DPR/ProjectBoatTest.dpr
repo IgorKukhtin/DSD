@@ -360,7 +360,9 @@ uses
   Report_OrderClient_byBoatChoice in '..\..\FormsBoat\Report\Report_OrderClient_byBoatChoice.pas' {Report_OrderClient_byBoatChoiceForm: TParentForm},
   ProdColorPatternGoodsEdit in '..\..\FormsBoat\Guides\ProdColorPatternGoodsEdit.pas' {ProdColorPatternGoodsEditForm: TParentForm},
   TaxKindEdit in '..\..\FormsBoat\Kind\TaxKindEdit.pas' {TaxKindEditForm: TParentForm},
-  ProductEdit in '..\..\FormsBoat\Guides\ProductEdit.pas' {ProductEditForm: TParentForm};
+  ProductEdit in '..\..\FormsBoat\Guides\ProductEdit.pas' {ProductEditForm: TParentForm},
+  EUSignCP in '..\..\SOURCE\EUSignCP\EUSignCP.pas',
+  EUSignCPOwnUI in '..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -933,6 +933,22 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_Goods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Price'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -1006,6 +1022,14 @@ object GoodsForm: TGoodsForm
     end
     object bbInsertUpdate_Unit: TdxBarButton
       Action = macInsertUpdate_Unit
+      Category = 0
+    end
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
+      Category = 0
+    end
+    object bbReport_Price: TdxBarButton
+      Action = actReport_Price
       Category = 0
     end
   end
@@ -1550,6 +1574,52 @@ object GoodsForm: TGoodsForm
       ControlName.DataType = ftString
       ControlName.MultiSelectSeparator = ','
     end
+    object actReport_Price: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1072#1081#1089#1072#1084'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1072#1081#1089#1072#1084'>'
+      ImageIndex = 24
+      FormName = 'TReport_Movement_PriceListForm'
+      FormNameParam.Value = 'TReport_Movement_PriceListForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PartnerId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PartnerName'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actInsertUpdate_Unit: TdsdExecStoredProc
       Category = 'Update'
       MoveParams = <>
@@ -1587,6 +1657,82 @@ object GoodsForm: TGoodsForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' '#1076#1083#1103' '#1042#1089#1077#1093' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' '#1076#1083#1103' '#1042#1089#1077#1093' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1093
       ImageIndex = 76
+    end
+    object actReport_Goods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072'>'
+      ImageIndex = 40
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitGroupId'
+          Value = ''
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPeriod'
+          Value = True
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartion'
+          Value = False
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object spSelect: TdsdStoredProc

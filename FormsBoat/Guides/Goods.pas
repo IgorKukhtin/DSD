@@ -148,6 +148,10 @@ type
     bbInsertUpdate_Unit: TdxBarButton;
     UnitName_receipt: TcxGridDBColumn;
     GoodsName_receipt: TcxGridDBColumn;
+    actReport_Goods: TdsdOpenForm;
+    actReport_Price: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
+    bbReport_Price: TdxBarButton;
   private
     { Private declarations }
   public
