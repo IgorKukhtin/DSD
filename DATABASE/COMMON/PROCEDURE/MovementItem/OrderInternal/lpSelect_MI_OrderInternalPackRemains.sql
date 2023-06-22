@@ -496,6 +496,7 @@ BEGIN
                                   , MIContainer.ObjectExtId_Analyzer
  
                           UNION
+                           -- Приход от поставщ
                            SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
                                 , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
                                 , SUM (MIContainer.Amount)                       AS Amount
@@ -513,6 +514,31 @@ BEGIN
                              AND MIContainer.DescId         = zc_MIContainer_Count()
                              AND MIContainer.MovementDescId = zc_Movement_Income()
                              AND MIContainer.isActive       = TRUE
+                             -- AND 1=0
+                           GROUP BY MIContainer.ObjectId_Analyzer
+                                  , MIContainer.ObjectIntId_Analyzer
+
+                          UNION
+                           -- Приход перемещение
+                           SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
+                                , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
+                                , SUM (MIContainer.Amount)                       AS Amount
+                                , MAX (MIContainer.ObjectExtId_Analyzer)         AS UnitId_pf
+                           FROM MovementItemContainer AS MIContainer
+                                -- Склады База + Реализации
+                                INNER JOIN tmpUnit_SKLAD ON tmpUnit_SKLAD.UnitId = MIContainer.WhereObjectId_Analyzer
+                                -- Ирна
+                                INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                      ON ObjectLink_Goods_InfoMoney.ObjectId      = MIContainer.ObjectId_Analyzer
+                                                     AND ObjectLink_Goods_InfoMoney.DescId        = zc_ObjectLink_Goods_InfoMoney()
+                                                     AND ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                    , zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                     )
+                           WHERE MIContainer.OperDate       = vbOperDate
+                             AND MIContainer.DescId         = zc_MIContainer_Count()
+                             AND MIContainer.MovementDescId = zc_Movement_Send()
+                             AND MIContainer.isActive       = TRUE
+                             AND MIContainer.ObjectExtId_Analyzer = 8450 -- Дільниця термічної обробки
                              -- AND 1=0
                            GROUP BY MIContainer.ObjectId_Analyzer
                                   , MIContainer.ObjectIntId_Analyzer

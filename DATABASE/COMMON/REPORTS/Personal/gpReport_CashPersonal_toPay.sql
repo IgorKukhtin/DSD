@@ -88,7 +88,7 @@ BEGIN
                         , CASE WHEN MIContainer.MovementDescId = zc_Movement_PersonalService() THEN NULL ELSE MIContainer.MovementId END AS MovementId_begin
                         , MIContainer.AnalyzerId
                         , tmpContainer.AccountId
-                        , tmpContainer.Amount AS Amount_rem
+                        , -1 * tmpContainer.Amount AS Amount_rem
                         , tmpContainer.PersonalId
                         , tmpContainer.InfoMoneyId
                         , tmpContainer.UnitId

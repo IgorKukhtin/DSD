@@ -104,7 +104,8 @@ BEGIN
      --             AND PrintForms_View_Default.DescId = zc_Movement_Sale()
 
 
-       WHERE Movement.Id =  inMovementId
+       WHERE Movement.Id = inMovementId
+       ORDER BY 1 ASC
 --         AND Movement.DescId = zc_Movement_Sale()
        LIMIT 1
       );

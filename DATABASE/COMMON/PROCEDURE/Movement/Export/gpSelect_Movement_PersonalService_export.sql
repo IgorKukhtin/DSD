@@ -136,7 +136,7 @@ BEGIN
 	             --, SUM (FLOOR (100 * CAST (COALESCE (gpSelect.SummCardSecondRecalc, 0) * 1.00705 AS NUMERIC (16, 1)))) AS SummCardSecondRecalc
 	               , SUM (FLOOR (100 * CAST ((COALESCE (gpSelect.SummCardSecondRecalc, 0) * vbKoeffSummCardSecond
                                                + COALESCE (gpSelect.SummAvCardSecondRecalc, 0) * vbKoeffSummCardSecond
-                                                 ) AS NUMERIC (16, 1)))) AS SummCardSecondRecalc
+                                                 ) AS NUMERIC (16, 0)))) AS SummCardSecondRecalc
 	          FROM gpSelect_MovementItem_PersonalService (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
 	          WHERE gpSelect.SummCardSecondRecalc <> 0 OR gpSelect.SummAvCardSecondRecalc <> 0
 	          GROUP BY COALESCE (gpSelect.CardSecond, ''), UPPER (COALESCE (gpSelect.PersonalName, '')), COALESCE (gpSelect.INN, '')
