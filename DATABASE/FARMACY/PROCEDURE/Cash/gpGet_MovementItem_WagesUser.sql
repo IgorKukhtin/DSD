@@ -242,8 +242,7 @@ BEGIN
                                                                           date_trunc('month', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', 
                                                                           inSession) AS T1
                                          GROUP BY T1.UnitId)
-              , tmpImplementationPlanEmployee AS (select * from gpReport_ImplementationPlanEmployeeUser(inStartDate := inOperDate,  inSession := inSession))
-              , tmpFulfillmentPlanMobileApp AS (select * from gpReport_FulfillmentPlanMobileAppAntiTOP(inOperDate := inOperDate,  inSession := inSession))
+              , tmpImplementationPlan AS (select * from ImplementationPlan)
 
             SELECT MovementItem.Id                    AS Id
                  , MovementItem.ObjectId              AS UserID
@@ -311,22 +310,22 @@ BEGIN
                  , tmpAdditionalExpenses.SummaTotal             AS SummaTotal
                  , ObjectString_PasswordEHels.ValueData         AS UserPassword
                  , MovementDate_Calculation.ValueData           AS DateCalculation
-                 , tmpImplementationPlanEmployee.Total          AS PlanEmployeeTotal
-                 , tmpImplementationPlanEmployee.PenaltiMobApp  AS PenaltiMobApp
+                 , tmpImplementationPlan.Total                  AS PlanEmployeeTotal
+                 , tmpImplementationPlan.PenaltiMobApp          AS PenaltiMobApp
                  , 'Зарплата':: TVarChar                        AS FormCaption
                  , (CASE WHEN COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE) = TRUE 
                          OR COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
                         THEN ' <' ELSE '' END||
                    CASE WHEN COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE) = TRUE 
-                        THEN 'Маркет: '||zfConvert_FloatToString(COALESCE(Round(tmpImplementationPlanEmployee.Total, 2), 0))  ELSE '' END||
+                        THEN 'Маркет: '||zfConvert_FloatToString(COALESCE(Round(tmpImplementationPlan.Total, 2), 0))  ELSE '' END||
                    CASE WHEN COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE) = TRUE 
                          AND COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
                         THEN '; ' ELSE '' END||
                    CASE WHEN COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
-                        THEN 'Прил: '||zfConvert_FloatToString(COALESCE(Round(tmpFulfillmentPlanMobileApp.PenaltiMobApp, 2), 0)) ELSE '' END||
-                   CASE WHEN COALESCE (tmpFulfillmentPlanMobileApp.AntiTOPMP_Place, 0) <> 0 
+                        THEN 'Прил: '||zfConvert_FloatToString(COALESCE(Round(tmpImplementationPlan.PenaltiMobApp, 2), 0)) ELSE '' END||
+                   CASE WHEN COALESCE (tmpImplementationPlan.AntiTOPMP_Place, 0) <> 0 
                          AND COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
-                        THEN '; Позиция в антиТОпе №: '||tmpFulfillmentPlanMobileApp.AntiTOPMP_Place::TVarChar ELSE '' END||
+                        THEN '; Позиция в антиТОпе №: '||tmpImplementationPlan.AntiTOPMP_Place::TVarChar ELSE '' END||
                    CASE WHEN COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE) = TRUE 
                           OR COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
                         THEN '>' ELSE '' END):: TVarChar AS FormCaptionLeft
@@ -398,9 +397,7 @@ BEGIN
                   
                   LEFT JOIN tmpAdditionalExpenses ON 1 = 1
                   
-                  LEFT JOIN tmpImplementationPlanEmployee ON 1 = 1
-                  
-                  LEFT JOIN tmpFulfillmentPlanMobileApp ON tmpFulfillmentPlanMobileApp.UserId = MovementItem.ObjectId
+                  LEFT JOIN tmpImplementationPlan ON tmpImplementationPlan.UserId = MovementItem.ObjectId
 
                   LEFT JOIN ObjectString AS ObjectString_PasswordEHels
                          ON ObjectString_PasswordEHels.DescId = zc_ObjectString_User_Helsi_PasswordEHels() 

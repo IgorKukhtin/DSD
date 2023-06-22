@@ -182,29 +182,63 @@ BEGIN
     END;
 
     -- Перерасчет ЗП каждый час
-    BEGIN
-      IF date_part('HOUR',  CURRENT_TIME)::Integer >= 9 AND date_part('HOUR',  CURRENT_TIME)::Integer <= 21 AND
-         EXISTS(SELECT Movement.ID
-                FROM Movement
-                     LEFT JOIN MovementDate AS MovementDate_Calculation
-                                            ON MovementDate_Calculation.MovementId = Movement.Id
-                                           AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
-                WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
-                  AND Movement.DescId = zc_Movement_Wages()
-                  AND (MovementDate_Calculation.ValueData IS NULL
-                   OR MovementDate_Calculation.ValueData + INTERVAL '1 HOUR' <= CURRENT_TIMESTAMP))
-      THEN
+    IF date_part('HOUR',  CURRENT_TIME)::Integer >= 9 AND date_part('HOUR',  CURRENT_TIME)::Integer <= 21 AND
+       EXISTS(SELECT Movement.ID
+              FROM Movement
+                   LEFT JOIN MovementDate AS MovementDate_Calculation
+                                          ON MovementDate_Calculation.MovementId = Movement.Id
+                                         AND MovementDate_Calculation.DescId = zc_MovementDate_Calculation()
+              WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
+                AND Movement.DescId = zc_Movement_Wages()
+                AND (MovementDate_Calculation.ValueData IS NULL
+                 OR MovementDate_Calculation.ValueData + INTERVAL '1 HOUR' <= CURRENT_TIMESTAMP))
+    THEN
+    
+      BEGIN
+        INSERT INTO ImplementationPlan (UserId, UnitId, PenaltiMobApp, AntiTOPMP_Place)
+        SELECT COALESCE(FP.UserId, PMA.UserId)
+             , COALESCE(FP.UnitId, PMA.UnitId)
+             , COALESCE(FP.PenaltiMobApp, 0)
+             , COALESCE(FP.AntiTOPMP_Place, 0)
+        FROM gpReport_FulfillmentPlanMobileApp(inOperDate := CURRENT_DATE , inUnitId := 0 , inUserId := 0 ,  inSession := inSession) AS FP
+
+             FULL JOIN PlanMobileApp AS PMA ON PMA.UserId = FP.UserId
+             
+        ON CONFLICT (UserId) DO UPDATE SET UnitId = EXCLUDED.UnitId, PenaltiMobApp = EXCLUDED.PenaltiMobApp, AntiTOPMP_Place = EXCLUDED.AntiTOPMP_Place;
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run ImplementationPlan gpReport_FulfillmentPlanMobileApp', True, text_var1::TVarChar, vbUserId);
+      END;
+
+      BEGIN
+        INSERT INTO ImplementationPlan (UserId, UnitId, Total)
+        SELECT COALESCE(FP.UserId, PMA.UserId)
+             , COALESCE(FP.UnitId, PMA.UnitId)
+             , COALESCE(FP.Total, 0)
+        FROM gpReport_ImplementationPlanEmployeeAll(inStartDate := CURRENT_DATE, inSession := inSession) AS FP
+
+             FULL JOIN PlanMobileApp AS PMA ON PMA.UserId = FP.UserId
+             
+        ON CONFLICT (UserId) DO UPDATE SET UnitId = EXCLUDED.UnitId, Total = EXCLUDED.Total;
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run ImplementationPlan gpReport_ImplementationPlanEmployeeAll', True, text_var1::TVarChar, vbUserId);
+      END;
+      
+      BEGIN
          PERFORM gpInsertUpdate_Movement_Wages_CalculationAll(inMovementId := (SELECT Movement.ID
                                                                                FROM Movement
                                                                                WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
                                                                                  AND Movement.DescId = zc_Movement_Wages())
                                                            ,  inSession := zfCalc_UserAdmin());
-      END IF;
-    EXCEPTION
-       WHEN others THEN
-         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
-       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_Wages_CalculationAll', True, text_var1::TVarChar, vbUserId);
-    END;
+      EXCEPTION
+         WHEN others THEN
+           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+         PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_Wages_CalculationAll', True, text_var1::TVarChar, vbUserId);
+      END;
+    END IF;
 
     -- Сброс 5 категории через 30 дней
     BEGIN

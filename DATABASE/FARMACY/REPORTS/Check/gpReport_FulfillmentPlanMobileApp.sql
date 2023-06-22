@@ -56,35 +56,65 @@ BEGIN
    LIMIT 1;
      
      -- raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+                         
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMovAll'))
+     THEN
+       DROP TABLE tmpMovAll;
+     END IF;
+
+     CREATE TEMP TABLE tmpMovAll ON COMMIT DROP AS   
+     SELECT Movement.*
+          , MovementLinkObject_Unit.ObjectId                                     AS UnitId
+     FROM Movement
+          INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                       AND (MovementLinkObject_Unit.ObjectId = inUnitId OR COALESCE(inUnitId, 0) = 0)
+     WHERE Movement.DescId = zc_Movement_Check()
+       AND Movement.StatusId = zc_Enum_Status_Complete()
+       AND Movement.OperDate >= date_trunc('MONTH', inOperDate) - INTERVAL '1 MONTH'
+       AND Movement.OperDate < date_trunc('MONTH', inOperDate) + INTERVAL '1 MONTH';
+        
+     ANALYSE tmpMovAll;
+     
+     -- raise notice 'Value 2: %', CLOCK_TIMESTAMP();
+
+
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpSpecial'))
+     THEN
+       DROP TABLE tmpSpecial;
+     END IF;
+     
+     CREATE TEMP TABLE tmpSpecial ON COMMIT DROP AS   
+     WITH tmpObjectSpecial AS (SELECT Object_Goods_Retail.ID
+                               FROM Object_Goods_Retail 
+                               WHERE COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
+                                  OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0)
+     
+     SELECT DISTINCT MovementItemContainer.MovementId
+     FROM MovementItemContainer
+     
+          INNER JOIN tmpObjectSpecial ON  tmpObjectSpecial.ID = MovementItemContainer.ObjectId_Analyzer                                   
+     WHERE  MovementItemContainer.OperDate >= date_trunc('MONTH', inOperDate) - INTERVAL '1 MONTH'
+       AND MovementItemContainer.OperDate < date_trunc('MONTH', inOperDate) + INTERVAL '1 MONTH';
+
+     ANALYSE tmpSpecial;
+                            
+     -- raise notice 'Value 21: %', CLOCK_TIMESTAMP();
 
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpMov'))
      THEN
        DROP TABLE tmpMov;
      END IF;
 
-     CREATE TEMP TABLE tmpMov ON COMMIT DROP AS 
-     WITH tmpSpecial AS (SELECT DISTINCT MovementItemContainer.MovementId
-                         FROM MovementItemContainer
-                         WHERE  MovementItemContainer.OperDate >= date_trunc('MONTH', inOperDate) - INTERVAL '1 MONTH'
-                           AND MovementItemContainer.OperDate < date_trunc('MONTH', inOperDate) + INTERVAL '1 MONTH'
-                           AND MovementItemContainer.MovementDescId = zc_Movement_Check()
-                           AND MovementItemContainer.ObjectId_Analyzer IN (SELECT Object_Goods_Retail.ID
-                                                                           FROM Object_Goods_Retail
-                                                                           WHERE (COALESCE (Object_Goods_Retail.SummaWages, 0) <> 0
-                                                                              OR COALESCE (Object_Goods_Retail.PercentWages, 0) <> 0))
-                         )     
+     CREATE TEMP TABLE tmpMov ON COMMIT DROP AS   
      SELECT Movement.*
-          , MovementLinkObject_Unit.ObjectId                                     AS UnitId
           , MovementFloat_TotalSumm.ValueData                                    AS TotalSumm
           , (COALESCE(MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0 OR
             COALESCE(MovementString_InvNumberOrder.ValueData, '') <> '') AND
             COALESCE(MovementBoolean_MobileApplication.ValueData, False) = FALSE AS isSite
           , COALESCE(MovementBoolean_MobileApplication.ValueData, False)         AS isMobileApplication
-     FROM Movement
-          INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                       AND (MovementLinkObject_Unit.ObjectId = inUnitId OR COALESCE(inUnitId, 0) = 0)
+     FROM tmpMovAll AS Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
                                        ON MovementLinkObject_CheckSourceKind.MovementId = Movement.Id
                                       AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
@@ -99,16 +129,11 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                   ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                  AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
-     WHERE Movement.DescId = zc_Movement_Check()
-       AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND Movement.OperDate >= date_trunc('MONTH', inOperDate) - INTERVAL '1 MONTH'
-       AND Movement.OperDate < date_trunc('MONTH', inOperDate) + INTERVAL '1 MONTH'
-       AND Movement.Id NOT IN (SELECT tmpSpecial.MovementId FROM tmpSpecial);
+     WHERE Movement.Id NOT IN (SELECT tmpSpecial.MovementId FROM tmpSpecial) ;
         
      ANALYSE tmpMov;
      
-     -- raise notice 'Value 2: %', CLOCK_TIMESTAMP();
+     -- raise notice 'Value 22: %', CLOCK_TIMESTAMP();
 
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpESCount'))
      THEN
@@ -198,7 +223,6 @@ BEGIN
      
      -- raise notice 'Value 5: %', CLOCK_TIMESTAMP(); 
      
-
      -- Результат
      RETURN QUERY
        WITH tmpUser AS (SELECT MIMaster.ObjectId                                                                     AS UserId
@@ -369,10 +393,11 @@ BEGIN
              
              LEFT JOIN tmpSumTop ON tmpSumTop.ProcFact     = MovPlan.ProcFact
                                 AND tmpSumTop.ProcPlanFull = MovPlan.ProcPlanFull  
-
+                                
         ORDER BY Object_Unit.ValueData , Object_User.ValueData
         ;
 
+     -- raise notice 'Value 6: %', CLOCK_TIMESTAMP(); 
          
 END;
 $BODY$
@@ -387,4 +412,5 @@ ALTER FUNCTION gpReport_Check_TabletkiRecreate (TDateTime, TDateTime, Integer, T
 
 -- 
 
-select * from gpReport_FulfillmentPlanMobileApp(inOperDate := ('01.06.2023')::TDateTime , inUnitId := 0 , inUserId := 0 ,  inSession := '3');
+select * from gpReport_FulfillmentPlanMobileApp(inOperDate := ('22.06.2023')::TDateTime , inUnitId := 0 , inUserId := 0 ,  inSession := '3')
+limit 1
