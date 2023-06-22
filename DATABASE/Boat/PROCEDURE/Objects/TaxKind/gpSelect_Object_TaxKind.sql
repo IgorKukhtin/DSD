@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_TaxKind(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Code_str TVarChar, Name TVarChar
-             , NDS TFloat
+             , Enum TVarChar, NDS TFloat
              , Info TVarChar, Comment TVarChar
              , isErased Boolean) AS
 $BODY$BEGIN
@@ -22,6 +22,7 @@ $BODY$BEGIN
       , Object_TaxKind.ValueData    AS Name
       
       , ObjectFloat_TaxKind_Value.ValueData  AS Value
+      , ObjectString_Enum.ValueData          AS Enum
       
       , ObjectString_TaxKind_Info.ValueData    AS Info
       , ObjectString_TaxKind_Comment.ValueData AS Comment
@@ -36,13 +37,16 @@ $BODY$BEGIN
                                ON ObjectString_TaxKind_Code.ObjectId = Object_TaxKind.Id 
                               AND ObjectString_TaxKind_Code.DescId = zc_ObjectString_TaxKind_Code()
 
-        
         LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
                                ON ObjectString_TaxKind_Info.ObjectId = Object_TaxKind.Id 
                               AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
         LEFT JOIN ObjectString AS ObjectString_TaxKind_Comment
                                ON ObjectString_TaxKind_Comment.ObjectId = Object_TaxKind.Id 
-                              AND ObjectString_TaxKind_Comment.DescId = zc_ObjectString_TaxKind_Comment()
+                              AND ObjectString_TaxKind_Comment.DescId = zc_ObjectString_TaxKind_Comment()   
+        
+        LEFT JOIN ObjectString AS ObjectString_Enum
+                               ON ObjectString_Enum.ObjectId = Object_TaxKind.Id 
+                              AND ObjectString_Enum.DescId = zc_ObjectString_Enum()
    WHERE Object_TaxKind.DescId = zc_Object_TaxKind();
   
 END;$BODY$

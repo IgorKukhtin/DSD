@@ -1,13 +1,15 @@
 -- Торговая марка
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_TaxKind (Integer, TVarChar, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Object_TaxKind (Integer, TVarChar, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_TaxKind (Integer, TVarChar, TVarChar, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_TaxKind(
     IN inId              Integer,       -- ключ объекта <>
     IN inName            TVarChar,      -- главное Название 
+    IN inCode_str        TVarChar,
     IN inValue           TFloat  ,
     IN inInfo            TVarChar,
+    IN inEnum            TVarChar,
     IN inComment         TVarChar,
     IN inSession         TVarChar       -- сессия пользователя
 )
@@ -28,6 +30,13 @@ BEGIN
    
    -- сохранили
    PERFORM lpInsertUpdate_Object(inId, zc_Object_TaxKind(), vbCode, inName);
+   
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_TaxKind_Code(), inId, inCode_str);
+   -- сохранили
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), inId, inEnum);
+
+
    -- сохранили
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_TaxKind_Value(), inId, inValue);
 

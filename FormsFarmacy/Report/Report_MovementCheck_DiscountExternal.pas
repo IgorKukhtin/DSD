@@ -81,6 +81,8 @@ type
     UpdateDate: TcxGridDBColumn;
     dxBarButton2: TdxBarButton;
     MovementProtocolOpenForm: TdsdOpenForm;
+    actProtocolOpenActForm: TdsdOpenForm;
+    bbProtocolOpenActForm: TdxBarButton;
   private
     { Private declarations }
   public

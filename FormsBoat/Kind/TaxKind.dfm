@@ -55,7 +55,7 @@ object TaxKindForm: TTaxKindForm
         DataBinding.FieldName = 'Code_str'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Width = 48
       end
       object Name: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1053#1044#1057
@@ -63,8 +63,7 @@ object TaxKindForm: TTaxKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 132
+        Width = 120
       end
       object NDS: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
@@ -72,7 +71,7 @@ object TaxKindForm: TTaxKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 116
+        Width = 105
       end
       object Info: TcxGridDBColumn
         Caption = #1054#1087#1080#1089#1072#1085#1080#1077
@@ -80,7 +79,14 @@ object TaxKindForm: TTaxKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 175
+        Width = 159
+      end
+      object Enum: TcxGridDBColumn
+        DataBinding.FieldName = 'Enum'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 123
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -88,7 +94,7 @@ object TaxKindForm: TTaxKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 156
+        Width = 77
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'

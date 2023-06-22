@@ -227,7 +227,7 @@ BEGIN
             , vbOperDate_OrderClient  AS OperDate_Order
             , vbInvNumber_OrderClient AS InvNumber_Order
 
-            , tmp_OrderInfo.Text_Info1 :: TBlob AS Text_Info1
+            , TRIM(tmp_OrderInfo.Text_Info1) :: TBlob AS Text_Info1
             , tmp_OrderInfo.Text_Info2 :: TBlob AS Text_Info2
             , tmp_OrderInfo.Text_Info3 :: TBlob AS Text_Info3
        FROM tmpProduct

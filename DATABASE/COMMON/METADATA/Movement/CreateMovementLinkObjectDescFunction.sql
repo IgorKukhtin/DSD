@@ -163,6 +163,14 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PersonalComplete5() RETURNS Int
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_PersonalComplete5', 'Сотрудник комплектовщик 5' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PersonalComplete5');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_MemberSignCarrier() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberSignCarrier'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_MemberSignCarrier', 'Физические лицо (ключь подписи перевозчика)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberSignCarrier');
+  
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_MemberSignConsignor() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberSignConsignor'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_MemberSignConsignor', 'Физические лицо (ключь подписи грузоотправителя)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberSignConsignor');
+
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PersonalStick1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PersonalStick1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_PersonalStick1', 'Сотрудник стикеровщик 1' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PersonalStick1');
@@ -568,13 +576,13 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_UserKeyId() RETURNS Integer AS 
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_UserKeyId', 'Чей файловый ключ использовался при пробитии чека.' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_UserKeyId');
 
-
 /*-------------------------------------------------------------------------------
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 22.05.23                                                                                     * zc_MovementLinkObject_MemberSignCarrier, zc_MovementLinkObject_MemberSignConsignor
  19.04.23         * zc_MovementLinkObject_StatusInsert
  20.02.23                                                                                     * zc_MovementLinkObject_UserKeyId
  14.06.22         * zc_MovementLinkObject_CarInfo
