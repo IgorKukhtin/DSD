@@ -53,14 +53,12 @@ object ProductEditForm: TProductEditForm
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     Properties.Options = [pcoAlwaysShowGoDialogButton, pcoGradient, pcoGradientClientArea]
-    ExplicitWidth = 586
     ClientRectBottom = 497
     ClientRectRight = 594
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitWidth = 586
       object edName: TcxTextEdit
         Left = 10
         Top = 393
@@ -699,7 +697,6 @@ object ProductEditForm: TProductEditForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 1
-      ExplicitWidth = 586
       object cxLabel22: TcxLabel
         Left = 611
         Top = 59
@@ -952,7 +949,6 @@ object ProductEditForm: TProductEditForm
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 22
-        ExplicitWidth = 586
         object dxBarDockControl1: TdxBarDockControl
           Left = 1
           Top = 1
@@ -960,7 +956,6 @@ object ProductEditForm: TProductEditForm
           Height = 26
           Align = dalTop
           BarManager = BarManager
-          ExplicitWidth = 584
         end
         object cxGrid1: TcxGrid
           Left = 1
@@ -969,7 +964,6 @@ object ProductEditForm: TProductEditForm
           Height = 228
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 584
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = BankDS
@@ -1391,7 +1385,6 @@ object ProductEditForm: TProductEditForm
         Align = alTop
         Caption = 'Panel1'
         TabOrder = 23
-        ExplicitWidth = 586
         object dxBarDockControl3: TdxBarDockControl
           Left = 1
           Top = 1
@@ -1399,7 +1392,6 @@ object ProductEditForm: TProductEditForm
           Height = 26
           Align = dalTop
           BarManager = BarManager
-          ExplicitWidth = 584
         end
         object cxGrid: TcxGrid
           Left = 1
@@ -1408,8 +1400,6 @@ object ProductEditForm: TProductEditForm
           Height = 189
           Align = alClient
           TabOrder = 1
-          ExplicitTop = 31
-          ExplicitWidth = 652
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = InvoiceDS
@@ -2023,6 +2013,7 @@ object ProductEditForm: TProductEditForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actInsertUpdateGuides: TdsdInsertUpdateGuides
@@ -2191,6 +2182,7 @@ object ProductEditForm: TProductEditForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actUnComplete: TdsdChangeMovementStatus
@@ -2480,7 +2472,6 @@ object ProductEditForm: TProductEditForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
-      ShortCut = 45
       ImageIndex = 0
       FormName = 'TInvoiceForm'
       FormNameParam.Value = 'TInvoiceForm'
@@ -2526,6 +2517,7 @@ object ProductEditForm: TProductEditForm
         end>
       isShowModal = False
       DataSource = InvoiceDS
+      DataSetRefresh = actDataSetRefreshInv
       IdFieldName = 'Id'
     end
     object actUpdateInv: TdsdInsertUpdateAction
@@ -2557,6 +2549,7 @@ object ProductEditForm: TProductEditForm
         end>
       isShowModal = True
       ActionType = acUpdate
+      DataSetRefresh = actDataSetRefreshInv
       IdFieldName = 'Id'
     end
     object actCompleteInv: TdsdChangeMovementStatus
@@ -2670,6 +2663,7 @@ object ProductEditForm: TProductEditForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+      DataSetRefresh = actDataSetRefreshBank
       IdFieldName = 'Id'
     end
     object actUpdateBank: TdsdInsertUpdateAction
@@ -2709,6 +2703,7 @@ object ProductEditForm: TProductEditForm
         end>
       isShowModal = False
       ActionType = acUpdate
+      DataSetRefresh = actDataSetRefreshBank
       IdFieldName = 'Id'
     end
     object actCompleteBank: TdsdChangeMovementStatus
@@ -3887,7 +3882,6 @@ object ProductEditForm: TProductEditForm
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
-    RefreshAction = actDataSetRefreshInv
     ComponentList = <
       item
         Component = GuidesModel
@@ -4876,8 +4870,8 @@ object ProductEditForm: TProductEditForm
         FieldName = 'Image3'
       end>
     PropertiesCellList = <>
-    Left = 144
-    Top = 344
+    Left = 56
+    Top = 168
   end
   object BankCDS: TClientDataSet
     Aggregates = <>
@@ -4964,8 +4958,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 176
-    Top = 320
+    Left = 208
+    Top = 344
   end
   object spSelectInvoice: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_InvoiceByProduct'
