@@ -312,6 +312,19 @@ type
     actShowErasedBank: TBooleanStoredProcAction;
     spSelectBank: TdsdStoredProc;
     bbShowErasedBank: TdxBarButton;
+    spSelectPrint: TdsdStoredProc;
+    actPrintInvoice: TdsdPrintAction;
+    bbPrintInvoice: TdxBarButton;
+    actMovementProtocolOpenForm: TdsdOpenForm;
+    bbMovementProtocolOpenForm: TdxBarButton;
+    actMovementProtocolOpenFormBank: TdsdOpenForm;
+    bbProtocolOpenFormBank: TdxBarButton;
+    actDataSetRefreshInv: TdsdDataSetRefresh;
+    actDataSetRefreshBank: TdsdDataSetRefresh;
+    bbDataSetRefreshInv: TdxBarButton;
+    bbDataSetRefreshBank: TdxBarButton;
+    macInsertInv: TMultiAction;
+    actSelectInvoice: TdsdExecStoredProc;
   private
     { Private declarations }
   public

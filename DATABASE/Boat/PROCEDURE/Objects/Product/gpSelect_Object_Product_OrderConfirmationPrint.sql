@@ -227,9 +227,12 @@ BEGIN
             , vbOperDate_OrderClient  AS OperDate_Order
             , vbInvNumber_OrderClient AS InvNumber_Order
 
-            , TRIM(tmp_OrderInfo.Text_Info1) :: TBlob AS Text_Info1
+            , tmp_OrderInfo.Text_Info1 :: TBlob AS Text_Info1
             , tmp_OrderInfo.Text_Info2 :: TBlob AS Text_Info2
             , tmp_OrderInfo.Text_Info3 :: TBlob AS Text_Info3
+            , CASE WHEN tmp_OrderInfo.Text_Info1 is Null THEN FALSE ELSE TRUE END AS isText_Info1
+            , CASE WHEN COALESCE (tmp_OrderInfo.Text_Info2,'') = '' THEN FALSE ELSE TRUE END AS isText_Info2
+            , CASE WHEN COALESCE (tmp_OrderInfo.Text_Info3,'') = '' THEN FALSE ELSE TRUE END AS isText_Info3
        FROM tmpProduct
           LEFT JOIN ObjectFloat AS ObjectFloat_Power
                                 ON ObjectFloat_Power.ObjectId = tmpProduct.EngineId

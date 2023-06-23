@@ -59,10 +59,10 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-   {
+
     LoadReportFromFile('PrintMovement_Invoice', ReportPath + '\PrintMovement_Invoice.fr3');
     exit;
-    }
+
     LoadReportFromFile('PrintReport_OrderClientByBoatGoods', ReportPath + '\PrintReport_OrderClientByBoatGoods.fr3');
     exit;
     LoadReportFromFile('PrintReport_OrderClientByBoat', ReportPath + '\PrintReport_OrderClientByBoat.fr3');

@@ -3,7 +3,7 @@ object ProductEditForm: TProductEditForm
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
   ClientHeight = 567
-  ClientWidth = 586
+  ClientWidth = 594
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -46,21 +46,21 @@ object ProductEditForm: TProductEditForm
   object cxPageControl1: TcxPageControl
     Left = 0
     Top = 0
-    Width = 586
+    Width = 594
     Height = 497
     Align = alTop
     TabOrder = 3
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     Properties.Options = [pcoAlwaysShowGoDialogButton, pcoGradient, pcoGradientClientArea]
-    ExplicitWidth = 791
+    ExplicitWidth = 586
     ClientRectBottom = 497
-    ClientRectRight = 586
+    ClientRectRight = 594
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitWidth = 593
+      ExplicitWidth = 586
       object edName: TcxTextEdit
         Left = 10
         Top = 393
@@ -699,9 +699,7 @@ object ProductEditForm: TProductEditForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 1
-      ExplicitLeft = -3
-      ExplicitTop = 32
-      ExplicitWidth = 1104
+      ExplicitWidth = 586
       object cxLabel22: TcxLabel
         Left = 611
         Top = 59
@@ -949,35 +947,29 @@ object ProductEditForm: TProductEditForm
       object Panel1: TPanel
         Left = 0
         Top = 217
-        Width = 586
+        Width = 594
         Height = 256
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 22
-        ExplicitLeft = 7
-        ExplicitTop = 223
-        ExplicitWidth = 588
-        ExplicitHeight = 244
+        ExplicitWidth = 586
         object dxBarDockControl1: TdxBarDockControl
           Left = 1
           Top = 1
-          Width = 584
+          Width = 592
           Height = 26
           Align = dalTop
           BarManager = BarManager
-          ExplicitWidth = 586
+          ExplicitWidth = 584
         end
         object cxGrid1: TcxGrid
           Left = 1
           Top = 27
-          Width = 584
+          Width = 592
           Height = 228
           Align = alClient
           TabOrder = 1
-          ExplicitLeft = 217
-          ExplicitTop = 33
-          ExplicitWidth = 586
-          ExplicitHeight = 216
+          ExplicitWidth = 584
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = BankDS
@@ -1394,33 +1386,30 @@ object ProductEditForm: TProductEditForm
       object Panel2: TPanel
         Left = 0
         Top = 0
-        Width = 586
+        Width = 594
         Height = 217
         Align = alTop
         Caption = 'Panel1'
         TabOrder = 23
-        ExplicitLeft = 1
-        ExplicitTop = 3
-        ExplicitWidth = 588
+        ExplicitWidth = 586
         object dxBarDockControl3: TdxBarDockControl
           Left = 1
           Top = 1
-          Width = 584
+          Width = 592
           Height = 26
           Align = dalTop
           BarManager = BarManager
-          ExplicitWidth = 586
+          ExplicitWidth = 584
         end
         object cxGrid: TcxGrid
           Left = 1
           Top = 27
-          Width = 584
+          Width = 592
           Height = 189
           Align = alClient
           TabOrder = 1
-          ExplicitLeft = 49
-          ExplicitTop = 28
-          ExplicitWidth = 586
+          ExplicitTop = 31
+          ExplicitWidth = 652
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = InvoiceDS
@@ -2002,8 +1991,8 @@ object ProductEditForm: TProductEditForm
     end
   end
   object ActionList: TActionList
-    Left = 440
-    Top = 195
+    Left = 136
+    Top = 163
     object actDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -2021,6 +2010,19 @@ object ProductEditForm: TProductEditForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actDataSetRefreshBank: TdsdDataSetRefresh
+      Category = 'Doc'
+      MoveParams = <>
+      StoredProc = spSelectBank
+      StoredProcList = <
+        item
+          StoredProc = spSelectBank
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
       RefreshOnTabSetChanges = False
     end
     object actInsertUpdateGuides: TdsdInsertUpdateGuides
@@ -2178,6 +2180,19 @@ object ProductEditForm: TProductEditForm
       Status = mtDelete
       Guides = GuidesStatus
     end
+    object actDataSetRefreshInv: TdsdDataSetRefresh
+      Category = 'Doc'
+      MoveParams = <>
+      StoredProc = spSelectInvoice
+      StoredProcList = <
+        item
+          StoredProc = spSelectInvoice
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
       MoveParams = <>
@@ -2235,6 +2250,36 @@ object ProductEditForm: TProductEditForm
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1089' '#1089#1072#1081#1090#1072
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1079#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072' '#1089' '#1089#1072#1081#1090#1072
+    end
+    object actMovementProtocolOpenFormBank: TdsdOpenForm
+      Category = 'Doc'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1054#1087#1083#1072#1090#1099'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1054#1087#1083#1072#1090#1099'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = BankCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = BankCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object actLoadAgilis: TdsdLoadAgilis
       Category = 'DSDLib'
@@ -2298,6 +2343,17 @@ object ProductEditForm: TProductEditForm
         end>
       Caption = 'mactLoad_Doc'
     end
+    object actGet_ProductPhoto: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_ProductPhoto
+      StoredProcList = <
+        item
+          StoredProc = spGet_ProductPhoto
+        end>
+      Caption = 'actGet_ProductPhoto'
+    end
     object actGet_ProductDocument: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -2351,17 +2407,6 @@ object ProductEditForm: TProductEditForm
           Action = actInsertUpdate_Photo
         end>
       Caption = 'mactLoad_Photo'
-    end
-    object actGet_ProductPhoto: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_ProductPhoto
-      StoredProcList = <
-        item
-          StoredProc = spGet_ProductPhoto
-        end>
-      Caption = 'actGet_ProductPhoto'
     end
     object actLoadFile_Photo: TdsdLoadFile_https
       Category = 'DSDLib'
@@ -2425,14 +2470,16 @@ object ProductEditForm: TProductEditForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
+        end
+        item
         end>
       Caption = 'actInsertUpdate'
     end
     object actInsertInv: TdsdInsertUpdateAction
       Category = 'Doc'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TInvoiceForm'
@@ -2484,8 +2531,8 @@ object ProductEditForm: TProductEditForm
     object actUpdateInv: TdsdInsertUpdateAction
       Category = 'Doc'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1095#1077#1090
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 1
       FormName = 'TInvoiceForm'
       FormNameParam.Value = 'TInvoiceForm'
@@ -2573,9 +2620,9 @@ object ProductEditForm: TProductEditForm
     object actInsertBank: TdsdInsertUpdateAction
       Category = 'Doc'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
-      ShortCut = 45
+      AfterAction = actDataSetRefreshInv
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1054#1087#1083#1072#1090#1091
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1054#1087#1083#1072#1090#1091
       ImageIndex = 0
       FormName = 'TBankAccountMovementForm'
       FormNameParam.Value = ''
@@ -2628,8 +2675,8 @@ object ProductEditForm: TProductEditForm
     object actUpdateBank: TdsdInsertUpdateAction
       Category = 'Doc'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1087#1083#1072#1090#1091
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1087#1083#1072#1090#1091
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TBankAccountMovementForm'
@@ -2702,6 +2749,109 @@ object ProductEditForm: TProductEditForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 13
       Status = mtDelete
+    end
+    object actPrintInvoice: TdsdPrintAction
+      Category = 'Doc'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090#1072
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 44197d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44197d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Invoice'
+      ReportNameParam.Value = 'PrintMovement_Invoice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actMovementProtocolOpenForm: TdsdOpenForm
+      Category = 'Doc'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = InvoiceCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = InvoiceCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macInsertInv: TMultiAction
+      Category = 'Doc'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertInv
+        end
+        item
+          Action = actSelectInvoice
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1095#1077#1090
+      ImageIndex = 0
+    end
+    object actSelectInvoice: TdsdExecStoredProc
+      Category = 'Doc'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectInvoice
+      StoredProcList = <
+        item
+          StoredProc = spSelectInvoice
+        end>
+      Caption = 'actSelectInvoice'
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -2957,8 +3107,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 168
+    Left = 216
+    Top = 136
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -3737,6 +3887,7 @@ object ProductEditForm: TProductEditForm
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
+    RefreshAction = actDataSetRefreshInv
     ComponentList = <
       item
         Component = GuidesModel
@@ -3846,8 +3997,8 @@ object ProductEditForm: TProductEditForm
     ImageOptions.Images = dmMain.ImageList
     PopupMenuLinks = <>
     UseSystemFont = True
-    Left = 80
-    Top = 241
+    Left = 56
+    Top = 337
     DockControlHeights = (
       0
       0
@@ -3895,7 +4046,31 @@ object ProductEditForm: TProductEditForm
         end
         item
           Visible = True
+          ItemName = 'bbDataSetRefreshInv'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowErasedInv'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintInvoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocolOpenForm'
         end
         item
           Visible = True
@@ -3949,7 +4124,23 @@ object ProductEditForm: TProductEditForm
         end
         item
           Visible = True
+          ItemName = 'bbDataSetRefreshBank'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowErasedBank'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenFormBank'
         end
         item
           Visible = True
@@ -4028,6 +4219,26 @@ object ProductEditForm: TProductEditForm
       Action = actShowErasedBank
       Category = 0
     end
+    object bbPrintInvoice: TdxBarButton
+      Action = actPrintInvoice
+      Category = 0
+    end
+    object bbMovementProtocolOpenForm: TdxBarButton
+      Action = actMovementProtocolOpenForm
+      Category = 0
+    end
+    object bbProtocolOpenFormBank: TdxBarButton
+      Action = actMovementProtocolOpenFormBank
+      Category = 0
+    end
+    object bbDataSetRefreshInv: TdxBarButton
+      Action = actDataSetRefreshInv
+      Category = 0
+    end
+    object bbDataSetRefreshBank: TdxBarButton
+      Action = actDataSetRefreshBank
+      Category = 0
+    end
   end
   object GuidesStatusInvoice: TdsdGuides
     KeyField = 'Id'
@@ -4063,8 +4274,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 28
-    Top = 38
+    Left = 44
+    Top = 118
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
@@ -4639,8 +4850,8 @@ object ProductEditForm: TProductEditForm
   end
   object InvoiceDS: TDataSource
     DataSet = InvoiceCDS
-    Left = 64
-    Top = 328
+    Left = 104
+    Top = 312
   end
   object dsdDBViewAddOnInvoice: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4665,8 +4876,8 @@ object ProductEditForm: TProductEditForm
         FieldName = 'Image3'
       end>
     PropertiesCellList = <>
-    Left = 112
-    Top = 304
+    Left = 144
+    Top = 344
   end
   object BankCDS: TClientDataSet
     Aggregates = <>
@@ -4860,5 +5071,22 @@ object ProductEditForm: TProductEditForm
     PackSize = 1
     Left = 216
     Top = 456
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Invoice_Print'
+    DataSets = <>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = InvoiceCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 368
+    Top = 112
   end
 end

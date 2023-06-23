@@ -58,7 +58,7 @@ BEGIN
        SELECT
              0 AS Id
            , CAST (NEXTVAL ('movement_Invoice_seq') AS TVarChar)  AS InvNumber
-           , inOperDate                 AS OperDate
+           , CURRENT_DATE /*inOperDate*/ :: TDateTime AS OperDate
            , NULL :: TDateTime          AS PlanDate
            , lfObject_Status.Code       AS StatusCode
            , lfObject_Status.Name       AS StatusName
@@ -69,8 +69,8 @@ BEGIN
 
            , Object_Object.Id           AS ObjectId
            , Object_Object.ValueData    AS ObjectName
-           , 0                          AS InfoMoneyId
-           , CAST ('' as TVarChar)      AS InfoMoneyName
+           , Object_InfoMoney.Id        AS InfoMoneyId
+           , Object_InfoMoney.ValueData ::TVarChar AS InfoMoneyName
            , Object_Product.Id          AS ProductId
            , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
            , 0                          AS PaidKindId
@@ -89,6 +89,11 @@ BEGIN
            LEFT JOIN MovementDesc AS MovementDesc_Parent ON MovementDesc_Parent.Id = Movement_Parent.DescId
            LEFT JOIN Object AS Object_Object ON Object_Object.Id = inClientId
            LEFT JOIN Object AS Object_Product ON Object_Product.Id = inProductId 
+           
+           LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
+                                ON ObjectLink_InfoMoney.ObjectId = Object_Object.Id
+                               AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Client_InfoMoney()
+           LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_InfoMoney.ChildObjectId
       ;
      ELSE
 
