@@ -325,6 +325,7 @@ type
     bbDataSetRefreshBank: TdxBarButton;
     macInsertInv: TMultiAction;
     actSelectInvoice: TdsdExecStoredProc;
+    PrintItemsCDS: TClientDataSet;
   private
     { Private declarations }
   public

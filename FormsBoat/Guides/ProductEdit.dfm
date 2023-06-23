@@ -2564,6 +2564,7 @@ object ProductEditForm: TProductEditForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
       Status = mtComplete
+      DataSource = InvoiceDS
     end
     object actUnCompleteInv: TdsdChangeMovementStatus
       Category = 'Doc'
@@ -2577,6 +2578,7 @@ object ProductEditForm: TProductEditForm
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 11
       Status = mtUncomplete
+      DataSource = InvoiceDS
     end
     object actSetErasedInv: TdsdChangeMovementStatus
       Category = 'Doc'
@@ -2590,6 +2592,7 @@ object ProductEditForm: TProductEditForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 13
       Status = mtDelete
+      DataSource = InvoiceDS
     end
     object actShowErasedInv: TBooleanStoredProcAction
       Category = 'Doc'
@@ -2718,6 +2721,7 @@ object ProductEditForm: TProductEditForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
       Status = mtComplete
+      DataSource = BankDS
     end
     object actUnCompleteBank: TdsdChangeMovementStatus
       Category = 'Doc'
@@ -2731,6 +2735,7 @@ object ProductEditForm: TProductEditForm
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 11
       Status = mtUncomplete
+      DataSource = BankDS
     end
     object actSetErasedBank: TdsdChangeMovementStatus
       Category = 'Doc'
@@ -2744,6 +2749,7 @@ object ProductEditForm: TProductEditForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 13
       Status = mtDelete
+      DataSource = BankDS
     end
     object actPrintInvoice: TdsdPrintAction
       Category = 'Doc'
@@ -2769,6 +2775,7 @@ object ProductEditForm: TProductEditForm
       ImageIndex = 3
       DataSets = <
         item
+          DataSet = PrintItemsCDS
           UserName = 'frxDBDHeader'
         end>
       Params = <
@@ -4980,6 +4987,7 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'inIsErased'
         Value = False
+        Component = actShowErasedInv
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5058,6 +5066,7 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'inIsErased'
         Value = False
+        Component = actShowErasedBank
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5068,7 +5077,11 @@ object ProductEditForm: TProductEditForm
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Invoice_Print'
-    DataSets = <>
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
     OutputType = otMultiDataSet
     Params = <
       item
@@ -5082,5 +5095,11 @@ object ProductEditForm: TProductEditForm
     PackSize = 1
     Left = 368
     Top = 112
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 262
   end
 end
