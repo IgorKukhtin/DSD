@@ -297,17 +297,17 @@ BEGIN
                -- замена, что б сразу искало в продажах
               , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN zc_Movement_ReturnIn() ELSE Movement.DescId END AS MovementDescId
               , Movement.DescId                                                                                                AS MovementDescId_orig
-              
-               -- 
+
+               --
               , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN COALESCE (Movement.ParentId, 0) ELSE 0 END AS MovementId_tax
-               -- 
+               --
               , CASE WHEN Movement.DescId = zc_Movement_ReturnIn()        THEN MovementLinkObject_From.ObjectId
                      WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN MovementLinkObject_Partner.ObjectId
                      ELSE MovementLinkObject_PartnerFrom.ObjectId
                 END AS PartnerId
-               -- 
+               --
               , MovementLinkObject_PaidKind.ObjectId AS PaidKindId
-               -- 
+               --
               , MovementLinkObject_Contract.ObjectId AS ContractId
                 INTO vbStartDate, vbEndDate, inEndDateSale
                    , vbMovementDescId, vbMovementDescId_orig, vbMovementId_tax, vbPartnerId, vbPaidKindId, vbContractId
@@ -799,7 +799,7 @@ BEGIN
                              )
                , MI_Child AS (SELECT MovementItem.Id, MovementItem.ParentId
                                    , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MIFloat_MovementItemId.ValueData ORDER BY MovementItem.Id)  = 1
-                                               THEN COALESCE (MIFloat_MovementItemId.ValueData, 0) 
+                                               THEN COALESCE (MIFloat_MovementItemId.ValueData, 0)
                                           ELSE 0
                                      END :: Integer AS MovementItemId_sale
                               FROM MovementItem
@@ -907,9 +907,10 @@ BEGIN
 
 if inUserId = 5 AND 1=1
 then
-    RAISE EXCEPTION 'Admin - Errr _end   % % %', outMessageText
+    RAISE EXCEPTION 'Admin - Errr _end   % % % %', outMessageText
     , (SELECT MAX (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar || ' _ ' || MIN (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar FROM _tmpResult_ReturnIn_Auto)
     , (select Movement.InvNumber from _tmpResult_ReturnIn_Auto join Movement on Movement.Id = MovementId_sale LIMIT 1)
+    , (select count(*) from _tmpResult_ReturnIn_Auto)
      ;
     -- 'Повторите действие через 3 мин.'
 end if;
