@@ -68,6 +68,16 @@ BEGIN
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
     ;
 
+     -- Пересохранили VATPercent
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), inMovementId, COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0))
+     FROM ObjectLink AS OL_Partner_TaxKind
+          LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                ON ObjectFloat_TaxKind_Value.ObjectId = OL_Partner_TaxKind.ChildObjectId 
+                               AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
+     WHERE OL_Partner_TaxKind.ObjectId = vbClientId_From
+       AND OL_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+    ;
+
      -- Проверка - Boat Structure
      IF EXISTS (SELECT ObjectLink_ProdColorPattern.ChildObjectId
                 FROM Object AS Object_ProdColorItems
@@ -817,12 +827,11 @@ BEGIN
           ;
 
 
-        RAISE EXCEPTION 'Ошибка.<%>  <%> <%>'
+        /*RAISE EXCEPTION 'Ошибка.<%>  <%> <%>'
         , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) = 0 and Key_Id_text ilike '%magenta%')
         , (select count(*) from _tmpReceiptItems_new where COALESCE (_tmpReceiptItems_new.GoodsId_child_old, 0) > 0 and Key_Id_text ilike '%magenta%')
         , (select count(*) from _tmpReceiptItems_new )
-         ;
-
+         ;*/
 
 
         -- Создаем новый Узел - master
@@ -1061,7 +1070,6 @@ BEGIN
              ) AS tmpGoods
         WHERE _tmpReceiptItems_new.ObjectId_parent_old = tmpGoods.GoodsId_parent_old
        ;
-
 
 
 

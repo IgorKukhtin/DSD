@@ -73,6 +73,10 @@ BEGIN
 -- inValue2:= zfCalc_Text_replace (inValue2, '®', '');
 
 
+-- if inValue1 = 'b305_u_1' then RAISE EXCEPTION 'Ошибка.<%>.', inValue1; end if;
+-- RAISE EXCEPTION 'Ошибка.<%   %>.', inValue1,  vbProdOptionsId; 
+
+
      -- замена
      IF inValue3 ILIKE 'null' THEN inValue3:= ''; END IF;
      -- замена
@@ -207,11 +211,13 @@ END IF;
 
      -- замена - временно - захардкодил
      IF inTitle ILIKE 'upholstery' AND inTitle2 ILIKE 'material_title' AND inValue2 ILIKE 'LIENZO' AND inValue3 ILIKE 'Black'
+        AND 1=0
      THEN inValue2:= 'SILVERTEX®';
           IF inValue1 = 'b280_u_3' THEN inValue1:= 'b280_u_1'; END IF;
 
      -- замена - временно - захардкодил
      ELSEIF inTitle ILIKE 'upholstery' AND inValue1 <> 'b280_u_1' AND inTitle2 ILIKE 'material_title' AND inValue2 ILIKE 'SILVERTEX®'
+        AND 1=0
      THEN inValue1 = 'b280_u_1';
           -- замена - временно - захардкодил
           IF inValue3 ILIKE 'Ice Cream' AND inValue5 ILIKE 'NAU-5002'
@@ -220,6 +226,7 @@ END IF;
 
      -- замена - временно - захардкодил
      ELSEIF inTitle ILIKE 'teak' AND inValue1 <> 'b280_t_2' AND inTitle2 ILIKE 'material_title' AND inValue2 ILIKE 'BLEACHED'
+        AND 1=0
      THEN inValue1 = 'b280_t_2';
 
 
@@ -1173,7 +1180,7 @@ END IF;
                                                 , inPartnerId              := 2975 -- ORCA
                                                 , inUnitId                 := NULL
                                                 , inDiscountPartnerId      := NULL
-                                                , inTaxKindId              := zc_TaxKind_Basis()
+                                                , inTaxKindId              := zc_Enum_TaxKind_Basis()
                                                 , inEngineId               := NULL
                                                 , inSession                := inSession
                                                  );
@@ -1276,7 +1283,7 @@ END IF;
                                                 , inPartnerId              := NULL
                                                 , inUnitId                 := NULL
                                                 , inDiscountPartnerId      := NULL
-                                                , inTaxKindId              := zc_TaxKind_Basis()
+                                                , inTaxKindId              := zc_Enum_TaxKind_Basis()
                                                 , inEngineId               := NULL
                                                 , inSession                := inSession
                                                  );
@@ -1303,26 +1310,40 @@ END IF;
                       -- 2.1. Проверка
                       IF 1 < (SELECT COUNT(*)
                               FROM ObjectLink AS OL_ProdColor
-                                   JOIN Object AS Object_Goods ON Object_Goods.Id       = OL_ProdColor.ObjectId
-                                                              AND Object_Goods.isErased = FALSE
+                                   JOIN Object AS Object_Goods ON Object_Goods.Id        = OL_ProdColor.ObjectId
+                                                              AND Object_Goods.isErased  = FALSE
                                                               AND TRIM (Object_Goods.ValueData) ILIKE CASE WHEN inTitle ILIKE 'moldings' THEN 'fender' ELSE TRIM (Object_Goods.ValueData) END
-                                                              AND Object_Goods.ObjectCode BETWEEN CASE WHEN inTitle ILIKE 'hull' OR inTitle ILIKE 'deck' OR inTitle ILIKE 'sconsole'
+                                                            /*AND Object_Goods.ObjectCode BETWEEN CASE WHEN inTitle ILIKE 'hull' OR inTitle ILIKE 'deck' OR inTitle ILIKE 'sconsole'
                                                                                                        THEN -100
                                                                                                        ELSE Object_Goods.ObjectCode
                                                                                                   END
                                                                                               AND CASE WHEN inTitle ILIKE 'hull' OR inTitle ILIKE 'deck' OR inTitle ILIKE 'sconsole'
                                                                                                        THEN 1
                                                                                                        ELSE Object_Goods.ObjectCode
-                                                                                                  END
+                                                                                                  END*/
+                                   LEFT JOIN ObjectString AS OS_Comment
+                                                          ON OS_Comment.ObjectId = Object_Goods.Id
+                                                         AND OS_Comment.DescId   = zc_ObjectString_Goods_Comment()
+                                                         AND (OS_Comment.ValueData ILIKE 'HULL/DECK'
+                                                           OR OS_Comment.ValueData ILIKE 'HULL'
+                                                           OR OS_Comment.ValueData ILIKE 'DECK'
+                                                           OR OS_Comment.ValueData ILIKE 'STEERING CONSOLE'
+                                                             )
+
                               WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
                                 -- с таким Цветом
-                                AND OL_ProdColor.ChildObjectId IN (SELECT vbProdColorId UNION SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
+                                AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
+                                -- "узлы" с таким примечание отбросили
+                                AND OS_Comment.ObjectId IS NULL
                              )
                       THEN
-                          RAISE EXCEPTION 'Ошибка.Найдено несколько видов сырья для <%> с цветом = <%>.<%>'
+                          RAISE EXCEPTION 'Ошибка.Найдено несколько видов сырья%для <%>%с цветом = <%>.' -- %<%>
+                                        , CHR (13)
                                         , inTitle
+                                        , CHR (13)
                                         , vbColor_title
-                                        , vbProdColorId
+                                       -- , CHR (13)
+                                       -- , vbProdColorId
                                          ;
                       END IF;
                       -- 2.2. нашли Комплектующее через цвет
@@ -1411,7 +1432,7 @@ END IF;
                                                 , inPartnerId              := NULL
                                                 , inUnitId                 := NULL
                                                 , inDiscountPartnerId      := NULL
-                                                , inTaxKindId              := zc_TaxKind_Basis()
+                                                , inTaxKindId              := zc_Enum_TaxKind_Basis()
                                                 , inEngineId               := NULL
                                                 , inSession                := inSession
                                                  );
