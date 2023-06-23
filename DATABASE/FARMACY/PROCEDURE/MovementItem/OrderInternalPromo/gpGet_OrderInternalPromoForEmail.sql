@@ -38,7 +38,7 @@ BEGIN
                   WHEN inJuridicalId = 59612 THEN 'sichkarykvictoria@ventaltd.com.ua,zakaz@ventaltd.com.ua' -- Вента
                   WHEN inJuridicalId = 183353 THEN 'n.ivanova@fitolek.com'                                 -- Фито-лек
                   WHEN inJuridicalId = 410822 THEN 'zakaz@ametrin.com.ua'                                  -- Аметрин 
-                  WHEN inJuridicalId = 183319 THEN 'elhovskiy.a@dolphi.com.ua'                             -- Долфи Украина
+                  WHEN inJuridicalId = 183319 THEN 'elhovskiy.a@dolphi.com.ua,offerdnepr@dolphi.com.ua'    -- Долфи Украина
                   WHEN inJuridicalId = 183332 THEN 'Ihor.Loboda@uf.ua'                                     -- Медцентр М.Т.К.
                   WHEN inJuridicalId = 18926945 THEN 'bpa@konex.com.ua'                                    -- Конекс
                   ELSE '' END;          

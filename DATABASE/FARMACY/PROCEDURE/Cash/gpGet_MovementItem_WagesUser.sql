@@ -28,6 +28,9 @@ $BODY$
     DECLARE vbUnitKey TVarChar;
     DECLARE vbMovementId    Integer;
     DECLARE vbMovementMaxId Integer;
+    DECLARE vbAntiTOPMP_Count Integer;
+    DECLARE vbAntiTOPMP_CountFine Integer;
+    DECLARE vbAntiTOPMP_SumFine TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Sale());
@@ -56,7 +59,26 @@ BEGIN
        RAISE EXCEPTION 'Не найден расчет з.п. за %', zfCalc_MonthYearName(inOperDate);
     END IF;
 
-    IF EXISTS(SELECT 1 FROM MovementItem 
+   SELECT ObjectFloat_CashSettings_AntiTOPMP_Count.ValueData::Integer              AS AntiTOPMP_Count
+        , ObjectFloat_CashSettings_AntiTOPMP_CountFine.ValueData::Integer          AS AntiTOPMP_CountFine
+        , ObjectFloat_CashSettings_AntiTOPMP_SumFine.ValueData                     AS AntiTOPMP_SumFine
+   INTO vbAntiTOPMP_Count , vbAntiTOPMP_CountFine , vbAntiTOPMP_SumFine
+   FROM Object AS Object_CashSettings
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_Count
+                              ON ObjectFloat_CashSettings_AntiTOPMP_Count.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_AntiTOPMP_Count.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_Count()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_CountFine
+                              ON ObjectFloat_CashSettings_AntiTOPMP_CountFine.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_AntiTOPMP_CountFine.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_CountFine()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_SumFine
+                              ON ObjectFloat_CashSettings_AntiTOPMP_SumFine.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_AntiTOPMP_SumFine.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_SumFine()
+
+   WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+   LIMIT 1;
+        
+   IF EXISTS(SELECT 1 FROM MovementItem 
               WHERE MovementItem.MovementId = vbMovementId
                 AND MovementItem.ObjectId = vbUserId
                 AND MovementItem.DescId = zc_MI_Master()
@@ -264,7 +286,14 @@ BEGIN
                         THEN - MIFloat_IlliquidAssets.ValueData ELSE MIFloat_IlliquidAssetsRepayment.ValueData END::TFloat                             AS IlliquidAssetsRepayment
                  , MIFloat_PenaltySUN.ValueData                 AS PenaltySUN
                  , MIFloat_PenaltyExam.ValueData                AS PenaltyExam
-                 , MIFloat_ApplicationAward.ValueData           AS ApplicationAward
+                 , (COALESCE(MIFloat_ApplicationAward.ValueData, 0) +
+                   CASE WHEN inOperDate = date_trunc('month', CURRENT_DATE) 
+                         AND tmpImplementationPlan.AntiTOPMP_Place > 0
+                         AND vbAntiTOPMP_CountFine >= tmpImplementationPlan.AntiTOPMP_Place
+                         AND COALESCE (MIFloat_ApplicationAward.ValueData, 0) = 0
+                         AND COALESCE (vbAntiTOPMP_SumFine, 0) > 0
+                        THEN - vbAntiTOPMP_SumFine
+                        ELSE 0 END)::TFloat           AS ApplicationAward
                  , MIF_AmountCard.ValueData                     AS AmountCard
                  , (MIAmount.Amount +
                     COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
@@ -278,7 +307,14 @@ BEGIN
                     COALESCE (MIFloat_PenaltySUN.ValueData, 0) +
                     COALESCE (MIFloat_PenaltyExam.ValueData, 0) +
                     COALESCE (MIFloat_ApplicationAward.ValueData, 0) -
-                    COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
+                    COALESCE (MIF_AmountCard.ValueData, 0) +
+                    CASE WHEN inOperDate = date_trunc('month', CURRENT_DATE) 
+                         AND tmpImplementationPlan.AntiTOPMP_Place > 0
+                         AND vbAntiTOPMP_CountFine >= tmpImplementationPlan.AntiTOPMP_Place
+                         AND COALESCE (MIFloat_ApplicationAward.ValueData, 0) = 0
+                         AND COALESCE (vbAntiTOPMP_SumFine, 0) > 0
+                        THEN - vbAntiTOPMP_SumFine
+                        ELSE 0 END)::TFloat AS AmountHand
 
 
                  , Object_Member.ObjectCode           AS MemberCode
@@ -322,7 +358,12 @@ BEGIN
                          AND COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
                         THEN '; ' ELSE '' END||
                    CASE WHEN COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
-                        THEN 'Прил: '||zfConvert_FloatToString(COALESCE(Round(tmpImplementationPlan.PenaltiMobApp, 2), 0)) ELSE '' END||
+                        THEN 'Прил: '||zfConvert_FloatToString(COALESCE(Round(CASE WHEN tmpImplementationPlan.AntiTOPMP_Place > 0
+                                                                                     AND vbAntiTOPMP_CountFine >= tmpImplementationPlan.AntiTOPMP_Place
+                                                                                     AND COALESCE (MIFloat_ApplicationAward.ValueData, 0) = 0
+                                                                                     AND COALESCE (vbAntiTOPMP_SumFine, 0) > 0
+                                                                                    THEN - vbAntiTOPMP_SumFine
+                                                                                    ELSE 0 END, 2), 0)) ELSE '' END||
                    CASE WHEN COALESCE (tmpImplementationPlan.AntiTOPMP_Place, 0) <> 0 
                          AND COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
                         THEN '; Позиция в антиТОпе №: '||tmpImplementationPlan.AntiTOPMP_Place::TVarChar ELSE '' END||
@@ -412,7 +453,7 @@ BEGIN
                   LEFT JOIN ObjectBoolean AS ObjectBoolean_ShowPlanMobileAppUser
                                           ON ObjectBoolean_ShowPlanMobileAppUser.ObjectId = vbUnitId
                                          AND ObjectBoolean_ShowPlanMobileAppUser.DescId = zc_ObjectBoolean_Unit_ShowPlanMobileAppUser()
-                                                 
+                                         AND tmpImplementationPlan.AntiTOPMP_Place > 0
 
             WHERE MovementItem.MovementId = vbMovementId
               AND MovementItem.ObjectId = vbUserId

@@ -412,7 +412,7 @@ inherited WagesUserForm: TWagesUserForm
         object cxLabel32: TcxLabel
           Left = 298
           Top = 111
-          Caption = #1052#1086#1073'. '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077
+          Caption = #1052#1086#1073'. '#1087#1088#1080#1083'.  ('#1096#1090#1088#1072#1092')'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
           Style.Font.Color = clWindowText
