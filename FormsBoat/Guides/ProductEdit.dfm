@@ -2660,8 +2660,8 @@ object ProductEditForm: TProductEditForm
         item
           Name = 'inMovementId_Invoice'
           Value = Null
-          Component = FormParams
-          ComponentItem = 'inMovementId_Invoice'
+          Component = InvoiceCDS
+          ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -3838,8 +3838,8 @@ object ProductEditForm: TProductEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 319
-    Top = 268
+    Left = 335
+    Top = 308
   end
   object GuidesClient: TdsdGuides
     KeyField = 'Id'
@@ -4622,8 +4622,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 376
-    Top = 360
+    Left = 408
+    Top = 328
   end
   object spGet_ProductDocument: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ProductDocument_https'
@@ -4993,8 +4993,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 336
-    Top = 352
+    Left = 288
+    Top = 376
   end
   object spMovementCompleteBank: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_BankAccount'
