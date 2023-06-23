@@ -47,6 +47,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              
              , GLN_car TVarChar, GLN_from TVarChar, GLN_Unloading TVarChar, GLN_to TVarChar, GLN_Driver TVarChar
              , KATOTTG_Unloading TVarChar, KATOTTG_Unit TVarChar
+             , MemberSignConsignorName TVarChar, SignConsignorDate TDateTime, MemberSignCarrierName TVarChar, SignCarrierDate TDateTime
 
               )
 AS
@@ -155,6 +156,10 @@ BEGIN
            , COALESCE(ObjectString_Unit_KATOTTG_To.ValueData, ''):: TVarChar    AS KATOTTG_Unloading
            , COALESCE(ObjectString_Unit_KATOTTG_Unit.ValueData, ''):: TVarChar  AS KATOTTG_Unit
 
+           , Object_MemberSignConsignor.ValueData                               AS MemberSignConsignorName
+           , MovementDate_SignConsignor.ValueData                               AS SignConsignorDate
+           , Object_MemberSignCarrier.ValueData                                 AS MemberSignCarrierName
+           , MovementDate_SignCarrier.ValueData                                 AS SignCarrierDate
 
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_TransportGoods()
@@ -436,6 +441,21 @@ BEGIN
                                    ON ObjectString_DriverGLN.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                   AND ObjectString_DriverGLN.DescId = zc_ObjectString_Member_GLN()
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSignConsignor
+                                         ON MovementLinkObject_MemberSignConsignor.MovementId = Movement.Id
+                                        AND MovementLinkObject_MemberSignConsignor.DescId = zc_MovementLinkObject_MemberSignConsignor()
+            LEFT JOIN Object AS Object_MemberSignConsignor ON Object_MemberSignConsignor.Id = MovementLinkObject_MemberSignConsignor.ObjectId
+            LEFT JOIN MovementDate AS MovementDate_SignConsignor
+                                   ON MovementDate_SignConsignor.MovementId =  Movement.Id
+                                  AND MovementDate_SignConsignor.DescId = zc_MovementDate_SignConsignor()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSignCarrier
+                                         ON MovementLinkObject_MemberSignCarrier.MovementId = Movement.Id
+                                        AND MovementLinkObject_MemberSignCarrier.DescId = zc_MovementLinkObject_MemberSignCarrier()
+            LEFT JOIN Object AS Object_MemberSignCarrier ON Object_MemberSignCarrier.Id = MovementLinkObject_MemberSignCarrier.ObjectId
+            LEFT JOIN MovementDate AS MovementDate_SignCarrier
+                                   ON MovementDate_SignCarrier.MovementId =  Movement.Id
+                                  AND MovementDate_SignCarrier.DescId = zc_MovementDate_SignCarrier()
       ;
   
 END;
@@ -455,4 +475,3 @@ $BODY$
 
 SELECT * FROM gpSelect_Movement_TransportGoods_EDIN (inStartDate:= '31.01.2022', inEndDate:= '31.01.2022', inIsErased:=false, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin()) 
 where isSend_eTTN = True
-
