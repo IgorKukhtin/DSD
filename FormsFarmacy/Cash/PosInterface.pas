@@ -11,6 +11,7 @@ type
       function GetMsgDescriptionProc: TMsgDescriptionProc;
       function GetLastPosError : string;
 
+      function CheckConnection : Boolean;
       function Payment(ASumma : Currency) : Boolean;
       function Refund(ASumma : Currency) : Boolean;
       procedure Cancel;

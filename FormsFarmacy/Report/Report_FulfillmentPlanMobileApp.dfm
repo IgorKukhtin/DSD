@@ -377,7 +377,7 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
             Width = 76
           end
           object PenaltiMobApp: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072'  ('#1080#1085#1092#1086#1088#1084#1072#1094#1080#1086#1085#1085#1099#1081')'
             DataBinding.FieldName = 'PenaltiMobApp'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ; '

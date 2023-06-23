@@ -257,9 +257,20 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_SiteDateUpdate() RETURNS Integer AS $
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_SiteDateUpdate', 'Дата изменение на сайте' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SiteDateUpdate');
 
+
+CREATE OR REPLACE FUNCTION zc_MovementDate_SignConsignor() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SignConsignor'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_SignConsignor', 'Дата подписи перевозчика' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SignConsignor');
+
+
+CREATE OR REPLACE FUNCTION zc_MovementDate_SignCarrier() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SignCarrier'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_SignCarrier', 'Дата подписи грузоотправителя' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SignCarrier');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 23.06.23                                                                                                        * zc_MovementDate_SignConsignor, zc_MovementDate_SignCarrier
  19.04.23         * zc_MovementDate_StatusInsert
  04.10.22                                                                                                        * zc_MovementDate_SiteDateUpdate
  09.08.22                                                                                                        * zc_MovementDate_Order
