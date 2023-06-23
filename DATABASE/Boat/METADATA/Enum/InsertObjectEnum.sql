@@ -17,10 +17,10 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_ODBC(), inDescId:= zc_Object_FileTypeKind(), inCode:= 4, inName:= 'ODBC', inEnumName:= 'zc_Enum_FileTypeKind_ODBC');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_FileTypeKind_Excel_OLE(),  inDescId:= zc_Object_FileTypeKind(), inCode:= 5, inName:= 'Excel OLE', inEnumName:= 'zc_Enum_FileTypeKind_Excel_OLE');
      -- !!! Типы НДС
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_TaxKind_Basis(), inDescId:= zc_Object_TaxKind(), inCode:= 1, inName:= 'Базовый', inEnumName:= 'zc_Enum_TaxKind_Basis');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_TaxKind_Other(), inDescId:= zc_Object_TaxKind(), inCode:= 2, inName:= 'Другой', inEnumName:= 'zc_Enum_TaxKind_Other');
-     -- PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_NDSKind_NDS(), zc_Enum_TaxKind_Basis(), 16);
-     --PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_NDSKind_NDS(), zc_Enum_TaxKind_(), 5);
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_TaxKind_WithVAT(), inDescId:= zc_Object_TaxKind(), inCode:= 1, inName:= 'With VAT', inEnumName:= 'zc_Enum_TaxKind_WithVAT');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_TaxKind_NonEU(),   inDescId:= zc_Object_TaxKind(), inCode:= 2, inName:= 'Non-EU',   inEnumName:= 'zc_Enum_TaxKind_NonEU');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_TaxKind_Basis(),   inDescId:= zc_Object_TaxKind(), inCode:= 3, inName:= 'EU',       inEnumName:= 'zc_Enum_TaxKind_Basis');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_TaxKind_Other(),   inDescId:= zc_Object_TaxKind(), inCode:= 4, inName:= 'Used',     inEnumName:= 'zc_Enum_TaxKind_Other');
 
 
      -- !!! Виды Boat Structure

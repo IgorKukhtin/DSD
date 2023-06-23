@@ -52,6 +52,20 @@ BEGIN
      DELETE FROM _tmpReserveRes;
 
 
+     -- Параметр из документа
+     vbPartnerId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
+
+     -- Пересохранили VATPercent
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), inMovementId, COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0))
+     FROM ObjectLink AS OL_Partner_TaxKind
+          LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                ON ObjectFloat_TaxKind_Value.ObjectId = OL_Partner_TaxKind.ChildObjectId 
+                               AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
+     WHERE OL_Partner_TaxKind.ObjectId = vbPartnerId
+       AND OL_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+    ;
+
+
      -- Параметры из документа
      SELECT tmp.MovementDescId, tmp.StatusId, tmp.OperDate, tmp.PartnerId, tmp.PartnerId_VAT, tmp.UnitId, tmp.PaidKindId
           , tmp.InfoMoneyId_Partner, tmp.InfoMoneyId_Partner_VAT
@@ -90,7 +104,7 @@ BEGIN
 
                 , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
                 , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
-                , COALESCE (ObjectLink_Partner_TaxKind.ChildObjectId, zc_TaxKind_Basis()) AS TaxKindId
+                , COALESCE (ObjectLink_Partner_TaxKind.ChildObjectId, zc_Enum_TaxKind_Basis()) AS TaxKindId
 
                   -- Сумма скидки без НДС
                 , COALESCE (MovementFloat_SummTaxMVAT.ValueData, 0) AS SummTaxMVAT

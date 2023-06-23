@@ -25,6 +25,29 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbInvNumberPoint Integer;
 BEGIN
+     -- Проверка
+     IF COALESCE (inVATPercent, 0) <> COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
+                                                 FROM ObjectLink AS OL_Partner_TaxKind
+                                                      LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = OL_Partner_TaxKind.ChildObjectId 
+                                                                           AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
+                                                 WHERE OL_Partner_TaxKind.ObjectId = inFromId
+                                                   AND OL_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+                                                ), 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Значение <% НДС> в документе = <%> не соответствует значению у Поставщика = <%>.'
+                       , '%'
+                       , zfConvert_FloatToString (inVATPercent)
+                       , zfConvert_FloatToString (COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
+                                                             FROM ObjectLink AS OL_Partner_TaxKind
+                                                                  LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                                                        ON ObjectFloat_TaxKind_Value.ObjectId = OL_Partner_TaxKind.ChildObjectId 
+                                                                                       AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
+                                                             WHERE OL_Partner_TaxKind.ObjectId = inFromId
+                                                               AND OL_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+                                                            ), 0))
+                        ;
+     END IF;
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
