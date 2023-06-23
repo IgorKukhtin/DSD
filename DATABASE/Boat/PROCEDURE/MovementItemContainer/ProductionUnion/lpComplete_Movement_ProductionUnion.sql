@@ -440,9 +440,9 @@ BEGIN
                                                , inOperPriceList     := 0                         -- Цена продажи
                                                , inOperPriceList_old := 0                         -- Цена продажи, ДО изменения строки
                                                  -- Тип НДС (!информативно!)
-                                               , inTaxKindId         := zc_TaxKind_Basis()
+                                               , inTaxKindId         := zc_Enum_TaxKind_Basis()
                                                  -- Значение НДС (!информативно!)
-                                               , inTaxKindValue      := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = zc_TaxKind_Basis()  AND OFl.DescId = zc_ObjectFloat_TaxKind_Value())
+                                               , inTaxKindValue      := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = zc_Enum_TaxKind_Basis()  AND OFl.DescId = zc_ObjectFloat_TaxKind_Value())
                                                  --
                                                , inUserId            := inUserId
                                                 )
@@ -589,9 +589,9 @@ BEGIN
                                                , inOperPriceList     := 0                         -- Цена продажи
                                                , inOperPriceList_old := 0                         -- Цена продажи, ДО изменения строки
                                                  -- Тип НДС (!информативно!)
-                                               , inTaxKindId         := zc_TaxKind_Basis()
+                                               , inTaxKindId         := zc_Enum_TaxKind_Basis()
                                                  -- Значение НДС (!информативно!)
-                                               , inTaxKindValue      := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = zc_TaxKind_Basis()  AND OFl.DescId = zc_ObjectFloat_TaxKind_Value())
+                                               , inTaxKindValue      := (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = zc_Enum_TaxKind_Basis()  AND OFl.DescId = zc_ObjectFloat_TaxKind_Value())
                                                  --
                                                , inUserId            := inUserId
                                                 )

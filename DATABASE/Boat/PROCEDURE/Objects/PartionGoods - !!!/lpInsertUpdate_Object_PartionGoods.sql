@@ -326,7 +326,7 @@ AND 1=0
               , GoodsSizeId          = zfConvert_IntToNull (vbGoodsSizeId)
               , ProdColorId          = zfConvert_IntToNull (vbProdColorId)
               , MeasureId            = vbMeasureId
-              , TaxKindId            = CASE WHEN inTaxKindId > 0 THEN inTaxKindId ELSE zc_TaxKind_Basis() END
+              , TaxKindId            = CASE WHEN inTaxKindId > 0 THEN inTaxKindId ELSE zc_Enum_TaxKind_Basis() END
               , TaxValue             = COALESCE (inTaxKindValue, 0)
               , isErased             = FALSE
               , isArc                = FALSE
@@ -350,7 +350,7 @@ AND 1=0
                                                             END*/
                                        , vbGoodsGroupId, zfConvert_IntToNull (vbGoodsTagId), zfConvert_IntToNull (vbGoodsTypeId)
                                        , zfConvert_IntToNull (vbGoodsSizeId), zfConvert_IntToNull (vbProdColorId), vbMeasureId
-                                       , CASE WHEN inTaxKindId > 0 THEN inTaxKindId ELSE zc_TaxKind_Basis() END
+                                       , CASE WHEN inTaxKindId > 0 THEN inTaxKindId ELSE zc_Enum_TaxKind_Basis() END
                                        , COALESCE (inTaxKindValue, 0)
                                        , FALSE, FALSE
                                         );

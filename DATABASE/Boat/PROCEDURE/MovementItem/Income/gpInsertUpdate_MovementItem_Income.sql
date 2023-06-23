@@ -45,28 +45,28 @@ BEGIN
 
      -- из шапки
      SELECT Movement.OperDate
-          , MovementLinkObject_To.ObjectId     AS ToId
           , MovementLinkObject_From.ObjectId   AS FromId
-          , OF_TaxKind_Value.ObjectId          AS TaxKindId
+          , MovementLinkObject_To.ObjectId     AS ToId
+          , OL_Partner_TaxKind.ChildObjectId   AS TaxKindId
           , MovementFloat_VATPercent.ValueData AS TaxKindValue
-            INTO vbOperDate, vbToId, vbFromId, vbTaxKindId, vbTaxKindValue
+            INTO vbOperDate, vbFromId, vbToId, vbTaxKindId, vbTaxKindValue
      FROM Movement
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                       ON MovementLinkObject_To.MovementId = Movement.Id
-                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                   ON MovementFloat_VATPercent.MovementId = Movement.Id
                                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-          LEFT JOIN ObjectFloat AS OF_TaxKind_Value
-                                ON OF_TaxKind_Value.ValueData = MovementFloat_VATPercent.ValueData
-                               AND OF_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+          LEFT JOIN ObjectLink AS OL_Partner_TaxKind
+                               ON OL_Partner_TaxKind.ObjectId = MovementLinkObject_From.ObjectId
+                              AND OL_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
      WHERE Movement.Id = inMovementId
     ;
     
-     vbTaxKindId:= CASE WHEN vbTaxKindId > 0 THEN vbTaxKindId ELSE zc_TaxKind_Basis() END;
+     vbTaxKindId:= CASE WHEN vbTaxKindId > 0 THEN vbTaxKindId ELSE zc_Enum_TaxKind_Basis() END;
 
      -- проверка если не нашли TaxKindId - выдается ошибка
      IF COALESCE (vbTaxKindId,0) = 0
