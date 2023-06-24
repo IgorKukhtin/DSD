@@ -232,11 +232,14 @@ type
     FPasswordParam: TdsdParam;
     FTokenParam: TdsdParam;
     FResultParam: TdsdParam;
+    FKeyFileNameParam: TdsdParam;
+    FKeyUserNameParam: TdsdParam;
 
     FHeaderDataSet: TDataSet;
     FListDataSet: TDataSet;
 
     FUpdateUuid: TdsdStoredProc;
+    FUpdateSign: TdsdStoredProc;
 
     FEDINActions : TEDINActionsType;
 
@@ -269,10 +272,14 @@ type
     property Token: TdsdParam read FTokenParam write FTokenParam;
     property Result: TdsdParam read FResultParam write FResultParam;
 
+    property KeyFileName: TdsdParam read FKeyFileNameParam write FKeyFileNameParam;
+    property KeyUserName: TdsdParam read FKeyUserNameParam write FKeyUserNameParam;
+
     property HeaderDataSet: TDataSet read FHeaderDataSet write FHeaderDataSet;
     property ListDataSet: TDataSet read FListDataSet write FListDataSet;
 
     property UpdateUuid: TdsdStoredProc read FUpdateUuid write FUpdateUuid;
+    property UpdateSign: TdsdStoredProc read FUpdateSign write FUpdateSign;
 
     property EDINActions : TEDINActionsType read FEDINActions write FEDINActions default edinSendETTN;
 
@@ -5520,6 +5527,13 @@ begin
   FResultParam.DataType := ftString;
   FResultParam.Value := '';
 
+  FKeyFileNameParam := TdsdParam.Create(nil);
+  FKeyFileNameParam.DataType := ftString;
+  FKeyFileNameParam.Value := '';
+
+  FKeyUserNameParam := TdsdParam.Create(nil);
+  FKeyUserNameParam.DataType := ftString;
+  FKeyUserNameParam.Value := '';
 
   FEDINActions:= edinSendETTN;
 end;
@@ -5531,6 +5545,8 @@ begin
   FreeAndNil(FHostParam);
   FreeAndNil(FTokenParam);
   FreeAndNil(FResultParam);
+  FreeAndNil(FKeyFileNameParam);
+  FreeAndNil(FKeyUserNameParam);
   inherited;
 end;
 
@@ -5891,11 +5907,15 @@ begin
       // проверка
       if not FileExists(String(FileName)) then raise Exception.Create('Файл не найден : <'+String(FileName)+'>');
 
+      FKeyFileNameParam.Value := ExtractFileName(String(FileName));
+
       nError := CPInterface.ReadPrivateKeyFile (PAnsiChar(FileName), PAnsiChar('24447183'), @CertOwnerInfo); // бухгалтер
       if nError <> EU_ERROR_NONE then
       begin
         raise Exception.Create('Ошибка В библиотеке при загрузке электронного ключа: ' + CPInterface.GetErrorDesc(nError));
       end;
+
+      FKeyUserNameParam.Value := String(CertOwnerInfo.SubjectFullName);
     except
       on E: Exception do
       begin
@@ -6215,6 +6235,9 @@ begin
     // Отправка подписанного файла eTTN
     if Result then Result := SignDcuETTN(GLN_Sign, HeaderDataSet.FieldByName('UuId').AsString);
     //Result := SignDcuETTN('4823036500001', '32d2bc90-577e-4e4c-af17-722b49cf1c86');
+
+    // Запишем в базу чей ключ и дату
+    if Result and Assigned(FUpdateSign) then FUpdateSign.Execute;
   finally
     // удалим временные файлы
     if FileExists(ExtractFilePath(ParamStr(0)) + FResultParam.Value) then DeleteFile(ExtractFilePath(ParamStr(0)) + FResultParam.Value);

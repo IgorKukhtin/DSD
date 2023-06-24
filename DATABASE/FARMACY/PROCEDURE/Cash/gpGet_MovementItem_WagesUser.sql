@@ -364,9 +364,9 @@ BEGIN
                                                                                      AND COALESCE (vbAntiTOPMP_SumFine, 0) > 0
                                                                                     THEN - vbAntiTOPMP_SumFine
                                                                                     ELSE 0 END, 2), 0)) ELSE '' END||
-                   CASE WHEN COALESCE (tmpImplementationPlan.AntiTOPMP_Place, 0) <> 0 
+                   /*CASE WHEN COALESCE (tmpImplementationPlan.AntiTOPMP_Place, 0) <> 0 
                          AND COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
-                        THEN '; Позиция в антиТОпе №: '||tmpImplementationPlan.AntiTOPMP_Place::TVarChar ELSE '' END||
+                        THEN '; Позиция в антиТОпе №: '||tmpImplementationPlan.AntiTOPMP_Place::TVarChar ELSE '' END||*/
                    CASE WHEN COALESCE (ObjectBoolean_ShowPlanEmployeeUser.ValueData, FALSE) = TRUE 
                           OR COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
                         THEN '>' ELSE '' END):: TVarChar AS FormCaptionLeft
