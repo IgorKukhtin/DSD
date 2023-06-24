@@ -26,6 +26,8 @@ object ProductionUnionForm: TProductionUnionForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = 1
+    ExplicitTop = -14
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -1784,6 +1786,7 @@ object ProductionUnionForm: TProductionUnionForm
           ItemName = 'bbStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbGridToExel'
         end
@@ -2297,6 +2300,7 @@ object ProductionUnionForm: TProductionUnionForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
@@ -5012,8 +5016,8 @@ object ProductionUnionForm: TProductionUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 750
-    Top = 343
+    Left = 734
+    Top = 335
   end
   object spInsertUpdate_bySend: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionUnion_Master_bySend'
@@ -5024,6 +5028,7 @@ object ProductionUnionForm: TProductionUnionForm
         Name = 'inMovementId'
         Value = Null
         Component = FormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -5032,6 +5037,14 @@ object ProductionUnionForm: TProductionUnionForm
         Value = '0'
         Component = FormParams
         ComponentItem = 'MovementId_Send'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = GuidesParent
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
