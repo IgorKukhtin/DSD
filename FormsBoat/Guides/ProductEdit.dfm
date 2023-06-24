@@ -699,7 +699,7 @@ object ProductEditForm: TProductEditForm
       end
       object cxLabel44: TcxLabel
         Left = 332
-        Top = 103
+        Top = 105
         Caption = #1058#1080#1087' '#1053#1044#1057
       end
       object edTaxKind: TcxButtonEdit

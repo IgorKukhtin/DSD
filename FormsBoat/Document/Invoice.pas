@@ -62,6 +62,9 @@ type
     cxLabel4: TcxLabel;
     ceParent: TcxButtonEdit;
     GuidesParent: TdsdGuides;
+    cxLabel44: TcxLabel;
+    edTaxKind: TcxButtonEdit;
+    GuidesTaxKind: TdsdGuides;
   private
     { Private declarations }
   public

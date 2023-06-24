@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , TaxKind_Value TFloat
              , PaidKindId Integer, PaidKindName TVarChar
+             , TaxKindId Integer, TaxKindName TVarChar
              , isErased Boolean
 )
 AS
@@ -45,6 +46,8 @@ BEGIN
           , ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
           , Object_PaidKind.Id              AS PaidKindId
           , Object_PaidKind.ValueData       AS PaidKindName
+          , Object_TaxKind.Id               AS TaxKindId
+          , Object_TaxKind.ValueData        AS TaxKindName
           , Object_ClientPartner.isErased
         FROM Object AS Object_ClientPartner
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_ClientPartner.DescId
@@ -82,6 +85,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 24.06.23         *
  03.02.21         *
  */
 

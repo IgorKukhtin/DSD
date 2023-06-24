@@ -421,6 +421,22 @@ inherited InvoiceJournalForm: TInvoiceJournalForm
             Options.Editing = False
             Width = 70
           end
+          object TaxKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1053#1044#1057
+            DataBinding.FieldName = 'TaxKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object TaxKindName_info: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1053#1044#1057' (info)'
+            DataBinding.FieldName = 'TaxKindName_info'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
           object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'

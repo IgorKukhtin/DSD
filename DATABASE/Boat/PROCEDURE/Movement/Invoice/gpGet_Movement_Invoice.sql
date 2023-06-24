@@ -21,7 +21,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , AmountOut       TFloat
 
              , ObjectId        Integer
-             , ObjectName      TVarChar
+             , ObjectName      TVarChar 
+             , TaxKindId       Integer
+             , TaxKindName     TVarChar
              , InfoMoneyId     Integer
              , InfoMoneyName_all TVarChar
              , ProductId       Integer
@@ -68,7 +70,9 @@ BEGIN
            , 0::TFloat                  AS AmountOut
 
            , Object_Object.Id           AS ObjectId
-           , Object_Object.ValueData    AS ObjectName
+           , Object_Object.ValueData    AS ObjectName 
+           , Object_TaxKind.Id          AS TaxKindId
+           , Object_TaxKind.ValueData   AS TaxKindName
            , Object_InfoMoney.Id        AS InfoMoneyId
            , Object_InfoMoney.ValueData ::TVarChar AS InfoMoneyName
            , Object_Product.Id          AS ProductId
@@ -93,7 +97,12 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
                                 ON ObjectLink_InfoMoney.ObjectId = Object_Object.Id
                                AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Client_InfoMoney()
-           LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_InfoMoney.ChildObjectId
+           LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_InfoMoney.ChildObjectId  
+           
+           LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                ON ObjectLink_TaxKind.ObjectId = Object_Object.Id
+                               AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
+           LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
       ;
      ELSE
 
@@ -124,6 +133,8 @@ BEGIN
          , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountOut
          , Object_Object.Id                                    AS ObjectId
          , Object_Object.ValueData                             AS ObjectName
+         , Object_TaxKind.Id                                   AS TaxKindId
+         , Object_TaxKind.ValueData                            AS TaxKindName
          , Object_InfoMoney_View.InfoMoneyId
          , Object_InfoMoney_View.InfoMoneyName
          , Object_Product.Id                                   AS ProductId
@@ -201,6 +212,11 @@ BEGIN
                                         ON MovementLinkObject_Product.MovementId = Movement_Parent.Id
                                        AND MovementLinkObject_Product.DescId     = zc_MovementLinkObject_Product()
            LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                ON ObjectLink_TaxKind.ObjectId = Object_Object.Id
+                               AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
+           LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
 
           WHERE Movement.Id = inMovementId
           ;

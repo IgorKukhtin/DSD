@@ -26,6 +26,8 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitLeft = -192
+    ExplicitTop = 186
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -369,6 +371,21 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKindName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
