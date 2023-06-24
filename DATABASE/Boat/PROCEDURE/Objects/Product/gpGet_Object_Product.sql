@@ -18,7 +18,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ModelId Integer, ModelName TVarChar, ModelName_full TVarChar
              , EngineId Integer, EngineName TVarChar
              , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
-             , ClientId Integer, ClientName TVarChar     --25
+             , ClientId Integer, ClientName TVarChar     --25    
+             , TaxKindId_Client Integer, TaxKindName_Client TVarChar
              , MovementId_OrderClient Integer
              , OperDate_OrderClient  TDateTime
              , InvNumber_OrderClient TVarChar
@@ -86,7 +87,7 @@ BEGIN
            , CAST (NULL AS TDateTime)  AS DateSale
            , CAST ('' AS TVarChar)     AS CIN
            , CAST ('' AS TVarChar)     AS EngineNum
-           , CAST ('' AS TVarChar)     AS Comment       --14
+           , CAST ('' AS TVarChar)     AS Comment                --14
 
           -- , CAST (0 AS Integer)    AS ProdGroupId
           -- , CAST ('' AS TVarChar)  AS ProdGroupName
@@ -100,8 +101,10 @@ BEGIN
            , CAST (0 AS Integer)       AS ReceiptProdModelId
            , CAST ('' AS TVarChar)     AS ReceiptProdModelName
            , CAST (0 AS Integer)       AS ClientId
-           , CAST ('' AS TVarChar)     AS ClientName           --25
-
+           , CAST ('' AS TVarChar)     AS ClientName             --25
+           , CAST (0 AS Integer)       AS TaxKindId_Client
+           , CAST ('' AS TVarChar)     AS TaxKindName_Client     --27
+           
            , CAST (0 AS Integer)       AS MovementId_OrderClient
            , CAST (CURRENT_DATE AS TDateTime)  AS OperDate_OrderClient
            , CAST (NEXTVAL ('movement_OrderClient_seq') AS TVarChar) AS InvNumber_OrderClient
@@ -120,7 +123,7 @@ BEGIN
            , CAST (TRUE AS Boolean)    AS isBasicConf
            , CAST (TRUE AS Boolean)    AS isProdColorPattern
 
-           , CAST (0 AS Integer)       AS MovementId_Invoice --41
+           , CAST (0 AS Integer)       AS MovementId_Invoice --43
            , CAST (NULL AS TDateTime)  AS OperDate_Invoice
            , CAST ('' AS TVarChar)     AS InvNumber_Invoice
            , Object_Status.Code        AS StatusCode_Invoice
@@ -291,6 +294,8 @@ BEGIN
 
          , tmpOrderClient.ClientId                 AS ClientId
          , tmpOrderClient.ClientName               AS ClientName
+         , Object_TaxKind.Id                       AS TaxKindId_Client
+         , Object_TaxKind.ValueData                AS TaxKindName_Client
 
          , tmpOrderClient.MovementId :: Integer    AS MovementId_OrderClient
          , tmpOrderClient.OperDate   :: TDateTime  AS OperDate_OrderClient
@@ -458,6 +463,11 @@ BEGIN
           LEFT JOIN tmpBankAccount AS tmpBankAccount_last ON tmpBankAccount_last.ord = 1
           LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = tmpBankAccount_last.BankAccountId
 
+          LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                               ON ObjectLink_TaxKind.ObjectId = tmpOrderClient.ClientId
+                              AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+
        WHERE Object_Product.Id = inId
       ;
 
@@ -470,6 +480,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.06.23         *
  15.05.23         *
  05.02.23         *
  04.01.21         *

@@ -484,8 +484,8 @@ object IncomeForm: TIncomeForm
       Width = 70
     end
     object cxLabel26: TcxLabel
-      Left = 450
-      Top = 40
+      Left = 457
+      Top = 45
       Caption = #1058#1080#1087' '#1053#1044#1057
     end
     object edTaxKind: TcxButtonEdit
