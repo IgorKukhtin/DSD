@@ -1993,6 +1993,14 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertUpDate_bySend'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end>
     end
@@ -2127,6 +2135,10 @@ object ProductionUnionForm: TProductionUnionForm
     end
     object bbOpenOrderClientForm: TdxBarButton
       Action = actOpenOrderClientForm
+      Category = 0
+    end
+    object bbInsertUpDate_bySend: TdxBarButton
+      Action = macInsertUpDate_bySend
       Category = 0
     end
   end
@@ -2273,6 +2285,19 @@ object ProductionUnionForm: TProductionUnionForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actRefreshMI_Master: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -3634,6 +3659,59 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       isShowModal = False
     end
+    object actSendInsertForm: TOpenChoiceForm
+      Category = 'Ins'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'SendJournalForm'
+      ImageIndex = 47
+      FormName = 'TSendJournalChoiceForm'
+      FormNameParam.Value = 'TSendJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementId_Send'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actInsertUpdate_bySend: TdsdExecStoredProc
+      Category = 'Ins'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_bySend
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_bySend
+        end
+        item
+        end>
+      Caption = 'actInsert_MI_Send'
+      ImageIndex = 47
+    end
+    object macInsertUpDate_bySend: TMultiAction
+      Category = 'Ins'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSendInsertForm
+        end
+        item
+          Action = actInsertUpdate_bySend
+        end
+        item
+          Action = actRefreshMI_Master
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1091#1079#1077#1083' '#1080#1079' '#1044#1086#1082'. '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1087#1080#1089#1072#1085#1099
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1079#1077#1083' ('#1076#1086#1082'. '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1079#1077#1083' ('#1076#1086#1082'. '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077')'
+      ImageIndex = 47
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -4936,5 +5014,29 @@ object ProductionUnionForm: TProductionUnionForm
     PackSize = 1
     Left = 750
     Top = 343
+  end
+  object spInsertUpdate_bySend: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_ProductionUnion_Master_bySend'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Send'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MovementId_Send'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 358
+    Top = 159
   end
 end

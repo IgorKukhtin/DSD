@@ -29,7 +29,9 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , InfoMoneyId_Client   Integer
              , InfoMoneyName_Client TVarChar
              , TaxKind_Value_Client TFloat
-             , Value_TaxKind TFloat, Info_TaxKind TVarChar 
+             --, Value_TaxKind TFloat, Info_TaxKind TVarChar
+             , TaxKindName_Client  TVarChar
+             , TaxKindName_info_Client TVarChar
              
              , MovementId_Invoice  Integer
              , OperDate_Invoice    TDateTime
@@ -820,8 +822,9 @@ BEGIN
          , tmpOrderClient.InfoMoneyId       AS InfoMoneyId_Client
          , tmpOrderClient.InfoMoneyName_all AS InfoMoneyName_Client
          , tmpOrderClient.VATPercent        AS TaxKind_Value_Client
-         , ObjectFloat_TaxKind_Value.ValueData  AS Value_TaxKind
-         , ObjectString_TaxKind_Info.ValueData  AS Info_TaxKind
+         --, ObjectFloat_TaxKind_Value.ValueData  AS Value_TaxKind
+         , Object_TaxKind.ValueData              AS TaxKindName_Client
+         , ObjectString_TaxKind_Info.ValueData   AS TaxKindName_info_Client
 
          --счет                             
          , tmpInvoice.MovementId_Invoice  ::Integer
@@ -965,10 +968,12 @@ BEGIN
 
           LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                                ON ObjectLink_TaxKind.ObjectId = tmpOrderClient.FromId
-                              AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
-          LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                              AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()    
+          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+
+          /*LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                 ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
-                               AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()   
+                               AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value() */  
           LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
                                  ON ObjectString_TaxKind_Info.ObjectId = ObjectLink_TaxKind.ChildObjectId
                                 AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()  

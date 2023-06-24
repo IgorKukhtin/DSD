@@ -3,7 +3,7 @@ object ClientForm: TClientForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Kunden('#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080')>'
   ClientHeight = 376
-  ClientWidth = 541
+  ClientWidth = 731
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,12 +19,13 @@ object ClientForm: TClientForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 541
+    Width = 731
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 541
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -623,6 +624,29 @@ object ClientForm: TClientForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindName_Info'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKindName_Info'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

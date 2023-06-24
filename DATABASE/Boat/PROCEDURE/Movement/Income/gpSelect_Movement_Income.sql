@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar
              , TotalSummTaxPVAT TFloat
 
              , FromId Integer, FromCode Integer, FromName TVarChar
+             , TaxKindName TVarChar, TaxKindName_info TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
@@ -126,7 +127,9 @@ BEGIN
 
              , Object_From.Id                             AS FromId
              , Object_From.ObjectCode                     AS FromCode
-             , Object_From.ValueData                      AS FromName
+             , Object_From.ValueData                      AS FromName  
+             , Object_TaxKind.ValueData                   AS TaxKindName
+             , ObjectString_TaxKind_Info.ValueData        AS TaxKindName_info
              , Object_To.Id                               AS ToId
              , Object_To.ObjectCode                       AS ToCode
              , Object_To.ValueData                        AS ToName
@@ -220,7 +223,16 @@ BEGIN
              LEFT JOIN MovementLinkObject AS MLO_Update
                                           ON MLO_Update.MovementId = Movement_Income.Id
                                          AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
+             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
+            
+             LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                  ON ObjectLink_TaxKind.ObjectId = Object_From.Id
+                                 AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Partner_TaxKind()
+             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+
+             LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
+                                    ON ObjectString_TaxKind_Info.ObjectId = Object_TaxKind.Id 
+                                   AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
             ;
 
 END;

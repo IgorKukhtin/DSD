@@ -1,7 +1,7 @@
-object ProductionUnionJournalForm: TProductionUnionJournalForm
+object SendJournalChoiceForm: TSendJournalChoiceForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1073#1086#1088#1082#1072'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 492
   ClientWidth = 817
   Color = clBtnFace
@@ -14,7 +14,9 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -27,7 +29,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 44927d
+      EditValue = 44197d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -37,7 +39,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 44927d
+      EditValue = 44197d
       Properties.ReadOnly = False
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -75,7 +77,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalCountChild
+          Column = TotalSumm
         end
         item
           Format = ',0.####'
@@ -127,7 +129,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalCountChild
+          Column = TotalSumm
         end
         item
           Format = ',0.####'
@@ -209,14 +211,14 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         Width = 55
       end
       object InvNumber: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'.'
+        Caption = 'Interne Nr'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 56
       end
       object OperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
+        Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -239,62 +241,24 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         Width = 155
       end
       object TotalCount: TcxGridDBColumn
-        Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1087#1088#1080#1093#1086#1076')'
+        Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 92
+        Width = 70
       end
-      object TotalCountChild: TcxGridDBColumn
-        Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
-        DataBinding.FieldName = 'TotalCountChild'
+      object TotalSumm: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
+        DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 101
-      end
-      object InvNumber_parent: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
-        DataBinding.FieldName = 'InvNumber_parent'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-        Options.Editing = False
-        Width = 200
-      end
-      object DescName_parent: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-        DataBinding.FieldName = 'DescName_parent'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 110
-      end
-      object FromName_parent: TcxGridDBColumn
-        Caption = 'Kunden'
-        DataBinding.FieldName = 'FromName_parent'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-        Options.Editing = False
-        Width = 109
-      end
-      object ProductName_parent: TcxGridDBColumn
-        Caption = #1051#1086#1076#1082#1072
-        DataBinding.FieldName = 'ProductName_parent'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-        Options.Editing = False
-        Width = 109
+        Width = 80
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -302,7 +266,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 203
+        Width = 297
       end
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
@@ -424,31 +388,13 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
           ItemName = 'bbEdit'
         end
         item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -459,6 +405,18 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -482,7 +440,15 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintCalc'
+          ItemName = 'bbPrint2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint3'
         end
         item
           Visible = True
@@ -538,6 +504,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
@@ -559,12 +526,26 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
       Action = actShowErased
       Category = 0
     end
-    object bbPrintCalc: TdxBarButton
-      Action = actPrintCalc
+    object bbPrintSticker: TdxBarButton
+      Action = actPrintSticker
       Category = 0
     end
     object bbPrintStickerTermo: TdxBarButton
       Action = actPrintStickerTermo
+      Category = 0
+    end
+    object bbPrint2: TdxBarButton
+      Action = actPrint2
+      Category = 0
+    end
+    object bbPrint3: TdxBarButton
+      Action = actPrint3
+      Caption = #1055#1077#1095#1072#1090#1100' '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      Category = 0
+      ImageIndex = 15
+    end
+    object bbChoiceGuides: TdxBarButton
+      Action = dsdChoiceGuides
       Category = 0
     end
   end
@@ -572,46 +553,6 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     Images = dmMain.ImageList
     Left = 80
     Top = 64
-    object actShowErased: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 64
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 65
-      ImageIndexFalse = 64
-    end
-    object actMIContainer: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      ImageIndex = 57
-      FormName = 'TMovementItemContainerForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -666,6 +607,191 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actPrint2: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1088#1072#1089#1095#1077#1090')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1088#1072#1089#1095#1077#1090')'
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'ReceiptLevelName;GoodsGroupName;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Send_2'
+      ReportNameParam.Value = 'PrintMovement_Send_2'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint3: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint_Master
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Master
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsCode;GoodsName;ProductName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Send_3'
+      ReportNameParam.Value = 'PrintMovement_Send_3'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 'ProductName;Article'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Send'
+      ReportNameParam.Value = 'PrintMovement_Send'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
+    object actMIContainer: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1074#1086#1076#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 57
+      FormName = 'TMovementItemContainerForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object MovementProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -702,8 +828,8 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TProductionUnionForm'
-      FormNameParam.Value = 'TProductionUnionForm'
+      FormName = 'TSendForm'
+      FormNameParam.Value = 'TSendForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -736,8 +862,8 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TProductionUnionForm'
-      FormNameParam.Value = 'TProductionUnionForm'
+      FormName = 'TSendForm'
+      FormNameParam.Value = 'TSendForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -761,7 +887,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -961,96 +1087,6 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         end>
       Caption = 'spErased'
     end
-    object actPrintCalc: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103
-      Hint = #1050#1072#1083#1100#1082#1091#1083#1103#1094#1080#1103
-      ImageIndex = 17
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'InvNumber_OrderClient;NPP_1;NPP_2;NPP_3'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_ProductionUnionCalc'
-      ReportNameParam.Value = 'PrintMovement_ProductionUnionCalc'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'InvNumber_OrderClient;NPP_1;NPP_2;NPP_3'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_ProductionUnion'
-      ReportNameParam.Value = 'PrintMovement_ProductionUnion'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
     object actPrintStickerTermo: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1139,9 +1175,87 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ToId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ToName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'FromId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'FromName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TotalCount'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'TotalCount'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TotalSumm'
+          Value = Null
+          ComponentItem = 'TotalSumm'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      ImageIndex = 7
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ProductionUnion'
+    StoredProcName = 'gpSelect_Movement_Send'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1173,11 +1287,11 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 16
-    Top = 192
+    Left = 128
+    Top = 184
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_ProductionUnion'
+    StoredProcName = 'gpComplete_Movement_Send'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1232,7 +1346,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_ProductionUnion'
+    StoredProcName = 'gpUnComplete_Movement_Send'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1249,7 +1363,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_ProductionUnion'
+    StoredProcName = 'gpSetErased_Movement_Send'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1270,19 +1384,18 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     Top = 328
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 240
-    Top = 168
+    Left = 249
+    Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
-        Action = actUpdate
+        Action = dsdChoiceGuides
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -1294,14 +1407,14 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     SummaryItemList = <>
     ShowFieldImageList = <>
     PropertiesCellList = <>
-    Left = 248
-    Top = 216
+    Left = 240
+    Top = 240
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 328
-    Top = 184
+    Top = 64
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1315,12 +1428,16 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     Top = 48
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ProductionUnion_Print'
-    DataSet = PrintItemsCDS
+    StoredProcName = 'gpSelect_Movement_Send_Print'
+    DataSet = PrintHeaderCDS
     DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
       item
         DataSet = PrintItemsCDS
       end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
@@ -1331,8 +1448,8 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 336
-    Top = 264
+    Left = 400
+    Top = 304
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1344,7 +1461,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     Aggregates = <>
     Params = <>
     Left = 532
-    Top = 262
+    Top = 150
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1370,7 +1487,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     Top = 200
   end
   object spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_ProductionUnion'
+    StoredProcName = 'gpReComplete_Movement_Send'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1385,5 +1502,29 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     PackSize = 1
     Left = 233
     Top = 346
+  end
+  object spSelectPrint_Master: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_SendMaster_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 615
+    Top = 256
   end
 end

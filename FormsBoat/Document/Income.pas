@@ -263,6 +263,9 @@ type
     spUnErasedMIchild: TdsdStoredProc;
     actSetUnErasedChild: TdsdUpdateErased;
     bbSetUnErasedChild: TdxBarButton;
+    cxLabel26: TcxLabel;
+    edTaxKind: TcxButtonEdit;
+    GuidesTaxKind: TdsdGuides;
   private
   public
   end;

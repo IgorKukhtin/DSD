@@ -223,8 +223,8 @@
     Width = 273
   end
   object cxLabel16: TcxLabel
-    Left = 287
-    Top = 363
+    Left = 289
+    Top = 365
     Caption = #1058#1080#1087' '#1053#1044#1057
   end
   object edTaxKind: TcxButtonEdit

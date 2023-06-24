@@ -45,7 +45,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , BrandId Integer, BrandName TVarChar, CIN TVarChar, EngineNum TVarChar, EngineName TVarChar
              , Comment TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
-             , Value_TaxKind TFloat, Info_TaxKind TVarChar
+             , Value_TaxKind TFloat, TaxKindName TVarChar, TaxKindName_info TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , StateText TVarChar, StateColor Integer
@@ -293,7 +293,8 @@ BEGIN
              , MovementString_Comment_Invoice.ValueData     AS Comment_Invoice
              
              , ObjectFloat_TaxKind_Value.ValueData          AS Value_TaxKind
-             , ObjectString_TaxKind_Info.ValueData          AS Info_TaxKind
+             , Object_TaxKind.ValueData                     AS TaxKindName
+             , ObjectString_TaxKind_Info.ValueData          AS TaxKindName_info
 
              , Object_Insert.ValueData                      AS InsertName
              , MovementDate_Insert.ValueData                AS InsertDate
@@ -441,6 +442,7 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                                   ON ObjectLink_TaxKind.ObjectId = Object_From.Id
                                  AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
 
              LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                    ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 

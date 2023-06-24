@@ -229,6 +229,9 @@ end;
 
 procedure TLoadFormTest.LoadSendFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendJournalChoiceForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
 

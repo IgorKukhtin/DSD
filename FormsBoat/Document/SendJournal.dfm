@@ -14,7 +14,9 @@ object SendJournalForm: TSendJournalForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
+  AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -428,6 +430,18 @@ object SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -547,6 +561,10 @@ object SendJournalForm: TSendJournalForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091
       Category = 0
       ImageIndex = 15
+    end
+    object bbChoiceGuides: TdxBarButton
+      Action = actChoiceGuides
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -1174,6 +1192,93 @@ object SendJournalForm: TSendJournalForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'FromId'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'FromName'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ToId'
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'ToName'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Comment'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TotalCount'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'TotalCount'
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      ImageIndex = 7
     end
   end
   object spSelect: TdsdStoredProc

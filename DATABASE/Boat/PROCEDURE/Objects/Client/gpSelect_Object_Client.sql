@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , BankId Integer, BankName TVarChar
              , PLZId Integer, PLZName TVarChar, PLZName_full TVarChar
-             , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
+             , TaxKindId Integer, TaxKindName TVarChar, TaxKindName_Info TVarChar, TaxKind_Value TFloat
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
@@ -62,7 +62,8 @@ BEGIN
            , TRIM (COALESCE (Object_PLZ.ValueData,'')||' '||ObjectString_City.ValueData||' '||Object_Country.ValueData) ::TVarChar AS PLZName_full
 
            , Object_TaxKind.Id               AS TaxKindId
-           , Object_TaxKind.ValueData        AS TaxKindName
+           , Object_TaxKind.ValueData        AS TaxKindName 
+           , ObjectString_TaxKind_Info.ValueData AS TaxKindName_Info
            , ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
 
            , Object_PaidKind.Id              AS PaidKindId
@@ -164,7 +165,10 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                 ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
                                AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
-
+          LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
+                                 ON ObjectString_TaxKind_Info.ObjectId = Object_TaxKind.Id 
+                                AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
+                              
           LEFT JOIN ObjectLink AS ObjectLink_PaidKind
                                ON ObjectLink_PaidKind.ObjectId = Object_Client.Id
                               AND ObjectLink_PaidKind.DescId = zc_ObjectLink_Client_PaidKind()

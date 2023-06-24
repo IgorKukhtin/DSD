@@ -239,6 +239,12 @@ type
     bbProtocol2: TdxBarButton;
     actUpdateProdColPattetnGoods: TdsdInsertUpdateAction;
     bbUpdateProdColPattetnGoods: TdxBarButton;
+    actSendInsertForm: TOpenChoiceForm;
+    actInsertUpDate_Child_bySend: TdsdExecStoredProc;
+    actRefreshChild: TdsdDataSetRefresh;
+    macInsertUpDate_Child_bySend: TMultiAction;
+    spInsertUpDate_Child_bySend: TdsdStoredProc;
+    bbInsertUpDate_Child_bySend: TdxBarButton;
   private
     { Private declarations }
   public
