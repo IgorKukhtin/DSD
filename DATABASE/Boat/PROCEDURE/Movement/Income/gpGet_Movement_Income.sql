@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , TotalSummTaxPVAT TFloat
              , TotalSummTaxMVAT TFloat 
              , TotalSummMVAT TFloat, Summ2 TFloat, Summ3 TFloat, Summ4 TFloat
-             , FromId Integer, FromName TVarChar
+             , FromId Integer, FromName TVarChar, TaxKindId Integer, TaxKindName TVarChar
              , ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , Comment TVarChar
@@ -71,6 +71,8 @@ BEGIN
 
              , 0                         AS FromId
              , CAST ('' AS TVarChar)     AS FromName
+             , 0                         AS TaxKindId
+             , CAST ('' AS TVarChar)     AS TaxKindName
              , Object_To.Id              AS ToId
              , Object_To.ValueData       AS ToName
              , 0                         AS PaidKindId
@@ -130,7 +132,9 @@ BEGIN
 
           --
           , Object_From.Id                            AS FromId
-          , Object_From.ValueData                     AS FromName
+          , Object_From.ValueData                     AS FromName 
+          , Object_TaxKind.Id                         AS TaxKindId
+          , Object_TaxKind.ValueData                  AS TaxKindName
           , Object_To.Id                              AS ToId      
           , Object_To.ValueData                       AS ToName
           , Object_PaidKind.Id                        AS PaidKindId      
@@ -219,6 +223,10 @@ BEGIN
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                 ON ObjectLink_TaxKind.ObjectId = Object_From.Id
+                                AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Partner_TaxKind()
+            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
         WHERE Movement_Income.Id = inMovementId
           AND Movement_Income.DescId = zc_Movement_Income()
           ;
@@ -231,6 +239,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.06.23         *
  14.06.22         *
  08.02.21         *
 */

@@ -1,9 +1,9 @@
 ﻿inherited InvoiceForm: TInvoiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>'
   ClientHeight = 503
-  ClientWidth = 351
+  ClientWidth = 344
   AddOnFormData.isSingle = False
-  ExplicitWidth = 357
+  ExplicitWidth = 350
   ExplicitHeight = 532
   PixelsPerInch = 96
   TextHeight = 13
@@ -83,12 +83,12 @@
   end
   object cxLabel5: TcxLabel [11]
     Left = 15
-    Top = 205
+    Top = 206
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object ceInfoMoney: TcxButtonEdit [12]
     Left = 15
-    Top = 225
+    Top = 228
     Properties.Buttons = <
       item
         Default = True
@@ -96,7 +96,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 319
+    Width = 208
   end
   object cxLabel10: TcxLabel [13]
     Left = 15
@@ -243,6 +243,23 @@
     Properties.ReadOnly = True
     TabOrder = 31
     Width = 319
+  end
+  object cxLabel44: TcxLabel [32]
+    Left = 234
+    Top = 206
+    Caption = #1058#1080#1087' '#1053#1044#1057
+  end
+  object edTaxKind: TcxButtonEdit [33]
+    Left = 234
+    Top = 228
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 33
+    Width = 100
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 242
@@ -452,7 +469,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 279
-    Top = 208
+    Top = 152
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Invoice'
@@ -650,6 +667,21 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindId'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindName'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 48
     Top = 32
@@ -719,6 +751,21 @@
         Name = 'PaidKindName'
         Value = Null
         Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindId'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindName'
+        Value = Null
+        Component = GuidesTaxKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -968,5 +1015,35 @@
       end>
     Left = 203
     Top = 375
+  end
+  object GuidesTaxKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edTaxKind
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TTaxKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TTaxKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 269
+    Top = 207
   end
 end

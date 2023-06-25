@@ -447,6 +447,9 @@ type
     edTaxKind_Value: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
     edInfo_TaxKind: TcxTextEdit;
+    cxLabel23: TcxLabel;
+    edTaxKind: TcxButtonEdit;
+    GuidesTaxKind: TdsdGuides;
   private
   public
   end;

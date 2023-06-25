@@ -26,6 +26,8 @@ object OrderClientForm: TOrderClientForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = -1
+    ExplicitTop = 5
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -607,6 +609,23 @@ object OrderClientForm: TOrderClientForm
       ShowHint = True
       Style.Color = clGradientInactiveCaption
       TabOrder = 60
+      Width = 70
+    end
+    object cxLabel23: TcxLabel
+      Left = 268
+      Top = 45
+      Caption = #1058#1080#1087' '#1053#1044#1057
+    end
+    object edTaxKind: TcxButtonEdit
+      Left = 268
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 62
       Width = 70
     end
   end
@@ -3471,20 +3490,21 @@ object OrderClientForm: TOrderClientForm
     Properties.ReadOnly = True
     ShowHint = True
     Style.Color = clGradientInactiveCaption
-    TabOrder = 12
+    TabOrder = 10
     Width = 70
   end
   object cxLabel7: TcxLabel
-    Left = 268
-    Top = 45
+    Left = 855
+    Top = 156
     Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
     Caption = #1053#1044#1057' (Kunden)'
     ParentShowHint = False
     ShowHint = True
+    Visible = False
   end
   object edTaxKind_Value: TcxCurrencyEdit
-    Left = 268
-    Top = 63
+    Left = 879
+    Top = 156
     Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
     ParentShowHint = False
     Properties.Alignment.Horz = taRightJustify
@@ -3492,7 +3512,8 @@ object OrderClientForm: TOrderClientForm
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     ShowHint = True
-    TabOrder = 14
+    TabOrder = 13
+    Visible = False
     Width = 70
   end
   object cxLabel14: TcxLabel
@@ -5623,9 +5644,24 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Info_TaxKind'
+        Name = 'TaxKindName_info'
         Value = Null
         Component = edInfo_TaxKind
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindId'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindName'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -5805,8 +5841,30 @@ object OrderClientForm: TOrderClientForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindId'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindName'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindName_Info'
+        Value = Null
+        Component = edInfo_TaxKind
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 320
+    Left = 312
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -7130,5 +7188,35 @@ object OrderClientForm: TOrderClientForm
     PackSize = 1
     Left = 314
     Top = 328
+  end
+  object GuidesTaxKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edTaxKind
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TTaxKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TTaxKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 293
+    Top = 47
   end
 end

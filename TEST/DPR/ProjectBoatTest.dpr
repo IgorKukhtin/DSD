@@ -362,7 +362,8 @@ uses
   TaxKindEdit in '..\..\FormsBoat\Kind\TaxKindEdit.pas' {TaxKindEditForm: TParentForm},
   ProductEdit in '..\..\FormsBoat\Guides\ProductEdit.pas' {ProductEditForm: TParentForm},
   EUSignCP in '..\..\SOURCE\EUSignCP\EUSignCP.pas',
-  EUSignCPOwnUI in '..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
+  EUSignCPOwnUI in '..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas',
+  SendJournalChoice in '..\..\FormsBoat\Document\SendJournalChoice.pas' {SendJournalChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

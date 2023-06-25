@@ -229,6 +229,9 @@ end;
 
 procedure TLoadFormTest.LoadSendFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendJournalChoiceForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
 
@@ -989,16 +992,16 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_OrderJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_OrderJournalChoiceForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_Goods_ReceiptServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_Goods_ReceiptServiceForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_Goods_ReceiptService_limitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_Goods_ReceiptService_limitForm');
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnion_ClientPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnion_ClientPartnerForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlace_ObjectForm');
   }

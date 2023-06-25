@@ -515,6 +515,38 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             Options.Editing = False
             Width = 80
           end
+          object MemberSignConsignorName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1087#1080#1089#1100' '#1075#1088#1091#1079#1086#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+            DataBinding.FieldName = 'MemberSignConsignorName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
+          object SignConsignorDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086#1076#1087#1080#1089#1080' '#1075#1088#1091#1079#1086#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+            DataBinding.FieldName = 'SignConsignorDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
+          object MemberSignCarrierName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1087#1080#1089#1100' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
+            DataBinding.FieldName = 'MemberSignCarrierName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
+          object SignCarrierDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086#1076#1087#1080#1089#1080' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
+            DataBinding.FieldName = 'SignCarrierDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
         end
       end
     end
@@ -862,8 +894,19 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       Result.ComponentItem = 'Uuid'
       Result.DataType = ftString
       Result.MultiSelectSeparator = ','
+      KeyFileName.Value = ''
+      KeyFileName.Component = FormParams
+      KeyFileName.ComponentItem = 'FileNameKey'
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.Component = FormParams
+      KeyUserName.ComponentItem = 'UserNameKey'
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
+      UpdateUuid = spUpdate_Uuid
     end
     object actExecSelect_eTTN_Send: TdsdExecStoredProc
       Category = 'Send_ETTN'
@@ -932,8 +975,19 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       Result.ComponentItem = 'Uuid'
       Result.DataType = ftString
       Result.MultiSelectSeparator = ','
+      KeyFileName.Value = ''
+      KeyFileName.Component = FormParams
+      KeyFileName.ComponentItem = 'FileNameKey'
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.Component = FormParams
+      KeyUserName.ComponentItem = 'UserNameKey'
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
+      UpdateSign = spUpdate_Sign_Consignor
       EDINActions = edinSignConsignor
     end
     object mactSignCarrierETTN: TMultiAction
@@ -981,8 +1035,19 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       Result.ComponentItem = 'Uuid'
       Result.DataType = ftString
       Result.MultiSelectSeparator = ','
+      KeyFileName.Value = ''
+      KeyFileName.Component = FormParams
+      KeyFileName.ComponentItem = 'FileNameKey'
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.Component = FormParams
+      KeyUserName.ComponentItem = 'UserNameKey'
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
+      UpdateSign = spUpdate_Sign_Carrier
       EDINActions = edinSignCarrier
     end
     object actDialog_TTN: TdsdOpenForm
@@ -1261,8 +1326,8 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       item
         Component = JuridicalBasisGuides
       end>
-    Left = 408
-    Top = 344
+    Left = 320
+    Top = 296
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_TransportGoods'
@@ -1320,6 +1385,29 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Uuid'
+        Value = '2'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SignId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserNameKey'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FileNameKey'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -1506,7 +1594,7 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       end>
     PackSize = 1
     Left = 651
-    Top = 368
+    Top = 360
   end
   object spSelect_eTTN_Sing: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TransportGoods_EDIN_Sign'
@@ -1525,7 +1613,182 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 811
-    Top = 368
+    Left = 819
+    Top = 352
+  end
+  object spUpdate_Uuid: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_TransportGoods_Uuid'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUuid'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Uuid'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 352
+    Top = 360
+  end
+  object spUpdate_Sign_Consignor: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_TransportGoods_Sign'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSignId'
+        Value = '1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserNameKey'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserNameKey'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFileNameKey'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileNameKey'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMemberSignConsignorName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberSignConsignorName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSignConsignorDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SignConsignorDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMemberSignCarrierName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberSignCarrierName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSignCarrierDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SignCarrierDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 344
+    Top = 416
+  end
+  object spUpdate_Sign_Carrier: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_TransportGoods_Sign'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSignId'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserNameKey'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserNameKey'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFileNameKey'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FileNameKey'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMemberSignConsignorName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberSignConsignorName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSignConsignorDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SignConsignorDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMemberSignCarrierName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MemberSignCarrierName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSignCarrierDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SignCarrierDate'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 496
+    Top = 416
   end
 end

@@ -287,6 +287,12 @@ type
     DescName: TcxGridDBColumn;
     actOpenOrderClientForm: TdsdOpenForm;
     bbOpenOrderClientForm: TdxBarButton;
+    spInsertUpdate_bySend: TdsdStoredProc;
+    actSendInsertForm: TOpenChoiceForm;
+    actInsertUpdate_bySend: TdsdExecStoredProc;
+    macInsertUpDate_bySend: TMultiAction;
+    actRefreshMI_Master: TdsdDataSetRefresh;
+    bbInsertUpDate_bySend: TdxBarButton;
   private
   public
   end;

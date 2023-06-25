@@ -326,6 +326,9 @@ type
     macInsertInv: TMultiAction;
     actSelectInvoice: TdsdExecStoredProc;
     PrintItemsCDS: TClientDataSet;
+    cxLabel44: TcxLabel;
+    edTaxKind: TcxButtonEdit;
+    GuidesTaxKind: TdsdGuides;
   private
     { Private declarations }
   public

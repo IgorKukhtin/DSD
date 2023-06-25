@@ -92,6 +92,13 @@ type
     KATOTTG_Unit: TcxGridDBColumn;
     spSelect_eTTN_Sing: TdsdStoredProc;
     actExecSelect_eTTN_Sign: TdsdExecStoredProc;
+    MemberSignConsignorName: TcxGridDBColumn;
+    SignConsignorDate: TcxGridDBColumn;
+    MemberSignCarrierName: TcxGridDBColumn;
+    SignCarrierDate: TcxGridDBColumn;
+    spUpdate_Uuid: TdsdStoredProc;
+    spUpdate_Sign_Consignor: TdsdStoredProc;
+    spUpdate_Sign_Carrier: TdsdStoredProc;
   private
     { Private declarations }
   public

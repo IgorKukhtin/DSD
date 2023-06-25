@@ -1,4 +1,4 @@
-unit SendJournal;
+unit SendJournalChoice;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dsdGuides, cxButtonEdit, ExternalLoad;
 
 type
-  TSendJournalForm = class(TParentForm)
+  TSendJournalChoiceForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -103,8 +103,8 @@ type
     actPrint3: TdsdPrintAction;
     bbPrint3: TdxBarButton;
     spSelectPrint_Master: TdsdStoredProc;
-    actChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
+    dsdChoiceGuides: TdsdChoiceGuides;
   private
   public
   end;
@@ -114,6 +114,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSendJournalForm);
+  RegisterClass(TSendJournalChoiceForm);
 
 end.

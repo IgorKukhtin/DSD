@@ -323,6 +323,22 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderHint = #1054#1090' '#1082#1086#1075#1086
         Width = 91
       end
+      object TaxKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1053#1044#1057
+        DataBinding.FieldName = 'TaxKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object TaxKindName_info: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1053#1044#1057' (info)'
+        DataBinding.FieldName = 'TaxKindName_info'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 87
+      end
       object ToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'

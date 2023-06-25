@@ -166,15 +166,15 @@ object IncomeForm: TIncomeForm
       Width = 157
     end
     object cxLabel16: TcxLabel
-      Left = 456
+      Left = 601
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 456
+      Left = 601
       Top = 63
       TabOrder = 18
-      Width = 394
+      Width = 249
     end
     object cxLabel10: TcxLabel
       Left = 273
@@ -482,6 +482,23 @@ object IncomeForm: TIncomeForm
       Style.Color = clGradientInactiveCaption
       TabOrder = 52
       Width = 70
+    end
+    object cxLabel26: TcxLabel
+      Left = 457
+      Top = 45
+      Caption = #1058#1080#1087' '#1053#1044#1057
+    end
+    object edTaxKind: TcxButtonEdit
+      Left = 457
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 54
+      Width = 138
     end
   end
   object cxPageControl: TcxPageControl
@@ -2208,6 +2225,7 @@ object IncomeForm: TIncomeForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -3878,6 +3896,21 @@ object IncomeForm: TIncomeForm
         Component = ceTotalSumm
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindId'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindName'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 208
@@ -4044,6 +4077,21 @@ object IncomeForm: TIncomeForm
         Name = 'PaidKindName'
         Value = Null
         Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindId'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindName'
+        Value = Null
+        Component = GuidesTaxKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -4738,6 +4786,10 @@ object IncomeForm: TIncomeForm
     TextEdit = edSearchArticle
     DataSet = MasterCDS
     Column = Article_all
+    ColumnList = <
+      item
+        Column = Article_all
+      end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 328
@@ -4804,5 +4856,35 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 742
     Top = 496
+  end
+  object GuidesTaxKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edTaxKind
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TTaxKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TTaxKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 509
+    Top = 55
   end
 end

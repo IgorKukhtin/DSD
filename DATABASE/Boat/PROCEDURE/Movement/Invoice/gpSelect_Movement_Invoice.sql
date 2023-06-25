@@ -38,6 +38,8 @@ RETURNS TABLE (Id              Integer
              , ObjectId        Integer
              , ObjectName      TVarChar
              , DescName        TVarChar
+             , TaxKindName     TVarChar
+             , TaxKindName_info TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
@@ -357,6 +359,9 @@ BEGIN
       , tmpData.ObjectId
       , tmpData.ObjectName
       , tmpData.DescName
+      , Object_TaxKind.ValueData            AS TaxKindName
+      , ObjectString_TaxKind_Info.ValueData AS TaxKindName_info
+
       , tmpData.InfoMoneyId
       , tmpData.InfoMoneyCode
       , tmpData.InfoMoneyName
@@ -401,6 +406,14 @@ BEGIN
              ELSE zc_Color_Black()
         END ::Integer AS Color_Pay
     FROM tmpData
+        LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                             ON ObjectLink_TaxKind.ObjectId = tmpData.ObjectId
+                            AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
+        LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+
+        LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
+                               ON ObjectString_TaxKind_Info.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                              AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
 
 ;
 
