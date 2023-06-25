@@ -1,9 +1,5 @@
 -- Function: gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild (Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (Boolean, TVarChar);
---DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo(
@@ -238,4 +234,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (0, false, false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo (0, 0, false, false, zfCalc_UserAdmin())
