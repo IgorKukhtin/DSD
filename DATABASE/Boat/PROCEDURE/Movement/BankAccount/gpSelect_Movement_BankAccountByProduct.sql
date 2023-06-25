@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_BankAccountByProduct (Integer, Boolean, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccountByProduct(
     IN inProductId       Integer ,
     IN inIsErased        Boolean ,
@@ -10,8 +9,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccountByProduct(
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , AmountIn TFloat
-             , AmountOut TFloat
+               --
+             , Amount TFloat
+               --
              , Comment TVarChar
              , BankAccountId Integer, BankAccountName TVarChar, BankName TVarChar
              , MoneyPlaceId Integer, MoneyPlaceCode Integer, MoneyPlaceName TVarChar, ItemName TVarChar
@@ -179,8 +179,7 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
 
-           , CASE WHEN MovementItem.Amount > 0 THEN  1 * MovementItem.Amount ELSE 0 END ::TFloat AS AmountIn
-           , CASE WHEN MovementItem.Amount < 0 THEN -1 * MovementItem.Amount ELSE 0 END ::TFloat AS AmountOut
+           , MovementItem.Amount ::TFloat AS Amount
 
            , MIString_Comment.ValueData        AS Comment
            , MovementItem.ObjectId             AS BankAccountId

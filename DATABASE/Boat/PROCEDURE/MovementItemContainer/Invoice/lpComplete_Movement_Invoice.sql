@@ -21,7 +21,7 @@ BEGIN
                                 ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
                                AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
      WHERE ObjectLink_TaxKind.ObjectId = vbObjectId
-       AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.Id = zc_Objec_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
+       AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.DescId = zc_Object_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
     ;
 
     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол

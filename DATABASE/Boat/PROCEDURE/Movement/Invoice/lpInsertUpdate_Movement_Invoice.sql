@@ -42,7 +42,7 @@ BEGIN
                                                                             ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
                                                                            AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
                                                  WHERE ObjectLink_TaxKind.ObjectId = inObjectId
-                                                   AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.Id = zc_Objec_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
+                                                   AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.DescId = zc_Object_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
                                                 ), 0)
      THEN
          RAISE EXCEPTION 'Ошибка.Значение <% НДС> в документе = <%> не соответствует значению у <Lieferanten / Kunden> = <%>.'
@@ -55,7 +55,7 @@ BEGIN
                                                                                         ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
                                                                                        AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
                                                              WHERE ObjectLink_TaxKind.ObjectId = inObjectId
-                                                               AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.Id = zc_Objec_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
+                                                               AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.DescId = zc_Object_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
                                                             ), 0))
                         ;
      END IF;

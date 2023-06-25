@@ -40,7 +40,7 @@ BEGIN
              0 AS Id
            , CAST (NEXTVAL ('movement_bankaccount_seq') AS TVarChar)  AS InvNumber
            , ''::TVarChar                                      AS InvNumberPartner
-           , inOperDate                                        AS OperDate
+           , CURRENT_DATE /*inOperDate*/          :: TDateTime AS OperDate
            , lfObject_Status.Code                              AS StatusCode
            , lfObject_Status.Name                              AS StatusName
            , 0::TFloat                                         AS AmountIn
@@ -56,7 +56,7 @@ BEGIN
            , zfCalc_InvNumber_isErased ('', Movement_Invoice.InvNumber, Movement_Invoice.OperDate, Movement_Invoice.StatusId) AS InvNumber_Invoice
            , MovementString_Comment_Invoice.ValueData          AS Comment_Invoice
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
-           , zfCalc_InvNumber_isErased (MovementDesc_Parent.ItemName, Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
+           , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
             LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = inMovementId_Invoice
             LEFT JOIN MovementString AS MovementString_Comment_Invoice
@@ -96,7 +96,7 @@ BEGIN
 
            --parent для Invoice
            , Movement_Parent.Id             ::Integer  AS MovementId_parent
-           , zfCalc_InvNumber_isErased (MovementDesc_Parent.ItemName, Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
+           , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
@@ -154,5 +154,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_BankAccount (inMovementId:= 271, inMovementId_Value:= 258394, inOperDate:= NULL :: TDateTime, inSession:= zfCalc_UserAdmin());
---select * from gpGet_Movement_Invoice(inMovementId := 0 , inMovementId_OrderClient := 705 , inProductId := 254931 , inClientId := 253190 , inOperDate := ('01.01.1900')::TDateTime ,  inSession := '5');
+-- SELECT * FROM gpGet_Movement_BankAccount (inMovementId:= 271, inMovementId_Value := 705 , inMovementId_Invoice := 254931 , inMovementId_parent := 253190 , inMoneyPlaceId:=0, inOperDate:= NULL :: TDateTime, inSession:= zfCalc_UserAdmin());
