@@ -35,7 +35,7 @@ BEGIN
 
       IF COALESCE (vbMovementId, 0) = 0
       THEN
-           RAISE EXCEPTION 'Ошибка. Не заведена шапка документа.';
+           RAISE EXCEPTION 'Ошибка.Не сохранен заголовок документа.';
       END IF;
 
       IF vbStatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_Erased())
