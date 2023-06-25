@@ -1,8 +1,5 @@
 -- Function: lpInsertUpdate_Movement_Invoice()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, TDateTime, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Invoice(
@@ -35,6 +32,30 @@ BEGIN
      -- проверка - свойство должно быть установлено
      IF COALESCE (inInfoMoneyId, 0) = 0 THEN
         RAISE EXCEPTION 'Ошибка.Не определено значение <УП статья назначения>.';
+     END IF;
+
+     -- Проверка
+     IF COALESCE (inVATPercent, 0) <> COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
+                                                 FROM ObjectLink AS OL_Partner_TaxKind
+                                                      LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = OL_Partner_TaxKind.ChildObjectId 
+                                                                           AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
+                                                 WHERE OL_Partner_TaxKind.ObjectId = inObjectId
+                                                   AND OL_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+                                                ), 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Значение <% НДС> в документе = <%> не соответствует значению у <Lieferanten / Kunden> = <%>.'
+                       , '%'
+                       , zfConvert_FloatToString (inVATPercent)
+                       , zfConvert_FloatToString (COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
+                                                             FROM ObjectLink AS OL_Partner_TaxKind
+                                                                  LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                                                        ON ObjectFloat_TaxKind_Value.ObjectId = OL_Partner_TaxKind.ChildObjectId 
+                                                                                       AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
+                                                             WHERE OL_Partner_TaxKind.ObjectId = inObjectId
+                                                               AND OL_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+                                                            ), 0))
+                        ;
      END IF;
 
 

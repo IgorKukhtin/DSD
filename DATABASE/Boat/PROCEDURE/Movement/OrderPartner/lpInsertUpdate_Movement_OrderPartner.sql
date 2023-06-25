@@ -1,8 +1,6 @@
 -- Function: gpInsertUpdate_Movement_OrderPartner()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderPartner (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, TFloat
-                                                            , Integer, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderPartner (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, TFloat
                                                             , Integer, Integer, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderPartner(
@@ -35,6 +33,30 @@ BEGIN
                                                , inProcedureName := 'lpInsertUpdate_Movement_OrderPartner'
                                                , inUserId        := vbUserId
                                                 );
+     END IF;
+
+     -- Проверка
+     IF COALESCE (inVATPercent, 0) <> COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
+                                                 FROM ObjectLink AS OL_Partner_TaxKind
+                                                      LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = OL_Partner_TaxKind.ChildObjectId 
+                                                                           AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
+                                                 WHERE OL_Partner_TaxKind.ObjectId = inToId
+                                                   AND OL_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+                                                ), 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Значение <% НДС> в документе = <%> не соответствует значению у Поставщика = <%>.'
+                       , '%'
+                       , zfConvert_FloatToString (inVATPercent)
+                       , zfConvert_FloatToString (COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
+                                                             FROM ObjectLink AS OL_Partner_TaxKind
+                                                                  LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                                                        ON ObjectFloat_TaxKind_Value.ObjectId = OL_Partner_TaxKind.ChildObjectId 
+                                                                                       AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
+                                                             WHERE OL_Partner_TaxKind.ObjectId = inToId
+                                                               AND OL_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+                                                            ), 0))
+                        ;
      END IF;
 
      -- определяем признак Создание/Корректировка
