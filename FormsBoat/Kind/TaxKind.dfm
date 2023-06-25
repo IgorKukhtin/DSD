@@ -43,19 +43,26 @@ object TaxKindForm: TTaxKindForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object Code: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object Code_str: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1089#1090#1088#1086#1082#1072
+        Caption = '***'#1050#1086#1076
         DataBinding.FieldName = 'Code_str'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 48
+        Width = 70
       end
       object Name: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1053#1044#1057
@@ -81,20 +88,13 @@ object TaxKindForm: TTaxKindForm
         Options.Editing = False
         Width = 159
       end
-      object Enum: TcxGridDBColumn
-        DataBinding.FieldName = 'Enum'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 123
-      end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 77
+        Width = 100
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'

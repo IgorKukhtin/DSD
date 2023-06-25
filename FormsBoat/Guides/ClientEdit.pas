@@ -92,6 +92,7 @@ type
     edPLZ: TcxButtonEdit;
     cxLabel14: TcxLabel;
     GuidesPLZ: TdsdGuides;
+    cxLabel24: TcxLabel;
   private
     { Private declarations }
   public

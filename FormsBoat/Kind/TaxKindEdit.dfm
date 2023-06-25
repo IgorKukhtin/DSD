@@ -26,8 +26,6 @@ object TaxKindEditForm: TTaxKindEditForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 8
-    ExplicitTop = 34
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -62,6 +60,7 @@ object TaxKindEditForm: TTaxKindEditForm
       object Code_str: TcxGridDBColumn
         Caption = '***'#1050#1086#1076
         DataBinding.FieldName = 'Code_str'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -74,19 +73,6 @@ object TaxKindEditForm: TTaxKindEditForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 132
       end
-      object Enum: TcxGridDBColumn
-        DataBinding.FieldName = 'Enum'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 123
-      end
-      object Info: TcxGridDBColumn
-        Caption = #1054#1087#1080#1089#1072#1085#1080#1077
-        DataBinding.FieldName = 'Info'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 175
-      end
       object NDS: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'NDS'
@@ -96,6 +82,13 @@ object TaxKindEditForm: TTaxKindEditForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
+      end
+      object Info: TcxGridDBColumn
+        Caption = #1054#1087#1080#1089#1072#1085#1080#1077
+        DataBinding.FieldName = 'Info'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 175
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -131,6 +124,13 @@ object TaxKindEditForm: TTaxKindEditForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
+      end
+      object Enum: TcxGridDBColumn
+        DataBinding.FieldName = 'Enum'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 123
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -206,10 +206,6 @@ object TaxKindEditForm: TTaxKindEditForm
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
