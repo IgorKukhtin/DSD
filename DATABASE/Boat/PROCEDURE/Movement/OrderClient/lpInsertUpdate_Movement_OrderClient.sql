@@ -43,24 +43,24 @@ BEGIN
      -- Проверка
      IF COALESCE (inFromId, 0) <> -1
     AND COALESCE (inVATPercent, 0) <> COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
-                                                 FROM ObjectLink AS OL_Partner_TaxKind
+                                                 FROM ObjectLink AS OL_Client_TaxKind
                                                       LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = OL_Partner_TaxKind.ChildObjectId 
+                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = OL_Client_TaxKind.ChildObjectId 
                                                                            AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
-                                                 WHERE OL_Partner_TaxKind.ObjectId = inFromId
-                                                   AND OL_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+                                                 WHERE OL_Client_TaxKind.ObjectId = inFromId
+                                                   AND OL_Client_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
                                                 ), 0)
      THEN
          RAISE EXCEPTION 'Ошибка.Значение <% НДС> в документе = <%> не соответствует значению у Клиента = <%>.'
                        , '%'
                        , zfConvert_FloatToString (inVATPercent)
                        , zfConvert_FloatToString (COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
-                                                             FROM ObjectLink AS OL_Partner_TaxKind
+                                                             FROM ObjectLink AS OL_Client_TaxKind
                                                                   LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                                                        ON ObjectFloat_TaxKind_Value.ObjectId = OL_Partner_TaxKind.ChildObjectId 
+                                                                                        ON ObjectFloat_TaxKind_Value.ObjectId = OL_Client_TaxKind.ChildObjectId 
                                                                                        AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
-                                                             WHERE OL_Partner_TaxKind.ObjectId = inFromId
-                                                               AND OL_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+                                                             WHERE OL_Client_TaxKind.ObjectId = inFromId
+                                                               AND OL_Client_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
                                                             ), 0))
                         ;
      END IF;

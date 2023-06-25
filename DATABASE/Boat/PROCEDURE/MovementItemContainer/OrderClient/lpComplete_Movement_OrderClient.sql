@@ -70,12 +70,12 @@ BEGIN
 
      -- Пересохранили VATPercent
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), inMovementId, COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0))
-     FROM ObjectLink AS OL_Partner_TaxKind
+     FROM ObjectLink AS OL_Client_TaxKind
           LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                ON ObjectFloat_TaxKind_Value.ObjectId = OL_Partner_TaxKind.ChildObjectId 
+                                ON ObjectFloat_TaxKind_Value.ObjectId = OL_Client_TaxKind.ChildObjectId 
                                AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
-     WHERE OL_Partner_TaxKind.ObjectId = vbClientId_From
-       AND OL_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+     WHERE OL_Client_TaxKind.ObjectId = vbClientId_From
+       AND OL_Client_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
     ;
 
      -- Проверка - Boat Structure

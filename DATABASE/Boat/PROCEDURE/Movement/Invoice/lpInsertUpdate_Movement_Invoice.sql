@@ -36,24 +36,26 @@ BEGIN
 
      -- Проверка
      IF COALESCE (inVATPercent, 0) <> COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
-                                                 FROM ObjectLink AS OL_Partner_TaxKind
+                                                 FROM ObjectLink AS ObjectLink_TaxKind
+                                                      LEFT JOIN Object ON Object.Id = ObjectLink_TaxKind.ObjectId
                                                       LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = OL_Partner_TaxKind.ChildObjectId 
+                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
                                                                            AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
-                                                 WHERE OL_Partner_TaxKind.ObjectId = inObjectId
-                                                   AND OL_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+                                                 WHERE ObjectLink_TaxKind.ObjectId = inObjectId
+                                                   AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.Id = zc_Objec_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
                                                 ), 0)
      THEN
          RAISE EXCEPTION 'Ошибка.Значение <% НДС> в документе = <%> не соответствует значению у <Lieferanten / Kunden> = <%>.'
                        , '%'
                        , zfConvert_FloatToString (inVATPercent)
                        , zfConvert_FloatToString (COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
-                                                             FROM ObjectLink AS OL_Partner_TaxKind
+                                                             FROM ObjectLink AS ObjectLink_TaxKind
+                                                                  LEFT JOIN Object ON Object.Id = ObjectLink_TaxKind.ObjectId
                                                                   LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                                                        ON ObjectFloat_TaxKind_Value.ObjectId = OL_Partner_TaxKind.ChildObjectId 
+                                                                                        ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
                                                                                        AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
-                                                             WHERE OL_Partner_TaxKind.ObjectId = inObjectId
-                                                               AND OL_Partner_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+                                                             WHERE ObjectLink_TaxKind.ObjectId = inObjectId
+                                                               AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.Id = zc_Objec_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
                                                             ), 0))
                         ;
      END IF;
