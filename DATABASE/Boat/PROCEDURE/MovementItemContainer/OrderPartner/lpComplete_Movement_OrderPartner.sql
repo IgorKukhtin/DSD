@@ -1,3 +1,5 @@
+-- Function: lpComplete_Movement_OrderPartner()
+
 DROP FUNCTION IF EXISTS lpComplete_Movement_OrderPartner (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_OrderPartner(
