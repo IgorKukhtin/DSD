@@ -1912,41 +1912,26 @@ object GoodsForm: TGoodsForm
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle
     DataSet = ClientDataSet
-    Column = Article_all
+    Column = Article
     ColumnList = <
+      item
+        Column = Article
+      end
       item
         Column = Article_all
-      end>
-    ActionNumber1 = dsdChoiceGuides
-    CheckBoxList = <>
-    Left = 352
-    Top = 240
-  end
-  object FieldFilter_Code: TdsdFieldFilter
-    TextEdit = edSearchCode
-    DataSet = ClientDataSet
-    Column = Code
-    ColumnList = <
+      end
       item
         Column = Code
-      end>
-    ActionNumber1 = dsdChoiceGuides
-    CheckBoxList = <>
-    Left = 416
-    Top = 272
-  end
-  object FieldFilter_Name: TdsdFieldFilter
-    TextEdit = edSearchName
-    DataSet = ClientDataSet
-    Column = Name
-    ColumnList = <
+        TextEdit = edSearchCode
+      end
       item
         Column = Name
+        TextEdit = edSearchName
       end>
     ActionNumber1 = dsdChoiceGuides
     CheckBoxList = <>
-    Left = 504
-    Top = 296
+    Left = 96
+    Top = 312
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
