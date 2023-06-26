@@ -1,21 +1,10 @@
 -- Function: gpInsertUpdate_Object_Product()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean
-                                                    , TFloat, TFloat, TFloat, TFloat, TFloat
-                                                    , TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
-                                                    , Integer, TVarChar, TDateTime, TFloat, Integer, TVarChar, TDateTime, TFloat, TFloat
-                                                    , TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean
                                                     , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                     , TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
-                                                    , Integer, TVarChar, TDateTime, TFloat, Integer, TVarChar, TDateTime, TFloat, TFloat
+                                                    , Integer, TVarChar, TDateTime, TFloat
                                                     , TVarChar);
-
-/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean
-                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                    , TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
-                                                    , Integer, TVarChar, TDateTime, TFloat, Integer, TVarChar, TDateTime, TFloat, TFloat
-                                                    , TVarChar);*/
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
  INOUT ioId                    Integer   ,    -- ключ объекта <Лодки>

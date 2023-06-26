@@ -1224,6 +1224,30 @@ type
     property CheckBox: TcxCheckBox read FCheckBox write SetCheckBox;
   end;
 
+  TColumnFieldFilterItem = class(TColumnCollectionItem)
+  private
+    FTextEdit: TcxTextEdit;
+
+    FOldStr : string;
+
+    FTimer: TTimer;
+    FProgressBar: TProgressBar;
+    FOnEditChange: TNotifyEvent;
+    FOnEditExit: TNotifyEvent;
+    FOnKeyDown: TKeyEvent;
+
+    procedure OnEditChange(Sender: TObject);
+    procedure OnEditExit(Sender: TObject);
+    procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState); virtual;
+    procedure SetTextEdit(const Value: TcxTextEdit);
+    procedure TimerTimer(Sender: TObject);
+  public
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
+  published
+    // Edit - для ввода текста фильтра
+    property TextEdit: TcxTextEdit read FTextEdit write SetTextEdit;
+  end;
 
   // Установка фильтра на поле
   TdsdFieldFilter = class(TComponent)
@@ -1231,7 +1255,7 @@ type
     FTextEdit: TcxTextEdit;
     FDataSet: TDataSet;
     FColumn: TcxGridColumn;
-    FColumnList: TCollection;
+    FColumnList: TOwnedCollection;
 
     FCheckColumn: TcxGridColumn;
 
@@ -1273,7 +1297,7 @@ type
     property DataSet: TDataSet read FDataSet write SetDataSet;
     property Column: TcxGridColumn read GetColumn write SetColumn;
     // Коллекция столюбиков для фильтра
-    property ColumnList: TCollection read FColumnList write FColumnList;
+    property ColumnList: TOwnedCollection read FColumnList write FColumnList;
     property CheckColumn: TcxGridColumn read FCheckColumn write FCheckColumn;
     // Если под фильтром 1 запись
     property ActionNumber1: TCustomAction read FActionNumber1 write FActionNumber1;
@@ -1583,8 +1607,7 @@ procedure TdsdDBTreeAddOn.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDestroying in ComponentState then
-     exit;
+
   if (Operation = opRemove) and (AComponent = DBTreeList) then
      DBTreeList := nil;
 end;
@@ -2440,6 +2463,7 @@ procedure TdsdDBViewAddOn.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
+
   if (Operation = opRemove) and (AComponent = FView) then begin
      FView := nil;
   end;
@@ -3221,18 +3245,18 @@ procedure THeaderSaver.Notification(AComponent: TComponent;
 var i: integer;
 begin
   inherited;
-  if csDesigning in ComponentState then
-    if (Operation = opRemove) then begin
-      if AComponent is TControl then begin
-         for i := 0 to ControlList.Count - 1 do
-            if ControlList[i].Control = AComponent then
-               ControlList[i].Control := nil;
-      end;
-      if AComponent = StoredProc then
-         StoredProc := nil;
-      if AComponent = FGetStoredProc then
-         FGetStoredProc := nil;
+
+  if (Operation = opRemove) then begin
+    if AComponent is TControl then begin
+       for i := 0 to ControlList.Count - 1 do
+          if ControlList[i].Control = AComponent then
+             ControlList[i].Control := nil;
     end;
+    if AComponent = StoredProc then
+       StoredProc := nil;
+    if AComponent = FGetStoredProc then
+       FGetStoredProc := nil;
+  end;
 end;
 
 procedure THeaderSaver.OnAfterShow(Sender: TObject);
@@ -3490,20 +3514,19 @@ procedure TCustomDBControlAddOn.Notification(AComponent: TComponent;
 var i: integer;
 begin
   inherited;
-  if csDestroying in ComponentState then
-     exit;
-    if (Operation = opRemove) then begin
-      if AComponent is TCustomAction then begin
-         for i := 0 to ActionItemList.Count - 1 do
-            if ActionItemList[i].Action = AComponent then
-               ActionItemList[i].Action := nil;
-         for i := 0 to OnDblClickActionList.Count - 1 do
-            if OnDblClickActionList[i].Action = AComponent then
-               OnDblClickActionList[i].Action := nil;
-      end;
-      if AComponent = SortImages then
-         SortImages := nil
+
+  if (Operation = opRemove) then begin
+    if AComponent is TCustomAction then begin
+       for i := 0 to ActionItemList.Count - 1 do
+          if ActionItemList[i].Action = AComponent then
+             ActionItemList[i].Action := nil;
+       for i := 0 to OnDblClickActionList.Count - 1 do
+          if OnDblClickActionList[i].Action = AComponent then
+             OnDblClickActionList[i].Action := nil;
     end;
+    if AComponent = SortImages then
+       SortImages := nil
+  end;
 end;
 
 procedure TCustomDBControlAddOn.OnAfterInsert(DataSet: TDataSet);
@@ -3579,18 +3602,16 @@ procedure TRefreshDispatcher.Notification(AComponent: TComponent;
 var i: integer;
 begin
   inherited;
-  if csDestroying in ComponentState then
-     exit;
-  if csDesigning in ComponentState then
-    if (Operation = opRemove) then begin
-      if AComponent = FRefreshAction then
-         FRefreshAction := nil;
-      if AComponent = FShowDialogAction then
-         FShowDialogAction := nil;
-      for i := 0 to ComponentList.Count - 1 do
-         if TComponentListItem(ComponentList.Items[i]).Component = AComponent then
-            TComponentListItem(ComponentList.Items[i]).Component := nil;
-    end;
+
+  if (Operation = opRemove) then begin
+    if AComponent = FRefreshAction then
+       FRefreshAction := nil;
+    if AComponent = FShowDialogAction then
+       FShowDialogAction := nil;
+    for i := 0 to ComponentList.Count - 1 do
+       if TComponentListItem(ComponentList.Items[i]).Component = AComponent then
+          TComponentListItem(ComponentList.Items[i]).Component := nil;
+  end;
 end;
 
 procedure TRefreshDispatcher.OnComponentChange(Sender: TObject);
@@ -3767,12 +3788,9 @@ procedure TExecuteDialog.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDestroying in ComponentState then
-     exit;
 
-  if csDesigning in ComponentState then
-     if (Operation = opRemove) and (AComponent = FRefreshDispatcher) then
-        FRefreshDispatcher := nil;
+  if (Operation = opRemove) and (AComponent = FRefreshDispatcher) then
+    FRefreshDispatcher := nil;
 end;
 
 { TCrossDBViewAddOn }
@@ -3812,16 +3830,13 @@ procedure TCrossDBViewAddOn.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDestroying in ComponentState then
-     exit;
 
-  if csDesigning in ComponentState then
-     if Operation = opRemove then begin
-        if AComponent = HeaderDataSet then
-           HeaderDataSet := nil;
-        if AComponent = FTemplateColumn then
-           FTemplateColumn := nil;
-     end;
+   if Operation = opRemove then begin
+      if AComponent = HeaderDataSet then
+         HeaderDataSet := nil;
+      if AComponent = FTemplateColumn then
+         FTemplateColumn := nil;
+   end;
 end;
 
 procedure TCrossDBViewAddOn.onAfterClose(DataSet: TDataSet);
@@ -4216,14 +4231,11 @@ procedure TPivotAddOn.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDestroying in ComponentState then
-     exit;
 
-  if csDesigning in ComponentState then
-     if Operation = opRemove then begin
-        if AComponent = PivotGrid then
-           PivotGrid := nil;
-     end;
+   if Operation = opRemove then begin
+      if AComponent = PivotGrid then
+         PivotGrid := nil;
+   end;
 end;
 
 procedure TPivotAddOn.SetPivotGrid(const Value: TcxDBPivotGrid);
@@ -5205,19 +5217,18 @@ var
 begin
   inherited Notification(AComponent, Operation);
 
-  if csDesigning in ComponentState then
-    if Operation = opRemove then
+  if Operation = opRemove then
+  begin
+    if AComponent is TControl then
     begin
-      if AComponent is TControl then
-      begin
-        for I := 0 to Pred(ChangerList.Count) do
-          if ChangerList[I].Control = AComponent then
-            ChangerList[I].Control := nil;
-      end;
-
-      if AComponent = Action then
-        Action := nil;
+      for I := 0 to Pred(ChangerList.Count) do
+        if ChangerList[I].Control = AComponent then
+          ChangerList[I].Control := nil;
     end;
+
+    if AComponent = Action then
+      Action := nil;
+  end;
 end;
 
 procedure THeaderChanger.OnChange(Sender: TObject);
@@ -5437,21 +5448,20 @@ var
 begin
   inherited Notification(AComponent, Operation);
 
-  if csDesigning in ComponentState then
-    if Operation = opRemove then
+  if Operation = opRemove then
+  begin
+    if AComponent is TControl then
     begin
-      if AComponent is TControl then
-      begin
-        for I := 0 to Pred(ExitList.Count) do
-          if ExitList[I].Control = AComponent then
-          begin
-            ExitList[I].Control := nil;
-          end;
-      end;
-
-      if AComponent = Action then
-        Action := nil;
+      for I := 0 to Pred(ExitList.Count) do
+        if ExitList[I].Control = AComponent then
+        begin
+          ExitList[I].Control := nil;
+        end;
     end;
+
+    if AComponent = Action then
+      Action := nil;
+  end;
 end;
 
 { TEnterMoveNextListItem }
@@ -5526,23 +5536,21 @@ var
 begin
   inherited Notification(AComponent, Operation);
 
-  if csDestroying in ComponentState then
-     exit;
-
-  if csDesigning in ComponentState then
-    if Operation = opRemove then
+  if Operation = opRemove then
+  begin
+    if AComponent is TControl then
     begin
-      if AComponent is TControl then
+      for I := 0 to Pred(EnterMoveNextList.Count) do
       begin
-        for I := 0 to Pred(EnterMoveNextList.Count) do
-          if EnterMoveNextList[I].Control = AComponent then
-            EnterMoveNextList[I].Control := nil;
-           if EnterMoveNextList[I].EnterAction = AComponent then
-              EnterMoveNextList[I].EnterAction := nil;
-           if EnterMoveNextList[I].ExitAction = AComponent then
-              EnterMoveNextList[I].ExitAction := nil;
+        if EnterMoveNextList[I].Control = AComponent then
+          EnterMoveNextList[I].Control := nil;
+        if EnterMoveNextList[I].EnterAction = AComponent then
+           EnterMoveNextList[I].EnterAction := nil;
+        if EnterMoveNextList[I].ExitAction = AComponent then
+           EnterMoveNextList[I].ExitAction := nil;
       end;
     end;
+  end;
 end;
 
 procedure TEnterMoveNext.OnFormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -5837,28 +5845,26 @@ procedure TdsdEnterManager.Notification(AComponent: TComponent;
 var i: integer;
 begin
   inherited;
-  if csDestroying in ComponentState then
-     exit;
-  if csDesigning in ComponentState then
-    if (Operation = opRemove) then begin
-      if AComponent = FPageControl then PageControl := nil;
-      for i := 0 to ControlList.Count - 1 do
-      begin
-         if TWinControlListItem(ControlList.Items[i]).Control = AComponent then
-            TWinControlListItem(ControlList.Items[i]).Control := nil;
-         if TWinControlListItem(ControlList.Items[i]).GotoControl = AComponent then
-            TWinControlListItem(ControlList.Items[i]).GotoControl := nil;
-         if TWinControlListItem(ControlList.Items[i]).Action = AComponent then
-            TWinControlListItem(ControlList.Items[i]).Action := nil;
-      end;
-      for i := 0 to TabSheetList.Count - 1 do
-      begin
-         if TTabSheetListItem(TabSheetList.Items[i]).Control = AComponent then
-            TTabSheetListItem(TabSheetList.Items[i]).Control := nil;
-         if TTabSheetListItem(TabSheetList.Items[i]).TabSheet = AComponent then
-            TTabSheetListItem(TabSheetList.Items[i]).TabSheet := nil;
-      end;
+
+  if (Operation = opRemove) then begin
+    if AComponent = FPageControl then PageControl := nil;
+    for i := 0 to ControlList.Count - 1 do
+    begin
+       if TWinControlListItem(ControlList.Items[i]).Control = AComponent then
+          TWinControlListItem(ControlList.Items[i]).Control := nil;
+       if TWinControlListItem(ControlList.Items[i]).GotoControl = AComponent then
+          TWinControlListItem(ControlList.Items[i]).GotoControl := nil;
+       if TWinControlListItem(ControlList.Items[i]).Action = AComponent then
+          TWinControlListItem(ControlList.Items[i]).Action := nil;
     end;
+    for i := 0 to TabSheetList.Count - 1 do
+    begin
+       if TTabSheetListItem(TabSheetList.Items[i]).Control = AComponent then
+          TTabSheetListItem(TabSheetList.Items[i]).Control := nil;
+       if TTabSheetListItem(TabSheetList.Items[i]).TabSheet = AComponent then
+          TTabSheetListItem(TabSheetList.Items[i]).TabSheet := nil;
+    end;
+  end;
 end;
 
   { TdsdFileToBase64 }
@@ -5908,8 +5914,7 @@ procedure TdsdFileToBase64.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDestroying in ComponentState then
-     exit;
+
   if (Operation = opRemove) then begin
       if (AComponent = FLookupControl) then
          FLookupControl := nil;
@@ -5940,6 +5945,95 @@ begin
       FreeAndNil(base64Stream);
     end;
   end;
+end;
+
+  { TColumnFieldFilterItem }
+
+constructor TColumnFieldFilterItem.Create(Collection: TCollection);
+begin
+  inherited;
+  FTimer := TTimer.Create(TdsdFieldFilter(Collection.Owner));
+  FTimer.Enabled:=False;
+  FTimer.OnTimer := TimerTimer;
+  FProgressBar := TProgressBar.Create(TdsdFieldFilter(Collection.Owner));
+  FProgressBar.Visible:=False;
+  FProgressBar.Height := 9;
+  FProgressBar.Width := 57;
+  FProgressBar.Anchors := [akTop, akRight];
+  FOldStr := '';
+  FOnEditChange := Nil;
+  FOnEditExit := Nil;
+  FOnKeyDown := Nil;
+  FColumn := Nil;
+end;
+
+destructor TColumnFieldFilterItem.Destroy;
+begin
+  FreeAndNil(FTimer);
+  inherited;
+end;
+
+procedure TColumnFieldFilterItem.SetTextEdit(const Value: TcxTextEdit);
+begin
+  if Assigned(FTextEdit) then
+  begin
+    FTextEdit.Properties.OnChange := FOnEditChange;
+    FTextEdit.OnExit := FOnEditExit;
+    FTextEdit.OnKeyDown := FOnKeyDown;
+    FOnEditChange := Nil;
+    FOnEditExit := Nil;
+    FOnKeyDown := Nil;
+    FProgressBar.Parent := Nil;
+  end;
+  FTextEdit := Value;
+  if Assigned(FTextEdit) then
+  begin
+    FOnEditChange := FTextEdit.Properties.OnChange;
+    FOnEditExit := FTextEdit.OnExit;
+    FOnKeyDown := FTextEdit.OnKeyDown;
+    FTextEdit.Properties.OnChange := OnEditChange;
+    FTextEdit.OnExit := OnEditExit;
+    FTextEdit.OnKeyDown := OnKeyDown;
+    FProgressBar.Parent := FTextEdit;
+    FProgressBar.Top := FTextEdit.Height - FProgressBar.Height - 4;
+    FProgressBar.Left := FTextEdit.Width - FProgressBar.Width - 4;
+  end;
+end;
+
+procedure TColumnFieldFilterItem.OnEditChange(Sender: TObject);
+begin
+  if not Assigned(TdsdFieldFilter(Collection.Owner).FDataSet) then Exit;
+  if not Assigned(TdsdFieldFilter(Collection.Owner).Column) then Exit;
+  if Sender is TcxTextEdit then
+  begin
+    if Trim(TcxTextEdit(Sender).Text)=FOldStr then exit;
+    FOldStr:=Trim(TcxTextEdit(Sender).Text);
+    FTimer.Enabled:=False;
+    FTimer.Interval:=100;
+    FTimer.Enabled:=True;
+    FProgressBar.Position:=0;
+    FProgressBar.Visible:=True;
+  end;
+end;
+
+procedure TColumnFieldFilterItem.OnEditExit(Sender: TObject);
+  var B: TBookMark;
+begin
+  FTimer.Enabled:=False;
+  FProgressBar.Position:=0;
+  FProgressBar.Visible:=False;
+  TdsdFieldFilter(Collection.Owner).OnEditExit(Sender);
+end;
+
+procedure TColumnFieldFilterItem.OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  TdsdFieldFilter(Collection.Owner).OnKeyDown(Sender, Key, Shift);
+end;
+
+procedure TColumnFieldFilterItem.TimerTimer(Sender: TObject);
+begin
+  FProgressBar.Position := FProgressBar.Position + 10;
+  if FProgressBar.Position = 100 then OnEditExit(Sender);
 end;
 
   { TCheckBoxItem }
@@ -5990,7 +6084,7 @@ begin
   inherited;
   FTimer := TTimer.Create(Self);
   FCheckBoxList := TOwnedCollection.Create(Self, TCheckBoxItem);
-  FColumnList := TCollection.Create(TColumnCollectionItem);
+  FColumnList := TOwnedCollection.Create(Self, TColumnFieldFilterItem);
   FTimer.Enabled:=False;
   FTimer.OnTimer := TimerTimer;
   FProgressBar := TProgressBar.Create(Self);
@@ -6018,7 +6112,7 @@ end;
 function TdsdFieldFilter.GetColumn: TcxGridColumn;
 begin
   if FColumnList.Count > 0 then
-     result := TColumnCollectionItem(FColumnList.Items[0]).Column
+     result := TColumnFieldFilterItem(FColumnList.Items[0]).Column
   else
      result := FColumn
 end;
@@ -6031,9 +6125,9 @@ begin
     if Value <> nil then
     begin
        if FColumnList.Count > 0 then
-          TColumnCollectionItem(FColumnList.Items[0]).Column := Value
+          TColumnFieldFilterItem(FColumnList.Items[0]).Column := Value
        else
-          TColumnCollectionItem(FColumnList.Add).Column := Value;
+          TColumnFieldFilterItem(FColumnList.Add).Column := Value;
     end
     else begin
       //если ставится в NIL
@@ -6045,10 +6139,10 @@ end;
 
 procedure TdsdFieldFilter.Notification(AComponent: TComponent;
   Operation: TOperation);
+  var I : Integer;
 begin
   inherited;
-  if csDestroying in ComponentState then
-     exit;
+
   if (Operation = opRemove) then begin
       if (AComponent = FTextEdit) then
          FTextEdit := nil;
@@ -6056,6 +6150,11 @@ begin
          FDataSet := nil;
       if (AComponent = FActionNumber1) then
          FActionNumber1 := nil;
+      if AComponent is TcxGridColumn then begin
+         for i := 0 to ColumnList.Count - 1 do
+            if TColumnFieldFilterItem(ColumnList.Items[i]).Column = AComponent then
+               TColumnFieldFilterItem(ColumnList.Items[i]).Column := nil;
+    end;
   end;
 end;
 
@@ -6126,6 +6225,7 @@ begin
 end;
 
 procedure TdsdFieldFilter.OnEditExit(Sender: TObject);
+  var B: TBookMark; Item : TCollectionItem; bDo : Boolean;
 begin
   FTimer.Enabled:=False;
   FProgressBar.Position:=0;
@@ -6134,17 +6234,35 @@ begin
   if not FDataSet.Active then Exit;
   if not Assigned(Column) and not Assigned(FCheckColumn) then Exit;
   FDataSet.DisableControls;
+  B := FDataSet.GetBookmark;
   try
     FDataSet.OnFilterRecord := FFilterRecord;
     FDataSet.Filtered := FFiltered;
 
-    if (FOldStr <> '') or not CheckSelected then
+    bDo := False;
+    for Item in FColumnList do if TColumnFieldFilterItem(Item).FOldStr <> '' then
+    begin
+      bDo := True;
+      Break;
+    end;
+
+    if bDo or (FOldStr <> '') or not CheckSelected then
     begin
       FDataSet.Filtered:=False;
       FDataSet.OnFilterRecord:=FilterRecord;
       FDataSet.Filtered:=True;
     end;
     FDataSet.First;
+
+    if Assigned(B) then
+    begin
+       try
+         if FDataSet.BookmarkValid(B) then
+           FDataSet.GotoBookmark(B);
+       except
+       end;
+       FDataSet.FreeBookmark(B);
+    end;
 
   finally
     FDataSet.EnableControls
@@ -6157,6 +6275,16 @@ begin
 end;
 
 procedure TdsdFieldFilter.OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+
+  function SetFocused(Control: TWinControl; Form : TForm): Boolean;
+  begin
+    if (Control.Parent <> Nil) and (Control.Parent <> Form) then SetFocused(Control.Parent, Form);
+    if Control.Parent is TcxPageControl then
+    begin
+      TcxPageControl(Control.Parent).ActivePage := TcxTabSheet(Control);
+    end else if (Control.TabStop or (Control is TcxGrid)) and not (Control is TcxPageControl) then Control.SetFocus;
+  end;
+
 begin
   if (Key = VK_RETURN) and (Shift = []) then
   begin
@@ -6167,6 +6295,9 @@ begin
     begin
       FActionNumber1.Execute;
       Key := 0;
+    end else if Assigned(Column) then // Если если больше то перейдем на грид
+    begin
+      SetFocused(TWinControl(Column.GridView.Control), TForm(Owner));
     end;
   end;
 end;
@@ -6198,19 +6329,22 @@ begin
     end;
   end;
 
-  if Trim(FOldStr) = '' then exit;
-
   for I := 0 to  FColumnList.Count - 1 do if Assigned(FColumnList.Items[I]) then
 
   begin
 
-    S1 := Trim(FOldStr);
+    if Assigned(TColumnFieldFilterItem(FColumnList.Items[I]).FTextEdit) then
+    begin
+      S1 := Trim(TColumnFieldFilterItem(FColumnList.Items[I]).FOldStr);
+    end else S1 := Trim(FOldStr);
+
+    if Trim(S1) = '' then Continue;
     Accept:=true;
 
-    if TColumnCollectionItem(FColumnList.Items[I]).Column is TcxGridDBBandedColumn then
-      Name:= TcxGridDBBandedColumn(TColumnCollectionItem(FColumnList.Items[I]).Column).DataBinding.FieldName
-    else if TColumnCollectionItem(FColumnList.Items[I]).Column is TcxGridDBColumn then
-      Name:= TcxGridDBColumn(TColumnCollectionItem(FColumnList.Items[I]).Column).DataBinding.FieldName
+    if TColumnFieldFilterItem(FColumnList.Items[I]).Column is TcxGridDBBandedColumn then
+      Name:= TcxGridDBBandedColumn(TColumnFieldFilterItem(FColumnList.Items[I]).Column).DataBinding.FieldName
+    else if TColumnFieldFilterItem(FColumnList.Items[I]).Column is TcxGridDBColumn then
+      Name:= TcxGridDBColumn(TColumnFieldFilterItem(FColumnList.Items[I]).Column).DataBinding.FieldName
     else Continue;
 
     repeat
@@ -6563,21 +6697,21 @@ procedure TCrossDBViewReportAddOn.Notification(AComponent: TComponent;
   var I, J : Integer;
 begin
   inherited;
-  if csDestroying in ComponentState then
-     exit;
 
-  if csDesigning in ComponentState then
-     if Operation = opRemove then begin
-        if AComponent = HeaderDataSet then
-           HeaderDataSet := nil;
-        if AComponent = FActionExpand then
-           FActionExpand := nil;
+   if Operation = opRemove then begin
+      if AComponent = HeaderDataSet then
+         HeaderDataSet := nil;
+      if AComponent = FActionExpand then
+         FActionExpand := nil;
+      if Assigned(TemplateColumnList) then
         for I := 0 to TemplateColumnList.Count - 1 do
           if TTemplateColumn(TemplateColumnList.Items[I]).FTemplateColumn = AComponent then
              TTemplateColumn(TemplateColumnList.Items[I]).FTemplateColumn := nil;
+      if Assigned(MultiplyColumnList) then
         for I := 0 to MultiplyColumnList.Count - 1 do
           if TMultiplyColumn(MultiplyColumnList.Items[I]).FColumn = AComponent then
              TMultiplyColumn(MultiplyColumnList.Items[I]).FColumn := nil;
+      if Assigned(FChartList) then
         for I := 0 to FChartList.Count - 1 do
         begin
           if TChart(FChartList.Items[I]).FChartView = AComponent then
@@ -6585,7 +6719,7 @@ begin
           if TChart(FChartList.Items[I]).FChartDataSet = AComponent then
              TChart(FChartList.Items[I]).FChartDataSet := nil;
         end;
-     end;
+   end;
 end;
 
 // Правим последовательность чтоб не перекасило отображение
@@ -7419,14 +7553,10 @@ procedure TChartAddOn.Notification(AComponent: TComponent;
 begin
   inherited;
 
-  if csDestroying in ComponentState then
-     exit;
-
-  if csDesigning in ComponentState then
-     if Operation = opRemove then begin
-        if AComponent = ChartView then
-           ChartView := nil;
-     end;
+   if Operation = opRemove then begin
+      if AComponent = ChartView then
+         ChartView := nil;
+   end;
 end;
 
 procedure TChartAddOn.SetView(const Value: TcxGridDBChartView);
@@ -7624,16 +7754,12 @@ procedure TCheckerboardAddOn.Notification(AComponent: TComponent;
 begin
   inherited;
 
-  if csDestroying in ComponentState then
-     exit;
-
-  if csDesigning in ComponentState then
-     if Operation = opRemove then begin
-        if AComponent = FControl then
-           FControl := nil
-        else if AComponent = FDataSet then
-           FDataSet := nil;
-     end;
+   if Operation = opRemove then begin
+      if AComponent = FControl then
+         FControl := nil
+      else if AComponent = FDataSet then
+         FDataSet := nil;
+   end;
 end;
 
 procedure TCheckerboardAddOn.SetDataSet(const Value: TDataSet);
@@ -8033,16 +8159,12 @@ procedure TCheckListBoxAddOn.Notification(AComponent: TComponent;
 begin
   inherited;
 
-  if csDestroying in ComponentState then
-     exit;
-
-  if csDesigning in ComponentState then
-     if Operation = opRemove then begin
-        if AComponent = FCheckListBox then
-           FCheckListBox := nil
-        else if AComponent = FDataSet then
-           FDataSet := nil;
-     end;
+   if Operation = opRemove then begin
+      if AComponent = FCheckListBox then
+         FCheckListBox := nil
+      else if AComponent = FDataSet then
+         FDataSet := nil;
+   end;
 end;
 
 procedure TCheckListBoxAddOn.SetDataSet(const Value: TDataSet);

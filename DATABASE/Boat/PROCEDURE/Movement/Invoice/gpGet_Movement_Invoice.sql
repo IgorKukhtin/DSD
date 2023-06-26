@@ -86,7 +86,7 @@ BEGIN
            , vbReceiptNumber:: TVarChar AS ReceiptNumber
            , CAST ('' as TVarChar)      AS Comment
            , Movement_Parent.Id ::Integer  AS MovementId_parent
-           , zfCalc_InvNumber_isErased (MovementDesc_Parent.ItemName, Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
+           , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status 
            LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = inMovementId_OrderClient
@@ -149,7 +149,7 @@ BEGIN
          , MovementString_Comment.ValueData                    AS Comment
 
          , Movement_Parent.Id             ::Integer  AS MovementId_parent
-         , zfCalc_InvNumber_isErased (MovementDesc_Parent.ItemName, Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
+         , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
 
        FROM Movement
            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

@@ -61,8 +61,8 @@ BEGIN
            , Object_PLZ.ValueData            AS PLZName
            , TRIM (COALESCE (Object_PLZ.ValueData,'')||' '||ObjectString_City.ValueData||' '||Object_Country.ValueData) ::TVarChar AS PLZName_full
 
-           , Object_TaxKind.Id               AS TaxKindId
-           , Object_TaxKind.ValueData        AS TaxKindName 
+           , Object_TaxKind.Id                   AS TaxKindId
+           , Object_TaxKind.ValueData            AS TaxKindName 
            , ObjectString_TaxKind_Info.ValueData AS TaxKindName_Info
            , ObjectFloat_TaxKind_Value.ValueData AS TaxKind_Value
 

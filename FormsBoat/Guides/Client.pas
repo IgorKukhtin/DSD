@@ -66,6 +66,7 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     DiscountTax: TcxGridDBColumn;
     TaxKind_Value: TcxGridDBColumn;
+    TaxKindName_Info: TcxGridDBColumn;
   private
     { Private declarations }
   public

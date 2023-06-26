@@ -268,7 +268,7 @@ object ClientEditForm: TClientEditForm
   object cxLabel20: TcxLabel
     Left = 438
     Top = 273
-    Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1085#1086#1084#1077#1088
+    Caption = 'Tax Number'
   end
   object edTaxNumber: TcxTextEdit
     Left = 438
@@ -304,19 +304,19 @@ object ClientEditForm: TClientEditForm
   end
   object edName1: TcxTextEdit
     Left = 8
-    Top = 416
+    Top = 419
     TabOrder = 43
     Width = 183
   end
   object edName2: TcxTextEdit
     Left = 208
-    Top = 416
+    Top = 419
     TabOrder = 44
     Width = 183
   end
   object edName3: TcxTextEdit
     Left = 397
-    Top = 416
+    Top = 419
     TabOrder = 45
     Width = 171
   end
@@ -367,6 +367,11 @@ object ClientEditForm: TClientEditForm
     Left = 10
     Top = 97
     Caption = 'PLZ'
+  end
+  object cxLabel24: TcxLabel
+    Left = 10
+    Top = 401
+    Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090' '#1087#1088#1086#1074#1077#1088#1082#1080' Tax Number:'
   end
   object ActionList: TActionList
     Left = 176
@@ -899,7 +904,7 @@ object ClientEditForm: TClientEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 112
-    Top = 432
+    Top = 435
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 56
@@ -961,7 +966,7 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end>
     Left = 421
-    Top = 401
+    Top = 404
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'

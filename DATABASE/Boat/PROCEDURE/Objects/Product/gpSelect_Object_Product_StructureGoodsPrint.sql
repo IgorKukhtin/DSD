@@ -16,6 +16,7 @@ RETURNS TABLE (GroupId Integer, GroupName TVarChar
              , GoodsGroupId Integer, GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
              , GoodsGroupId_dt Integer, GoodsGroupNameFull_dt TVarChar, GoodsGroupName_dt TVarChar
              , ReceiptLevelName TVarChar, ReceiptLevelName_dt TVarChar
+             , isProdOptions_level Boolean
              , NPP_1 Integer, NPP_2 Integer
              , NPP_pcp Integer,ProdColorPatternId Integer, ProdColorPatternCode Integer, ProdColorPatternName TVarChar
              , mi_child_count Integer
@@ -213,8 +214,9 @@ BEGIN
                              , 0 AS GoodsId_basis
                              , 0 AS ReceiptLevelId
                              , 0 AS ProdColorPatternId
+                             , tmpItem_Ñhild.ProdOptionsId
                         FROM tmpItem_Ñhild
-                        WHERE tmpItem_Ñhild.ProdOptionsId = 0
+                      --WHERE tmpItem_Ñhild.ProdOptionsId = 0
 
                        UNION ALL
                         -- óðîâåíü 1 - ñîáèðàåì òîëüêî "âèðòóàëüíûå" óçëû
@@ -227,6 +229,7 @@ BEGIN
                              , tmpItem_Detail.GoodsId_basis
                              , tmpItem_Detail.ReceiptLevelId
                              , tmpItem_Detail.ProdColorPatternId
+                             , 0 AS ProdOptionsId
                         FROM tmpItem_Detail_mi AS tmpItem_Detail
                         WHERE tmpItem_Detail.GoodsId_basis > 0
 
@@ -241,6 +244,7 @@ BEGIN
                              , 0 AS GoodsId_basis
                              , 0 AS ReceiptLevelId
                              , CASE WHEN tmpItem_Detail.GoodsId_basis > 0 THEN 0 ELSE tmpItem_Detail.ProdColorPatternId END AS ProdColorPatternId
+                             , 0 AS ProdOptionsId
                         FROM tmpItem_Detail_mi AS tmpItem_Detail
 
                        )
@@ -315,7 +319,16 @@ BEGIN
            , Object_GoodsGroup_dt.ValueData           AS GoodsGroupName_dt
 
            , tmpReceiptLevel.ReceiptLevelName    :: TVarChar AS ReceiptLevelName
-           , COALESCE (Object_ReceiptLevel_dt.ValueData, tmpReceiptLevel_dt.ReceiptLevelName) :: TVarChar AS ReceiptLevelName_dt
+           , CASE WHEN tmpItem_Detail.ProdOptionsId > 0 AND tmpItem_Ñhild.GroupId = 3
+                       THEN 'Îïöèè'
+                  ELSE COALESCE (Object_ReceiptLevel_dt.ValueData, tmpReceiptLevel_dt.ReceiptLevelName)
+             END :: TVarChar AS ReceiptLevelName_dt
+
+             -- ýòî îïöèÿ â ñáîðêå Ëîäêè
+           , CASE WHEN tmpItem_Detail.ProdOptionsId > 0 AND tmpItem_Ñhild.GroupId = 3
+                       THEN TRUE
+                  ELSE FALSE
+             END :: Boolean AS isProdOptions_level
 
            , COALESCE (tmpReceiptLevel.NPP_1, Object_ch.Id) :: Integer AS NPP_1
            , ROW_NUMBER() OVER (PARTITION BY tmpItem_Ñhild.GroupId, tmpItem_Ñhild.ObjectId
@@ -349,6 +362,11 @@ BEGIN
                                        , CASE WHEN EXISTS (SELECT 1 FROM tmpItem_Detail AS tmp WHERE tmp.GoodsId = tmpItem_Detail.ObjectId)
                                                    THEN 0
                                               ELSE 1
+                                         END
+                                         -- äëÿ ñáîðêè ìîäåëè - Îïöèè â êîíöå
+                                       , CASE WHEN tmpItem_Detail.ProdOptionsId > 0 AND tmpItem_Ñhild.GroupId = 3
+                                                   THEN 1
+                                              ELSE 0
                                          END
                                        , Object_dt.ValueData
                                ) :: Integer AS NPP_2
@@ -520,8 +538,9 @@ BEGIN
            , '' :: TVarChar AS GoodsGroupNameFull_dt
            , '' :: TVarChar AS GoodsGroupName_dt
 
-           , '' :: TVarChar AS ReceiptLevelName
+           , ''    :: TVarChar AS ReceiptLevelName
            , tmpProdColorItems.ProdColorPatternName :: TVarChar AS ReceiptLevelName_dt
+           , FALSE :: Boolean  AS isProdOptions_level
 
            , -2                    :: Integer AS NPP_1
            , tmpProdColorItems.Npp :: Integer AS NPP_2
@@ -586,8 +605,9 @@ BEGIN
            , '' :: TVarChar AS GoodsGroupNameFull_dt
            , '' :: TVarChar AS GoodsGroupName_dt
 
-           , '' :: TVarChar AS ReceiptLevelName
-           , '' :: TVarChar AS ReceiptLevelName_dt
+           , ''    :: TVarChar AS ReceiptLevelName
+           , ''    :: TVarChar AS ReceiptLevelName_dt
+           , FALSE :: Boolean  AS isProdOptions_level
 
            , -1                  :: Integer AS NPP_1
            , tmpProdOptItems.Npp :: Integer AS NPP_2

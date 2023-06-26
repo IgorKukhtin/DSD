@@ -60,7 +60,7 @@ type
     Info: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     spUpdate_Code: TdsdStoredProc;
-    Enum: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
   private
     { Private declarations }
   public

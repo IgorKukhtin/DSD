@@ -14,6 +14,7 @@ type
     FIdHTTP: TIdHTTP;
     FLastPosError : String;
     FHost : String;
+    FPort : Integer;
     FCancel : Boolean;
     FMsgDescriptionProc : TMsgDescriptionProc;
     FPOSTerminalCode : integer;
@@ -33,6 +34,8 @@ type
     procedure BeforeDestruction; override;
 
     property LastPosError : String read GetLastPosError;
+    property Host : String read FHost write FHost;
+    property Port : Integer read FPort write FPort;
   end;
 
 implementation
@@ -113,7 +116,7 @@ begin
         FIdHTTP.Request.ContentType := 'application/json';
         FIdHTTP.Request.Accept := 'application/json';
         FIdHTTP.Request.ContentEncoding := 'utf-8';
-        S := FIdHTTP.Post(FHost , JsonToSend);
+        S := FIdHTTP.Post(FHost + ':' + IntToStr(FPort) , JsonToSend);
       except on E:EIdHTTPProtocolException do FLastPosError := 'Ошибка проверки связи : ' + e.ErrorMessage;
       end;
     finally
@@ -181,7 +184,7 @@ begin
         FIdHTTP.Request.ContentType := 'application/json';
         FIdHTTP.Request.Accept := 'application/json';
         FIdHTTP.Request.ContentEncoding := 'utf-8';
-        S := FIdHTTP.Post(FHost , JsonToSend);
+        S := FIdHTTP.Post(FHost + ':' + IntToStr(FPort), JsonToSend);
       except on E:EIdHTTPProtocolException do FLastPosError := 'Ошибка выполнения оплаты (возврата) : ' + e.ErrorMessage;
       end;
     finally

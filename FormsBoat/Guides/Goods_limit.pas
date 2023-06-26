@@ -126,8 +126,6 @@ type
     lbSearchName: TcxLabel;
     edSearchCode: TcxTextEdit;
     edSearchName: TcxTextEdit;
-    FieldFilter_Code: TdsdFieldFilter;
-    FieldFilter_Name: TdsdFieldFilter;
     bbSearchNameLabel: TdxBarControlContainerItem;
     bbSearchName: TdxBarControlContainerItem;
     isReceiptGoods: TcxGridDBColumn;

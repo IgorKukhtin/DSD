@@ -122,8 +122,6 @@ type
     lbSearchName: TcxLabel;
     edSearchCode: TcxTextEdit;
     edSearchName: TcxTextEdit;
-    FieldFilter_Code: TdsdFieldFilter;
-    FieldFilter_Name: TdsdFieldFilter;
     Panel2: TPanel;
     Len_1: TcxGridDBColumn;
     Len_2: TcxGridDBColumn;

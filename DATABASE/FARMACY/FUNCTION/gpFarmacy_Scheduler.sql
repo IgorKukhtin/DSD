@@ -196,13 +196,13 @@ BEGIN
     
       BEGIN
         INSERT INTO ImplementationPlan (UserId, UnitId, PenaltiMobApp, AntiTOPMP_Place)
-        SELECT COALESCE(FP.UserId, PMA.UserId)
-             , COALESCE(FP.UnitId, PMA.UnitId)
-             , COALESCE(FP.PenaltiMobApp, 0)
-             , COALESCE(FP.AntiTOPMP_Place, 0)
+        SELECT COALESCE(FP.UserId, PMA.UserId) AS UserId 
+             , COALESCE(FP.UnitId, PMA.UnitId) AS UnitId
+             , COALESCE(FP.PenaltiMobApp, 0)   AS PenaltiMobApp
+             , COALESCE(FP.AntiTOPMP_Place, 0) AS AntiTOPMP_Place
         FROM gpReport_FulfillmentPlanMobileApp(inOperDate := CURRENT_DATE , inUnitId := 0 , inUserId := 0 ,  inSession := inSession) AS FP
 
-             FULL JOIN PlanMobileApp AS PMA ON PMA.UserId = FP.UserId
+             FULL JOIN ImplementationPlan AS PMA ON PMA.UserId = FP.UserId
              
         ON CONFLICT (UserId) DO UPDATE SET UnitId = EXCLUDED.UnitId, PenaltiMobApp = EXCLUDED.PenaltiMobApp, AntiTOPMP_Place = EXCLUDED.AntiTOPMP_Place;
       EXCEPTION
@@ -213,12 +213,12 @@ BEGIN
 
       BEGIN
         INSERT INTO ImplementationPlan (UserId, UnitId, Total)
-        SELECT COALESCE(FP.UserId, PMA.UserId)
-             , COALESCE(FP.UnitId, PMA.UnitId)
-             , COALESCE(FP.Total, 0)
+        SELECT COALESCE(FP.UserId, PMA.UserId)      AS UserId
+             , COALESCE(FP.UnitId, PMA.UnitId)      AS UnitId
+             , COALESCE(FP.Total, 0)                AS Total
         FROM gpReport_ImplementationPlanEmployeeAll(inStartDate := CURRENT_DATE, inSession := inSession) AS FP
 
-             FULL JOIN PlanMobileApp AS PMA ON PMA.UserId = FP.UserId
+             FULL JOIN ImplementationPlan AS PMA ON PMA.UserId = FP.UserId
              
         ON CONFLICT (UserId) DO UPDATE SET UnitId = EXCLUDED.UnitId, Total = EXCLUDED.Total;
       EXCEPTION

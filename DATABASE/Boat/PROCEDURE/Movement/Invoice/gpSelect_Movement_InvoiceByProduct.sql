@@ -1,6 +1,7 @@
 -- Function: gpSelect_Movement_Invoice()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_InvoiceByProduct (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_InvoiceByProduct (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_InvoiceByProduct(
     IN inProductId     Integer ,
@@ -14,8 +15,9 @@ RETURNS TABLE (Id              Integer
              , PlanDate        TDateTime
              , StatusCode      Integer
              , StatusName      TVarChar
-             , AmountIn         TFloat
-             , AmountOut        TFloat
+               -- 
+             , Amount         TFloat
+               --
              , AmountIn_NotVAT  TFloat
              , AmountOut_NotVAT TFloat
              , AmountIn_VAT     TFloat
@@ -334,8 +336,7 @@ BEGIN
       , tmpData.StatusCode
       , tmpData.StatusName
         -- с НДС
-      , tmpData.AmountIn
-      , tmpData.AmountOut
+      , (tmpData.AmountIn + tmpData.AmountOut) :: TFloat AS Amount
         -- без НДС
       , tmpData.AmountIn_NotVAT
       , tmpData.AmountOut_NotVAT
@@ -415,4 +416,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_Movement_InvoiceByProduct (inProductId:= 253191, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_InvoiceByProduct (inProductId:= 253191, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
