@@ -59,6 +59,7 @@ RETURNS TABLE (MovementId_OrderClient Integer
              , AmountBasis TFloat
                -- кол опций
              , Amount TFloat
+             , Amount_goods TFloat
 
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -207,12 +208,18 @@ BEGIN
 
                                      -- Кол-во
                                    , 1                             AS Value
+                                     -- Кол-во
+                                   , CASE WHEN ObjectFloat_ProdOptions_Amount.ValueData > 0 THEN ObjectFloat_ProdOptions_Amount.ValueData ELSE 1 END AS Value_goods
+
                                      -- Цена вх. без НДС - Комплектующие
                                    , ObjectFloat_EKPrice.ValueData AS EKPrice
                                      -- Цена продажи без НДС - Опции/Комплектующие
                                    , CASE WHEN ObjectFloat_SalePrice.ValueData > 0 THEN ObjectFloat_SalePrice.ValueData ELSE tmpPriceBasis.ValuePrice END AS SalePrice
 
                               FROM Object AS Object_ProdOptions
+                                   LEFT JOIN ObjectFloat AS ObjectFloat_ProdOptions_Amount
+                                                         ON ObjectFloat_ProdOptions_Amount.ObjectId = Object_ProdOptions.Id
+                                                        AND ObjectFloat_ProdOptions_Amount.DescId   = zc_ObjectFloat_ProdOptions_Amount()
                                    -- Модель лодки
                                    LEFT JOIN ObjectLink AS ObjectLink_Model
                                                         ON ObjectLink_Model.ObjectId = Object_ProdOptions.Id
@@ -275,6 +282,8 @@ BEGIN
 
                                      -- Кол-во
                                    , tmpProdOptions_pcp.Value
+                                     -- Кол-во
+                                   , tmpProdOptions_pcp.Value AS Value_goods
                                      -- Цена вх. без НДС - Комплектующие (если есть)
                                    , COALESCE (ObjectFloat_EKPrice.ValueData, tmpProdOptions_pcp.EKPrice) AS EKPrice
                                      -- опция - Цена продажи без НДС
@@ -388,7 +397,9 @@ BEGIN
                                , COALESCE (ObjectFloat_DiscountTax.ValueData,0) AS DiscountTax
 
                                  -- Кол-во
-                               , COALESCE (tmpProdOptions.Value, 0) AS Value
+                               , COALESCE (tmpProdOptions.Value, 0)       AS Value
+                                 -- Кол-во
+                               , CASE WHEN ObjectFloat_ProdOptions_Amount.ValueData > 0 THEN ObjectFloat_ProdOptions_Amount.ValueData ELSE 1 END AS Value_goods
 
                                  -- Цена вх. без НДС - Комплектующие - факт
                                , ObjectFloat_EKPrice.ValueData AS EKPrice
@@ -436,6 +447,7 @@ BEGIN
                                , tmpProduct.DiscountNextTax_order
 
                                , COALESCE (ObjectFloat_Count.ValueData, 0) AS Amount
+                               
 
                           FROM Object AS Object_ProdOptItems
                                -- Лодка
@@ -488,7 +500,11 @@ BEGIN
                                -- Опции
                                LEFT JOIN ObjectLink AS ObjectLink_ProdOptions
                                                     ON ObjectLink_ProdOptions.ObjectId = Object_ProdOptItems.Id
-                                                   AND ObjectLink_ProdOptions.DescId = zc_ObjectLink_ProdOptItems_ProdOptions()
+                                                   AND ObjectLink_ProdOptions.DescId   = zc_ObjectLink_ProdOptItems_ProdOptions()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_ProdOptions_Amount
+                                                     ON ObjectFloat_ProdOptions_Amount.ObjectId = ObjectLink_ProdOptions.ChildObjectId
+                                                    AND ObjectFloat_ProdOptions_Amount.DescId   = zc_ObjectFloat_ProdOptions_Amount()
+                                                   
                                -- возьмем из "все Опции" (сборка Модели) - хотя можно было совсем отдельным запросом
                                LEFT JOIN tmpProdOptions ON tmpProdOptions.Id         = ObjectLink_ProdOptions.ChildObjectId
                                                        AND (tmpProdOptions.ModelId   = tmpProduct.ModelId OR tmpProdOptions.ModelId   = 0)
@@ -534,6 +550,7 @@ BEGIN
                          , tmpProdOptItems.DiscountNextTax_order
                          
                          , tmpProdOptItems.Value
+                         , tmpProdOptItems.Value_goods
                          , tmpProdOptItems.EKPrice
                          , tmpProdOptItems.SalePrice
                          , tmpProdOptItems.SalePriceWVAT
@@ -571,6 +588,7 @@ BEGIN
 
                            -- Кол-во
                          , 0 AS Value
+                         , tmpProdOptions.Value_goods
 
                            -- Цена вх. без НДС
                          , tmpProdOptions.EKPrice
@@ -627,7 +645,7 @@ BEGIN
                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
                      )
-         -- все цветадля свчзки с примечаниями
+         -- все цвета для свчязки с примечаниями
        , tmpProdColor AS (SELECT Object_ProdColor.ValueData      AS Name
                                , ObjectString_Value.ValueData    AS Value
                                , COALESCE(ObjectFloat_Value.ValueData, zc_Color_White())::Integer  AS Color_Value
@@ -716,9 +734,10 @@ BEGIN
          , zfCalc_SummWVAT (tmpRes.SalePrice * tmpRes.Amount, tmpRes.VATPercent) :: TFloat AS SaleWVAT_summ
 
            -- кол-во в сборке
-         , tmpRes.Value  ::TFloat AS AmountBasis
+         , tmpRes.Value        ::TFloat AS AmountBasis
          -- кол-во опций
-         , tmpRes.Amount ::TFloat AS Amount
+         , tmpRes.Amount       ::TFloat AS Amount
+         , tmpRes.Value_goods  ::TFloat AS Amount_goods
 
          , Object_Insert.ValueData            ::TVarChar  AS InsertName
          , ObjectDate_Insert.ValueData        ::TDateTime AS InsertDate

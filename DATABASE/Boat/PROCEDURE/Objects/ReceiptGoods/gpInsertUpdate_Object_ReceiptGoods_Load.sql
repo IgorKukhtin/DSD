@@ -200,7 +200,7 @@ BEGIN
         -- поиск по модели
         INNER JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
                                          -- здесь Модель
-                                         AND Object_Model.ValueData ILIKE TRIM (SPLIT_PART (inArticle, '-', 2))
+                                         AND LEFT (Object_Model.ValueData, 3) ILIKE TRIM (SPLIT_PART (inArticle, '-', 2))
    WHERE Object_ColorPattern.DescId    = zc_Object_ColorPattern()
      AND Object_ColorPattern.isErased  = FALSE
   ;
@@ -224,7 +224,7 @@ BEGIN
                                      -- поиск по Модели
                                      INNER JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
                                                                       -- здесь Модель
-                                                                      AND Object_Model.ValueData ILIKE TRIM (SPLIT_PART (inArticle, '-', 2))
+                                                                      AND LEFT (Object_Model.ValueData, 3) ILIKE TRIM (SPLIT_PART (inArticle, '-', 2))
                                 WHERE Object.DescId   = zc_Object_ReceiptProdModel()
                                   AND Object.isErased = FALSE
                                );
@@ -778,6 +778,8 @@ end if;
 
              -- если не нашли
              IF COALESCE (vbGoodsId_child, 0) = 0
+             -- !!!если есть Артикул, нельзя искать по Названию!!!
+                AND 1=0
              THEN
                  -- поиск по названию
                 vbGoodsId_child := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ValueData ILIKE TRIM (inGoodsName_child) AND Object.isErased = FALSE);
@@ -1044,7 +1046,7 @@ end if;
                                      -- поиск по Модели
                                      INNER JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
                                                                       -- здесь Модель
-                                                                      AND Object_Model.ValueData ILIKE TRIM (SPLIT_PART (inArticle, '-', 2))
+                                                                      AND LEFT (Object_Model.ValueData, 3) ILIKE TRIM (SPLIT_PART (inArticle, '-', 2))
                                 WHERE Object.DescId   = zc_Object_ReceiptProdModel()
                                   AND Object.isErased = FALSE
                                );
