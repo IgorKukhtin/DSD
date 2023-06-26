@@ -6027,20 +6027,7 @@ end;
 
 procedure TColumnFieldFilterItem.OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
-  if (Key = VK_RETURN) and (Shift = []) then
-  begin
-    OnEditExit(Sender);
-
-    // Если под фильтром 1 запись
-    if Assigned(TdsdFieldFilter(Collection.Owner).FActionNumber1) and
-      (TdsdFieldFilter(Collection.Owner).FDataSet.RecordCount = 1) and
-      TdsdFieldFilter(Collection.Owner).FActionNumber1.Enabled and
-      TdsdFieldFilter(Collection.Owner).FActionNumber1.Visible then
-    begin
-      TdsdFieldFilter(Collection.Owner).FActionNumber1.Execute;
-      Key := 0;
-    end;
-  end;
+  TdsdFieldFilter(Collection.Owner).OnKeyDown(Sender, Key, Shift);
 end;
 
 procedure TColumnFieldFilterItem.TimerTimer(Sender: TObject);
@@ -6288,6 +6275,16 @@ begin
 end;
 
 procedure TdsdFieldFilter.OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+
+  function SetFocused(Control: TWinControl; Form : TForm): Boolean;
+  begin
+    if (Control.Parent <> Nil) and (Control.Parent <> Form) then SetFocused(Control.Parent, Form);
+    if Control.Parent is TcxPageControl then
+    begin
+      TcxPageControl(Control.Parent).ActivePage := TcxTabSheet(Control);
+    end else if (Control.TabStop or (Control is TcxGrid)) and not (Control is TcxPageControl) then Control.SetFocus;
+  end;
+
 begin
   if (Key = VK_RETURN) and (Shift = []) then
   begin
@@ -6298,6 +6295,9 @@ begin
     begin
       FActionNumber1.Execute;
       Key := 0;
+    end else if Assigned(Column) then // Если если больше то перейдем на грид
+    begin
+      SetFocused(TWinControl(Column.GridView.Control), TForm(Owner));
     end;
   end;
 end;
