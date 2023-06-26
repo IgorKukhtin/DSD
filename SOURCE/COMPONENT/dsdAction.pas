@@ -6146,7 +6146,7 @@ begin
 end;
 
 procedure TdsdSetFocusedAction.OnTimerFocused(Sender: TObject);
-  var I : integer;
+  var I : integer; Item : TCollectionItem;  Control: TWinControl;
 
   function SetFocused(Control: TWinControl; Form : TForm): Boolean;
   begin
@@ -6179,7 +6179,25 @@ begin
     for I := 0 to TForm(Owner).ComponentCount - 1 do
       if (LowerCase(TForm(Owner).Components[I].Name) = LowerCase(FControlNameParam.Value)) then
     begin
-      if (TForm(Owner).Components[I] is TWinControl) then SetFocused(TWinControl(TForm(Owner).Components[I]), TForm(Owner))
+      if TForm(Owner).Components[I] is TdsdFieldFilter  then
+      begin
+        Control := TdsdFieldFilter(TForm(Owner).Components[I]).TextEdit;
+        if Assigned(TdsdFieldFilter(TForm(Owner).Components[I]).TextEdit) and (Trim(TdsdFieldFilter(TForm(Owner).Components[I]).TextEdit.Text) <> '') then
+        begin
+          SetFocused(TWinControl(TdsdFieldFilter(TForm(Owner).Components[I]).TextEdit), TForm(Owner));
+          Exit;
+        end else
+        begin
+          if not Assigned(Control) then Control := TColumnFieldFilterItem(Item).TextEdit;
+          for Item in TdsdFieldFilter(TForm(Owner).Components[I]).ColumnList do
+            if Assigned(TColumnFieldFilterItem(Item).TextEdit) and (Trim(TColumnFieldFilterItem(Item).TextEdit.Text) <> '') then
+          begin
+            SetFocused(TWinControl(TColumnFieldFilterItem(Item).TextEdit), TForm(Owner));
+            Exit;
+          end;
+        end;
+        if Assigned(Control) then SetFocused(TWinControl(Control), TForm(Owner));
+      end else if (TForm(Owner).Components[I] is TWinControl) then SetFocused(TWinControl(TForm(Owner).Components[I]), TForm(Owner))
       else if (TForm(Owner).Components[I] is TcxGridColumn) then SetFocusedColumn(TcxGridColumn(TForm(Owner).Components[I]), TForm(Owner));
       Break;
     end;
