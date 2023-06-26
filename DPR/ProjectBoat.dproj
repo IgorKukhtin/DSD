@@ -288,6 +288,8 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\StorageSQLite.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\UAECMRXML.pas"/>
+			<DCCReference Include="..\SOURCE\EUSignCP\EUSignCP.pas"/>
+			<DCCReference Include="..\SOURCE\EUSignCP\EUSignCPOwnUI.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

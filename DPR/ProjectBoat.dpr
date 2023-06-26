@@ -95,7 +95,9 @@ uses
   GoogleOTP in '..\SOURCE\GoogleOTP.pas',
   PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
   StorageSQLite in '..\SOURCE\StorageSQLite.pas',
-  UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas';
+  UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas',
+  EUSignCP in '..\SOURCE\EUSignCP\EUSignCP.pas',
+  EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
 
 {$R *.res}
 
@@ -119,7 +121,7 @@ begin
       TUpdater.AutomaticUpdateProgram;
       TUpdater.AutomaticCheckConnect;
       Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainForm, MainFormInstance);
+      Application.CreateForm(TMainForm, MainFormInstance);
   end;
   Application.Run;
 
