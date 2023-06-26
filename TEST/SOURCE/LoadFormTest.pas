@@ -2397,11 +2397,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashPersonal_toPayForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashPersonal_toPayForm');
   exit;
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Remains_PartionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Remains_PartionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Remains_PartionDialogForm'));
@@ -2818,11 +2818,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSold_BranchDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSold_BranchDialogForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationDialogForm');
 
@@ -2998,26 +2998,26 @@ exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefrosterDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_DefrosterDialogForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_PackageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_PackageForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_PackageDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_PackageDialogForm');
   exit;
-  {
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteForm');
    exit;
-   }
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalDialogForm');
   exit;
-  {//Отчет Проверка кол-ва в привязке возврата
+  //Отчет Проверка кол-ва в привязке возврата
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToLinkForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToLinkDialogForm'));
@@ -3134,11 +3134,13 @@ end;
 
 procedure TLoadFormTest.LoadReportWageFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StaffListDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_StaffListDialogForm');
   exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WageForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageDialogForm'));

@@ -91,6 +91,7 @@ type
     macPersonalServiceAll: TMultiAction;
     actPersonalServiceErased: TdsdExecStoredProc;
     KoeffHoursWork_car: TcxGridDBColumn;
+    chkDetailMonth: TcxCheckBox;
   private
     { Private declarations }
   public

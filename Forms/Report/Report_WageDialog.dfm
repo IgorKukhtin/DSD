@@ -3,7 +3,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1088#1072#1089#1095#1077#1090#1091' '#1079#1072#1088#1086#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099'>'
-  ClientHeight = 333
+  ClientHeight = 351
   ClientWidth = 333
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 42
-    Top = 295
+    Top = 316
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
   end
   object cxButton2: TcxButton
     Left = 216
-    Top = 295
+    Top = 316
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,7 +54,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
   end
   object edUnit: TcxButtonEdit
     Left = 11
-    Top = 128
+    Top = 149
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
   end
   object cxLabel3: TcxLabel
     Left = 11
-    Top = 108
+    Top = 129
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object cxLabel6: TcxLabel
@@ -81,7 +81,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
   end
   object chkDetailModelServiceItemMaster: TcxCheckBox
     Left = 139
-    Top = 57
+    Top = 54
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1090#1080#1087#1072#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     TabOrder = 8
@@ -89,7 +89,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
   end
   object chkDetailDay: TcxCheckBox
     Left = 11
-    Top = 57
+    Top = 54
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1076#1085#1103#1084
     TabOrder = 9
@@ -97,12 +97,12 @@ object Report_WageDialogForm: TReport_WageDialogForm
   end
   object cxLabel1: TcxLabel
     Left = 11
-    Top = 155
+    Top = 176
     Caption = #1052#1086#1076#1077#1083#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
   end
   object ceModelService: TcxButtonEdit
     Left = 11
-    Top = 172
+    Top = 193
     Properties.Buttons = <
       item
         Default = True
@@ -114,12 +114,12 @@ object Report_WageDialogForm: TReport_WageDialogForm
   end
   object cxLabel5: TcxLabel
     Left = 11
-    Top = 196
+    Top = 217
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
   end
   object cePosition: TcxButtonEdit
     Left = 11
-    Top = 213
+    Top = 234
     Properties.Buttons = <
       item
         Default = True
@@ -131,12 +131,12 @@ object Report_WageDialogForm: TReport_WageDialogForm
   end
   object cxLabel2: TcxLabel
     Left = 11
-    Top = 237
+    Top = 258
     Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082':'
   end
   object ceMember: TcxButtonEdit
     Left = 11
-    Top = 254
+    Top = 275
     Properties.Buttons = <
       item
         Default = True
@@ -148,7 +148,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
   end
   object chkDetailModelService: TcxCheckBox
     Left = 11
-    Top = 81
+    Top = 102
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1084#1086#1076#1077#1083#1103#1084
     TabOrder = 16
@@ -156,21 +156,30 @@ object Report_WageDialogForm: TReport_WageDialogForm
   end
   object chkDetailModelServiceItemChild: TcxCheckBox
     Left = 139
-    Top = 81
+    Top = 78
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1090#1086#1074#1072#1088#1091' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
     TabOrder = 17
     Width = 150
   end
+  object chkDetailMonth: TcxCheckBox
+    Left = 11
+    Top = 78
+    Cursor = crDrag
+    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+    Caption = #1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+    TabOrder = 18
+    Width = 88
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 132
-    Top = 264
+    Top = 285
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 215
-    Top = 86
+    Top = 107
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -183,7 +192,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 252
-    Top = 252
+    Top = 273
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -226,6 +235,13 @@ object Report_WageDialogForm: TReport_WageDialogForm
         Component = chkDetailDay
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'chkDetailMonth'
+        Value = Null
+        Component = chkDetailMonth
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -304,7 +320,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 19
-    Top = 262
+    Top = 283
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -335,11 +351,11 @@ object Report_WageDialogForm: TReport_WageDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 87
-    Top = 110
+    Top = 131
   end
   object ActionList: TActionList
     Left = 8
-    Top = 223
+    Top = 244
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -391,7 +407,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 120
-    Top = 141
+    Top = 162
   end
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
@@ -420,7 +436,7 @@ object Report_WageDialogForm: TReport_WageDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 200
-    Top = 181
+    Top = 202
   end
   object MemberGuides: TdsdGuides
     KeyField = 'Id'
@@ -449,6 +465,6 @@ object Report_WageDialogForm: TReport_WageDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 128
-    Top = 213
+    Top = 234
   end
 end

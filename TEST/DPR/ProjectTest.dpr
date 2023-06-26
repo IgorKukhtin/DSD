@@ -1438,7 +1438,9 @@ uses
   Report_Remains_PartionDialog in '..\..\Forms\Report\Report_Remains_PartionDialog.pas' {Report_Remains_PartionDialogForm: TParentForm},
   AssetGroup_GoodsGroup in '..\..\Forms\Guides\AssetGroup_GoodsGroup.pas' {AssetGroup_GoodsGroupForm: TParentForm},
   Report_CashPersonal_toPay in '..\..\Forms\Report\Report_CashPersonal_toPay.pas' {Report_CashPersonal_toPayForm: TParentForm},
-  TransportGoods_EDINJournal in '..\..\Forms\Document\TransportGoods_EDINJournal.pas' {TransportGoods_EDINJournalForm: TParentForm};
+  TransportGoods_EDINJournal in '..\..\Forms\Document\TransportGoods_EDINJournal.pas' {TransportGoods_EDINJournalForm: TParentForm},
+  EUSignCP in '..\..\SOURCE\EUSignCP\EUSignCP.pas',
+  EUSignCPOwnUI in '..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

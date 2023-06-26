@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpReport_PersonalComplete (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_PersonalComplete (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_PersonalComplete (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_PersonalComplete (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_PersonalComplete (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_PersonalComplete(
     IN inStartDate   TDateTime ,              --
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_PersonalComplete(
     IN inPositionId  Integer   ,              -- должность
     IN inBranchId    Integer   ,              -- филиал
     IN inIsDay       Boolean   ,              -- признак группировки по дням - да/нет
+    IN inIsMonth     Boolean   ,              -- признак группировки по месяцам - да/нет
     IN inIsDetail    Boolean   DEFAULT FALSE, -- признак группировки по дням - да/нет
     IN inisMovement  Boolean   DEFAULT FALSE, -- показать док
     IN inSession     TVarChar  DEFAULT ''      -- сессия пользователя
@@ -229,7 +231,11 @@ BEGIN
               , tmp.ToId
 
         FROM (-- ДЛЯ Комлектовщика
-              SELECT CASE WHEN inIsDay = TRUE OR inisMovement = TRUE THEN tmpMovement_all.OperDate ELSE inEndDate END AS OperDate
+              SELECT CASE WHEN inIsDay = TRUE OR inisMovement = TRUE THEN tmpMovement_all.OperDate 
+                          ELSE CASE WHEN inIsMonth = TRUE THEN DATE_TRUNC ('MONTH', tmpMovement_all.OperDate) 
+                                    ELSE inEndDate
+                               END
+                     END ::TDateTime AS OperDate
                    , tmpMovement_all.InvNumber
                    , tmpMovement_all.MovementId_parent
                    , Object_Unit.Id             AS UnitId
@@ -272,7 +278,11 @@ BEGIN
 
              UNION ALL
               -- ДЛЯ Пользователя - Кладовщик
-              SELECT CASE WHEN inIsDay = TRUE OR inisMovement = TRUE THEN tmpMovement_all.OperDate ELSE inEndDate END AS OperDate
+              SELECT CASE WHEN inIsDay = TRUE OR inisMovement = TRUE THEN tmpMovement_all.OperDate
+                          ELSE CASE WHEN inIsMonth = TRUE THEN DATE_TRUNC ('MONTH', tmpMovement_all.OperDate) 
+                                    ELSE inEndDate
+                               END
+                     END ::TDateTime AS OperDate
                    , tmpMovement_all.InvNumber
                    , tmpMovement_all.MovementId_parent
                    , Object_Unit.Id             AS UnitId
@@ -329,7 +339,11 @@ BEGIN
 
              UNION ALL
               -- ДЛЯ Сотрудник - Стикеровщик
-              SELECT CASE WHEN inIsDay = TRUE OR inisMovement = TRUE THEN tmpMovement_all.OperDate ELSE inEndDate END AS OperDate
+              SELECT CASE WHEN inIsDay = TRUE OR inisMovement = TRUE THEN tmpMovement_all.OperDate
+                          ELSE CASE WHEN inIsMonth = TRUE THEN DATE_TRUNC ('MONTH', tmpMovement_all.OperDate) 
+                                    ELSE inEndDate
+                               END
+                     END ::TDateTime AS OperDate
                    , tmpMovement_all.InvNumber
                    , tmpMovement_all.MovementId_parent
                    , Object_Unit.Id             AS UnitId
@@ -439,6 +453,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.06.23         *
  12.07.19         *
  17.12.18         * add PersonalComplete5
  26.11.17                                        * all
@@ -448,4 +463,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_PersonalComplete (inStartDate:= '01.10.2019', inEndDate:= '31.10.2019', inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= FALSE, inIsDetail:= FALSE, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpReport_PersonalComplete (inStartDate:= '01.11.2019', inEndDate:= '02.11.2019', inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= FALSE, inIsDetail:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_PersonalComplete (inStartDate:= '01.11.2019', inEndDate:= '02.11.2019', inPersonalId:= 0, inPositionId:= 0, inBranchId:= 0, inIsDay:= FALSE, inIsMonth:= True, inIsDetail:= FALSE, inSession:= zfCalc_UserAdmin())

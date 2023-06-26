@@ -1,6 +1,7 @@
 -- Function: gpSelect_Report_Wage_Server ()
 
-DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Server (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Server (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Server (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Wage_Server(
     IN inStartDate      TDateTime, --дата начала периода
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Wage_Server(
     IN inMemberId       Integer,   --сотрудник
     IN inPositionId     Integer,   --должность
     IN inDetailDay      Boolean,   --детализировать по дням
+    IN inDetailMonth    Boolean,   --детализировать по месяцам
     IN inDetailModelService Boolean,   --детализировать по моделям
     IN inDetailModelServiceItemMaster Boolean,   --детализировать по типам документов в модели
     IN inDetailModelServiceItemChild  Boolean,   --детализировать по товарам в типах документов
@@ -193,7 +195,9 @@ BEGIN
          , Report_1.StorageLineId_From, Report_1.StorageLineName_From, Report_1.StorageLineId_To, Report_1.StorageLineName_To
          , Report_1.GoodsKind_FromId, Report_1.GoodsKind_FromName, Report_1.GoodsKindComplete_FromId, Report_1.GoodsKindComplete_FromName
          , Report_1.GoodsKind_ToId, Report_1.GoodsKind_ToName, Report_1.GoodsKindComplete_ToId, Report_1.GoodsKindComplete_ToName
-         , Report_1.OperDate
+         , CASE WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Report_1.OperDate)
+                ELSE Report_1.OperDate
+           END ::TDateTime AS OperDate
            -- Отраб. дн. 1 чел (инф.)
          , CASE WHEN Report_1.Ord_SheetWorkTime = 1 THEN Report_1.Count_Day         ELSE 0 END AS Count_Day
            -- Кол-во человек (за 1 д.)
@@ -344,7 +348,10 @@ BEGIN
                -- собраны данные из табеля
              , Movement_SheetWorkTime AS
                 (SELECT
-                       CASE WHEN inDetailDay = TRUE THEN Movement.OperDate ELSE NULL END :: TDateTime AS OperDate
+                       CASE WHEN inDetailDay = TRUE THEN Movement.OperDate
+                            WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Movement.OperDate)
+                            ELSE NULL
+                       END :: TDateTime AS OperDate
                      , MI_SheetWorkTime.ObjectId                      AS MemberId
                      , MIObject_Position.ObjectId                     AS PositionId
                      , MIObject_PersonalGroup.ObjectId                AS PersonalGroupId
@@ -383,7 +390,10 @@ BEGIN
                  WHERE Movement.DescId = zc_Movement_SheetWorkTime()
                    AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                    AND Movement.StatusId <> zc_Enum_Status_Erased()
-                 GROUP BY CASE WHEN inDetailDay = TRUE THEN Movement.OperDate ELSE NULL END
+                 GROUP BY CASE WHEN inDetailDay = TRUE THEN Movement.OperDate
+                               WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Movement.OperDate)
+                               ELSE NULL
+                          END
                         , MI_SheetWorkTime.ObjectId                      
                         , MIObject_Position.ObjectId                     
                         , MIObject_PersonalGroup.ObjectId                
@@ -463,7 +473,7 @@ BEGIN
                      THEN Res.GoodsKindComplete_ToName
                 ELSE NULL::TVarChar END                         AS GoodsKindComplete_ToName
 
-               ,CASE WHEN inDetailDay = TRUE
+               ,CASE WHEN inDetailDay = TRUE OR inDetailMonth = TRUE
                      THEN Res.OperDate
                 ELSE NULL::TDateTime END                  AS OperDate
 
@@ -567,7 +577,7 @@ BEGIN
                      THEN Res.GoodsKindComplete_ToName
                 ELSE NULL::TVarChar END
 
-               ,CASE WHEN inDetailDay = TRUE
+               ,CASE WHEN inDetailDay = TRUE OR inDetailMonth = TRUE
                      THEN Res.OperDate
                 ELSE NULL::TDateTime END
                ,CASE WHEN inDetailDay = TRUE
@@ -873,3 +883,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '01.04.2017', inEndDate:= '02.04.2017', inUnitId:= 8439, inModelServiceId:= 633116, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');
 -- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '01.10.2023', inEndDate:= '31.10.2023', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');
+-- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '01.10.2023', inEndDate:= '31.10.2023', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailMonth:= True, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');

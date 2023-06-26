@@ -204,6 +204,17 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Options.Editing = False
         Width = 50
       end
+      object MonthDate: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094
+        DataBinding.FieldName = 'OperDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.AssignedValues.EditFormat = True
+        Properties.DisplayFormat = 'mmmm yyyy '
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
       object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
@@ -457,17 +468,25 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 4
     Width = 251
   end
   object cbIsMovement: TcxCheckBox
-    Left = 416
+    Left = 544
     Top = 87
     Action = actIsDay
     Caption = #1054#1090' '#1082#1086#1075#1086' / '#1050#1086#1084#1091
     Properties.ReadOnly = False
-    TabOrder = 9
+    TabOrder = 8
     Width = 109
+  end
+  object cbisMonth: TcxCheckBox
+    Left = 429
+    Top = 87
+    Action = actIsMonth
+    Properties.ReadOnly = False
+    TabOrder = 10
+    Width = 89
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -591,6 +610,10 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         end
         item
           Visible = True
+          ItemName = 'bbisMonth'
+        end
+        item
+          Visible = True
           ItemName = 'bbIsMovement'
         end
         item
@@ -667,6 +690,13 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       Hint = 'bbIsMovement'
       Visible = ivAlways
       Control = cbIsMovement
+    end
+    object bbisMonth: TdxBarControlContainerItem
+      Caption = 'bbisMonth'
+      Category = 0
+      Hint = 'bbisMonth'
+      Visible = ivAlways
+      Control = cbisMonth
     end
   end
   object ActionList: TActionList
@@ -810,6 +840,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
           Component = cbDoc
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMonth'
+          Value = Null
+          Component = cbisMonth
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -947,6 +985,19 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         end>
       isShowModal = False
     end
+    object actIsMonth: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084
+      Hint = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actIsDay: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1007,14 +1058,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         end
         item
           Name = 'inIsDay'
-          Value = 'False'
+          Value = False
           Component = cbIsDay
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPrint'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1073,14 +1124,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         end
         item
           Name = 'inIsDay'
-          Value = 'False'
+          Value = False
           Component = cbIsDay
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
         item
           Name = 'isPrint'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1150,6 +1201,14 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisMonth'
+        Value = Null
+        Component = cbisMonth
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsDetail'
         Value = False
         Component = cbIsMovement
@@ -1176,6 +1235,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <
       item
@@ -1185,6 +1245,8 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 432
     Top = 344
   end
