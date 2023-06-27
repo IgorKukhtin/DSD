@@ -272,6 +272,17 @@ inherited Report_WageForm: TReport_WageForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object MonthDate: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094
+            DataBinding.FieldName = 'OperDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DisplayFormat = 'mmmm yyyy '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
           object Count_MemberInDay: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1095#1077#1083#1086#1074#1077#1082' ('#1079#1072' 1 '#1076'.)'
             DataBinding.FieldName = 'Count_MemberInDay'
@@ -445,25 +456,34 @@ inherited Report_WageForm: TReport_WageForm
       Width = 66
     end
     object chkDetailModelService: TcxCheckBox
-      Left = 687
+      Left = 802
       Top = 50
       Caption = #1055#1086' '#1084#1086#1076#1077#1083#1103#1084
       TabOrder = 13
       Width = 82
     end
     object chkDetailModelServiceItemMaster: TcxCheckBox
-      Left = 543
-      Top = 67
+      Left = 641
+      Top = 50
       Caption = #1055#1086' '#1090#1080#1087#1072#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       TabOrder = 14
       Width = 138
     end
     object chkDetailModelServiceItemChild: TcxCheckBox
-      Left = 687
+      Left = 641
       Top = 67
       Caption = #1055#1086' '#1058#1086#1074#1072#1088#1091' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
       TabOrder = 15
       Width = 146
+    end
+    object chkDetailMonth: TcxCheckBox
+      Left = 543
+      Top = 67
+      Cursor = crDrag
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      TabOrder = 16
+      Width = 88
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -740,6 +760,14 @@ inherited Report_WageForm: TReport_WageForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'chkDetailMonth'
+          Value = Null
+          Component = chkDetailMonth
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -875,6 +903,14 @@ inherited Report_WageForm: TReport_WageForm
         Name = 'inDetailDay'
         Value = Null
         Component = chkDetailDay
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDetailMonth'
+        Value = Null
+        Component = chkDetailMonth
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

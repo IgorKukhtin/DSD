@@ -3,7 +3,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1082#1086#1084#1087#1083#1077#1082#1090#1086#1074#1097#1080#1082#1072#1084'>'
-  ClientHeight = 232
+  ClientHeight = 260
   ClientWidth = 388
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 80
-    Top = 189
+    Top = 222
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
   end
   object cxButton2: TcxButton
     Left = 254
-    Top = 189
+    Top = 222
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,7 +54,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
   end
   object edPosition: TcxButtonEdit
     Left = 98
-    Top = 96
+    Top = 129
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
   end
   object edPersonal: TcxButtonEdit
     Left = 98
-    Top = 134
+    Top = 167
     Properties.Buttons = <
       item
         Default = True
@@ -78,12 +78,12 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
   end
   object cxLabel3: TcxLabel
     Left = 11
-    Top = 100
+    Top = 133
     Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082':'
   end
   object cxLabel1: TcxLabel
     Left = 11
-    Top = 135
+    Top = 168
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
   end
   object cxLabel6: TcxLabel
@@ -97,7 +97,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cbinIsDay: TcxCheckBox
-    Left = 26
+    Left = 39
     Top = 33
     Caption = #1087#1086' '#1076#1085#1103#1084
     Properties.ReadOnly = False
@@ -106,12 +106,12 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
   end
   object cxLabel2: TcxLabel
     Left = 11
-    Top = 65
+    Top = 98
     Caption = #1060#1080#1083#1080#1072#1083':'
   end
   object edBranch: TcxButtonEdit
     Left = 98
-    Top = 65
+    Top = 98
     Properties.Buttons = <
       item
         Default = True
@@ -122,29 +122,37 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
     Width = 250
   end
   object cbIsMovement: TcxCheckBox
-    Left = 114
-    Top = 33
+    Left = 39
+    Top = 60
     Caption = #1054#1090' '#1082#1086#1075#1086' / '#1050#1086#1084#1091
     Properties.ReadOnly = False
     TabOrder = 13
-    Width = 107
+    Width = 103
   end
   object cbDoc: TcxCheckBox
-    Left = 232
-    Top = 33
+    Left = 152
+    Top = 60
     Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     TabOrder = 14
     Width = 148
+  end
+  object cbisMonth: TcxCheckBox
+    Left = 152
+    Top = 33
+    Caption = #1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 15
+    Width = 89
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 355
-    Top = 119
+    Top = 152
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 352
-    Top = 57
+    Top = 90
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -157,7 +165,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 291
-    Top = 149
+    Top = 182
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -251,9 +259,17 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMonth'
+        Value = Null
+        Component = cbisMonth
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 27
-    Top = 153
+    Top = 186
   end
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
@@ -283,7 +299,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 150
-    Top = 125
+    Top = 158
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
@@ -328,7 +344,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 245
-    Top = 89
+    Top = 122
   end
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
@@ -359,6 +375,6 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 126
-    Top = 51
+    Top = 84
   end
 end

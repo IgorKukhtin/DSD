@@ -96,6 +96,9 @@ type
     actRefreshMov: TdsdDataSetRefresh;
     InvNumber_parent: TcxGridDBColumn;
     OperDate_parent: TcxGridDBColumn;
+    cbisMonth: TcxCheckBox;
+    bbisMonth: TdxBarControlContainerItem;
+    actIsMonth: TdsdDataSetRefresh;
   private
   public
   end;

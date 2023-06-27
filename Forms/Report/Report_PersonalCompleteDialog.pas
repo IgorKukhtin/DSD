@@ -45,6 +45,7 @@ type
     BranchGuides: TdsdGuides;
     cbIsMovement: TcxCheckBox;
     cbDoc: TcxCheckBox;
+    cbisMonth: TcxCheckBox;
   private
     { Private declarations }
   public
