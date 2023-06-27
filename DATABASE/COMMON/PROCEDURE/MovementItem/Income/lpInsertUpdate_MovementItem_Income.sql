@@ -1,8 +1,9 @@
 -- Function: lpInsertUpdate_MovementItem_Income()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income (
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
@@ -13,11 +14,13 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Income(
     IN inCountForPrice       TFloat    , -- Цена за количество
     IN inLiveWeight          TFloat    , -- Живой вес
     IN inHeadCount           TFloat    , -- Количество голов
-    IN inPartionGoods        TVarChar  , -- Партия товара
+    IN inPartionGoods        TVarChar  , -- Партия товара 
+    IN inPartNumber          TVarChar  , -- № по тех паспорту 
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ) 
+    IN inStorageId           Integer   , -- Место хранения
     IN inUserId              Integer     -- пользователь
-)
+   )
 RETURNS Integer
 AS
 $BODY$
@@ -33,7 +36,7 @@ BEGIN
                 WHERE MLO.MovementId = inMovementId
                   AND MLO.DescId = zc_MovementLinkObject_To()
                   AND MLO.ObjectId IN (SELECT tt.UnitId FROM Object_Unit_check_isOrder_View AS tt)
-                )
+                )                               lpInsertUpdate_MovementItem_Income
      THEN   
          --если товара и вида товара  нет в zc_ObjectBoolean_GoodsByGoodsKind_Order  - тогда ошиибка
          IF NOT EXISTS (SELECT 1
@@ -94,6 +97,19 @@ BEGIN
          PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
      END IF;
 
+
+     -- сохранили свойство <№ по тех паспорту>
+     IF inPartNumber <> '' OR EXISTS (SELECT 1 FROM MovementItemString AS MIS WHERE MIS.MovementItemId = ioId AND MIS.DescId = zc_MIString_PartNumber())
+     THEN
+         PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
+     END IF;
+   
+     -- сохранили связь с <Место хранения> - для партии прихода на МО 
+     IF COALESCE (inStorageId,0) <> 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_Storage())
+     THEN
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
+     END IF;
+
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
      -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
@@ -115,6 +131,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.06.23         *
  29.05.15                                        * set lp
  11.05.14                                        * add lpInsert_MovementItemProtocol
  06.10.13                                        * add lfCheck_Movement_Parent

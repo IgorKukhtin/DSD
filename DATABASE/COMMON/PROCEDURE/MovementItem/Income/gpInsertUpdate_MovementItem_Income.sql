@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Income()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Income (Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -17,8 +18,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
     IN inLiveWeight          TFloat    , -- Живой вес
     IN inHeadCount           TFloat    , -- Количество голов
     IN inPartionGoods        TVarChar  , -- Партия товара
+ INOUT ioPartNumber          TVarChar  , -- № по тех паспорту
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ) 
+    IN inStorageId           Integer   , -- Место хранения
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD
@@ -50,8 +53,10 @@ BEGIN
                                               , inLiveWeight         := inLiveWeight
                                               , inHeadCount          := inHeadCount
                                               , inPartionGoods       := inPartionGoods
+                                              , inPartNumber         := ioPartNumber
                                               , inGoodsKindId        := inGoodsKindId
                                               , inAssetId            := inAssetId
+                                              , inStorageId          := inStorageId
                                               , inUserId             := vbUserId
                                                );
 
@@ -71,6 +76,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.06.23         *
  21.07.16         *
  29.06.15                                        * add inIsCalcAmountPartner
  29.05.15                                        *

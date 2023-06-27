@@ -23,11 +23,11 @@ BEGIN
       END IF;
     
       -- –ÂÁÛÎ¸Ú‡Ú
-       CREATE TEMP TABLE tmpMI (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer
-                              , Amount TFloat, AmountPartner TFloat, Price TFloat, CountForPrice TFloat, HeadCount TFloat, PartionGoods TVarChar) ON COMMIT DROP;
+       CREATE TEMP TABLE tmpMI (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, StorageId Integer
+                              , Amount TFloat, AmountPartner TFloat, Price TFloat, CountForPrice TFloat, HeadCount TFloat
+                              , PartionGoods TVarChar, PartNumber TVarChar) ON COMMIT DROP;
 
-
-      INSERT INTO tmpMI  (MovementItemId, GoodsId, GoodsKindId, AssetId, Amount, AmountPartner, Price, CountForPrice, HeadCount, PartionGoods)
+      INSERT INTO tmpMI  (MovementItemId, GoodsId, GoodsKindId, AssetId, StorageId, Amount, AmountPartner, Price, CountForPrice, HeadCount, PartionGoods, PartNumber)
 
          WITH 
           tmp AS (SELECT MAX (MovementItem.Id)                         AS MovementItemId
@@ -47,7 +47,8 @@ BEGIN
         SELECT COALESCE (tmp.MovementItemId, 0)              AS MovementItemId
              , Object_Goods.Id                               AS GoodsId
              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-             , MILinkObject_Asset.ObjectId                   AS AssetId
+             , MILinkObject_Asset.ObjectId                   AS AssetId 
+             , MILinkObject_Storage.ObjectId                 AS StorageId
              , MovementItem.Amount                           AS Amount
              , MIFloat_AmountPartner.ValueData               AS AmountPartner
 
@@ -55,6 +56,7 @@ BEGIN
              , MIFloat_CountForPrice.ValueData               AS CountForPrice
              , MIFloat_HeadCount.ValueData                   AS HeadCount
              , MIString_PartionGoods.ValueData               AS PartionGoods
+             , MIString_PartNumber.ValueData                 AS PartNumber
 
        FROM MovementItem 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -81,9 +83,17 @@ BEGIN
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
 
+            LEFT JOIN MovementItemString AS MIString_PartNumber
+                                         ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                        AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
+                                             ON MILinkObject_Storage.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
 
             LEFT JOIN tmp ON tmp.GoodsId     = MovementItem.ObjectId
                          AND tmp.GoodsKindId =  COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
@@ -106,8 +116,10 @@ BEGIN
                                                , inLiveWeight         := 0     ::TFloat
                                                , inHeadCount          := COALESCE (tmpMI.HeadCount,0)     ::TFloat
                                                , inPartionGoods       := COALESCE (tmpMI.PartionGoods,'') ::TVarChar
+                                               , inPartNumber         := COALESCE (tmpMI.PartNumber,'') ::TVarChar
                                                , inGoodsKindId        := tmpMI.GoodsKindId  ::Integer
                                                , inAssetId            := tmpMI.AssetId      ::Integer
+                                               , inStorageId          := tmpMI.StorageId
                                                , inUserId             := vbUserId
                                                 )
      FROM tmpMI
@@ -120,6 +132,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.06.23         *
  02.06.22         *
 */
 
