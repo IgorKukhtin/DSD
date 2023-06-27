@@ -319,8 +319,6 @@ BEGIN
                                   WHERE Object_Contract_View.ContractId = vbContractId
                                   )
 
-
-
              SELECT
                    Movement.Id                                AS Id
                  , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
@@ -976,6 +974,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.06.23         *
  09.09.15         * add tmpMIPartionMovement
  28.01.15                                                       *
  16.07.14                                        * add tmpObject_GoodsPropertyValueGroup
