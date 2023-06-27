@@ -1570,7 +1570,7 @@ object GoodsForm: TGoodsForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'actSetFocused'
-      ControlName.Value = 'edSearchArticle'
+      ControlName.Value = 'FieldFilter_Article'
       ControlName.DataType = ftString
       ControlName.MultiSelectSeparator = ','
     end
