@@ -4692,6 +4692,14 @@
 				<Form>Report_FulfillmentPlanMobileAppAntiTOPForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsSaleChechUserDialog.pas">
+				<Form>Report_GoodsSaleChechUserDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsSaleChechUser.pas">
+				<Form>Report_GoodsSaleChechUserForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

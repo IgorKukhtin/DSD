@@ -304,7 +304,11 @@ BEGIN
                                                   ORDER BY Round(1.0 * tmpMovFact.CountMobile / 
                                                            NullIf(tmpMovFact.CountChech, 0) * 100, 1)::TFloat)::Integer AS ORD
                              , ROW_NUMBER() OVER (PARTITION BY date_part('day', vbDateStart - tmpUser.DateIn)::INTEGER <= 90 OR 
-                                                               COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = FALSE
+                                                               COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = FALSE,
+                                                               Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
+                                                                     COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 1) - 
+                                                               Round(1.0 * tmpMovFact.CountMobile / 
+                                                                     NullIf(tmpMovFact.CountChech, 0) * 100, 1) = 0                                                               
                                                   ORDER BY Round(1.0 * tmpMovFact.CountMobile / 
                                                            NullIf(tmpMovFact.CountChech, 0) * 100, 1)::TFloat,
                                                            1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
@@ -336,6 +340,7 @@ BEGIN
                                     , COUNT(*)          AS CountUser
                                FROM tmpData AS MovPlan 
                                WHERE MovPlan.isNewUser = False AND MovPlan.isShowPlanMobileAppUser = TRUE
+                                 AND COALESCE(MovPlan.PenaltiMobApp, 0) > 0
                                GROUP BY MovPlan.ProcFact
                                       , MovPlan.ProcPlanFull),
             tmpSumTop AS (SELECT MovPlan.ProcFact
@@ -370,7 +375,8 @@ BEGIN
            
            , CASE WHEN not MovPlan.isNewUser AND MovPlan.isShowPlanMobileAppUser AND 
                        COALESCE(inUnitId, 0) = 0 AND COALESCE (inUserId, 0) = 0 AND           
-                       tmpSumTop.SumPlace <= (SELECT MIN(tmpSumTop.SumPlace) FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_Count)
+                       tmpSumTop.SumPlace <= (SELECT MIN(tmpSumTop.SumPlace) FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_Count) AND
+                       COALESCE(MovPlan.PenaltiMobApp, 0) > 0
                   THEN MovPlan.Place END                             AS AntiTOPMP_Place
                   
            , tmpSumTop.SumPlace
@@ -413,4 +419,3 @@ ALTER FUNCTION gpReport_Check_TabletkiRecreate (TDateTime, TDateTime, Integer, T
 -- 
 
 select * from gpReport_FulfillmentPlanMobileApp(inOperDate := ('22.06.2023')::TDateTime , inUnitId := 0 , inUserId := 0 ,  inSession := '3')
-limit 1

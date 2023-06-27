@@ -1183,10 +1183,15 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BanToTransferTimeGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsSaleChechUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsSaleChechUserForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsSaleChechUserDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsSaleChechUserDialogForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BanToTransferTimeGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BanToTransferTimeGoodsForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaymentHelsiForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaymentHelsiForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PaymentHelsiForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppUserForm'));

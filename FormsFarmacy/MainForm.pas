@@ -1028,6 +1028,8 @@ type
     N379: TMenuItem;
     actReport_FulfillmentPlanMobileAppAntiTOP: TdsdOpenForm;
     N380: TMenuItem;
+    actReport_GoodsSaleChechUser: TdsdOpenForm;
+    N381: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);
