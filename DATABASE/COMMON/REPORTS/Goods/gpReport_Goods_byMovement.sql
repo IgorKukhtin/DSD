@@ -339,15 +339,63 @@ BEGIN
                             , (SUM (tmp.ReturnAmountDay        * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  ) AS ReturnAmountDay
                             , (SUM (tmp.ReturnAmountPartnerDay * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  ) AS ReturnAmountPartnerDay
 
-                            , (SUM (tmp.SaleAmount)             ) AS SaleAmountSh
-                            , (SUM (tmp.SaleAmountPartner)      ) AS SaleAmountPartnerSh
-                            , (SUM (tmp.ReturnAmount)           ) AS ReturnAmountSh
-                            , (SUM (tmp.ReturnAmountPartner)    ) AS ReturnAmountPartnerSh
+                            , (SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                         THEN tmp.SaleAmount
+                                         -- перевод в шт. для Тушенки
+                                         WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                         THEN tmp.SaleAmount / _tmpGoods.Weight
+                                         ELSE 0
+                                    END)) AS SaleAmountSh
+                            , (SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                         THEN tmp.SaleAmountPartner
+                                         -- перевод в шт. для Тушенки
+                                         WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                         THEN tmp.SaleAmountPartner / _tmpGoods.Weight
+                                         ELSE 0
+                                    END)) AS SaleAmountPartnerSh
+                            , (SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                         THEN tmp.ReturnAmount
+                                         -- перевод в шт. для Тушенки
+                                         WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                         THEN tmp.ReturnAmount / _tmpGoods.Weight
+                                         ELSE 0
+                                    END)) AS ReturnAmountSh
+                            , (SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                         THEN tmp.ReturnAmountPartner
+                                         -- перевод в шт. для Тушенки
+                                         WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                         THEN tmp.ReturnAmountPartner / _tmpGoods.Weight
+                                         ELSE 0
+                                    END)) AS ReturnAmountPartnerSh
 
-                            , (SUM (tmp.SaleAmountDay)          ) AS SaleAmountDaySh
-                            , (SUM (tmp.SaleAmountPartnerDay)   ) AS SaleAmountPartnerDaySh
-                            , (SUM (tmp.ReturnAmountDay)        ) AS ReturnAmountDaySh
-                            , (SUM (tmp.ReturnAmountPartnerDay) ) AS ReturnAmountPartnerDaySh
+                            , (SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                         THEN tmp.SaleAmountDay
+                                         -- перевод в шт. для Тушенки
+                                         WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                         THEN tmp.SaleAmountDay / _tmpGoods.Weight
+                                         ELSE 0
+                                    END)) AS SaleAmountDaySh
+                            , (SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                         THEN tmp.SaleAmountPartnerDay
+                                         -- перевод в шт. для Тушенки
+                                         WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                         THEN tmp.SaleAmountPartnerDay / _tmpGoods.Weight
+                                         ELSE 0
+                                    END)) AS SaleAmountPartnerDaySh
+                            , (SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                         THEN tmp.ReturnAmountDay
+                                         -- перевод в шт. для Тушенки
+                                         WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                         THEN tmp.ReturnAmountDay / _tmpGoods.Weight
+                                         ELSE 0
+                                    END)) AS ReturnAmountDaySh
+                            , (SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                         THEN tmp.ReturnAmountPartnerDay
+                                         -- перевод в шт. для Тушенки
+                                         WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                         THEN tmp.ReturnAmountPartnerDay / _tmpGoods.Weight
+                                         ELSE 0
+                                    END)) AS ReturnAmountPartnerDaySh
 
                             -- данные из заявок
                             , (SUM (tmp.Amount_Order * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)) AS OrderAmount
@@ -355,10 +403,34 @@ BEGIN
                             , (SUM (tmp.Amount_Under * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)) AS UnderAmount
                             , (SUM (tmp.Amount_Diff * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END))  AS DiffAmount
 
-                            , (SUM (tmp.Amount_Order)           ) AS OrderAmountSh
-                            , (SUM (tmp.Amount_More)            ) AS MoreAmountSh
-                            , (SUM (tmp.Amount_Under)           ) AS UnderAmountSh
-                            , (SUM (tmp.Amount_Diff)            ) AS DiffAmountSh
+                            , (SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                         THEN tmp.Amount_Order
+                                         -- перевод в шт. для Тушенки
+                                         WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                         THEN tmp.Amount_Order / _tmpGoods.Weight
+                                         ELSE 0
+                                    END)) AS OrderAmountSh
+                            , (SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                         THEN tmp.Amount_More
+                                         -- перевод в шт. для Тушенки
+                                         WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                         THEN tmp.Amount_More / _tmpGoods.Weight
+                                         ELSE 0
+                                    END)) AS MoreAmountSh
+                            , (SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                         THEN tmp.Amount_Under
+                                         -- перевод в шт. для Тушенки
+                                         WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                         THEN tmp.Amount_Under / _tmpGoods.Weight
+                                         ELSE 0
+                                    END)) AS UnderAmountSh
+                            , (SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                         THEN tmp.Amount_Diff
+                                         -- перевод в шт. для Тушенки
+                                         WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                         THEN tmp.Amount_Diff / _tmpGoods.Weight
+                                         ELSE 0
+                                    END)) AS DiffAmountSh
 
                       FROM tmpData AS tmp
                            LEFT JOIN _tmpGoods  ON _tmpGoods.GoodsId = tmp.GoodsId
@@ -987,4 +1059,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Goods_byMovement(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('06.12.2016')::TDateTime , inUnitId := 8459 , inUnitGroupId := 8460 , inGoodsGroupGPId := 1832 , inGoodsGroupId := 1979 ,  inSession := '5');
+-- SELECT * FROM gpReport_Goods_byMovement(inStartDate := ('01.12.2023')::TDateTime , inEndDate := ('06.12.2023')::TDateTime , inUnitId := 8459 , inUnitGroupId := 8460 , inGoodsGroupGPId := 1832 , inGoodsGroupId := 1979 , inWeek := 'False' ::Boolean, inMonth := 'False'::Boolean ,  inSession := '5');

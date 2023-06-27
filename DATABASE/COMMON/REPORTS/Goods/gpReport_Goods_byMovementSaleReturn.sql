@@ -120,15 +120,85 @@ BEGIN
                          , SUM (CASE WHEN tmpReport.OperDate = inEndDate THEN COALESCE (tmpReport.Return_Amount_Weight, 0) ELSE 0 END)         AS ReturnAmountDay
                          , SUM (CASE WHEN tmpReport.OperDate = inEndDate THEN COALESCE (tmpReport.Return_AmountPartner_Weight, 0) ELSE 0 END)  AS ReturnAmountPartnerDay
 
-                         , SUM (tmpReport.Sale_Amount_Sh)          AS SaleAmountSh
-                         , SUM (tmpReport.Sale_AmountPartnerR_Sh)  AS SaleAmountPartnerSh
-                         , SUM (tmpReport.Return_Amount_Sh)        AS ReturnAmountSh
-                         , SUM (tmpReport.Return_AmountPartner_Sh) AS ReturnAmountPartnerSh
+                         , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                     THEN tmpReport.Sale_Amount_Sh
+                                     -- перевод в шт. для Тушенки
+                                     WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                     THEN tmpReport.Sale_Amount_Weight / _tmpGoods.Weight
+                                     ELSE 0
+                                END
+                               ) AS SaleAmountSh
 
-                         , SUM (CASE WHEN tmpReport.OperDate = inEndDate THEN COALESCE (tmpReport.Sale_Amount_Sh, 0) ELSE 0 END)           AS DayAmountDaySh
-                         , SUM (CASE WHEN tmpReport.OperDate = inEndDate THEN COALESCE (tmpReport.Sale_AmountPartnerR_Sh, 0) ELSE 0 END)   AS DayAmountPartnerDaySh
-                         , SUM (CASE WHEN tmpReport.OperDate = inEndDate THEN COALESCE (tmpReport.Return_Amount_Sh, 0) ELSE 0 END)         AS ReturnAmountDaySh
-                         , SUM (CASE WHEN tmpReport.OperDate = inEndDate THEN COALESCE (tmpReport.Return_AmountPartner_Sh, 0) ELSE 0 END)  AS ReturnAmountPartnerDaySh
+                         , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                     THEN tmpReport.Sale_AmountPartnerR_Sh
+                                     -- перевод в шт. для Тушенки
+                                     WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                     THEN tmpReport.Sale_AmountPartnerR_Weight / _tmpGoods.Weight
+                                     ELSE 0
+                                END
+                               ) AS SaleAmountPartnerSh
+
+                         , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                     THEN tmpReport.Return_Amount_Sh
+                                     -- перевод в шт. для Тушенки
+                                     WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                     THEN tmpReport.Return_Amount_Weight / _tmpGoods.Weight
+                                     ELSE 0
+                                END
+                               ) AS ReturnAmountSh
+
+                         , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                     THEN tmpReport.Return_AmountPartner_Sh
+                                     -- перевод в шт. для Тушенки
+                                     WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                     THEN tmpReport.Return_AmountPartner_Weight / _tmpGoods.Weight
+                                     ELSE 0
+                                END
+                               ) AS ReturnAmountPartnerSh
+
+                         , SUM (CASE WHEN tmpReport.OperDate = inEndDate
+                                     THEN CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                               THEN COALESCE (tmpReport.Sale_Amount_Sh, 0)
+                                               -- перевод в шт. для Тушенки
+                                               WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                               THEN COALESCE (tmpReport.Sale_Amount_Weight, 0) / _tmpGoods.Weight
+                                               ELSE 0
+                                          END
+                                     ELSE 0
+                                END) AS DayAmountDaySh
+
+                         , SUM (CASE WHEN tmpReport.OperDate = inEndDate
+                                     THEN CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                               THEN COALESCE (tmpReport.Sale_AmountPartnerR_Sh, 0)
+                                               -- перевод в шт. для Тушенки
+                                               WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                               THEN COALESCE (tmpReport.Sale_AmountPartnerR_Weight, 0) / _tmpGoods.Weight
+                                               ELSE 0
+                                          END
+                                     ELSE 0
+                                END) AS DayAmountPartnerDaySh
+
+                         , SUM (CASE WHEN tmpReport.OperDate = inEndDate
+                                     THEN CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                               THEN COALESCE (tmpReport.Return_Amount_Sh, 0)
+                                               -- перевод в шт. для Тушенки
+                                               WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                               THEN COALESCE (tmpReport.Return_Amount_Weight, 0) / _tmpGoods.Weight
+                                               ELSE 0
+                                          END
+                                     ELSE 0
+                                END) AS ReturnAmountDaySh
+
+                         , SUM (CASE WHEN tmpReport.OperDate = inEndDate
+                                     THEN CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh()
+                                               THEN COALESCE (tmpReport.Return_AmountPartner_Sh, 0)
+                                               -- перевод в шт. для Тушенки
+                                               WHEN _tmpGoods.Weight > 0 AND _tmpGoods.GroupNum = 2
+                                               THEN COALESCE (tmpReport.Return_AmountPartner_Weight, 0) / _tmpGoods.Weight
+                                               ELSE 0
+                                          END
+                                     ELSE 0
+                                END) AS ReturnAmountPartnerDaySh
 
                     FROM gpReport_GoodsMI_SaleReturnIn (inStartDate    := inStartDate
                                                       , inEndDate      := inEndDate
@@ -738,4 +808,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpReport_Goods_byMovementSaleReturn (inStartDate := ('01.12.2022')::TDateTime , inEndDate := ('05.12.2022')::TDateTime , inGoodsGroupGPId := 1832 , inGoodsGroupId := 1979 , inWeek := 'False' ::Boolean, inMonth := 'False'::Boolean ,  inSession := '5' ::TVarChar);
+-- SELECT * FROM gpReport_Goods_byMovementSaleReturn (inStartDate := ('01.12.2023')::TDateTime , inEndDate := ('05.12.2023')::TDateTime , inGoodsGroupGPId := 1832 , inGoodsGroupId := 1979 , inWeek := 'False' ::Boolean, inMonth := 'False'::Boolean ,  inSession := '5' ::TVarChar);
