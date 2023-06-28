@@ -193,6 +193,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
             Options.Editing = False
+            Width = 70
           end
           object InvNumberPack: TcxGridDBColumn
             Caption = #8470' '#1059#1087'. '#1083#1080#1089#1090#1072
@@ -201,7 +202,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1053#1086#1084#1077#1088' '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1086#1075#1086' '#1083#1080#1089#1090#1072
             Options.Editing = False
-            Width = 64
+            Width = 70
           end
           object OperDatePartner: TcxGridDBColumn
             Caption = 'External Dt'

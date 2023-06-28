@@ -122,7 +122,9 @@ BEGIN
               --
               vbMovementId := lpInsertUpdate_Movement_Income(ioId                 := 0
                                                            , inInvNumber          := CAST (NEXTVAL ('movement_Income_seq') AS TVarChar)
-                                                           , inInvNumberPartner   := ''
+                                                           , inInvNumberPartner   := ''  
+                                                           , inInvNumberPack      := ''
+                                                           , inInvNumberInvoice   := ''
                                                            , inOperDate           := inOperDate
                                                            , inOperDatePartner    := inOperDate
                                                            , inPriceWithVAT       := FALSE

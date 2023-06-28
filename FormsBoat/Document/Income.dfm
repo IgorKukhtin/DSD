@@ -3544,6 +3544,22 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inInvNumberPack'
+        Value = Null
+        Component = edInvNumberPack
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumberInvoice'
+        Value = Null
+        Component = edInvNumberInvoice
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperDate'
         Value = 0d
         Component = edOperDate
@@ -3616,8 +3632,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 122
-    Top = 232
+    Left = 130
+    Top = 200
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -3651,14 +3667,16 @@ object IncomeForm: TIncomeForm
         Control = edVATPercent
       end
       item
-      end
-      item
         Control = edPaidKind
       end
       item
         Control = ceComment
       end
       item
+        Control = edInvNumberInvoice
+      end
+      item
+        Control = edInvNumberPack
       end
       item
       end

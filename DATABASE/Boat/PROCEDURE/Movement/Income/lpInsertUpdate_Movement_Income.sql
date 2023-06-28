@@ -3,12 +3,15 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер документа (внешний)
+    IN inInvNumberPack       TVarChar  , -- Номер Упаковочный лист
+    IN inInvNumberInvoice    TVarChar  , -- Номер Счета
     IN inOperDate            TDateTime , -- Дата документа
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
@@ -75,6 +78,11 @@ BEGIN
 
      -- сохранили <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
+     -- сохранили <>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPack(), ioId, inInvNumberPack);
+     -- сохранили <>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberInvoice(), ioId, inInvNumberInvoice);
+     
      -- сохранили <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
@@ -111,6 +119,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.06.23         *
  04.06.21         *
  08.02.21         *
 */
