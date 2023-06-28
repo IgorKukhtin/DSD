@@ -3789,10 +3789,6 @@
 				<Form>GoodsByGoodsKind_lineVMCForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SendAsset.pas">
-				<Form>SendAssetForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\SendAssetJournal.pas">
 				<Form>SendAssetJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5020,6 +5016,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\EUSignCP\EUSignCP.pas"/>
 			<DCCReference Include="..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas"/>
+			<DCCReference Include="..\..\Forms\Document\SendAsset.pas">
+				<Form>SendAssetForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

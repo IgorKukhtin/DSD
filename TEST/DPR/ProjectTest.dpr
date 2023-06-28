@@ -1121,7 +1121,6 @@ uses
   MemberBankAccountEdit in '..\..\Forms\Guides\MemberBankAccountEdit.pas' {MemberBankAccountEditForm: TParentForm},
   OrderInternalStewJournal in '..\..\Forms\Document\OrderInternalStewJournal.pas' {OrderInternalStewJournalForm: TParentForm},
   GoodsByGoodsKind_lineVMC in '..\..\Forms\Guides\GoodsByGoodsKind_lineVMC.pas' {GoodsByGoodsKind_lineVMCForm: TParentForm},
-  SendAsset in '..\..\Forms\Document\SendAsset.pas' {SendAssetForm: TParentForm},
   SendAssetJournal in '..\..\Forms\Document\SendAssetJournal.pas' {SendAssetJournalForm: TParentForm},
   Asset_Object in '..\..\Forms\Guides\Asset_Object.pas' {Asset_ObjectForm: TParentForm},
   Report_OrderInternalBasis_Olap in '..\..\Forms\Report\Report_OrderInternalBasis_Olap.pas' {Report_OrderInternalBasis_OlapForm: TParentForm},
@@ -1440,7 +1439,8 @@ uses
   Report_CashPersonal_toPay in '..\..\Forms\Report\Report_CashPersonal_toPay.pas' {Report_CashPersonal_toPayForm: TParentForm},
   TransportGoods_EDINJournal in '..\..\Forms\Document\TransportGoods_EDINJournal.pas' {TransportGoods_EDINJournalForm: TParentForm},
   EUSignCP in '..\..\SOURCE\EUSignCP\EUSignCP.pas',
-  EUSignCPOwnUI in '..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
+  EUSignCPOwnUI in '..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas',
+  SendAsset in '..\..\Forms\Document\SendAsset.pas' {SendAssetForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
