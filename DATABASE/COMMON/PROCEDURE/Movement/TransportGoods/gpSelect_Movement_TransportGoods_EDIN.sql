@@ -41,13 +41,18 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PersonalDriverName_Transport TVarChar
              , CarName_Transport TVarChar
              , isExternal Boolean
-
+             
              , isSend_eTTN Boolean
              , Uuid TVarChar
              
-             , GLN_car TVarChar, GLN_from TVarChar, GLN_Unloading TVarChar, GLN_to TVarChar, GLN_Driver TVarChar
+             , PlaceOf TVarChar
+             
+             , GLN_car TVarChar, GLN_from TVarChar, GLN_Unit TVarChar, GLN_Unloading TVarChar, GLN_to TVarChar, GLN_Driver TVarChar
+             , OKPO_car TVarChar, OKPO_From TVarChar, OKPO_To TVarChar
+             , DriverINN TVarChar, DriverCertificate  TVarChar 
              , KATOTTG_Unloading TVarChar, KATOTTG_Unit TVarChar
              , MemberSignConsignorName TVarChar, SignConsignorDate TDateTime, MemberSignCarrierName TVarChar, SignCarrierDate TDateTime
+             , DeliveryInstructionsName TVarChar
 
               )
 AS
@@ -144,14 +149,27 @@ BEGIN
            , (COALESCE(MovementString_Uuid.ValueData, '') <> '')::Boolean AS isSend_eTTN
            , MovementString_Uuid.ValueData             AS Uuid
            
+           , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '')
+                  ELSE '' -- 'м.Днiпро'
+                  END  :: TVarChar   AS PlaceOf
+           
            , COALESCE (ObjectString_Juridical_GLNCode_Car.ValueData , 
              CASE WHEN Movement_Sale.DescId <> zc_Movement_ReturnIn() 
                   THEN COALESCE(ObjectString_Unit_GLN_from.ValueData, ObjectString_GLNCode_From.ValueData, ObjectString_Juridical_GLNCode_From.ValueData)  
                   ELSE COALESCE(ObjectString_GLNCode_To.ValueData, ObjectString_Juridical_GLNCode_To.ValueData)  END)        :: TVarChar AS GLN_car
            , COALESCE(ObjectString_GLNCode_From.ValueData, ObjectString_Juridical_GLNCode_From.ValueData)  AS GLN_from
+           , COALESCE(ObjectString_Unit_GLN_from.ValueData, ObjectString_GLNCode_From.ValueData, ObjectString_Juridical_GLNCode_From.ValueData)  AS GLN_Unit
            , COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_GLNCode_To.ValueData, ObjectString_Juridical_GLNCode_To.ValueData) AS GLN_Unloading
            , COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_Juridical_GLNCode_To.ValueData, ObjectString_GLNCode_To.ValueData) AS GLN_To
            , COALESCE (ObjectString_DriverGLN_external.ValueData, ObjectString_DriverGLN.ValueData) :: TVarChar AS GLN_Driver
+           
+           , COALESCE (OH_JuridicalDetails_car.OKPO, CASE WHEN Movement_Sale.DescId <> zc_Movement_ReturnIn() THEN OH_JuridicalDetails_From.OKPO ELSE OH_JuridicalDetails_To.OKPO END):: TVarChar AS OKPO_car
+           , OH_JuridicalDetails_From.OKPO AS OKPO_From
+           , OH_JuridicalDetails_To.OKPO AS OKPO_To
+           
+           , COALESCE (ObjectString_DriverINN_external.ValueData, ObjectString_DriverINN.ValueData) :: TVarChar AS DriverINN
+           , COALESCE (ObjectString_DriverCertificate_external.ValueData, ObjectString_DriverCertificate.ValueData) :: TVarChar AS DriverCertificate
+
            
            , COALESCE(ObjectString_Unit_KATOTTG_To.ValueData, ''):: TVarChar    AS KATOTTG_Unloading
            , COALESCE(ObjectString_Unit_KATOTTG_Unit.ValueData, ''):: TVarChar  AS KATOTTG_Unit
@@ -160,6 +178,12 @@ BEGIN
            , MovementDate_SignConsignor.ValueData                               AS SignConsignorDate
            , Object_MemberSignCarrier.ValueData                                 AS MemberSignCarrierName
            , MovementDate_SignCarrier.ValueData                                 AS SignCarrierDate
+           
+           , CASE WHEN COALESCE (OH_JuridicalDetails_car.OKPO, CASE WHEN Movement_Sale.DescId <> zc_Movement_ReturnIn() THEN OH_JuridicalDetails_From.OKPO ELSE OH_JuridicalDetails_To.OKPO END) = OH_JuridicalDetails_From.OKPO
+                  THEN 'відрядний тариф'
+                  WHEN ObjectLink_Unit_City.ChildObjectId = View_Partner_Address.CityKindId
+                  THEN 'внутрішньомістське'
+                  ELSE 'міжміське' END::TVarChar                                         AS DeliveryInstructionsName
 
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_TransportGoods()
@@ -429,6 +453,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_DriverGLN_external
                                    ON ObjectString_DriverGLN_external.ObjectId = MovementLinkObject_PersonalDriver.ObjectId
                                   AND ObjectString_DriverGLN_external.DescId   = zc_ObjectString_MemberExternal_GLN()
+            LEFT JOIN ObjectString AS ObjectString_DriverCertificate_external
+                                   ON ObjectString_DriverCertificate_external.ObjectId = MovementLinkObject_PersonalDriver.ObjectId
+                                  AND ObjectString_DriverCertificate_external.DescId   = zc_ObjectString_MemberExternal_DriverCertificate()
                                   
             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                  ON ObjectLink_Personal_Member.ObjectId = MovementLinkObject_PersonalDriver.ObjectId
@@ -440,6 +467,20 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_DriverGLN
                                    ON ObjectString_DriverGLN.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                   AND ObjectString_DriverGLN.DescId = zc_ObjectString_Member_GLN()
+            LEFT JOIN ObjectString AS ObjectString_DriverCertificate
+                                   ON ObjectString_DriverCertificate.ObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                  AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
+                                  
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                 ON ObjectLink_Unit_Branch.ObjectId = CASE WHEN Movement_Sale.DescId = zc_Movement_ReturnIn() THEN Object_From.Id ELSE Object_To.Id END
+                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN ObjectString AS ObjectString_PlaceOf                           
+                                   ON ObjectString_PlaceOf.ObjectId = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+                                  AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()
+                                  
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_City
+                                 ON ObjectLink_Unit_City.ObjectId = CASE WHEN Movement_Sale.DescId = zc_Movement_ReturnIn() THEN Object_From.Id ELSE Object_To.Id END
+                                AND ObjectLink_Unit_City.DescId = zc_ObjectLink_Unit_City()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSignConsignor
                                          ON MovementLinkObject_MemberSignConsignor.MovementId = Movement.Id
@@ -456,6 +497,31 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_SignCarrier
                                    ON MovementDate_SignCarrier.MovementId =  Movement.Id
                                   AND MovementDate_SignCarrier.DescId = zc_MovementDate_SignCarrier()
+                                  
+
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
+                           ON OH_JuridicalDetails_From.JuridicalId  = 
+                                      CASE WHEN Movement_Sale.DescId = zc_Movement_SendOnPrice() THEN zc_Juridical_Basis() 
+                                           WHEN Movement_Sale.DescId = zc_Movement_ReturnIn() THEN COALESCE (ObjectLink_Partner_Juridical_From.ChildObjectId, Object_From.Id)
+                                           ELSE COALESCE (View_Contract.JuridicalBasisId, Object_From.Id)
+                                      END
+                          AND Movement.OperDate >= OH_JuridicalDetails_From.StartDate
+                          AND Movement.OperDate <  OH_JuridicalDetails_From.EndDate
+                  
+
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                   ON OH_JuridicalDetails_To.JuridicalId = 
+                                  CASE WHEN Movement_Sale.DescId = zc_Movement_SendOnPrice() THEN zc_Juridical_Basis() 
+                                       WHEN Movement_Sale.DescId = zc_Movement_ReturnIn() THEN COALESCE (View_Contract.JuridicalBasisId, Object_To.Id)
+                                       ELSE COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id)
+                                  END
+                  AND Movement.OperDate >= OH_JuridicalDetails_To.StartDate
+                  AND Movement.OperDate <  OH_JuridicalDetails_To.EndDate
+
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_car
+                   ON OH_JuridicalDetails_car.JuridicalId = MI_Transport.ObjectId
+                  AND Movement.OperDate >= OH_JuridicalDetails_car.StartDate
+                  AND Movement.OperDate <  OH_JuridicalDetails_car.EndDate                                
       ;
   
 END;

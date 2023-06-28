@@ -159,6 +159,7 @@ type
     procedure edRecordStepExit(Sender: TObject);
     procedure edTimerIntervalExit(Sender: TObject);
     procedure edOffsetTimeEndExit(Sender: TObject);
+    procedure btnEqualizationSendClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -178,7 +179,7 @@ type
     function GetInfoSlave(AShowError : boolean) : Boolean;
     function GetInfoSlavePostgres : Boolean;
 
-    procedure EqualizationThreadFinish;
+    procedure EqualizationThreadFinish(AError : String);
     procedure EqualizationThreadMessage(AText: string);
     procedure EqualizationThreadAddLog;
     procedure EqualizationThreadProgress;
@@ -1055,6 +1056,11 @@ begin
   EqualizationAll(2);
 end;
 
+procedure TMainForm.btnEqualizationSendClick(Sender: TObject);
+begin
+ EqualizationAll(1);
+end;
+
 procedure TMainForm.btnFunctionClick(Sender: TObject);
 begin
 
@@ -1538,21 +1544,19 @@ begin
 
 end;
 
-procedure TMainForm.EqualizationThreadFinish;
-  var cError : string;
+procedure TMainForm.EqualizationThreadFinish(AError : String);
 begin
   TThread.CreateAnonymousThread(procedure
     begin
       TThread.Synchronize(nil,
         procedure
         begin
-          cError := EqualizationThread.Error;
           EqualizationThread := Nil;
           lblActionTake.Caption := 'Ожидание задания';
           pbEqualization.Position := 0;
-          if cError <> '' then
+          if AError <> '' then
           begin
-            SaveBranchEqualizationeLog('Ошибка выполнения уравнивания данных:'#13#10 + cError);
+            SaveBranchEqualizationeLog('Ошибка выполнения уравнивания данных:'#13#10 + AError);
           end else
           begin
             SaveBranchEqualizationeLog('Уравнивание данных выполнено.');

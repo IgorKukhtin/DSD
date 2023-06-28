@@ -41,6 +41,7 @@ type
     cxLabel2: TcxLabel;
     deStart: TcxDateEdit;
     cxLabel1: TcxLabel;
+    spGet_UserUnit: TdsdStoredProc;
   private
     { Private declarations }
   public
