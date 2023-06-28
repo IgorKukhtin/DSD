@@ -50,6 +50,8 @@ inherited MainInventoryForm: TMainInventoryForm
           Height = 302
           Align = alClient
           TabOrder = 0
+          LookAndFeel.ScrollbarMode = sbmClassic
+          ExplicitTop = 66
           object cxGridChildDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -344,6 +346,9 @@ inherited MainInventoryForm: TMainInventoryForm
           Height = 314
           Align = alClient
           TabOrder = 1
+          LookAndFeel.ScrollbarMode = sbmClassic
+          ExplicitLeft = 1
+          ExplicitTop = 58
           object cxGridDBTableView2: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ManualDS
@@ -497,6 +502,7 @@ inherited MainInventoryForm: TMainInventoryForm
           Height = 333
           Align = alClient
           TabOrder = 1
+          LookAndFeel.ScrollbarMode = sbmClassic
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = InfoDS
@@ -661,7 +667,7 @@ inherited MainInventoryForm: TMainInventoryForm
               Width = 65
             end
             object InfoAmountUser: TcxGridDBColumn
-              Caption = #1060#1072#1082#1090'. '#1086#1089#1090#1072#1090#1086#1082' ('#1090#1077#1082'. '#1087#1086#1083#1100#1079'.)'
+              Caption = #1060#1072#1082#1090'. '#1086#1089#1090#1072#1090#1086#1082' ('#1074#1089#1077#1093'. '#1087#1086#1083#1100#1079'.)'
               DataBinding.FieldName = 'AmountUser'
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4

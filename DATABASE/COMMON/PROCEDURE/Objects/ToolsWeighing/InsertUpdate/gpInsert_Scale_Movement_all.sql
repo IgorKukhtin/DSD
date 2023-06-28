@@ -1214,8 +1214,10 @@ BEGIN
                                                         , inLiveWeight          := tmp.LiveWeight
                                                         , inHeadCount           := tmp.HeadCount
                                                         , inPartionGoods        := tmp.PartionGoods
+                                                        , inPartNumber          := tmp.PartNumber
                                                         , inGoodsKindId         := tmp.GoodsKindId
-                                                        , inAssetId             := NULL
+                                                        , inAssetId             := NULL  
+                                                        , inStorageId           := NULL
                                                         , inUserId              := vbUserId
                                                          )
                        WHEN vbMovementDescId = zc_Movement_ReturnOut()

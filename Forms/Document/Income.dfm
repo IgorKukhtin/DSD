@@ -536,6 +536,13 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object PartNumber: TcxGridDBColumn
+            Caption = #8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
+            DataBinding.FieldName = 'PartNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
@@ -672,6 +679,21 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object StorageName: TcxGridDBColumn
+            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062')'
+            DataBinding.FieldName = 'StorageName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actStorageChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
           object Amount_parent: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1095#1077#1090')'
@@ -1520,6 +1542,33 @@ object IncomeForm: TIncomeForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actStorageChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'StorageForm'
+      FormName = 'TStorage_ObjectForm'
+      FormNameParam.Value = 'TStorage_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actUpdateClientDataCost: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -2523,6 +2572,15 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioPartNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartNumber'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsKindId'
         Value = Null
         Component = MasterCDS
@@ -2537,9 +2595,17 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'AssetId'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StorageId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 150
+    Left = 118
     Top = 287
   end
   object MasterViewAddOn: TdsdDBViewAddOn
@@ -3656,6 +3722,15 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioPartNumber'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartNumber'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsKindId'
         Value = Null
         Component = MasterCDS
@@ -3668,6 +3743,14 @@ object IncomeForm: TIncomeForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AssetId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStorageId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StorageId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

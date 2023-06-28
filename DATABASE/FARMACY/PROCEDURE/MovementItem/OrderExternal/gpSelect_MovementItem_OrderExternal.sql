@@ -366,6 +366,7 @@ BEGIN
                     OR COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData) ILIKE '%АйВи%'
                     OR COALESCE(MIString_GoodsName.ValueData, Object_PartnerGoods.ValueData) ILIKE '%АЙВІ%'
                     OR tmpMI.GoodsName ILIKE '%БДЗ%' THEN zc_Color_Red()    --красный заказывать нельзя
+                  WHEN COALESCE (GoodsParam_Close.ValueData, FALSE) = TRUE THEN zfCalc_Color (250, 128, 114) 
                   ELSE zc_Color_White()
               END  AS OrderShedule_Color
            , tmpMI.MinimumLot  ::TFloat                           AS MinimumLot
@@ -373,11 +374,13 @@ BEGIN
            , tmpMI.CalcAmount  ::TFloat                           AS CalcAmount
            , CASE
                   WHEN COALESCE (tmpMI.MinimumLot <> 0) AND tmpMI.CalcAmount <> tmpMI.Amount THEN zc_Color_Red() --красный заказывать нельзя
+                  WHEN COALESCE (GoodsParam_Close.ValueData, FALSE) = TRUE THEN zfCalc_Color (250, 128, 114) 
                   ELSE zc_Color_White()
               END  AS MultiplicityColor
            , COALESCE (SupplierFailures.GoodsId, 0) <> 0          AS isSupplierFailures
            , CASE
                   WHEN COALESCE (SupplierFailures.GoodsId, 0) <> 0 THEN zfCalc_Color (255, 165, 0) -- orange 
+                  WHEN COALESCE (GoodsParam_Close.ValueData, FALSE) = TRUE THEN zfCalc_Color (250, 128, 114) 
                   ELSE zc_Color_White()
               END  AS SupplierFailuresColor
            , tmpLayoutAll.Amount::TFloat                                     AS Layout

@@ -1006,9 +1006,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome20202JournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome20202JournalForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
   }

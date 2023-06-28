@@ -5512,6 +5512,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_GoodsSaleChechUser: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1072' '#1074' '#1088#1072#1079#1088#1077#1079#1077' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+      FormName = 'TReport_GoodsSaleChechUserForm'
+      FormNameParam.Value = 'TReport_GoodsSaleChechUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6263,6 +6274,9 @@
       end
       object miReport_GoodsPartionHistoryForm: TMenuItem
         Action = actReport_GoodsPartionHistoryForm
+      end
+      object N381: TMenuItem
+        Action = actReport_GoodsSaleChechUser
       end
       object miReport_SoldForm: TMenuItem
         Action = actReport_SoldForm
