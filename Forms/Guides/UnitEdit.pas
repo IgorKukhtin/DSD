@@ -94,6 +94,9 @@ type
     cxLabel19: TcxLabel;
     edKATOTTG: TcxTextEdit;
     cxLabel20: TcxLabel;
+    cxLabel21: TcxLabel;
+    edCity: TcxButtonEdit;
+    GuidesCity: TdsdGuides;
   private
     { Private declarations }
   public

@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RouteId Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
                AreaId Integer, AreaName TVarChar,
+               CityId Integer, CityName TVarChar,
                PersonalHeadId Integer, PersonalHeadCode Integer, PersonalHeadName TVarChar, UnitName_Head TVarChar, BranchName_Head TVarChar,
                PartnerCode Integer, PartnerName TVarChar,
                UnitId_HistoryCost Integer, UnitCode_HistoryCost Integer, UnitName_HistoryCost TVarChar,
@@ -136,6 +137,9 @@ BEGIN
            , Object_Area.Id                 AS AreaId
            , Object_Area.ValueData          AS AreaName
 
+           , Object_City.Id                 AS CityId
+           , Object_City.ValueData          AS CityName
+           
            , Object_PersonalHead.PersonalId    AS PersonalHeadId
            , Object_PersonalHead.PersonalCode  AS PersonalHeadCode
            , Object_PersonalHead.PersonalName  AS PersonalHeadName
@@ -215,6 +219,11 @@ BEGIN
                                  ON ObjectLink_Unit_Area.ObjectId = Object_Unit_View.Id 
                                 AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_City
+                                 ON ObjectLink_Unit_City.ObjectId = Object_Unit_View.Id 
+                                AND ObjectLink_Unit_City.DescId = zc_ObjectLink_Unit_City()
+            LEFT JOIN Object AS Object_City ON Object_City.Id = ObjectLink_Unit_City.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_PersonalHead
                                  ON ObjectLink_Unit_PersonalHead.ObjectId = Object_Unit_View.Id 
@@ -319,6 +328,9 @@ BEGIN
            , CAST (0 as Integer)    AS AreaId
            , CAST ('' as TVarChar)  AS AreaName
 
+           , CAST (0 as Integer)    AS CityId
+           , CAST ('' as TVarChar)  AS CityName
+
            , CAST (0 as Integer)    AS PersonalHeadId
            , CAST (0 as Integer)    AS PersonalHeadCode
            , CAST ('' as TVarChar)  AS PersonalHeadName
@@ -405,6 +417,9 @@ BEGIN
            , CAST (0 as Integer)    AS AreaId
            , CAST ('' as TVarChar)  AS AreaName
 
+           , CAST (0 as Integer)    AS CityId
+           , CAST ('' as TVarChar)  AS CityName
+
            , CAST (0 as Integer)    AS PersonalHeadId
            , CAST (0 as Integer)    AS PersonalHeadCode
            , CAST ('' as TVarChar)  AS PersonalHeadName
@@ -446,6 +461,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.06.23         *
  14.03.23         *
  03.10.22         * isPartionGP
  05.09.22         * PersonalService

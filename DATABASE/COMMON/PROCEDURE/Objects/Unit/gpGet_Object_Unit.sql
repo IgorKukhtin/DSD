@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RouteId Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
                AreaId Integer, AreaName TVarChar,
+               CityId Integer, CityName TVarChar,
                PersonalHeadId Integer, PersonalHeadName TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                isErased boolean, isLeaf boolean,
@@ -78,6 +79,9 @@ BEGIN
            , CAST (0 as Integer)    AS AreaId
            , CAST ('' as TVarChar)  AS AreaName
 
+           , CAST (0 as Integer)    AS CityId
+           , CAST ('' as TVarChar)  AS CityName
+
            , CAST (0 as Integer)    AS PersonalHeadId
            , CAST ('' as TVarChar)  AS PersonalHeadName
 
@@ -136,6 +140,9 @@ BEGIN
          
            , Object_Area.Id                 AS AreaId
            , Object_Area.ValueData          AS AreaName
+
+           , Object_City.Id                 AS CityId
+           , Object_City.ValueData          AS CityName
 
            , Object_PersonalHead.Id        AS PersonalHeadId
            , Object_PersonalHead.ValueData AS PersonalHeadName
@@ -200,6 +207,11 @@ BEGIN
                                 AND ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_City
+                                 ON ObjectLink_Unit_City.ObjectId = Object_Unit_View.Id 
+                                AND ObjectLink_Unit_City.DescId = zc_ObjectLink_Unit_City()
+            LEFT JOIN Object AS Object_City ON Object_City.Id = ObjectLink_Unit_City.ChildObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_Unit_PersonalHead
                                  ON ObjectLink_Unit_PersonalHead.ObjectId = Object_Unit_View.Id 
                                 AND ObjectLink_Unit_PersonalHead.DescId   = zc_ObjectLink_Unit_PersonalHead()
@@ -240,6 +252,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.06.23         *
  14.03.23         * Avance
  27.07.22         * isCountCount
  15.12.21         * PersonalHead

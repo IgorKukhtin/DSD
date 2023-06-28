@@ -597,6 +597,20 @@ object IncomeJournalForm: TIncomeJournalForm
         Options.Editing = False
         Width = 78
       end
+      object InvNumberInvoice: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
+        DataBinding.FieldName = 'InvNumberInvoice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+      end
+      object InvNumberPack: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1086#1075#1086' '#1083#1080#1089#1090#1072
+        DataBinding.FieldName = 'InvNumberPack'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

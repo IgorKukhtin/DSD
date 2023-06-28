@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 112
-    Top = 529
+    Top = 534
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 306
-    Top = 529
+    Top = 534
     Width = 75
     Height = 25
     Action = FormClose
@@ -301,12 +301,12 @@
   end
   object cxLabel17: TcxLabel
     Left = 40
-    Top = 438
+    Top = 482
     Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
   end
   object ceSheetWorkTime: TcxButtonEdit
     Left = 40
-    Top = 456
+    Top = 502
     Properties.Buttons = <
       item
         Default = True
@@ -324,15 +324,15 @@
     Width = 209
   end
   object cxLabel18: TcxLabel
-    Left = 40
-    Top = 480
+    Left = 280
+    Top = 484
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
-    Left = 40
-    Top = 498
+    Left = 280
+    Top = 502
     TabOrder = 40
-    Width = 449
+    Width = 209
   end
   object cbCountCount: TcxCheckBox
     Left = 265
@@ -376,6 +376,23 @@
     Left = 389
     Top = 390
     Caption = #1050#1040#1058#1054#1058#1058#1043
+  end
+  object cxLabel21: TcxLabel
+    Left = 40
+    Top = 434
+    Caption = #1043#1086#1088#1086#1076
+  end
+  object edCity: TcxButtonEdit
+    Left = 40
+    Top = 454
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 49
+    Width = 209
   end
   object ActionList: TActionList
     Left = 16
@@ -558,6 +575,14 @@
         Name = 'inAreaId'
         Value = Null
         Component = AreaGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCityId'
+        Value = Null
+        Component = GuidesCity
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -906,6 +931,21 @@
         Name = 'KATOTTG'
         Value = Null
         Component = edKATOTTG
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CityId'
+        Value = Null
+        Component = GuidesCity
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CityName'
+        Value = Null
+        Component = GuidesCity
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1361,6 +1401,36 @@
         MultiSelectSeparator = ','
       end>
     Left = 127
-    Top = 438
+    Top = 484
+  end
+  object GuidesCity: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCity
+    FormNameParam.Value = 'TCityForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCityForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCity
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCity
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 115
+    Top = 440
   end
 end

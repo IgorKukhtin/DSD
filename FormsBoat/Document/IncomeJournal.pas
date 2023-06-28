@@ -118,6 +118,8 @@ type
     bbStartLoad_SN: TdxBarButton;
     actDoLoad_SN: TExecuteImportSettingsAction;
     spSelectPrintSticker: TdsdStoredProc;
+    InvNumberInvoice: TcxGridDBColumn;
+    InvNumberPack: TcxGridDBColumn;
   private
   public
   end;

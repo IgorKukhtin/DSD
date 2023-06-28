@@ -70,6 +70,7 @@ type
     actProtocol: TdsdOpenForm;
     bbProtocol: TdxBarButton;
     Comment: TcxGridDBColumn;
+    CityName: TcxGridDBColumn;
   private
     { Private declarations }
   public

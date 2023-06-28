@@ -186,6 +186,23 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
+          object InvNumberInvoice: TcxGridDBColumn
+            Caption = #8470' '#1057#1095#1077#1090#1072
+            DataBinding.FieldName = 'InvNumberInvoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
+            Options.Editing = False
+          end
+          object InvNumberPack: TcxGridDBColumn
+            Caption = #8470' '#1059#1087'. '#1083#1080#1089#1090#1072
+            DataBinding.FieldName = 'InvNumberPack'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1084#1077#1088' '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1086#1075#1086' '#1083#1080#1089#1090#1072
+            Options.Editing = False
+            Width = 64
+          end
           object OperDatePartner: TcxGridDBColumn
             Caption = 'External Dt'
             DataBinding.FieldName = 'OperDatePartner'
@@ -670,5 +687,8 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
       end>
     Left = 304
     Top = 288
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    Left = 408
   end
 end

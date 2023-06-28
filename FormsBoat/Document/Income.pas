@@ -266,6 +266,10 @@ type
     cxLabel26: TcxLabel;
     edTaxKind: TcxButtonEdit;
     GuidesTaxKind: TdsdGuides;
+    cxLabel27: TcxLabel;
+    edInvNumberPack: TcxTextEdit;
+    cxLabel28: TcxLabel;
+    edInvNumberInvoice: TcxTextEdit;
   private
   public
   end;
