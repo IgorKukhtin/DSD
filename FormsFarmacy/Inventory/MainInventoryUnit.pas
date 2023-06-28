@@ -255,12 +255,12 @@ begin
   begin
     if isSave and (OperDate < IncDay(Date, - 3)) then
     begin
-      ShowMessage('Инвентаризация не создана. С начало создайте ее');
+      ShowMessage('Инвентаризация не создана. Сначала создайте ее');
       Exit;
     end;
   end else
   begin
-    ShowMessage('Инвентаризация не создана. С начало создайте ее');
+    ShowMessage('Инвентаризация не создана. Сначала создайте ее');
     Exit;
   end;
 
@@ -295,12 +295,12 @@ begin
   begin
     if isSave and (OperDate < IncDay(Date, - 3)) then
     begin
-      ShowMessage('Инвентаризация не создана. С начало создайте ее');
+      ShowMessage('Инвентаризация не создана. Сначала создайте ее');
       Exit;
     end;
   end else
   begin
-    ShowMessage('Инвентаризация не создана. С начало создайте ее');
+    ShowMessage('Инвентаризация не создана. Сначала создайте ее');
     Exit;
   end;
 
@@ -398,12 +398,12 @@ begin
   begin
     if isSave and (OperDate < IncDay(Date, - 3)) then
     begin
-      ShowMessage('Инвентаризация не создана. С начало создайте ее');
+      ShowMessage('Инвентаризация не создана. Сначала создайте ее');
       Exit;
     end;
   end else
   begin
-    ShowMessage('Инвентаризация не создана. С начало создайте ее');
+    ShowMessage('Инвентаризация не создана. Сначала создайте ее');
     Exit;
   end;
 
@@ -437,6 +437,21 @@ begin
 
   StartSplash('Старт', 'Проведение инвентаризации');
   try
+
+    if ChechActiveInv(OperDate, UnitName, isSave) then
+    begin
+      if not isSave then
+      begin
+        ChangeStatus('Отправка результаты инвентаризации');
+        try
+          spSendInvent.Execute;
+          if SendInventCDS.RecordCount > 0 then mactSendInvent.Execute;
+        finally
+          SendInventCDS.Close;
+        end;
+      end;
+    end;
+
     ChangeStatus('Получение "Получение данных инвентаризации"');
     if not SaveInventory(FormParams.ParamByName('UnitId').Value, FormParams.ParamByName('OperDate').Value) then Exit;
   finally
@@ -574,7 +589,7 @@ begin
           raise Exception.Create ('Прервано сотрудником...');
       end else raise Exception.Create ('Прервано сотрудником...');
 
-    end else if OperDate >= IncDay(Date, - 7) then
+    end else if OperDate >= IncDay(Date, - 4) then
     begin
       if MessageDlg('Создана инвентаризация по ' + UnitName + ' от ' +
         FormatDateTime('dd.mm.yyyy', OperDate) + #13#10#13#10 +
@@ -588,7 +603,7 @@ begin
 end;
 
 procedure TMainInventoryForm.actRefreshItogExecute(Sender: TObject);
-  var Params : TdsdParams;
+  var Params : TdsdParams; OperDate: TDateTime; UnitName : String; isSave: boolean;
 begin
   inherited;
   if PageControl.ActivePage = tsInfo then
@@ -624,6 +639,21 @@ begin
 
     StartSplash('Старт', 'Проведение инвентаризации');
     try
+
+      if ChechActiveInv(OperDate, UnitName, isSave) then
+      begin
+        if not isSave then
+        begin
+          ChangeStatus('Отправка результаты инвентаризации');
+          try
+            spSendInvent.Execute;
+            if SendInventCDS.RecordCount > 0 then mactSendInvent.Execute;
+          finally
+            SendInventCDS.Close;
+          end;
+        end;
+      end;
+
       ChangeStatus('Получение "Получение данных инвентаризации"');
       if not SaveInventory(FormParams.ParamByName('UnitId').Value, FormParams.ParamByName('OperDate').Value) then Exit;
     finally
@@ -786,16 +816,16 @@ begin
     finally
       FreeAndNil(Params);
     end;
-
   end;
 end;
 
 procedure TMainInventoryForm.InfoCDSPostError(DataSet: TDataSet;
   E: EDatabaseError; var Action: TDataAction);
-var GoodsId : Integer;
+var GoodsId, Id : Integer;
     AmountUser, AmountUserOld : Currency;
     Params : TdsdParams;
 begin
+  Id := DataSet.FieldByName('Id').AsInteger;
   GoodsId := DataSet.FieldByName('GoodsId').AsInteger;
   AmountUser := DataSet.FieldByName('AmountUser').AsCurrency;
   AmountUserOld := DataSet.FieldByName('AmountUser').OldValue;
@@ -817,6 +847,29 @@ begin
       SQLite_Insert(InventoryChild_Table, Params);
     finally
       FreeAndNil(Params);
+    end;
+
+    try
+      spSendInvent.Execute;
+      if SendInventCDS.RecordCount > 0 then
+      begin
+        mactSendInvent.ShowGauge := False;
+        mactSendInvent.Execute;
+
+        if Id <> 0 then
+        begin
+          Params := TdsdParams.Create(Self, TdsdParam);
+          try
+            Params.AddParam('Amount', TFieldType.ftFloat, ptInput, AmountUser);
+            Params.AddParam('AmountUser', TFieldType.ftFloat, ptInput, AmountUser);
+            SQLite_Update(InventoryDate_Table, Id, Params);
+          finally
+            FreeAndNil(Params);
+          end;
+        end else SaveInventory(FormParams.ParamByName('UnitId').Value, FormParams.ParamByName('OperDate').Value);
+      end;
+    finally
+      SendInventCDS.Close;
     end;
 
     spSelectInfo.Execute;

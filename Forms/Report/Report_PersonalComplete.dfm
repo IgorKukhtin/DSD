@@ -206,7 +206,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
       end
       object MonthDate: TcxGridDBColumn
         Caption = #1052#1077#1089#1103#1094
-        DataBinding.FieldName = 'OperDate'
+        DataBinding.FieldName = 'MonthDate'
         PropertiesClassName = 'TcxDateEditProperties'
         Properties.AssignedValues.EditFormat = True
         Properties.DisplayFormat = 'mmmm yyyy '
@@ -387,7 +387,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     object deStart: TcxDateEdit
       Left = 60
       Top = 5
-      EditValue = 43466d
+      EditValue = 44927d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -396,7 +396,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     object deEnd: TcxDateEdit
       Left = 60
       Top = 30
-      EditValue = 43466d
+      EditValue = 44927d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 3
@@ -477,7 +477,7 @@ object Report_PersonalCompleteForm: TReport_PersonalCompleteForm
     Action = actIsDay
     Caption = #1054#1090' '#1082#1086#1075#1086' / '#1050#1086#1084#1091
     Properties.ReadOnly = False
-    TabOrder = 8
+    TabOrder = 7
     Width = 109
   end
   object cbisMonth: TcxCheckBox
