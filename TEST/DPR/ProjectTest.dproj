@@ -4909,10 +4909,6 @@
 				<Form>CurrencyListMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SheetWorkTime_line.pas">
-				<Form>SheetWorkTime_lineForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\MovementItemProtocolSWT.pas">
 				<Form>MovementItemProtocolSWTForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5018,6 +5014,10 @@
 			<DCCReference Include="..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas"/>
 			<DCCReference Include="..\..\Forms\Document\SendAsset.pas">
 				<Form>SendAssetForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SheetWorkTime_line.pas">
+				<Form>SheetWorkTime_lineForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

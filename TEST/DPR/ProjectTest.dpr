@@ -1411,7 +1411,6 @@ uses
   SheetWorkTimeJournal_line in '..\..\Forms\Document\SheetWorkTimeJournal_line.pas' {SheetWorkTimeJournal_lineForm: TParentForm},
   CurrencyListJournal in '..\..\Forms\Document\CurrencyListJournal.pas' {CurrencyListJournalForm: TParentForm},
   CurrencyListMovement in '..\..\Forms\Document\CurrencyListMovement.pas' {CurrencyListMovementForm: TParentForm},
-  SheetWorkTime_line in '..\..\Forms\Document\SheetWorkTime_line.pas' {SheetWorkTime_lineForm: TParentForm},
   MovementItemProtocolSWT in '..\..\Forms\System\MovementItemProtocolSWT.pas' {MovementItemProtocolSWTForm: TParentForm},
   MobileMovement_DateDialog in '..\..\Forms\Document\MobileMovement_DateDialog.pas' {MobileMovement_DateDialogForm: TParentForm},
   MobileMemberDialog in '..\..\Forms\Document\MobileMemberDialog.pas' {MobileMemberDialogForm: TParentForm},
@@ -1440,7 +1439,8 @@ uses
   TransportGoods_EDINJournal in '..\..\Forms\Document\TransportGoods_EDINJournal.pas' {TransportGoods_EDINJournalForm: TParentForm},
   EUSignCP in '..\..\SOURCE\EUSignCP\EUSignCP.pas',
   EUSignCPOwnUI in '..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas',
-  SendAsset in '..\..\Forms\Document\SendAsset.pas' {SendAssetForm: TParentForm};
+  SendAsset in '..\..\Forms\Document\SendAsset.pas' {SendAssetForm: TParentForm},
+  SheetWorkTime_line in '..\..\Forms\Document\SheetWorkTime_line.pas' {SheetWorkTime_lineForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
