@@ -18,6 +18,7 @@ BEGIN
 
    --
    --IF EXTRACT (MONTH FROM inStartDate) IN (2) THEN RETURN; END IF;
+   --IF EXTRACT (DAY FROM inStartDate) < 15 THEN RETURN; END IF;
    --
 	
    IF (DATE_TRUNC ('MONTH', inStartDate) < DATE_TRUNC ('MONTH', CURRENT_DATE)
