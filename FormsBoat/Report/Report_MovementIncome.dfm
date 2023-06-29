@@ -1739,6 +1739,36 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       ImageIndex = 7
       DataSource = MasterDS
     end
+    object actOpenForm_Income: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      ImageIndex = 28
+      FormName = 'TIncomeForm'
+      FormNameParam.Value = 'TIncomeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Partion'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate_Partion'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1854,6 +1884,14 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenForm_Income'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1959,6 +1997,10 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       Hint = 'edSearchArticle'
       Visible = ivAlways
       Control = edSearchArticle
+    end
+    object bbOpenForm_Income: TdxBarButton
+      Action = actOpenForm_Income
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

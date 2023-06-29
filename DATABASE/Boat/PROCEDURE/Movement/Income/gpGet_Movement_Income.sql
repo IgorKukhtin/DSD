@@ -38,6 +38,12 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Income());
      vbUserId := inSession;
 
+     IF COALESCE (inMovementId, 0) < 0
+     THEN
+          RAISE EXCEPTION 'Ошибка.Документ не может быть открыт';
+     END IF;
+     
+     
      IF COALESCE (inMovementId, 0) = 0
      THEN
      RETURN QUERY

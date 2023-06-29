@@ -4076,8 +4076,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 120
-    Top = 336
+    Left = 112
+    Top = 304
   end
   object spSelect_ProdOptItems: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ProdOptItems'

@@ -273,7 +273,7 @@ BEGIN
        , tmpData_All AS (SELECT tmpData.UnitId
                               , tmpData.GoodsId
                               , CASE WHEN inisPartion = TRUE THEN tmpData.PartionId        ELSE 0  END AS PartionId
-                              , CASE WHEN inisPartion = TRUE THEN tmpData.MovementId       ELSE 0  END AS MovementId_Partion
+                              , CASE WHEN inisPartion = TRUE THEN tmpData.MovementId       ELSE -1  END AS MovementId_Partion
                               , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END AS DescName_Partion
                               , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END AS InvNumber_Partion 
                               , MovementString_InvNumberPack.ValueData                                      AS InvNumberPack_Partion
@@ -361,7 +361,7 @@ BEGIN
                          GROUP BY tmpData.UnitId
                                 , tmpData.GoodsId
                                 , CASE WHEN inisPartion = TRUE THEN tmpData.PartionId        ELSE 0 END
-                                , CASE WHEN inisPartion = TRUE THEN tmpData.MovementId       ELSE 0  END
+                                , CASE WHEN inisPartion = TRUE THEN tmpData.MovementId       ELSE -1  END
                                 , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END
                                 , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END
                                 , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE zc_DateStart() END
