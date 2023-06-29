@@ -17,8 +17,11 @@ CREATE OR REPLACE FUNCTION gpReport_PersonalComplete(
     IN inisMovement  Boolean   DEFAULT FALSE, -- показать док
     IN inSession     TVarChar  DEFAULT ''      -- сессия пользователя
 )
-RETURNS TABLE (OperDate TDateTime, InvNumber TVarChar
-             , OperDate_parent TDateTime, InvNumber_parent TVarChar
+RETURNS TABLE (InvNumber TVarChar
+             , OperDate TDateTime
+             , MonthDate TDateTime
+             , OperDate_parent TDateTime
+             , InvNumber_parent TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , PositionId Integer, PositionCode Integer, PositionName TVarChar
@@ -193,8 +196,9 @@ BEGIN
                    GROUP BY tmpMI.MovementId
                   )
         -- Результат
-        SELECT  tmp.OperDate
-              , tmp.InvNumber ::TVarChar
+        SELECT  tmp.InvNumber ::TVarChar
+              , tmp.OperDate
+              , tmp.OperDate AS MonthDate
               , Movement_parent.OperDate  AS OperDate_parent
               , Movement_parent.InvNumber AS InvNumber_parent
               , tmp.UnitId
