@@ -337,7 +337,7 @@ BEGIN
                                                         AND inisPartion            = TRUE 
 
                               LEFT JOIN tmpMovementFloat AS MovementFloat_TotalDiscountTax
-                                                      ON MovementFloat_TotalDiscountTax.MovementId = Movement_Income.Id
+                                                      ON MovementFloat_TotalDiscountTax.MovementId = tmpData.MovementId
                                                      AND MovementFloat_TotalDiscountTax.DescId = zc_MovementFloat_TotalDiscountTax()
                                                      AND inisPartion            = TRUE
                               
@@ -350,12 +350,12 @@ BEGIN
                                                       AND MovementString_InvNumberInvoice.DescId = zc_MovementString_InvNumberInvoice()
                                                       AND inisPartion = TRUE
                               LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                                       ON MovementString_InvNumberPartner.MovementId = Movement_Income.Id
+                                                       ON MovementString_InvNumberPartner.MovementId = tmpData.MovementId
                                                       AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
                                                       AND inisPartion = TRUE
 
                               LEFT JOIN MovementDate AS MovementDate_OperDatePartner    
-                                                     ON MovementDate_OperDatePartner.MovementId = Movement_Income.Id
+                                                     ON MovementDate_OperDatePartner.MovementId = tmpData.MovementId
                                                     AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                                                     AND inisPartion = TRUE
                          GROUP BY tmpData.UnitId
@@ -546,8 +546,9 @@ BEGIN
                         ELSE 0
                    END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
 
-           , tmpData_All.OperPrice_orig
-           , tmpData_All.DiscountTax
+           , tmpData.OperPrice_orig  :: TFloat
+           , tmpData.DiscountTax     :: TFloat
+           , tmpData.SummIn          :: TFloat
 
 
            , tmpData.Comment_in       :: TVarChar
@@ -588,4 +589,4 @@ $BODY$
  24.03.21         *
 */
 -- тест
--- select * from gpReport_MovementIncome (inStartDate :='01.01.2121', inEndDate :='01.01.2121', inUnitId := 0 , inPartnerId := 0 ,inGoodsGroupId:=0, inIsPartion := 'True' , inIsPartner := 'False', inSession := '2');
+-- select * from gpReport_MovementIncome (inStartDate :='01.01.2021', inEndDate :='01.01.2124', inUnitId := 0 , inPartnerId := 0 ,inGoodsGroupId:=0, inIsPartion := 'true' , inIsPartner := 'true', inSession := '2');
