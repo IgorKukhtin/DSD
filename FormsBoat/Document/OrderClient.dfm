@@ -3735,11 +3735,27 @@ object OrderClientForm: TOrderClientForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocol2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol3'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
           Visible = True
           ItemName = 'bbProtocolInfoOpen'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtoco_Invoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -3943,6 +3959,18 @@ object OrderClientForm: TOrderClientForm
     end
     object bbPrint_Invoice: TdxBarButton
       Action = actPrint_Invoice
+      Category = 0
+    end
+    object bbProtocol2: TdxBarButton
+      Action = actProtocol2
+      Category = 0
+    end
+    object bbProtocol3: TdxBarButton
+      Action = actProtocol3
+      Category = 0
+    end
+    object bbProtoco_Invoice: TdxBarButton
+      Action = actProtoco_Invoice
       Category = 0
     end
   end
@@ -4778,6 +4806,7 @@ object OrderClientForm: TOrderClientForm
     end
     object actProtocol3: TdsdOpenForm
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1054#1087#1094#1080#1080
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1054#1087#1094#1080#1080
@@ -4808,7 +4837,9 @@ object OrderClientForm: TOrderClientForm
     end
     object actProtoco_Invoice: TdsdOpenForm
       Category = 'DSDLib'
+      TabSheet = cxTabSheetInvoice
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1057#1095#1077#1090
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1057#1095#1077#1090
       ImageIndex = 34
@@ -5061,6 +5092,7 @@ object OrderClientForm: TOrderClientForm
     end
     object actProtocol2: TdsdOpenForm
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088

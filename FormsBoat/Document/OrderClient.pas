@@ -456,6 +456,9 @@ type
     actProtocol2: TdsdOpenForm;
     actProtocol3: TdsdOpenForm;
     actProtoco_Invoice: TdsdOpenForm;
+    bbProtocol2: TdxBarButton;
+    bbProtocol3: TdxBarButton;
+    bbProtoco_Invoice: TdxBarButton;
   private
   public
   end;
