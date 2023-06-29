@@ -450,6 +450,15 @@ type
     cxLabel23: TcxLabel;
     edTaxKind: TcxButtonEdit;
     GuidesTaxKind: TdsdGuides;
+    spSelectPrint_Invoice: TdsdStoredProc;
+    actPrint_Invoice: TdsdPrintAction;
+    bbPrint_Invoice: TdxBarButton;
+    actProtocol2: TdsdOpenForm;
+    actProtocol3: TdsdOpenForm;
+    actProtoco_Invoice: TdsdOpenForm;
+    bbProtocol2: TdxBarButton;
+    bbProtocol3: TdxBarButton;
+    bbProtoco_Invoice: TdxBarButton;
   private
   public
   end;

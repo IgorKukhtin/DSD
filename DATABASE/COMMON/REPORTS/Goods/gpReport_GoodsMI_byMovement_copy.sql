@@ -518,6 +518,37 @@ BEGIN
 -- lfSelect_ObjectHistory_PriceListItem   -- тоже попробовать выбрать 
 
 
+ , tmpOH_PriceListItem AS (SELECT
+                                 ObjectLink_PriceListItem_PriceList.ChildObjectId AS PriceListId
+                               , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+                               , ObjectLink_PriceListItem_GoodsKind.ChildObjectId AS GoodsKindId
+                               , ObjectHistory_PriceListItem.StartDate
+                               , ObjectHistory_PriceListItem.EndDate
+                               , ObjectHistoryFloat_PriceListItem_Value.ValueData AS ValuePrice
+                           FROM ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                     ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                    AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                                LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                                     ON ObjectLink_PriceListItem_GoodsKind.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                    AND ObjectLink_PriceListItem_GoodsKind.DescId   = zc_ObjectLink_PriceListItem_GoodsKind()
+                                INNER JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                         ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                        AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                                        AND inPriceDate >= ObjectHistory_PriceListItem.StartDate AND inPriceDate < ObjectHistory_PriceListItem.EndDate
+                                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                             ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                            AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                    
+                           WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
+                             AND ObjectLink_PriceListItem_PriceList.ChildObjectId IN (SELECT DISTINCT tmpOperationGroup.PriceListId FROM tmpOperationGroup)
+                             AND ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 
+                     )
+
+   , tmpInfoMoney_View AS (SELECT * FROM Object_InfoMoney_View
+                         WHERE Object_InfoMoney_View.InfoMoneyId IN (SELECT DISTINCT tmpOperationGroup.InfoMoneyId FROM tmpOperationGroup)
+                         )
+
     -- Результат
     SELECT tmpOperationGroup.ItemName
          , tmpOperationGroup.InvNumber
@@ -608,7 +639,7 @@ BEGIN
 
           LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmpOperationGroup.PriceListId
 
-          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
+          LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
           
           -- Товар и Вид товара   --tmpGoodsByGoodsKind_View
           LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpOperationGroup.GoodsId
@@ -618,15 +649,15 @@ BEGIN
                                 ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
                                AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
           
-          LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= tmpOperationGroup.PriceListId
-                                                        , inOperDate   := inPriceDate
-                                                         ) AS lfSelectPrice ON lfSelectPrice.GoodsId =tmpOperationGroup.GoodsId
-                                                                           AND lfSelectPrice.GoodsKindId = tmpOperationGroup.GoodsKindId
+          LEFT JOIN tmpOH_PriceListItem AS lfSelectPrice
+                                        ON lfSelectPrice.GoodsId = tmpOperationGroup.GoodsId
+                                       AND lfSelectPrice.GoodsKindId = tmpOperationGroup.GoodsKindId 
+                                       AND lfSelectPrice.PriceListId = tmpOperationGroup.PriceListId  
 
-          LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= tmpOperationGroup.PriceListId
-                                                        , inOperDate   := inPriceDate
-                                                         ) AS lfSelectPrice_ ON lfSelectPrice_.GoodsId =tmpOperationGroup.GoodsId
-                                                                            AND lfSelectPrice_.GoodsKindId IS Null   
+          LEFT JOIN tmpOH_PriceListItem AS lfSelectPrice_
+                                        ON lfSelectPrice_.GoodsId = tmpOperationGroup.GoodsId
+                                       AND lfSelectPrice_.GoodsKindId IS Null 
+                                       AND lfSelectPrice_.PriceListId = tmpOperationGroup.PriceListId  
 
           LEFT JOIN tmpMLO_Contract AS MovementLinkObject_Contract
                                     ON MovementLinkObject_Contract.MovementId = tmpOperationGroup.MovementId

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, InvNumberPartner TVarChar
+             , InvNumberPack TVarChar, InvNumberInvoice TVarChar
              , OperDate TDateTime, OperDatePartner TDateTime
              , StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
@@ -59,6 +60,8 @@ BEGIN
         , Movement_Income AS ( SELECT Movement_Income.Id
                                     , Movement_Income.InvNumber
                                     , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
+                                    , MovementString_InvNumberPack.ValueData    AS InvNumberPack
+                                    , MovementString_InvNumberInvoice.ValueData AS InvNumberInvoice
                                     , Movement_Income.OperDate                  AS OperDate
                                     , MovementDate_OperDatePartner.ValueData    AS OperDatePartner
                                     , Movement_Income.StatusId                  AS StatusId
@@ -87,7 +90,14 @@ BEGIN
                                                              ON MovementString_InvNumberPartner.MovementId = Movement_Income.Id
                                                             AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-                                    LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                    LEFT JOIN MovementString AS MovementString_InvNumberPack
+                                                             ON MovementString_InvNumberPack.MovementId = Movement_Income.Id
+                                                            AND MovementString_InvNumberPack.DescId = zc_MovementString_InvNumberPack()
+                                    LEFT JOIN MovementString AS MovementString_InvNumberInvoice 
+                                                             ON MovementString_InvNumberInvoice.MovementId = Movement_Income.Id
+                                                            AND MovementString_InvNumberInvoice.DescId = zc_MovementString_InvNumberInvoice()
+
+                                    LEFT JOIN MovementDate AS MovementDate_OperDatePartner    
                                                            ON MovementDate_OperDatePartner.MovementId = Movement_Income.Id
                                                           AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                               )
@@ -96,6 +106,8 @@ BEGIN
         SELECT Movement_Income.Id
              , zfConvert_StringToNumber (Movement_Income.InvNumber) AS InvNumber
              , Movement_Income.InvNumberPartner
+             , Movement_Income.InvNumberPack    ::TVarChar
+             , Movement_Income.InvNumberInvoice ::TVarChar
              , Movement_Income.OperDate
              , Movement_Income.OperDatePartner
              , Object_Status.ObjectCode                   AS StatusCode
@@ -242,6 +254,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.06.23         *
  13.10.21         *
  04.06.21         *
  08.02.21         *

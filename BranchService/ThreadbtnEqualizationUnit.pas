@@ -7,7 +7,7 @@ uses System.Classes, System.SysUtils, System.DateUtils, DB,
 
 type
 
-  TOnFinish = procedure of object;
+  TOnFinish = procedure(AError: String) of object;
   TOnMessage = procedure(AText: string) of object;
 
   // Поток для уравнивания данных (получение с мастера)
@@ -119,6 +119,47 @@ begin
 
       try
 
+        if (Mode and 1) = 1 then
+        begin
+
+          if Assigned(OnMessage) then OnMessage('Синхронизация данных с Slave.');
+
+          FProgress := 0;
+          FMax := MinutesBetween(FStartDate, CurrDate);
+
+          if Assigned(FOnProgress) then  Synchronize(FOnProgress);
+
+          while True do
+          begin
+
+            if Terminated then Exit;
+
+            FZQueryTable.Close;
+            FZQueryTable.SQL.Text := cSQLEqualization_SlaveStep;
+            FZQueryTable.Open;
+            if FZQueryTable.FieldByName('ErrorText').AsString <> '' then
+            begin
+              FError := FZQueryTable.FieldByName('ErrorText').AsString;
+              Exit;
+            end;
+
+            FProgress := MinutesBetween(FStartDate, FZQueryTable.FieldByName('DateEqualization').AsDateTime);
+
+            if Assigned(FOnProgress) then  Synchronize(FOnProgress);
+
+            if FZQueryTable.FieldByName('RowCount').AsInteger <= 0 then
+            begin
+              Break;
+            end;
+            if CurrDate <= FZQueryTable.FieldByName('DateEqualization').AsDateTime then
+            begin
+              Break;
+            end;
+
+          end;
+        end;
+
+
         if (Mode and 2) = 2 then
         begin
 
@@ -149,11 +190,11 @@ begin
 
             if FZQueryTable.FieldByName('RowCount').AsInteger <= 0 then
             begin
-              Exit;
+              Break;
             end;
             if CurrDate <= FZQueryTable.FieldByName('DateEqualization').AsDateTime then
             begin
-              Exit;
+              Break;
             end;
 
           end;
@@ -180,7 +221,7 @@ begin
     FreeAndNil(FZQueryExecute);
     FreeAndNil(FZQueryTable);
     FreeAndNil(FZConnection);
-    if Assigned(FOnFinish) then OnFinish;
+    if Assigned(FOnFinish) then OnFinish(FError);
   end;
 
 end;

@@ -5,7 +5,8 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
@@ -26,7 +27,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inProfitLossDirectionId   Integer   , -- ссылка на Аналитики статей отчета ПиУ
     IN inRouteId                 Integer   , -- Маршрут
     IN inRouteSortingId          Integer   , -- Сортировка маршрутов
-    IN inAreaId                  Integer   , -- регион
+    IN inAreaId                  Integer   , -- регион 
+    IN inCityId                  Integer   , -- город
     IN inPersonalHeadId          Integer   , -- Руководитель подразделения
     IN inSheetWorkTimeId         Integer   , -- Режим работы (Шаблон табеля р.вр.)
     IN inAddress                 TVarChar  , -- Адрес
@@ -115,7 +117,9 @@ BEGIN
    -- сохранили связь с <Сортировки маршрутов>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Unit_RouteSorting(), ioId, inRouteSortingId);
    -- сохранили связь с <Регион>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Area(), ioId, inAreaId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Area(), ioId, inAreaId); 
+   -- сохранили связь с <город>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_City(), ioId, inCityId);
    -- сохранили связь с <Сотрудник (доступ к табелю р.времени)>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_PersonalHead(), ioId, inPersonalHeadId);
    -- сохранили связь с <Режим работы (Шаблон табеля р.вр.)>
@@ -171,12 +175,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.06.23         *
  11.05.23         *
  14.03.23         * inisAvance
  03.10.22         * inisPartionGP

@@ -18,7 +18,8 @@ RETURNS TABLE (Id Integer, ItemName TVarChar, GoodsId Integer, GoodsCode Integer
              , CarId Integer, CarCode Integer, CarName TVarChar, CarModelName TVarChar
              , Release TDateTime
              , InvNumber TVarChar, SerialNumber TVarChar, PassportNumber TVarChar
-             , PeriodUse TFloat
+             , PeriodUse TFloat 
+             , StorageId Integer, StorageName TVarChar
               )
 AS
 $BODY$
@@ -45,6 +46,7 @@ BEGIN
                                  , MovementItem.Amount                           AS Amount
                                  , MIFloat_Summ.ValueData                        AS Summ
                                  , MIFloat_ContainerId.ValueData      :: Integer AS ContainerId
+                                 , MILinkObject_Storage.ObjectId                 AS StorageId
                                  , MovementItem.isErased
                             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                  INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -56,7 +58,11 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                              ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
                                                             AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
-                                   )
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
+                                                                  ON MILinkObject_Storage.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
+                                 )
 
           , tmpRemains AS (SELECT tmpMI_Goods.MovementItemId
                                 , SUM (Container.Amount) AS Amount
@@ -101,12 +107,16 @@ BEGIN
            , ObjectString_PassportNumber.ValueData AS PassportNumber
            , ObjectFloat_PeriodUse.ValueData  AS PeriodUse
 
+           , Object_Storage.Id                  AS StorageId
+           , Object_Storage.ValueData ::TVarChar AS StorageName
        FROM tmpMI_Goods
             LEFT JOIN tmpRemains ON tmpRemains.MovementItemId = tmpMI_Goods.MovementItemId
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Goods.GoodsId
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
              
+            LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = tmpMI_Goods.StorageId
+            
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI_Goods.GoodsId
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -163,6 +173,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.06.23         *
  18.06.20         *
 */
 

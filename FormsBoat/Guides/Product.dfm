@@ -1928,6 +1928,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbtProtocol2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbtProtocol3'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2141,6 +2149,14 @@
     end
     object bbUpdate_BankAccount: TdxBarButton
       Action = actUpdate_BankAccount
+      Category = 0
+    end
+    object bbtProtocol2: TdxBarButton
+      Action = actProtocol2
+      Category = 0
+    end
+    object bbtProtocol3: TdxBarButton
+      Action = actProtocol3
       Category = 0
     end
   end
@@ -2482,6 +2498,66 @@
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actProtocol2: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ProdColorItemsCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProdColorItemsCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actProtocol3: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1054#1087#1094#1080#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1054#1087#1094#1080#1080
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ProdOptionsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object actProtocol: TdsdOpenForm
       Category = 'DSDLib'
@@ -3919,8 +3995,8 @@
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 264
-    Top = 240
+    Left = 184
+    Top = 304
   end
   object ProdColorItemsDS: TDataSource
     DataSet = ProdColorItemsCDS
@@ -4000,8 +4076,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 120
-    Top = 336
+    Left = 112
+    Top = 304
   end
   object spSelect_ProdOptItems: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ProdOptItems'
@@ -4287,6 +4363,23 @@
         ComponentItem = 'CommentOpt'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsEnabled'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'isEnabled'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ProdOptItemsCDS
+        ComponentItem = 'IsErased'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -26,8 +26,6 @@ object OrderClientForm: TOrderClientForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = -1
-    ExplicitTop = 5
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -3490,7 +3488,7 @@ object OrderClientForm: TOrderClientForm
     Properties.ReadOnly = True
     ShowHint = True
     Style.Color = clGradientInactiveCaption
-    TabOrder = 10
+    TabOrder = 9
     Width = 70
   end
   object cxLabel7: TcxLabel
@@ -3512,7 +3510,7 @@ object OrderClientForm: TOrderClientForm
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
     ShowHint = True
-    TabOrder = 13
+    TabOrder = 12
     Visible = False
     Width = 70
   end
@@ -3725,7 +3723,23 @@ object OrderClientForm: TOrderClientForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Invoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol3'
         end
         item
           Visible = True
@@ -3734,6 +3748,14 @@ object OrderClientForm: TOrderClientForm
         item
           Visible = True
           ItemName = 'bbProtocolInfoOpen'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtoco_Invoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -3933,6 +3955,22 @@ object OrderClientForm: TOrderClientForm
     end
     object bbChangeSumm: TdxBarButton
       Action = macChangeSumm
+      Category = 0
+    end
+    object bbPrint_Invoice: TdxBarButton
+      Action = actPrint_Invoice
+      Category = 0
+    end
+    object bbProtocol2: TdxBarButton
+      Action = actProtocol2
+      Category = 0
+    end
+    object bbProtocol3: TdxBarButton
+      Action = actProtocol3
+      Category = 0
+    end
+    object bbProtoco_Invoice: TdxBarButton
+      Action = actProtoco_Invoice
       Category = 0
     end
   end
@@ -4766,6 +4804,69 @@ object OrderClientForm: TOrderClientForm
       Hint = 'Add Info'
       ImageIndex = 0
     end
+    object actProtocol3: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1054#1087#1094#1080#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1054#1087#1094#1080#1080
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProdOptItemsCDS
+          ComponentItem = 'ProdOptionsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actProtoco_Invoice: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetInvoice
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1057#1095#1077#1090
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1057#1095#1077#1090
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = InvoiceCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = InvoiceCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actOpenForm_Invoice: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -4937,6 +5038,88 @@ object OrderClientForm: TOrderClientForm
         end>
       Caption = 'actUpdateDataSetProdColorItems'
       DataSource = ProdOptItemsDS
+    end
+    object actPrint_Invoice: TdsdPrintAction
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetInvoice
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      Enabled = False
+      StoredProc = spSelectPrint_Invoice
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_Invoice
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090#1072
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 44197d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44197d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Invoice'
+      ReportNameParam.Value = 'PrintMovement_Invoice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actProtocol2: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ProdColorItemsCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProdColorItemsCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object MasterDS: TDataSource
@@ -7218,5 +7401,26 @@ object OrderClientForm: TOrderClientForm
       end>
     Left = 293
     Top = 47
+  end
+  object spSelectPrint_Invoice: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Invoice_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = InvoiceCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 903
+    Top = 192
   end
 end

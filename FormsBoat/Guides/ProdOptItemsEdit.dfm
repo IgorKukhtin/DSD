@@ -325,6 +325,12 @@ object ProdOptItemsEditForm: TProdOptItemsEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsEnabled'
+        Value = True
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96

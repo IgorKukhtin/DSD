@@ -67,7 +67,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     end
     object cbPartion: TcxCheckBox
       Left = 562
-      Top = 39
+      Top = 38
       Hint = #1087#1086#1082#1072#1079#1072#1090#1100' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470'> ('#1044#1072'/'#1053#1077#1090')'
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1087#1072#1088#1090#1080#1103' '#8470
       ParentShowHint = False
@@ -235,6 +235,24 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' - '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
             Options.Editing = False
             Width = 55
+          end
+          object InvNumberInvoice: TcxGridDBColumn
+            Caption = #8470' '#1057#1095#1077#1090#1072
+            DataBinding.FieldName = 'InvNumberInvoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object InvNumberPack: TcxGridDBColumn
+            Caption = #8470' '#1059#1087'. '#1083#1080#1089#1090#1072
+            DataBinding.FieldName = 'InvNumberPack'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1084#1077#1088' '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1086#1075#1086' '#1083#1080#1089#1090#1072
+            Options.Editing = False
+            Width = 75
           end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -1721,6 +1739,36 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       ImageIndex = 7
       DataSource = MasterDS
     end
+    object actOpenForm_Income: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      ImageIndex = 28
+      FormName = 'TIncomeForm'
+      FormNameParam.Value = 'TIncomeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_Partion'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate_Partion'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1836,6 +1884,14 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenForm_Income'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1941,6 +1997,10 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       Hint = 'edSearchArticle'
       Visible = ivAlways
       Control = edSearchArticle
+    end
+    object bbOpenForm_Income: TdxBarButton
+      Action = actOpenForm_Income
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2495,6 +2555,10 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     TextEdit = edSearchArticle
     DataSet = MasterCDS
     Column = Article_all
+    ColumnList = <
+      item
+        Column = Article_all
+      end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 280

@@ -3,12 +3,15 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Income(Integer, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
-    IN inInvNumberPartner    TVarChar  , -- Номер документа (внешний)
+    IN inInvNumberPartner    TVarChar  , -- Номер документа (внешний) 
+    IN inInvNumberPack       TVarChar  , -- Номер Упаковочный лист
+    IN inInvNumberInvoice    TVarChar  , -- Номер Счета
     IN inOperDate            TDateTime , -- Дата документа
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
@@ -33,6 +36,7 @@ BEGIN
 
     --    
     ioId := lpInsertUpdate_Movement_Income(ioId, inInvNumber, inInvNumberPartner
+                                         , inInvNumberPack, inInvNumberInvoice
                                          , inOperDate, inOperDatePartner
                                          , inPriceWithVAT
                                          , inVATPercent, inDiscountTax
@@ -48,6 +52,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.06.23         *
  04.06.21         *
  08.02.21         *
 */

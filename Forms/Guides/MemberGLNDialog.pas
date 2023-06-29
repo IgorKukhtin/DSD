@@ -30,6 +30,10 @@ type
     FormParams: TdsdFormParams;
     cxLabel16: TcxLabel;
     edGLN: TcxTextEdit;
+    Код: TcxLabel;
+    ceCode: TcxCurrencyEdit;
+    cxLabel1: TcxLabel;
+    edName: TcxTextEdit;
   private
     { Private declarations }
   public

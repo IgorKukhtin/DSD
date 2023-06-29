@@ -16,8 +16,12 @@ RETURNS TABLE (PartionId            Integer
              , MovementId_Partion   Integer
              , InvNumber_Partion    TVarChar
              , InvNumberAll_Partion TVarChar
-             , OperDate_Partion     TDateTime
-             , DescName_Partion     TVarChar
+             , InvNumberPack_Partion TVarChar
+             , InvNumberInvoice_Partion TVarChar
+             , InvNumberPartner_Partion TVarChar
+             , OperDatePartner_Partion TDateTime
+             , OperDate_Partion     TDateTime                
+             , DescName_Partion     TVarChar 
              , UnitId               Integer
              , UnitName             TVarChar
              , UnitName_in          TVarChar
@@ -51,8 +55,13 @@ RETURNS TABLE (PartionId            Integer
              , TotalSumm_Cost          TFloat -- Сумма вх+ затраты
              , PriceTax                TFloat -- % скидки !!!НА!!! zc_DateEnd
                     
+             , OperPrice_orig TFloat        -- Вх. цена БЕЗ скидки  
+             , DiscountTax    TFloat    -- % скидки             
+             , SummIn                  TFloat    -- Сумма вх., с учетом скидки в элементе
+ 
              , Comment_in       TVarChar
              , DiscountTax_in   TFloat
+             , TotalDiscountTax_in TFloat
              , VATPercent_in    TFloat
            
               ) 
@@ -138,10 +147,30 @@ BEGIN
                              , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.isActive = TRUE
                                               THEN MIContainer.Amount
                                          ELSE 0
-                                    END) AS Summ
+                                    END) AS Summ  
+                              
+                             -- Сумма вх. с учетом скидки в элементе
+                             , SUM (COALESCE (MIFloat_SummIn.ValueData, 0))   AS SummIn
+                              
+                              --цена БЕЗ скидки
+                             , COALESCE (MIFloat_OperPrice_orig.ValueData, 0) AS OperPrice_orig 
+                             -- % скидки
+                             , COALESCE (MIFloat_DiscountTax.ValueData, 0)    AS DiscountTax
                         FROM MovementItemContainer AS MIContainer
                              INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_Analyzer
-                             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer   
+
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice_orig
+                                                         ON MIFloat_OperPrice_orig.MovementItemId = MIContainer.MovementItemId
+                                                        AND MIFloat_OperPrice_orig.DescId = zc_MIFloat_OperPrice_orig()
+                             LEFT JOIN MovementItemFloat AS MIFloat_DiscountTax
+                                                         ON MIFloat_DiscountTax.MovementItemId = MIContainer.MovementItemId
+                                                        AND MIFloat_DiscountTax.DescId = zc_MIFloat_DiscountTax()
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummIn
+                                                         ON MIFloat_SummIn.MovementItemId = MIContainer.MovementItemId
+                                                        AND MIFloat_SummIn.DescId = zc_MIFloat_SummIn()                             
+                             
                         WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                           AND MIContainer.MovementDescId = zc_Movement_Income()
                           AND (MIContainer.ObjectExtId_Analyzer = inPartnerId OR inPartnerId = 0)
@@ -150,6 +179,8 @@ BEGIN
                                , MIContainer.ObjectExtId_Analyzer
                                , MIContainer.MovementId
                                , MIContainer.PartionId
+                               , COALESCE (MIFloat_OperPrice_orig.ValueData, 0)
+                               , COALESCE (MIFloat_DiscountTax.ValueData, 0)
                        )
  
    --остатки
@@ -188,7 +219,10 @@ BEGIN
 
                      , COALESCE (tmpMIContainer.Amount, 0) AS Amount  -- из проводок
                      , COALESCE (tmpRemains.Amount, 0)     AS Remains
-                     , COALESCE (tmpMIContainer.Summ, 0)   AS Summ    -- из проводок
+                     , COALESCE (tmpMIContainer.Summ, 0)   AS Summ    -- из проводок 
+                     , COALESCE (tmpMIContainer.OperPrice_orig, 0) AS OperPrice_orig
+                     , COALESCE (tmpMIContainer.DiscountTax, 0)    AS DiscountTax
+                     , COALESCE (tmpMIContainer.SummIn, 0)         AS SummIn
 
                      , Object_PartionGoods.EKPrice
                      , Object_PartionGoods.CountForPrice
@@ -231,6 +265,7 @@ BEGIN
                                WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
                                  AND MovementFloat.DescId IN (zc_MovementFloat_DiscountTax()
                                                             , zc_MovementFloat_VATPercent()
+                                                            ,  zc_MovementFloat_TotalDiscountTax()
                                                             )
                                  AND inisPartion = TRUE
                                )
@@ -238,10 +273,15 @@ BEGIN
        , tmpData_All AS (SELECT tmpData.UnitId
                               , tmpData.GoodsId
                               , CASE WHEN inisPartion = TRUE THEN tmpData.PartionId        ELSE 0  END AS PartionId
-                              , CASE WHEN inisPartion = TRUE THEN tmpData.MovementId       ELSE 0  END AS MovementId_Partion
+                              , CASE WHEN inisPartion = TRUE THEN tmpData.MovementId       ELSE -1  END AS MovementId_Partion
                               , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END AS DescName_Partion
-                              , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END AS InvNumber_Partion
+                              , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END AS InvNumber_Partion 
+                              , MovementString_InvNumberPack.ValueData                                      AS InvNumberPack_Partion
+                              , MovementString_InvNumberInvoice.ValueData                                   AS InvNumberInvoice_Partion
+                              , MovementString_InvNumberPartner.ValueData                                   AS InvNumberPartner_Partion
                               , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE zc_DateStart() END AS OperDate_Partion
+                              , MovementDate_OperDatePartner.ValueData                                      AS OperDatePartner_Partion 
+                              
                               , CASE WHEN inisPartner = TRUE THEN tmpData.PartnerId        ELSE 0  END AS PartnerId
                               , tmpData.GoodsSizeId
                               --, tmpData.BrandId
@@ -259,9 +299,14 @@ BEGIN
                               , tmpData.CountForPrice
                               , tmpData.UnitId_in
 
+                              , tmpData.OperPrice_orig
+                              , tmpData.DiscountTax
+                              , SUM (COALESCE (tmpData.SummIn, 0))  AS SummIn
+                              
                               , SUM (COALESCE (tmpData.Amount, 0))  AS Amount  -- из проводок
                               , SUM (COALESCE (tmpData.Summ, 0))    AS Summ    -- из проводок
 
+                          
                                 --  только для Ord = 1
                               , SUM (CASE WHEN tmpData.Ord = 1 THEN tmpData.Amount_in ELSE 0 END) AS Amount_in
                               --, SUM (CASE WHEN tmpData.Ord = 1 THEN zfCalc_SummIn (tmpData.Amount_in, tmpData.EKPrice, tmpData.CountForPrice) ELSE 0 END) AS TotalSummEKPrice
@@ -270,9 +315,10 @@ BEGIN
                               , SUM (zfCalc_SummPriceList (tmpData.Amount, tmpData.OperPriceList))                  AS TotalSummPriceList
 
                               , MS_Comment.ValueData                        AS Comment_in
-                              , COALESCE (MF_DiscountTax.ValueData, 0)      AS DiscountTax_in
-                              , COALESCE (MF_VATPercent.ValueData, 0)       AS VATPercent_in
-
+                              , COALESCE (MF_DiscountTax.ValueData, 0)      AS DiscountTax_in 
+                              , COALESCE (MovementFloat_TotalDiscountTax.ValueData, 0)  :: TFloat AS TotalDiscountTax_in
+                              , COALESCE (MF_VATPercent.ValueData, 0)       AS VATPercent_in  
+                              
                          FROM tmpData
                               LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = tmpData.MovementId
                               LEFT JOIN MovementDesc AS MovementDesc_Partion ON MovementDesc_Partion.Id = Movement_Partion.DescId
@@ -288,11 +334,34 @@ BEGIN
                               LEFT JOIN tmpMovementFloat AS MF_VATPercent
                                                          ON MF_VATPercent.MovementId = tmpData.MovementId
                                                         AND MF_VATPercent.DescId     = zc_MovementFloat_VATPercent()
-                                                        AND inisPartion            = TRUE
+                                                        AND inisPartion            = TRUE 
+
+                              LEFT JOIN tmpMovementFloat AS MovementFloat_TotalDiscountTax
+                                                      ON MovementFloat_TotalDiscountTax.MovementId = tmpData.MovementId
+                                                     AND MovementFloat_TotalDiscountTax.DescId = zc_MovementFloat_TotalDiscountTax()
+                                                     AND inisPartion            = TRUE
+                              
+                              LEFT JOIN MovementString AS MovementString_InvNumberPack
+                                                       ON MovementString_InvNumberPack.MovementId = tmpData.MovementId
+                                                      AND MovementString_InvNumberPack.DescId = zc_MovementString_InvNumberPack()
+                                                      AND inisPartion = TRUE
+                              LEFT JOIN MovementString AS MovementString_InvNumberInvoice 
+                                                       ON MovementString_InvNumberInvoice.MovementId = tmpData.MovementId
+                                                      AND MovementString_InvNumberInvoice.DescId = zc_MovementString_InvNumberInvoice()
+                                                      AND inisPartion = TRUE
+                              LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                                       ON MovementString_InvNumberPartner.MovementId = tmpData.MovementId
+                                                      AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                                                      AND inisPartion = TRUE
+
+                              LEFT JOIN MovementDate AS MovementDate_OperDatePartner    
+                                                     ON MovementDate_OperDatePartner.MovementId = tmpData.MovementId
+                                                    AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                                    AND inisPartion = TRUE
                          GROUP BY tmpData.UnitId
                                 , tmpData.GoodsId
                                 , CASE WHEN inisPartion = TRUE THEN tmpData.PartionId        ELSE 0 END
-                                , CASE WHEN inisPartion = TRUE THEN tmpData.MovementId       ELSE 0  END
+                                , CASE WHEN inisPartion = TRUE THEN tmpData.MovementId       ELSE -1  END
                                 , CASE WHEN inisPartion = TRUE THEN MovementDesc_Partion.ItemName ELSE '' END
                                 , CASE WHEN inisPartion = TRUE THEN Movement_Partion.InvNumber    ELSE '' END
                                 , CASE WHEN inisPartion = TRUE THEN Movement_Partion.OperDate     ELSE zc_DateStart() END
@@ -313,8 +382,15 @@ BEGIN
                                 , MF_VATPercent.ValueData
                                 , tmpData.CountForPrice
                                 , tmpData.OperPrice_cost
-                                , tmpData.CostPrice
-                  )
+                                , tmpData.CostPrice 
+                                , MovementString_InvNumberPack.ValueData   
+                                , MovementString_InvNumberInvoice.ValueData
+                                , MovementString_InvNumberPartner.ValueData
+                                , MovementDate_OperDatePartner.ValueData
+                                , COALESCE (MovementFloat_TotalDiscountTax.ValueData, 0) 
+                                , tmpData.OperPrice_orig
+                               , tmpData.DiscountTax
+                         )
 
        , tmpData_Rez AS (SELECT tmpData_All.UnitId
                           , tmpData_All.GoodsId
@@ -322,6 +398,10 @@ BEGIN
                           , tmpData_All.MovementId_Partion
                           , tmpData_All.DescName_Partion
                           , tmpData_All.InvNumber_Partion
+                          , tmpData_All.InvNumberInvoice_Partion
+                          , tmpData_All.InvNumberPack_Partion
+                          , tmpData_All.InvNumberPartner_Partion
+                          , tmpData_All.OperDatePartner_Partion
                           , tmpData_All.OperDate_Partion
                           , tmpData_All.PartnerId
                           , Object_GoodsSize.Id        AS GoodsSizeId
@@ -344,6 +424,11 @@ BEGIN
                           , tmpData_All.Comment_in
                           , tmpData_All.DiscountTax_in
                           , tmpData_All.VATPercent_in
+                          , tmpData_All.TotalDiscountTax_in
+
+                          , tmpData_All.OperPrice_orig
+                          , tmpData_All.DiscountTax
+                          , SUM (COALESCE (tmpData_All.SummIn, 0))  AS SummIn
 
                           , SUM (COALESCE (tmpData_All.Amount, 0))  AS Amount  -- из проводок
                           , SUM (COALESCE (tmpData_All.Summ, 0))    AS Summ    -- из проводок
@@ -375,12 +460,19 @@ BEGIN
                             , tmpData_All.OperPriceList
                             , tmpData_All.UnitId_in
                             , tmpData_All.Comment_in
-                            , tmpData_All.DiscountTax_in
+                            , tmpData_All.DiscountTax_in 
+                            , tmpData_All.TotalDiscountTax_in
                             , tmpData_All.VATPercent_in
                             , tmpData_All.EKPrice
                             , tmpData_All.CountForPrice
                             , tmpData_All.OperPrice_cost
                             , tmpData_All.CostPrice
+                            , tmpData_All.InvNumberInvoice_Partion
+                            , tmpData_All.InvNumberPack_Partion
+                            , tmpData_All.InvNumberPartner_Partion
+                            , tmpData_All.OperDatePartner_Partion
+                            , tmpData_All.OperPrice_orig
+                            , tmpData_All.DiscountTax
               )
 
 
@@ -389,7 +481,11 @@ BEGIN
              tmpData.PartionId                      AS PartionId
            , tmpData.MovementId_Partion             AS MovementId_Partion
            , tmpData.InvNumber_Partion :: TVarChar  AS InvNumber_Partion
-           , zfCalc_PartionMovementName (0, '', tmpData.InvNumber_Partion, tmpData.OperDate_Partion) AS InvNumberAll_Partion
+           , zfCalc_PartionMovementName (0, '', tmpData.InvNumber_Partion, tmpData.OperDate_Partion) AS InvNumberAll_Partion 
+           , tmpData.InvNumberInvoice_Partion    :: TVarChar
+           , tmpData.InvNumberPack_Partion       :: TVarChar
+           , tmpData.InvNumberPartner_Partion    :: TVarChar
+           , tmpData.OperDatePartner_Partion
            , CASE WHEN tmpData.OperDate_Partion = zc_DateStart() THEN NULL ELSE tmpData.OperDate_Partion END  :: TDateTime AS OperDate_Partion
            , tmpData.DescName_Partion  :: TVarChar  AS DescName_Partion
 
@@ -450,8 +546,14 @@ BEGIN
                         ELSE 0
                    END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
 
+           , tmpData.OperPrice_orig  :: TFloat
+           , tmpData.DiscountTax     :: TFloat
+           , tmpData.SummIn          :: TFloat
+
+
            , tmpData.Comment_in       :: TVarChar
            , tmpData.DiscountTax_in   :: TFloat
+           , tmpData.TotalDiscountTax_in ::TFloat
            , tmpData.VATPercent_in    :: TFloat
 
         FROM tmpData_Rez AS tmpData
@@ -483,7 +585,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.06.23         *
  24.03.21         *
 */
 -- тест
--- select * from gpReport_MovementIncome (inStartDate :='01.01.2121', inEndDate :='01.01.2121', inUnitId := 0 , inPartnerId := 0 ,inGoodsGroupId:=0, inIsPartion := 'True' , inIsPartner := 'False', inSession := '2');
+-- select * from gpReport_MovementIncome (inStartDate :='01.01.2021', inEndDate :='01.01.2124', inUnitId := 0 , inPartnerId := 0 ,inGoodsGroupId:=0, inIsPartion := 'true' , inIsPartner := 'true', inSession := '2');

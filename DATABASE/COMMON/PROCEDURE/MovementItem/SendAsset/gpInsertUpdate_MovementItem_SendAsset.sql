@@ -1,13 +1,15 @@
 -- Function: gpInsertUpdate_MovementItem_SendAsset()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendAsset (Integer, Integer, Integer, TFloat, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendAsset (Integer, Integer, Integer, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendAsset (Integer, Integer, Integer, TFloat, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendAsset(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId            Integer   , -- Ключ объекта <Документ>
     IN inGoodsId               Integer   , -- Товары
     IN inAmount                TFloat    , -- Количество
-    IN inContainerId           Integer   , -- Партия ОС
+    IN inContainerId           Integer   , -- Партия ОС 
+    IN inStorageId             Integer   , -- Место хранения
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -25,6 +27,7 @@ BEGIN
                                                   , inGoodsId     := inGoodsId
                                                   , inAmount      := inAmount
                                                   , inContainerId := inContainerId
+                                                  , inStorageId   := inStorageId
                                                   , inUserId      := vbUserId
                                                    ) AS tmp;
 
@@ -35,6 +38,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.06.23         *
  16.03.20         *
 */
 

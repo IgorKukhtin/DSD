@@ -132,6 +132,8 @@ type
     FieldFilter_Article: TdsdFieldFilter;
     bblbSearchArticle: TdxBarControlContainerItem;
     bbedSearchArticle: TdxBarControlContainerItem;
+    actOpenForm_Income: TdsdOpenForm;
+    bbOpenForm_Income: TdxBarButton;
   private
     { Private declarations }
   public

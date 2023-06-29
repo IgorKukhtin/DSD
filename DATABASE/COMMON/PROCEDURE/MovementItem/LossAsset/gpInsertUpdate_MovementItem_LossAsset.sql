@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_LossAsset()
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossAsset (Integer, Integer, Integer, TFloat, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossAsset (Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossAsset (Integer, Integer, Integer, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossAsset (Integer, Integer, Integer, TFloat, TFloat, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_LossAsset(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -9,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_LossAsset(
     IN inGoodsId               Integer   , -- Товары
     IN inAmount                TFloat    , -- Количество
     IN inSumm                  TFloat    , -- сумма услуги
-    IN inContainerId           Integer   , -- Партия ОС
+    IN inContainerId           Integer   , -- Партия ОС 
+    IN inStorageId           Integer   , -- Место хранения
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -27,7 +29,8 @@ BEGIN
                                                   , inGoodsId     := inGoodsId
                                                   , inAmount      := inAmount
                                                   , inSumm        := inSumm
-                                                  , inContainerId := inContainerId
+                                                  , inContainerId := inContainerId 
+                                                  , inStorageId   := inStorageId
                                                   , inUserId      := vbUserId
                                                    ) AS tmp;
 
@@ -38,6 +41,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.06.23         *
  18.06.20         *
 */
 

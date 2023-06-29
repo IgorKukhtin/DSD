@@ -64,6 +64,11 @@ type
     actAssetChoiceForm: TOpenChoiceForm;
     bbInsertRecordGoods: TdxBarButton;
     ContainerId: TcxGridDBColumn;
+    actInsertRecordAsset: TInsertRecord;
+    actPartionGoodsAssetChoiceForm: TOpenChoiceForm;
+    macInsertRecordAsset: TMultiAction;
+    bbPartionGoodsAssetChoiceForm: TdxBarButton;
+    bbInsertRecordAsset: TdxBarButton;
   private
     { Private declarations }
   public

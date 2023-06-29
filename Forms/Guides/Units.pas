@@ -94,6 +94,7 @@ type
     bbUpdate_isIrna: TdxBarButton;
     isCountCount: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
+    CityName: TcxGridDBColumn;
   private
     { Private declarations }
   public

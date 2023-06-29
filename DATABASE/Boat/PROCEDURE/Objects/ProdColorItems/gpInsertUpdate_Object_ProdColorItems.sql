@@ -85,7 +85,7 @@ BEGIN
        IF COALESCE (ioId, 0) = 0
        THEN
            RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'ќшибка.Ёлемент не может быть удален.'
-                                                 , inProcedureName := 'gpInsertUpdate_Object_ProdColorItems'
+                                                 , inProcedureName := 'gpInsertUpdate_Object_ProdOptItems'
                                                  , inUserId        := vbUserId);
        END IF;
 

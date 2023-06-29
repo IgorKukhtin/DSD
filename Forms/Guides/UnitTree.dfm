@@ -127,6 +127,14 @@ object UnitTreeForm: TUnitTreeForm
         HeaderAlignmentVert = vaCenter
         Width = 120
       end
+      object CityName: TcxGridDBColumn
+        Caption = #1043#1086#1088#1086#1076
+        DataBinding.FieldName = 'CityName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object Address: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'

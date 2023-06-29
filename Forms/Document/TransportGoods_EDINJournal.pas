@@ -99,6 +99,13 @@ type
     spUpdate_Uuid: TdsdStoredProc;
     spUpdate_Sign_Consignor: TdsdStoredProc;
     spUpdate_Sign_Carrier: TdsdStoredProc;
+    GLN_Unit: TcxGridDBColumn;
+    PlaceOf: TcxGridDBColumn;
+    DeliveryInstructionsName: TcxGridDBColumn;
+    OKPO_car: TcxGridDBColumn;
+    OKPO_To: TcxGridDBColumn;
+    DriverINN: TcxGridDBColumn;
+    DriverCertificate: TcxGridDBColumn;
   private
     { Private declarations }
   public

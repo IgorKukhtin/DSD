@@ -315,6 +315,24 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object InvNumberInvoice: TcxGridDBColumn
+        Caption = #8470' '#1057#1095#1077#1090#1072
+        DataBinding.FieldName = 'InvNumberInvoice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
+        Options.Editing = False
+        Width = 70
+      end
+      object InvNumberPack: TcxGridDBColumn
+        Caption = #8470' '#1059#1087'. '#1083#1080#1089#1090#1072
+        DataBinding.FieldName = 'InvNumberPack'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1086#1084#1077#1088' '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1086#1075#1086' '#1083#1080#1089#1090#1072
+        Options.Editing = False
+        Width = 75
+      end
       object FromName: TcxGridDBColumn
         Caption = 'Lieferanten'
         DataBinding.FieldName = 'FromName'
@@ -829,7 +847,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Category = 0
     end
     object bbPrintSticker: TdxBarButton
-      Action = actPrintSticker
+      Action = macPrintStiker
       Category = 0
     end
     object bbPrintStickerTermo: TdxBarButton
@@ -1309,6 +1327,20 @@ object IncomeJournalForm: TIncomeJournalForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
+    object macPrintStiker: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogPrint
+        end
+        item
+          Action = actPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1069#1090#1080#1082#1077#1090#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1069#1090#1080#1082#1077#1090#1082#1080
+      ImageIndex = 18
+    end
     object spReCompete: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1473,6 +1505,27 @@ object IncomeJournalForm: TIncomeJournalForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object ExecuteDialogPrint: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'ExecuteDialogPrint'
+      FormName = 'TCheckBooleanDialogForm'
+      FormNameParam.Value = 'TCheckBooleanDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'isPrice'
+          Value = False
+          Component = FormParams
+          ComponentItem = 'isPrice'
+          DataType = ftBoolean
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
   end
   object spSelect: TdsdStoredProc
@@ -1709,6 +1762,13 @@ object IncomeJournalForm: TIncomeJournalForm
         Name = 'ImportSettingId_SN'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsPrice'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -1808,6 +1868,21 @@ object IncomeJournalForm: TIncomeJournalForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPrice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'IsPrice'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

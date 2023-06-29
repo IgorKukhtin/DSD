@@ -43,6 +43,7 @@ const
                                'SELECT BranchService_Settings.OffsetTimeEnd FROM _replica.BranchService_Settings ' +
                                'WHERE BranchService_Settings.Id = 1) AS TEXT)||'' MIN'') AS INTERVAL) AS CurrDate';
 
+  cSQLEqualization_SlaveStep = 'select * from _replica.gpBranchService_Equalization_SlaveStep(''0'');';
   cSQLEqualization_MasterStep = 'select * from _replica.gpBranchService_Equalization_MasterStep(''0'');';
 
   cSQLReserveAllId = 'select * from _replica.gpBranchService_ReserveAllId(''0'');';

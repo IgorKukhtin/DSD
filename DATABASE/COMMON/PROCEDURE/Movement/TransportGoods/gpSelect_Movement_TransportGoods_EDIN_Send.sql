@@ -598,7 +598,11 @@ BEGIN
           , (select tmpCar_param.Width  from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: TVarChar  AS Width_tr
           , (select tmpCar_param.Height from tmpCar_param where tmpCar_param.CarId = tmpTransportGoods.CarTrailerId) :: TVarChar  AS Height_tr
           
-          , 'відрядний тариф'::TVarChar AS DeliveryInstructionsName
+          , CASE WHEN COALESCE (OH_JuridicalDetails_car.OKPO, CASE WHEN COALESCE (vbMovementDescId, 0) <> zc_Movement_ReturnIn() THEN OH_JuridicalDetails_From.OKPO ELSE OH_JuridicalDetails_To.OKPO END) = OH_JuridicalDetails_From.OKPO
+                 THEN 'відрядний тариф'
+                 WHEN ObjectLink_Unit_City.ChildObjectId = View_Partner_Address.CityKindId
+                 THEN 'внутрішньомістське'
+                 ELSE 'міжміське' END::TVarChar                                         AS DeliveryInstructionsName
           
        FROM Movement
             LEFT JOIN tmpTransportGoods ON tmpTransportGoods.MovementId_Sale = Movement.Id
@@ -794,6 +798,11 @@ BEGIN
             LEFT JOIN zfSelect_ParseAddress (inAddress := OH_Juridical_Basis.JuridicalAddress) AS ParseAddress_Basis ON 1 = 1
 
             LEFT JOIN tmpPackage ON 1=1
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_City
+                                 ON ObjectLink_Unit_City.ObjectId = CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN Object_From.Id ELSE Object_To.Id END
+                                AND ObjectLink_Unit_City.DescId = zc_ObjectLink_Unit_City()
+
 
        WHERE Movement.Id = vbMovementSaleId
          AND Movement.StatusId = zc_Enum_Status_Complete()

@@ -528,7 +528,7 @@ BEGIN
                     SELECT tmpProdOptItems.Id
                          , tmpProdOptItems.Code
                          , tmpProdOptItems.Name
-                         , TRUE :: Boolean AS isEnabled
+                         , CASE WHEN tmpProdOptItems.isErased = TRUE THEN FALSE ELSE TRUE END :: Boolean AS isEnabled
                          , tmpProdOptItems.isErased
 
                          , tmpProdOptItems.ProdOptionsId

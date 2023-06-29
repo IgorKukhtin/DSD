@@ -1,13 +1,15 @@
 -- Function: lpInsertUpdate_MovementItem_SendAsset()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendAsset (Integer, Integer, Integer, TFloat, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendAsset (Integer, Integer, Integer, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SendAsset (Integer, Integer, Integer, TFloat, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SendAsset(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inContainerId         Integer   , -- Партия ОС
+    IN inContainerId         Integer   , -- Партия ОС 
+    IN inStorageId           Integer   , -- Место хранения
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -55,6 +57,12 @@ BEGIN
      -- сохранили свойство <Партия ОС>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), ioId, inContainerId);
 
+     -- сохранили связь с <Место хранения> - для партии прихода на МО 
+     IF COALESCE (inStorageId,0) <> 0 OR EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = ioId AND MILO.DescId = zc_MILinkObject_Storage())
+     THEN
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Storage(), ioId, inStorageId);
+     END IF;
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
@@ -68,6 +76,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.06.23         *
  16.03.20         *
 */
 

@@ -443,6 +443,14 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             Options.Editing = False
             Width = 80
           end
+          object PlaceOf: TcxGridDBColumn
+            Caption = #1052#1077#1089#1090#1086' '#1089#1086#1089#1090#1072#1074#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'PlaceOf'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 146
+          end
           object isSend_eTTN: TcxGridDBColumn
             Caption = 'e-'#1058#1058#1053' '#1086#1090#1087#1088#1072#1074#1083'.'
             DataBinding.FieldName = 'isSend_eTTN'
@@ -467,6 +475,14 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             Options.Editing = False
             Width = 80
           end
+          object OKPO_car: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' '#1087#1077#1088#1077#1074#1086#1079#1095#1080#1082#1072
+            DataBinding.FieldName = 'OKPO_car'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
           object GLN_Driver: TcxGridDBColumn
             Caption = 'GLN '#1074#1086#1076#1080#1090#1077#1083#1103
             DataBinding.FieldName = 'GLN_Driver'
@@ -474,6 +490,22 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object DriverINN: TcxGridDBColumn
+            Caption = #1048#1053#1053' '#1074#1086#1076#1080#1090#1077#1083#1103
+            DataBinding.FieldName = 'DriverINN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object DriverCertificate: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090'. '#1091#1076#1086#1089#1090'.'
+            DataBinding.FieldName = 'DriverCertificate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
           end
           object GLN_from: TcxGridDBColumn
             Caption = 'GLN '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
@@ -483,17 +515,33 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             Options.Editing = False
             Width = 80
           end
-          object GLN_Unloading: TcxGridDBColumn
+          object GLN_Unit: TcxGridDBColumn
             Caption = 'GLN '#1084#1077#1089#1090#1072' '#1087#1086#1075#1088#1091#1079#1082#1080
-            DataBinding.FieldName = 'GLN_Unloading'
+            DataBinding.FieldName = 'GLN_Unit'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
+          end
+          object GLN_to: TcxGridDBColumn
+            Caption = 'GLN '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'GLN_to'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
           end
-          object GLN_to: TcxGridDBColumn
-            Caption = 'GLN '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
-            DataBinding.FieldName = 'GLN_to'
+          object OKPO_To: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'OKPO_To'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 69
+          end
+          object GLN_Unloading: TcxGridDBColumn
+            Caption = 'GLN '#1084#1077#1089#1090#1072' '#1074#1099#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'GLN_Unloading'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -546,6 +594,14 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 84
+          end
+          object DeliveryInstructionsName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1087#1077#1088#1077#1074#1086#1079#1082#1080
+            DataBinding.FieldName = 'DeliveryInstructionsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
           end
         end
       end

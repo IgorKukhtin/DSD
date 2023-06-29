@@ -225,6 +225,10 @@ type
     bbUpdateMov: TdxBarSubItem;
     bbUpdate_Invoice: TdxBarButton;
     bbUpdate_BankAccount: TdxBarButton;
+    actProtocol2: TdsdOpenForm;
+    actProtocol3: TdsdOpenForm;
+    bbtProtocol2: TdxBarButton;
+    bbtProtocol3: TdxBarButton;
   private
     { Private declarations }
   public
