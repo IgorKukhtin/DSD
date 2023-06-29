@@ -227,6 +227,7 @@ BEGIN
                    , Count_Day
                    , ModelServiceId, StaffListSummKindId
                    , KoeffHoursWork_car
+                   , OperDate
                     )
     WITH tmpReport_1 AS (SELECT Res.MemberId, MAX (Res.SheetWorkTime_Amount) AS SheetWorkTime_Amount /*, Res.PersonalGroupId, Res.PositionId, Res.PositionLevelId*/
                          FROM Res
@@ -267,7 +268,8 @@ BEGIN
         --
        ,0              AS ModelServiceId
        ,Report_2.StaffListSummKindId
-       ,Report_2.Tax_Trainee :: TFloat   AS KoeffHoursWork_car
+       ,Report_2.Tax_Trainee :: TFloat   AS KoeffHoursWork_car 
+       ,Report_2.OperDate :: TDateTime AS OperDate
     FROM gpSelect_Report_Wage_Sum_Server (inStartDate      := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inStartDate END
                                         , inEndDate        := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inEndDate   END
                                         , inUnitId         := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inUnitId    END

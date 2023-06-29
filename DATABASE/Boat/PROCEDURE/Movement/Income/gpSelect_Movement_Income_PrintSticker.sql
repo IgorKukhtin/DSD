@@ -83,7 +83,7 @@ BEGIN
            , MIString_PartNumber.ValueData  AS PartNumber
            , vbFromCode AS FromCode
            , vbFromName AS FromName 
-           , COALESCE (MIFloat_OperPriceList.ValueData, tmpPriceBasis.ValuePrice, 0) :: TFloat  AS OperPriceList 
+           , CASE WHEN inisPrice = TRUE THEN COALESCE (MIFloat_OperPriceList.ValueData, tmpPriceBasis.ValuePrice, 0) ELSE NULL END :: TFloat  AS OperPriceList 
        FROM tmpMI
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
 

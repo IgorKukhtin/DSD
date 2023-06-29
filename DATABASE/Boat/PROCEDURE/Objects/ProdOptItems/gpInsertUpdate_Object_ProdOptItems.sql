@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Int
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptItems(Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
  INOUT ioId                     Integer   , -- Ключ
@@ -23,6 +24,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptItems(
     IN inPartNumber             TVarChar  ,
     IN inComment                TVarChar  ,
     IN inCommentOpt             TVarChar  ,
+    IN inIsEnabled              Boolean   , 
+   OUT outIsErased              Boolean   , -- удален
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -74,6 +77,8 @@ BEGIN
                                              , inUserId        := vbUserId
                                               );
    END IF;
+
+
 
    -- Проверка - нельзя дублировать опции
    IF EXISTS (SELECT 1
@@ -245,119 +250,147 @@ BEGIN
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-    -- Если код не установлен, определяем его как последний+1, для каждой лодки начиная с 1
-   IF COALESCE (ioId,0) = 0 AND inCode = 0
-   THEN
-       vbCode_calc:= COALESCE ((SELECT MAX (Object_ProdOptItems.ObjectCode) AS ObjectCode
-                                FROM Object AS Object_ProdOptItems
-                                     INNER JOIN ObjectLink AS ObjectLink_Product
-                                                           ON ObjectLink_Product.ObjectId = Object_ProdOptItems.Id
-                                                          AND ObjectLink_Product.DescId = zc_ObjectLink_ProdOptItems_Product()
-                                                          AND ObjectLink_Product.ChildObjectId = inProductId AND COALESCE (inProductId,0) <> 0
-                                WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems())
-                               , 0) + 1;
-   ELSE
-        vbCode_calc:= inCode;
-   END IF;
 
-   -- проверка прав уникальности для свойства <Наименование >
-   --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdOptItems(), inName, vbUserId);
+     IF inIsEnabled = FALSE
+     THEN
+                -- Проверка
+       IF COALESCE (ioId, 0) = 0
+       THEN
+           RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Элемент не может быть удален.'
+                                                 , inProcedureName := 'gpInsertUpdate_Object_ProdColorItems'
+                                                 , inUserId        := vbUserId);
+       END IF;
 
-   -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdOptItems(), vbCode_calc, '');
+       -- удалили
+       PERFORM lpUpdate_Object_isErased (inObjectId:= ioId, inIsErased:= TRUE, inUserId:= vbUserId);
+       --
+       outIsErased:= TRUE;
 
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ProdOptItems_PartNumber(), ioId, inPartNumber);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ProdOptItems_Comment(), ioId, inComment);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ProdOptItems_CommentOpt(), ioId, inCommentOpt);
+    ELSE
+       IF COALESCE (ioId, 0) > 0
+       THEN
+            -- восстановили
+           PERFORM lpUpdate_Object_isErased (inObjectId:= ioId, inIsErased:= FALSE, inUserId:= vbUserId);
+           --
+           outIsErased:= FALSE;
+       END IF;    
+       
+        -- Если код не установлен, определяем его как последний+1, для каждой лодки начиная с 1
+       IF COALESCE (ioId,0) = 0 AND inCode = 0
+       THEN
+           vbCode_calc:= COALESCE ((SELECT MAX (Object_ProdOptItems.ObjectCode) AS ObjectCode
+                                    FROM Object AS Object_ProdOptItems
+                                         INNER JOIN ObjectLink AS ObjectLink_Product
+                                                               ON ObjectLink_Product.ObjectId = Object_ProdOptItems.Id
+                                                              AND ObjectLink_Product.DescId = zc_ObjectLink_ProdOptItems_Product()
+                                                              AND ObjectLink_Product.ChildObjectId = inProductId AND COALESCE (inProductId,0) <> 0
+                                    WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems())
+                                   , 0) + 1;
+       ELSE
+            vbCode_calc:= inCode;
+       END IF;
+    
+       -- проверка прав уникальности для свойства <Наименование >
+       --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProdOptItems(), inName, vbUserId);
+    
+       -- сохранили <Объект>
+       ioId := lpInsertUpdate_Object(ioId, zc_Object_ProdOptItems(), vbCode_calc, '');
+    
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ProdOptItems_PartNumber(), ioId, inPartNumber);
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ProdOptItems_Comment(), ioId, inComment);
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ProdOptItems_CommentOpt(), ioId, inCommentOpt);
+    
+       -- сохранили свойство <Кол опций>
+       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_Count(), ioId, CASE WHEN inAmount > 0 THEN inAmount ELSE 1 END);
+    
+       -- сохранили свойство <PriceIn> - временно убрал, может потом понадобится
+       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceIn(), ioId, 0);
+       -- сохранили свойство <PriceOut> - временно убрал, может потом понадобится
+       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceOut(), ioId, inPriceOut);
+    
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_DiscountTax(), ioId, inDiscountTax);
+    
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_Product(), ioId, inProductId);
+    
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_ProdOptions(), ioId, ioProdOptionsId);
+    
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_ProdOptPattern(), ioId, inProdOptPatternId);
+    
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_Goods(), ioId, ioGoodsId);
+    
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_OrderClient(), ioId, inMovementId_OrderClient);
+    
+    
+       IF vbIsInsert = TRUE THEN
+          -- сохранили свойство <Дата создания>
+          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
+          -- сохранили свойство <Пользователь (создание)>
+          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, vbUserId);
+       END IF;
+    
+       outGoodsName := (SELECT Object.ValueData FROM Object WHERE Object.Id = ioGoodsId);
+    
+       -- сохранили протокол
+       PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+    
+    
+       -- пересохраняем - элемент  - Заказ Клиента
+       vbMI_Id:= (WITH gpSelect AS (SELECT gpSelect.Basis_summ, gpSelect.Basis_summ_orig, gpSelect.Basis_summ1_orig
+                                    FROM gpSelect_Object_Product (inMovementId_OrderClient, FALSE, FALSE, vbUserId :: TVarChar) AS gpSelect
+                                    WHERE gpSelect.MovementId_OrderClient = inMovementId_OrderClient
+                                   )
+                  -- Результат
+                  SELECT tmp.ioId
+                  FROM lpInsertUpdate_MovementItem_OrderClient (ioId            := vbMI_Id
+                                                              , inMovementId    := inMovementId_OrderClient
+                                                              , inGoodsId       := inProductId
+                                                              , inAmount        := (SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = vbMI_Id)
+                                                                -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
+                                                              , ioOperPrice     := (SELECT gpSelect.Basis_summ       FROM gpSelect)
+                                                                -- ИТОГО Сумма продажи без НДС - без Скидки (Basis+options)
+                                                              , inOperPriceList := (SELECT gpSelect.Basis_summ_orig  FROM gpSelect)
+                                                                -- ИТОГО Сумма продажи без НДС - без Скидки (Basis)
+                                                              , inBasisPrice    := (SELECT gpSelect.Basis_summ1_orig FROM gpSelect)
+                                                                -- 
+                                                              , inCountForPrice := 1  ::TFloat
+                                                              , inComment       := '' ::TVarChar
+                                                              , inUserId        := vbUserId
+                                                               ) AS tmp
+                 );
+    
+    
+       -- Проверка - нельзя дублировать опции
+       IF EXISTS (SELECT 1
+                  FROM ObjectLink AS OL
+                       -- Не удален
+                       JOIN Object AS Object_ProdOptItems ON Object_ProdOptItems.Id       = OL.ObjectId
+                                                         AND Object_ProdOptItems.isErased = FALSE
+                       -- Опция
+                       JOIN ObjectLink AS OL_ProdOptions
+                                       ON OL_ProdOptions.ObjectId      = OL.ObjectId
+                                      AND OL_ProdOptions.DescId        = zc_ObjectLink_ProdOptItems_ProdOptions()
+                                      AND OL_ProdOptions.ChildObjectId = ioProdOptionsId
+                  WHERE OL.ChildObjectId = inProductId AND OL.DescId = zc_ObjectLink_ProdOptItems_Product()
+                    AND OL.ObjectId <> COALESCE (ioId, 0)
+                 )
+       THEN
+           RAISE EXCEPTION 'Ошибка.Дублирование опции <%> запрещено.'
+                          , lfGet_Object_ValueData_sh (ioProdOptionsId)
+                           ;
+       END IF;
 
-   -- сохранили свойство <Кол опций>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_Count(), ioId, CASE WHEN inAmount > 0 THEN inAmount ELSE 1 END);
-
-   -- сохранили свойство <PriceIn> - временно убрал, может потом понадобится
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceIn(), ioId, 0);
-   -- сохранили свойство <PriceOut> - временно убрал, может потом понадобится
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_PriceOut(), ioId, inPriceOut);
-
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_DiscountTax(), ioId, inDiscountTax);
-
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_Product(), ioId, inProductId);
-
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_ProdOptions(), ioId, ioProdOptionsId);
-
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_ProdOptPattern(), ioId, inProdOptPatternId);
-
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ProdOptItems_Goods(), ioId, ioGoodsId);
-
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptItems_OrderClient(), ioId, inMovementId_OrderClient);
-
-
-   IF vbIsInsert = TRUE THEN
-      -- сохранили свойство <Дата создания>
-      PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
-      -- сохранили свойство <Пользователь (создание)>
-      PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, vbUserId);
-   END IF;
-
-   outGoodsName := (SELECT Object.ValueData FROM Object WHERE Object.Id = ioGoodsId);
-
-   -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
-
-
-   -- пересохраняем - элемент  - Заказ Клиента
-   vbMI_Id:= (WITH gpSelect AS (SELECT gpSelect.Basis_summ, gpSelect.Basis_summ_orig, gpSelect.Basis_summ1_orig
-                                FROM gpSelect_Object_Product (inMovementId_OrderClient, FALSE, FALSE, vbUserId :: TVarChar) AS gpSelect
-                                WHERE gpSelect.MovementId_OrderClient = inMovementId_OrderClient
-                               )
-              -- Результат
-              SELECT tmp.ioId
-              FROM lpInsertUpdate_MovementItem_OrderClient (ioId            := vbMI_Id
-                                                          , inMovementId    := inMovementId_OrderClient
-                                                          , inGoodsId       := inProductId
-                                                          , inAmount        := (SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = vbMI_Id)
-                                                            -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
-                                                          , ioOperPrice     := (SELECT gpSelect.Basis_summ       FROM gpSelect)
-                                                            -- ИТОГО Сумма продажи без НДС - без Скидки (Basis+options)
-                                                          , inOperPriceList := (SELECT gpSelect.Basis_summ_orig  FROM gpSelect)
-                                                            -- ИТОГО Сумма продажи без НДС - без Скидки (Basis)
-                                                          , inBasisPrice    := (SELECT gpSelect.Basis_summ1_orig FROM gpSelect)
-                                                            -- 
-                                                          , inCountForPrice := 1  ::TFloat
-                                                          , inComment       := '' ::TVarChar
-                                                          , inUserId        := vbUserId
-                                                           ) AS tmp
-             );
-
-
-   -- Проверка - нельзя дублировать опции
-   IF EXISTS (SELECT 1
-              FROM ObjectLink AS OL
-                   -- Не удален
-                   JOIN Object AS Object_ProdOptItems ON Object_ProdOptItems.Id       = OL.ObjectId
-                                                     AND Object_ProdOptItems.isErased = FALSE
-                   -- Опция
-                   JOIN ObjectLink AS OL_ProdOptions
-                                   ON OL_ProdOptions.ObjectId      = OL.ObjectId
-                                  AND OL_ProdOptions.DescId        = zc_ObjectLink_ProdOptItems_ProdOptions()
-                                  AND OL_ProdOptions.ChildObjectId = ioProdOptionsId
-              WHERE OL.ChildObjectId = inProductId AND OL.DescId = zc_ObjectLink_ProdOptItems_Product()
-                AND OL.ObjectId <> COALESCE (ioId, 0)
-             )
-   THEN
-       RAISE EXCEPTION 'Ошибка.Дублирование опции <%> запрещено.'
-                      , lfGet_Object_ValueData_sh (ioProdOptionsId)
-                       ;
-   END IF;
-
+  END IF;
+  
+  
    -- сохранили протокол
    PERFORM lpInsert_MovementItemProtocol (vbMI_Id, vbUserId, FALSE);
    -- пересчитали Итоговые суммы - Заказ Клиента

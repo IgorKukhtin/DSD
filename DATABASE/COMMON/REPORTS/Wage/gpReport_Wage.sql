@@ -358,7 +358,7 @@ BEGIN
        , 0  :: Integer  AS GoodsKindComplete_ToId
        , '' :: TVarChar AS GoodsKindComplete_ToName
 
-       , NULL :: TDateTime AS OperDate
+       , Report_2.OperDate :: TDateTime AS OperDate
        , Report_2.Count_Day
        , 0 :: Integer AS Count_MemberInDay
        , 0 :: TFloat AS Gross
@@ -805,7 +805,7 @@ BEGIN
                                             AND COALESCE (Movement_SheetWorkTime.PersonalGroupId, 0) = COALESCE (tmpRes.PersonalGroupId, 0)
                                           --AND COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
                                             AND (Movement_SheetWorkTime.OperDate                     = tmpRes.OperDate
-                                              OR inDetailDay = FALSE
+                                              OR (inDetailDay = FALSE AND inDetailMonth = FALSE)
                                                 )
                                             AND tmpRes.Ord_SheetWorkTime                             = 1
             LEFT JOIN tmpPersonal AS Object_Personal
@@ -952,7 +952,7 @@ BEGIN
                             AND COALESCE (Movement_SheetWorkTime.PersonalGroupId, 0) = COALESCE (tmpRes.PersonalGroupId, 0)
                           --AND COALESCE (Movement_SheetWorkTime.PositionLevelId, 0) = COALESCE (tmpRes.PositionLevelId, 0)
                             AND (Movement_SheetWorkTime.OperDate                     = tmpRes.OperDate
-                              OR inDetailDay = FALSE
+                              OR (inDetailDay = FALSE AND inDetailMonth = FALSE)
                                 )
             LEFT JOIN Object AS Object_Member        ON Object_Member.Id        = Movement_SheetWorkTime.MemberId
             LEFT JOIN Object AS Object_Position      ON Object_Position.Id      = Movement_SheetWorkTime.PositionId
@@ -960,8 +960,7 @@ BEGIN
             LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = NULL -- Movement_SheetWorkTime.PositionLevelId
             LEFT JOIN Object AS Object_Unit          ON Object_Unit.Id          = inUnitId
 
-        WHERE tmpRes.MemberId_find IS NULL
-         AND 1=0
+        WHERE tmpRes.MemberId_find IS NULL AND 1=0
        ;
 
 END;
