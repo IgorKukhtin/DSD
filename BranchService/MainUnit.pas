@@ -336,7 +336,7 @@ begin
 
     // Создаем (обновляем) Table_Equalization_ObjectId
     ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQLTable_Equalization_ObjectId);
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLTable_Equalization_Id);
     ZQueryExecute.ExecSQL;
 
     // Создаем (обновляем) gpBranchService_EqualizationPrepareId
@@ -550,7 +550,7 @@ begin
     ZQueryExecute.SQL.Text := LiadScripts(cSQLSPGet_MovementId);
     ZQueryExecute.ExecSQL;
 
-    // Создаем функцию с переметрами подключения е базе
+    // Создаем функцию с пареметрами подключения е базе
     ZQueryExecute.Close;
     ZQueryExecute.SQL.Text := Format(LiadScripts(cSQLSPMasterConnect),
         [edtMasterServer.Text, edtMasterDatabase.Text, edtMasterPort.Text, edtMasterUser.Text,
@@ -565,6 +565,11 @@ begin
     // Создаем (обновляем) gpBranchService_ReserveAllId
     ZQueryExecute.Close;
     ZQueryExecute.SQL.Text := LiadScripts(cSQLSReserveAllId);
+    ZQueryExecute.ExecSQL;
+
+    // Создаем (обновляем) cSQLTable_Send_Id
+    ZQueryExecute.Close;
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLTable_Send_Id);
     ZQueryExecute.ExecSQL;
 
     // Создаем функцию для получения изменений
