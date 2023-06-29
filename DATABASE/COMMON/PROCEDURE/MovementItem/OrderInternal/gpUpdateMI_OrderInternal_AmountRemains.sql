@@ -40,7 +40,8 @@ BEGIN
     INSERT INTO tmpContainer_Count (MIDescId, ContainerId, GoodsId, GoodsKindId, Amount)
                                  WITH tmpUnit AS (SELECT UnitId, zc_MI_Master() AS MIDescId
                                                   FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup
-                                                  WHERE UnitId <> 1078643 -- Склад Карантин Тушенка
+                                                  WHERE lfSelect_Object_Unit_byGroup.UnitId <> 1078643 -- Склад Карантин Тушенка
+                                                    AND lfSelect_Object_Unit_byGroup.UnitId <> 9558031 -- Склад Неликвид
 
                                                  UNION
                                                   -- Склад Поклейки этикетки

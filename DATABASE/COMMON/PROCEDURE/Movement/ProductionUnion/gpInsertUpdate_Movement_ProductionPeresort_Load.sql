@@ -22,6 +22,15 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProductionUnion());
+
+
+    --
+    IF TRIM (inMemberName) = ''
+       AND TRIM (inGoodsName) = ''
+       AND TRIM (inPartionGoods) = ''
+    THEN
+        RETURN;
+    END IF;
  
  
     -- Найти Id физ лица

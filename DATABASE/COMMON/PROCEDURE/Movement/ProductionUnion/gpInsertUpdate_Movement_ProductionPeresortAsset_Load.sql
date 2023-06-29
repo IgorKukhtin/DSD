@@ -35,6 +35,14 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProductionUnion());
 
+    IF TRIM (inFromName) = ''
+       AND TRIM (inToName) = ''
+       AND TRIM (inGoodsName) = ''
+    THEN
+        RETURN;
+    END IF;
+
+
     -- Найти Id от кого
     vbFromId:= (SELECT Object.Id
                   FROM Object
@@ -122,7 +130,7 @@ BEGIN
      -- Если нет такого элемента, то выдать сообщение об ошибке и прервать выполнение загрузки
     IF COALESCE (vbUnitId_Storage, 0) = 0
     THEN
-        RAISE EXCEPTION 'Ошибка. <%> не найден в справочнике Подразделений.%Загрузка остановлена.', TRIM (inUnitName_Storage), chr(13);
+        RAISE EXCEPTION 'Ошибка.Не найдено место хранения = <%> для <%> <%>.%Загрузка остановлена.', TRIM (inUnitName_Storage), inInvNumber, inGoodsName, chr(13);
     END IF;
 
     -- Поиск <Участок (Место хранения)>, если нет такого создаем

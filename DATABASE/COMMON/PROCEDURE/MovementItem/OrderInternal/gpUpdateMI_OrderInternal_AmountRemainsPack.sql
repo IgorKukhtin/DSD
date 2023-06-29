@@ -37,7 +37,9 @@ BEGIN
             tmpUnit_CEH AS (SELECT UnitId, TRUE AS isContainer FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup)
             -- хардкодим - Склады База + Склад Поклейки этикетки
           , tmpUnit_SKLAD   AS (SELECT lfSelect.UnitId, FALSE AS isContainer FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect
+                                WHERE lfSelect.UnitId <> 9558031 -- Склад Неликвид
                                UNION
+                                -- Склад Поклейки этикетки
                                 SELECT 9073781 AS UnitId, FALSE AS isContainer
                                )
             -- Склад Реализации
