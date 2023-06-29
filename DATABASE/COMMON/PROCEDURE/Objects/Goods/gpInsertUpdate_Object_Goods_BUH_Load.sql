@@ -31,6 +31,16 @@ BEGIN
      END IF;
 
 
+     -- Проверка
+     IF COALESCE (inGoodsCode, 0) = 41 AND 1=0THEN
+        RAISE EXCEPTION 'Ошибка.(%)   (%)   (%)    (%)> .'
+                       , inDate_BUH
+                       , inGoodsCode
+                       , inGoodsName
+                       , inGoodsName_New
+                       ;
+     END IF;
+
      -- !!!поиск ИД товара!!!
      vbGoodsId:= (SELECT Object_Goods.Id
                   FROM Object AS Object_Goods
@@ -53,7 +63,7 @@ BEGIN
 
 
      -- сохраненное значение переносим в  zc_ObjectString_Goods_BUH на дату, если zc_ObjectString_Goods_BUH не пусто  = ошибка
-     vbGoodsName_BUH := (SELECT OS FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Goods_BUH() and OS.ObjectId = vbGoodsId);
+     vbGoodsName_BUH := (SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Goods_BUH() and OS.ObjectId = vbGoodsId);
 
      IF COALESCE (vbGoodsName_BUH,'') <> ''
      THEN
