@@ -134,7 +134,42 @@ BEGIN
      -- Проверка
      IF COALESCE (vbMovementId_sale, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Документ <Продажа покупателю> с № <%> не найден.', inBarCode;
+         IF CHAR_LENGTH (inBarCode) >= 13 AND EXISTS (SELECT Movement.Id
+                                                      FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
+                                                           ) AS tmp
+                                                           INNER JOIN Movement ON Movement.Id     = tmp.MovementId
+                                                                              AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
+                                                                              AND Movement.OperDate >= CURRENT_DATE - INTERVAL '24 MONTH'
+                                                                              AND Movement.StatusId = zc_Enum_Status_Erased()
+                                                     )
+         THEN
+             RAISE EXCEPTION 'Ошибка.Документ <Продажа покупателю> № <%> от <%> удален.(%)'
+                           , inBarCode
+                           , (SELECT Movement.InvNumber
+                              FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
+                                   ) AS tmp
+                                   INNER JOIN Movement ON Movement.Id     = tmp.MovementId
+                                                      AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
+                                                      AND Movement.OperDate >= CURRENT_DATE - INTERVAL '24 MONTH'
+                                                      AND Movement.StatusId = zc_Enum_Status_Erased()
+                              ORDER BY Movement.OperDate DESC
+                              LIMIT 1
+                             )
+                           , (SELECT zfConvert_DateToString (Movement.OperDate)
+                              FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
+                                   ) AS tmp
+                                   INNER JOIN Movement ON Movement.Id     = tmp.MovementId
+                                                      AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
+                                                      AND Movement.OperDate >= CURRENT_DATE - INTERVAL '24 MONTH'
+                                                      AND Movement.StatusId = zc_Enum_Status_Erased()
+                              ORDER BY Movement.OperDate DESC
+                              LIMIT 1
+                             )
+                            ;
+         ELSE
+             RAISE EXCEPTION 'Ошибка.Документ <Продажа покупателю> с Ш/К = <%> не найден.', inBarCode;
+         END IF;
+
      END IF;
 
      -- найдем элемент

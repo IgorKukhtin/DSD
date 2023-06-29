@@ -36,7 +36,9 @@ BEGIN
                               SELECT InfoMoneyId
                               FROM Object_InfoMoney_View
                               WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
-                                AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_1107() AND UserId = vbUserId)
+                                AND (EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_1107() AND UserId = vbUserId)
+                                  OR vbUserId = 405161
+                                    )
                              )
 
               , tmpPrice AS (SELECT tmp.GoodsId
@@ -90,7 +92,9 @@ BEGIN
 
              WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100())
                -- AND (tmpParams.InfoMoneyId IS NULL OR tmpParams.InfoMoneyId = Object_InfoMoney_View.InfoMoneyId)
-               AND tmpParams.InfoMoneyId IS NULL
+               AND (tmpParams.InfoMoneyId IS NULL
+                 OR vbUserId = 405161
+                   )
             ) AS tmpGoods
             LEFT JOIN (SELECT MovementItem.ObjectId                         AS GoodsId
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
