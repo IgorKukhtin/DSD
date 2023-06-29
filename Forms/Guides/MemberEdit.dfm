@@ -3,7 +3,7 @@
   ClientHeight = 560
   ClientWidth = 349
   ExplicitWidth = 355
-  ExplicitHeight = 588
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -35,7 +35,7 @@
     object tsCommon: TcxTabSheet
       Caption = #1054#1073#1097#1080#1077
       ImageIndex = 0
-      object edMeasureName: TcxTextEdit
+      object edName: TcxTextEdit
         Left = 14
         Top = 60
         TabOrder = 1
@@ -59,7 +59,7 @@
       object edCardIBAN: TcxTextEdit
         Left = 14
         Top = 402
-        TabOrder = 19
+        TabOrder = 18
         Width = 130
       end
       object cxLabel15: TcxLabel
@@ -775,7 +775,7 @@
       item
         Name = 'inName'
         Value = ''
-        Component = edMeasureName
+        Component = edName
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -939,7 +939,7 @@
       item
         Name = 'Name'
         Value = ''
-        Component = edMeasureName
+        Component = edName
         DataType = ftString
         MultiSelectSeparator = ','
       end

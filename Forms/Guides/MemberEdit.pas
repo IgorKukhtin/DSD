@@ -23,7 +23,7 @@ uses
 
 type
   TMemberEditForm = class(TAncestorEditDialogForm)
-    edMeasureName: TcxTextEdit;
+    edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
