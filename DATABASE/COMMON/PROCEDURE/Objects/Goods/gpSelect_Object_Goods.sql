@@ -57,6 +57,7 @@ BEGIN
        SELECT Object_Goods.Id             AS Id
             , Object_Goods.ObjectCode     AS Code
             , zfCalc_Text_replace (Object_Goods.ValueData, CHR (39), '`' ) :: TVarChar AS Name
+            --, Object_Goods.ValueData :: TVarChar AS Name
             , ObjectString_Goods_ShortName.ValueData :: TVarChar AS ShortName
             , COALESCE (zfCalc_Text_replace (ObjectString_Goods_RUS.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_RUS
             , COALESCE (zfCalc_Text_replace (ObjectString_Goods_BUH.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_BUH
