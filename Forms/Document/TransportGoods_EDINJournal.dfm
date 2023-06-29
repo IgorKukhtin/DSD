@@ -603,6 +603,14 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             Options.Editing = False
             Width = 113
           end
+          object CommentError: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072' '#1086#1073#1088#1072#1073#1086#1090#1082#1080
+            DataBinding.FieldName = 'CommentError'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 125
+          end
         end
       end
     end
@@ -950,6 +958,11 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       Result.ComponentItem = 'Uuid'
       Result.DataType = ftString
       Result.MultiSelectSeparator = ','
+      Error.Value = ''
+      Error.Component = FormParams
+      Error.ComponentItem = 'CommentError'
+      Error.DataType = ftString
+      Error.MultiSelectSeparator = ','
       KeyFileName.Value = ''
       KeyFileName.Component = FormParams
       KeyFileName.ComponentItem = 'FileNameKey'
@@ -963,6 +976,7 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
       UpdateUuid = spUpdate_Uuid
+      UpdateError = spUpdate_CommentError
     end
     object actExecSelect_eTTN_Send: TdsdExecStoredProc
       Category = 'Send_ETTN'
@@ -1031,6 +1045,11 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       Result.ComponentItem = 'Uuid'
       Result.DataType = ftString
       Result.MultiSelectSeparator = ','
+      Error.Value = ''
+      Error.Component = FormParams
+      Error.ComponentItem = 'CommentError'
+      Error.DataType = ftString
+      Error.MultiSelectSeparator = ','
       KeyFileName.Value = ''
       KeyFileName.Component = FormParams
       KeyFileName.ComponentItem = 'FileNameKey'
@@ -1044,6 +1063,7 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
       UpdateSign = spUpdate_Sign_Consignor
+      UpdateError = spUpdate_CommentError
       EDINActions = edinSignConsignor
     end
     object mactSignCarrierETTN: TMultiAction
@@ -1091,6 +1111,11 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       Result.ComponentItem = 'Uuid'
       Result.DataType = ftString
       Result.MultiSelectSeparator = ','
+      Error.Value = ''
+      Error.Component = FormParams
+      Error.ComponentItem = 'CommentError'
+      Error.DataType = ftString
+      Error.MultiSelectSeparator = ','
       KeyFileName.Value = ''
       KeyFileName.Component = FormParams
       KeyFileName.ComponentItem = 'FileNameKey'
@@ -1104,6 +1129,7 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
       UpdateSign = spUpdate_Sign_Carrier
+      UpdateError = spUpdate_CommentError
       EDINActions = edinSignCarrier
     end
     object actDialog_TTN: TdsdOpenForm
@@ -1465,6 +1491,12 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CommentError'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -1682,7 +1714,6 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1696,7 +1727,7 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 352
+    Left = 344
     Top = 360
   end
   object spUpdate_Sign_Consignor: TdsdStoredProc
@@ -1709,7 +1740,6 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1783,7 +1813,6 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1845,6 +1874,32 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       end>
     PackSize = 1
     Left = 496
+    Top = 416
+  end
+  object spUpdate_CommentError: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_TransportGoods_CommentError'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCommentError'
+        Value = '2'
+        Component = FormParams
+        ComponentItem = 'CommentError'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 632
     Top = 416
   end
 end

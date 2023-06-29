@@ -312,7 +312,8 @@ BEGIN
                                                   ORDER BY Round(1.0 * tmpMovFact.CountMobile / 
                                                            NullIf(tmpMovFact.CountChech, 0) * 100, 1)::TFloat,
                                                            1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
-                                                           COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1))::Integer AS Place
+                                                           COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 
+                                                           tmpMovFact.QuantityMobile)::Integer AS Place
                           FROM tmpMovPlan AS MovPlan 
                           
                                
@@ -337,16 +338,19 @@ BEGIN
                                                       WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member())),
             tmpSumProcFact AS (SELECT MovPlan.ProcFact 
                                     , MovPlan.ProcPlanFull
+                                    , MovPlan.QuantityMobile
                                     , COUNT(*)          AS CountUser
                                FROM tmpData AS MovPlan 
                                WHERE MovPlan.isNewUser = False AND MovPlan.isShowPlanMobileAppUser = TRUE
                                  AND COALESCE(MovPlan.PenaltiMobApp, 0) > 0
                                GROUP BY MovPlan.ProcFact
-                                      , MovPlan.ProcPlanFull),
+                                      , MovPlan.ProcPlanFull
+                                      , MovPlan.QuantityMobile),
             tmpSumTop AS (SELECT MovPlan.ProcFact
                                , MovPlan.ProcPlanFull
-                               , ROW_NUMBER() OVER (ORDER BY MovPlan.ProcFact, MovPlan.ProcPlanFull)::Integer             AS Place
-                               , SUM(MovPlan.CountUser) OVER (ORDER BY MovPlan.ProcFact, MovPlan.ProcPlanFull)::Integer   AS SumPlace
+                               , MovPlan.QuantityMobile
+                               , ROW_NUMBER() OVER (ORDER BY MovPlan.ProcFact, MovPlan.ProcPlanFull, MovPlan.QuantityMobile)::Integer             AS Place
+                               , SUM(MovPlan.CountUser) OVER (ORDER BY MovPlan.ProcFact, MovPlan.ProcPlanFull, MovPlan.QuantityMobile)::Integer   AS SumPlace
                           FROM tmpSumProcFact AS MovPlan)
             
 
@@ -397,8 +401,9 @@ BEGIN
              
              LEFT JOIN Object AS Object_User ON Object_User.Id = MovPlan.UserId
              
-             LEFT JOIN tmpSumTop ON tmpSumTop.ProcFact     = MovPlan.ProcFact
-                                AND tmpSumTop.ProcPlanFull = MovPlan.ProcPlanFull  
+             LEFT JOIN tmpSumTop ON tmpSumTop.ProcFact       = MovPlan.ProcFact
+                                AND tmpSumTop.ProcPlanFull   = MovPlan.ProcPlanFull  
+                                AND tmpSumTop.QuantityMobile = MovPlan.QuantityMobile  
                                 
         ORDER BY Object_Unit.ValueData , Object_User.ValueData
         ;

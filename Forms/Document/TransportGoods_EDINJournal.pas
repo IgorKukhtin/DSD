@@ -106,6 +106,8 @@ type
     OKPO_To: TcxGridDBColumn;
     DriverINN: TcxGridDBColumn;
     DriverCertificate: TcxGridDBColumn;
+    spUpdate_CommentError: TdsdStoredProc;
+    CommentError: TcxGridDBColumn;
   private
     { Private declarations }
   public

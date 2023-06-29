@@ -119,7 +119,7 @@ const
 
   cSQLUpdateDateSnapshot = 'UPDATE _replica.BranchService_Settings SET DateSnapshot = :Date;';
   cSQLUpdateDateEqualization = 'UPDATE _replica.BranchService_Settings SET DateEqualization = :Date, EqualizationLastId = 0;';
-  cSQLUpdateDateSendDocument = 'UPDATE _replica.BranchService_Settings SET DateSendDocument = :Date, SendLastId = 0;';
+  cSQLUpdateDateSend = 'UPDATE _replica.BranchService_Settings SET DateSend = :Date, SendLastId = 0;';
   cSQLUpdateReplServer  = 'UPDATE _replica.BranchService_Settings SET ReplServerId = :ReplServerId;';
   cSQLUpdateRecordStep  = 'UPDATE _replica.BranchService_Settings SET RecordStep = :RecordStep;';
   cSQLUpdateOffsetTimeEnd  = 'UPDATE _replica.BranchService_Settings SET OffsetTimeEnd = :OffsetTimeEnd;';
