@@ -37,8 +37,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = 40
-      ExplicitTop = 11
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -161,6 +159,14 @@
           Options.Editing = False
           Width = 189
         end
+        object ModelName: TcxGridDBColumn
+          Caption = #1052#1086#1076#1077#1083#1100
+          DataBinding.FieldName = 'ModelName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 70
+        end
         object ColorPatternName: TcxGridDBColumn
           Caption = #1064#1072#1073#1083#1086#1085' Boat Structure '
           DataBinding.FieldName = 'ColorPatternName'
@@ -267,6 +273,52 @@
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 164
+        end
+        object Article_group: TcxGridDBColumn
+          Caption = '***Artikel Nr'
+          DataBinding.FieldName = 'Article_group'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = '***'#1041#1072#1079#1086#1074#1072#1103' '#1089#1073#1086#1088#1082#1072
+          Width = 80
+        end
+        object GoodsCode_group: TcxGridDBColumn
+          Caption = '***Interne Nr'
+          DataBinding.FieldName = 'GoodsCode_group'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = '***'#1041#1072#1079#1086#1074#1072#1103' '#1089#1073#1086#1088#1082#1072
+          Width = 70
+        end
+        object GoodsName_group: TcxGridDBColumn
+          Caption = '***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+          DataBinding.FieldName = 'GoodsName_group'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = '***'#1041#1072#1079#1086#1074#1072#1103' '#1089#1073#1086#1088#1082#1072
+          Width = 120
         end
         object ProdColorName: TcxGridDBColumn
           Caption = 'Farbe ('#1050#1086#1084#1087#1083'.)'
@@ -4171,8 +4223,8 @@
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 1012
-    Top = 89
+    Left = 1044
+    Top = 113
   end
   object PrintItemsColorCDS: TClientDataSet
     Aggregates = <>

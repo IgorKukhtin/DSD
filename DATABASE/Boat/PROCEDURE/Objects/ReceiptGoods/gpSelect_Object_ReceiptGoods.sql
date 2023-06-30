@@ -10,7 +10,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UserCode TVarChar, Comment TVarChar
              , isMain Boolean
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_all TVarChar
+             , GoodsId_group Integer, GoodsCode_group Integer, GoodsName_group TVarChar, Article_group TVarChar
+
              , ColorPatternId Integer, ColorPatternName TVarChar
+             , ModelId Integer, ModelName TVarChar
              , MaterialOptionsName TVarChar, ProdColorName_pcp TVarChar
              , UnitId Integer, UnitName TVarChar
 
@@ -161,8 +164,10 @@ BEGIN
                               WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
                                AND (Object_ReceiptGoods.isErased = FALSE OR inIsErased = TRUE)
                              )
+           -- поиск "аналогов"
          , tmpReceiptProdModel AS (SELECT DISTINCT ObjectLink_Object.ChildObjectId                 AS GoodsId
                                                  , ObjectLink_ReceiptProdModel_Model.ChildObjectId AS ModelId
+                                                 , ObjectString_Goods_Comment.ValueData            AS Comment
                                    FROM Object AS Object_ReceiptProdModelChild
                                         LEFT JOIN ObjectLink AS ObjectLink_Object
                                                              ON ObjectLink_Object.ObjectId = Object_ReceiptProdModelChild.Id
@@ -176,6 +181,9 @@ BEGIN
                                         LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModel_Model
                                                              ON ObjectLink_ReceiptProdModel_Model.ObjectId = Object_ReceiptProdModel.Id
                                                             AND ObjectLink_ReceiptProdModel_Model.DescId   = zc_ObjectLink_ReceiptProdModel_Model()
+                                        LEFT JOIN ObjectString AS ObjectString_Goods_Comment
+                                                               ON ObjectString_Goods_Comment.ObjectId = ObjectLink_Object.ChildObjectId
+                                                              AND ObjectString_Goods_Comment.DescId   = zc_ObjectString_Goods_Comment()
                                    WHERE Object_ReceiptProdModelChild.DescId   = zc_Object_ReceiptProdModelChild()
                                      AND Object_ReceiptProdModelChild.isErased = FALSE
                                   )
@@ -193,9 +201,16 @@ BEGIN
          , Object_Goods.ObjectCode ::Integer  AS GoodsCode
          , Object_Goods.ValueData  ::TVarChar AS GoodsName
          , zfCalc_GoodsName_all (ObjectString_Article.ValueData, Object_Goods.ValueData) ::TVarChar AS GoodsName_all
+         
+         , Object_Goods_group.Id                AS GoodsId_group
+         , Object_Goods_group.ObjectCode        AS GoodsCode_group
+         , Object_Goods_group.ValueData         AS GoodsName_group
+         , ObjectString_Article_group.ValueData AS Article_group
 
          , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
          , Object_ColorPattern.ValueData      ::TVarChar AS ColorPatternName
+         , Object_Model.Id                    ::Integer  AS ModelId
+         , Object_Model.ValueData             ::TVarChar AS ModelName
 
          , tmpMaterialOptions.MaterialOptionsName :: TVarChar AS MaterialOptionsName
        --, COALESCE (tmpProdColorPattern.ProdColorName, tmpProdColorPattern_next.ProdColorName, tmpProdColorPattern_next_all.ProdColorName) :: TVarChar AS ProdColorName_pcp
@@ -251,6 +266,11 @@ BEGIN
                                ON ObjectLink_ColorPattern.ObjectId = Object_ReceiptGoods.Id
                               AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ReceiptGoods_ColorPattern()
           LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern_Model
+                               ON ObjectLink_ColorPattern_Model.ObjectId = Object_ColorPattern.Id
+                              AND ObjectLink_ColorPattern_Model.DescId   = zc_ObjectLink_ColorPattern_Model()
+          LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_ColorPattern_Model.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Unit
                                ON ObjectLink_Unit.ObjectId = Object_ReceiptGoods.Id
@@ -350,6 +370,15 @@ BEGIN
                      GROUP BY tmpReceiptGoodsChild_ProdColorPattern.ReceiptGoodsId
                     ) AS tmpProdColorPattern_next_all
                       ON tmpProdColorPattern_next_all.ReceiptGoodsId = Object_ReceiptGoods.Id
+
+           -- поиск "аналогов"
+          LEFT JOIN tmpReceiptProdModel ON tmpReceiptProdModel.ModelId = Object_Model.Id
+                                       AND tmpReceiptProdModel.Comment = ObjectString_Goods_Comment.ValueData
+                                       AND ObjectString_Goods_Comment.ValueData <> ''
+          LEFT JOIN Object AS Object_Goods_group ON Object_Goods_group.Id = tmpReceiptProdModel.GoodsId
+          LEFT JOIN ObjectString AS ObjectString_Article_group
+                                 ON ObjectString_Article_group.ObjectId = Object_Goods_group.Id
+                                AND ObjectString_Article_group.DescId   = zc_ObjectString_Article()
 
      WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
       AND (Object_ReceiptGoods.isErased = FALSE OR inIsErased = TRUE)

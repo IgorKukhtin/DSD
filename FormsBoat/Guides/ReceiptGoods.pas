@@ -248,6 +248,10 @@ type
     GuidesReceiptGoods1: TdsdGuides;
     cxLabel15: TcxLabel;
     cxButtonEdit1: TcxButtonEdit;
+    ModelName: TcxGridDBColumn;
+    GoodsCode_group: TcxGridDBColumn;
+    GoodsName_group: TcxGridDBColumn;
+    Article_group: TcxGridDBColumn;
   private
     { Private declarations }
   public
