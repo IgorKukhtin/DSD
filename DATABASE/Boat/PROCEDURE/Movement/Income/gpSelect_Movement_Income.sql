@@ -261,4 +261,4 @@ $BODY$
 */
 
 -- тест
---  SELECT * FROM gpSelect_Movement_Income (inStartDate:= '01.01.2023', inEndDate:= '31.12.2023', inIsErased := FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Income (inStartDate:= '01.01.2023', inEndDate:= '31.12.2023', inIsErased := FALSE, inSession:= zfCalc_UserAdmin())

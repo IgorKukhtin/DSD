@@ -52,6 +52,13 @@ BEGIN
      DELETE FROM _tmpReserveRes;
 
 
+     -- проверка
+     IF NOT EXISTS (SELECT 1 FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_InvNumberInvoice())
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе не устновлено значение <Номер Счета>.';
+     END IF;
+
+
      -- Параметр из документа
      vbPartnerId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
 

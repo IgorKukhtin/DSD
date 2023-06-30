@@ -292,13 +292,22 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 56
       end
-      object InvNumberPartner: TcxGridDBColumn
-        Caption = 'External Nr'
-        DataBinding.FieldName = 'InvNumberPartner'
-        Visible = False
+      object InvNumberInvoice: TcxGridDBColumn
+        Caption = #8470' '#1057#1095#1077#1090#1072
+        DataBinding.FieldName = 'InvNumberInvoice'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Options.Editing = False
+        Width = 70
+      end
+      object InvNumberPack: TcxGridDBColumn
+        Caption = #8470' '#1059#1087#1072#1082'. '#1083#1080#1089#1090#1072
+        DataBinding.FieldName = 'InvNumberPack'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #8470' '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1086#1075#1086' '#1083#1080#1089#1090#1072
+        Options.Editing = False
+        Width = 75
       end
       object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
@@ -315,23 +324,13 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object InvNumberInvoice: TcxGridDBColumn
-        Caption = #8470' '#1057#1095#1077#1090#1072
-        DataBinding.FieldName = 'InvNumberInvoice'
+      object InvNumberPartner: TcxGridDBColumn
+        Caption = 'External Nr'
+        DataBinding.FieldName = 'InvNumberPartner'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
-        Options.Editing = False
-        Width = 70
-      end
-      object InvNumberPack: TcxGridDBColumn
-        Caption = #8470' '#1059#1087'. '#1083#1080#1089#1090#1072
-        DataBinding.FieldName = 'InvNumberPack'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1053#1086#1084#1077#1088' '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1086#1075#1086' '#1083#1080#1089#1090#1072
-        Options.Editing = False
-        Width = 75
+        Width = 55
       end
       object FromName: TcxGridDBColumn
         Caption = 'Lieferanten'
@@ -340,6 +339,24 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1054#1090' '#1082#1086#1075#1086
         Width = 91
+      end
+      object VATPercent: TcxGridDBColumn
+        Caption = '% '#1053#1044#1057
+        DataBinding.FieldName = 'VATPercent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 42
+      end
+      object PriceWithVAT: TcxGridDBColumn
+        Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'PriceWithVAT'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object TaxKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1053#1044#1057
@@ -350,7 +367,7 @@ object IncomeJournalForm: TIncomeJournalForm
         Width = 70
       end
       object TaxKindName_info: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1053#1044#1057' (info)'
+        Caption = #1058#1080#1087' '#1053#1044#1057' ('#1086#1087#1080#1089#1072#1085#1080#1077')'
         DataBinding.FieldName = 'TaxKindName_info'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -514,24 +531,6 @@ object IncomeJournalForm: TIncomeJournalForm
           #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' '#1073#1077#1079' '#1053#1044#1057' ('#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1088#1072#1089#1093#1086#1076#1086#1074' '#1080' '#1089#1082#1080#1076#1086 +
           #1082')'
         Width = 80
-      end
-      object PriceWithVAT: TcxGridDBColumn
-        Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-        DataBinding.FieldName = 'PriceWithVAT'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object VATPercent: TcxGridDBColumn
-        Caption = '% '#1053#1044#1057
-        DataBinding.FieldName = 'VATPercent'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 42
       end
       object TotalSummPVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057

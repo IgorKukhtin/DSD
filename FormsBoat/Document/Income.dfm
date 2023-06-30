@@ -25,13 +25,12 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1027
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 70
+      Width = 62
     end
     object cxLabel1: TcxLabel
       Left = 9
@@ -39,16 +38,16 @@ object IncomeForm: TIncomeForm
       Caption = 'Interne Nr'
     end
     object edOperDate: TcxDateEdit
-      Left = 171
+      Left = 79
       Top = 23
       EditValue = 42160d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 94
+      Width = 87
     end
     object cxLabel2: TcxLabel
-      Left = 171
+      Left = 79
       Top = 5
       Caption = #1044#1072#1090#1072
     end
@@ -107,32 +106,32 @@ object IncomeForm: TIncomeForm
       Width = 40
     end
     object cxLabel5: TcxLabel
-      Left = 85
-      Top = 5
+      Left = 860
+      Top = 96
       Caption = 'External Nr'
     end
     object cxLabel6: TcxLabel
-      Left = 171
-      Top = 45
+      Left = 860
+      Top = 119
       Hint = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
       Caption = 'External Dt'
       ParentShowHint = False
       ShowHint = True
     end
     object edOperDatePartner: TcxDateEdit
-      Left = 171
-      Top = 63
+      Left = 924
+      Top = 118
       EditValue = 44235d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 5
-      Width = 94
+      Width = 100
     end
     object edInvNumberPartner: TcxTextEdit
-      Left = 85
-      Top = 23
+      Left = 924
+      Top = 95
       TabOrder = 4
-      Width = 81
+      Width = 100
     end
     object cxLabel7: TcxLabel
       Left = 404
@@ -382,8 +381,8 @@ object IncomeForm: TIncomeForm
       Width = 70
     end
     object cbPrice: TcxCheckBox
-      Left = 968
-      Top = 168
+      Left = 868
+      Top = 163
       Hint = '1. '#1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
       Caption = '1. '#1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' ('#1044#1072'/ '#1053#1077#1090')'
       TabOrder = 43
@@ -502,24 +501,26 @@ object IncomeForm: TIncomeForm
       Width = 138
     end
     object cxLabel27: TcxLabel
-      Left = 860
-      Top = 90
-      Caption = 'InvNumberPack'
+      Left = 175
+      Top = 45
+      Hint = #8470' '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1086#1075#1086' '#1083#1080#1089#1090#1072
+      Caption = #8470' '#1059#1087#1072#1082'. '#1083#1080#1089#1090#1072
     end
     object edInvNumberPack: TcxTextEdit
-      Left = 860
-      Top = 107
+      Left = 175
+      Top = 63
       TabOrder = 56
       Width = 90
     end
     object cxLabel28: TcxLabel
-      Left = 860
-      Top = 131
-      Caption = 'InvNumberInvoice'
+      Left = 175
+      Top = 5
+      Hint = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
+      Caption = #8470' '#1057#1095#1077#1090#1072
     end
     object edInvNumberInvoice: TcxTextEdit
-      Left = 860
-      Top = 149
+      Left = 175
+      Top = 23
       TabOrder = 58
       Width = 90
     end
@@ -533,14 +534,12 @@ object IncomeForm: TIncomeForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1027
     ClientRectBottom = 346
     ClientRectRight = 1051
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1027
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -548,7 +547,6 @@ object IncomeForm: TIncomeForm
         Height = 169
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1027
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1044,7 +1042,6 @@ object IncomeForm: TIncomeForm
         LookAndFeel.Kind = lfStandard
         LookAndFeel.NativeStyle = False
         LookAndFeel.SkinName = ''
-        ExplicitWidth = 1027
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1229,7 +1226,6 @@ object IncomeForm: TIncomeForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitWidth = 1027
       end
     end
     object cxTabSheetCost: TcxTabSheet
@@ -3652,6 +3648,12 @@ object IncomeForm: TIncomeForm
         Control = edInvNumber
       end
       item
+        Control = edInvNumberInvoice
+      end
+      item
+        Control = edInvNumberPack
+      end
+      item
         Control = edInvNumberPartner
       end
       item
@@ -3677,22 +3679,6 @@ object IncomeForm: TIncomeForm
       end
       item
         Control = ceComment
-      end
-      item
-        Control = edInvNumberInvoice
-      end
-      item
-        Control = edInvNumberPack
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
       end>
     GetStoredProc = spGet
     Left = 792
@@ -4061,8 +4047,8 @@ object IncomeForm: TIncomeForm
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 39
-    Top = 40
+    Left = 23
+    Top = 48
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Income'

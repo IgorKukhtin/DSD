@@ -1,9 +1,5 @@
 -- Function: gpInsertUpdate_Movement_Income()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
---DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
