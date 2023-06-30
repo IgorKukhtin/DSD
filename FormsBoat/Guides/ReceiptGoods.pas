@@ -245,6 +245,9 @@ type
     macInsertUpDate_Child_bySend: TMultiAction;
     spInsertUpDate_Child_bySend: TdsdStoredProc;
     bbInsertUpDate_Child_bySend: TdxBarButton;
+    GuidesReceiptGoods1: TdsdGuides;
+    cxLabel15: TcxLabel;
+    cxButtonEdit1: TcxButtonEdit;
   private
     { Private declarations }
   public

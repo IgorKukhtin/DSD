@@ -37,6 +37,8 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitLeft = 40
+      ExplicitTop = 11
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -1451,12 +1453,12 @@
       Width = 181
     end
     object cxLabel4: TcxLabel
-      Left = 720
+      Left = 935
       Top = 8
       Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080
     end
     object edUnit: TcxButtonEdit
-      Left = 799
+      Left = 1010
       Top = 7
       Properties.Buttons = <
         item
@@ -1465,7 +1467,26 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 273
+      Width = 186
+    end
+    object cxLabel15: TcxLabel
+      Left = 630
+      Top = 8
+      Caption = #1057#1073#1086#1088#1082#1072' '#1059#1079#1077#1083'-1:'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object cxButtonEdit1: TcxButtonEdit
+      Left = 711
+      Top = 7
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 218
     end
   end
   object DataSource: TDataSource
@@ -4366,5 +4387,32 @@
     PackSize = 1
     Left = 526
     Top = 343
+  end
+  object GuidesReceiptGoods1: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edReceiptGoods
+    FormNameParam.Value = 'TReceiptGoodsChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TReceiptGoodsChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'ObjectId'
+        Value = ''
+        Component = GuidesReceiptGoods1
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectName'
+        Value = ''
+        Component = GuidesReceiptGoods1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 784
+    Top = 65528
   end
 end
