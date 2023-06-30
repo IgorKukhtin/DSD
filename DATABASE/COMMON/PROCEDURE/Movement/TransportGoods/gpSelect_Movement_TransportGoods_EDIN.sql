@@ -44,6 +44,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              
              , isSend_eTTN Boolean
              , Uuid TVarChar
+             , CommentError TVarChar
              
              , PlaceOf TVarChar
              
@@ -148,6 +149,7 @@ BEGIN
            
            , (COALESCE(MovementString_Uuid.ValueData, '') <> '')::Boolean AS isSend_eTTN
            , MovementString_Uuid.ValueData             AS Uuid
+           , MovementString_CommentError.ValueData     AS CommentError
            
            , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '')
                   ELSE '' -- 'м.ƒнiпро'
@@ -200,6 +202,9 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Uuid
                                      ON MovementString_Uuid.MovementId =  Movement.Id
                                     AND MovementString_Uuid.DescId = zc_MovementString_Uuid()
+            LEFT JOIN MovementString AS MovementString_CommentError
+                                     ON MovementString_CommentError.MovementId =  Movement.Id
+                                    AND MovementString_CommentError.DescId = zc_MovementString_CommentError()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                          ON MovementLinkObject_Route.MovementId = Movement.Id

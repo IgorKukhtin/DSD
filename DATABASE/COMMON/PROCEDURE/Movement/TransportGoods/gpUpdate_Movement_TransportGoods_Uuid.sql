@@ -18,6 +18,9 @@ BEGIN
      -- сохранили Ідентифікатор документа, у «Електронної товарно-транспортної накладної» (е-ТТН)
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Uuid(), inMovementId, inUuid);
 
+     -- очистили Текст ошибки
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentError(), inMovementId, '');
+
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);
 

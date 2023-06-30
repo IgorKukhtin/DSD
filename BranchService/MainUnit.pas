@@ -64,7 +64,7 @@ type
     cxLabel2: TcxLabel;
     cxLabel3: TcxLabel;
     deDateSnapshot: TcxDateEdit;
-    deDateSendDocument: TcxDateEdit;
+    deDateSend: TcxDateEdit;
     deDateEqualization: TcxDateEdit;
     btnIndex: TButton;
     Panel1: TPanel;
@@ -150,7 +150,7 @@ type
       var AllowChange: Boolean);
     procedure btnReserveIdClick(Sender: TObject);
     procedure deDateEqualizationExit(Sender: TObject);
-    procedure deDateSendDocumentExit(Sender: TObject);
+    procedure deDateSendExit(Sender: TObject);
     procedure deDateSnapshotExit(Sender: TObject);
     procedure btnUpdateDataLogClick(Sender: TObject);
     procedure btnlInfoEqualizationViewClick(Sender: TObject);
@@ -164,7 +164,7 @@ type
     { Private declarations }
 
     FDateSnapshot : Variant;
-    FDateSendDocument : Variant;
+    FDateSend : Variant;
     FDateEqualization : Variant;
     FRecordStep : Integer;
     FOffsetTimeEnd : Integer;
@@ -336,7 +336,7 @@ begin
 
     // Создаем (обновляем) Table_Equalization_ObjectId
     ZQueryExecute.Close;
-    ZQueryExecute.SQL.Text := LiadScripts(cSQLTable_Equalization_ObjectId);
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLTable_Equalization_Id);
     ZQueryExecute.ExecSQL;
 
     // Создаем (обновляем) gpBranchService_EqualizationPrepareId
@@ -550,7 +550,7 @@ begin
     ZQueryExecute.SQL.Text := LiadScripts(cSQLSPGet_MovementId);
     ZQueryExecute.ExecSQL;
 
-    // Создаем функцию с переметрами подключения е базе
+    // Создаем функцию с пареметрами подключения е базе
     ZQueryExecute.Close;
     ZQueryExecute.SQL.Text := Format(LiadScripts(cSQLSPMasterConnect),
         [edtMasterServer.Text, edtMasterDatabase.Text, edtMasterPort.Text, edtMasterUser.Text,
@@ -565,6 +565,11 @@ begin
     // Создаем (обновляем) gpBranchService_ReserveAllId
     ZQueryExecute.Close;
     ZQueryExecute.SQL.Text := LiadScripts(cSQLSReserveAllId);
+    ZQueryExecute.ExecSQL;
+
+    // Создаем (обновляем) cSQLTable_Send_Id
+    ZQueryExecute.Close;
+    ZQueryExecute.SQL.Text := LiadScripts(cSQLTable_Send_Id);
     ZQueryExecute.ExecSQL;
 
     // Создаем функцию для получения изменений
@@ -812,9 +817,9 @@ begin
   end;
 end;
 
-procedure TMainForm.deDateSendDocumentExit(Sender: TObject);
+procedure TMainForm.deDateSendExit(Sender: TObject);
 begin
-  if deDateSendDocument.EditValue <> FDateSendDocument then
+  if deDateSend.EditValue <> FDateSend then
   begin
     if not CheckDB then Exit;
     try
@@ -825,8 +830,8 @@ begin
        ZQueryExecute.ExecSQL;
 
        ZQuery.Close;
-       ZQuery.SQL.Text := cSQLUpdateDateSendDocument;
-       ZQuery.ParamByName('Date').Value := deDateSendDocument.EditValue;
+       ZQuery.SQL.Text := cSQLUpdateDateSend;
+       ZQuery.ParamByName('Date').Value := deDateSend.EditValue;
        ZQuery.ExecSQL;
 
        ReadInfo;
@@ -1418,7 +1423,7 @@ begin
     btnlInfoEqualizationView.Enabled := False;
 
     deDateSnapshot.Enabled := False;
-    deDateSendDocument.Enabled := False;
+    deDateSend.Enabled := False;
     deDateEqualization.Enabled := False;
 
     TimerEqualization.Enabled := True;
@@ -1496,8 +1501,8 @@ begin
         FDateSnapshot := ZQuery.FieldByName('DateSnapshot').AsVariant;
         deDateSnapshot.EditValue :=  ZQuery.FieldByName('DateSnapshot').AsVariant;
 
-        FDateSendDocument := ZQuery.FieldByName('DateSendDocument').AsVariant;
-        deDateSendDocument.EditValue :=  ZQuery.FieldByName('DateSendDocument').AsVariant;
+        FDateSend := ZQuery.FieldByName('DateSend').AsVariant;
+        deDateSend.EditValue :=  ZQuery.FieldByName('DateSend').AsVariant;
 
         FDateEqualization := ZQuery.FieldByName('DateEqualization').AsVariant;
         deDateEqualization.EditValue :=  ZQuery.FieldByName('DateEqualization').AsVariant;

@@ -109,6 +109,9 @@ BEGIN
       
       -- сохранили свойство <Дата подписи>
       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_SignConsignor(), inMovementId, CURRENT_TIMESTAMP);
+
+      -- очистили Текст ошибки
+      PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentError(), inMovementId, '');
     
     ELSEIF COALESCE (inSignId, 0) = 2
     THEN 
@@ -118,6 +121,9 @@ BEGIN
       
       -- сохранили свойство <Дата подписи>
       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_SignCarrier(), inMovementId, CURRENT_TIMESTAMP);
+
+      -- очистили Текст ошибки
+      PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentError(), inMovementId, '');
     
     ELSE
       RAISE EXCEPTION 'Ошибка. Не описан тип подписи для сохранения сотрудника.';

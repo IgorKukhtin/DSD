@@ -234,12 +234,14 @@ type
     FResultParam: TdsdParam;
     FKeyFileNameParam: TdsdParam;
     FKeyUserNameParam: TdsdParam;
+    FErrorParam: TdsdParam;
 
     FHeaderDataSet: TDataSet;
     FListDataSet: TDataSet;
 
     FUpdateUuid: TdsdStoredProc;
     FUpdateSign: TdsdStoredProc;
+    FUpdateError: TdsdStoredProc;
 
     FEDINActions : TEDINActionsType;
 
@@ -255,6 +257,7 @@ type
     function DoSendETTN: Boolean;
     function DoSignDcuETTN: Boolean;
     function LocalExecute: Boolean; override;
+    function ShowError(AError : String): Boolean;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -271,6 +274,7 @@ type
     property Password: TdsdParam read FPasswordParam write FPasswordParam;
     property Token: TdsdParam read FTokenParam write FTokenParam;
     property Result: TdsdParam read FResultParam write FResultParam;
+    property Error: TdsdParam read FErrorParam write FErrorParam;
 
     property KeyFileName: TdsdParam read FKeyFileNameParam write FKeyFileNameParam;
     property KeyUserName: TdsdParam read FKeyUserNameParam write FKeyUserNameParam;
@@ -280,6 +284,7 @@ type
 
     property UpdateUuid: TdsdStoredProc read FUpdateUuid write FUpdateUuid;
     property UpdateSign: TdsdStoredProc read FUpdateSign write FUpdateSign;
+    property UpdateError: TdsdStoredProc read FUpdateError write FUpdateError;
 
     property EDINActions : TEDINActionsType read FEDINActions write FEDINActions default edinSendETTN;
 
@@ -5535,6 +5540,10 @@ begin
   FKeyUserNameParam.DataType := ftString;
   FKeyUserNameParam.Value := '';
 
+  FErrorParam := TdsdParam.Create(nil);
+  FErrorParam.DataType := ftString;
+  FErrorParam.Value := '';
+
   FEDINActions:= edinSendETTN;
 end;
 
@@ -5547,7 +5556,16 @@ begin
   FreeAndNil(FResultParam);
   FreeAndNil(FKeyFileNameParam);
   FreeAndNil(FKeyUserNameParam);
+  FreeAndNil(FErrorParam);
   inherited;
+end;
+
+function TdsdEDINAction.ShowError(AError : String): Boolean;
+begin
+  FErrorParam.Value := AError;
+  if Assigned(FUpdateError) then FUpdateError.Execute;
+
+  raise Exception.Create(AError);
 end;
 
 procedure TdsdEDINAction.UAECMREDI(var AXML: String);
@@ -5563,7 +5581,7 @@ begin
        (HeaderDataSet.FieldByName('GLN_to').asString = '') or
        (HeaderDataSet.FieldByName('GLN_Unloading').asString = '') or
        (HeaderDataSet.FieldByName('GLN_Driver').asString = '') then
-       raise Exception.Create(Format('Не заполнено GLN для Перевізник <%s>, Замовник <%s>, Вантажоодержувач <%s>, Пункт розвантаження <%s>, Водій <%s>',
+       ShowError(Format('Не заполнено GLN для Перевізник <%s>, Замовник <%s>, Вантажоодержувач <%s>, Пункт розвантаження <%s>, Водій <%s>',
              [HeaderDataSet.FieldByName('GLN_car').asString,
               HeaderDataSet.FieldByName('GLN_from').asString,
               HeaderDataSet.FieldByName('GLN_to').asString,
@@ -5572,7 +5590,7 @@ begin
 
     if (HeaderDataSet.FieldByName('KATOTTG_Unit').asString = '') or
        (HeaderDataSet.FieldByName('KATOTTG_Unloading').asString = '') then
-       raise Exception.Create(Format('Не заполнено КАТОТТГ для Пункт навантаження <%s>, Пункт розвантаження <%s>',
+       ShowError(Format('Не заполнено КАТОТТГ для Пункт навантаження <%s>, Пункт розвантаження <%s>',
              [HeaderDataSet.FieldByName('KATOTTG_Unit').asString,
               HeaderDataSet.FieldByName('KATOTTG_Unloading').asString]));
 
@@ -5857,19 +5875,19 @@ begin
     apath := 'c:\Program Files\Institute of Informational Technologies\Certificate Authority-1.3\End User\';
     if not FileExists(apath + String(EUDLLName)) then
     begin
-      raise Exception.Create('Ошибка Не найден файл библиотеки подписи: ' + EUDLLName);
+      ShowError('Ошибка Не найден файл библиотеки подписи: ' + EUDLLName);
     end;
   end;
 
   if not EULoadDLL(apath) then
   begin
-    raise Exception.Create('Ошибка Не загружена библиотеки подписи: ' + EUDLLName);
+    ShowError('Ошибка Не загружена библиотеки подписи: ' + EUDLLName);
   end;
   CPInterface := EUGetInterface();
   if CPInterface = nil then
   begin
     EUUnloadDLL();
-    raise Exception.Create('Ошибка Не загружена библиотеки подписи: ' + EUDLLName);
+    ShowError('Ошибка Не загружена библиотеки подписи: ' + EUDLLName);
   end;
   CPInterface.SetUIMode(false);
   EUInitializeOwnUI(CPInterface, true);
@@ -5878,7 +5896,7 @@ begin
     nError := CPInterface.Initialize();
     if nError <> EU_ERROR_NONE then
     begin
-      raise Exception.Create('Ошибка Инициализации библиотеки подписи: ' + EUDLLName);
+      ShowError('Ошибка Инициализации библиотеки подписи: ' + EUDLLName);
     end;
     if ShiftDown then
     begin
@@ -5893,7 +5911,7 @@ begin
     except
       on E: Exception do
       begin
-        raise Exception.Create('Ошибка В библиотеке подписи: ' + E.Message);
+        ShowError('Ошибка В библиотеке подписи: ' + E.Message);
       end;
     end;
 
@@ -5905,21 +5923,21 @@ begin
            else FileName := AnsiString(ExtractFilePath(ParamStr(0)) + UserSign)
       else FileName := AnsiString(ExtractFilePath(ParamStr(0)) + '24447183_2992217209_SU211210105333.ZS2');
       // проверка
-      if not FileExists(String(FileName)) then raise Exception.Create('Файл не найден : <'+String(FileName)+'>');
+      if not FileExists(String(FileName)) then ShowError('Файл не найден : <'+String(FileName)+'>');
 
       FKeyFileNameParam.Value := ExtractFileName(String(FileName));
 
       nError := CPInterface.ReadPrivateKeyFile (PAnsiChar(FileName), PAnsiChar('24447183'), @CertOwnerInfo); // бухгалтер
       if nError <> EU_ERROR_NONE then
       begin
-        raise Exception.Create('Ошибка В библиотеке при загрузке электронного ключа: ' + CPInterface.GetErrorDesc(nError));
+        ShowError('Ошибка В библиотеке при загрузке электронного ключа: ' + CPInterface.GetErrorDesc(nError));
       end;
 
       FKeyUserNameParam.Value := String(CertOwnerInfo.SubjectFullName);
     except
       on E: Exception do
       begin
-        raise Exception.Create('Ошибка В библиотеке при загрузке электронного ключа:' + E.Message);
+        ShowError('Ошибка В библиотеке при загрузке электронного ключа:' + E.Message);
       end;
     end;
 
@@ -5927,17 +5945,17 @@ begin
       // 2.Неарспедственно подпись
       FileName := AnsiString(ExtractFilePath(ParamStr(0)) + FResultParam.Value);
       // проверка
-      if not FileExists(String(FileName)) then raise Exception.Create('Файл tTTN не найден : <'+String(FileName)+'>');
+      if not FileExists(String(FileName)) then ShowError('Файл tTTN не найден : <'+String(FileName)+'>');
 
       nError := CPInterface.SignFile(PAnsiChar(FileName), PAnsiChar(FileName + '.p7s'), True);
       if nError <> EU_ERROR_NONE then
       begin
-        raise Exception.Create('Ошибка В библиотеке при надожении подписи: ' + CPInterface.GetErrorDesc(nError));
+        ShowError('Ошибка В библиотеке при надожении подписи: ' + CPInterface.GetErrorDesc(nError));
       end;
     except
       on E: Exception do
       begin
-        raise Exception.Create('Ошибка В библиотеке при надожении подписи:' + E.Message);
+        ShowError('Ошибка В библиотеке при надожении подписи:' + E.Message);
       end;
     end;
 
@@ -6153,7 +6171,7 @@ begin
     case FEDINActions of
       edinSignConsignor : Params := Params + '&role_code=CZ';
       edinSignCarrier  : Params := Params + '&role_code=CA';
-    else raise Exception.Create('Не описана роль пдписи eTTN.');
+    else ShowError('Не описана роль пдписи eTTN.');
     end;
 
     Params := Params + '&doc_uuid=' + AUuId;
@@ -6211,15 +6229,15 @@ begin
   Result := False;
 
   if (HeaderDataSet.FieldByName('UuId').asString = '') then
-     raise Exception.Create('ТТН не отправлена. Подпись невозиожна.');
+     ShowError('ТТН не отправлена. Подпись невозиожна.');
 
     case FEDINActions of
       edinSignConsignor : GLN_Sign := HeaderDataSet.FieldByName('GLN_from').asString;
       edinSignCarrier  : GLN_Sign := HeaderDataSet.FieldByName('GLN_car').asString;
-    else raise Exception.Create('Не описана роль пдписи eTTN.');
+    else ShowError('Не описана роль пдписи eTTN.');
     end;
 
-  if GLN_Sign = '' then raise Exception.Create('Не заполнено GLN подписанта.');
+  if GLN_Sign = '' then ShowError('Не заполнено GLN подписанта.');
 
   if not GetToken then Exit;
 
@@ -6253,7 +6271,7 @@ begin
     edinSendETTN : Result := DoSendETTN;
     edinSignConsignor, edinSignCarrier  : Result := DoSignDcuETTN;
 
-  else raise Exception.Create('Не описано метод обработки типа документов.');
+  else ShowError('Не описано метод обработки типа документов.');
   end;
 
 end;

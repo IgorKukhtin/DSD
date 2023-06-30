@@ -78,7 +78,7 @@ const
   cSQLBranchService_Table_Equalization = '\SQL_Slave\BranchService_Table_Equalization.sql';
 
   // На мастере
-  cSQLTable_Equalization_ObjectId = '\SQL_Master\BranchService_Equalization_Id.sql';
+  cSQLTable_Equalization_Id = '\SQL_Master\BranchService_Equalization_Id.sql';
   cSQLEqualizationPrepareId = '\SQL_Master\gpBranchService_EqualizationPrepareId.sql';
   cSQLEqualizationForMovement = '\SQL_Master\BranchService_DescId_ForMovement.sql';
 
@@ -92,6 +92,7 @@ const
                                             'END $$;';
 
   // На слейве
+  cSQLTable_Send_Id = '\SQL_Master\BranchService_Send_Id.sql';
   cSQLpg_get_tabledef  = '\SQL_Master\pg_get_tabledef.sql';
   cSQLSPMasterConnect  = '\SQL_Slave\gpBranchService_Select_MasterConnectParams.sql';
   cSQLSPNewTable       = '\SQL_Slave\gpBranchService_Create_NewTable.sql';
@@ -119,7 +120,7 @@ const
 
   cSQLUpdateDateSnapshot = 'UPDATE _replica.BranchService_Settings SET DateSnapshot = :Date;';
   cSQLUpdateDateEqualization = 'UPDATE _replica.BranchService_Settings SET DateEqualization = :Date, EqualizationLastId = 0;';
-  cSQLUpdateDateSendDocument = 'UPDATE _replica.BranchService_Settings SET DateSendDocument = :Date, SendLastId = 0;';
+  cSQLUpdateDateSend = 'UPDATE _replica.BranchService_Settings SET DateSend = :Date, SendLastId = 0;';
   cSQLUpdateReplServer  = 'UPDATE _replica.BranchService_Settings SET ReplServerId = :ReplServerId;';
   cSQLUpdateRecordStep  = 'UPDATE _replica.BranchService_Settings SET RecordStep = :RecordStep;';
   cSQLUpdateOffsetTimeEnd  = 'UPDATE _replica.BranchService_Settings SET OffsetTimeEnd = :OffsetTimeEnd;';
