@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ProdColorName TVarChar
              , MeasureName TVarChar
              , Comment_goods TVarChar
-             
+
 
                -- Сумма вх. без НДС, до 2-х знаков - Товар
              , EKPrice_summ_goods     TFloat
@@ -161,6 +161,24 @@ BEGIN
                               WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
                                AND (Object_ReceiptGoods.isErased = FALSE OR inIsErased = TRUE)
                              )
+         , tmpReceiptProdModel AS (SELECT DISTINCT ObjectLink_Object.ChildObjectId                 AS GoodsId
+                                                 , ObjectLink_ReceiptProdModel_Model.ChildObjectId AS ModelId
+                                   FROM Object AS Object_ReceiptProdModelChild
+                                        LEFT JOIN ObjectLink AS ObjectLink_Object
+                                                             ON ObjectLink_Object.ObjectId = Object_ReceiptProdModelChild.Id
+                                                            AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
+                                        LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModel
+                                                             ON ObjectLink_ReceiptProdModel.ObjectId = Object_ReceiptProdModelChild.Id
+                                                            AND ObjectLink_ReceiptProdModel.DescId   = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
+                                        INNER JOIN Object AS Object_ReceiptProdModel
+                                                          ON Object_ReceiptProdModel.Id       = ObjectLink_ReceiptProdModel.ChildObjectId
+                                                         AND Object_ReceiptProdModel.isErased = FALSE
+                                        LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModel_Model
+                                                             ON ObjectLink_ReceiptProdModel_Model.ObjectId = Object_ReceiptProdModel.Id
+                                                            AND ObjectLink_ReceiptProdModel_Model.DescId   = zc_ObjectLink_ReceiptProdModel_Model()
+                                   WHERE Object_ReceiptProdModelChild.DescId   = zc_Object_ReceiptProdModelChild()
+                                     AND Object_ReceiptProdModelChild.isErased = FALSE
+                                  )
      -- Результат
      SELECT
            Object_ReceiptGoods.Id         AS Id
@@ -185,7 +203,7 @@ BEGIN
 
          , Object_Unit.Id                     AS UnitId
          , Object_Unit.ValueData              AS UnitName
-         
+
          , Object_Insert.ValueData            AS InsertName
          , Object_Update.ValueData            AS UpdateName
          , ObjectDate_Insert.ValueData        AS InsertDate
