@@ -301,7 +301,7 @@ object IncomeJournalForm: TIncomeJournalForm
         Width = 70
       end
       object InvNumberPack: TcxGridDBColumn
-        Caption = #8470' '#1059#1087#1072#1082'. '#1083#1080#1089#1090#1072
+        Caption = #8470' '#1059#1087#1072#1082'. '#1083#1080#1089#1090
         DataBinding.FieldName = 'InvNumberPack'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

@@ -504,11 +504,16 @@ object IncomeForm: TIncomeForm
       Left = 175
       Top = 45
       Hint = #8470' '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1086#1075#1086' '#1083#1080#1089#1090#1072
-      Caption = #8470' '#1059#1087#1072#1082'. '#1083#1080#1089#1090#1072
+      Caption = #8470' '#1059#1087#1072#1082'. '#1083#1080#1089#1090
+      ParentShowHint = False
+      ShowHint = True
     end
     object edInvNumberPack: TcxTextEdit
       Left = 175
       Top = 63
+      Hint = #8470' '#1059#1087#1072#1082#1086#1074#1086#1095#1085#1086#1075#1086' '#1083#1080#1089#1090#1072
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 56
       Width = 90
     end
