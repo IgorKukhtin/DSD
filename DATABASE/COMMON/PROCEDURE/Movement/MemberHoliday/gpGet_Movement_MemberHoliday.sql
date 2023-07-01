@@ -35,14 +35,14 @@ BEGIN
              , inOperDate                                       AS OperDate
              , DATE_TRUNC ('YEAR', inOperDate) :: TDateTime    AS OperDateStartDate
              , (DATE_TRUNC ('YEAR', inOperDate) + INTERVAL '1 YEAR' - INTERVAL '1 DAY') :: TDateTime    AS OperDateEndDate
-             , CURRENT_DATE			:: TDateTime    AS BeginDateStartDate
+             , CURRENT_DATE                     :: TDateTime    AS BeginDateStartDate
              , CURRENT_DATE                     :: TDateTime    AS BeginDateEndDate
              , 0                                                AS MemberId
-             , CAST ('' AS TVarChar) 				AS MemberName
+             , CAST ('' AS TVarChar)                            AS MemberName
              , 0                                                AS MemberMainId
              , CAST ('' AS TVarChar)                            AS MemberMainName
              , 0                                                AS WorkTimeKindId
-             , CAST ('' AS TVarChar) 				AS WorkTimeKindName
+             , CAST ('' AS TVarChar)                            AS WorkTimeKindName
              , Object_Insert.Id                                 AS InsertId
              , Object_Insert.ValueData                          AS InsertName
              , 0                                                AS UpdateId
