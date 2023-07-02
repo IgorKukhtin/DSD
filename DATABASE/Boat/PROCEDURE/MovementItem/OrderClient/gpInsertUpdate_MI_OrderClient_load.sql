@@ -74,7 +74,7 @@ BEGIN
 
 
 -- if inValue1 = 'b305_u_1' then RAISE EXCEPTION 'Ошибка.<%>.', inValue1; end if;
--- RAISE EXCEPTION 'Ошибка.<%   %>.', inValue1,  vbProdOptionsId; 
+-- RAISE EXCEPTION 'Ошибка.<%   %>.', inValue1,  vbProdOptionsId;
 
 
      -- замена
@@ -130,7 +130,7 @@ THEN
     THEN
         inValue1:= 'b360_hp_c1';
     END IF;
-    
+
     IF inValue1 = '_hs_c1'
     THEN
         inValue1:= 'b360_hs_c1';
@@ -140,12 +140,12 @@ THEN
     THEN
         inValue1:= 'b360_m_1';
     END IF;
-    
+
     IF inValue1 = '_u_9'
     THEN
         inValue1:= 'b360_u_9';
     END IF;
-    
+
     IF inValue1 = '_t_0'
     THEN
         inValue1:= 'b360_t_0';
@@ -185,7 +185,7 @@ THEN
     THEN
         inValue1:= 'b360_doa_3';
     END IF;
-    
+
     IF inValue1 = '_loa_0'
     THEN
         inValue1:= 'b360_loa_0';
@@ -195,7 +195,7 @@ THEN
     THEN
         inValue1:= 'b360_loa_1';
     END IF;
-    
+
     IF inValue1 = '_aoa_0'
     THEN
         inValue1:= 'b360_aoa_0';
@@ -1307,8 +1307,107 @@ END IF;
                   -- moldings + Корпус + Палуба + Консоль рулевого управления
                   ElSEIF inTitle ILIKE 'hull' OR inTitle ILIKE 'deck' OR inTitle ILIKE 'sconsole' OR inTitle ILIKE 'moldings'
                   THEN
-                      -- 2.1. Проверка
-                      IF 1 < (SELECT COUNT(*)
+                      -- 2.1.1. Проверка - этот цвет есть в сборке Узла
+                      IF 1 = (SELECT COUNT(*)
+                              FROM
+                                   (SELECT DISTINCT Object_Goods.Id
+                                    FROM ObjectLink AS OL_ProdColor
+                                         JOIN Object AS Object_Goods ON Object_Goods.Id        = OL_ProdColor.ObjectId
+                                                                    AND Object_Goods.isErased  = FALSE
+                                                                    AND TRIM (Object_Goods.ValueData) ILIKE CASE WHEN inTitle ILIKE 'moldings' THEN 'fender' ELSE TRIM (Object_Goods.ValueData) END
+                                         -- Такой товар в сборке
+                                         INNER JOIN ObjectLink AS ObjectLink_Object
+                                                               ON ObjectLink_Object.ChildObjectId = Object_Goods.Id
+                                                              AND ObjectLink_Object.DescId        = zc_ObjectLink_ReceiptGoodsChild_Object()
+                                         -- элемент сборки не удален
+                                         INNER JOIN Object AS Object_ReceiptGoodsChild ON Object_ReceiptGoodsChild.Id       = ObjectLink_Object.ObjectId
+                                                                                      AND Object_ReceiptGoodsChild.isErased = FALSE
+                                         -- сборка не удалена
+                                         LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                                              ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                                             AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                         INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id       = ObjectLink_ReceiptGoods.ChildObjectId
+                                                                                 AND Object_ReceiptGoods.isErased = FALSE
+                                         -- нашли модель
+                                         LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                                                              ON ObjectLink_ColorPattern.ObjectId = Object_ReceiptGoods.Id
+                                                             AND ObjectLink_ColorPattern.DescId   = zc_ObjectLink_ReceiptGoods_ColorPattern()
+                                         INNER JOIN ObjectLink AS ObjectLink_Model
+                                                               ON ObjectLink_Model.ObjectId      = ObjectLink_ColorPattern.ChildObjectId
+                                                              AND ObjectLink_Model.DescId        = zc_ObjectLink_ColorPattern_Model()
+                                         -- !!! Модель соответсвует той что загружаем
+                                         INNER JOIN ObjectLink AS ObjectLink_Product_Model
+                                                               ON ObjectLink_Product_Model.ObjectId      = ioProductId
+                                                              AND ObjectLink_Product_Model.DescId        = zc_ObjectLink_Product_Model()
+                                                              AND ObjectLink_Product_Model.ChildObjectId = ObjectLink_Model.ChildObjectId
+                                         -- нашли сам Узел
+                                         LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                              ON ObjectLink_Goods.ObjectId = Object_ReceiptGoods.Id
+                                                             AND ObjectLink_Goods.DescId   = zc_ObjectLink_ReceiptGoods_Object()
+                                         INNER JOIN Object AS Object_Goods_master ON Object_Goods_master.Id  = ObjectLink_Goods.ChildObjectId
+                                         -- у этого Узла такой же inTitle
+                                         INNER JOIN ObjectString AS OS_Comment
+                                                                 ON OS_Comment.ObjectId = Object_Goods_master.Id
+                                                                AND OS_Comment.DescId   = zc_ObjectString_Goods_Comment()
+                                                                AND OS_Comment.ValueData ILIKE CASE WHEN inTitle ILIKE 'sconsole' THEN 'STEERING CONSOLE' ELSE '%' || inTitle || '%' END
+      
+                                    WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
+                                      -- с таким Цветом
+                                      AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
+                                   ) AS tmp
+                             )
+                             AND 1=1
+                      THEN
+                          -- 2.2.2. нашли Комплектующее через цвет + Шаблон сборки
+                          vbGoodsId:=
+                                   (SELECT DISTINCT Object_Goods.Id
+                                    FROM ObjectLink AS OL_ProdColor
+                                         JOIN Object AS Object_Goods ON Object_Goods.Id        = OL_ProdColor.ObjectId
+                                                                    AND Object_Goods.isErased  = FALSE
+                                                                    AND TRIM (Object_Goods.ValueData) ILIKE CASE WHEN inTitle ILIKE 'moldings' THEN 'fender' ELSE TRIM (Object_Goods.ValueData) END
+                                         -- Такой товар в сборке
+                                         INNER JOIN ObjectLink AS ObjectLink_Object
+                                                               ON ObjectLink_Object.ChildObjectId = Object_Goods.Id
+                                                              AND ObjectLink_Object.DescId        = zc_ObjectLink_ReceiptGoodsChild_Object()
+                                         -- элемент сборки не удален
+                                         INNER JOIN Object AS Object_ReceiptGoodsChild ON Object_ReceiptGoodsChild.Id       = ObjectLink_Object.ObjectId
+                                                                                      AND Object_ReceiptGoodsChild.isErased = FALSE
+                                         -- сборка не удалена
+                                         LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                                              ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                                             AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                         INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id       = ObjectLink_ReceiptGoods.ChildObjectId
+                                                                                 AND Object_ReceiptGoods.isErased = FALSE
+                                         -- нашли модель
+                                         LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                                                              ON ObjectLink_ColorPattern.ObjectId = Object_ReceiptGoods.Id
+                                                             AND ObjectLink_ColorPattern.DescId   = zc_ObjectLink_ReceiptGoods_ColorPattern()
+                                         INNER JOIN ObjectLink AS ObjectLink_Model
+                                                               ON ObjectLink_Model.ObjectId      = ObjectLink_ColorPattern.ChildObjectId
+                                                              AND ObjectLink_Model.DescId        = zc_ObjectLink_ColorPattern_Model()
+                                         -- !!! Модель соответсвует той что загружаем
+                                         INNER JOIN ObjectLink AS ObjectLink_Product_Model
+                                                               ON ObjectLink_Product_Model.ObjectId      = ioProductId
+                                                              AND ObjectLink_Product_Model.DescId        = zc_ObjectLink_Product_Model()
+                                                              AND ObjectLink_Product_Model.ChildObjectId = ObjectLink_Model.ChildObjectId
+                                         -- нашли сам Узел
+                                         LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                              ON ObjectLink_Goods.ObjectId = Object_ReceiptGoods.Id
+                                                             AND ObjectLink_Goods.DescId   = zc_ObjectLink_ReceiptGoods_Object()
+                                         INNER JOIN Object AS Object_Goods_master ON Object_Goods_master.Id  = ObjectLink_Goods.ChildObjectId
+                                         -- у этого Узла такой же inTitle
+                                         INNER JOIN ObjectString AS OS_Comment
+                                                                 ON OS_Comment.ObjectId = Object_Goods_master.Id
+                                                                AND OS_Comment.DescId   = zc_ObjectString_Goods_Comment()
+                                                                AND OS_Comment.ValueData ILIKE CASE WHEN inTitle ILIKE 'sconsole' THEN 'STEERING CONSOLE' ELSE '%' || inTitle || '%' END
+      
+                                    WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
+                                      -- с таким Цветом
+                                      AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
+                                   );
+
+                      -- 2.1.2. Проверка
+                      ELSEIF 1 < (SELECT COUNT(*)
                               FROM ObjectLink AS OL_ProdColor
                                    JOIN Object AS Object_Goods ON Object_Goods.Id        = OL_ProdColor.ObjectId
                                                               AND Object_Goods.isErased  = FALSE
@@ -1345,45 +1444,46 @@ END IF;
                                        -- , CHR (13)
                                        -- , vbProdColorId
                                          ;
-                      END IF;
-                      -- 2.2. нашли Комплектующее через цвет
-                      vbGoodsId:= COALESCE ((SELECT Object_Goods.Id
-                                             FROM ObjectLink AS OL_ProdColor
-                                                  JOIN Object AS Object_Goods ON Object_Goods.Id        = OL_ProdColor.ObjectId
-                                                                             AND Object_Goods.isErased  = FALSE
-                                                                             AND TRIM (Object_Goods.ValueData) ILIKE CASE WHEN inTitle ILIKE 'moldings' THEN 'fender' ELSE TRIM (Object_Goods.ValueData) END
-                                                                           /*AND Object_Goods.ObjectCode BETWEEN CASE WHEN inTitle ILIKE 'hull' OR inTitle ILIKE 'deck' OR inTitle ILIKE 'sconsole'
-                                                                                                                      THEN -100
-                                                                                                                      ELSE Object_Goods.ObjectCode
-                                                                                                                 END
-                                                                                                             AND CASE WHEN inTitle ILIKE 'hull' OR inTitle ILIKE 'deck' OR inTitle ILIKE 'sconsole'
-                                                                                                                      THEN 1
-                                                                                                                      ELSE Object_Goods.ObjectCode
-                                                                                                                 END*/
-                                                  LEFT JOIN ObjectString AS OS_Comment
-                                                                         ON OS_Comment.ObjectId = Object_Goods.Id
-                                                                        AND OS_Comment.DescId   = zc_ObjectString_Goods_Comment()
-                                                                        AND (OS_Comment.ValueData ILIKE 'HULL/DECK'
-                                                                          OR OS_Comment.ValueData ILIKE 'HULL'
-                                                                          OR OS_Comment.ValueData ILIKE 'DECK'
-                                                                          OR OS_Comment.ValueData ILIKE 'STEERING CONSOLE'
-                                                                            )
+                      ELSE
+                          -- 2.2.2. нашли Комплектующее через цвет
+                          vbGoodsId:= COALESCE ((SELECT Object_Goods.Id
+                                                 FROM ObjectLink AS OL_ProdColor
+                                                      JOIN Object AS Object_Goods ON Object_Goods.Id        = OL_ProdColor.ObjectId
+                                                                                 AND Object_Goods.isErased  = FALSE
+                                                                                 AND TRIM (Object_Goods.ValueData) ILIKE CASE WHEN inTitle ILIKE 'moldings' THEN 'fender' ELSE TRIM (Object_Goods.ValueData) END
+                                                                               /*AND Object_Goods.ObjectCode BETWEEN CASE WHEN inTitle ILIKE 'hull' OR inTitle ILIKE 'deck' OR inTitle ILIKE 'sconsole'
+                                                                                                                          THEN -100
+                                                                                                                          ELSE Object_Goods.ObjectCode
+                                                                                                                     END
+                                                                                                                 AND CASE WHEN inTitle ILIKE 'hull' OR inTitle ILIKE 'deck' OR inTitle ILIKE 'sconsole'
+                                                                                                                          THEN 1
+                                                                                                                          ELSE Object_Goods.ObjectCode
+                                                                                                                     END*/
+                                                      LEFT JOIN ObjectString AS OS_Comment
+                                                                             ON OS_Comment.ObjectId = Object_Goods.Id
+                                                                            AND OS_Comment.DescId   = zc_ObjectString_Goods_Comment()
+                                                                            AND (OS_Comment.ValueData ILIKE 'HULL/DECK'
+                                                                              OR OS_Comment.ValueData ILIKE 'HULL'
+                                                                              OR OS_Comment.ValueData ILIKE 'DECK'
+                                                                              OR OS_Comment.ValueData ILIKE 'STEERING CONSOLE'
+                                                                                )
 
-                                             WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
-                                               -- с таким Цветом
-                                               AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
-                                               -- "узлы" с таким примечание отбросили
-                                               AND OS_Comment.ObjectId IS NULL
-                                            )
-                                          , (SELECT Object_Goods.Id
-                                             FROM ObjectLink AS OL_ProdColor
-                                                  JOIN Object AS Object_Goods ON Object_Goods.Id       = OL_ProdColor.ObjectId
-                                                                             AND Object_Goods.isErased  = FALSE
-                                                                             AND TRIM (Object_Goods.ValueData) ILIKE CASE WHEN inTitle ILIKE 'moldings' THEN 'fender' ELSE TRIM (Object_Goods.ValueData) END
-                                             WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
-                                               -- с таким Цветом
-                                               AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = TRUE)
-                                           ));
+                                                 WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
+                                                   -- с таким Цветом
+                                                   AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
+                                                   -- "узлы" с таким примечание отбросили
+                                                   AND OS_Comment.ObjectId IS NULL
+                                                )
+                                              , (SELECT Object_Goods.Id
+                                                 FROM ObjectLink AS OL_ProdColor
+                                                      JOIN Object AS Object_Goods ON Object_Goods.Id       = OL_ProdColor.ObjectId
+                                                                                 AND Object_Goods.isErased  = FALSE
+                                                                                 AND TRIM (Object_Goods.ValueData) ILIKE CASE WHEN inTitle ILIKE 'moldings' THEN 'fender' ELSE TRIM (Object_Goods.ValueData) END
+                                                 WHERE OL_ProdColor.DescId        = zc_ObjectLink_Goods_ProdColor()
+                                                   -- с таким Цветом
+                                                   AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = TRUE)
+                                               ));
+                      END IF;
 
                       -- 2.3. Создаем RAL...
                       IF COALESCE (vbGoodsId, 0) = 0 AND vbColor_title ILIKE '%RAL%' AND (inTitle ILIKE 'hull' OR inTitle ILIKE 'deck' OR inTitle ILIKE 'sconsole')
@@ -1648,6 +1748,7 @@ vbProdOptItemsId
                                                                         , inPartNumber             := ''
                                                                         , inComment                := vbComment
                                                                         , inCommentOpt             := ''
+                                                                        , inIsEnabled              := TRUE
                                                                         , inSession                := inSession
                                                                          ) AS gpInsertUpdate);
          END IF;

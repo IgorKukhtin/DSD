@@ -139,6 +139,7 @@ BEGIN
           -- продублировали GoodsChild
         , tmpReceiptGoods AS (SELECT Object_ReceiptGoods.Id, Object_ReceiptGoods.DescId, Object_ReceiptGoods.ObjectCode, Object_ReceiptGoods.ValueData, Object_ReceiptGoods.isErased
                                    , ObjectLink_Goods.ChildObjectId AS GoodsId
+                                   , ObjectLink_Goods.ChildObjectId AS GoodsId_main
                               FROM Object AS Object_ReceiptGoods
                                    LEFT JOIN ObjectLink AS ObjectLink_Goods
                                                         ON ObjectLink_Goods.ObjectId = Object_ReceiptGoods.Id
@@ -149,7 +150,11 @@ BEGIN
                               SELECT DISTINCT
                                      Object_ReceiptGoods.Id, Object_ReceiptGoods.DescId, Object_ReceiptGoods.ObjectCode, Object_ReceiptGoods.ValueData, Object_ReceiptGoods.isErased
                                    , ObjectLink_GoodsChild.ChildObjectId AS GoodsId
+                                   , ObjectLink_Goods.ChildObjectId      AS GoodsId_main
                               FROM Object AS Object_ReceiptGoods
+                                   LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                        ON ObjectLink_Goods.ObjectId = Object_ReceiptGoods.Id
+                                                       AND ObjectLink_Goods.DescId   = zc_ObjectLink_ReceiptGoods_Object()
                                    LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
                                                         ON ObjectLink_ReceiptGoods.ChildObjectId = Object_ReceiptGoods.Id
                                                        AND ObjectLink_ReceiptGoods.DescId        = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
@@ -166,12 +171,18 @@ BEGIN
                              )
            -- поиск "аналогов"
          , tmpReceiptProdModel AS (SELECT DISTINCT ObjectLink_Object.ChildObjectId                 AS GoodsId
+                                                 , Object_Goods.ObjectCode                         AS GoodsCode
+                                                 , Object_Goods.ValueData                          AS GoodsName
                                                  , ObjectLink_ReceiptProdModel_Model.ChildObjectId AS ModelId
-                                                 , ObjectString_Goods_Comment.ValueData            AS Comment
+                                                 , CASE WHEN Object_Goods.ValueData ILIKE '%RAL %' THEN TRIM (SPLIT_PART (Object_Goods.ValueData, 'AGL-', 1))
+                                                        ELSE ObjectString_Goods_Comment.ValueData
+                                                   END AS Comment
                                    FROM Object AS Object_ReceiptProdModelChild
                                         LEFT JOIN ObjectLink AS ObjectLink_Object
                                                              ON ObjectLink_Object.ObjectId = Object_ReceiptProdModelChild.Id
                                                             AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptProdModelChild_Object()
+                                        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Object.ChildObjectId
+
                                         LEFT JOIN ObjectLink AS ObjectLink_ReceiptProdModel
                                                              ON ObjectLink_ReceiptProdModel.ObjectId = Object_ReceiptProdModelChild.Id
                                                             AND ObjectLink_ReceiptProdModel.DescId   = zc_ObjectLink_ReceiptProdModelChild_ReceiptProdModel()
@@ -195,16 +206,19 @@ BEGIN
 
          , ObjectString_Code.ValueData        ::TVarChar  AS UserCode
          , CASE WHEN ObjectString_Comment.ValueData <> '' THEN ObjectString_Comment.ValueData ELSE ObjectString_Goods_Comment.ValueData END ::TVarChar  AS Comment
-         , ObjectBoolean_Main.ValueData       ::Boolean   AS isMain
+         , CASE WHEN Object_Goods.Id = tmpReceiptProdModel.GoodsId
+                     THEN TRUE
+                ELSE FALSE -- ObjectBoolean_Main.ValueData
+           END :: Boolean AS isMain
 
          , Object_Goods.Id         ::Integer  AS GoodsId
          , Object_Goods.ObjectCode ::Integer  AS GoodsCode
          , Object_Goods.ValueData  ::TVarChar AS GoodsName
          , zfCalc_GoodsName_all (ObjectString_Article.ValueData, Object_Goods.ValueData) ::TVarChar AS GoodsName_all
          
-         , Object_Goods_group.Id                AS GoodsId_group
-         , Object_Goods_group.ObjectCode        AS GoodsCode_group
-         , Object_Goods_group.ValueData         AS GoodsName_group
+         , tmpReceiptProdModel.GoodsId          AS GoodsId_group
+         , tmpReceiptProdModel.GoodsCode        AS GoodsCode_group
+         , tmpReceiptProdModel.GoodsName        AS GoodsName_group
          , ObjectString_Article_group.ValueData AS Article_group
 
          , Object_ColorPattern.Id             ::Integer  AS ColorPatternId
@@ -371,13 +385,20 @@ BEGIN
                     ) AS tmpProdColorPattern_next_all
                       ON tmpProdColorPattern_next_all.ReceiptGoodsId = Object_ReceiptGoods.Id
 
+
            -- поиск "аналогов"
+          LEFT JOIN Object AS Object_Goods_main ON Object_Goods_main.Id = Object_ReceiptGoods.GoodsId_main
+          LEFT JOIN ObjectString AS ObjectString_Goods_Comment_main
+                                 ON ObjectString_Goods_Comment_main.ObjectId = Object_Goods_main.Id
+                                AND ObjectString_Goods_Comment_main.DescId   = zc_ObjectString_Goods_Comment()
           LEFT JOIN tmpReceiptProdModel ON tmpReceiptProdModel.ModelId = Object_Model.Id
-                                       AND tmpReceiptProdModel.Comment = ObjectString_Goods_Comment.ValueData
-                                       AND ObjectString_Goods_Comment.ValueData <> ''
-          LEFT JOIN Object AS Object_Goods_group ON Object_Goods_group.Id = tmpReceiptProdModel.GoodsId
+                                       AND tmpReceiptProdModel.Comment = CASE WHEN Object_Goods_main.ValueData ILIKE '%RAL %'
+                                                                              THEN TRIM (SPLIT_PART (Object_Goods_main.ValueData, 'AGL-', 1))
+                                                                              ELSE ObjectString_Goods_Comment_main.ValueData
+                                                                         END
+                                       AND ObjectString_Goods_Comment_main.ValueData <> ''
           LEFT JOIN ObjectString AS ObjectString_Article_group
-                                 ON ObjectString_Article_group.ObjectId = Object_Goods_group.Id
+                                 ON ObjectString_Article_group.ObjectId = tmpReceiptProdModel.GoodsId
                                 AND ObjectString_Article_group.DescId   = zc_ObjectString_Article()
 
      WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
