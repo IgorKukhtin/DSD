@@ -1,4 +1,4 @@
-unit Report_DefermentPaymentMovementDialog;
+unit Report_JuridicalDefermentPaymentMovementDialog;
 
 interface
 
@@ -22,29 +22,27 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_DefermentPaymentMovementDialogForm = class(TParentForm)
+  TReport_JuridicalDefermentPaymentMovementDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
-    deEnd: TcxDateEdit;
     deStart: TcxDateEdit;
     PeriodChoice: TPeriodChoice;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
-    cxLabel6: TcxLabel;
-    cxLabel7: TcxLabel;
-    cxLabel5: TcxLabel;
+    edJuridicalGroup: TcxButtonEdit;
+    edPaidKind: TcxButtonEdit;
+    GuidesJuridicalGroup: TdsdGuides;
+    PaidKindGuides: TdsdGuides;
     edBranch: TcxButtonEdit;
-    GuidesBranch: TdsdGuides;
+    cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
-    edJuridical: TcxButtonEdit;
-    GuidesJuridical: TdsdGuides;
     cxLabel1: TcxLabel;
+    BranchGuides: TdsdGuides;
     ceAccount: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
     GuidesAccount: TdsdGuides;
-    cxLabel2: TcxLabel;
-    edRetail: TcxButtonEdit;
-    GuidesRetail: TdsdGuides;
   private
     { Private declarations }
   public
@@ -56,6 +54,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_DefermentPaymentMovementDialogForm);
+  RegisterClass(TReport_JuridicalDefermentPaymentMovementDialogForm);
 
 end.

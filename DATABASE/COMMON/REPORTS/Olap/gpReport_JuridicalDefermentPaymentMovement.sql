@@ -1,15 +1,17 @@
 -- Function: gpReport_DefermentPaymentMovement()
 
 DROP FUNCTION IF EXISTS gpReport_DefermentPaymentMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_DefermentPaymentMovement (
-    IN inStartDate          TDateTime ,  
-    IN inEndDate            TDateTime ,
-    IN inAccountId          Integer   ,
-    IN inBranchId           Integer   ,
-    IN inRetailId           Integer   ,
-    IN inJuridicalId        Integer   , -- юр.лицо
-    IN inSession            TVarChar    -- сесси€ пользовател€
+CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPaymentMovement (
+    IN inOperDate         TDateTime , -- 
+    IN inEmptyParam       TDateTime , -- 
+    IN inAccountId        Integer   , --
+    IN inPaidKindId       Integer   , --
+    IN inBranchId         Integer   , --
+    IN inJuridicalGroupId Integer   , --
+    IN inSession          TVarChar    -- сесси€ пользовател€
+
 )
 RETURNS TABLE (OperDate TDateTime
              , MonthDate TDateTime
