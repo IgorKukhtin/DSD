@@ -204,8 +204,10 @@ AS
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('32294926', '40720198', '32294897', '42751590', '41028986'
-                                      -- Експансія ТОВ ...
+                                        -- Експансія ТОВ ...
                                       , '32294905', '35278624', '38939423', '38183389', '34902541', '36577999'
+                                        -- Ексопт ТОВ
+                                      , '44708897'
                                        )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
