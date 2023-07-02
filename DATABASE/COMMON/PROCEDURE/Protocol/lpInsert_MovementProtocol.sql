@@ -3,10 +3,11 @@
 DROP FUNCTION IF EXISTS lpInsert_MovementProtocol (Integer, Integer, Boolean);
 
 CREATE OR REPLACE FUNCTION lpInsert_MovementProtocol (inMovementId Integer, inUserId Integer, inIsInsert Boolean)
-  RETURNS void AS
+RETURNS VOID
+AS
 $BODY$
- DECLARE 
-   vbProtocolXML TBlob;
+  DECLARE vbMovementDescId Integer;
+  DECLARE vbProtocolXML TBlob;
 BEGIN
 
   -- Просмотр - без прав корректировки
@@ -14,7 +15,9 @@ BEGIN
   THEN
       RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав для изменения данных.', lfGet_Object_ValueData_sh (inUserId);
   END IF;
-
+  
+  --
+  vbMovementDescId:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
 
   -- Подготавливаем XML для записи в протокол
   SELECT '<XML>' || STRING_AGG (D.FieldXML, '') || '</XML>' INTO vbProtocolXML
@@ -72,7 +75,11 @@ BEGIN
          INNER JOIN MovementStringDesc ON MovementStringDesc.Id = MovementString.DescId
     WHERE MovementString.MovementId = inMovementId
    UNION
-    SELECT '<Field FieldName = "' || zfStrToXmlStr (MovementBooleanDesc.ItemName) || '" FieldValue = "' || COALESCE (MovementBoolean.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+    SELECT '<Field FieldName = "' || zfStrToXmlStr (CASE WHEN vbMovementDescId = zc_Movement_MemberHoliday() AND MovementBoolean.DescId = zc_MovementBoolean_isLoad()
+                                                         THEN 'Оплачен'
+                                                         ELSE MovementBooleanDesc.ItemName
+                                                    END)
+        || '" FieldValue = "' || COALESCE (MovementBoolean.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
          , 6 AS GroupId
          , MovementBoolean.DescId
     FROM MovementBoolean
