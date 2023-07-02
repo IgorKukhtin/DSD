@@ -234,6 +234,8 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
                                              ON MILinkObject_NDSKind.MovementItemId = MI.Id
                                             AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+                                            AND (COALESCE (MILinkObject_NDSKind.ObjectId, 0) <> 13937605 OR
+                                                vbOperDate < '01.07.2023') 
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_DivisionParties
                                              ON MILinkObject_DivisionParties.MovementItemId = MI.Id
@@ -274,6 +276,7 @@ BEGIN
             , Container.Id       AS ContainerId
             , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
                      OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                     OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 13937605 AND vbOperDate >= '01.07.2023'
                    THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END             AS NDSKindId
             , COALESCE(ContainerLinkObject_DivisionParties.ObjectId, 0)                                 AS DivisionPartiesId
             , CASE WHEN vbDiscountExternalId = 0 THEN Container.Amount ELSE FLOOR(Container.Amount) END AS Amount
@@ -345,6 +348,7 @@ BEGIN
                                                             ON ItemJuridical.ObjectId = Container.ObjectId
                                                            AND COALESCE(ItemJuridical.NDSKindId, 0) = CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
                                                                                                              OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                                                                                             OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 13937605 AND vbOperDate >= '01.07.2023'
                                                                                                            THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END 
                                                            AND COALESCE(ItemJuridical.DivisionPartiesId, 0) = COALESCE(ContainerLinkObject_DivisionParties.ObjectId, 0) 
 

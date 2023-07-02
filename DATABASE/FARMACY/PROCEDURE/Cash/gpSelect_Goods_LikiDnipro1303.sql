@@ -228,6 +228,7 @@ BEGIN
             LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                  ON ObjectFloat_NDSKind_NDS.ObjectId = CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
                                                                               OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                                                              OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 13937605
                                                                             THEN Object_Goods_Main.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END
        GROUP BY ObjectFloat_NDSKind_NDS.ValueData
               , MIString_PartionGoods.ValueData 

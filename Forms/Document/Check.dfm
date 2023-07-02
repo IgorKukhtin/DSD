@@ -2112,10 +2112,10 @@ inherited CheckForm: TCheckForm
         item
           StoredProc = spUpdate_OffsetVIP
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
+      Caption = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
+      Hint = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
       ImageIndex = 7
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>?'
+      QuestionBeforeExecute = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>?'
     end
     object actUpdate_MedicForSale: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2186,6 +2186,47 @@ inherited CheckForm: TCheckForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actDateOffsetVIPDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actDateOffsetVIPDialog'
+      FormName = 'TDataChoiceDialogForm'
+      FormNameParam.Value = 'TDataChoiceDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DateOffsetVIP'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1077#1076#1080' '#1076#1072#1090#1091' '#1079#1072#1095#1077#1090#1072' '#1042#1048#1055' '#1084#1077#1085#1077#1076#1078#1077#1088#1072#1084' '#1095#1077#1082#1072
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_SetOffsetVIP: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actDateOffsetVIPDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SetOffsetVIP
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SetOffsetVIP
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
+      ImageIndex = 7
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>?'
     end
   end
   inherited MasterDS: TDataSource
@@ -2464,6 +2505,10 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton22'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -2500,6 +2545,10 @@ inherited CheckForm: TCheckForm
     end
     object dxBarButton21: TdxBarButton
       Action = actUpdate_MedicForSale
+      Category = 0
+    end
+    object dxBarButton22: TdxBarButton
+      Action = actUpdate_SetOffsetVIP
       Category = 0
     end
   end
@@ -2632,6 +2681,12 @@ inherited CheckForm: TCheckForm
       item
         Name = 'BuyerForSaleId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateOffsetVIP'
+        Value = Null
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 56
@@ -4050,8 +4105,7 @@ inherited CheckForm: TCheckForm
       end
       item
         Name = 'inisOffsetVIP'
-        Value = False
-        Component = cbOffsetVIP
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4116,5 +4170,45 @@ inherited CheckForm: TCheckForm
     PackSize = 1
     Left = 250
     Top = 264
+  end
+  object spUpdate_SetOffsetVIP: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_SetOffsetVIP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOffsetVIP'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateOffsetVIP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DateOffsetVIP'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisOffsetVIP'
+        Value = False
+        Component = cbOffsetVIP
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 234
+    Top = 497
   end
 end

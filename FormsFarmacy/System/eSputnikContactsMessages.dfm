@@ -62,12 +62,7 @@ object eSputnikContactsMessagesForm: TeSputnikContactsMessagesForm
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <
-        item
-          Format = #1057#1086#1086#1073#1097#1077#1085#1080#1081' 0'
-          Kind = skCount
-          Column = text
-        end>
+      DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.GoToNextCellOnEnter = True

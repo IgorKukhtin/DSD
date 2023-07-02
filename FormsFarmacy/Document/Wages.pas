@@ -124,6 +124,14 @@ type
     TestingAttempts: TcxGridDBBandedColumn;
     PenaltyExam: TcxGridDBBandedColumn;
     ApplicationAward: TcxGridDBBandedColumn;
+    actPrintCalculationUserNew: TMultiAction;
+    actPrintCalculationAllNew: TMultiAction;
+    dxBarButton19: TdxBarButton;
+    dxBarButton20: TdxBarButton;
+    spSelectPrintCalculationAllNew: TdsdStoredProc;
+    spSelectPrintCalculationUserNew: TdsdStoredProc;
+    actExecSPPrintCalculationUserNew: TdsdExecStoredProc;
+    actExecSPPrintCalculationAllNew: TdsdExecStoredProc;
   private
     { Private declarations }
   public

@@ -185,6 +185,7 @@ BEGIN
                                , Container.Amount
                                , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
                                         OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                        OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 13937605
                                  THEN Object_Goods_Main.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId
                                , COALESCE(Container.ExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd()) AS ExpirationDate
                                , Container.PartionDateKindId                                               AS PartionDateKindId
@@ -299,6 +300,7 @@ BEGIN
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
                                                               ON MILinkObject_NDSKind.MovementItemId = MovementItemMaster.Id
                                                              AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+                                                             AND COALESCE (MILinkObject_NDSKind.ObjectId, 0) <> 13937605
 
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountExternal
                                                               ON MILinkObject_DiscountExternal.MovementItemId = MovementItemMaster.Id

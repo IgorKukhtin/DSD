@@ -98,6 +98,7 @@ BEGIN
                                  tmpPDGoodsRemains.PartionDateKindId,
                                  CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
                                         OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                        OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 13937605
                                       THEN Object_Goods_Main.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId,
                                  ContainerLinkObject_DivisionParties.ObjectId                                        AS DivisionPartiesId,
                                  COALESCE(tmpPDGoodsRemains.Amount, Container.Amount)                                AS Amount

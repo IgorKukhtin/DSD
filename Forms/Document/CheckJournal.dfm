@@ -4,8 +4,8 @@ inherited CheckJournalForm: TCheckJournalForm
   ClientWidth = 919
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 935
-  ExplicitHeight = 593
+  ExplicitWidth = 937
+  ExplicitHeight = 601
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -573,6 +573,14 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object DateOffsetVIP: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1079#1072#1095#1077#1090#1072' '#1042#1048#1055#1072#1084
+            DataBinding.FieldName = 'DateOffsetVIP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
           end
           object isErrorRRO: TcxGridDBColumn
             Caption = #1042#1048#1055' '#1095#1077#1082' '#1087#1086' '#1086#1096#1080#1073#1082#1077' '#1056#1056#1054

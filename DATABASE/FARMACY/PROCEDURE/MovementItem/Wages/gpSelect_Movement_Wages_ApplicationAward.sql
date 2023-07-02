@@ -23,7 +23,7 @@ BEGIN
     FROM (
       WITH tmpApplicationAward AS (SELECT PlanMobileAppAntiTOP.UserId
                                         , PlanMobileAppAntiTOP.PenaltiMobApp
-                                   FROM gpReport_FulfillmentPlanMobileAppAntiTOP(DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '1 DAY', inSession) AS PlanMobileAppAntiTOP
+                                   FROM gpReport_FulfillmentPlanMobileAppAntiTOP(DATE_TRUNC ('MONTH', inOperDate), inSession) AS PlanMobileAppAntiTOP
                                    WHERE PlanMobileAppAntiTOP.PenaltiMobApp < 0),
            tmpMovementWages AS (SELECT Movement.Id
                                 FROM Movement
@@ -62,4 +62,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Wages_ApplicationAward (CURRENT_DATE, inSession:= '3')      
+-- SELECT * FROM gpSelect_Movement_Wages_ApplicationAward (CURRENT_DATE - INTERVAL '1 DAY', inSession:= '3')      
