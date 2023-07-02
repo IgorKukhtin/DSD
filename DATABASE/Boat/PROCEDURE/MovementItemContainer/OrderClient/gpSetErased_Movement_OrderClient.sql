@@ -18,6 +18,12 @@ BEGIN
     PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                 , inUserId     := vbUserId);
 
+    -- Удаляем Лодку
+    PERFORM lpUpdate_Object_isErased (inObjectId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Product())
+                                    , inIsErased:= TRUE
+                                    , inUserId  := vbUserId
+                                     );
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

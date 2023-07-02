@@ -25,6 +25,16 @@ BEGIN
      -- нашли Лодку
      vbProductId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Product());
 
+     --
+     IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbProductId AND Object.isErased = TRUE)
+     THEN
+         -- Восстановили Лодку
+         PERFORM lpUpdate_Object_isErased (inObjectId:= vbProductId
+                                         , inIsErased:= FALSE
+                                         , inUserId  := inUserId
+                                          );
+     END IF;
+
      -- Параметры из Лодки - Шаблон её сборки
      SELECT COALESCE (ObjectLink_ReceiptProdModel.ChildObjectId,0) AS ReceiptProdModelId
             -- если "правильно" выбран ReceiptProdModel, т.е. модели совпадают
