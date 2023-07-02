@@ -237,7 +237,7 @@ end if;
                                                )
     FROM tmpAll;
 
-if inSession = '5' AND 1=0
+if inSession = '5' AND 1=1
 then
     RAISE EXCEPTION 'Ошибка. end <%>  %   %', (select sum (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
     , (select sum (tmpAll.AmountRK_start) from tmpAll) -- where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
