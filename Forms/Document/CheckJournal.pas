@@ -115,6 +115,7 @@ type
     macUpdate_InsertDate_list: TMultiAction;
     macUpdate_InsertDate: TMultiAction;
     bbUpdate_InsertDate: TdxBarButton;
+    DateOffsetVIP: TcxGridDBColumn;
   private
     { Private declarations }
   public

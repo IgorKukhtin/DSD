@@ -565,6 +565,7 @@ BEGIN
           LEFT JOIN tmpMILinkObject AS MILinkObject_NDSKind
                                            ON MILinkObject_NDSKind.MovementItemId = MovementItem.Id
                                           AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+                                          AND COALESCE (MILinkObject_NDSKind.ObjectId, 0) <> 13937605
 
           LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId)
@@ -1053,6 +1054,7 @@ BEGIN
           LEFT JOIN tmpMILinkObject AS MILinkObject_NDSKind
                                            ON MILinkObject_NDSKind.MovementItemId = MovementItem.Id
                                           AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+                                          AND COALESCE (MILinkObject_NDSKind.ObjectId, 0) <> 13937605
 
           LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId)

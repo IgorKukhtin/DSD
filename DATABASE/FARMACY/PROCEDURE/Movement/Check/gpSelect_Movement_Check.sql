@@ -58,7 +58,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDiscountCommit Boolean
              , CommentCustomer TVarChar
              , isManual Boolean
-             , isOffsetVIP Boolean
+             , isOffsetVIP Boolean, DateOffsetVIP TDateTime
              , isErrorRRO Boolean
              , isAutoVIPforSales Boolean
              , isPaperRecipeSP Boolean 
@@ -202,6 +202,7 @@ BEGIN
            , COALESCE(MovementBoolean_Manual.ValueData, False)            AS isManual
            
            , COALESCE(MovementBoolean_OffsetVIP.ValueData, False)         AS isOffsetVIP
+           , MovementDate_OffsetVIP.ValueData                             AS DateOffsetVIP
            , COALESCE(MovementBoolean_ErrorRRO.ValueData, False)          AS isErrorRRO
            , COALESCE(MovementBoolean_AutoVIPforSales.ValueData, False)   AS isAutoVIPforSales
            , COALESCE(MovementBoolean_PaperRecipeSP.ValueData, False)     AS isPaperRecipeSP
@@ -469,6 +470,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Coming
                                    ON MovementDate_Coming.MovementId = Movement_Check.Id
                                   AND MovementDate_Coming.DescId = zc_MovementDate_Coming()
+
+            LEFT JOIN MovementDate AS MovementDate_OffsetVIP
+                                   ON MovementDate_OffsetVIP.MovementId = Movement_Check.Id
+                                  AND MovementDate_OffsetVIP.DescId = zc_MovementDate_OffsetVIP()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
                                          ON MovementLinkObject_CheckSourceKind.MovementId =  Movement_Check.Id

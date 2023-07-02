@@ -182,6 +182,7 @@ BEGIN
                              LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_NDSKind
                                                                  ON MILinkObject_NDSKind.MovementItemId = Movement.MovementItemId
                                                                 AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+                                                                AND COALESCE (MovementItemLinkObject.ObjectId, 0) <> 13937605
 
                              LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_DiscountExternal
                                                                  ON MILinkObject_DiscountExternal.MovementItemId =  Movement.MovementItemId

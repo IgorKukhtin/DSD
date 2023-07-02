@@ -65,6 +65,7 @@ BEGIN
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
                                                        ON MILinkObject_NDSKind.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+                                                      AND COALESCE (MILinkObject_NDSKind.ObjectId, 0) <> 13937605
 
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
                                                        ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
@@ -108,6 +109,7 @@ BEGIN
      , tmpContainerAll AS (SELECT Container.ObjectId
                                 , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
                                          OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                         OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 13937605
                                   THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId
                                 , COALESCE(tmpContainerPD.PartionDateKindId, 0)                             AS PartionDateKindId
                                 , COALESCE(ContainerLinkObject_DivisionParties.ObjectId, 0)                 AS DivisionPartiesId

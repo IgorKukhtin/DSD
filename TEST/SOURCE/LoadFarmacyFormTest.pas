@@ -492,7 +492,7 @@ end;
 
 procedure TLoadFormTest.LoadCheckFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentCheckForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCommentCheckForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentCheckEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCommentCheckEditForm');
@@ -500,7 +500,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckErrorInsertDateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckErrorInsertDateForm');
 
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckRedForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckRedForm');
 
@@ -531,10 +531,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPChoiceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberSPChoiceDialogForm');
 
-
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalForm');
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalUserForm');
 

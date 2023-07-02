@@ -57,7 +57,7 @@ BEGIN
      LIMIT 1;*/
 
      -- находим вид НДС.
-     SELECT ObjectId INTO vbNDSKindId
+     SELECT CASE WHEN ObjectId = 13937605 THEN 9 ELSE ObjectId END INTO vbNDSKindId
      FROM MovementLinkObject AS MovementLinkObject_NDSKind
      WHERE MovementLinkObject_NDSKind.MovementId = inMovementId
        AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind();

@@ -312,7 +312,7 @@ BEGIN
 
       -- Штраф за моб. приложение
       BEGIN
-         PERFORM gpSelect_Movement_Wages_ApplicationAward(inOperDate := CURRENT_DATE,  inSession := inSession);
+         PERFORM gpSelect_Movement_Wages_ApplicationAward(inOperDate := CURRENT_DATE - INTERVAL '1 DAY',  inSession := inSession);
       EXCEPTION
          WHEN others THEN
            GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;

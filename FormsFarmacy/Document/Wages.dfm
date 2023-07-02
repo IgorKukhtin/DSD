@@ -1251,6 +1251,60 @@ inherited WagesForm: TWagesForm
         end>
       isShowModal = False
     end
+    object actPrintCalculationUserNew: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenChoiceUser
+        end
+        item
+          Action = actExecSPPrintCalculationUserNew
+        end
+        item
+          Action = actExportPrintCalculationUser
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1072' '#1079'.'#1087'. '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091' '#1085#1086#1074#1099#1081' '#1088#1072#1089#1095#1077#1090
+      Hint = #1055#1077#1095#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1072' '#1079'.'#1087'. '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091' '#1085#1086#1074#1099#1081' '#1088#1072#1089#1095#1077#1090
+      ImageIndex = 3
+    end
+    object actPrintCalculationAllNew: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecSPPrintCalculationAllNew
+        end
+        item
+          Action = actExportPrintCalculationAll
+        end>
+      QuestionBeforeExecute = #1056#1072#1089#1087#1077#1095#1072#1090#1072#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1079'.'#1087'. '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084' '#1085#1086#1074#1099#1081' '#1088#1072#1089#1095#1077#1090'?'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1072' '#1079'.'#1087'. '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084' '#1085#1086#1074#1099#1081' '#1088#1072#1089#1095#1077#1090
+      Hint = #1055#1077#1095#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1072' '#1079'.'#1087'. '#1087#1086' '#1074#1089#1077#1084' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084' '#1085#1086#1074#1099#1081' '#1088#1072#1089#1095#1077#1090
+      ImageIndex = 16
+    end
+    object actExecSPPrintCalculationUserNew: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectPrintCalculationUserNew
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintCalculationUserNew
+        end>
+      Caption = 'actExecSPPrintCalculationUserNew'
+    end
+    object actExecSPPrintCalculationAllNew: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectPrintCalculationAllNew
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintCalculationAllNew
+        end>
+      Caption = 'actExecSPPrintCalculationAllNew'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -1360,11 +1414,19 @@ inherited WagesForm: TWagesForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton19'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton7'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton20'
         end
         item
           Visible = True
@@ -1508,6 +1570,14 @@ inherited WagesForm: TWagesForm
     end
     object dxBarButton18: TdxBarButton
       Action = actWagesMoneyBoxSun
+      Category = 0
+    end
+    object dxBarButton19: TdxBarButton
+      Action = actPrintCalculationUserNew
+      Category = 0
+    end
+    object dxBarButton20: TdxBarButton
+      Action = actPrintCalculationAllNew
       Category = 0
     end
   end
@@ -2147,5 +2217,61 @@ inherited WagesForm: TWagesForm
     PackSize = 1
     Left = 944
     Top = 320
+  end
+  object spSelectPrintCalculationAllNew: TdsdStoredProc
+    StoredProcName = 'gpSelect_CalculationPerson_PrintAllNew'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 42132d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 759
+    Top = 408
+  end
+  object spSelectPrintCalculationUserNew: TdsdStoredProc
+    StoredProcName = 'gpSelect_CalculationPerson_PrintNew'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 42132d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserPrintID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 759
+    Top = 344
   end
 end

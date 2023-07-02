@@ -267,9 +267,14 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_SignCarrier() RETURNS Integer AS $BOD
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_SignCarrier', 'Дата подписи грузоотправителя' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SignCarrier');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_OffsetVIP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_OffsetVIP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_OffsetVIP', 'Дата зачет ВИПам' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_OffsetVIP');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 02.07.23                                                                                                        * zc_MovementDate_OffsetVIP
  23.06.23                                                                                                        * zc_MovementDate_SignConsignor, zc_MovementDate_SignCarrier
  19.04.23         * zc_MovementDate_StatusInsert
  04.10.22                                                                                                        * zc_MovementDate_SiteDateUpdate

@@ -233,6 +233,10 @@ type
     dxBarButton21: TdxBarButton;
     cbConfirmByPhone: TcxCheckBox;
     CommentCheckName: TcxGridDBColumn;
+    actDateOffsetVIPDialog: TExecuteDialog;
+    actUpdate_SetOffsetVIP: TdsdExecStoredProc;
+    spUpdate_SetOffsetVIP: TdsdStoredProc;
+    dxBarButton22: TdxBarButton;
   private
     { Private declarations }
   public

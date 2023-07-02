@@ -83,6 +83,7 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
                                              ON MILinkObject_NDSKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_NDSKind.DescId         = zc_MILinkObject_NDSKind()
+                                            AND COALESCE (MILinkObject_NDSKind.ObjectId, 0) <> 13937605
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
                                              ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
@@ -163,6 +164,7 @@ BEGIN
                                  Container.Amount,
                                  CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
                                         OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                        OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 13937605
                                       THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId,
                                  ContainerLinkObject_DivisionParties.ObjectId                                   AS DivisionPartiesId,
                                  MovementLinkObject_From.ObjectId                                               AS JuridicalId,
@@ -279,6 +281,7 @@ BEGIN
                                    Container.Amount,
                                    CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
                                           OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                          OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 13937605
                                         THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId,
                                    ContainerLinkObject_DivisionParties.ObjectId                                   AS DivisionPartiesId,
                                    MovementLinkObject_From.ObjectId                                               AS JuridicalId,

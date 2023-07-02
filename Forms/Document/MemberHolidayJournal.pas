@@ -51,6 +51,9 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     spSelectPrint_Spec: TdsdStoredProc;
     WorkTimeKindName: TcxGridDBColumn;
+    isLoad: TcxGridDBColumn;
+    InvNumber_Full1: TcxGridDBColumn;
+    InvNumber_Full2: TcxGridDBColumn;
   private
     { Private declarations }
   public

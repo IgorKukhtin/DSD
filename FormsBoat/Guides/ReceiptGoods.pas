@@ -252,6 +252,9 @@ type
     GoodsCode_group: TcxGridDBColumn;
     GoodsName_group: TcxGridDBColumn;
     Article_group: TcxGridDBColumn;
+    macErasedGoods_child1_list: TMultiAction;
+    macErasedGoods_child1: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

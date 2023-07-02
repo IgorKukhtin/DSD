@@ -1,10 +1,12 @@
 -- Function: gpInsertUpdate_Object_ReceiptGoodsChild_bySend()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild_bySend(Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild_bySend(Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild_bySend(
  INOUT inReceiptGoodsId      Integer   ,    -- ключ объекта <>
-    IN inMovementId_Send     Integer   ,    --
+    IN inMovementId_Send     Integer   ,    --      
+    IN inGoodsChildId        Integer   ,    --
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -132,7 +134,7 @@ BEGIN
                                                        , inMaterialOptionsId  := _tmpReceiptGoodsChild.MaterialOptionsId
                                                        , inReceiptLevelId_top := 0
                                                        , inReceiptLevelId     := _tmpReceiptGoodsChild.ReceiptLevelId
-                                                       , inGoodsChildId       := _tmpReceiptGoodsChild.GoodsChildId
+                                                       , inGoodsChildId       := inGoodsChildId   --_tmpReceiptGoodsChild.GoodsChildId
                                                        , ioValue              := COALESCE (_tmpSendMI.Value, _tmpReceiptGoodsChild.Value) :: TVarChar
                                                        , ioValue_service      := COALESCE (_tmpReceiptGoodsChild.Value_servise,0)         :: TVarChar
                                                        , ioForCount           := COALESCE (_tmpSendMI.ForCount, _tmpReceiptGoodsChild.ForCount) ::TFloat

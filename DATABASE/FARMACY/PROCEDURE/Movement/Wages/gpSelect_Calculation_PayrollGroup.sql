@@ -1,8 +1,10 @@
 -- Function: gpSelect_Ñalculation_PayrollGroup()
 
-DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, TFloat, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (TDateTime, Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, TFloat, Integer, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (TDateTime, Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (TDateTime, Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, TFloat, TVarChar, TFloat);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Calculation_PayrollGroup(
     IN inOperDate         TDateTime,
@@ -14,7 +16,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Calculation_PayrollGroup(
     IN inSummBaseSite     TFloat,
     IN inCountUser        Integer,
     IN inCorrPercentage   TFloat,
-    IN inDetals           TVarChar
+    IN inDetals           TVarChar,
+    IN inSoldPlan         TFloat
 )
 RETURNS TABLE (Summa TFloat
              , SummaBase TFloat
@@ -27,6 +30,7 @@ $BODY$
    DECLARE vbSummaBase     TFloat;
    DECLARE vbSummaBaseSite TFloat;
    DECLARE vbSummaCalñ     TFloat;
+   DECLARE vbSummaSoldPlan TFloat;
    DECLARE vbFormula       TVarChar;
    DECLARE vbPercentSite   TFloat;
 BEGIN
@@ -43,7 +47,22 @@ BEGIN
     vbSummaBase := inSummBase;
     vbSummaBaseSite := inSummBaseSite;
     vbSumma := ROUND(COALESCE (vbSummaBase * inPercent / 100, 0), 2) + ROUND(COALESCE (vbSummaBaseSite * vbPercentSite / 100, 0), 2);
-    vbSummaCalñ := CASE WHEN vbSumma < inMinAccrualAmount THEN inMinAccrualAmount ELSE vbSumma END;
+    
+    IF inPayrollTypeID = zc_Enum_PayrollType_WorkCS() AND
+       COALESCE (inSoldPlan, 0) > 0 AND
+       COALESCE (inSoldPlan, 0) < COALESCE (vbSummaBase, 0) + COALESCE (vbSummaBaseSite, 0)
+    THEN
+      IF COALESCE (inCountUser, 0) = 0
+      THEN
+        vbSummaSoldPlan := ROUND((COALESCE (vbSummaBase, 0) + COALESCE (vbSummaBaseSite, 0) - COALESCE (inSoldPlan, 0)) * 0.03, 2);
+      ELSE
+        vbSummaSoldPlan := ROUND((COALESCE (vbSummaBase, 0) + COALESCE (vbSummaBaseSite, 0) - COALESCE (inSoldPlan, 0)) / inCountUser * 0.03, 2);
+      END IF;
+    ELSE
+      vbSummaSoldPlan := 0;
+    END IF;
+    
+    vbSummaCalñ := CASE WHEN vbSumma < (inMinAccrualAmount + vbSummaSoldPlan) THEN inMinAccrualAmount + vbSummaSoldPlan ELSE vbSumma END;
     IF COALESCE (inCorrPercentage, 100) <> 100
     THEN
       vbSummaCalñ := ROUND(vbSummaCalñ * inCorrPercentage / 100, 2);
@@ -54,7 +73,9 @@ BEGIN
                     '; Íà÷èñëåíî: Åñëè áàçà '||zfConvert_FloatToString(COALESCE (inPercent, 0))||' % '||CASE WHEN COALESCE (vbSummaBaseSite, 0) > 0 THEN ' + áàçà ñàéòà '||zfConvert_FloatToString(vbPercentSite)||' % ' ELSE '' END||
                     ' = '||zfConvert_FloatToString(vbSumma)||
                     ' < '||zfConvert_FloatToString(inMinAccrualAmount)||
+                    CASE WHEN vbSummaSoldPlan > 0 THEN ' + '||zfConvert_FloatToString(vbSummaSoldPlan) ELSE '' END||
                     ' òî '||zfConvert_FloatToString(inMinAccrualAmount)||
+                    CASE WHEN vbSummaSoldPlan > 0 THEN ' + '||zfConvert_FloatToString(vbSummaSoldPlan) ELSE '' END||
                     ' èíà÷å '||zfConvert_FloatToString(vbSumma)||
                     CASE WHEN COALESCE (inCorrPercentage, 100) <> 100 THEN '; Êîýôôèöèåíò  '||zfConvert_FloatToString(inCorrPercentage / 100) ELSE '' END
                     --'; Íà÷èñëåíî: '||zfConvert_FloatToString(vbSummaCalñ)
@@ -156,4 +177,4 @@ ALTER FUNCTION gpSelect_Calculation_PayrollGroup (TDateTime, Integer, TFloat, TF
 */
 
 -- 
-select * from gpSelect_Calculation_PayrollGroup('01.07.2021', zc_Enum_PayrollType_WorkSBid(), 3, 870, 3, 40813.63 - 3589.65, 3589.65, 0, 100, '');
+select * from gpSelect_Calculation_PayrollGroup('01.07.2023', zc_Enum_PayrollType_WorkCS(), 3, 1200, 3, 40813.63 - 3589.65, 3589.65, 0, 100, '', 16129.03);

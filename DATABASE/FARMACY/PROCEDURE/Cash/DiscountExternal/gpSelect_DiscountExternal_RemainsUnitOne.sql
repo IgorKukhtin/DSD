@@ -192,6 +192,7 @@ BEGIN
          , tmpDeferredSendNDSKindId AS (SELECT Movement.ParentId
                                              , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
                                                        OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                                       OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 13937605
                                                      THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId
                                          FROM (SELECT DISTINCT tmpDeferredSendAll.ParentId FROM tmpDeferredSendAll) AS Movement
 
@@ -292,6 +293,7 @@ BEGIN
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
                                                               ON MILinkObject_NDSKind.MovementItemId = MovementItemMaster.Id
                                                              AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+                                                             AND COALESCE (MILinkObject_NDSKind.ObjectId, 0) <> 13937605
 
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountExternal
                                                               ON MILinkObject_DiscountExternal.MovementItemId = MovementItemMaster.Id
@@ -430,6 +432,7 @@ BEGIN
                                , Container.Amount
                                , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
                                         OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                        OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 13937605
                                  THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId
                                , Container.DeferredSend
                                , MIDate_ExpirationDate.ValueData                                           AS ExpirationDate

@@ -2399,6 +2399,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefermentPaymentMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_DefermentPaymentMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefermentPaymentMovementDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_DefermentPaymentMovementDialogForm');
+  exit;
+
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashPersonal_toPayForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashPersonal_toPayForm');
