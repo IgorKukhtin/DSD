@@ -4228,6 +4228,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberHolidayForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberHolidayJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberHolidayJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberHolidayEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberHolidayEditForm');
 end;
 
 procedure TLoadFormTest.LoadMobileProjectFormTest;

@@ -22,7 +22,6 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
       inherited cxGrid: TcxGrid
         Width = 975
         Height = 480
-        ExplicitLeft = 128
         ExplicitWidth = 975
         ExplicitHeight = 480
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -372,6 +371,12 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
             Options.Editing = False
             Width = 78
           end
+          object Color_SummHoliday: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_SummHoliday'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 70
+          end
         end
       end
     end
@@ -546,6 +551,45 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actOpenFormMemberHolidayEdit: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1087#1083#1072#1090#1080#1090#1100
+      Hint = #1054#1087#1083#1072#1090#1080#1090#1100
+      ImageIndex = 56
+      FormName = 'TMemberHolidayEditForm'
+      FormNameParam.Value = 'TMemberHolidayEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -646,6 +690,22 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormMemberHolidayEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -701,8 +761,23 @@ inherited MemberHolidayJournalForm: TMemberHolidayJournalForm
       Visible = ivAlways
       ImageIndex = 21
     end
+    object bbOpenFormMemberHolidayEdit: TdxBarButton
+      Action = actOpenFormMemberHolidayEdit
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ColorColumn = SummHoliday1
+        BackGroundValueColumn = Color_SummHoliday
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = SummHoliday2
+        BackGroundValueColumn = Color_SummHoliday
+        ColorValueList = <>
+      end>
     Left = 320
     Top = 224
   end
