@@ -2399,10 +2399,10 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefermentPaymentMovementForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_DefermentPaymentMovementForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefermentPaymentMovementDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_DefermentPaymentMovementDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPaymentMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPaymentMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPaymentMovementDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPaymentMovementDialogForm');
   exit;
 
    {
@@ -4228,6 +4228,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberHolidayForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberHolidayJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberHolidayJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberHolidayEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberHolidayEditForm');
 end;
 
 procedure TLoadFormTest.LoadMobileProjectFormTest;

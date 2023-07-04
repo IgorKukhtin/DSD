@@ -1441,8 +1441,9 @@ uses
   EUSignCPOwnUI in '..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas',
   SendAsset in '..\..\Forms\Document\SendAsset.pas' {SendAssetForm: TParentForm},
   SheetWorkTime_line in '..\..\Forms\Document\SheetWorkTime_line.pas' {SheetWorkTime_lineForm: TParentForm},
-  Report_DefermentPaymentMovementDialog in '..\..\Forms\Report\Report_DefermentPaymentMovementDialog.pas' {Report_DefermentPaymentMovementDialogForm: TParentForm},
-  Report_DefermentPaymentMovement in '..\..\Forms\Report\Report_DefermentPaymentMovement.pas' {Report_DefermentPaymentMovementForm: TParentForm};
+  Report_JuridicalDefermentPaymentMovementDialog in '..\..\Forms\Report\Report_JuridicalDefermentPaymentMovementDialog.pas' {Report_JuridicalDefermentPaymentMovementDialogForm: TParentForm},
+  Report_JuridicalDefermentPaymentMovement in '..\..\Forms\Report\Report_JuridicalDefermentPaymentMovement.pas' {Report_JuridicalDefermentPaymentMovementForm: TParentForm},
+  MemberHolidayEdit in '..\..\Forms\Document\MemberHolidayEdit.pas' {MemberHolidayEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

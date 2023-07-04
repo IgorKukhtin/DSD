@@ -15,7 +15,12 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPaymentByDocument(
     IN inSaleSumm         TFloat    , 
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, OperDate TDateTime, InvNumber TVarChar, TotalSumm TFloat, FromName TVarChar, ToName TVarChar, ContractNumber TVarChar, ContractTagName TVarChar, PaidKindName TVarChar)
+RETURNS TABLE (Id Integer, OperDate TDateTime, InvNumber TVarChar
+             , TotalSumm TFloat
+             , FromName TVarChar, ToName TVarChar
+             , ContractNumber TVarChar, ContractTagName TVarChar
+             , PaidKindName TVarChar
+             )
 AS
 $BODY$
    DECLARE vbLenght Integer;

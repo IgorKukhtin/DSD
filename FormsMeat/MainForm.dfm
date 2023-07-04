@@ -169,12 +169,12 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actReport_DefermentPaymentMovement: TdsdOpenForm [1]
+    object actReport_JuridicalDefermentPaymentMovement: TdsdOpenForm [1]
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1077' ('#1053#1072#1082#1083#1072#1076#1085#1099#1077')'
-      FormName = 'TReport_DefermentPaymentMovementForm'
-      FormNameParam.Value = 'TReport_DefermentPaymentMovementForm'
+      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081' ('#1053#1072#1082#1083#1072#1076#1085#1099#1077')'
+      FormName = 'TReport_JuridicalDefermentPaymentMovementForm'
+      FormNameParam.Value = 'TReport_JuridicalDefermentPaymentMovementForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -10965,6 +10965,9 @@ inherited MainForm: TMainForm
       object miReport_JuridicalDefermentPayment365: TMenuItem
         Action = actReport_JuridicalDefermentPayment365
       end
+      object miReport_DefermentPaymentMovement: TMenuItem
+        Action = actReport_JuridicalDefermentPaymentMovement
+      end
       object miReport_JuridicalDefermentDebet: TMenuItem
         Action = actReport_JuridicalDefermentDebet
         Caption = #1044#1077#1090#1072#1083#1080#1079#1072#1094#1080#1103' '#1087#1086' '#1076#1086#1083#1075#1072#1084
@@ -10986,9 +10989,6 @@ inherited MainForm: TMainForm
       end
       object miReport_DefermentPaymentOLAPTable: TMenuItem
         Action = actReport_DefermentPaymentOLAPTable
-      end
-      object miReport_DefermentPaymentMovement: TMenuItem
-        Action = actReport_DefermentPaymentMovement
       end
       object N29: TMenuItem
         Caption = '-'

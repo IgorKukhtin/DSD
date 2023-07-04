@@ -54,6 +54,9 @@ type
     isLoad: TcxGridDBColumn;
     InvNumber_Full1: TcxGridDBColumn;
     InvNumber_Full2: TcxGridDBColumn;
+    Color_SummHoliday: TcxGridDBColumn;
+    actOpenFormMemberHolidayEdit: TdsdOpenForm;
+    bbOpenFormMemberHolidayEdit: TdxBarButton;
   private
     { Private declarations }
   public

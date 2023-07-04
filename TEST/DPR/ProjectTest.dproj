@@ -5020,12 +5020,16 @@
 				<Form>SheetWorkTime_lineForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_DefermentPaymentMovementDialog.pas">
-				<Form>Report_DefermentPaymentMovementDialogForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalDefermentPaymentMovementDialog.pas">
+				<Form>Report_JuridicalDefermentPaymentMovementDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_DefermentPaymentMovement.pas">
-				<Form>Report_DefermentPaymentMovementForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalDefermentPaymentMovement.pas">
+				<Form>Report_JuridicalDefermentPaymentMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\MemberHolidayEdit.pas">
+				<Form>MemberHolidayEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

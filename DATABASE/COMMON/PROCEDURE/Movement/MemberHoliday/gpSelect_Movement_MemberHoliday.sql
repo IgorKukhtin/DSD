@@ -32,7 +32,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InvNumber_Full1 TVarChar, InvNumber_Full2 TVarChar
              , SummHoliday1 TFloat, SummHoliday2 TFloat, TotalSummHoliday TFloat, SummHoliday_calc TFloat
              , Amount TFloat 
-             , isLoad Boolean
+             , isLoad Boolean 
+             , Color_SummHoliday Integer
               )
 AS
 $BODY$
@@ -149,9 +150,14 @@ BEGIN
            , tmpSummHoliday1.SummHoliday ::TFloat AS SummHoliday1
            , tmpSummHoliday2.SummHoliday ::TFloat AS SummHoliday2
            , (COALESCE (tmpSummHoliday1.SummHoliday,0) + COALESCE (tmpSummHoliday2.SummHoliday,0)) ::TFloat AS TotalSummHoliday  
-           , ( MovementFloat_Amount.ValueData * (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1)) ::TFloat AS SummHoliday_calc
+           , (MovementFloat_Amount.ValueData * (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1)) ::TFloat AS SummHoliday_calc
            , MovementFloat_Amount.ValueData  ::TFloat AS Amount                  --Ср.ЗП за день    
-           , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) :: Boolean AS isLoad
+           , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) :: Boolean AS isLoad  
+           
+           , CASE WHEN (MovementFloat_Amount.ValueData * (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1)) <> (COALESCE (tmpSummHoliday1.SummHoliday,0) + COALESCE (tmpSummHoliday2.SummHoliday,0))
+                  THEN  zc_Color_Pink() --фон 
+                  ELSE zc_Color_White()
+             END ::Integer AS Color_SummHoliday
        FROM tmpMovement AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

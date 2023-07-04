@@ -1,4 +1,4 @@
-unit Report_DefermentPaymentMovement;
+unit Report_JuridicalDefermentPaymentMovement;
 
 interface
 
@@ -27,20 +27,29 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TReport_DefermentPaymentMovementForm = class(TAncestorReportForm)
+  TReport_JuridicalDefermentPaymentMovementForm = class(TAncestorReportForm)
     JuridicalName: TcxGridDBColumn;
-    ContractName: TcxGridDBColumn;
+    ContractNumber: TcxGridDBColumn;
+    KreditRemains: TcxGridDBColumn;
     DebetRemains: TcxGridDBColumn;
     SaleSumm: TcxGridDBColumn;
     DefermentPaymentRemains: TcxGridDBColumn;
-    SaleSumm_month: TcxGridDBColumn;
-    DebtRemains_month: TcxGridDBColumn;
-    DefermentPaymentRemains_month: TcxGridDBColumn;
+    SaleSumm1: TcxGridDBColumn;
+    SaleSumm2: TcxGridDBColumn;
+    SaleSumm3: TcxGridDBColumn;
+    SaleSumm4: TcxGridDBColumn;
+    SaleSumm5: TcxGridDBColumn;
     AccountName: TcxGridDBColumn;
     Condition: TcxGridDBColumn;
     edAccount: TcxButtonEdit;
     cxLabel3: TcxLabel;
     GuidesAccount: TdsdGuides;
+    actPrintOneWeek: TdsdPrintAction;
+    actPrintTwoWeek: TdsdPrintAction;
+    actPrintThreeWeek: TdsdPrintAction;
+    actPrintFourWeek: TdsdPrintAction;
+    spReport: TdsdStoredProc;
+    cdsReport: TClientDataSet;
     bbReportOneWeek: TdxBarButton;
     FormParams: TdsdFormParams;
     bbTwoWeek: TdxBarButton;
@@ -49,15 +58,25 @@ type
     bbOther: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPribt: TdxBarButton;
+    OKPO: TcxGridDBColumn;
     ContractCode: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
-    MonthDate: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
+    AreaName: TcxGridDBColumn;
+    StartDate: TcxGridDBColumn;
+    EndDate: TcxGridDBColumn;
+    actPrintSale: TdsdPrintAction;
+    spReport_JuridicalSaleDocument: TdsdStoredProc;
     bbSale: TdxBarButton;
     cxLabel6: TcxLabel;
-    edRetail: TcxButtonEdit;
-    GuidesedRetail: TdsdGuides;
-    PartnerCode: TcxGridDBColumn;
+    edPaidKind: TcxButtonEdit;
+    GuidesPaidKind: TdsdGuides;
+    StartContractDate: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
+    actPrint_byJuridical: TdsdPrintAction;
     bbPrint_byJuridical: TdxBarButton;
     cxLabel9: TcxLabel;
     edBranch: TcxButtonEdit;
@@ -65,12 +84,23 @@ type
     BranchCode: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
     cxLabel4: TcxLabel;
-    edJuridical: TcxButtonEdit;
-    GuidesJuridical: TdsdGuides;
-    RetailName: TcxGridDBColumn;
+    edJuridicalGroup: TcxButtonEdit;
+    GuidesJuridicalGroup: TdsdGuides;
+    RetailName_main: TcxGridDBColumn;
     ContractTagGroupName: TcxGridDBColumn;
+    PersonalTradeName: TcxGridDBColumn;
+    PersonalTradeName_Partner: TcxGridDBColumn;
+    AreaName_Partner: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    ContractJuridicalDocCode: TcxGridDBColumn;
+    ContractJuridicalDocName: TcxGridDBColumn;
+    BranchName_personal: TcxGridDBColumn;
+    BranchName_personal_trade: TcxGridDBColumn;
+    spUpdate_LastPayment: TdsdStoredProc;
+    actUpdate_LastPayment: TdsdExecStoredProc;
+    ExecuteDialogLastPayment: TExecuteDialog;
+    macUpdate_LastPayment: TMultiAction;
     bbUpdate_LastPayment: TdxBarButton;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
@@ -85,7 +115,7 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_DefermentPaymentMovementForm);
+  RegisterClass(TReport_JuridicalDefermentPaymentMovementForm);
 
 
 end.
