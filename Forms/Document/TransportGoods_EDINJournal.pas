@@ -108,6 +108,8 @@ type
     DriverCertificate: TcxGridDBColumn;
     spUpdate_CommentError: TdsdStoredProc;
     CommentError: TcxGridDBColumn;
+    CityFromName: TcxGridDBColumn;
+    CityToName: TcxGridDBColumn;
   private
     { Private declarations }
   public

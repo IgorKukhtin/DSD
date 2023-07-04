@@ -7,26 +7,28 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 988
-  ExplicitHeight = 570
+  ExplicitWidth = 990
+  ExplicitHeight = 578
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 61
     Width = 972
-    Height = 474
+    Height = 470
     TabOrder = 3
+    ExplicitTop = 61
     ExplicitWidth = 972
-    ExplicitHeight = 474
-    ClientRectBottom = 474
+    ExplicitHeight = 470
+    ClientRectBottom = 470
     ClientRectRight = 972
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 972
-      ExplicitHeight = 474
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
         Width = 972
-        Height = 474
+        Height = 470
         ExplicitWidth = 972
-        ExplicitHeight = 474
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -621,6 +623,22 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             HeaderHint = #1055#1088#1080#1081#1085#1103#1074' ('#1074#1110#1076#1087#1086#1074#1110#1076#1072#1083#1100#1085#1072' '#1086#1089#1086#1073#1072' '#1074#1072#1085#1090#1072#1078#1086#1086#1076#1077#1088#1078#1091#1074#1072#1095#1072') - '#1087#1091#1089#1090#1086
             Options.Editing = False
             Width = 80
+          end
+          object CityFromName: TcxGridDBColumn
+            Caption = #1043#1086#1088#1086#1076' '#1084#1077#1089#1090#1072' '#1087#1086#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'CityFromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
+          object CityToName: TcxGridDBColumn
+            Caption = #1043#1086#1088#1086#1076' '#1084#1077#1089#1090#1072' '#1088#1072#1079#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'CityToName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
           end
         end
       end
@@ -1243,7 +1261,7 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
     DockControlHeights = (
       0
       0
-      26
+      30
       0)
     inherited Bar: TdxBar
       ItemLinks = <

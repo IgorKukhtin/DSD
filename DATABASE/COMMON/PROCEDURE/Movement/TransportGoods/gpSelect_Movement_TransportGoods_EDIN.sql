@@ -55,6 +55,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MemberSignConsignorName TVarChar, SignConsignorDate TDateTime, MemberSignCarrierName TVarChar, SignCarrierDate TDateTime
              , DeliveryInstructionsName TVarChar
 
+             , CityFromName TVarChar
+             , CityToName TVarChar
+
               )
 AS
 $BODY$
@@ -186,6 +189,9 @@ BEGIN
                   WHEN ObjectLink_Unit_City.ChildObjectId = View_Partner_Address.CityKindId
                   THEN 'внутрішньомістське'
                   ELSE 'міжміське' END::TVarChar                                         AS DeliveryInstructionsName
+                  
+           , Object_Unit_City.ValueData                                                  AS CityFromName
+           , View_Partner_Address.CityName                                               AS CityToName
 
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_TransportGoods()
@@ -434,16 +440,20 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_GLNCode_From
                                    ON ObjectString_GLNCode_From.ObjectId = View_Partner_AddressFrom.PartnerId
                                   AND ObjectString_GLNCode_From.DescId = zc_ObjectString_Partner_GLNCode()
+                                  AND COALESCE(ObjectString_GLNCode_From.ValueData) <> ''
             LEFT JOIN ObjectString AS ObjectString_GLNCode_To
                                    ON ObjectString_GLNCode_To.ObjectId = View_Partner_Address.PartnerId
                                   AND ObjectString_GLNCode_To.DescId = zc_ObjectString_Partner_GLNCode()
+                                  AND COALESCE(ObjectString_GLNCode_To.ValueData) <> ''
                                   
             LEFT JOIN ObjectString AS ObjectString_Unit_GLN_from
                                    ON ObjectString_Unit_GLN_from.ObjectId = MovementLinkObject_From.ObjectId
                                   AND ObjectString_Unit_GLN_from.DescId = zc_ObjectString_Unit_GLN()
+                                  AND COALESCE(ObjectString_Unit_GLN_from.ValueData) <> ''
             LEFT JOIN ObjectString AS ObjectString_Unit_GLN_to
                                    ON ObjectString_Unit_GLN_to.ObjectId = MovementLinkObject_To.ObjectId
                                   AND ObjectString_Unit_GLN_to.DescId = zc_ObjectString_Unit_GLN()
+                                  AND COALESCE(ObjectString_Unit_GLN_to.ValueData) <> ''
 
             LEFT JOIN ObjectString AS ObjectString_Unit_KATOTTG_Unit
                                    ON ObjectString_Unit_KATOTTG_Unit.ObjectId = MovementLinkObject_From.ObjectId
@@ -455,9 +465,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_DriverINN_external
                                    ON ObjectString_DriverINN_external.ObjectId = MovementLinkObject_PersonalDriver.ObjectId
                                   AND ObjectString_DriverINN_external.DescId   = zc_ObjectString_MemberExternal_INN()
+                                  AND COALESCE(ObjectString_DriverINN_external.ValueData) <> ''
             LEFT JOIN ObjectString AS ObjectString_DriverGLN_external
                                    ON ObjectString_DriverGLN_external.ObjectId = MovementLinkObject_PersonalDriver.ObjectId
                                   AND ObjectString_DriverGLN_external.DescId   = zc_ObjectString_MemberExternal_GLN()
+                                  AND COALESCE(ObjectString_DriverGLN_external.ValueData) <> ''
             LEFT JOIN ObjectString AS ObjectString_DriverCertificate_external
                                    ON ObjectString_DriverCertificate_external.ObjectId = MovementLinkObject_PersonalDriver.ObjectId
                                   AND ObjectString_DriverCertificate_external.DescId   = zc_ObjectString_MemberExternal_DriverCertificate()
@@ -472,12 +484,14 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_DriverGLN
                                    ON ObjectString_DriverGLN.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                   AND ObjectString_DriverGLN.DescId = zc_ObjectString_Member_GLN()
+                                  AND COALESCE(ObjectString_DriverGLN.ValueData) <> ''
             LEFT JOIN ObjectString AS ObjectString_DriverCertificate
                                    ON ObjectString_DriverCertificate.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                   AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
                                   
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                                 ON ObjectLink_Unit_Branch.ObjectId = CASE WHEN Movement_Sale.DescId = zc_Movement_ReturnIn() THEN Object_From.Id ELSE Object_To.Id END
+                                 ON ObjectLink_Unit_Branch.ObjectId = CASE WHEN Movement_Sale.DescId <> zc_Movement_ReturnIn() 
+                                                                           THEN Object_From.Id ELSE Object_To.Id END
                                 AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
             LEFT JOIN ObjectString AS ObjectString_PlaceOf                           
                                    ON ObjectString_PlaceOf.ObjectId = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
@@ -486,6 +500,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Unit_City
                                  ON ObjectLink_Unit_City.ObjectId = CASE WHEN Movement_Sale.DescId = zc_Movement_ReturnIn() THEN Object_From.Id ELSE Object_To.Id END
                                 AND ObjectLink_Unit_City.DescId = zc_ObjectLink_Unit_City()
+            LEFT JOIN Object AS Object_Unit_City ON Object_Unit_City.Id = ObjectLink_Unit_City.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSignConsignor
                                          ON MovementLinkObject_MemberSignConsignor.MovementId = Movement.Id

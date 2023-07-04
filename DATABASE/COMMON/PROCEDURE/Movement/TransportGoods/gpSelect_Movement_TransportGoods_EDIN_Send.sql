@@ -619,9 +619,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_DriverINN
                                    ON ObjectString_DriverINN.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                   AND ObjectString_DriverINN.DescId = zc_ObjectString_Member_INN()
+                                  AND COALESCE(ObjectString_DriverINN.ValueData) <> ''
             LEFT JOIN ObjectString AS ObjectString_DriverGLN
                                    ON ObjectString_DriverGLN.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                   AND ObjectString_DriverGLN.DescId = zc_ObjectString_Member_GLN()
+                                  AND COALESCE(ObjectString_DriverGLN.ValueData) <> ''
 
             LEFT JOIN ObjectString AS ObjectString_DriverCertificate_external
                                    ON ObjectString_DriverCertificate_external.ObjectId = tmpTransportGoods.PersonalDriverId
@@ -632,6 +634,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_DriverGLN_external
                                    ON ObjectString_DriverGLN_external.ObjectId = tmpTransportGoods.PersonalDriverId
                                   AND ObjectString_DriverGLN_external.DescId   = zc_ObjectString_MemberExternal_GLN()
+                                  AND COALESCE(ObjectString_DriverGLN_external.ValueData) <> ''
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -683,9 +686,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Unit_GLN_from
                                    ON ObjectString_Unit_GLN_from.ObjectId = MovementLinkObject_From.ObjectId
                                   AND ObjectString_Unit_GLN_from.DescId = zc_ObjectString_Unit_GLN()
+                                  AND COALESCE(ObjectString_Unit_GLN_from.ValueData) <> ''
             LEFT JOIN ObjectString AS ObjectString_Unit_GLN_to
                                    ON ObjectString_Unit_GLN_to.ObjectId = MovementLinkObject_To.ObjectId
                                   AND ObjectString_Unit_GLN_to.DescId = zc_ObjectString_Unit_GLN()
+                                  AND COALESCE(ObjectString_Unit_GLN_to.ValueData) <> ''
 
             LEFT JOIN ObjectString AS ObjectString_Unit_KATOTTG_Unit
                                    ON ObjectString_Unit_KATOTTG_Unit.ObjectId = MovementLinkObject_From.ObjectId
@@ -721,6 +726,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_GLNCode_To
                                    ON ObjectString_GLNCode_To.ObjectId = View_Partner_Address.PartnerId
                                   AND ObjectString_GLNCode_To.DescId = zc_ObjectString_Partner_GLNCode()
+                                  AND COALESCE(ObjectString_GLNCode_To.ValueData) <> ''
 
             LEFT JOIN ObjectString AS ObjectString_FromAddress
                                    ON ObjectString_FromAddress.ObjectId = Object_From.Id
@@ -746,6 +752,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_GLNCode_From
                                    ON ObjectString_GLNCode_From.ObjectId = View_Partner_AddressFrom.PartnerId
                                   AND ObjectString_GLNCode_From.DescId = zc_ObjectString_Partner_GLNCode()
+                                  AND COALESCE(ObjectString_GLNCode_From.ValueData) <> ''
 
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
@@ -769,6 +776,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Juridical_GLNCode_From                           
                                    ON ObjectString_Juridical_GLNCode_From.ObjectId = vbFromId_find
                                   AND ObjectString_Juridical_GLNCode_From.DescId = zc_ObjectString_Juridical_GLNCode()
+                                  AND COALESCE(ObjectString_Juridical_GLNCode_From.ValueData) <> ''
             LEFT JOIN zfSelect_ParseAddress (inAddress := OH_JuridicalDetails_From.JuridicalAddress) AS ParseAddress_From ON 1 = 1
 
             LEFT JOIN t2
@@ -779,6 +787,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Juridical_GLNCode_To                           
                                    ON ObjectString_Juridical_GLNCode_To.ObjectId = vbToId_find
                                   AND ObjectString_Juridical_GLNCode_To.DescId = zc_ObjectString_Juridical_GLNCode()
+                                  AND COALESCE(ObjectString_Juridical_GLNCode_To.ValueData) <> ''
             LEFT JOIN zfSelect_ParseAddress (inAddress := OH_JuridicalDetails_To.JuridicalAddress) AS ParseAddress_To ON 1 = 1
 
             LEFT JOIN t3
@@ -790,6 +799,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Juridical_GLNCode_car
                                    ON ObjectString_Juridical_GLNCode_car.ObjectId = vbJuricalId_car
                                   AND ObjectString_Juridical_GLNCode_car.DescId = zc_ObjectString_Juridical_GLNCode()
+                                  AND COALESCE(ObjectString_Juridical_GLNCode_car.ValueData) <> ''
 
             LEFT JOIN zfSelect_ParseAddress (inAddress := OH_JuridicalDetails_car.JuridicalAddress) AS ParseAddress_car ON 1 = 1
 
