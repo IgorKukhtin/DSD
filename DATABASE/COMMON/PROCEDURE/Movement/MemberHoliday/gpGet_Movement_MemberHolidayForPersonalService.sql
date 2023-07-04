@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_MemberHolidayForPersonalService(
     IN inMovementId       Integer  , -- ключ Документа
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MemberId Integer, MemberName TVarChar
+RETURNS TABLE (MemberId Integer, MemberName TVarChar, PersonalId Integer
              , Day_holiday TFloat 
              , Day_holiday1 TFloat
              , Day_holiday2 TFloat
@@ -21,6 +21,11 @@ RETURNS TABLE (MemberId Integer, MemberName TVarChar
              , InvNumber_Full1 TVarChar, InvNumber_Full2 TVarChar
              , Color_SummHoliday1 Integer
              , Color_SummHoliday2 Integer
+             , ServiceDateStart TDateTime
+             , ServiceDateEnd   TDateTime
+             , PositionId Integer
+             , UnitId     Integer   
+             , IsMain     Boolean
               )
 AS
 $BODY$
@@ -43,6 +48,7 @@ BEGIN
                              , lfSelect.UnitId
                              , lfSelect.PositionId
                              , lfSelect.BranchId
+                             , lfSelect.IsMain
                         FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                         WHERE lfSelect.Ord = 1
                         )
@@ -75,6 +81,7 @@ BEGIN
                                    INNER JOIN MovementItemFloat AS MIFloat_SummHoliday
                                                                 ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
                                                                AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
+                                                               
                              GROUP BY MovementItem.MovementId
                                     , MovementItem.ObjectId
                              )
@@ -90,13 +97,10 @@ BEGIN
                            
                            , Object_Member.Id                      AS MemberId
                            , Object_Member.ValueData               AS MemberName
-                           , Object_MemberMain.Id                  AS MemberMainId
-                           , Object_MemberMain.ValueData           AS MemberMainName
                            , tmpMember.PersonalId 
-                           , Object_Position.Id                    AS PositionId
-                           , Object_Position.ValueData             AS PositionName
-                           , Object_Unit.Id                        AS UnitId
-                           , Object_Unit.ValueData                 AS UnitName
+                           , tmpMember.PositionId 
+                           , tmpMember.IsMain
+                           , tmpMember.UnitId
 
                            , Object_WorkTimeKind.Id                AS WorkTimeKindId
                            , Object_WorkTimeKind.ValueData         AS WorkTimeKindName
@@ -120,17 +124,14 @@ BEGIN
                            , Object_PersonalServiceList.Id            AS PersonalServiceListId
                            , Object_PersonalServiceList.ValueData     AS PersonalServiceListName 
 
-                           , Movement_PersonalService1.Id AS MovementId_PersonalService1
-                           , Movement_PersonalService2.Id AS MovementId_PersonalService2
-                           , zfCalc_PartionMovementName (Movement_PersonalService1.DescId, MovementDesc1.ItemName, Movement_PersonalService1.InvNumber, Movement_PersonalService1.OperDate) ::TVarChar AS InvNumber_Full1
-                           , zfCalc_PartionMovementName (Movement_PersonalService2.DescId, MovementDesc2.ItemName, Movement_PersonalService2.InvNumber, Movement_PersonalService2.OperDate) ::TVarChar AS InvNumber_Full2
+                           , Movement.MovementId_1 AS MovementId_PersonalService1
+                           , Movement.MovementId_2 AS MovementId_PersonalService2
                            , tmpSummHoliday1.SummHoliday ::TFloat AS SummHoliday1
                            , tmpSummHoliday2.SummHoliday ::TFloat AS SummHoliday2
                            , (COALESCE (tmpSummHoliday1.SummHoliday,0) + COALESCE (tmpSummHoliday2.SummHoliday,0)) ::TFloat AS TotalSummHoliday  
                            , (MovementFloat_Amount.ValueData * (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1)) ::TFloat AS SummHoliday_calc
                            , MovementFloat_Amount.ValueData                     :: TFloat AS Amount  --Ср.ЗП за день
                            , spReport_HolidayCompensation.AmountCompensation    :: TFloat            --Ср.ЗП за день (отчет)   
-                           , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) :: Boolean AS isLoad  
            
                            , CASE WHEN (MovementFloat_Amount.ValueData * (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1))
                                     <> (COALESCE (tmpSummHoliday1.SummHoliday,0) + COALESCE (tmpSummHoliday2.SummHoliday,0))
@@ -157,17 +158,6 @@ BEGIN
                             LEFT JOIN MovementFloat AS MovementFloat_Amount
                                                     ON MovementFloat_Amount.MovementId = Movement.Id
                                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
-                
-                            LEFT JOIN Movement AS Movement_PersonalService1 ON Movement_PersonalService1.Id = Movement.MovementId_1  --MovementFloat_MovementId.ValueData::Integer 
-                            LEFT JOIN MovementDesc AS MovementDesc1 ON MovementDesc1.Id = Movement_PersonalService1.DescId
-                
-                            LEFT JOIN Movement AS Movement_PersonalService2 ON Movement_PersonalService2.Id = Movement.MovementId_2  --MovementFloat_MovementItemId.ValueData::Integer
-                            LEFT JOIN MovementDesc AS MovementDesc2 ON MovementDesc2.Id = Movement_PersonalService2.DescId
-                 
-                            LEFT JOIN MovementBoolean AS MovementBoolean_isLoad
-                                                      ON MovementBoolean_isLoad.MovementId = Movement.Id
-                                                     AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
-
 
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
                                                          ON MovementLinkObject_Member.MovementId = Movement.Id
@@ -183,12 +173,8 @@ BEGIN
                                                          ON MovementLinkObject_WorkTimeKind.MovementId = Movement.Id
                                                         AND MovementLinkObject_WorkTimeKind.DescId = zc_MovementLinkObject_WorkTimeKind()
                             LEFT JOIN Object AS Object_WorkTimeKind ON Object_WorkTimeKind.Id = MovementLinkObject_WorkTimeKind.ObjectId
-
                             --
                             LEFT JOIN tmpMember ON tmpMember.MemberId = MovementLinkObject_Member.ObjectId
-                            LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpMember.PositionId
-                            LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpMember.UnitId
-
 
                             LEFT JOIN ObjectDate AS ObjectDate_DateIn
                                                  ON ObjectDate_DateIn.ObjectId = tmpMember.PersonalId
@@ -204,16 +190,16 @@ BEGIN
             
                             --
                             LEFT JOIN tmpSummHoliday AS tmpSummHoliday1
-                                                     ON tmpSummHoliday1.MovementId = Movement_PersonalService1.Id 
+                                                     ON tmpSummHoliday1.MovementId = Movement.MovementId_1 
                                                     AND tmpSummHoliday1.PersonalId = tmpMember.PersonalId
                             LEFT JOIN tmpSummHoliday AS tmpSummHoliday2
-                                                     ON tmpSummHoliday2.MovementId = Movement_PersonalService2.Id 
+                                                     ON tmpSummHoliday2.MovementId = Movement.MovementId_2 
                                                     AND tmpSummHoliday2.PersonalId = tmpMember.PersonalId   
     
                              LEFT JOIN gpReport_HolidayCompensation(DATE_TRUNC ('Month', MovementDate_BeginDateStart.ValueData) - INTERVAL '1 Day'
                                                                   , tmpMember.UnitId
                                                                   , Object_Member.Id
-                                                                  , Object_PersonalServiceList.Id
+                                                                  , 0
                                                                   , inSession) AS spReport_HolidayCompensation ON 1 = 1
                   )
         --ищем уже сохраненные док.начисления
@@ -255,6 +241,7 @@ BEGIN
 
        SELECT  tmpData.MemberId
              , tmpData.MemberName
+             , tmpData.PersonalId
              , tmpData.Day_holiday   
              , (tmpData.Day_holiday1 ) ::TFloat AS Day_holiday1
              , (tmpData.Day_holiday2 ) ::TFloat AS Day_holiday2
@@ -280,8 +267,14 @@ BEGIN
              , CASE WHEN (tmpData.Day_holiday2 * CAST (tmpData.AmountCompensation AS NUMERIC(16,2))) <> tmpPersonalService2.Amount 
                     THEN  zc_Color_Pink() --фон 
                     ELSE zc_Color_White()
-               END::Integer AS Color_SummHoliday2
-           
+               END::Integer AS Color_SummHoliday2  
+               
+             , tmpData.ServiceDateStart ::TDateTime
+             , tmpData.ServiceDateEnd   ::TDateTime
+             , tmpData.PositionId
+             , tmpData.UnitId     
+             , tmpData.IsMain ::Boolean
+             
              /*tmpData.Id
              , tmpData.OperDateStart     --период начисления
              , tmpData.OperDateEnd
@@ -289,7 +282,7 @@ BEGIN
              , tmpData.BeginDateStart    -- период отпуска
              , tmpData.BeginDateEnd
              
-             , tmpData.PersonalId 
+              
              , tmpData.PositionId
              , tmpData.PositionName
              , tmpData.UnitId

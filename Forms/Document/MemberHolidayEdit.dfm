@@ -111,7 +111,7 @@
     ShowHint = True
   end
   object edSummHoliday2_calc: TcxCurrencyEdit [13]
-    Left = 182
+    Left = 181
     Top = 173
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -229,81 +229,124 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 4
-    Top = 340
+    Left = 36
+    Top = 300
   end
   inherited spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_MemberHoliday'
+    StoredProcName = 'gpInsertUpdate_Movement_PersonalServiceByHoliday'
     Params = <
       item
-        Name = 'ioId'
-        Value = '0'
+        Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inInvNumber'
-        Value = '0'
-        Component = edInvNumber
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDateStart'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDateEnd'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBeginDateStart'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBeginDateEnd'
-        Value = Null
-        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId'
-        Value = ''
+        Value = Null
         Component = GuideMemberHoliday
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMemberMainId'
-        Value = ''
+        Name = 'inPersonalId'
+        Value = 0d
+        Component = FormParams
+        ComponentItem = 'PersonalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inWorkTimeKindId'
+        Name = 'inPersonalServiceListId'
+        Value = ''
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_1'
+        Value = '0'
+        Component = GuidesPS1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_2'
+        Value = '0'
+        Component = GuidesPS2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummHoliday1'
         Value = Null
+        Component = edSummHoliday1_calc
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummHoliday2'
+        Value = Null
+        Component = edSummHoliday2_calc
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountCompensation'
+        Value = Null
+        Component = edAmountCompensation
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inServiceDate1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ServiceDate1'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inServiceDate2'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ServiceDate2'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMain'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isMain'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -422,6 +465,51 @@
         Value = '0'
         Component = FormParams
         ComponentItem = 'Color_SummHoliday2'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PositionId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ServiceDateStart'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ServiceDate1'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ServiceDateEnd'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ServiceDate2'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMain'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isMain'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 288
