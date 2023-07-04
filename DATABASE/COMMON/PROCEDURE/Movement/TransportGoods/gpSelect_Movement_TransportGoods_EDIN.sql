@@ -92,12 +92,12 @@ BEGIN
            , Object_Status.ValueData    AS StatusName
 
            , MovementString_InvNumberMark.ValueData  AS InvNumberMark
-           , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, Movement.OperDate) AS InvNumber_Full
+           , zfCalc_InvNumber_isErased (MovementDesc.ItemName, Movement.InvNumber, Movement.OperDate, Movement.StatusId) AS InvNumber_Full
 
            , Movement_Sale.Id        AS MovementId_Sale
-           , Movement_Sale.InvNumber AS InvNumber_Sale
+           , zfCalc_InvNumber_isErased_sh (Movement_Sale.InvNumber, Movement_Sale.StatusId) AS InvNumber_Sale
            , Movement_Sale.OperDate  AS OperDate_Sale
-           , MovementString_InvNumberPartner_Sale.ValueData AS InvNumberPartner_Sale
+           , zfCalc_InvNumber_isErased_sh (MovementString_InvNumberPartner_Sale.ValueData, Movement_Sale.StatusId) AS InvNumberPartner_Sale
            , MovementDate_OperDatePartner_Sale.ValueData    AS OperDatePartner_Sale
 
            , Object_Route.ValueData          AS RouteName
@@ -136,14 +136,14 @@ BEGIN
            , Object_PersonalDriver_reestr.PersonalName  AS PersonalDriverName_reestr
            , Object_Member_reestr.ValueData             AS MemberName_reestr
 
-           , Movement_Transport_reestr.InvNumber        AS InvNumber_Transport_reestr
+           , zfCalc_InvNumber_isErased_sh (Movement_Transport_reestr.InvNumber, Movement_Transport_reestr.StatusId) AS InvNumber_Transport_reestr
            , Movement_Transport_reestr.OperDate         AS OperDate_Transport_reestr
            
 
            , Movement_Transport.Id                     AS MovementId_Transport
-           , Movement_Transport.InvNumber              AS InvNumber_Transport
+           , zfCalc_InvNumber_isErased_sh (Movement_Transport.InvNumber, Movement_Transport.StatusId) AS InvNumber_Transport
            , Movement_Transport.OperDate               AS OperDate_Transport
-           , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
+           , zfCalc_InvNumber_isErased ('', Movement_Transport.InvNumber, Movement_Transport.OperDate, Movement_Transport.StatusId) AS InvNumber_Transport_Full
            , Object_PersonalDriver_Transport.ValueData AS PersonalDriverName_Transport
            , Object_Car_Transport.ValueData            AS CarName_Transport
            
@@ -323,7 +323,7 @@ BEGIN
                                            ON MovementLinkMovement_TransportGoods.MovementChildId = Movement.Id 
                                           AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_TransportGoods.MovementId
-                                               AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+                                             --AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_Sale
                                      ON MovementString_InvNumberPartner_Sale.MovementId =  MovementLinkMovement_TransportGoods.MovementId
                                     AND MovementString_InvNumberPartner_Sale.DescId = zc_MovementString_InvNumberPartner()
