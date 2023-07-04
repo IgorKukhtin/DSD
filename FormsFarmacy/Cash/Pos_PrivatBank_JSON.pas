@@ -5,13 +5,14 @@ unit Pos_PrivatBank_JSON;
 interface
 
 uses Winapi.Windows, Winapi.ActiveX, System.Variants, System.SysUtils, System.Win.ComObj,
-     System.Classes, PosInterface, IdHTTP, Vcl.Forms, Vcl.Dialogs,
+     System.Classes, PosInterface, IdTCPClient, IdThreadComponent, Vcl.Forms, Vcl.Dialogs,
      {$IFDEF DELPHI103RIO} System.JSON {$ELSE} Data.DBXJSON {$ENDIF};
 
 type
   TPos_PrivatBank_JSON = class(TInterfacedObject, IPos)
   private
-    FIdHTTP: TIdHTTP;
+    FIdTCPClient: TIdTCPClient;
+    FidThreadComponent: TIdThreadComponent;
     FLastPosError : String;
     FHost : String;
     FPort : Integer;
@@ -22,13 +23,15 @@ type
     procedure SetMsgDescriptionProc(Value: TMsgDescriptionProc);
     function GetMsgDescriptionProc: TMsgDescriptionProc;
     function GetLastPosError : string;
+    function GetProcessType : TPosProcessType;
+    procedure IdThreadComponentRun(Sender: TIdThreadComponent);
   protected
+    function CheckConnection : Boolean;
     function Payment(ASumma : Currency) : Boolean;
     function Refund(ASumma : Currency) : Boolean;
     procedure Cancel;
   public
     constructor Create(APOSTerminalCode : Integer);
-    function CheckConnection : Boolean;
     function DoPayment(ASumma : Currency; ARefund : Boolean) : Boolean;
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
@@ -82,19 +85,40 @@ begin
   Result := FLastPosError;
 end;
 
+function TPos_PrivatBank_JSON.GetProcessType : TPosProcessType;
+begin
+  Result := pptThread;
+end;
+
 procedure TPos_PrivatBank_JSON.AfterConstruction;
 begin
   inherited AfterConstruction;
 
-  FIdHTTP := TIdHTTP.Create;
+  FIdTCPClient := TIdTCPClient.Create;
   FHost := iniPosHost(FPOSTerminalCode);
+  FPort := iniPosPortNumber(FPOSTerminalCode);
+
+  FidThreadComponent := TIdThreadComponent.Create();
+  FidThreadComponent.OnRun := IdThreadComponentRun;
+
   FCancel := False;
 end;
 
 procedure TPos_PrivatBank_JSON.BeforeDestruction;
 begin
-  FreeAndNil(FIdHTTP);
+  if FidThreadComponent.Active then FidThreadComponent.Active := False;
+  FreeAndNil(FIdTCPClient);
+  FreeAndNil(FIdThreadComponent);
   inherited BeforeDestruction;
+end;
+
+procedure TPos_PrivatBank_JSON.IdThreadComponentRun(Sender: TIdThreadComponent);
+var
+    msgFromServer : string;
+begin
+    // ... read message from server
+    msgFromServer := FIdTCPClient.IOHandler.ReadLn();
+    Add_PosLog(msgFromServer);
 end;
 
 function TPos_PrivatBank_JSON.CheckConnection : Boolean;
@@ -112,12 +136,17 @@ begin
     JsonToSend := TStringStream.Create(JSONObject.ToString, TEncoding.UTF8);
     try
       try
-        FIdHTTP.Request.Clear;
-        FIdHTTP.Request.ContentType := 'application/json';
-        FIdHTTP.Request.Accept := 'application/json';
-        FIdHTTP.Request.ContentEncoding := 'utf-8';
-        S := FIdHTTP.Post(FHost + ':' + IntToStr(FPort) , JsonToSend);
-      except on E:EIdHTTPProtocolException do FLastPosError := 'Ошибка проверки связи : ' + e.ErrorMessage;
+        FIdTCPClient.Host := FHost;
+        FIdTCPClient.Port := FPort;
+        FIdTCPClient.Connect;
+
+        Add_PosLog(JsonToSend.DataString);
+        if FIdTCPClient.Connected then
+        begin
+          FIdThreadComponent.Active  := True;
+          FIdTCPClient.IOHandler.Write(JsonToSend);
+        end;
+      except on E:Exception do FLastPosError := 'Ошибка проверки связи : ' + e.Message;
       end;
     finally
       JSONObject.Free;
@@ -126,8 +155,6 @@ begin
   except on E:Exception do FLastPosError := 'Ошибка проверки связи : ' + e.Message;
   end;
 
-  Add_PosLog(IntToStr(FIdHTTP.ResponseCode) + ' : ' + FIdHTTP.ResponseText);
-  if S <> '' then Add_PosLog(S);
   if FLastPosError <> '' then Add_PosLog(FLastPosError);
 
   if FLastPosError = '' then
@@ -180,12 +207,11 @@ begin
     JsonToSend := TStringStream.Create(JSONObject.ToString, TEncoding.UTF8);
     try
       try
-        FIdHTTP.Request.Clear;
-        FIdHTTP.Request.ContentType := 'application/json';
-        FIdHTTP.Request.Accept := 'application/json';
-        FIdHTTP.Request.ContentEncoding := 'utf-8';
-        S := FIdHTTP.Post(FHost + ':' + IntToStr(FPort), JsonToSend);
-      except on E:EIdHTTPProtocolException do FLastPosError := 'Ошибка выполнения оплаты (возврата) : ' + e.ErrorMessage;
+
+        Add_PosLog(JsonToSend.DataString);
+        if FIdTCPClient.Connected then FIdTCPClient.IOHandler.Write(JsonToSend);
+
+      except on E:Exception do FLastPosError := 'Ошибка выполнения оплаты (возврата) : ' + e.Message;
       end;
     finally
       JSONObject.Free;
@@ -194,8 +220,6 @@ begin
   except on E:Exception do FLastPosError := 'Ошибка выполнения оплаты (возврата) : ' + e.Message;
   end;
 
-  Add_PosLog(IntToStr(FIdHTTP.ResponseCode) + ' : ' + FIdHTTP.ResponseText);
-  if S <> '' then Add_PosLog(S);
   if FLastPosError <> '' then Add_PosLog(FLastPosError);
 
   if FLastPosError = '' then
@@ -231,8 +255,6 @@ end;
 function TPos_PrivatBank_JSON.Payment(ASumma : Currency) : Boolean;
 begin
 
-  if not CheckConnection then Exit;
-
   if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Выполнение оплаты');
 
   Result := DoPayment(ASumma, False);
@@ -240,16 +262,40 @@ end;
 
 function TPos_PrivatBank_JSON.Refund(ASumma : Currency) : Boolean;
 begin
-  if not CheckConnection then Exit;
-
   if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Выполнение возврата');
 
   Result := DoPayment(ASumma, True);
 end;
 
 procedure TPos_PrivatBank_JSON.Cancel;
+  var JSONObject: TJSONObject;
+      JsonToSend: TStringStream;
 begin
+
   FCancel := True;
+
+  if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Отмена выполнение операции');
+
+  if not FIdTCPClient.Connected then Exit;
+
+  try
+    JSONObject := TJSONObject.Create;
+    JSONObject.AddPair('method', 'CheckConnection');
+    JSONObject.AddPair('step', TJSONNumber.Create(0));
+
+    JsonToSend := TStringStream.Create(JSONObject.ToString, TEncoding.UTF8);
+    try
+      try
+        Add_PosLog(JsonToSend.DataString);
+        FIdTCPClient.IOHandler.Write(JsonToSend);
+      except on E:Exception do FLastPosError := 'Ошибка отмены выполнение операции : ' + e.Message;
+      end;
+    finally
+      JSONObject.Free;
+      JsonToSend.Free;
+    end;
+  except on E:Exception do FLastPosError := 'Ошибка отмены выполнение операции : ' + e.Message;
+  end;
 end;
 
 end.

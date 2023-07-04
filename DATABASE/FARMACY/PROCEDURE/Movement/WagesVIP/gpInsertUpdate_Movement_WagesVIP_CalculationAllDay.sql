@@ -135,5 +135,4 @@ $BODY$
  21.08.19                                                        *
 */
 
--- 
-select * from gpInsertUpdate_Movement_WagesVIP_CalculationAllDay(inMovementId := 30560885 ,  inSession := '3');
+-- select * from gpInsertUpdate_Movement_WagesVIP_CalculationAllDay(inMovementId := 30560885 ,  inSession := '3');

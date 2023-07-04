@@ -55,6 +55,7 @@ BEGIN
                                      , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
                                      , COALESCE(MovementBoolean_CallOrder.ValueData,FALSE) :: Boolean AS isCallOrder
                                      , False                                                          AS isOffsetVIP
+                                     , Null::TDateTime                                                AS DateOffsetVIP 
                                 FROM Movement
 
                                      INNER JOIN MovementBoolean AS MovementBoolean_Deferred
@@ -79,16 +80,22 @@ BEGIN
                                                                ON MovementBoolean_MobileApplication.MovementId = Movement.Id
                                                               AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
 
+                                     LEFT JOIN MovementBoolean AS MovementBoolean_OffsetVIP
+                                                               ON MovementBoolean_OffsetVIP.MovementId = Movement.Id
+                                                              AND MovementBoolean_OffsetVIP.DescId = zc_MovementBoolean_OffsetVIP()
+
                                 WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', inOperDate) -  INTERVAL '1 MONTH' + INTERVAL '4 DAY'
                                   AND Movement.OperDate < DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' + INTERVAL '4 DAY'
                                   AND Movement.DescId = zc_Movement_Check()
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
                                   AND COALESCE(MovementBoolean_MobileApplication.ValueData, False) = False
+                                  AND COALESCE(MovementBoolean_OffsetVIP.ValueData, False) = False
                                 UNION ALL
                                 SELECT Movement.*
                                      , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
                                      , False                                                          AS isCallOrder
                                      , MovementBoolean_OffsetVIP.ValueData                            AS isOffsetVIP 
+                                     , COALESCE(MovementDate_OffsetVIP.ValueData, Movement.OperDate)  AS DateOffsetVIP 
                                 FROM Movement
 
                                      INNER JOIN MovementBoolean AS MovementBoolean_OffsetVIP
@@ -100,21 +107,25 @@ BEGIN
                                                              ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                                             AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
                                                                 
+                                     LEFT JOIN MovementDate AS MovementDate_OffsetVIP
+                                                            ON MovementDate_OffsetVIP.MovementId =  Movement.Id
+                                                           AND MovementDate_OffsetVIP.DescId = zc_MovementDate_OffsetVIP()
+                                                            
                                 WHERE Movement.OperDate >= DATE_TRUNC ('MONTH', inOperDate)
                                   AND Movement.OperDate < DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH'
                                   AND Movement.DescId = zc_Movement_Check()
                                   AND Movement.StatusId = zc_Enum_Status_Complete())
          , tmpMovementProtocol AS (SELECT MovementProtocol.MovementId
                                         , CASE WHEN MIN(date_trunc('day', MovementProtocol.OperDate + INTERVAL '3 HOUR')) < DATE_TRUNC ('MONTH', inOperDate)
-                                                    AND date_trunc('day', Movement.OperDate) > DATE_TRUNC ('MONTH', inOperDate)
-                                                    AND date_trunc('day', Movement.OperDate) >= '01.01.2022'
+                                                    AND date_trunc('day', COALESCE(Movement.DateOffsetVIP, Movement.OperDate)) > DATE_TRUNC ('MONTH', inOperDate)
+                                                    AND date_trunc('day',COALESCE(Movement.DateOffsetVIP, Movement.OperDate)) >= '01.01.2022'
                                                     OR Movement.isOffsetVIP = TRUE
-                                               THEN date_trunc('day', Movement.OperDate)
+                                               THEN date_trunc('day', COALESCE(Movement.DateOffsetVIP, Movement.OperDate))
                                                ELSE MIN(date_trunc('day', MovementProtocol.OperDate + INTERVAL '3 HOUR')) END   AS OperDate
                                    FROM tmpMovementCheck AS Movement
 
                                         INNER JOIN MovementProtocol ON MovementProtocol.MovementId = Movement.ID
-                                   GROUP BY MovementProtocol.MovementId, date_trunc('day', Movement.OperDate), Movement.isOffsetVIP)
+                                   GROUP BY MovementProtocol.MovementId, date_trunc('day', COALESCE(Movement.DateOffsetVIP, Movement.OperDate)), Movement.isOffsetVIP)
          , tmpMovement AS (SELECT tmpMovementProtocol.OperDate
                                 , SUM(CASE WHEN Movement.isCallOrder = TRUE THEN Movement.TotalSumm END)::TFloat  AS SummPhone
                                 , SUM(CASE WHEN Movement.isCallOrder = FALSE THEN Movement.TotalSumm END)::TFloat AS SummSale
@@ -180,4 +191,4 @@ ALTER FUNCTION gpReport_Movement_WagesVIP_CalcMonth (TDateTime, TVarChar) OWNER 
 -- тест
 -- 
 
-select * from gpReport_Movement_WagesVIP_CalcMonth(inOperDate := ('01.01.2023')::TDateTime ,  inSession := '3');
+select * from gpReport_Movement_WagesVIP_CalcMonth(inOperDate := ('01.06.2023')::TDateTime ,  inSession := '3');

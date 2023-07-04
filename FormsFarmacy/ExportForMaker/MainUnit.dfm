@@ -289,6 +289,13 @@ object MainForm: TMainForm
         HeaderAlignmentHorz = taCenter
         Width = 88
       end
+      object isReport8: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
+        DataBinding.FieldName = 'isReport8'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 94
+      end
       object isQuarter: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1082#1074#1072#1088#1090#1072#1083#1100#1085#1099#1077' '#1086#1090#1095#1077#1090#1099
         DataBinding.FieldName = 'isQuarter'
@@ -431,7 +438,9 @@ object MainForm: TMainForm
       
         'COALESCE (isReport5, FALSE) = TRUE OR COALESCE (isReport6, FALSE' +
         ') = TRUE OR'
-      'COALESCE (isReport7, FALSE) = TRUE OR'
+      
+        'COALESCE (isReport7, FALSE) = TRUE OR COALESCE (isReport8, FALSE' +
+        ') = TRUE OR'
       'COALESCE (isUnPlanned, FALSE) = TRUE) AND'
       'COALESCE (Mail, '#39#39') <> '#39#39
       ')')
@@ -503,6 +512,11 @@ object MainForm: TMainForm
     object N7: TMenuItem
       Tag = 6
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1087#1083#1072#1090#1077' '#1087#1088#1080#1093#1086#1076#1086#1074
+      OnClick = pmClick
+    end
+    object N8: TMenuItem
+      Tag = 7
+      Caption = #1054#1090#1095#1077#1090' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
       OnClick = pmClick
     end
   end

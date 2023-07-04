@@ -67,6 +67,17 @@ type
     ApplicationAward: TcxGridDBColumn;
     SiteWhoUpdate: TcxGridDBColumn;
     SiteDateUpdate: TcxGridDBColumn;
+    spUpdate_SetOffsetVIP: TdsdStoredProc;
+    spUpdate_OffsetVIP: TdsdStoredProc;
+    isOffsetVIP: TcxGridDBColumn;
+    DateOffsetVIP: TcxGridDBColumn;
+    actDateOffsetVIPDialog: TExecuteDialog;
+    actUpdate_SetOffsetVIP: TdsdExecStoredProc;
+    actUpdate_OffsetVIP: TdsdExecStoredProc;
+    mactUpdate_SetOffsetVIP: TMultiAction;
+    mactUpdate_OffsetVIP: TMultiAction;
+    bbUpdate_SetOffsetVIP: TdxBarButton;
+    bbUpdate_OffsetVIP: TdxBarButton;
   private
     { Private declarations }
   public

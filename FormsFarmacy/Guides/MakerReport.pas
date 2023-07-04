@@ -101,6 +101,7 @@ type
     Panel1: TPanel;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
+    isReport8: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isSite Boolean, isCallOrder Boolean
              , DiscountCardName TVarChar, DiscountExternalName TVarChar
              , BayerPhone TVarChar
-             , InvNumberOrder TVarChar
+             , InvNumberOrder Integer
              , ConfirmedKindName TVarChar
              , ConfirmedKindClientName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
@@ -50,6 +50,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isMobileFirstOrder Boolean 
              , UserUnitReferalsName TVarChar, ApplicationAward TFloat
              , SiteWhoUpdate TVarChar, SiteDateUpdate TDateTime
+             , isOffsetVIP Boolean, DateOffsetVIP TDateTime
               )
 AS
 $BODY$
@@ -112,9 +113,9 @@ BEGIN
            , Object_DiscountExternal.ValueData                  AS DiscountExternalName
            , COALESCE (ObjectString_BuyerForSite_Phone.ValueData, 
                        MovementString_BayerPhone.ValueData)     AS BayerPhone
-           , COALESCE(MovementString_InvNumberOrder.ValueData,
+           , zfConvert_StringToNumber(COALESCE(MovementString_InvNumberOrder.ValueData,
              CASE WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) = zc_Enum_CheckSourceKind_Tabletki() THEN MovementString_OrderId.ValueData
-                  WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0 THEN Movement_Check.Id::TVarChar END)::TVarChar   AS InvNumberOrder
+                  WHEN COALESCE (MovementLinkObject_CheckSourceKind.ObjectId, 0) <> 0 THEN Movement_Check.Id::TVarChar END)::TVarChar)   AS InvNumberOrder
            , Object_ConfirmedKind.ValueData                     AS ConfirmedKindName
            , Object_ConfirmedKindClient.ValueData               AS ConfirmedKindClientName
 
@@ -166,6 +167,8 @@ BEGIN
 
            , MovementString_SiteWhoUpdate.ValueData                       AS SiteWhoUpdate
            , MovementDate_SiteDateUpdate.ValueData                        AS SiteDateUpdate
+           , COALESCE(MovementBoolean_OffsetVIP.ValueData, False)         AS isOffsetVIP
+           , MovementDate_OffsetVIP.ValueData                             AS DateOffsetVIP
 
         FROM (SELECT Movement.*
                                        , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -441,7 +444,14 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_SiteDateUpdate
                                    ON MovementDate_SiteDateUpdate.MovementId = Movement_Check.Id
                                   AND MovementDate_SiteDateUpdate.DescId = zc_MovementDate_SiteDateUpdate()
+
+            LEFT JOIN MovementDate AS MovementDate_OffsetVIP
+                                   ON MovementDate_OffsetVIP.MovementId = Movement_Check.Id
+                                  AND MovementDate_OffsetVIP.DescId = zc_MovementDate_OffsetVIP()
                                   
+            LEFT JOIN MovementBoolean AS MovementBoolean_OffsetVIP
+                                      ON MovementBoolean_OffsetVIP.MovementId = Movement_Check.Id
+                                     AND MovementBoolean_OffsetVIP.DescId = zc_MovementBoolean_OffsetVIP()
       ;
 
 END;
@@ -459,4 +469,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_CheckSummCard (inStartDate:= '30.06.2020', inEndDate:= '30.06.2020', inIsErased := FALSE, inSession:= '3')
 
-select * from gpSelect_Movement_CheckSummCard(inStartDate := ('06.10.2022')::TDateTime , inEndDate := ('06.10.2022')::TDateTime , inIsErased := 'False' ,  inSession := '3');
+select * from gpSelect_Movement_CheckSummCard(inStartDate := ('01.07.2023')::TDateTime , inEndDate := ('01.07.2023')::TDateTime , inIsErased := 'False' ,  inSession := '3');

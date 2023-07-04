@@ -3,7 +3,7 @@
 --DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, TFloat, Integer, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (TDateTime, Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (TDateTime, Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, TFloat, TVarChar, TFloat);
+DROP FUNCTION IF EXISTS gpSelect_Calculation_PayrollGroup (TDateTime, Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer, TFloat, TFloat, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Calculation_PayrollGroup(
@@ -16,8 +16,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Calculation_PayrollGroup(
     IN inSummBaseSite     TFloat,
     IN inCountUser        Integer,
     IN inCorrPercentage   TFloat,
-    IN inDetals           TVarChar,
-    IN inSoldPlan         TFloat
+    IN inSoldPlan         TFloat,
+    IN inDetals           TVarChar
 )
 RETURNS TABLE (Summa TFloat
              , SummaBase TFloat
@@ -50,14 +50,9 @@ BEGIN
     
     IF inPayrollTypeID = zc_Enum_PayrollType_WorkCS() AND
        COALESCE (inSoldPlan, 0) > 0 AND
-       COALESCE (inSoldPlan, 0) < COALESCE (vbSummaBase, 0) + COALESCE (vbSummaBaseSite, 0)
-    THEN
-      IF COALESCE (inCountUser, 0) = 0
-      THEN
-        vbSummaSoldPlan := ROUND((COALESCE (vbSummaBase, 0) + COALESCE (vbSummaBaseSite, 0) - COALESCE (inSoldPlan, 0)) * 0.03, 2);
-      ELSE
-        vbSummaSoldPlan := ROUND((COALESCE (vbSummaBase, 0) + COALESCE (vbSummaBaseSite, 0) - COALESCE (inSoldPlan, 0)) / inCountUser * 0.03, 2);
-      END IF;
+       COALESCE (inSoldPlan, 0) / inCountUser < COALESCE (inSummBase, 0) + COALESCE (inSummBaseSite, 0)
+    THEN    
+      vbSummaSoldPlan := ROUND((COALESCE (inSummBase, 0) + COALESCE (inSummBaseSite, 0) - COALESCE (inSoldPlan, 0) / inCountUser) * 0.03, 2);
     ELSE
       vbSummaSoldPlan := 0;
     END IF;
@@ -140,7 +135,7 @@ BEGIN
     RETURN QUERY
         SELECT vbSummaCalñ, vbSummaBase, vbSummaBaseSite, vbFormula;
 
-  ELSEIF inPayrollTypeID in (zc_Enum_PayrollType_WorkBid(), zc_Enum_PayrollType_WorkSBid())
+  ELSEIF inPayrollTypeID in (zc_Enum_PayrollType_WorkBid(), zc_Enum_PayrollType_WorkSBid(), zc_Enum_PayrollType_WorkSBis())
   THEN
 
     vbSummaBase := 0;
@@ -177,4 +172,4 @@ ALTER FUNCTION gpSelect_Calculation_PayrollGroup (TDateTime, Integer, TFloat, TF
 */
 
 -- 
-select * from gpSelect_Calculation_PayrollGroup('01.07.2023', zc_Enum_PayrollType_WorkCS(), 3, 1200, 3, 40813.63 - 3589.65, 3589.65, 0, 100, '', 16129.03);
+select * from gpSelect_Calculation_PayrollGroup('01.07.2023', zc_Enum_PayrollType_WorkCS(), 3, 1200, 3, 40813.63 - 3589.65, 3589.65, 2, 100, 16129.03, '');

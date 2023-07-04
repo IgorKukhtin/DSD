@@ -418,7 +418,7 @@ end;
 //возвращает хост POS-терминала
 function iniPosHost(ACode : integer):String;
 begin
-  Result := GetValue('TSoldWithCompMainForm', 'PosHost' + IntToStr(ACode), 'http://localhost:3000');
+  Result := GetValue('TSoldWithCompMainForm', 'PosHost' + IntToStr(ACode), '192.168.1.101');
 end;
 
 //возвращает порт POS-терминала
@@ -426,7 +426,7 @@ function iniPosPortNumber(ACode : integer):Integer;
 var
   S: String;
 begin
-  S := GetValue('TSoldWithCompMainForm','PosPortNumber' + IntToStr(ACode),'');
+  S := GetValue('TSoldWithCompMainForm','PosPortNumber' + IntToStr(ACode), '2000');
   if not tryStrToInt(S,Result) then
     Result := 0;
 end;

@@ -184,6 +184,7 @@ type
     FInfoAfterExecuteList: TStringList;
     FView: TcxGridTableView;
     FWithoutNext: Boolean;
+    FShowGauge: Boolean;
     procedure ListExecute;
     procedure DataSourceExecute;
     procedure SaveQuestionBeforeExecute;
@@ -217,6 +218,8 @@ type
     property SecondaryShortCuts;
     property WithoutNext: Boolean read FWithoutNext write FWithoutNext
       default false;
+    property ShowGauge: Boolean read FShowGauge write FShowGauge
+      default True;
   end;
 
   TdsdDataSetRefresh = class(TdsdCustomDataSetAction)
@@ -3533,6 +3536,7 @@ begin
   inherited;
   FActionList := TOwnedCollection.Create(Self, TActionItem);
   FWithoutNext := false;
+  FShowGauge := True;
 end;
 
 procedure TMultiAction.DataSourceExecute;
@@ -3543,9 +3547,9 @@ begin
   if Assigned(View) then
   begin
     with TGaugeFactory.GetGauge(Caption, 0,
-      View.DataController.FilteredRecordCount) do
+      View.DataController.FilteredRecordCount, FShowGauge) do
     begin
-      Start;
+      if FShowGauge then Start;
       try
         for i := 0 to View.DataController.FilteredRecordCount - 1 do
         begin
@@ -3553,11 +3557,11 @@ begin
             View.DataController.FilteredRecordIndex[i];
           fExecPack:= (i = View.DataController.FilteredRecordCount - 1);//***12.07.2016 - Определили параметр для StoredProc, нужен для otMultiExecute
           ListExecute;
-          IncProgress(1);
+          if FShowGauge then IncProgress(1);
           Application.ProcessMessages;
         end;
       finally
-        Finish;
+        if FShowGauge then Finish;
       end;
     end;
   end
@@ -3571,15 +3575,15 @@ begin
       try
         DataSource.DataSet.First;
         with TGaugeFactory.GetGauge(Caption, 0,
-          DataSource.DataSet.RecordCount) do
+          DataSource.DataSet.RecordCount, FShowGauge) do
           try
-            Start;
+            if FShowGauge then Start;
             while not DataSource.DataSet.Eof do
             begin
               fExecPack:= (i = 1);//***12.07.2016 - Определили параметр для StoredProc, нужен для otMultiExecute
               ListExecute;
               i:=i-1;//***12.07.2016
-              IncProgress(1);
+              if FShowGauge then IncProgress(1);
               Application.ProcessMessages;
               if not WithoutNext then
                 DataSource.DataSet.Next
@@ -3587,7 +3591,7 @@ begin
                 DataSource.DataSet.Delete;
             end;
           finally
-            Finish;
+            if FShowGauge then Finish;
           end;
       finally
         Application.ProcessMessages;
@@ -3597,9 +3601,9 @@ begin
   end else
   begin
     with TGaugeFactory.GetGauge(Caption, 0,
-      DateNavigator.SelectedDays.Count) do
+      DateNavigator.SelectedDays.Count, FShowGauge) do
     begin
-      Start;
+      if FShowGauge then Start;
       SetLength(aDate, DateNavigator.SelectedDays.Count);
       try
         for i := 0 to DateNavigator.SelectedDays.Count - 1 do
@@ -3609,11 +3613,11 @@ begin
           DateNavigator.Date := aDate[i];
           fExecPack:= (i = High(aDate) - 1);
           ListExecute;
-          IncProgress(1);
+          if FShowGauge then IncProgress(1);
           Application.ProcessMessages;
         end;
       finally
-        Finish;
+        if FShowGauge then Finish;
       end;
     end;
   end;

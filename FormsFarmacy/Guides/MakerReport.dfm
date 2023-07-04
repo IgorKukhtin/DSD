@@ -18,16 +18,14 @@ object MakerReportForm: TMakerReportForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 67
+    Top = 68
     Width = 1062
-    Height = 356
+    Height = 355
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 26
-    ExplicitHeight = 397
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -226,6 +224,14 @@ object MakerReportForm: TMakerReportForm
         Options.Editing = False
         Width = 80
       end
+      object isReport8: TcxGridDBColumn
+        Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
+        DataBinding.FieldName = 'isReport8'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 107
+      end
       object is4Month: TcxGridDBColumn
         Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1095#1077#1090#1099' '#1079#1072' 4 '#1084#1077#1089#1103#1094#1072
         DataBinding.FieldName = 'is4Month'
@@ -265,8 +271,6 @@ object MakerReportForm: TMakerReportForm
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 6
-    ExplicitLeft = 8
-    ExplicitTop = -14
     object cxLabel1: TcxLabel
       Left = 12
       Top = 2
@@ -309,7 +313,7 @@ object MakerReportForm: TMakerReportForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -15
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -328,7 +332,7 @@ object MakerReportForm: TMakerReportForm
     DockControlHeights = (
       0
       0
-      26
+      27
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'

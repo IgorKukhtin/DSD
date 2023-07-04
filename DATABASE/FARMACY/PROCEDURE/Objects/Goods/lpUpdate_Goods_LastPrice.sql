@@ -15,6 +15,8 @@ BEGIN
    IF COALESCE(inGoodsMainId, 0) = 0 THEN
       RETURN;
    END IF;
+   
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_LastPrice(), inGoodsMainId, inLastPriceDate);  
 
     -- Сохранили в плоскую таблицй
    BEGIN

@@ -20,7 +20,7 @@ object PayPosTermProcessForm: TPayPosTermProcessForm
   TextHeight = 13
   object edMsgDescription: TEdit
     Left = 16
-    Top = 16
+    Top = 12
     Width = 393
     Height = 21
     TabStop = False

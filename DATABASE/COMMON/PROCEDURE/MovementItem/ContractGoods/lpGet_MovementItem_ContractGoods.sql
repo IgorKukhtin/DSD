@@ -80,7 +80,7 @@ BEGIN
                                                            ON MIF_Price.MovementItemId = MovementItem.Id
                                                           AND MIF_Price.DescId         = zc_MIFloat_Price()
 
-                          WHERE Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '12 MONTH') AND inOperDate
+                          WHERE Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '24 MONTH') AND inOperDate
                             AND Movement.DescId    = zc_Movement_ContractGoods()
                             AND Movement.StatusId  = zc_Enum_Status_Complete()
                             AND (ObjectLink_Contract_Juridical.ChildObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)

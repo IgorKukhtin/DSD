@@ -20,7 +20,7 @@ BEGIN
     IF 3 <> inSession::Integer AND 375661 <> inSession::Integer AND 4183126 <> inSession::Integer AND
       8001630 <> inSession::Integer AND 9560329 <> inSession::Integer
     THEN
-      RAISE EXCEPTION 'Установка признака <Врачи.> вам запрещено.';
+      RAISE EXCEPTION 'Установка признака <Зачет ВИПам.> вам запрещено.';
     END IF;
 
     IF COALESCE(inMovementId,0) = 0
@@ -30,7 +30,7 @@ BEGIN
 
     outisOffsetVIP := NOT inisOffsetVIP;
     
-    -- сохранили отметку <Просрочка>
+    -- сохранили отметку <Зачет ВИПам>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_OffsetVIP(), inMovementId, outisOffsetVIP);
     
     -- сохранили протокол

@@ -4,11 +4,11 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDialog, cxGraphics, cxControls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   Vcl.ExtCtrls, Vcl.StdCtrls, cxButtons, cxGroupBox, cxRadioGroup, cxLabel,
   cxTextEdit, cxCurrencyEdit, Vcl.ActnList, dsdAction, cxClasses,
-  cxPropertiesStore, dsdAddOn, CashInterface, AncestorBase, dsdDB, dxSkinsCore,
+  cxPropertiesStore, dsdAddOn, dsdDB, dxSkinsCore,
   dxSkinsDefaultPainters, PosInterface, Vcl.ComCtrls, cxProgressBar;
 
 type
@@ -80,10 +80,18 @@ begin
   if Terminated then Exit;
   if not Assigned(FPosTerm) then Exit;
 
-  if (FSalerCash > 0) then
+  while not Terminated do
   begin
-    if FRefund then FPosTerm.Refund(FSalerCash)
-    else FPosTerm.Payment(FSalerCash);
+    Sleep(500);
+
+//    if FPosTerm.CheckConnection then
+//    begin
+//      if (FSalerCash > 0) then
+//      begin
+//        if FRefund then FPosTerm.Refund(FSalerCash)
+//        else FPosTerm.Payment(FSalerCash);
+//      end;
+//    end;
   end;
 
   if Assigned(FEndPayPosTerm) then FEndPayPosTerm;
@@ -116,18 +124,21 @@ procedure TPayPosTermProcessForm.FormClose(Sender: TObject;
 begin
   if Assigned(FPosTermThread) and not FPosTermThread.Finished then
   begin
-    Action := caNone;
-    ModalResult := 0;
-    if MessageDlg('Прервать оплату документа?',mtConfirmation,mbYesNo,0)<>mrYes then FPosTermThread.FPosTerm.Cancel;
-  end else
-  begin
-    if Assigned(FPosTermThread) then
+    if MessageDlg('Прервать оплату документа?',mtConfirmation,mbYesNo,0) <> mrYes then
     begin
-      if FPosTermThread.GetLastPosError <> '' then ShowMessage(FPosTermThread.GetLastPosError);
-      FreeAndNil(FPosTermThread);
-    end;
-    Timer.Enabled := False;
+      Action := caNone;
+      ModalResult := 0;
+      Exit;
+    end else FPosTermThread.FPosTerm.Cancel;
   end;
+
+  if Assigned(FPosTermThread) then
+  begin
+    if FPosTermThread.GetLastPosError <> '' then ShowMessage(FPosTermThread.GetLastPosError);
+    if not FPosTermThread.Finished then FPosTermThread.Terminate;
+    FreeAndNil(FPosTermThread);
+  end;
+  Timer.Enabled := False;
 end;
 
 procedure TPayPosTermProcessForm.FormDestroy(Sender: TObject);
@@ -161,6 +172,7 @@ Begin
     PayPosTermProcessForm := TPayPosTermProcessForm.Create(Application);
   With PayPosTermProcessForm do
   try
+    edMsgDescription.Text := 'Подключение к терминалу';
     try
       FPosTermThread := TPosTermThread.Create;
       FPosTermThread.FPosTerm := PosTerm;
