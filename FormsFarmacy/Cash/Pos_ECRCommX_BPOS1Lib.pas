@@ -18,8 +18,10 @@ type
     procedure SetMsgDescriptionProc(Value: TMsgDescriptionProc);
     function GetMsgDescriptionProc: TMsgDescriptionProc;
     function GetLastPosError : string;
+    function GetProcessType : TPosProcessType;
   protected
     function WaitPosResponsePrivat() : Integer;
+    function CheckConnection : Boolean;
     function Payment(ASumma : Currency) : Boolean;
     function Refund(ASumma : Currency) : Boolean;
     procedure Cancel;
@@ -52,6 +54,11 @@ end;
 function TPos_ECRCommX_BPOS1Lib.GetLastPosError : string;
 begin
   Result := FLastPosError;
+end;
+
+function TPos_ECRCommX_BPOS1Lib.GetProcessType : TPosProcessType;
+begin
+  Result := pptProcess;
 end;
 
 procedure TPos_ECRCommX_BPOS1Lib.AfterConstruction;
@@ -95,6 +102,11 @@ begin
   begin
     FLastPosError := IntToStr(FPOS.LastErrorCode) + ' ( ' + FPOS.LastErrorDescription + ' )';
   end;
+end;
+
+function TPos_ECRCommX_BPOS1Lib.CheckConnection : Boolean;
+begin
+  Result := True;
 end;
 
 function TPos_ECRCommX_BPOS1Lib.Payment(ASumma : Currency) : Boolean;

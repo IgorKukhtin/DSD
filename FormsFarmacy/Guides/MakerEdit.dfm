@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1099#1081' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-  ClientHeight = 542
-  ClientWidth = 372
+  ClientHeight = 471
+  ClientWidth = 693
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 81
-    Top = 514
+    Left = 185
+    Top = 426
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 227
-    Top = 514
+    Left = 440
+    Top = 426
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -96,13 +96,13 @@
     Width = 296
   end
   object cxLabel7: TcxLabel
-    Left = 40
-    Top = 236
+    Left = 384
+    Top = 54
     Caption = #1055#1083#1072#1085#1080#1088#1091#1077#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1100
   end
   object edSendPlan: TcxDateEdit
-    Left = 40
-    Top = 254
+    Left = 384
+    Top = 72
     EditValue = 42370d
     Properties.Kind = ckDateTime
     Properties.SaveTime = False
@@ -111,13 +111,13 @@
     Width = 145
   end
   object cxLabel3: TcxLabel
-    Left = 191
-    Top = 236
+    Left = 535
+    Top = 54
     Caption = #1059#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086
   end
   object edSendReal: TcxDateEdit
-    Left = 191
-    Top = 254
+    Left = 535
+    Top = 72
     EditValue = 42370d
     Properties.Kind = ckDateTime
     Properties.SaveTime = False
@@ -127,7 +127,7 @@
   end
   object cbReport1: TcxCheckBox
     Left = 40
-    Top = 324
+    Top = 198
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084'"'
     ParentShowHint = False
     ShowHint = True
@@ -136,7 +136,7 @@
   end
   object cbReport2: TcxCheckBox
     Left = 40
-    Top = 344
+    Top = 220
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084'"'
     ParentShowHint = False
     ShowHint = True
@@ -145,7 +145,7 @@
   end
   object cbReport3: TcxCheckBox
     Left = 40
-    Top = 364
+    Top = 240
     Hint = ' '#9#1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090#1072#1090#1082#1072#1084#1080' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
     Caption = ' '#9#1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1086#1089#1090'. '#1085#1072' '#1082#1086#1085'. '#1087#1077#1088#1080#1086#1076#1072'"'
     ParentShowHint = False
@@ -155,7 +155,7 @@
   end
   object cbReport4: TcxCheckBox
     Left = 40
-    Top = 384
+    Top = 260
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     ParentShowHint = False
@@ -164,13 +164,13 @@
     Width = 270
   end
   object cxLabel5: TcxLabel
-    Left = 40
-    Top = 279
+    Left = 384
+    Top = 97
     Caption = #1055#1077#1088#1080#1086#1076'-'#1089#1090#1100' '#1086#1090#1087#1088'. '#1074' '#1076#1085#1103#1093
   end
   object edAmountDay: TcxCurrencyEdit
-    Left = 40
-    Top = 297
+    Left = 384
+    Top = 115
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = False
@@ -178,13 +178,13 @@
     Width = 145
   end
   object cxLabel6: TcxLabel
-    Left = 191
-    Top = 279
+    Left = 535
+    Top = 97
     Caption = #1055#1077#1088#1080#1086#1076'-'#1089#1090#1100' '#1086#1090#1087#1088'. '#1074' '#1084#1077#1089#1103#1094#1072#1093
   end
   object edAmountMonth: TcxCurrencyEdit
-    Left = 191
-    Top = 297
+    Left = 535
+    Top = 115
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = False
@@ -193,7 +193,7 @@
   end
   object cbQuarter: TcxCheckBox
     Left = 40
-    Top = 465
+    Top = 363
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1082#1074#1072#1088#1090#1072#1083#1100#1085#1099#1077' '#1086#1090#1095#1077#1090#1099
     ParentShowHint = False
@@ -203,7 +203,7 @@
   end
   object cb4Month: TcxCheckBox
     Left = 40
-    Top = 485
+    Top = 383
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     Caption = #1054#1090#1087#1088#1072#1074#1083#1103#1090#1100' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1095#1077#1090#1099' '#1079#1072' 4 '#1084#1077#1089#1103#1094#1072
     ParentShowHint = False
@@ -213,7 +213,7 @@
   end
   object cbReport5: TcxCheckBox
     Left = 40
-    Top = 404
+    Top = 280
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1087#1088#1080#1093#1086#1076' '#1088#1072#1089#1093#1086#1076' '#1086#1089#1090#1072#1090#1086#1082'"'
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1089#1088#1086#1082#1072#1084'"'
     ParentShowHint = False
@@ -223,7 +223,7 @@
   end
   object cbReport6: TcxCheckBox
     Left = 40
-    Top = 425
+    Top = 301
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1085#1072' '#1074#1080#1088#1090#1091#1072#1083#1100#1085#1086#1084' '#1089#1082#1083#1072#1076#1077'"'
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1080#1089#1090#1077#1082#1096#1080#1081' '#1089#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080'"'
     ParentShowHint = False
@@ -233,7 +233,7 @@
   end
   object cbReport7: TcxCheckBox
     Left = 40
-    Top = 445
+    Top = 321
     Hint = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1087#1083#1072#1090#1077' '#1087#1088#1080#1093#1086#1076#1086#1074'"'
     Caption = #1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1087#1083#1072#1090#1077' '#1087#1088#1080#1093#1086#1076#1086#1074'"'
     ParentShowHint = False
@@ -242,8 +242,8 @@
     Width = 324
   end
   object edJuridical: TcxButtonEdit
-    Left = 40
-    Top = 209
+    Left = 384
+    Top = 27
     Properties.Buttons = <
       item
         Default = True
@@ -254,9 +254,19 @@
     Width = 296
   end
   object cxLabel8: TcxLabel
-    Left = 40
-    Top = 190
+    Left = 384
+    Top = 8
     Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
+  end
+  object cbReport8: TcxCheckBox
+    Left = 40
+    Top = 341
+    Hint = #9#1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1086#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
+    Caption = #9#1086#1090#1087#1088#1072#1074#1083#1103#1090#1100' "'#1086#1090#1095#1077#1090' '#1086#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072'"'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 29
+    Width = 369
   end
   object ActionList: TActionList
     Left = 272
@@ -427,6 +437,14 @@
         Name = 'inisReport7'
         Value = Null
         Component = cbReport7
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReport8'
+        Value = Null
+        Component = cbReport8
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -611,6 +629,12 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isReport8'
+        Value = Null
+        Component = cbReport8
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'isQuarter'
         Value = Null
         Component = cbQuarter
@@ -731,7 +755,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 248
-    Top = 196
+    Left = 592
+    Top = 14
   end
 end

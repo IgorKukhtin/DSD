@@ -86,6 +86,8 @@ type
     EditId: TEdit;
     StartDateEdit: TcxDateEdit;
     EndDateEdit: TcxDateEdit;
+    isReport8: TcxGridDBColumn;
+    N8: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -144,6 +146,7 @@ type
     procedure ReportGoodsPartionDate;
     procedure ReportStockTimingRemainder;
     procedure ReportPayIncome(ADateStart, ADateEnd : TDateTime);
+    procedure ReportRemainsDate(ADateEnd : TDateTime);
 
     procedure ExportAnalysisRemainsSelling;
   end;
@@ -239,6 +242,14 @@ begin
       begin
         RepType := 6;
         ReportPayIncome(DateStart, DateEnd);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport8').AsBoolean then
+      begin
+        RepType := 7;
+        ReportRemainsDate(IncDay(Date, -1));
         btnExportClick(Nil);
         btnSendMailClick(Nil);
       end;
@@ -405,6 +416,14 @@ begin
       if qryMaker.FieldByName('isReport7').AsBoolean then
       begin
         RepType := 6;
+        ReportPayIncome(DateStart, DateEnd);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport8').AsBoolean then
+      begin
+        RepType := 7;
         ReportPayIncome(DateStart, DateEnd);
         btnExportClick(Nil);
         btnSendMailClick(Nil);
@@ -927,6 +946,43 @@ begin
   end;
 end;
 
+procedure TMainForm.ReportRemainsDate(ADateEnd : TDateTime);
+  var I : integer;
+begin
+  Add_Log('Начало Формирования отчета остаток по поставщикам на ' +
+                                          FormatDateTime('dd.mm.yyyy', IncDay(ADateEnd)));
+  FileName := 'Отчет остаток по поставщикам';
+  Subject := FileName + ' на ' + FormatDateTime('dd.mm.yyyy', IncDay(ADateEnd));
+
+  if qryReport_Upload.Active then qryReport_Upload.Close;
+  if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
+  if grtvMaker.DataController.Summary.FooterSummaryItems.Count > 0 then
+    grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
+  qryReport_Upload.SQL.Text :=
+    'select '#13#10 +
+    '  GoodsName AS "Название товара", '#13#10 +
+    '  OKPO AS "ОКПО Аптеки", '#13#10 +
+    '  UnitName AS "Аптека", '#13#10 +
+    '  FromName AS "Поставщик", '#13#10 +
+    '  OperDate AS "Дата прихода", '#13#10 +
+    '  Remains AS "Остаток количество" '#13#10 +
+    'from gpReport_RemainsDateMaker(:inOperDate, :inMaker, ''3'')';
+
+  qryReport_Upload.Params.ParamByName('inOperDate').Value := IncDay(ADateEnd);
+  qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+
+  OpenAndFormatSQL;
+
+  if grtvMaker.ColumnCount = 0 then Exit;
+
+  with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
+  begin
+    Column := grtvMaker.Columns[5];
+    Format := '0.####';
+    Kind := skSum;
+  end;
+end;
+
 
 procedure TMainForm.ReportIncomeConsumptionBalance(ADateStart, ADateEnd : TDateTime);
   var I : integer;
@@ -1109,6 +1165,7 @@ begin
     4 : ReportGoodsPartionDate;
     5 : ReportStockTimingRemainder;
     6 : ReportPayIncome(DateStart, DateEnd);
+    7 : ReportRemainsDate(DateEnd);
   end;
 end;
 
@@ -1485,7 +1542,7 @@ begin
        qryMailParam.FieldByName('Mail_Port').AsInteger,
        qryMailParam.FieldByName('Mail_Password').AsString,
        qryMailParam.FieldByName('Mail_User').AsString,
-       qryMaker.FieldByName('Mail').AsString,
+       StringsReplace(qryMaker.FieldByName('Mail').AsString, [',', ', '], [';',';']),
        qryMailParam.FieldByName('Mail_From').AsString,
        Subject,
        '',

@@ -18,7 +18,7 @@ type
   end;
 
   TGaugeFactory = class
-    class function GetGauge(in_stCaption: TCaption; AMinValue, AMaxValue: integer): IGauge;
+    class function GetGauge(in_stCaption: TCaption; AMinValue, AMaxValue: integer; ACreate : Boolean = True): IGauge;
   end;
 
   TSimpleGaugeForm = class(TForm, IGauge)
@@ -73,9 +73,11 @@ begin
 end;
 
 { TGaugeFactory }
-class function TGaugeFactory.GetGauge(in_stCaption: TCaption; AMinValue, AMaxValue: integer): IGauge;
+class function TGaugeFactory.GetGauge(in_stCaption: TCaption; AMinValue, AMaxValue: integer; ACreate : Boolean = True): IGauge;
 begin
-   result := TSimpleGaugeForm.Create(nil, in_stCaption, AMinValue, AMaxValue);
+   if ACreate then
+     result := TSimpleGaugeForm.Create(nil, in_stCaption, AMinValue, AMaxValue)
+   else result := Nil;
 end;
 
 procedure TSimpleGaugeForm.IncProgress(IncValue: integer);

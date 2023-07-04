@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isReport5  Boolean
              , isReport6  Boolean
              , isReport7  Boolean
+             , isReport8  Boolean
              , isQuarter  Boolean
              , is4Month  Boolean
              , isUnPlanned Boolean 
@@ -75,6 +76,7 @@ $BODY$BEGIN
            , COALESCE (ObjectBoolean_Maker_Report5.ValueData, FALSE) :: Boolean AS isReport5
            , COALESCE (ObjectBoolean_Maker_Report6.ValueData, FALSE) :: Boolean AS isReport6
            , COALESCE (ObjectBoolean_Maker_Report7.ValueData, FALSE) :: Boolean AS isReport7
+           , COALESCE (ObjectBoolean_Maker_Report8.ValueData, FALSE) :: Boolean AS isReport8
            , COALESCE (ObjectBoolean_Maker_Quarter.ValueData, FALSE) :: Boolean AS isQuarter
            , COALESCE (ObjectBoolean_Maker_4Month.ValueData, FALSE) :: Boolean  AS is4Month
 
@@ -136,6 +138,9 @@ $BODY$BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Report7
                                    ON ObjectBoolean_Maker_Report7.ObjectId = Object_Maker.Id
                                   AND ObjectBoolean_Maker_Report7.DescId = zc_ObjectBoolean_Maker_Report7()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Report8
+                                   ON ObjectBoolean_Maker_Report8.ObjectId = Object_Maker.Id
+                                  AND ObjectBoolean_Maker_Report8.DescId = zc_ObjectBoolean_Maker_Report8()
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Maker_Quarter
                                    ON ObjectBoolean_Maker_Quarter.ObjectId = Object_Maker.Id
                                   AND ObjectBoolean_Maker_Quarter.DescId = zc_ObjectBoolean_Maker_Quarter()

@@ -378,6 +378,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSSAS(),  inDescId:= zc_Object_PayrollType(), inCode:= 9,  inName:= 'Смена кладовщика + Подмена средней смены'   , inEnumName:= 'zc_Enum_PayrollType_WorkSSAS');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkBid(),   inDescId:= zc_Object_PayrollType(), inCode:= 10, inName:= 'Первостольник ставка'        , inEnumName:= 'zc_Enum_PayrollType_WorkBid');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSBid(),  inDescId:= zc_Object_PayrollType(), inCode:= 11, inName:= 'Кладовщик ставка'            , inEnumName:= 'zc_Enum_PayrollType_WorkSBid');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PayrollType_WorkSBis(),  inDescId:= zc_Object_PayrollType(), inCode:= 12, inName:= 'Стажировка'                  , inEnumName:= 'zc_Enum_PayrollType_WorkSBis');
 
 
 -- !!! Группы расчета заработной платы

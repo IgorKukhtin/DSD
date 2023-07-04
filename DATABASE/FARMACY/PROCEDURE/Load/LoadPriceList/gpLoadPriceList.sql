@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Movement_BankAccount()
+-- Function: gpLoadPriceList()
 
 DROP FUNCTION IF EXISTS gpLoadPriceList (Integer, TVarChar);
 
@@ -20,6 +20,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_LoadSaleFrom1C());
      vbUserId := lpGetUserBySession (inSession);
+     
+     -- raise notice 'Value 1: %', CLOCK_TIMESTAMP();
 
      -- Получаем параметры прайсЛиста
      SELECT LoadPriceList.OperDate	 
@@ -71,6 +73,8 @@ BEGIN
                                      AND ObjectLink_JuridicalArea_Juridical.ChildObjectId = vbJuridicalId
                                      AND ObjectLink_JuridicalArea_Area.ChildObjectId      = vbAreaId
                                   ) , 0);
+                                  
+      -- raise notice 'Value 2: %', CLOCK_TIMESTAMP();
 
      -- переносим последнюю дату прайса в ПРЕДпоследнюю 
      PERFORM CASE WHEN COALESCE (ObjectDate_LastPriceOLd.ValueData, NULL) <> NULL
@@ -97,11 +101,62 @@ BEGIN
                                AND ObjectDate_LastPriceOld.DescId = zc_ObjectDate_Goods_LastPriceOld()
       WHERE GoodsId <> 0 AND LoadPriceListId = inId;
       
+     -- raise notice 'Value 3: %', CLOCK_TIMESTAMP();
+     
      -- Востановим если чтото удалиди раньше
      UPDATE MovementItem SET isErased = FALSE 
      WHERE MovementItem.MovementId = vbMovementId_pl 
        AND MovementItem.isErased = TRUE;
+       
+     -- raise notice 'Value 4: %', CLOCK_TIMESTAMP();
+
+     CREATE TEMP TABLE tmpGoods ON COMMIT DROP AS 
+     SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode
+     FROM Object_Goods_View
+     WHERE Object_Goods_View.ObjectId = vbJuridicalId
+       AND (-- если Регион соответсвует
+            COALESCE (Object_Goods_View.AreaId, 0) = vbAreaId_find
+            -- или Это регион zc_Area_Basis - тогда ищем в регионе "пусто"
+         OR (vbAreaId_find = zc_Area_Basis() AND Object_Goods_View.AreaId IS NULL)
+            -- или Это регион "пусто" - тогда ищем в регионе zc_Area_Basis
+         OR (vbAreaId_find = 0 AND Object_Goods_View.AreaId = zc_Area_Basis())
+           );
+                                     
+     ANALYSE tmpGoods;
+                             
+     -- raise notice 'Value 5: %', CLOCK_TIMESTAMP();
+      
+     CREATE TEMP TABLE _tmpPriceList ON COMMIT DROP AS 
+     SELECT LoadPriceListItem.*
+          , LoadPriceList.NDSinPrice
+          , MovementItem.Id AS MovementItemId
+          , tmpGoods.Id     AS GoodsId_find
+          , ObjectFloat_NDSKind_NDS.ValueData AS NDS
+     FROM LoadPriceListItem 
+          JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                               ON ObjectLink_Goods_NDSKind.ObjectId = LoadPriceListItem.GoodsId
+                              AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+                     
+          LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.Childobjectid
+                               AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
+      
+          INNER JOIN tmpGoods ON tmpGoods.goodscode = LoadPriceListItem.GoodsCode
+                          
+          LEFT JOIN MovementItem ON MovementItem.ObjectId = LoadPriceListItem.GoodsId AND MovementItem.MovementId = vbMovementId_pl
+                                AND MovementItem.DescId = zc_MI_Master() 
+          /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                           ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+                                          AND MILinkObject_Goods.ObjectId       = tmpGoods.Id*/
+                    
+                    
+     WHERE LoadPriceListItem.GoodsId > 0 AND LoadPriceListItem.LoadPriceListId = inId;
+             
+     ANALYSE _tmpPriceList;       
      
+     -- raise notice 'Value 6: %', CLOCK_TIMESTAMP();
       
      -- Перенос элементов прайса
      PERFORM 
@@ -123,49 +178,19 @@ BEGIN
                                                  tmp.ExpirationDate , -- Партия товара
                                                         tmp.Remains , -- остаток
                                                            vbUserId)
-        , lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_LastPrice(), tmp.GoodsId, vbOperDate)              -- дата прайса --CURRENT_TIMESTAMP
-        , lpUpdate_Goods_LastPrice (tmp.GoodsId, vbOperDate, vbUserId)
+
+       FROM _tmpPriceList AS tmp;
+       
+     -- raise notice 'Value 7: %', CLOCK_TIMESTAMP();
+      
+     PERFORM 
+          lpUpdate_Goods_LastPrice (tmp.GoodsId, vbOperDate, vbUserId)
           -- Кол-во позиций по всем прайсам
         --, lpInsertUpdate_Goods_CountPrice (vbMovementId_pl, vbOperDate, tmp.GoodsId)
 
-       FROM (WITH tmpGoods AS (SELECT Object_Goods_View.Id, Object_Goods_View.GoodsCode
-                               FROM Object_Goods_View
-                               WHERE Object_Goods_View.ObjectId = vbJuridicalId
-                                 AND (-- если Регион соответсвует
-                                      COALESCE (Object_Goods_View.AreaId, 0) = vbAreaId_find
-                                      -- или Это регион zc_Area_Basis - тогда ищем в регионе "пусто"
-                                   OR (vbAreaId_find = zc_Area_Basis() AND Object_Goods_View.AreaId IS NULL)
-                                      -- или Это регион "пусто" - тогда ищем в регионе zc_Area_Basis
-                                   OR (vbAreaId_find = 0 AND Object_Goods_View.AreaId = zc_Area_Basis())
-                                     )
-                              )
-             SELECT LoadPriceListItem.*
-                  , LoadPriceList.NDSinPrice
-                  , MovementItem.Id AS MovementItemId
-                  , tmpGoods.Id     AS GoodsId_find
-                  , ObjectFloat_NDSKind_NDS.ValueData AS NDS
-             FROM LoadPriceListItem 
-                  JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
-                  LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                                       ON ObjectLink_Goods_NDSKind.ObjectId = LoadPriceListItem.GoodsId
-                                      AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-                     
-                  LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                        ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.Childobjectid
-                                       AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
-      
-                  INNER JOIN tmpGoods ON tmpGoods.goodscode = LoadPriceListItem.GoodsCode
-                          
-                  LEFT JOIN MovementItem ON MovementItem.ObjectId = LoadPriceListItem.GoodsId AND MovementItem.MovementId = vbMovementId_pl
-                                        AND MovementItem.DescId = zc_MI_Master() 
-                  /*LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
-                                                   ON MILinkObject_Goods.MovementItemId = MovementItem.Id
-                                                  AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
-                                                  AND MILinkObject_Goods.ObjectId       = tmpGoods.Id*/
-                    
-                    
-             WHERE LoadPriceListItem.GoodsId > 0 AND LoadPriceListItem.LoadPriceListId = inId
-            ) AS tmp;
+       FROM _tmpPriceList AS tmp;
+
+   -- raise notice 'Value 8: %', CLOCK_TIMESTAMP();
 
      -- Удалим если чтото ушло из прайса
      UPDATE MovementItem SET isErased = TRUE
@@ -181,6 +206,9 @@ BEGIN
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
+
+   -- raise notice 'Value 9: %', CLOCK_TIMESTAMP();
+   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -200,3 +228,6 @@ $BODY$
 -- тест
 -- SELECT * FROM gpLoadSaleFrom1C('01-01-2013'::TDateTime, '01-01-2014'::TDateTime, '')
 -- lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_LastPrice(), GoodsId, vbOperDate) 
+
+
+-- SELECT * FROM gpLoadPriceList(44053,'1871720')

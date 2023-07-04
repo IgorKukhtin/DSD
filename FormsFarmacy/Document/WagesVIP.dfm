@@ -627,10 +627,6 @@ inherited WagesVIPForm: TWagesVIPForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton3'
         end>
     end
     inherited bbMovementItemProtocol: TdxBarButton

@@ -4,8 +4,8 @@ inherited CheckSummCardForm: TCheckSummCardForm
   ClientWidth = 925
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 941
-  ExplicitHeight = 593
+  ExplicitWidth = 943
+  ExplicitHeight = 601
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -320,6 +320,22 @@ inherited CheckSummCardForm: TCheckSummCardForm
             Options.Editing = False
             Width = 95
           end
+          object isOffsetVIP: TcxGridDBColumn
+            Caption = #1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084
+            DataBinding.FieldName = 'isOffsetVIP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object DateOffsetVIP: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1079#1072#1095#1077#1090#1072' '#1042#1048#1055#1072#1084
+            DataBinding.FieldName = 'DateOffsetVIP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 93
+          end
         end
       end
     end
@@ -500,6 +516,83 @@ inherited CheckSummCardForm: TCheckSummCardForm
       GuiParams = <>
       isShowModal = False
     end
+    object actDateOffsetVIPDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actDateOffsetVIPDialog'
+      FormName = 'TDataChoiceDialogForm'
+      FormNameParam.Value = 'TDataChoiceDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DateOffsetVIP'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1042#1074#1077#1076#1080' '#1076#1072#1090#1091' '#1079#1072#1095#1077#1090#1072' '#1042#1048#1055' '#1084#1077#1085#1077#1076#1078#1077#1088#1072#1084' '#1095#1077#1082#1072
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_SetOffsetVIP: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SetOffsetVIP
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SetOffsetVIP
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
+    end
+    object mactUpdate_SetOffsetVIP: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actDateOffsetVIPDialog
+      ActionList = <
+        item
+          Action = actUpdate_SetOffsetVIP
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
+      ImageIndex = 7
+    end
+    object actUpdate_OffsetVIP: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_OffsetVIP
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_OffsetVIP
+        end>
+      Caption = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
+      Hint = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
+    end
+    object mactUpdate_OffsetVIP: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actUpdate_OffsetVIP
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>?'
+      Caption = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
+      Hint = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1047#1072#1095#1077#1090' '#1042#1048#1055#1072#1084'>'
+      ImageIndex = 52
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_CheckSummCard'
@@ -564,6 +657,18 @@ inherited CheckSummCardForm: TCheckSummCardForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_SetOffsetVIP'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_OffsetVIP'
         end>
     end
     inherited bbInsert: TdxBarButton
@@ -597,6 +702,14 @@ inherited CheckSummCardForm: TCheckSummCardForm
     end
     object dxBarButton2: TdxBarButton
       Action = actCheckSiteInsert
+      Category = 0
+    end
+    object bbUpdate_SetOffsetVIP: TdxBarButton
+      Action = mactUpdate_SetOffsetVIP
+      Category = 0
+    end
+    object bbUpdate_OffsetVIP: TdxBarButton
+      Action = mactUpdate_OffsetVIP
       Category = 0
     end
   end
@@ -650,6 +763,12 @@ inherited CheckSummCardForm: TCheckSummCardForm
       item
         Name = 'UnitId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateOffsetVIP'
+        Value = Null
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
   end
@@ -743,5 +862,62 @@ inherited CheckSummCardForm: TCheckSummCardForm
     PackSize = 1
     Left = 250
     Top = 381
+  end
+  object spUpdate_SetOffsetVIP: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_SetOffsetVIP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOffsetVIP'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateOffsetVIP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DateOffsetVIP'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 514
+    Top = 281
+  end
+  object spUpdate_OffsetVIP: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_OffsetVIP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOffsetVIP'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 514
+    Top = 193
   end
 end

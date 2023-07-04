@@ -106,6 +106,7 @@ type
     actProtocolOpenForm: TdsdOpenForm;
     isReport7: TcxGridDBColumn;
     MainJuridicalName: TcxGridDBColumn;
+    isReport8: TcxGridDBColumn;
   private
     { Private declarations }
   public
