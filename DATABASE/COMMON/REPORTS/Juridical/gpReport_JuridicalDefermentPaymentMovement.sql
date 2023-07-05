@@ -4,8 +4,8 @@ DROP FUNCTION IF EXISTS gpReport_DefermentPaymentMovement (TDateTime, TDateTime,
 DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPaymentMovement(
-    IN inOperDate         TDateTime , -- 
-    IN inEmptyParam       TDateTime , -- 
+    IN inOperDate         TDateTime , --
+    IN inEmptyParam       TDateTime , --
     IN inAccountId        Integer   , --
     IN inPaidKindId       Integer   , --
     IN inBranchId         Integer   , --
@@ -45,31 +45,89 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      vbUserId:= lpGetUserBySession (inSession);
 
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpReport')
+     THEN
+         DELETE FROM tmpReport;
+     ELSE
+         -- таблица - элементы продаж для распределения Затрат по накладным
+         CREATE TEMP TABLE _tmpReport ON COMMIT DROP AS
+                      (SELECT tmpReport.*
+                       FROM lpReport_JuridicalDefermentPayment (inOperDate         := inOperDate
+                                                              , inEmptyParam       := inEmptyParam
+                                                              , inStartDate_sale   := CASE WHEN DATE_TRUNC ('MONTH', inOperDate + INTERVAL '1 DAY') <> DATE_TRUNC ('MONTH', inOperDate)
+                                                                                                     -- тогда здесь последний день мес, берем тек. месяц
+                                                                                                     THEN DATE_TRUNC ('MONTH', inOperDate)
+                                                                                                     -- берем прошлый месяц
+                                                                                                     ELSE DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '1 MONTH'
+                                                                                                END
+                                                              , inEndDate_sale     := CASE WHEN DATE_TRUNC ('MONTH', inOperDate + INTERVAL '1 DAY') <> DATE_TRUNC ('MONTH', inOperDate)
+                                                                                                     -- тогда здесь последний день мес, берем тек. месяц
+                                                                                                     THEN inOperDate
+                                                                                                     -- берем прошлый месяц
+                                                                                                     ELSE DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '1 DAY'
+                                                                                                END
+                                                              , inAccountId        := inAccountId
+                                                              , inPaidKindId       := inPaidKindId
+                                                              , inBranchId         := inBranchId
+                                                              , inJuridicalGroupId := inJuridicalGroupId
+                                                              , inUserId           := -1 * vbUserId
+                                                               ) AS tmpReport
+                      )
+
+     ;
+
+     END IF;
+
      -- Результат
      RETURN QUERY
      WITH
-     tmpReport AS (SELECT tmpReport.*
-                   FROM lpReport_JuridicalDefermentPayment (inOperDate         := inOperDate
-                                                          , inEmptyParam       := inEmptyParam
-                                                          , inStartDate_sale   := CASE WHEN DATE_TRUNC ('MONTH', inOperDate + INTERVAL '1 DAY') <> DATE_TRUNC ('MONTH', inOperDate) 
-                                                                                                 -- тогда здесь последний день мес, берем тек. месяц
-                                                                                                 THEN DATE_TRUNC ('MONTH', inOperDate)
-                                                                                                 -- берем прошлый месяц
-                                                                                                 ELSE DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '1 MONTH'
-                                                                                            END
-                                                          , inEndDate_sale     := CASE WHEN DATE_TRUNC ('MONTH', inOperDate + INTERVAL '1 DAY') <> DATE_TRUNC ('MONTH', inOperDate) 
-                                                                                                 -- тогда здесь последний день мес, берем тек. месяц
-                                                                                                 THEN inOperDate
-                                                                                                 -- берем прошлый месяц
-                                                                                                 ELSE DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '1 DAY'
-                                                                                            END
-                                                          , inAccountId        := inAccountId
-                                                          , inPaidKindId       := inPaidKindId
-                                                          , inBranchId         := inBranchId
-                                                          , inJuridicalGroupId := inJuridicalGroupId
-                                                          , inUserId           := vbUserId
-                                                           ) AS tmpReport
-                   )
+     tmpReport AS (SELECT a.AccountId, a.AccountName
+                        , a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
+                        , a.SectionId, a.SectionName
+                        , a.PartnerId, a.PartnerCode, a.PartnerName
+                        , a.BranchId, a.BranchCode, a.BranchName
+                        , a.PaidKindId, a.PaidKindName
+                        , a.ContractId, a.ContractCode, a.ContractNumber
+                        , a.ContractTagGroupName, a.ContractTagName, a.ContractStateKindCode
+                        , a.ContractJuridicalDocId, a.ContractJuridicalDocCode, a.ContractJuridicalDocName
+                        , a.PersonalName
+                        , a.PersonalTradeName
+                        , a.PersonalCollationName
+                        , a.PersonalTradeName_Partner
+                        , a.StartDate, a.EndDate
+                        , SUM (a.DebetRemains) :: TFloat AS DebetRemains, SUM (a.KreditRemains) :: TFloat AS KreditRemains
+                        , SUM (a.SaleSumm) :: TFloat AS SaleSumm, SUM (a.DefermentPaymentRemains) :: TFloat AS DefermentPaymentRemains
+                        , SUM (a.SaleSumm1) :: TFloat AS SaleSumm1, SUM (a.SaleSumm2) :: TFloat AS SaleSumm2, SUM (a.SaleSumm3) :: TFloat AS SaleSumm3
+                        , SUM (a.SaleSumm4) :: TFloat AS SaleSumm4, SUM (a.SaleSumm5) :: TFloat AS SaleSumm5
+                        , a.Condition, a.StartContractDate, SUM (a.Remains) :: TFloat AS Remains
+                        , a.InfoMoneyGroupName, a.InfoMoneyDestinationName, a.InfoMoneyId, a.InfoMoneyCode, a.InfoMoneyName
+                        , a.AreaName, a.AreaName_Partner
+
+                        , a.BranchName_personal
+                        , a.BranchName_personal_trade
+
+                   FROM _tmpReport AS a
+                   GROUP BY a.AccountId, a.AccountName
+                          , a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
+                          , a.SectionId, a.SectionName
+                          , a.PartnerId, a.PartnerCode, a.PartnerName
+                          , a.BranchId, a.BranchCode, a.BranchName
+                          , a.PaidKindId, a.PaidKindName
+                          , a.ContractId, a.ContractCode, a.ContractNumber
+                          , a.ContractTagGroupName, a.ContractTagName, a.ContractStateKindCode
+                          , a.ContractJuridicalDocId, a.ContractJuridicalDocCode, a.ContractJuridicalDocName
+                          , a.PersonalName
+                          , a.PersonalTradeName
+                          , a.PersonalCollationName
+                          , a.PersonalTradeName_Partner
+                          , a.StartDate, a.EndDate
+                          , a.Condition, a.StartContractDate
+                          , a.InfoMoneyGroupName, a.InfoMoneyDestinationName, a.InfoMoneyId, a.InfoMoneyCode, a.InfoMoneyName
+                          , a.AreaName, a.AreaName_Partner
+
+                          , a.BranchName_personal
+                          , a.BranchName_personal_trade
+                  )
     -- выбираем последнии оплаты
    , tmpLastPayment_all AS (SELECT tt.JuridicalId
                                  , tt.ContractId
@@ -97,13 +155,35 @@ BEGIN
                        )
 
    ---
-   SELECT tmpReport.*
+   SELECT tmpReport.AccountId, tmpReport.AccountName, tmpReport.JuridicalId, tmpReport.JuridicalName, tmpReport.RetailName, tmpReport.RetailName_main, tmpReport.OKPO, tmpReport.JuridicalGroupName
+        , tmpReport.SectionId, tmpReport.SectionName
+        , tmpReport.PartnerId, tmpReport.PartnerCode, tmpReport.PartnerName
+        , tmpReport.BranchId, tmpReport.BranchCode, tmpReport.BranchName
+        , tmpReport.PaidKindId, tmpReport.PaidKindName
+        , tmpReport.ContractId, tmpReport.ContractCode, tmpReport.ContractNumber
+        , tmpReport.ContractTagGroupName, tmpReport.ContractTagName, tmpReport.ContractStateKindCode
+        , tmpReport.ContractJuridicalDocId, tmpReport.ContractJuridicalDocCode, tmpReport.ContractJuridicalDocName
+        , tmpReport.PersonalName
+        , tmpReport.PersonalTradeName
+        , tmpReport.PersonalCollationName
+        , tmpReport.PersonalTradeName_Partner
+        , tmpReport.StartDate, tmpReport.EndDate
+        , tmpReport.DebetRemains, tmpReport.KreditRemains
+        , tmpReport.SaleSumm, tmpReport.DefermentPaymentRemains
+        , tmpReport.SaleSumm1, tmpReport.SaleSumm2, tmpReport.SaleSumm3, tmpReport.SaleSumm4, tmpReport.SaleSumm5
+        , tmpReport.Condition, tmpReport.StartContractDate, tmpReport.Remains
+        , tmpReport.InfoMoneyGroupName, tmpReport.InfoMoneyDestinationName
+        , tmpReport.InfoMoneyId, tmpReport.InfoMoneyCode, tmpReport.InfoMoneyName
+        , tmpReport.AreaName, tmpReport.AreaName_Partner
+        , tmpReport.BranchName_personal
+        , tmpReport.BranchName_personal_trade
+
         , tmpLastPayment.OperDate :: TDateTime AS PaymentDate
         , tmpLastPayment.Amount   :: TFloat    AS PaymentAmount
-        
+
         , tmpLastPaymentJuridical.OperDate :: TDateTime AS PaymentDate_jur
         , tmpLastPaymentJuridical.Amount   :: TFloat    AS PaymentAmount_jur
-        
+
    FROM tmpReport
         LEFT JOIN tmpLastPayment_all AS tmpLastPayment
                                      ON tmpLastPayment.JuridicalId = tmpReport.JuridicalId
@@ -149,13 +229,9 @@ $BODY$
  10.04.14                                        * add AreaName
  09.04.14                                        * add !!!
  31.03.14                                        * add Object_Contract_View and Object_InfoMoney_View and ObjectHistory_JuridicalDetails_View and Object_PaidKind
- 30.03.14                          * 
- 06.02.14                          * 
+ 30.03.14                          *
+ 06.02.14                          *
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= CURRENT_DATE, inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(),  inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
--- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= CURRENT_DATE, inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_SecondForm(), inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
-
---select * from gpReport_JuridicalDefermentPayment(inOperDate := ('19.12.2021')::TDateTime , inEmptyParam := ('01.05.2013')::TDateTime , inAccountId := 9128 , inPaidKindId := 3 , inBranchId := 0 , inJuridicalGroupId := 0 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e')
---where JuridicalId = 14866
+-- SELECT * FROM gpReport_JuridicalDefermentPaymentMovement(inOperDate := ('04.07.2023')::TDateTime , inEmptyParam := ('01.01.2023')::TDateTime , inAccountId := 9128 , inPaidKindId := 3 , inBranchId := 0 , inJuridicalGroupId := 0 ,  inSession := zfCalc_UserAdmin());
