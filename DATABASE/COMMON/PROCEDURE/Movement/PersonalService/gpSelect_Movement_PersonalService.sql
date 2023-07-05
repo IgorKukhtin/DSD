@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummHouseAdd TFloat
              , TotalSummAvance TFloat, TotalSummAvanceRecalc TFloat
              , TotalSummAvCardSecond TFloat, TotalSummAvCardSecondRecalc TFloat
+             , PriceNalog TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -263,7 +264,9 @@ BEGIN
            , MovementFloat_TotalAvanceRecalc.ValueData  :: TFloat AS TotalSummAvanceRecalc
 
            , MovementFloat_TotalSummAvCardSecond.ValueData        :: TFloat AS TotalSummAvCardSecond
-           , MovementFloat_TotalSummAvCardSecondRecalc.ValueData  :: TFloat AS TotalSummAvCardSecondRecalc
+           , MovementFloat_TotalSummAvCardSecondRecalc.ValueData  :: TFloat AS TotalSummAvCardSecondRecalc   
+           
+           , MovementFloat_PriceNalog.ValueData                   :: TFloat AS PriceNalog
 
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
@@ -456,6 +459,10 @@ BEGIN
                                     ON MovementFloat_TotalSummAvCardSecondRecalc.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummAvCardSecondRecalc.DescId = zc_MovementFloat_TotalSummAvCardSecondRecalc()
 
+            LEFT JOIN MovementFloat AS MovementFloat_PriceNalog
+                                    ON MovementFloat_PriceNalog.MovementId = Movement.Id
+                                   AND MovementFloat_PriceNalog.DescId = zc_MovementFloat_PriceNalog()
+
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -495,6 +502,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 04.07.23         * PriceNalog
  02.05.23         *
  24.04.23         *
  27.03.23         *

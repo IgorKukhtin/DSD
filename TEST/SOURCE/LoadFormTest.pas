@@ -882,6 +882,9 @@ end;
 
 procedure TLoadFormTest.LoadPersonalServiceFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceNalogDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceNalogDialogForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalService_RecalcForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalService_RecalcForm');

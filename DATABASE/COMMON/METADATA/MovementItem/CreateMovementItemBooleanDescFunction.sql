@@ -205,9 +205,15 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_FixedPercent() RETURNS Integer AS $BODY$
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_FixedPercent', 'Фиксированный процент выполнения' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_FixedPercent'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_PriceNalog() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PriceNalog'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_PriceNalog', 'Сумма удержания сформирована на основании удержания налога по Ф2' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_PriceNalog'); 
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 04.07.23         * zc_MIBoolean_PriceNalog
  03.01.23                                                                       * zc_MIBoolean_FixedPercent
  10.09.22                                                                       * zc_MIBoolean_GoodsPresent
  10.04.22                                                                       * zc_MIBoolean_UsePriceOOC

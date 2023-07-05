@@ -1076,6 +1076,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Options.Editing = False
             Width = 80
           end
+          object PriceNalog: TcxGridDBColumn
+            Caption = #1057#1090#1072#1074#1082#1072' '#1085#1072#1083#1086#1075#1072
+            DataBinding.FieldName = 'PriceNalog'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object isAuto: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
             DataBinding.FieldName = 'isAuto'
