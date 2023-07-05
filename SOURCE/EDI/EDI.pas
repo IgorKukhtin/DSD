@@ -5607,7 +5607,7 @@ begin
     // порядковий номер (серія) документа ТТН
     UAECMR.ECMR.ExchangedDocument.ID := HeaderDataSet.FieldByName('InvNumber').asString;
     // Дата і час складання документа (виписування ТТН)
-    UAECMR.ECMR.ExchangedDocument.IssueDateTime.DateTime := gfFormatToDateTime (Now {HeaderDataSet.FieldByName('OperDate').AsDateTime});
+    UAECMR.ECMR.ExchangedDocument.IssueDateTime.DateTime := gfFormatToDateTime (HeaderDataSet.FieldByName('OperDate').AsDateTime);
     // Додані записи
     // CA - Перевізник
     with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
