@@ -45,7 +45,30 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-     SELECT tmpReport.*
+     SELECT tmpReport.AccountId, tmpReport.AccountName
+                        , tmpReport.JuridicalId, tmpReport.JuridicalName, tmpReport.RetailName, tmpReport.RetailName_main, tmpReport.OKPO, tmpReport.JuridicalGroupName
+                        , tmpReport.PartnerId, tmpReport.PartnerCode, tmpReport.PartnerName
+                        , tmpReport.BranchId, tmpReport.BranchCode, tmpReport.BranchName
+                        , tmpReport.PaidKindId, tmpReport.PaidKindName
+                        , tmpReport.ContractId, tmpReport.ContractCode, tmpReport.ContractNumber
+                        , tmpReport.ContractTagGroupName, tmpReport.ContractTagName, tmpReport.ContractStateKindCode
+                        , tmpReport.ContractJuridicalDocId, tmpReport.ContractJuridicalDocCode, tmpReport.ContractJuridicalDocName
+                        , tmpReport.PersonalName
+                        , tmpReport.PersonalTradeName
+                        , tmpReport.PersonalCollationName
+                        , tmpReport.PersonalTradeName_Partner
+                        , tmpReport.StartDate, tmpReport.EndDate
+                        , (tmpReport.DebetRemains) :: TFloat AS DebetRemains, (tmpReport.KreditRemains) :: TFloat AS KreditRemains
+                        , (tmpReport.SaleSumm) :: TFloat AS SaleSumm, (tmpReport.DefermentPaymentRemains) :: TFloat AS DefermentPaymentRemains
+                        , (tmpReport.SaleSumm1) :: TFloat AS SaleSumm1, (tmpReport.SaleSumm2) :: TFloat AS SaleSumm2, (tmpReport.SaleSumm3) :: TFloat AS SaleSumm3
+                        , (tmpReport.SaleSumm4) :: TFloat AS SaleSumm4, (tmpReport.SaleSumm5) :: TFloat AS SaleSumm5
+                        , tmpReport.Condition, tmpReport.StartContractDate, (tmpReport.Remains) :: TFloat AS Remains
+                        , tmpReport.InfoMoneyGroupName, tmpReport.InfoMoneyDestinationName, tmpReport.InfoMoneyId, tmpReport.InfoMoneyCode, tmpReport.InfoMoneyName
+                        , tmpReport.AreaName, tmpReport.AreaName_Partner
+
+                        , tmpReport.BranchName_personal
+                        , tmpReport.BranchName_personal_trade
+
      FROM lpReport_JuridicalDefermentPayment (inOperDate         := inOperDate
                                             , inEmptyParam       := inEmptyParam
                                             , inStartDate_sale   := inStartDate_sale
