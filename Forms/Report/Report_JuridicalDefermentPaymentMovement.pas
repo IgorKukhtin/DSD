@@ -104,6 +104,10 @@ type
     bbUpdate_LastPayment: TdxBarButton;
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
+    OperDate: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    Summa_doc: TcxGridDBColumn;
+    MovementDescName: TcxGridDBColumn;
   private
     { Private declarations }
   public

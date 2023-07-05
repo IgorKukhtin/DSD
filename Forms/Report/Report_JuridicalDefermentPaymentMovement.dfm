@@ -70,6 +70,11 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
               Format = ',0.00##'
               Kind = skSum
               Column = SaleSumm5
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summa_doc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -121,6 +126,11 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = JuridicalName
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summa_doc
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -608,6 +618,40 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object InvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
+          end
+          object Summa_doc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'Summa_doc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object MovementDescName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'MovementDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 148
           end
         end
       end

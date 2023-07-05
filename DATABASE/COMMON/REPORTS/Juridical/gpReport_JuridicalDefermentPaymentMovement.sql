@@ -1,12 +1,11 @@
  -- Function: gpReport_JuridicalSold()
 
-DROP FUNCTION IF EXISTS gpReport_DefermentPaymentMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPaymentMovement(
     IN inOperDate         TDateTime , --
     IN inEmptyParam       TDateTime , --
-    IN inAccountId        Integer   , --
+    IN inAccountId        Integer   , --                           
     IN inPaidKindId       Integer   , --
     IN inBranchId         Integer   , --
     IN inJuridicalGroupId Integer   , --
@@ -36,6 +35,11 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , BranchName_personal_trade TVarChar
              , PaymentDate TDateTime, PaymentAmount TFloat
              , PaymentDate_jur TDateTime, PaymentAmount_jur TFloat
+             , MovementId      Integer
+             , OperDate        TDateTime
+             , MovementDescName TVarChar
+             , InvNumber       TVarChar
+             , Summa_doc       TFloat
               )
 AS
 $BODY$
@@ -104,8 +108,8 @@ BEGIN
                         , a.AreaName, a.AreaName_Partner
 
                         , a.BranchName_personal
-                        , a.BranchName_personal_trade
-
+                        , a.BranchName_personal_trade 
+                        
                    FROM _tmpReport AS a
                    GROUP BY a.AccountId, a.AccountName
                           , a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
@@ -153,7 +157,107 @@ BEGIN
                                , tt.InfoMoneyId
                                , tt.OperDate
                        )
+   -- DISTINCT ContainerId + StartContractDate
+   , tmpContainer AS (
+                      SELECT DISTINCT a.ContainerId
+                           , a.StartContractDate
+                           , a.JuridicalId
+                           , a.PartnerId
+                           , a.ContractId
+                           , a.PaidKindId 
+                      FROM _tmpReport AS a
+                      WHERE COALESCE (a.SaleSumm,0) <> 0
+                      )
+   , tmpContainerData AS (SELECT tmpContainer.JuridicalId
+                               , tmpContainer.PartnerId
+                               , tmpContainer.ContractId
+                               , tmpContainer.PaidKindId
+                               , MIContainer.MovementId
+                               , MIContainer.MovementDescId
+                               , MovementDesc.ItemName AS MovementDescName
+                               , Movement.OperDate
+                               , Movement.InvNumber
+                               , SUM (COALESCE (MIContainer.Amount,0)) AS Amount
+                          FROM tmpContainer
+                               INNER JOIN MovementItemcontainer AS MIContainer
+                                                                ON MIContainer.Id = tmpContainer.ContainerId
+                                                               AND MIContainer.DescId = zc_MIContainer_Summ()  
+                                                               AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) 
+                                                               --AND MIContainer.OperDate BETWEEN tmpContainer.StartContractDate AND inOperDate
+                               LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
+                               LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                          GROUP BY tmpContainer.JuridicalId
+                                 , tmpContainer.PartnerId
+                                 , tmpContainer.ContractId
+                                 , tmpContainer.PaidKindId
+                                 , MIContainer.MovementId
+                                 , MIContainer.MovementDescId
+                                 , Movement.OperDate
+                                 , Movement.InvNumber
+                                 , MovementDesc.ItemName
+                          )
+   --
+   , tmpData AS (SELECT tmpReport.AccountId, tmpReport.AccountName, tmpReport.JuridicalId, tmpReport.JuridicalName, tmpReport.RetailName, tmpReport.RetailName_main, tmpReport.OKPO, tmpReport.JuridicalGroupName
+                       , tmpReport.SectionId, tmpReport.SectionName
+                       , tmpReport.PartnerId, tmpReport.PartnerCode, tmpReport.PartnerName
+                       , tmpReport.BranchId, tmpReport.BranchCode, tmpReport.BranchName
+                       , tmpReport.PaidKindId, tmpReport.PaidKindName
+                       , tmpReport.ContractId, tmpReport.ContractCode, tmpReport.ContractNumber
+                       , tmpReport.ContractTagGroupName, tmpReport.ContractTagName, tmpReport.ContractStateKindCode
+                       , tmpReport.ContractJuridicalDocId, tmpReport.ContractJuridicalDocCode, tmpReport.ContractJuridicalDocName
+                       , tmpReport.PersonalName
+                       , tmpReport.PersonalTradeName
+                       , tmpReport.PersonalCollationName
+                       , tmpReport.PersonalTradeName_Partner
+                       , tmpReport.StartDate, tmpReport.EndDate
+                       , tmpReport.DebetRemains, tmpReport.KreditRemains
+                       , tmpReport.SaleSumm, tmpReport.DefermentPaymentRemains
+                       , tmpReport.SaleSumm1, tmpReport.SaleSumm2, tmpReport.SaleSumm3, tmpReport.SaleSumm4, tmpReport.SaleSumm5
+                       , tmpReport.Condition, tmpReport.StartContractDate, tmpReport.Remains
+                       , tmpReport.InfoMoneyGroupName, tmpReport.InfoMoneyDestinationName
+                       , tmpReport.InfoMoneyId, tmpReport.InfoMoneyCode, tmpReport.InfoMoneyName
+                       , tmpReport.AreaName, tmpReport.AreaName_Partner
+                       , tmpReport.BranchName_personal
+                       , tmpReport.BranchName_personal_trade
 
+                       , tmpLastPayment.OperDate :: TDateTime AS PaymentDate
+                       , tmpLastPayment.Amount   :: TFloat    AS PaymentAmount
+
+                       , tmpLastPaymentJuridical.OperDate :: TDateTime AS PaymentDate_jur
+                       , tmpLastPaymentJuridical.Amount   :: TFloat    AS PaymentAmount_jur  
+                       
+                       , ROW_NUMBER() OVER(PARTITION BY tmpReport.JuridicalId, tmpReport.PaidKindId, tmpReport.ContractId, tmpReport.PartnerId ORDER BY tmpLastPayment.OperDate DESC) AS Ord 
+                       , tmpContainerData.MovementId
+                       , tmpContainerData.OperDate 
+                       , tmpContainerData.MovementDescName
+                       , tmpContainerData.InvNumber
+                       , tmpContainerData.Amount AS Summa_doc
+                 FROM tmpReport
+                  LEFT JOIN tmpLastPayment_all AS tmpLastPayment
+                                               ON tmpLastPayment.JuridicalId = tmpReport.JuridicalId
+                                              AND tmpLastPayment.ContractId  = tmpReport.ContractId
+                                              AND tmpLastPayment.PaidKindId  = tmpReport.PaidKindId
+                                              AND tmpLastPayment.PartnerId   = COALESCE (tmpReport.PartnerId,0)
+ 
+                  LEFT JOIN (SELECT tmpLastPayment.JuridicalId
+                                  , tmpLastPayment.InfoMoneyId
+                                  , tmpLastPayment.PaidKindId
+                                  , tmpLastPayment.OperDate
+                                  , tmpLastPayment.Amount
+                                  , ROW_NUMBER() OVER(PARTITION BY tmpLastPayment.JuridicalId, tmpLastPayment.PaidKindId, tmpLastPayment.InfoMoneyId ORDER BY tmpLastPayment.OperDate DESC) AS Ord
+                             FROM tmpLastPayment
+                            ) AS tmpLastPaymentJuridical
+                              ON tmpLastPaymentJuridical.JuridicalId = tmpReport.JuridicalId
+                             AND tmpLastPaymentJuridical.PaidKindId  = tmpReport.PaidKindId
+                             AND tmpLastPaymentJuridical.InfoMoneyId = tmpReport.InfoMoneyId
+                             AND tmpLastPaymentJuridical.Ord = 1
+
+                  LEFT JOIN tmpContainerData ON tmpContainerData.JuridicalId = tmpReport.JuridicalId
+                                            AND tmpContainerData.ContractId  = tmpReport.ContractId
+                                            AND tmpContainerData.PaidKindId  = tmpReport.PaidKindId
+                                            AND COALESCE (tmpContainerData.PartnerId,0) = COALESCE (tmpReport.PartnerId,0)
+                 )
+   
    ---
    SELECT tmpReport.AccountId, tmpReport.AccountName, tmpReport.JuridicalId, tmpReport.JuridicalName, tmpReport.RetailName, tmpReport.RetailName_main, tmpReport.OKPO, tmpReport.JuridicalGroupName
         , tmpReport.SectionId, tmpReport.SectionName
@@ -168,9 +272,17 @@ BEGIN
         , tmpReport.PersonalCollationName
         , tmpReport.PersonalTradeName_Partner
         , tmpReport.StartDate, tmpReport.EndDate
-        , tmpReport.DebetRemains, tmpReport.KreditRemains
-        , tmpReport.SaleSumm, tmpReport.DefermentPaymentRemains
-        , tmpReport.SaleSumm1, tmpReport.SaleSumm2, tmpReport.SaleSumm3, tmpReport.SaleSumm4, tmpReport.SaleSumm5
+        
+        , CASE WHEN tmpReport.Ord = 1 THEN tmpReport.DebetRemains  ELSE 0 END ::TFloat AS DebetRemains
+        , CASE WHEN tmpReport.Ord = 1 THEN tmpReport.KreditRemains ELSE 0 END ::TFloat AS KreditRemains            
+        , CASE WHEN tmpReport.Ord = 1 THEN tmpReport.SaleSumm      ELSE 0 END ::TFloat AS SaleSumm
+        , CASE WHEN tmpReport.Ord = 1 THEN tmpReport.DefermentPaymentRemains ELSE 0 END ::TFloat AS DefermentPaymentRemains
+        , CASE WHEN tmpReport.Ord = 1 THEN tmpReport.SaleSumm1     ELSE 0 END ::TFloat AS SaleSumm1
+        , CASE WHEN tmpReport.Ord = 1 THEN tmpReport.SaleSumm2     ELSE 0 END ::TFloat AS SaleSumm2
+        , CASE WHEN tmpReport.Ord = 1 THEN tmpReport.SaleSumm3     ELSE 0 END ::TFloat AS SaleSumm3
+        , CASE WHEN tmpReport.Ord = 1 THEN tmpReport.SaleSumm4     ELSE 0 END ::TFloat AS SaleSumm4
+        , CASE WHEN tmpReport.Ord = 1 THEN tmpReport.SaleSumm5     ELSE 0 END ::TFloat AS SaleSumm5
+        
         , tmpReport.Condition, tmpReport.StartContractDate, tmpReport.Remains
         , tmpReport.InfoMoneyGroupName, tmpReport.InfoMoneyDestinationName
         , tmpReport.InfoMoneyId, tmpReport.InfoMoneyCode, tmpReport.InfoMoneyName
@@ -178,31 +290,18 @@ BEGIN
         , tmpReport.BranchName_personal
         , tmpReport.BranchName_personal_trade
 
-        , tmpLastPayment.OperDate :: TDateTime AS PaymentDate
-        , tmpLastPayment.Amount   :: TFloat    AS PaymentAmount
+        , tmpReport.PaymentDate        :: TDateTime 
+        , tmpReport.PaymentAmount      :: TFloat 
+        , tmpReport.PaymentDate_jur    :: TDateTime
+        , tmpReport.PaymentAmount_jur  :: TFloat
 
-        , tmpLastPaymentJuridical.OperDate :: TDateTime AS PaymentDate_jur
-        , tmpLastPaymentJuridical.Amount   :: TFloat    AS PaymentAmount_jur
-
-   FROM tmpReport
-        LEFT JOIN tmpLastPayment_all AS tmpLastPayment
-                                     ON tmpLastPayment.JuridicalId = tmpReport.JuridicalId
-                                    AND tmpLastPayment.ContractId  = tmpReport.ContractId
-                                    AND tmpLastPayment.PaidKindId  = tmpReport.PaidKindId
-                                    AND tmpLastPayment.PartnerId   = COALESCE (tmpReport.PartnerId,0)
-
-        LEFT JOIN (SELECT tmpLastPayment.JuridicalId
-                        , tmpLastPayment.InfoMoneyId
-                        , tmpLastPayment.PaidKindId
-                        , tmpLastPayment.OperDate
-                        , tmpLastPayment.Amount
-                        , ROW_NUMBER() OVER(PARTITION BY tmpLastPayment.JuridicalId, tmpLastPayment.PaidKindId, tmpLastPayment.InfoMoneyId ORDER BY tmpLastPayment.OperDate DESC) AS Ord
-                   FROM tmpLastPayment
-                  ) AS tmpLastPaymentJuridical
-                    ON tmpLastPaymentJuridical.JuridicalId = tmpReport.JuridicalId
-                   AND tmpLastPaymentJuridical.PaidKindId  = tmpReport.PaidKindId
-                   AND tmpLastPaymentJuridical.InfoMoneyId = tmpReport.InfoMoneyId
-                   AND tmpLastPaymentJuridical.Ord = 1
+        , tmpReport.MovementId      ::Integer
+        , tmpReport.OperDate        ::TDateTime
+        , tmpReport.MovementDescName ::TVarChar
+        , tmpReport.InvNumber       ::TVarChar
+        , tmpReport.Summa_doc   ::TFloat    ::TFloat
+   FROM tmpData AS tmpReport
+       
    ;
 
 END;
@@ -234,4 +333,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalDefermentPaymentMovement(inOperDate := ('04.07.2023')::TDateTime , inEmptyParam := ('01.01.2023')::TDateTime , inAccountId := 9128 , inPaidKindId := 3 , inBranchId := 0 , inJuridicalGroupId := 0 ,  inSession := zfCalc_UserAdmin());
+--
+ --select * from gpReport_JuridicalDefermentPaymentMovement(inOperDate := ('05.07.2023')::TDateTime , inEmptyParam := ('01.05.2013')::TDateTime , inAccountId := 9128 , inPaidKindId := 3 , inBranchId := 0 , inJuridicalGroupId := 0 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
+
