@@ -108,6 +108,7 @@ type
     InvNumber: TcxGridDBColumn;
     Summa_doc: TcxGridDBColumn;
     MovementDescName: TcxGridDBColumn;
+    OperDate_pay: TcxGridDBColumn;
   private
     { Private declarations }
   public

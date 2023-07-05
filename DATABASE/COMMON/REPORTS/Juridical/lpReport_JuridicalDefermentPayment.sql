@@ -37,6 +37,7 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar
              , BranchName_personal       TVarChar
              , BranchName_personal_trade TVarChar
              , ContainerId Integer
+             , DayCount TFloat, ContractConditionKindId Integer
               )
 AS
 $BODY$
@@ -169,6 +170,9 @@ BEGIN
              , a.BranchName_personal_trade ::TVarChar
 
              , a.ContainerId               ::Integer
+             
+             , a.DayCount                 ::TFloat
+             , a.ContractConditionKindId  ::Integer
      from (
            SELECT 
               Object_Account_View.AccountId
@@ -266,6 +270,8 @@ BEGIN
                                            ELSE ''
                                       END
                )::TVarChar AS Condition -- Object_ContractConditionKind.ValueData
+            , RESULT.DayCount 
+            , RESULT.ContractConditionKindId
             , RESULT.ContractDate :: TDateTime AS StartContractDate
             , (-1 * RESULT.Remains * COALESCE (tmpReport_res.Koeff, 1.0)) :: TFloat AS Remains
          
@@ -327,8 +333,8 @@ BEGIN
                        LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = CLO_Contract.ObjectId
          
                        LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
-                                       , zfCalc_DetermentPaymentDate (COALESCE (ContractConditionKindId, 0), Value :: Integer, inOperDate) :: Date AS ContractDate
-                                       , ContractConditionKindId
+                                       , zfCalc_DetermentPaymentDate (COALESCE (Object_ContractCondition_View.ContractConditionKindId, 0), Value :: Integer, inOperDate) :: Date AS ContractDate
+                                       , Object_ContractCondition_View.ContractConditionKindId
                                        , Value :: Integer AS DayCount
                                     FROM Object_ContractCondition_View
                                          INNER JOIN Object_ContractCondition_DefermentPaymentView 
@@ -352,8 +358,8 @@ BEGIN
                          , Container.Amount
                          , View_Contract_ContractKey.ContractId_Key
                          , CLO_Juridical.ObjectId  
-                         , ContractConditionKindId
-                         , DayCount
+                         , ContractCondition_DefermentPayment.ContractConditionKindId
+                         , COALESCE (ContractCondition_DefermentPayment.DayCount, 0)
                          , ContractDate
                 ) AS RESULT_all
          
