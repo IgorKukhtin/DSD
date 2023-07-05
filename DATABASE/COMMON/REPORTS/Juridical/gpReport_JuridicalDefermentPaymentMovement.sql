@@ -40,6 +40,7 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , MovementDescName TVarChar
              , InvNumber       TVarChar
              , Summa_doc       TFloat
+             , ContainerId     Integer
               )
 AS
 $BODY$
@@ -109,6 +110,7 @@ BEGIN
 
                         , a.BranchName_personal
                         , a.BranchName_personal_trade 
+                        , MAX (a.ContainerId) AS ContainerId
                         
                    FROM _tmpReport AS a
                    GROUP BY a.AccountId, a.AccountName
@@ -180,10 +182,10 @@ BEGIN
                                , SUM (COALESCE (MIContainer.Amount,0)) AS Amount
                           FROM tmpContainer
                                INNER JOIN MovementItemcontainer AS MIContainer
-                                                                ON MIContainer.Id = tmpContainer.ContainerId
-                                                               AND MIContainer.DescId = zc_MIContainer_Summ()  
+                                                                ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                               AND MIContainer.DescId      = zc_MIContainer_Summ()  
                                                                AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) 
-                                                               --AND MIContainer.OperDate BETWEEN tmpContainer.StartContractDate AND inOperDate
+                                                               AND MIContainer.OperDate BETWEEN tmpContainer.StartContractDate AND inOperDate
                                LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
                                LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
                           GROUP BY tmpContainer.JuridicalId
@@ -226,12 +228,13 @@ BEGIN
                        , tmpLastPaymentJuridical.OperDate :: TDateTime AS PaymentDate_jur
                        , tmpLastPaymentJuridical.Amount   :: TFloat    AS PaymentAmount_jur  
                        
-                       , ROW_NUMBER() OVER(PARTITION BY tmpReport.JuridicalId, tmpReport.PaidKindId, tmpReport.ContractId, tmpReport.PartnerId ORDER BY tmpLastPayment.OperDate DESC) AS Ord 
+                       , ROW_NUMBER() OVER(PARTITION BY tmpReport.JuridicalId, tmpReport.PaidKindId, tmpReport.ContractId, tmpReport.PartnerId ORDER BY tmpContainerData.OperDate DESC) AS Ord 
                        , tmpContainerData.MovementId
                        , tmpContainerData.OperDate 
                        , tmpContainerData.MovementDescName
                        , tmpContainerData.InvNumber
                        , tmpContainerData.Amount AS Summa_doc
+                       , tmpReport.ContainerId
                  FROM tmpReport
                   LEFT JOIN tmpLastPayment_all AS tmpLastPayment
                                                ON tmpLastPayment.JuridicalId = tmpReport.JuridicalId
@@ -300,6 +303,7 @@ BEGIN
         , tmpReport.MovementDescName ::TVarChar
         , tmpReport.InvNumber       ::TVarChar
         , tmpReport.Summa_doc   ::TFloat    ::TFloat
+        , tmpReport.ContainerId :: Integer
    FROM tmpData AS tmpReport
        
    ;
@@ -333,6 +337,4 @@ $BODY$
 */
 
 -- тест
---
- --select * from gpReport_JuridicalDefermentPaymentMovement(inOperDate := ('05.07.2023')::TDateTime , inEmptyParam := ('01.05.2013')::TDateTime , inAccountId := 9128 , inPaidKindId := 3 , inBranchId := 0 , inJuridicalGroupId := 0 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
-
+-- SELECT * FROM gpReport_JuridicalDefermentPaymentMovement(inOperDate := ('04.07.2023')::TDateTime , inEmptyParam := ('01.01.2016')::TDateTime , inAccountId := 9128 , inPaidKindId := 3 , inBranchId := 0 , inJuridicalGroupId := 0 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e') --WHERE SaleSumm <> 0
