@@ -36,12 +36,14 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar
              , AreaName TVarChar, AreaName_Partner TVarChar
              , BranchName_personal       TVarChar
              , BranchName_personal_trade TVarChar
+             , ContainerId Integer
               )
 AS
 $BODY$
    DECLARE vbLenght Integer;
 
-   DECLARE vbIsBranch Boolean;
+   DECLARE vbIsContainer      Boolean;
+   DECLARE vbIsBranch         Boolean;
    DECLARE vbIsJuridicalGroup Boolean;
    DECLARE vbObjectId_Constraint_Branch Integer;
    DECLARE vbObjectId_Constraint_JuridicalGroup Integer;
@@ -51,6 +53,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      --vbUserId:= lpGetUserBySession (inSession);
+     
+     vbIsContainer:= inUserId < 0;
+     inUserId:= ABS (inUserId);
 
      -- Разрешен просмотр долги Маркетинг - НАЛ
      vbIsInfoMoneyDestination_21500:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = inUserId AND tmp.RoleId = 8852398);
@@ -162,6 +167,8 @@ BEGIN
              
              , a.BranchName_personal       ::TVarChar
              , a.BranchName_personal_trade ::TVarChar
+
+             , a.ContainerId               ::Integer
      from (
            SELECT 
               Object_Account_View.AccountId
@@ -273,6 +280,7 @@ BEGIN
                
                , Object_Branch_personal.ValueData       AS BranchName_personal
                , Object_Branch_personal_trade.ValueData AS BranchName_personal_trade
+               , RESULT.ContainerId
          
            FROM (SELECT RESULT_all.AccountId
                       , RESULT_all.ContractId
@@ -294,8 +302,9 @@ BEGIN
                     --, MIN (CLO_Branch.ObjectId)    AS BranchId
                       , CLO_Branch.ObjectId    AS BranchId
                       , ObjectLink_Juridical_JuridicalGroup.ChildObjectId AS JuridicalGroupId
+                      , CASE WHEN vbIsContainer = TRUE THEN RESULT_all.ContainerId ELSE 0 END AS ContainerId
                  FROM
-                (SELECT Container.Id
+                (SELECT Container.Id           AS ContainerId
                       , Container.ObjectId     AS AccountId
                       , View_Contract_ContractKey.ContractId_Key AS ContractId -- CLO_Contract.ObjectId AS ContractId
                       , CLO_Juridical.ObjectId AS JuridicalId 
@@ -349,16 +358,16 @@ BEGIN
                 ) AS RESULT_all
          
                     LEFT JOIN ContainerLinkObject AS CLO_PaidKind
-                                                  ON CLO_PaidKind.ContainerId = RESULT_all.Id
+                                                  ON CLO_PaidKind.ContainerId = RESULT_all.ContainerId
                                                  AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                     LEFT JOIN ContainerLinkObject AS CLO_Branch
-                                                  ON CLO_Branch.ContainerId = RESULT_all.Id
+                                                  ON CLO_Branch.ContainerId = RESULT_all.ContainerId
                                                  AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
                     LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
-                                                  ON CLO_InfoMoney.ContainerId = RESULT_all.Id
+                                                  ON CLO_InfoMoney.ContainerId = RESULT_all.ContainerId
                                                  AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                     LEFT JOIN ContainerLinkObject AS CLO_Partner
-                                                  ON CLO_Partner.ContainerId = RESULT_all.Id
+                                                  ON CLO_Partner.ContainerId = RESULT_all.ContainerId
                                                  AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
                     LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                                          ON ObjectLink_Juridical_JuridicalGroup.ObjectId = RESULT_all.JuridicalId
@@ -407,6 +416,7 @@ BEGIN
                          , CLO_Partner.ObjectId
                          , CLO_Branch.ObjectId
                          , ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+                         , CASE WHEN vbIsContainer = TRUE THEN RESULT_all.ContainerId ELSE 0 END
                 ) AS RESULT
          
                 LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = RESULT.JuridicalId
