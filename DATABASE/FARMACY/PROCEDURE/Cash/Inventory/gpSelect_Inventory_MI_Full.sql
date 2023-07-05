@@ -238,7 +238,7 @@ BEGIN
               , CASE WHEN MovementItem.ObjectId > 0 THEN MovementItem.Price ELSE tmpPrice.Price END :: TFloat AS Price
               , REMAINS.Amount  :: TFloat                                           AS Remains
               , REMAINS.minExpirationDate ::TDateTime
-              , MovementItem.Amount                                                 AS AmountUser
+              , tmpMI_Child.AmountUser                                              AS AmountUser
               , tmpMI_Child.CountUser
               , MovementItem.MIComment                                              AS MIComment
               , CASE WHEN MovementItem.ObjectId > 0 THEN COALESCE (MovementItem.isAuto, FALSE) ELSE TRUE END :: Boolean AS isAuto
@@ -267,4 +267,4 @@ ALTER FUNCTION gpSelect_Inventory_MI_Full (Integer, TDateTime, TVarChar) OWNER T
 
 -- тест
 
--- select * from gpSelect_Inventory_MI_Full(inUnitId := 183289 , inOperDate := '19.05.2023' ,  inSession := '3');
+-- select * from gpSelect_Inventory_MI_Full(inUnitId := 377610 , inOperDate := ('05.07.2023')::TDateTime ,  inSession := '3');

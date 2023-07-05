@@ -250,6 +250,7 @@ type
     function SendETTN(AGLN, AUuId, AXML : String): Boolean;
     function GetDocETTN(AGLN, AUuId : String): Boolean;
     function GetKATOTTG(ACity : String): Boolean;
+    function GetCompanyAddresses(AEdrpou : String): Boolean;
     function SignDcuETTN(AGLN, AUuId : String): Boolean;
 
     procedure UAECMREDI(var AXML: String);
@@ -5581,6 +5582,7 @@ begin
        (HeaderDataSet.FieldByName('GLN_from').asString = '') or
        (HeaderDataSet.FieldByName('GLN_to').asString = '') or
        (HeaderDataSet.FieldByName('GLN_Unloading').asString = '') or
+       (HeaderDataSet.FieldByName('GLN_Unit').asString = '') or
        (HeaderDataSet.FieldByName('GLN_Driver').asString = '') or
        (HeaderDataSet.FieldByName('KATOTTG_Unit').asString = '') or
        (HeaderDataSet.FieldByName('KATOTTG_Unloading').asString = '') then
@@ -5588,6 +5590,7 @@ begin
                  IfThen(HeaderDataSet.FieldByName('GLN_car').asString = '', ' GLN для Перевізника;', '') +
                  IfThen(HeaderDataSet.FieldByName('GLN_from').asString = '', ' GLN для Замовника;', '') +
                  IfThen(HeaderDataSet.FieldByName('GLN_to').asString = '', ' GLN для Вантажоодержувача;', '') +
+                 IfThen(HeaderDataSet.FieldByName('GLN_Unit').asString = '', ' GLN для Пункт навантаження;', '') +
                  IfThen(HeaderDataSet.FieldByName('GLN_Unloading').asString = '', ' GLN для Пункта розвантаження;', '') +
                  IfThen(HeaderDataSet.FieldByName('GLN_Driver').asString = '', ' GLN для Водія;', '') +
                  IfThen(HeaderDataSet.FieldByName('KATOTTG_Unit').asString = '', ' КАТОТТГ Пункта навантаження;', '') +
@@ -5604,7 +5607,7 @@ begin
     // порядковий номер (серія) документа ТТН
     UAECMR.ECMR.ExchangedDocument.ID := HeaderDataSet.FieldByName('InvNumber').asString;
     // Дата і час складання документа (виписування ТТН)
-    UAECMR.ECMR.ExchangedDocument.IssueDateTime.DateTime := gfFormatToDateTime (Now {HeaderDataSet.FieldByName('OperDate').AsDateTime});
+    UAECMR.ECMR.ExchangedDocument.IssueDateTime.DateTime := gfFormatToDateTime (HeaderDataSet.FieldByName('OperDate').AsDateTime);
     // Додані записи
     // CA - Перевізник
     with UAECMR.ECMR.ExchangedDocument.IncludedNote.Add do
@@ -5734,9 +5737,9 @@ begin
       UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.ID.SchemeAgencyID := 'КАТОТТГ';
       UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.ID.NodeValue := HeaderDataSet.FieldByName('KATOTTG_Unit').asString;
     end;
-    UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.Name := HeaderDataSet.FieldByName('Name_Unit').asString; // 'ТОВ "Вантажовідправник_v3"';
+    UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.Name := HeaderDataSet.FieldByName('Name_Unit').asString;
     UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.TypeCode := 5;
-    UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.Description := HeaderDataSet.FieldByName('Address_Unit').asString;  // 'Україна, 1233122, Полтавська обл,  Полтавський р-н, м. Полтава, Качури 99';
+    UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.Description := HeaderDataSet.FieldByName('Address_Unit').asString;
     if HeaderDataSet.FieldByName('GLN_Unit').asString <> '' then
     begin
       UAECMR.ECMR.SpecifiedSupplyChainConsignment.CarrierAcceptanceLogisticsLocation.PhysicalGeographicalCoordinate.SystemID.SchemeAgencyID := 'GLN';
@@ -5979,7 +5982,7 @@ begin
      (FLoginParam.Value = '') or
      (FHostParam.Value = '') then
   begin
-    ShowMessage('Не заполнены Host, логин или пароль.');
+    ShowError('Не заполнены Host, логин или пароль.');
     Exit;
   end;
 
@@ -6001,7 +6004,7 @@ begin
         SL.Add('password=' + FPasswordParam.Value);
         S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + '/api/authorization/hash'), SL);
       except on E:EIdHTTPProtocolException  do
-                  ShowMessage(e.ErrorMessage);
+                  ShowError('Ошибка получения токена: ' + e.ErrorMessage);
       end;
     finally
       SL.Free;
@@ -6036,7 +6039,7 @@ begin
 
   if FTokenParam.Value = '' then
   begin
-    ShowMessage('Не получен токе. Отправка еЕЕТ невозможна.');
+    ShowError('Не получен токе. Отправка еЕЕТ невозможна.');
     Exit;
   end;
 
@@ -6060,7 +6063,7 @@ begin
       try
         S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + '/api/eds/doc/ettn/ttn' + Params), Steam);
       except on E:EIdHTTPProtocolException  do
-                  ShowMessage(e.ErrorMessage);
+                  ShowError('Ошибка отправки ТТН: ' + e.ErrorMessage);
       end;
     finally
       Steam.Free;
@@ -6094,7 +6097,7 @@ begin
 
   if FTokenParam.Value = '' then
   begin
-    ShowMessage('Не получен токе. Загрузка файла еЕЕТ невозможна.');
+    ShowError('Не получен токе. Загрузка файла еЕЕТ невозможна.');
     Exit;
   end;
 
@@ -6117,7 +6120,7 @@ begin
       try
         IdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + '/api/eds/doc/ettn/body' + Params), Steam);
       except on E:EIdHTTPProtocolException  do
-                  ShowMessage(e.ErrorMessage);
+                  ShowError('Ошибка получение файла ТТН: ' + e.ErrorMessage);
       end;
 
       if IdHTTP.ResponseCode = 200 then
@@ -6144,7 +6147,7 @@ begin
 
   if FTokenParam.Value = '' then
   begin
-    ShowMessage('Не получен токе. Загрузка файла еЕЕТ невозможна.');
+    ShowError('Не получен токе. Загрузка файла еЕЕТ невозможна.');
     Exit;
   end;
 
@@ -6165,7 +6168,55 @@ begin
     try
       S := IdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + '/api/oas/v2/katottg/search' + Params));
     except on E:EIdHTTPProtocolException  do
-                ShowMessage(e.ErrorMessage);
+                ShowError('Ошибка: ' + e.ErrorMessage);
+    end;
+
+    if IdHTTP.ResponseCode = 200 then
+    begin
+      jsonArray := TJSONObject.ParseJSONValue(S) as TJSONArray;
+      if jsonArray.Size = 1 then
+      begin
+
+        Result := True;
+      end;
+    end;
+  finally
+    IdHTTP.Free;
+  end;
+end;
+
+function TdsdEDINAction.GetCompanyAddresses(AEdrpou : String): Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      S, Params: String;
+      jsonArray: TJSONArray;
+begin
+  inherited;
+  Result := False;
+
+  if FTokenParam.Value = '' then
+  begin
+    ShowError('Не получен токе. Загрузка файла еЕЕТ невозможна.');
+    Exit;
+  end;
+
+  // Непосредственно загрузка файла для подписи
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  try
+
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.ContentType := 'application/json';
+    IdHTTP.Request.ContentEncoding := 'utf-8';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    Params := '?edrpou=' + AEdrpou; // + '&query=к';
+
+    try
+      S := IdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + '/api/oas/v2/company/addresses/search' + Params));
+    except on E:EIdHTTPProtocolException  do
+                ShowError('Ошибка: ' + e.ErrorMessage);
     end;
 
     if IdHTTP.ResponseCode = 200 then
@@ -6183,6 +6234,7 @@ begin
 end;
 
 
+
 function TdsdEDINAction.SignDcuETTN(AGLN, AUuId : String): Boolean;
   var IdHTTP: TCustomIdHTTP;
       S, Params: String;
@@ -6195,7 +6247,7 @@ begin
 
   if FTokenParam.Value = '' then
   begin
-    ShowMessage('Не получен токе. Подпись еЕЕТ невозможна.');
+    ShowError('Не получен токе. Подпись еЕЕТ невозможна.');
     Exit;
   end;
 
@@ -6236,7 +6288,7 @@ begin
           FreeAndNil(Stream);
         end;
       except on E:EIdHTTPProtocolException  do
-                  ShowMessage(e.ErrorMessage);
+                  ShowError('Ошибка: ' + e.ErrorMessage);
       end;
     finally
       FreeAndNil(fileStream);
@@ -6270,14 +6322,16 @@ begin
 //
 //  end;
 
+//  GetCompanyAddresses(HeaderDataSet.FieldByName('OKPO_To').asString);
+
   // Сформируем XML
   UAECMREDI(cXML);
 
   // Отправим eTTN
-  Result := SendETTN(HeaderDataSet.FieldByName('GLN_from').asString, HeaderDataSet.FieldByName('TransportGoods_UuId').AsString, cXML);
+  Result := SendETTN(HeaderDataSet.FieldByName('GLN_from').asString, HeaderDataSet.FieldByName('UuId').AsString, cXML);
 
   // Запишем в базу Uuid
-  if (FResultParam.Value <> HeaderDataSet.FieldByName('TransportGoods_UuId').AsString) and
+  if Result and ((FResultParam.Value <> HeaderDataSet.FieldByName('UuId').AsString)) and
      Assigned(FUpdateUuid) then FUpdateUuid.Execute;
 
 end;
