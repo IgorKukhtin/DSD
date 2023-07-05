@@ -36,10 +36,14 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , PaymentDate TDateTime, PaymentAmount TFloat
              , PaymentDate_jur TDateTime, PaymentAmount_jur TFloat
              , MovementId      Integer
-             , OperDate        TDateTime
+             , OperDate        TDateTime 
+             , OperDate_pay    TDateTime
              , MovementDescName TVarChar
              , InvNumber       TVarChar
-             , Summa_doc       TFloat
+             , Summa_doc       TFloat  
+             , TotalSumm       TFloat
+             , TotalSumm_diff  TFloat
+             , DelayDay_calc   Integer
              , ContainerId     Integer
               )
 AS
@@ -112,6 +116,8 @@ BEGIN
                         , a.BranchName_personal_trade 
                         , MAX (a.ContainerId) AS ContainerId
                         
+                        , a.DayCount
+                        , a.ContractConditionKindId
                    FROM _tmpReport AS a
                    GROUP BY a.AccountId, a.AccountName
                           , a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
@@ -133,6 +139,9 @@ BEGIN
 
                           , a.BranchName_personal
                           , a.BranchName_personal_trade
+                          
+                          , a.DayCount
+                          , a.ContractConditionKindId
                   )
     -- выбираем последнии оплаты
    , tmpLastPayment_all AS (SELECT tt.JuridicalId
@@ -235,6 +244,9 @@ BEGIN
                        , tmpContainerData.InvNumber
                        , tmpContainerData.Amount AS Summa_doc
                        , tmpReport.ContainerId
+                       
+                       , zfCalc_DetermentPaymentDate_ASC (inContractConditionId:= tmpReport.ContractConditionKindId, inDayCount:= tmpReport.DayCount::Integer, inDate:= tmpContainerData.OperDate ::TDateTime) ::TDateTime AS OperDate_pay
+                       , MovementFloat_TotalSumm.ValueData ::TFloat AS TotalSumm
                  FROM tmpReport
                   LEFT JOIN tmpLastPayment_all AS tmpLastPayment
                                                ON tmpLastPayment.JuridicalId = tmpReport.JuridicalId
@@ -258,7 +270,11 @@ BEGIN
                   LEFT JOIN tmpContainerData ON tmpContainerData.JuridicalId = tmpReport.JuridicalId
                                             AND tmpContainerData.ContractId  = tmpReport.ContractId
                                             AND tmpContainerData.PaidKindId  = tmpReport.PaidKindId
-                                            AND COALESCE (tmpContainerData.PartnerId,0) = COALESCE (tmpReport.PartnerId,0)
+                                            AND COALESCE (tmpContainerData.PartnerId,0) = COALESCE (tmpReport.PartnerId,0) 
+
+                  LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                          ON MovementFloat_TotalSumm.MovementId = tmpContainerData.MovementId
+                                         AND MovementFloat_TotalSumm.DEscId = zc_MovementFloat_TotalSumm()
                  )
    
    ---
@@ -300,12 +316,16 @@ BEGIN
 
         , tmpReport.MovementId      ::Integer
         , tmpReport.OperDate        ::TDateTime
+        , tmpReport.OperDate_pay    ::TDateTime
         , tmpReport.MovementDescName ::TVarChar
         , tmpReport.InvNumber       ::TVarChar
-        , tmpReport.Summa_doc   ::TFloat    ::TFloat
+        , tmpReport.Summa_doc       ::TFloat  
+        , tmpReport.TotalSumm       ::TFloat  --
+        , 0 ::TFloat AS TotalSumm_diff    --  долг по накладной
+        , DATE_PART ('DAY', tmpReport.OperDate_pay :: TIMESTAMP - inOperDate :: TIMESTAMP) ::Integer AS DelayDay_calc
+
         , tmpReport.ContainerId :: Integer
-   FROM tmpData AS tmpReport
-       
+   FROM tmpData AS tmpReport   
    ;
 
 END;

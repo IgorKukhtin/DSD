@@ -22,6 +22,8 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
       inherited cxGrid: TcxGrid
         Width = 1123
         Height = 314
+        ExplicitLeft = 624
+        ExplicitTop = 16
         ExplicitWidth = 1123
         ExplicitHeight = 314
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -652,6 +654,45 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 148
+          end
+          object OperDate_pay: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'OperDate_pay'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            Width = 80
+          end
+          object TotalSumm_diff: TcxGridDBColumn
+            Caption = #1044#1086#1083#1075' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            DataBinding.FieldName = 'TotalSumm_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object DelayDay_calc: TcxGridDBColumn
+            Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1086' '#1076#1085#1077#1081
+            DataBinding.FieldName = 'DelayDay_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
         end
       end
