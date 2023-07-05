@@ -245,7 +245,10 @@ BEGIN
                        , tmpContainerData.Amount AS Summa_doc
                        , tmpReport.ContainerId
                        
-                       , zfCalc_DetermentPaymentDate_ASC (inContractConditionId:= tmpReport.ContractConditionKindId, inDayCount:= tmpReport.DayCount::Integer, inDate:= tmpContainerData.OperDate ::TDateTime) ::TDateTime AS OperDate_pay
+                       , CASE WHEN tmpReport.ContractConditionKindId IN (zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank())
+                              THEN zfCalc_DetermentPaymentDate_ASC (inContractConditionId:= tmpReport.ContractConditionKindId, inDayCount:= tmpReport.DayCount::Integer, inDate:= tmpContainerData.OperDate ::TDateTime) 
+                              ELSE NULL
+                         END  ::TDateTime AS OperDate_pay
                        , MovementFloat_TotalSumm.ValueData ::TFloat AS TotalSumm
                  FROM tmpReport
                   LEFT JOIN tmpLastPayment_all AS tmpLastPayment
@@ -322,7 +325,7 @@ BEGIN
         , tmpReport.Summa_doc       ::TFloat  
         , tmpReport.TotalSumm       ::TFloat  --
         , 0 ::TFloat AS TotalSumm_diff    --  долг по накладной
-        , DATE_PART ('DAY', tmpReport.OperDate_pay :: TIMESTAMP - inOperDate :: TIMESTAMP) ::Integer AS DelayDay_calc
+        , DATE_PART ('DAY', inOperDate:: TIMESTAMP -  tmpReport.OperDate_pay :: TIMESTAMP) ::Integer AS DelayDay_calc
 
         , tmpReport.ContainerId :: Integer
    FROM tmpData AS tmpReport   
