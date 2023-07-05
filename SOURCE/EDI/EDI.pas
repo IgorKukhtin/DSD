@@ -249,6 +249,7 @@ type
     function GetToken: Boolean;
     function SendETTN(AGLN, AUuId, AXML : String): Boolean;
     function GetDocETTN(AGLN, AUuId : String): Boolean;
+    function GetKATOTTG(ACity : String): Boolean;
     function SignDcuETTN(AGLN, AUuId : String): Boolean;
 
     procedure UAECMREDI(var AXML: String);
@@ -5580,19 +5581,17 @@ begin
        (HeaderDataSet.FieldByName('GLN_from').asString = '') or
        (HeaderDataSet.FieldByName('GLN_to').asString = '') or
        (HeaderDataSet.FieldByName('GLN_Unloading').asString = '') or
-       (HeaderDataSet.FieldByName('GLN_Driver').asString = '') then
-       ShowError(Format('Не заполнено GLN для Перевізник <%s>, Замовник <%s>, Вантажоодержувач <%s>, Пункт розвантаження <%s>, Водій <%s>',
-             [HeaderDataSet.FieldByName('GLN_car').asString,
-              HeaderDataSet.FieldByName('GLN_from').asString,
-              HeaderDataSet.FieldByName('GLN_to').asString,
-              HeaderDataSet.FieldByName('GLN_Unloading').asString,
-              HeaderDataSet.FieldByName('GLN_Driver').asString]));
-
-    if (HeaderDataSet.FieldByName('KATOTTG_Unit').asString = '') or
+       (HeaderDataSet.FieldByName('GLN_Driver').asString = '') or
+       (HeaderDataSet.FieldByName('KATOTTG_Unit').asString = '') or
        (HeaderDataSet.FieldByName('KATOTTG_Unloading').asString = '') then
-       ShowError(Format('Не заполнено КАТОТТГ для Пункт навантаження <%s>, Пункт розвантаження <%s>',
-             [HeaderDataSet.FieldByName('KATOTTG_Unit').asString,
-              HeaderDataSet.FieldByName('KATOTTG_Unloading').asString]));
+       ShowError('Не заполнено:' +
+                 IfThen(HeaderDataSet.FieldByName('GLN_car').asString = '', ' GLN для Перевізника;', '') +
+                 IfThen(HeaderDataSet.FieldByName('GLN_from').asString = '', ' GLN для Замовника;', '') +
+                 IfThen(HeaderDataSet.FieldByName('GLN_to').asString = '', ' GLN для Вантажоодержувача;', '') +
+                 IfThen(HeaderDataSet.FieldByName('GLN_Unloading').asString = '', ' GLN для Пункта розвантаження;', '') +
+                 IfThen(HeaderDataSet.FieldByName('GLN_Driver').asString = '', ' GLN для Водія;', '') +
+                 IfThen(HeaderDataSet.FieldByName('KATOTTG_Unit').asString = '', ' КАТОТТГ Пункта навантаження;', '') +
+                 IfThen(HeaderDataSet.FieldByName('KATOTTG_Unloading').asString = '', ' КАТОТТГ Пункта розвантаження;', ''));
 
     // Создать XML
     UAECMR := UAECMRXML.NewUAECMR;
@@ -6135,6 +6134,55 @@ begin
   end;
 end;
 
+function TdsdEDINAction.GetKATOTTG(ACity : String): Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      S, Params: String;
+      jsonArray: TJSONArray;
+begin
+  inherited;
+  Result := False;
+
+  if FTokenParam.Value = '' then
+  begin
+    ShowMessage('Не получен токе. Загрузка файла еЕЕТ невозможна.');
+    Exit;
+  end;
+
+  // Непосредственно загрузка файла для подписи
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  try
+
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.ContentType := 'application/json';
+    IdHTTP.Request.ContentEncoding := 'utf-8';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    Params := '?query=' + ACity;
+
+    try
+      S := IdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + '/api/oas/v2/katottg/search' + Params));
+    except on E:EIdHTTPProtocolException  do
+                ShowMessage(e.ErrorMessage);
+    end;
+
+    if IdHTTP.ResponseCode = 200 then
+    begin
+      jsonArray := TJSONObject.ParseJSONValue(S) as TJSONArray;
+      if jsonArray.Size = 1 then
+      begin
+
+        Result := True;
+      end;
+    end;
+  finally
+    IdHTTP.Free;
+  end;
+end;
+
+
 function TdsdEDINAction.SignDcuETTN(AGLN, AUuId : String): Boolean;
   var IdHTTP: TCustomIdHTTP;
       S, Params: String;
@@ -6209,6 +6257,18 @@ function TdsdEDINAction.DoSendETTN: Boolean;
 begin
   Result := False;
   if not GetToken then Exit;
+
+  // Пробуем найти КАТОТТГ
+//  if (HeaderDataSet.FieldByName('KATOTTG_Unloading').asString = '') then
+//  begin
+//    if HeaderDataSet.FieldByName('PartnerCity_Unloading').asString = '' then
+//    begin
+//      ShowError('Не определен город места разгрузки.');
+//      Exit;
+//    end;
+//    if not GetKATOTTG(HeaderDataSet.FieldByName('PartnerCity_Unloading').asString) then Exit;
+//
+//  end;
 
   // Сформируем XML
   UAECMREDI(cXML);

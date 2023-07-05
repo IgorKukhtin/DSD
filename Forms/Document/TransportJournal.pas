@@ -130,6 +130,8 @@ type
     actPrintCost: TdsdPrintAction;
     bbPrintCost: TdxBarButton;
     PartnerCount_no: TcxGridDBColumn;
+    UnitName_Personal: TcxGridDBColumn;
+    UnitName_PersonalMore: TcxGridDBColumn;
   private
   public
   end;

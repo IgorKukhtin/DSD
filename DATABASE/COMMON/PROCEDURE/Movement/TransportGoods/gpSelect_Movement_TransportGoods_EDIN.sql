@@ -186,7 +186,9 @@ BEGIN
            
            , CASE WHEN COALESCE (OH_JuridicalDetails_car.OKPO, CASE WHEN Movement_Sale.DescId <> zc_Movement_ReturnIn() THEN OH_JuridicalDetails_From.OKPO ELSE OH_JuridicalDetails_To.OKPO END) = OH_JuridicalDetails_From.OKPO
                   THEN 'відрядний тариф'
-                  WHEN ObjectLink_Unit_City.ChildObjectId = View_Partner_Address.CityKindId
+                  WHEN TRIM(Object_Unit_City.ValueData) ILIKE TRIM(View_Partner_Address.CityName)
+                   AND COALESCE(ObjectLink_Unit_City_CityKind.ChildObjectId, 0) = COALESCE(View_Partner_Address.CityKindId, 0)
+                   AND COALESCE(ObjectLink_Unit_City_Region.ChildObjectId, 0)   = COALESCE(View_Partner_Address.RegionId, 0)
                   THEN 'внутрішньомістське'
                   ELSE 'міжміське' END::TVarChar                                         AS DeliveryInstructionsName
                   
@@ -501,6 +503,12 @@ BEGIN
                                  ON ObjectLink_Unit_City.ObjectId = CASE WHEN Movement_Sale.DescId = zc_Movement_ReturnIn() THEN Object_From.Id ELSE Object_To.Id END
                                 AND ObjectLink_Unit_City.DescId = zc_ObjectLink_Unit_City()
             LEFT JOIN Object AS Object_Unit_City ON Object_Unit_City.Id = ObjectLink_Unit_City.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_City_CityKind
+                                 ON ObjectLink_Unit_City_CityKind.ObjectId = Object_Unit_City.Id
+                                AND ObjectLink_Unit_City_CityKind.DescId = zc_ObjectLink_City_CityKind()
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_City_Region
+                                 ON ObjectLink_Unit_City_Region.ObjectId = Object_Unit_City.Id
+                                AND ObjectLink_Unit_City_Region.DescId = zc_ObjectLink_City_Region()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSignConsignor
                                          ON MovementLinkObject_MemberSignConsignor.MovementId = Movement.Id

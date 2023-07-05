@@ -47,7 +47,31 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH
-     tmpReport AS (SELECT tmpReport.*
+     tmpReport AS (SELECT tmpReport.AccountId, tmpReport.AccountName
+                        , tmpReport.JuridicalId, tmpReport.JuridicalName, tmpReport.RetailName, tmpReport.RetailName_main, tmpReport.OKPO, tmpReport.JuridicalGroupName
+                        , tmpReport.SectionId, tmpReport.SectionName
+                        , tmpReport.PartnerId, tmpReport.PartnerCode, tmpReport.PartnerName
+                        , tmpReport.BranchId, tmpReport.BranchCode, tmpReport.BranchName
+                        , tmpReport.PaidKindId, tmpReport.PaidKindName
+                        , tmpReport.ContractId, tmpReport.ContractCode, tmpReport.ContractNumber
+                        , tmpReport.ContractTagGroupName, tmpReport.ContractTagName, tmpReport.ContractStateKindCode
+                        , tmpReport.ContractJuridicalDocId, tmpReport.ContractJuridicalDocCode, tmpReport.ContractJuridicalDocName
+                        , tmpReport.PersonalName
+                        , tmpReport.PersonalTradeName
+                        , tmpReport.PersonalCollationName
+                        , tmpReport.PersonalTradeName_Partner
+                        , tmpReport.StartDate, tmpReport.EndDate
+                        , (tmpReport.DebetRemains) :: TFloat AS DebetRemains, (tmpReport.KreditRemains) :: TFloat AS KreditRemains
+                        , (tmpReport.SaleSumm) :: TFloat AS SaleSumm, (tmpReport.DefermentPaymentRemains) :: TFloat AS DefermentPaymentRemains
+                        , (tmpReport.SaleSumm1) :: TFloat AS SaleSumm1, (tmpReport.SaleSumm2) :: TFloat AS SaleSumm2, (tmpReport.SaleSumm3) :: TFloat AS SaleSumm3
+                        , (tmpReport.SaleSumm4) :: TFloat AS SaleSumm4, (tmpReport.SaleSumm5) :: TFloat AS SaleSumm5
+                        , tmpReport.Condition, tmpReport.StartContractDate, (tmpReport.Remains) :: TFloat AS Remains
+                        , tmpReport.InfoMoneyGroupName, tmpReport.InfoMoneyDestinationName, tmpReport.InfoMoneyId, tmpReport.InfoMoneyCode, tmpReport.InfoMoneyName
+                        , tmpReport.AreaName, tmpReport.AreaName_Partner
+
+                        , tmpReport.BranchName_personal
+                        , tmpReport.BranchName_personal_trade
+
                    FROM lpReport_JuridicalDefermentPayment (inOperDate         := inOperDate
                                                           , inEmptyParam       := inEmptyParam
                                                           , inStartDate_sale   := CASE WHEN DATE_TRUNC ('MONTH', inOperDate + INTERVAL '1 DAY') <> DATE_TRUNC ('MONTH', inOperDate) 
@@ -156,5 +180,5 @@ $BODY$
 -- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= CURRENT_DATE, inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(),  inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
 -- SELECT * FROM gpReport_JuridicalDefermentPayment (inOperDate:= CURRENT_DATE, inEmptyParam:= NULL :: TDateTime, inAccountId:= 0, inPaidKindId:= zc_Enum_PaidKind_SecondForm(), inBranchId:= 0, inJuridicalGroupId:= null, inSession:= zfCalc_UserAdmin());
 
---select * from gpReport_JuridicalDefermentPayment(inOperDate := ('19.12.2021')::TDateTime , inEmptyParam := ('01.05.2013')::TDateTime , inAccountId := 9128 , inPaidKindId := 3 , inBranchId := 0 , inJuridicalGroupId := 0 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e')
+--select * from gpReport_JuridicalDefermentPayment(inOperDate := ('19.12.2023')::TDateTime , inEmptyParam := ('01.05.2033')::TDateTime , inAccountId := 9128 , inPaidKindId := 3 , inBranchId := 0 , inJuridicalGroupId := 0 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e')
 --where JuridicalId = 14866
