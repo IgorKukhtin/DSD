@@ -104,7 +104,7 @@ BEGIN
      --
    , tmpMIProtocol AS (SELECT MovementItemProtocol.*
                               -- ¹ ï/ï
-                            , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.OperDate ASC) AS Ord
+                            , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.OperDate DESC) AS Ord
                        FROM MovementItemProtocol
                        WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                       )
