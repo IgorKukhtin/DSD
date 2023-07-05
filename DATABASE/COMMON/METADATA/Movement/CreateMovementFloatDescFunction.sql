@@ -696,10 +696,15 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummAvCardSecondRecalc() RETURN
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummAvCardSecondRecalc', 'Карта БН (ввод) - 2ф. Аванс' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummAvCardSecondRecalc');  
  
+CREATE OR REPLACE FUNCTION zc_MovementFloat_PriceNalog() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PriceNalog'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_PriceNalog', 'Ставка налога' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PriceNalog');  
+ 
  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 04.07.23         * zc_MovementFloat_PriceNalog
  02.05.23         * zc_MovementFloat_TotalSummAvCardSecond
                     zc_MovementFloat_TotalSummAvCardSecondRecalc
  14.03.23                                                                                     * zc_MovementFloat_AmountAct

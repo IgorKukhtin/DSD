@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , FineSubjectId Integer, FineSubjectName TVarChar
              , UnitFineSubjectId Integer, UnitFineSubjectName TVarChar
              , StaffListSummKindName TVarChar
+             
              , Amount TFloat, AmountToPay TFloat, AmountCash TFloat,AmountCash_rem TFloat, AmountCash_pay TFloat
              , SummService TFloat
              , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat, SummCardSecondDiff TFloat, SummCardSecondCash TFloat
@@ -50,7 +51,9 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , DayVacation TFloat, DayHoliday TFloat, DayWork TFloat
              , DayAudit TFloat 
              , SummMedicdayAdd TFloat, DayMedicday TFloat
-             , SummSkip TFloat, DaySkip TFloat             
+             , SummSkip TFloat, DaySkip TFloat
+             , DayPriceNalog TFloat
+             , isPriceNalog Boolean             
              , Number TVarChar
              , Comment TVarChar
              , isErased Boolean
@@ -600,7 +603,10 @@ BEGIN
             , MIFloat_SummMedicdayAdd.ValueData         ::TFloat AS SummMedicdayAdd
             , MIFloat_DayMedicday.ValueData             ::TFloat AS DayMedicday
             , MIFloat_SummSkip.ValueData                ::TFloat AS SummSkip
-            , MIFloat_DaySkip.ValueData                 ::TFloat AS DaySkip
+            , MIFloat_DaySkip.ValueData                 ::TFloat AS DaySkip 
+            
+            , MIFloat_DayPriceNalog.ValueData           ::TFloat AS DayPriceNalog
+            , COALESCE (MIBoolean_PriceNalog.ValueData, FALSE)  :: Boolean AS isPriceNalog
 
             , MIString_Number.ValueData   ::TVarChar AS Number
             , MIString_Comment.ValueData             AS Comment
@@ -809,9 +815,17 @@ BEGIN
                                         ON MIFloat_SummAvCardSecondRecalc.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummAvCardSecondRecalc.DescId = zc_MIFloat_SummAvCardSecondRecalc()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_DayPriceNalog
+                                        ON MIFloat_DayPriceNalog.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_DayPriceNalog.DescId = zc_MIFloat_DayPriceNalog()
+
             LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = tmpAll.MovementItemId
                                          AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
+
+            LEFT JOIN MovementItemBoolean AS MIBoolean_PriceNalog
+                                          ON MIBoolean_PriceNalog.MovementItemId = tmpAll.MovementItemId
+                                         AND MIBoolean_PriceNalog.DescId = zc_MIBoolean_PriceNalog()
 
             LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
                                           ON MIBoolean_isAuto.MovementItemId = tmpAll.MovementItemId
@@ -898,6 +912,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 04.07.23         *
  02.05.23         *
  27.03.23         *
  17.01.23         *

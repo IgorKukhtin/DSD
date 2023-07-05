@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalService(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
-             , TotalSummCardRecalc TFloat
+             , TotalSummCardRecalc TFloat 
+             , PriceNalog TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -43,7 +44,8 @@ BEGIN
              , Object_Status.Name        AS StatusName
 
              , DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '1 MONTH') :: TDateTime  AS ServiceDate
-             , 0            :: TFloat    AS TotalSummCardRecalc
+             , 0            :: TFloat    AS TotalSummCardRecalc  
+             , 0            :: TFloat    AS PriceNalog
              , CAST ('' AS TVarChar)     AS Comment
              , 0                     	 AS PersonalServiceListId
              , CAST ('' AS TVarChar) 	 AS PersonalServiceListName
@@ -74,7 +76,8 @@ BEGIN
            , Object_Status.ObjectCode             AS StatusCode
            , Object_Status.ValueData              AS StatusName
            , COALESCE (MovementDate_ServiceDate.ValueData, DATE_TRUNC ('MONTH', Movement.OperDate)) :: TDateTime AS ServiceDate
-           , MovementFloat_TotalSummCardRecalc.ValueData  AS TotalSummCardRecalc
+           , MovementFloat_TotalSummCardRecalc.ValueData  AS TotalSummCardRecalc 
+           , MovementFloat_PriceNalog.ValueData                   :: TFloat AS PriceNalog
            , MovementString_Comment.ValueData     AS Comment
            , Object_PersonalServiceList.Id        AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData AS PersonalServiceListName
@@ -117,6 +120,10 @@ BEGIN
                                     ON MovementFloat_TotalSummCardRecalc.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummCardRecalc.DescId = zc_MovementFloat_TotalSummCardRecalc()
 
+            LEFT JOIN MovementFloat AS MovementFloat_PriceNalog
+                                    ON MovementFloat_PriceNalog.MovementId = Movement.Id
+                                   AND MovementFloat_PriceNalog.DescId = zc_MovementFloat_PriceNalog()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                          ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
@@ -149,6 +156,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.07.23         *
  16.11.21         *
  28.04.21         *
  20.09.18         *

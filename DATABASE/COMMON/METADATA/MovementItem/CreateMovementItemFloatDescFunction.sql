@@ -1008,6 +1008,12 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_DayMedicday() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_DayMedicday', 'Дней доплата за санобработка' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DayMedicday');
 
+ CREATE OR REPLACE FUNCTION zc_MIFloat_DayPriceNalog() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DayPriceNalog'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_DayPriceNalog', 'Кол-во дней за которые происходит удержания налога по Ф2' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DayPriceNalog');
+
+
+
 
 ----!!!!!!Farmacy
 
@@ -1646,6 +1652,7 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 04.07.23         * zc_MIFloat_DayPriceNalog
  17.05.23                                                                                                     * zc_MIFloat_Discount
  02.05.23         * zc_MIFloat_SummAvCardSecond
                     zc_MIFloat_SummAvCardSecondRecalc

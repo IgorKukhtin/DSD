@@ -312,6 +312,13 @@ type
     macStartLoad: TMultiAction;
     macStartLoad_fine: TMultiAction;
     bbStartLoad_fine: TdxBarButton;
+    spUpdate_PriceNalog: TdsdStoredProc;
+    actPriceNalogDialog: TExecuteDialog;
+    edPriceNalog: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
+    macUpdate_PriceNalog: TMultiAction;
+    actUpdate_PriceNalog: TdsdExecStoredProc;
+    bbUpdate_PriceNalog: TdxBarButton;
   private
     { Private declarations }
   public
