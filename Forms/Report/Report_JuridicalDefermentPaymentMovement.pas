@@ -113,6 +113,7 @@ type
     Summa_doc2: TcxGridDBColumn;
     Summa_doc3: TcxGridDBColumn;
     Summa_doc4: TcxGridDBColumn;
+    Summa_doc5: TcxGridDBColumn;
   private
     { Private declarations }
   public
