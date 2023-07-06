@@ -4,6 +4,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
   ClientWidth = 1123
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -229
   ExplicitWidth = 1139
   ExplicitHeight = 410
   PixelsPerInch = 96
@@ -22,8 +23,6 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
       inherited cxGrid: TcxGrid
         Width = 1123
         Height = 314
-        ExplicitLeft = 624
-        ExplicitTop = 16
         ExplicitWidth = 1123
         ExplicitHeight = 314
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -693,6 +692,30 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object Summa_doc1: TcxGridDBColumn
+            DataBinding.FieldName = 'Summa_doc1'
+            Visible = False
+            Options.Editing = False
+            Width = 70
+          end
+          object Summa_doc2: TcxGridDBColumn
+            DataBinding.FieldName = 'Summa_doc2'
+            Visible = False
+            Options.Editing = False
+            Width = 70
+          end
+          object Summa_doc3: TcxGridDBColumn
+            DataBinding.FieldName = 'Summa_doc3'
+            Visible = False
+            Options.Editing = False
+            Width = 70
+          end
+          object Summa_doc4: TcxGridDBColumn
+            DataBinding.FieldName = 'Summa_doc4'
+            Visible = False
+            Options.Editing = False
+            Width = 70
           end
         end
       end

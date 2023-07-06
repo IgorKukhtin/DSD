@@ -40,9 +40,23 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , OperDate_pay    TDateTime
              , MovementDescName TVarChar
              , InvNumber       TVarChar
+               -- нет просрочки на эту сумму 
              , Summa_doc       TFloat  
+               -- просрочки на эту сумму - 1 неделя
+             , Summa_doc1      TFloat  
+               -- просрочки на эту сумму - 2 неделя
+             , Summa_doc2      TFloat  
+               -- просрочки на эту сумму - 3 неделя
+             , Summa_doc3      TFloat  
+               -- просрочки на эту сумму - 4 неделя
+             , Summa_doc4      TFloat  
+               -- просрочки на эту сумму > 4 недель
+             , Summa_doc5      TFloat  
+               -- вся сумма накладной
              , TotalSumm       TFloat
+               --  долг по накладной
              , TotalSumm_diff  TFloat
+               --
              , DelayDay_calc   Integer
              , ContainerId     Integer
               )
@@ -90,58 +104,58 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH
-     tmpReport AS (SELECT a.AccountId, a.AccountName
-                        , a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
-                        , a.SectionId, a.SectionName
-                        , a.PartnerId, a.PartnerCode, a.PartnerName
-                        , a.BranchId, a.BranchCode, a.BranchName
-                        , a.PaidKindId, a.PaidKindName
-                        , a.ContractId, a.ContractCode, a.ContractNumber
-                        , a.ContractTagGroupName, a.ContractTagName, a.ContractStateKindCode
-                        , a.ContractJuridicalDocId, a.ContractJuridicalDocCode, a.ContractJuridicalDocName
-                        , a.PersonalName
-                        , a.PersonalTradeName
-                        , a.PersonalCollationName
-                        , a.PersonalTradeName_Partner
-                        , a.StartDate, a.EndDate
-                        , SUM (a.DebetRemains) :: TFloat AS DebetRemains, SUM (a.KreditRemains) :: TFloat AS KreditRemains
-                        , SUM (a.SaleSumm) :: TFloat AS SaleSumm, SUM (a.DefermentPaymentRemains) :: TFloat AS DefermentPaymentRemains
-                        , SUM (a.SaleSumm1) :: TFloat AS SaleSumm1, SUM (a.SaleSumm2) :: TFloat AS SaleSumm2, SUM (a.SaleSumm3) :: TFloat AS SaleSumm3
-                        , SUM (a.SaleSumm4) :: TFloat AS SaleSumm4, SUM (a.SaleSumm5) :: TFloat AS SaleSumm5
-                        , a.Condition, a.StartContractDate, SUM (a.Remains) :: TFloat AS Remains
-                        , a.InfoMoneyGroupName, a.InfoMoneyDestinationName, a.InfoMoneyId, a.InfoMoneyCode, a.InfoMoneyName
-                        , a.AreaName, a.AreaName_Partner
+     tmpReport AS (SELECT _tmpReport.AccountId, _tmpReport.AccountName
+                        , COALESCE (_tmpReport.JuridicalId, 0) AS JuridicalId, _tmpReport.JuridicalName, _tmpReport.RetailName, _tmpReport.RetailName_main, _tmpReport.OKPO, _tmpReport.JuridicalGroupName
+                        , _tmpReport.SectionId, _tmpReport.SectionName
+                        , COALESCE (_tmpReport.PartnerId, 0) AS PartnerId, _tmpReport.PartnerCode, _tmpReport.PartnerName
+                        , COALESCE (_tmpReport.BranchId, 0) AS BranchId, _tmpReport.BranchCode, _tmpReport.BranchName
+                        , COALESCE (_tmpReport.PaidKindId, 0) AS PaidKindId, _tmpReport.PaidKindName
+                        , COALESCE (_tmpReport.ContractId, 0) AS ContractId, _tmpReport.ContractCode, _tmpReport.ContractNumber
+                        , _tmpReport.ContractTagGroupName, _tmpReport.ContractTagName, _tmpReport.ContractStateKindCode
+                        , _tmpReport.ContractJuridicalDocId, _tmpReport.ContractJuridicalDocCode, _tmpReport.ContractJuridicalDocName
+                        , _tmpReport.PersonalName
+                        , _tmpReport.PersonalTradeName
+                        , _tmpReport.PersonalCollationName
+                        , _tmpReport.PersonalTradeName_Partner
+                        , _tmpReport.StartDate, _tmpReport.EndDate
+                        , SUM (_tmpReport.DebetRemains) :: TFloat AS DebetRemains, SUM (_tmpReport.KreditRemains) :: TFloat AS KreditRemains
+                        , SUM (_tmpReport.SaleSumm) :: TFloat AS SaleSumm, SUM (_tmpReport.DefermentPaymentRemains) :: TFloat AS DefermentPaymentRemains
+                        , SUM (_tmpReport.SaleSumm1) :: TFloat AS SaleSumm1, SUM (_tmpReport.SaleSumm2) :: TFloat AS SaleSumm2, SUM (_tmpReport.SaleSumm3) :: TFloat AS SaleSumm3
+                        , SUM (_tmpReport.SaleSumm4) :: TFloat AS SaleSumm4, SUM (_tmpReport.SaleSumm5) :: TFloat AS SaleSumm5
+                        , _tmpReport.Condition, _tmpReport.StartContractDate, SUM (_tmpReport.Remains) :: TFloat AS Remains
+                        , _tmpReport.InfoMoneyGroupName, _tmpReport.InfoMoneyDestinationName, _tmpReport.InfoMoneyId, _tmpReport.InfoMoneyCode, _tmpReport.InfoMoneyName
+                        , _tmpReport.AreaName, _tmpReport.AreaName_Partner
 
-                        , a.BranchName_personal
-                        , a.BranchName_personal_trade 
-                        , MAX (a.ContainerId) AS ContainerId
+                        , _tmpReport.BranchName_personal
+                        , _tmpReport.BranchName_personal_trade 
+                        , MAX (_tmpReport.ContainerId) AS ContainerId
                         
-                        , a.DayCount
-                        , a.ContractConditionKindId
-                   FROM _tmpReport AS a
-                   GROUP BY a.AccountId, a.AccountName
-                          , a.JuridicalId, a.JuridicalName, a.RetailName, a.RetailName_main, a.OKPO, a.JuridicalGroupName
-                          , a.SectionId, a.SectionName
-                          , a.PartnerId, a.PartnerCode, a.PartnerName
-                          , a.BranchId, a.BranchCode, a.BranchName
-                          , a.PaidKindId, a.PaidKindName
-                          , a.ContractId, a.ContractCode, a.ContractNumber
-                          , a.ContractTagGroupName, a.ContractTagName, a.ContractStateKindCode
-                          , a.ContractJuridicalDocId, a.ContractJuridicalDocCode, a.ContractJuridicalDocName
-                          , a.PersonalName
-                          , a.PersonalTradeName
-                          , a.PersonalCollationName
-                          , a.PersonalTradeName_Partner
-                          , a.StartDate, a.EndDate
-                          , a.Condition, a.StartContractDate
-                          , a.InfoMoneyGroupName, a.InfoMoneyDestinationName, a.InfoMoneyId, a.InfoMoneyCode, a.InfoMoneyName
-                          , a.AreaName, a.AreaName_Partner
+                        , _tmpReport.DayCount
+                        , _tmpReport.ContractConditionKindId
+                   FROM _tmpReport
+                   GROUP BY _tmpReport.AccountId, _tmpReport.AccountName
+                          , _tmpReport.JuridicalId, _tmpReport.JuridicalName, _tmpReport.RetailName, _tmpReport.RetailName_main, _tmpReport.OKPO, _tmpReport.JuridicalGroupName
+                          , _tmpReport.SectionId, _tmpReport.SectionName
+                          , _tmpReport.PartnerId, _tmpReport.PartnerCode, _tmpReport.PartnerName
+                          , _tmpReport.BranchId, _tmpReport.BranchCode, _tmpReport.BranchName
+                          , _tmpReport.PaidKindId, _tmpReport.PaidKindName
+                          , _tmpReport.ContractId, _tmpReport.ContractCode, _tmpReport.ContractNumber
+                          , _tmpReport.ContractTagGroupName, _tmpReport.ContractTagName, _tmpReport.ContractStateKindCode
+                          , _tmpReport.ContractJuridicalDocId, _tmpReport.ContractJuridicalDocCode, _tmpReport.ContractJuridicalDocName
+                          , _tmpReport.PersonalName
+                          , _tmpReport.PersonalTradeName
+                          , _tmpReport.PersonalCollationName
+                          , _tmpReport.PersonalTradeName_Partner
+                          , _tmpReport.StartDate, _tmpReport.EndDate
+                          , _tmpReport.Condition, _tmpReport.StartContractDate
+                          , _tmpReport.InfoMoneyGroupName, _tmpReport.InfoMoneyDestinationName, _tmpReport.InfoMoneyId, _tmpReport.InfoMoneyCode, _tmpReport.InfoMoneyName
+                          , _tmpReport.AreaName, _tmpReport.AreaName_Partner
 
-                          , a.BranchName_personal
-                          , a.BranchName_personal_trade
+                          , _tmpReport.BranchName_personal
+                          , _tmpReport.BranchName_personal_trade
                           
-                          , a.DayCount
-                          , a.ContractConditionKindId
+                          , _tmpReport.DayCount
+                          , _tmpReport.ContractConditionKindId
                   )
     -- выбираем последнии оплаты
    , tmpLastPayment_all AS (SELECT tt.JuridicalId
@@ -151,7 +165,7 @@ BEGIN
                                  , tt.OperDate
                                  , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
                                  , tt.Amount
-                            FROM gpSelect_Object_JuridicalDefermentPayment(inSession) AS tt
+                            FROM gpSelect_Object_JuridicalDefermentPayment (inSession) AS tt
                                  JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
                                                  ON ObjectLink_Contract_InfoMoney.ObjectId = tt.ContractId
                                                 AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
@@ -168,46 +182,155 @@ BEGIN
                                , tt.InfoMoneyId
                                , tt.OperDate
                        )
-   -- DISTINCT ContainerId + StartContractDate
-   , tmpContainer AS (
-                      SELECT DISTINCT a.ContainerId
-                           , a.StartContractDate
-                           , a.JuridicalId
-                           , a.PartnerId
-                           , a.ContractId
-                           , a.PaidKindId 
-                      FROM _tmpReport AS a
-                      WHERE COALESCE (a.SaleSumm,0) <> 0
-                      )
-   , tmpContainerData AS (SELECT tmpContainer.JuridicalId
-                               , tmpContainer.PartnerId
-                               , tmpContainer.ContractId
-                               , tmpContainer.PaidKindId
-                               , MIContainer.MovementId
-                               , MIContainer.MovementDescId
-                               , MovementDesc.ItemName AS MovementDescName
-                               , Movement.OperDate
-                               , Movement.InvNumber
-                               , SUM (COALESCE (MIContainer.Amount,0)) AS Amount
-                          FROM tmpContainer
-                               INNER JOIN MovementItemcontainer AS MIContainer
-                                                                ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                               AND MIContainer.DescId      = zc_MIContainer_Summ()  
-                                                               AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) 
-                                                               AND MIContainer.OperDate BETWEEN tmpContainer.StartContractDate AND inOperDate
-                               LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
-                               LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-                          GROUP BY tmpContainer.JuridicalId
+     -- Список для Продажи за "период" + просрочка только 4 недели
+   , tmpContainer AS (SELECT DISTINCT
+                             _tmpReport.ContainerId
+                           , COALESCE (_tmpReport.JuridicalId, 0) AS JuridicalId
+                           , COALESCE (_tmpReport.PartnerId,   0) AS PartnerId
+                           , COALESCE (_tmpReport.ContractId,  0) AS ContractId
+                           , COALESCE (_tmpReport.PaidKindId , 0) AS PaidKindId
+                           , _tmpReport.StartContractDate
+                             -- какой период нужен, может так будет быстрее
+                           , CASE WHEN _tmpReport.SaleSumm4 > 0 THEN 4
+                                  WHEN _tmpReport.SaleSumm3 > 0 THEN 3
+                                  WHEN _tmpReport.SaleSumm2 > 0 THEN 2
+                                  WHEN _tmpReport.SaleSumm1 > 0 THEN 1
+                                  ELSE 0
+                             END AS Period_add
+                      FROM _tmpReport
+                      WHERE COALESCE (_tmpReport.SaleSumm,0) <> 0
+                         OR COALESCE (_tmpReport.SaleSumm1, 0) <> 0
+                         OR COALESCE (_tmpReport.SaleSumm2, 0) <> 0
+                         OR COALESCE (_tmpReport.SaleSumm3, 0) <> 0
+                         OR COALESCE (_tmpReport.SaleSumm4, 0) <> 0
+                     )
+   -- Продажи за "период" + просрочка только 4 недели
+ , tmpContainerData_all AS (SELECT tmpContainer.JuridicalId
                                  , tmpContainer.PartnerId
                                  , tmpContainer.ContractId
                                  , tmpContainer.PaidKindId
                                  , MIContainer.MovementId
-                                 , MIContainer.MovementDescId
-                                 , Movement.OperDate
-                                 , Movement.InvNumber
-                                 , MovementDesc.ItemName
-                          )
-   --
+                                 , MAX (COALESCE (MovementDate_OperDatePartner.ValueData, MIContainer.OperDate)) AS OperDate
+                                 , SUM (CASE WHEN MIContainer.OperDate < inOperDate                                    AND MIContainer.OperDate >= tmpContainer.StartContractDate                THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId = zc_Movement_TransferDebtOut() AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS Amount
+                                 , SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 0 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 1 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId = zc_Movement_TransferDebtOut() AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS Amount1
+                                 , SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 1 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 2 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId = zc_Movement_TransferDebtOut() AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS Amount2
+                                 , SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 2 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 3 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId = zc_Movement_TransferDebtOut() AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS Amount3
+                                 , SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 3 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 4 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId = zc_Movement_TransferDebtOut() AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS Amount4
+                            FROM tmpContainer
+                                 INNER JOIN MovementItemcontainer AS MIContainer
+                                                                  ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                                 AND MIContainer.DescId      = zc_MIContainer_Summ()  
+                                                                 AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) 
+                                                                 AND MIContainer.OperDate >= tmpContainer.StartContractDate :: Date - tmpContainer.Period_add * 7
+                                                                 AND MIContainer.OperDate < inOperDate
+                                                                 --AND MIContainer.OperDate BETWEEN tmpContainer.StartContractDate AND inOperDate - INTERVAL '1 DAY'
+                                 LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                        ON MovementDate_OperDatePartner.MovementId = MIContainer.MovementId
+                                                       AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+                            GROUP BY tmpContainer.JuridicalId
+                                   , tmpContainer.PartnerId
+                                   , tmpContainer.ContractId
+                                   , tmpContainer.PaidKindId
+                                   , MIContainer.MovementId
+                           )
+   -- Продажи за "период" + просрочка только 4 недели + накопительно
+  , tmpContainerData_gr AS (SELECT tmpData.JuridicalId
+                                 , tmpData.PartnerId
+                                 , tmpData.ContractId
+                                 , tmpData.PaidKindId
+                                 , tmpData.MovementId
+                                 , tmpData.OperDate
+                                 , tmpData.Amount
+                                 , tmpData.Amount1
+                                 , tmpData.Amount2
+                                 , tmpData.Amount3
+                                 , tmpData.Amount4
+                                 , SUM (tmpData.Amount1) OVER (PARTITION BY tmpData.JuridicalId, tmpData.PartnerId, tmpData.ContractId ORDER BY tmpData.OperDate DESC) AS Amount1_summ
+                                 , SUM (tmpData.Amount2) OVER (PARTITION BY tmpData.JuridicalId, tmpData.PartnerId, tmpData.ContractId ORDER BY tmpData.OperDate DESC) AS Amount2_summ
+                                 , SUM (tmpData.Amount3) OVER (PARTITION BY tmpData.JuridicalId, tmpData.PartnerId, tmpData.ContractId ORDER BY tmpData.OperDate DESC) AS Amount3_summ
+                                 , SUM (tmpData.Amount4) OVER (PARTITION BY tmpData.JuridicalId, tmpData.PartnerId, tmpData.ContractId ORDER BY tmpData.OperDate DESC) AS Amount4_summ
+                            FROM tmpContainerData_all AS tmpData
+                           )
+      -- Продажи за "период" + просрочка только 4 недели + накопительно
+     , tmpContainerData AS (SELECT tmpData.JuridicalId
+                                 , tmpData.PartnerId
+                                 , tmpData.ContractId
+                                 , tmpData.PaidKindId
+                                 , tmpData.MovementId
+                                 , tmpData.OperDate
+                                   -- вся сумма накладной
+                                 , tmpData.Amount
+                                 , 0 AS Amount1
+                                 , 0 AS Amount2
+                                 , 0 AS Amount3
+                                 , 0 AS Amount4
+                                 , 0 AS Amount5
+                                   -- просрочка по накладной
+                                 , 0 AS Amount1_res
+                                 , 0 AS Amount2_res
+                                 , 0 AS Amount3_res
+                                 , 0 AS Amount4_res
+                                 , 0 AS Amount5_res
+                            FROM tmpContainerData_gr AS tmpData
+                           UNION ALL
+                            SELECT
+                                   tmpData.JuridicalId
+                                 , tmpData.PartnerId
+                                 , tmpData.ContractId
+                                 , tmpData.PaidKindId
+                                   -- 
+                                 , tmpContainerData_gr.MovementId
+                                 , tmpContainerData_gr.OperDate
+                                   -- вся сумма накладной
+                                 , 0 AS Amount
+                                 , tmpContainerData_gr.Amount1
+                                 , 0 AS Amount2
+                                 , 0 AS Amount3
+                                 , 0 AS Amount4
+                                 , 0 AS Amount5
+                                   -- просрочка по накладной
+                                 , CASE -- если накопительный итог c этой суммой меньше SaleSumm1
+                                        WHEN tmpContainerData_gr.Amount1_summ <= tmpData.SaleSumm1
+                                             THEN tmpContainerData_gr.Amount1
+                                        -- если итог без этой суммы больше SaleSumm1
+                                        WHEN tmpContainerData_gr.Amount1_summ - tmpContainerData_gr.Amount1 > tmpData.SaleSumm1
+                                             THEN 0
+                                        -- просрочка не на всю сумму накладной, только часть, посчитаем ее
+                                        ELSE tmpData.SaleSumm1 - (tmpContainerData_gr.Amount1_summ - tmpContainerData_gr.Amount1)
+                                   END  AS Amount1_res
+                                 , 0 AS Amount2_res
+                                 , 0 AS Amount3_res
+                                 , 0 AS Amount4_res
+                                 , 0 AS Amount5_res
+                              FROM (-- Итоговая просрочка - 1 неделя
+                                    SELECT tmpReport.SaleSumm1
+                                         , COALESCE (tmpReport.JuridicalId, 0) AS JuridicalId
+                                         , COALESCE (tmpReport.PartnerId,   0) AS PartnerId
+                                         , COALESCE (tmpReport.ContractId,  0) AS ContractId
+                                         , COALESCE (tmpReport.PaidKindId , 0) AS PaidKindId
+                                    FROM tmpReport
+                                    WHERE tmpReport.SaleSumm1 > 0
+                                   ) AS tmpData
+                                   -- по накладным
+                                   INNER JOIN tmpContainerData_gr ON tmpContainerData_gr.JuridicalId = tmpData.JuridicalId
+                                                                 AND tmpContainerData_gr.PartnerId   = tmpData.PartnerId
+                                                                 AND tmpContainerData_gr.ContractId  = tmpData.ContractId
+                                                                 AND tmpContainerData_gr.ContractId  = tmpData.ContractId
+                                                                 -- берем все накладный, пока накопительная сумма меньше той на которую делаем подбор
+                                                                 AND tmpContainerData_gr.Amount1_summ <= tmpData.SaleSumm1
+                           )
+     -- Список просрочка только с 5 недели + 2 месяца
+   , tmpContainer_next5_1 AS (SELECT DISTINCT
+                                     _tmpReport.ContainerId
+                                   , _tmpReport.StartContractDate
+                                   , COALESCE (_tmpReport.JuridicalId, 0) AS JuridicalId
+                                   , COALESCE (_tmpReport.PartnerId,   0) AS PartnerId
+                                   , COALESCE (_tmpReport.ContractId,  0) AS ContractId
+                                   , COALESCE (_tmpReport.PaidKindId , 0) AS PaidKindId
+                              FROM _tmpReport
+                              WHERE _tmpReport.SaleSumm5 > 0
+                             )
+     --
    , tmpData AS (SELECT tmpReport.AccountId, tmpReport.AccountName, tmpReport.JuridicalId, tmpReport.JuridicalName, tmpReport.RetailName, tmpReport.RetailName_main, tmpReport.OKPO, tmpReport.JuridicalGroupName
                        , tmpReport.SectionId, tmpReport.SectionName
                        , tmpReport.PartnerId, tmpReport.PartnerCode, tmpReport.PartnerName
@@ -240,16 +363,29 @@ BEGIN
                        , ROW_NUMBER() OVER(PARTITION BY tmpReport.JuridicalId, tmpReport.PaidKindId, tmpReport.ContractId, tmpReport.PartnerId ORDER BY tmpContainerData.OperDate DESC) AS Ord 
                        , tmpContainerData.MovementId
                        , tmpContainerData.OperDate 
-                       , tmpContainerData.MovementDescName
-                       , tmpContainerData.InvNumber
+                       , MovementDesc.ItemName AS MovementDescName
+                       , Movement.InvNumber
+                         -- нет просрочки на эту сумму 
                        , tmpContainerData.Amount AS Summa_doc
+                         -- просрочки на эту сумму - 1 неделя
+                       , tmpContainerData.Amount1_res AS Summa_doc_1
+                         -- просрочки на эту сумму - 2 неделя
+                       , tmpContainerData.Amount2_res AS Summa_doc_2
+                         -- просрочки на эту сумму - 3 неделя
+                       , tmpContainerData.Amount3_res AS Summa_doc_3
+                         -- просрочки на эту сумму - 4 неделя
+                       , tmpContainerData.Amount4_res AS Summa_doc_4
+                         -- просрочки на эту сумму > 4 недель
+                       , tmpContainerData.Amount5_res AS Summa_doc_5
+                         --
                        , tmpReport.ContainerId
                        
                        , CASE WHEN tmpReport.ContractConditionKindId IN (zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank())
                               THEN zfCalc_DetermentPaymentDate_ASC (inContractConditionId:= tmpReport.ContractConditionKindId, inDayCount:= tmpReport.DayCount::Integer, inDate:= tmpContainerData.OperDate ::TDateTime) 
                               ELSE NULL
                          END  ::TDateTime AS OperDate_pay
-                       , MovementFloat_TotalSumm.ValueData ::TFloat AS TotalSumm
+                         -- вся сумма накладной
+                       , (tmpContainerData.Amount + tmpContainerData.Amount1 + tmpContainerData.Amount2 + tmpContainerData.Amount3 + tmpContainerData.Amount4 + tmpContainerData.Amount5) ::TFloat AS TotalSumm
                  FROM tmpReport
                   LEFT JOIN tmpLastPayment_all AS tmpLastPayment
                                                ON tmpLastPayment.JuridicalId = tmpReport.JuridicalId
@@ -273,11 +409,10 @@ BEGIN
                   LEFT JOIN tmpContainerData ON tmpContainerData.JuridicalId = tmpReport.JuridicalId
                                             AND tmpContainerData.ContractId  = tmpReport.ContractId
                                             AND tmpContainerData.PaidKindId  = tmpReport.PaidKindId
-                                            AND COALESCE (tmpContainerData.PartnerId,0) = COALESCE (tmpReport.PartnerId,0) 
+                                            AND tmpContainerData.PartnerId   = tmpReport.PartnerId
+                  LEFT JOIN Movement ON Movement.Id = tmpContainerData.MovementId
+                  LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
-                  LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                          ON MovementFloat_TotalSumm.MovementId = tmpContainerData.MovementId
-                                         AND MovementFloat_TotalSumm.DEscId = zc_MovementFloat_TotalSumm()
                  )
    
    ---
@@ -322,9 +457,26 @@ BEGIN
         , tmpReport.OperDate_pay    ::TDateTime
         , tmpReport.MovementDescName ::TVarChar
         , tmpReport.InvNumber       ::TVarChar
-        , tmpReport.Summa_doc       ::TFloat  
+
+          -- нет просрочки на эту сумму 
+        , tmpReport.Summa_doc ::TFloat  
+          -- просрочки на эту сумму - 1 неделя
+        , tmpReport.Summa_doc_1 ::TFloat  
+          -- просрочки на эту сумму - 2 неделя
+        , tmpReport.Summa_doc_2 ::TFloat  
+          -- просрочки на эту сумму - 3 неделя
+        , tmpReport.Summa_doc_3 ::TFloat  
+          -- просрочки на эту сумму - 4 неделя
+        , tmpReport.Summa_doc_4 ::TFloat  
+          -- просрочки на эту сумму > 4 недель
+        , tmpReport.Summa_doc_5 ::TFloat  
+
+          -- вся сумма накладной
         , tmpReport.TotalSumm       ::TFloat  --
-        , 0 ::TFloat AS TotalSumm_diff    --  долг по накладной
+
+          --  долг по накладной
+        , (tmpReport.Summa_doc_1 + tmpReport.Summa_doc_2 + tmpReport.Summa_doc_3 + tmpReport.Summa_doc_4 + tmpReport.Summa_doc_5) ::TFloat AS TotalSumm_diff
+
         , DATE_PART ('DAY', inOperDate:: TIMESTAMP -  tmpReport.OperDate_pay :: TIMESTAMP) ::Integer AS DelayDay_calc
 
         , tmpReport.ContainerId :: Integer
@@ -360,4 +512,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalDefermentPaymentMovement(inOperDate := ('04.07.2023')::TDateTime , inEmptyParam := ('01.01.2016')::TDateTime , inAccountId := 9128 , inPaidKindId := 3 , inBranchId := 0 , inJuridicalGroupId := 0 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e') --WHERE SaleSumm <> 0
+-- SELECT * FROM gpReport_JuridicalDefermentPaymentMovement(inOperDate := ('04.07.2024')::TDateTime , inEmptyParam := ('01.01.2016')::TDateTime , inAccountId := 9128 , inPaidKindId := 3 , inBranchId := 0 , inJuridicalGroupId := 0 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e') --WHERE SaleSumm <> 0
