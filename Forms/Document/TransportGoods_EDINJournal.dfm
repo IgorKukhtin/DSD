@@ -1005,6 +1005,7 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
       UpdateUuid = spUpdate_Uuid
+      UpdateKATOTTG = spUpdate_Partner_KATOTTG
       UpdateError = spUpdate_CommentError
     end
     object actExecSelect_eTTN_Send: TdsdExecStoredProc
@@ -1756,7 +1757,7 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
+    Left = 313
     Top = 360
   end
   object spUpdate_Sign_Consignor: TdsdStoredProc
@@ -1930,5 +1931,31 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
     PackSize = 1
     Left = 632
     Top = 416
+  end
+  object spUpdate_Partner_KATOTTG: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_Partner_KATOTTG'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ToId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKATOTTG'
+        Value = '2'
+        Component = FormParams
+        ComponentItem = 'Uuid'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 176
   end
 end

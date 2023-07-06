@@ -216,7 +216,7 @@ end if;*/
            HAVING MI_Master.Amount <> COALESCE (SUM (MI_Child.Amount), 0)
               AND COALESCE (SUM (MI_Child.Amount), 0) <> 0 LIMIT 1;
 
-           RAISE EXCEPTION 'Ошибка.Как минимум у одного товара <%> количество <%> меньше распределено <%>. Испревте количество или распределение по срокам.', vbGoodsName, vbAmountM, vbAmountC;
+           RAISE EXCEPTION 'Ошибка.Как минимум у одного товара <%> количество <%> меньше распределено <%>. Исправте количество или распределение по срокам.', vbGoodsName, vbAmountM, vbAmountC;
         END IF;
     END IF;
 

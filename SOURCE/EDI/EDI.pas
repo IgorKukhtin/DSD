@@ -241,6 +241,7 @@ type
 
     FUpdateUuid: TdsdStoredProc;
     FUpdateSign: TdsdStoredProc;
+    FUpdateKATOTTG: TdsdStoredProc;
     FUpdateError: TdsdStoredProc;
 
     FEDINActions : TEDINActionsType;
@@ -249,8 +250,7 @@ type
     function GetToken: Boolean;
     function SendETTN(AGLN, AUuId, AXML : String): Boolean;
     function GetDocETTN(AGLN, AUuId : String): Boolean;
-    function GetKATOTTG(ACity : String): Boolean;
-    function GetCompanyAddresses(AEdrpou : String): Boolean;
+    function GetIdentifiers(AGLN, AQuery : String): Boolean;
     function SignDcuETTN(AGLN, AUuId : String): Boolean;
 
     procedure UAECMREDI(var AXML: String);
@@ -286,6 +286,7 @@ type
 
     property UpdateUuid: TdsdStoredProc read FUpdateUuid write FUpdateUuid;
     property UpdateSign: TdsdStoredProc read FUpdateSign write FUpdateSign;
+    property UpdateKATOTTG: TdsdStoredProc read FUpdateKATOTTG write FUpdateKATOTTG;
     property UpdateError: TdsdStoredProc read FUpdateError write FUpdateError;
 
     property EDINActions : TEDINActionsType read FEDINActions write FEDINActions default edinSendETTN;
@@ -6137,7 +6138,7 @@ begin
   end;
 end;
 
-function TdsdEDINAction.GetKATOTTG(ACity : String): Boolean;
+function TdsdEDINAction.GetIdentifiers(AGLN, AQuery : String): Boolean;
   var IdHTTP: TCustomIdHTTP;
       S, Params: String;
       jsonArray: TJSONArray;
@@ -6163,10 +6164,10 @@ begin
     IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
     IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
 
-    Params := '?query=' + ACity;
+    Params := '?gln=' + AGLN + '&query=' + AQuery; // + '&katottg_required=true';
 
     try
-      S := IdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + '/api/oas/v2/katottg/search' + Params));
+      S := IdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + '/api/oas/identifiers' + Params));
     except on E:EIdHTTPProtocolException  do
                 ShowError('Ошибка: ' + e.ErrorMessage);
     end;
@@ -6176,64 +6177,23 @@ begin
       jsonArray := TJSONObject.ParseJSONValue(S) as TJSONArray;
       if jsonArray.Size = 1 then
       begin
-
-        Result := True;
+        if (TJSONObject(jsonArray.Get(0)).Get('katottg') <> nil) and
+           (TJSONObject(jsonArray.Get(0)).Get('katottg').JsonValue.Value <> '') then
+        begin
+          FResultParam.Value := TJSONObject(jsonArray.Get(0)).Get('katottg').JsonValue.Value;
+          if Assigned(FUpdateKATOTTG) then FUpdateKATOTTG.Execute;
+          HeaderDataSet.Edit;
+          HeaderDataSet.FieldByName('KATOTTG_Unloading').asString := FResultParam.Value;
+          HeaderDataSet.Post;
+          FResultParam.Value := '';
+          Result := True;
+        end;
       end;
     end;
   finally
     IdHTTP.Free;
   end;
 end;
-
-function TdsdEDINAction.GetCompanyAddresses(AEdrpou : String): Boolean;
-  var IdHTTP: TCustomIdHTTP;
-      S, Params: String;
-      jsonArray: TJSONArray;
-begin
-  inherited;
-  Result := False;
-
-  if FTokenParam.Value = '' then
-  begin
-    ShowError('Не получен токе. Загрузка файла еЕЕТ невозможна.');
-    Exit;
-  end;
-
-  // Непосредственно загрузка файла для подписи
-
-  IdHTTP := TCustomIdHTTP.Create(Nil);
-  try
-
-    IdHTTP.Request.Clear;
-    IdHTTP.Request.ContentType := 'application/json';
-    IdHTTP.Request.ContentEncoding := 'utf-8';
-    IdHTTP.Request.CustomHeaders.FoldLines := False;
-    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
-    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
-
-    Params := '?edrpou=' + AEdrpou; // + '&query=к';
-
-    try
-      S := IdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + '/api/oas/v2/company/addresses/search' + Params));
-    except on E:EIdHTTPProtocolException  do
-                ShowError('Ошибка: ' + e.ErrorMessage);
-    end;
-
-    if IdHTTP.ResponseCode = 200 then
-    begin
-      jsonArray := TJSONObject.ParseJSONValue(S) as TJSONArray;
-      if jsonArray.Size = 1 then
-      begin
-
-        Result := True;
-      end;
-    end;
-  finally
-    IdHTTP.Free;
-  end;
-end;
-
-
 
 function TdsdEDINAction.SignDcuETTN(AGLN, AUuId : String): Boolean;
   var IdHTTP: TCustomIdHTTP;
@@ -6311,18 +6271,16 @@ begin
   if not GetToken then Exit;
 
   // Пробуем найти КАТОТТГ
-//  if (HeaderDataSet.FieldByName('KATOTTG_Unloading').asString = '') then
-//  begin
-//    if HeaderDataSet.FieldByName('PartnerCity_Unloading').asString = '' then
-//    begin
-//      ShowError('Не определен город места разгрузки.');
-//      Exit;
-//    end;
-//    if not GetKATOTTG(HeaderDataSet.FieldByName('PartnerCity_Unloading').asString) then Exit;
-//
-//  end;
-
-//  GetCompanyAddresses(HeaderDataSet.FieldByName('OKPO_To').asString);
+  if (HeaderDataSet.FieldByName('KATOTTG_Unloading').asString = '') and
+     Assigned(FUpdateKATOTTG) then
+  begin
+    if HeaderDataSet.FieldByName('GLN_Unloading').asString = '' then
+    begin
+      ShowError('Не определен GLN для Пункта розвантаження.');
+      Exit;
+    end;
+    if not GetIdentifiers(HeaderDataSet.FieldByName('GLN_Unloading').asString, HeaderDataSet.FieldByName('GLN_Unloading').asString) then Exit;
+  end;
 
   // Сформируем XML
   UAECMREDI(cXML);
