@@ -4,6 +4,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
   ClientWidth = 1123
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -229
   ExplicitWidth = 1139
   ExplicitHeight = 410
   PixelsPerInch = 96
@@ -22,8 +23,6 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
       inherited cxGrid: TcxGrid
         Width = 1123
         Height = 314
-        ExplicitLeft = 624
-        ExplicitTop = 16
         ExplicitWidth = 1123
         ExplicitHeight = 314
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -77,6 +76,46 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
               Format = ',0.00##'
               Kind = skSum
               Column = Summa_doc
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summa_doc1
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summa_doc2
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summa_doc3
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summa_doc4
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summa_doc5
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = TotalSumm
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = TotalSumm_diff
+            end
+            item
+              Format = ',0.'
+              Kind = skSum
+              Column = DelayDay_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -133,6 +172,46 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
               Format = ',0.00##'
               Kind = skSum
               Column = Summa_doc
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summa_doc1
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summa_doc2
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summa_doc3
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summa_doc4
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = Summa_doc5
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = TotalSumm
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = TotalSumm_diff
+            end
+            item
+              Format = ',0.'
+              Kind = skSum
+              Column = DelayDay_calc
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -164,6 +243,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
           object AreaName_Partner: TcxGridDBColumn
             Caption = #1056#1077#1075#1080#1086#1085' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
             DataBinding.FieldName = 'AreaName_Partner'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -172,7 +252,6 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
           object RetailName_main: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName_main'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -181,6 +260,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
           object RetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072')'
             DataBinding.FieldName = 'RetailName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -207,6 +287,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
           object BranchName_personal: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1079#1072' '#1076#1086#1075'.)'
             DataBinding.FieldName = 'BranchName_personal'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1060#1080#1083#1080#1072#1083' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1044#1086#1075#1086#1074#1086#1088')'
@@ -216,6 +297,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
           object BranchName_personal_trade: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1058#1055' '#1079#1072' '#1076#1086#1075'.)'
             DataBinding.FieldName = 'BranchName_personal_trade'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1060#1080#1083#1080#1072#1083' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1058#1055' '#1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1044#1086#1075#1086#1074#1086#1088')'
@@ -229,6 +311,30 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 68
+          end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object InvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
+          end
+          object MovementDescName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'MovementDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 148
           end
           object JuridicalGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
@@ -277,6 +383,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -336,6 +443,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
           object ContractTagGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1087#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagGroupName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -391,6 +499,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
           object PaymentDate_jur: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083'. '#1086#1087#1083#1072#1090#1099' ('#1070#1088'.'#1083#1080#1094#1086')'
             DataBinding.FieldName = 'PaymentDate_jur'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -403,6 +512,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -411,6 +521,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
           object PersonalName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1079#1072' '#1076#1086#1075'.)'
             DataBinding.FieldName = 'PersonalName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1044#1086#1075#1086#1074#1086#1088')'
@@ -420,6 +531,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
           object PersonalTradeName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1058#1055' ('#1079#1072' '#1076#1086#1075'.)'
             DataBinding.FieldName = 'PersonalTradeName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1086#1090#1088#1091#1076#1085#1080#1082' '#1058#1055' '#1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' '#1079#1072' '#1044#1086#1075#1086#1074#1086#1088
@@ -439,6 +551,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
           object PersonalTradeName_Partner: TcxGridDBColumn
             Caption = #1058#1055' '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
             DataBinding.FieldName = 'PersonalTradeName_Partner'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -474,6 +587,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
           object InfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -500,6 +614,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
           object ContractJuridicalDocName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1095#1077#1088#1077#1079' '#1082#1086#1075#1086')'
             DataBinding.FieldName = 'ContractJuridicalDocName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -538,8 +653,21 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1090' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1076#1086#1083#1075#1072
             Options.Editing = False
             Width = 75
+          end
+          object Summa_doc: TcxGridDBColumn
+            Caption = '*** '#1055#1088#1086#1076#1072#1078#1072
+            DataBinding.FieldName = 'Summa_doc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1090' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1076#1086#1083#1075#1072
+            Options.Editing = False
+            Width = 80
           end
           object DefermentPaymentRemains: TcxGridDBColumn
             Caption = #1044#1086#1083#1075' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
@@ -548,6 +676,25 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object DelayDay_calc: TcxGridDBColumn
+            Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1086' '#1076#1085#1077#1081
+            DataBinding.FieldName = 'DelayDay_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object OperDate_pay: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'OperDate_pay'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -613,65 +760,76 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             Options.Editing = False
             Width = 75
           end
-          object Condition: TcxGridDBColumn
-            Caption = #1059#1089#1083#1086#1074#1080#1077
-            DataBinding.FieldName = 'Condition'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object OperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 87
-          end
-          object InvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'InvNumber'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 92
-          end
-          object Summa_doc: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'Summa_doc'
+          object Summa_doc1: TcxGridDBColumn
+            Caption = '*** 7 '#1076#1085'.'
+            DataBinding.FieldName = 'Summa_doc1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object MovementDescName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'MovementDescName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 148
-          end
-          object OperDate_pay: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'OperDate_pay'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
             Options.Editing = False
             Width = 70
+          end
+          object Summa_doc2: TcxGridDBColumn
+            Caption = '*** 14 '#1076#1085'.'
+            DataBinding.FieldName = 'Summa_doc2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+            Options.Editing = False
+            Width = 70
+          end
+          object Summa_doc3: TcxGridDBColumn
+            Caption = '*** 21 '#1076#1085'.'
+            DataBinding.FieldName = 'Summa_doc3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+            Options.Editing = False
+            Width = 70
+          end
+          object Summa_doc4: TcxGridDBColumn
+            Caption = '*** 28 '#1076#1085'.'
+            DataBinding.FieldName = 'Summa_doc4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+            Options.Editing = False
+            Width = 70
+          end
+          object Summa_doc5: TcxGridDBColumn
+            Caption = '*** >28 '#1076#1085'.'
+            DataBinding.FieldName = 'Summa_doc5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+            Options.Editing = False
+            Width = 75
           end
           object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            Options.Editing = False
             Width = 80
           end
           object TotalSumm_diff: TcxGridDBColumn
@@ -679,20 +837,19 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             DataBinding.FieldName = 'TotalSumm_diff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
-          object DelayDay_calc: TcxGridDBColumn
-            Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1086' '#1076#1085#1077#1081
-            DataBinding.FieldName = 'DelayDay_calc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object Condition: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1077
+            DataBinding.FieldName = 'Condition'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Options.Editing = False
+            Width = 120
           end
         end
       end

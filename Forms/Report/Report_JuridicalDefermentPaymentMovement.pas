@@ -109,6 +109,11 @@ type
     Summa_doc: TcxGridDBColumn;
     MovementDescName: TcxGridDBColumn;
     OperDate_pay: TcxGridDBColumn;
+    Summa_doc1: TcxGridDBColumn;
+    Summa_doc2: TcxGridDBColumn;
+    Summa_doc3: TcxGridDBColumn;
+    Summa_doc4: TcxGridDBColumn;
+    Summa_doc5: TcxGridDBColumn;
   private
     { Private declarations }
   public

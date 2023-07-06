@@ -604,7 +604,7 @@ inherited OrderExternalUnitJournalForm: TOrderExternalUnitJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'AmountSort;GoodsGroupNameFull;GoodsName;GoodsKindName'
+          IndexFieldNames = 'GoodsGroupNameFull;AmountSort;GoodsName;GoodsKindName'
         end>
       Params = <
         item
