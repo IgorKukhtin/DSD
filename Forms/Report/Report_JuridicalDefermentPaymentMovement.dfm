@@ -111,6 +111,11 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
               Format = ',0.00##'
               Kind = skSum
               Column = TotalSumm_diff
+            end
+            item
+              Format = ',0.'
+              Kind = skSum
+              Column = DelayDay_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -202,6 +207,11 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
               Format = ',0.00##'
               Kind = skSum
               Column = TotalSumm_diff
+            end
+            item
+              Format = ',0.'
+              Kind = skSum
+              Column = DelayDay_calc
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -679,6 +689,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object OperDate_pay: TcxGridDBColumn
@@ -687,7 +698,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 75
           end
           object SaleSumm1: TcxGridDBColumn
             Caption = '7 '#1076#1085'.'
