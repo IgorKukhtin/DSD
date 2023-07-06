@@ -40,6 +40,7 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , OperDate_pay    TDateTime
              , MovementDescName TVarChar
              , InvNumber       TVarChar
+             , ToId Integer, ToName TVarChar
                -- нет просрочки на эту сумму 
              , Summa_doc       TFloat  
                -- просрочки на эту сумму - 1 недел€
@@ -466,7 +467,7 @@ BEGIN
                                                                  AND tmpContainerData_gr.PaidKindId  = tmpData.PaidKindId
                                                                  -- берем все накладный, пока накопительна€ сумма меньше той на которую делаем подбор
                                                                  AND tmpContainerData_gr.Amount4_summ - tmpContainerData_gr.Amount4 <= tmpData.SaleSumm4
-                                                                 AND tmpContainerData_gr.Amount4     > 0
+                                                                 AND tmpContainerData_gr.Amount4 > 0
                            )
 
      -- —писок просрочка только с 5 недели + 2 мес€ца
@@ -514,7 +515,9 @@ BEGIN
                        , tmpContainerData.MovementId
                        , tmpContainerData.OperDate 
                        , MovementDesc.ItemName AS MovementDescName
-                       , Movement.InvNumber
+                       , Movement.InvNumber 
+                       , Object_To.Id         AS ToId
+                       , Object_To.ValueData  AS ToName
                          -- нет просрочки на эту сумму 
                        , tmpContainerData.Amount AS Summa_doc
                          -- просрочки на эту сумму - 1 недел€
@@ -562,7 +565,11 @@ BEGIN
                                             AND tmpContainerData.PartnerId   = tmpReport.PartnerId
                   LEFT JOIN Movement ON Movement.Id = tmpContainerData.MovementId
                   LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-
+                  
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                               ON MovementLinkObject_To.MovementId = tmpContainerData.MovementId
+                                              AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_Partner() END
+                  LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
                  )
    
    ---
@@ -606,7 +613,9 @@ BEGIN
         , tmpReport.OperDate        ::TDateTime
         , tmpReport.OperDate_pay    ::TDateTime
         , tmpReport.MovementDescName ::TVarChar
-        , tmpReport.InvNumber       ::TVarChar
+        , tmpReport.InvNumber        ::TVarChar
+        , tmpReport.ToId             ::Integer
+        , tmpReport.ToName           ::TVarChar
 
           -- нет просрочки на эту сумму 
         , tmpReport.Summa_doc ::TFloat  

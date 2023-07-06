@@ -4,7 +4,6 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
   ClientWidth = 1123
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -229
   ExplicitWidth = 1139
   ExplicitHeight = 410
   PixelsPerInch = 96
@@ -352,6 +351,14 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object ToName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1076#1086#1082'.)'
+            DataBinding.FieldName = 'ToName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
           end
           object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
