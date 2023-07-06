@@ -216,6 +216,7 @@ BEGIN
                                  , SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 1 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 2 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId = zc_Movement_TransferDebtOut() AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS Amount2
                                  , SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 2 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 3 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId = zc_Movement_TransferDebtOut() AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS Amount3
                                  , SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 3 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 4 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId = zc_Movement_TransferDebtOut() AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS Amount4
+
                             FROM tmpContainer
                                  INNER JOIN MovementItemcontainer AS MIContainer
                                                                   ON MIContainer.ContainerId = tmpContainer.ContainerId
@@ -223,7 +224,6 @@ BEGIN
                                                                  AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) 
                                                                  AND MIContainer.OperDate >= tmpContainer.StartContractDate :: Date - tmpContainer.Period_add * 7
                                                                  AND MIContainer.OperDate < inOperDate
-                                                                 --AND MIContainer.OperDate BETWEEN tmpContainer.StartContractDate AND inOperDate - INTERVAL '1 DAY'
                                  LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                         ON MovementDate_OperDatePartner.MovementId = MIContainer.MovementId
                                                        AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
@@ -245,13 +245,13 @@ BEGIN
                                  , tmpData.Amount2
                                  , tmpData.Amount3
                                  , tmpData.Amount4
-                                 , SUM (tmpData.Amount1) OVER (PARTITION BY tmpData.JuridicalId, tmpData.PartnerId, tmpData.ContractId ORDER BY tmpData.OperDate DESC) AS Amount1_summ
-                                 , SUM (tmpData.Amount2) OVER (PARTITION BY tmpData.JuridicalId, tmpData.PartnerId, tmpData.ContractId ORDER BY tmpData.OperDate DESC) AS Amount2_summ
-                                 , SUM (tmpData.Amount3) OVER (PARTITION BY tmpData.JuridicalId, tmpData.PartnerId, tmpData.ContractId ORDER BY tmpData.OperDate DESC) AS Amount3_summ
-                                 , SUM (tmpData.Amount4) OVER (PARTITION BY tmpData.JuridicalId, tmpData.PartnerId, tmpData.ContractId ORDER BY tmpData.OperDate DESC) AS Amount4_summ
+                                 , SUM (tmpData.Amount1) OVER (PARTITION BY tmpData.JuridicalId, tmpData.PartnerId, tmpData.ContractId, tmpData.PaidKindId ORDER BY tmpData.OperDate DESC, tmpData.MovementId DESC) AS Amount1_summ
+                                 , SUM (tmpData.Amount2) OVER (PARTITION BY tmpData.JuridicalId, tmpData.PartnerId, tmpData.ContractId, tmpData.PaidKindId ORDER BY tmpData.OperDate DESC, tmpData.MovementId DESC) AS Amount2_summ
+                                 , SUM (tmpData.Amount3) OVER (PARTITION BY tmpData.JuridicalId, tmpData.PartnerId, tmpData.ContractId, tmpData.PaidKindId ORDER BY tmpData.OperDate DESC, tmpData.MovementId DESC) AS Amount3_summ
+                                 , SUM (tmpData.Amount4) OVER (PARTITION BY tmpData.JuridicalId, tmpData.PartnerId, tmpData.ContractId, tmpData.PaidKindId ORDER BY tmpData.OperDate DESC, tmpData.MovementId DESC) AS Amount4_summ
                             FROM tmpContainerData_all AS tmpData
                            )
-      -- ѕродажи за "период" + просрочка только 4 недели + накопительно
+      -- ѕродажи за "период" + просрочка только 4 недели
      , tmpContainerData AS (SELECT tmpData.JuridicalId
                                  , tmpData.PartnerId
                                  , tmpData.ContractId
@@ -272,7 +272,10 @@ BEGIN
                                  , 0 AS Amount4_res
                                  , 0 AS Amount5_res
                             FROM tmpContainerData_gr AS tmpData
+                            WHERE tmpData.Amount > 0
+
                            UNION ALL
+                            -- 1 недел€
                             SELECT
                                    tmpData.JuridicalId
                                  , tmpData.PartnerId
@@ -315,10 +318,157 @@ BEGIN
                                    INNER JOIN tmpContainerData_gr ON tmpContainerData_gr.JuridicalId = tmpData.JuridicalId
                                                                  AND tmpContainerData_gr.PartnerId   = tmpData.PartnerId
                                                                  AND tmpContainerData_gr.ContractId  = tmpData.ContractId
-                                                                 AND tmpContainerData_gr.ContractId  = tmpData.ContractId
+                                                                 AND tmpContainerData_gr.PaidKindId  = tmpData.PaidKindId
                                                                  -- берем все накладный, пока накопительна€ сумма меньше той на которую делаем подбор
-                                                                 AND tmpContainerData_gr.Amount1_summ <= tmpData.SaleSumm1
+                                                                 AND tmpContainerData_gr.Amount1_summ - tmpContainerData_gr.Amount1 <= tmpData.SaleSumm1
+                                                                 AND tmpContainerData_gr.Amount1     > 0
+
+                           UNION ALL
+                            -- 2 недел€
+                            SELECT
+                                   tmpData.JuridicalId
+                                 , tmpData.PartnerId
+                                 , tmpData.ContractId
+                                 , tmpData.PaidKindId
+                                   -- 
+                                 , tmpContainerData_gr.MovementId
+                                 , tmpContainerData_gr.OperDate
+                                   -- вс€ сумма накладной
+                                 , 0 AS Amount
+                                 , 0 AS Amount1
+                                 , tmpContainerData_gr.Amount2
+                                 , 0 AS Amount3
+                                 , 0 AS Amount4
+                                 , 0 AS Amount5
+                                 , 0 AS Amount1_res
+                                   -- просрочка по накладной
+                                 , CASE -- если накопительный итог c этой суммой меньше SaleSumm2
+                                        WHEN tmpContainerData_gr.Amount2_summ <= tmpData.SaleSumm2
+                                             THEN tmpContainerData_gr.Amount2
+                                        -- если итог без этой суммы больше SaleSumm2
+                                        WHEN tmpContainerData_gr.Amount2_summ - tmpContainerData_gr.Amount2 > tmpData.SaleSumm2
+                                             THEN 0
+                                        -- просрочка не на всю сумму накладной, только часть, посчитаем ее
+                                        ELSE tmpData.SaleSumm2 - (tmpContainerData_gr.Amount2_summ - tmpContainerData_gr.Amount2)
+                                   END  AS Amount2_res
+                                 , 0 AS Amount3_res
+                                 , 0 AS Amount4_res
+                                 , 0 AS Amount5_res
+                              FROM (-- »тогова€ просрочка - 2 недел€
+                                    SELECT tmpReport.SaleSumm2
+                                         , COALESCE (tmpReport.JuridicalId, 0) AS JuridicalId
+                                         , COALESCE (tmpReport.PartnerId,   0) AS PartnerId
+                                         , COALESCE (tmpReport.ContractId,  0) AS ContractId
+                                         , COALESCE (tmpReport.PaidKindId , 0) AS PaidKindId
+                                    FROM tmpReport
+                                    WHERE tmpReport.SaleSumm2 > 0
+                                   ) AS tmpData
+                                   -- по накладным
+                                   INNER JOIN tmpContainerData_gr ON tmpContainerData_gr.JuridicalId = tmpData.JuridicalId
+                                                                 AND tmpContainerData_gr.PartnerId   = tmpData.PartnerId
+                                                                 AND tmpContainerData_gr.ContractId  = tmpData.ContractId
+                                                                 AND tmpContainerData_gr.PaidKindId  = tmpData.PaidKindId
+                                                                 -- берем все накладный, пока накопительна€ сумма меньше той на которую делаем подбор
+                                                                 AND tmpContainerData_gr.Amount2_summ - tmpContainerData_gr.Amount2 <= tmpData.SaleSumm2
+                                                                 AND tmpContainerData_gr.Amount2     > 0
+                           UNION ALL
+                            -- 3 недел€
+                            SELECT
+                                   tmpData.JuridicalId
+                                 , tmpData.PartnerId
+                                 , tmpData.ContractId
+                                 , tmpData.PaidKindId
+                                   -- 
+                                 , tmpContainerData_gr.MovementId
+                                 , tmpContainerData_gr.OperDate
+                                   -- вс€ сумма накладной
+                                 , 0 AS Amount
+                                 , 0 AS Amount1
+                                 , 0 AS Amount2
+                                 , tmpContainerData_gr.Amount3
+                                 , 0 AS Amount4
+                                 , 0 AS Amount5
+                                 , 0 AS Amount1_res
+                                 , 0 AS Amount2_res
+                                   -- просрочка по накладной
+                                 , CASE -- если накопительный итог c этой суммой меньше SaleSumm3
+                                        WHEN tmpContainerData_gr.Amount3_summ <= tmpData.SaleSumm3
+                                             THEN tmpContainerData_gr.Amount3
+                                        -- если итог без этой суммы больше SaleSumm3
+                                        WHEN tmpContainerData_gr.Amount3_summ - tmpContainerData_gr.Amount3 > tmpData.SaleSumm3
+                                             THEN 0
+                                        -- просрочка не на всю сумму накладной, только часть, посчитаем ее
+                                        ELSE tmpData.SaleSumm3 - (tmpContainerData_gr.Amount3_summ - tmpContainerData_gr.Amount3)
+                                   END  AS Amount3_res
+                                 , 0 AS Amount4_res
+                                 , 0 AS Amount5_res
+                              FROM (-- »тогова€ просрочка - 3 недел€
+                                    SELECT tmpReport.SaleSumm3
+                                         , COALESCE (tmpReport.JuridicalId, 0) AS JuridicalId
+                                         , COALESCE (tmpReport.PartnerId,   0) AS PartnerId
+                                         , COALESCE (tmpReport.ContractId,  0) AS ContractId
+                                         , COALESCE (tmpReport.PaidKindId , 0) AS PaidKindId
+                                    FROM tmpReport
+                                    WHERE tmpReport.SaleSumm3 > 0
+                                   ) AS tmpData
+                                   -- по накладным
+                                   INNER JOIN tmpContainerData_gr ON tmpContainerData_gr.JuridicalId = tmpData.JuridicalId
+                                                                 AND tmpContainerData_gr.PartnerId   = tmpData.PartnerId
+                                                                 AND tmpContainerData_gr.ContractId  = tmpData.ContractId
+                                                                 AND tmpContainerData_gr.PaidKindId  = tmpData.PaidKindId
+                                                                 -- берем все накладный, пока накопительна€ сумма меньше той на которую делаем подбор
+                                                                 AND tmpContainerData_gr.Amount3_summ - tmpContainerData_gr.Amount3 <= tmpData.SaleSumm3
+                                                                 AND tmpContainerData_gr.Amount3     > 0
+                           UNION ALL
+                            -- 4 недел€
+                            SELECT
+                                   tmpData.JuridicalId
+                                 , tmpData.PartnerId
+                                 , tmpData.ContractId
+                                 , tmpData.PaidKindId
+                                   -- 
+                                 , tmpContainerData_gr.MovementId
+                                 , tmpContainerData_gr.OperDate
+                                   -- вс€ сумма накладной
+                                 , 0 AS Amount
+                                 , 0 AS Amount1
+                                 , 0 AS Amount2
+                                 , 0 AS Amount3
+                                 , tmpContainerData_gr.Amount4
+                                 , 0 AS Amount5
+                                 , 0 AS Amount1_res
+                                 , 0 AS Amount2_res
+                                 , 0 AS Amount3_res
+                                   -- просрочка по накладной
+                                 , CASE -- если накопительный итог c этой суммой меньше SaleSumm4
+                                        WHEN tmpContainerData_gr.Amount4_summ <= tmpData.SaleSumm4
+                                             THEN tmpContainerData_gr.Amount4
+                                        -- если итог без этой суммы больше SaleSumm4
+                                        WHEN tmpContainerData_gr.Amount4_summ - tmpContainerData_gr.Amount4 > tmpData.SaleSumm4
+                                             THEN 0
+                                        -- просрочка не на всю сумму накладной, только часть, посчитаем ее
+                                        ELSE tmpData.SaleSumm4 - (tmpContainerData_gr.Amount4_summ - tmpContainerData_gr.Amount4)
+                                   END  AS Amount4_res
+                                 , 0 AS Amount5_res
+                              FROM (-- »тогова€ просрочка - 4 недел€
+                                    SELECT tmpReport.SaleSumm4
+                                         , COALESCE (tmpReport.JuridicalId, 0) AS JuridicalId
+                                         , COALESCE (tmpReport.PartnerId,   0) AS PartnerId
+                                         , COALESCE (tmpReport.ContractId,  0) AS ContractId
+                                         , COALESCE (tmpReport.PaidKindId , 0) AS PaidKindId
+                                    FROM tmpReport
+                                    WHERE tmpReport.SaleSumm4 > 0
+                                   ) AS tmpData
+                                   -- по накладным
+                                   INNER JOIN tmpContainerData_gr ON tmpContainerData_gr.JuridicalId = tmpData.JuridicalId
+                                                                 AND tmpContainerData_gr.PartnerId   = tmpData.PartnerId
+                                                                 AND tmpContainerData_gr.ContractId  = tmpData.ContractId
+                                                                 AND tmpContainerData_gr.PaidKindId  = tmpData.PaidKindId
+                                                                 -- берем все накладный, пока накопительна€ сумма меньше той на которую делаем подбор
+                                                                 AND tmpContainerData_gr.Amount4_summ - tmpContainerData_gr.Amount4 <= tmpData.SaleSumm4
+                                                                 AND tmpContainerData_gr.Amount4     > 0
                            )
+
      -- —писок просрочка только с 5 недели + 2 мес€ца
    , tmpContainer_next5_1 AS (SELECT DISTINCT
                                      _tmpReport.ContainerId
