@@ -10,7 +10,7 @@ BEGIN
 
      CASE inContractConditionId
          WHEN 0 THEN RETURN (inDate);
-         WHEN zc_Enum_ContractConditionKind_DelayDayCalendar() THEN RETURN (inDate::Date - inDayCount);
+         WHEN zc_Enum_ContractConditionKind_DelayDayCalendar() THEN RETURN (inDate::Date + inDayCount);
          WHEN zc_Enum_ContractConditionKind_DelayDayBank()
               THEN
                 RETURN (SELECT MAX (CalendarDate)
