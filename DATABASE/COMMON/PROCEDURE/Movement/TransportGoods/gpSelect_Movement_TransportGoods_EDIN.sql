@@ -176,7 +176,7 @@ BEGIN
            , COALESCE (ObjectString_DriverCertificate_external.ValueData, ObjectString_DriverCertificate.ValueData) :: TVarChar AS DriverCertificate
 
            
-           , COALESCE(ObjectString_Unit_KATOTTG_To.ValueData, ''):: TVarChar    AS KATOTTG_Unloading
+           , COALESCE(ObjectString_Partner_KATOTTG_To.ValueData, ''):: TVarChar    AS KATOTTG_Unloading
            , COALESCE(ObjectString_Unit_KATOTTG_Unit.ValueData, ''):: TVarChar  AS KATOTTG_Unit
 
            , Object_MemberSignConsignor.ValueData                               AS MemberSignConsignorName
@@ -460,9 +460,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Unit_KATOTTG_Unit
                                    ON ObjectString_Unit_KATOTTG_Unit.ObjectId = MovementLinkObject_From.ObjectId
                                   AND ObjectString_Unit_KATOTTG_Unit.DescId = zc_ObjectString_Unit_KATOTTG()
-            LEFT JOIN ObjectString AS ObjectString_Unit_KATOTTG_to
-                                   ON ObjectString_Unit_KATOTTG_to.ObjectId = MovementLinkObject_To.ObjectId
-                                  AND ObjectString_Unit_KATOTTG_to.DescId = zc_ObjectString_Unit_KATOTTG()
+            LEFT JOIN ObjectString AS ObjectString_Partner_KATOTTG_to
+                                   ON ObjectString_Partner_KATOTTG_to.ObjectId = MovementLinkObject_To.ObjectId
+                                  AND ObjectString_Partner_KATOTTG_to.DescId = zc_ObjectString_Partner_KATOTTG()
                                   
             LEFT JOIN ObjectString AS ObjectString_DriverINN_external
                                    ON ObjectString_DriverINN_external.ObjectId = MovementLinkObject_PersonalDriver.ObjectId
@@ -559,7 +559,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Шаблий О.В.
+ 06.07.23                                                                   *
  05.10.16         * add inJuridicalBasisId
  28.03.15                                        *
 */

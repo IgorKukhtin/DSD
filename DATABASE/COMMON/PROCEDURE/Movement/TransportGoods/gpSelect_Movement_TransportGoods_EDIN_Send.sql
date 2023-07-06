@@ -325,7 +325,7 @@ BEGIN
                    ELSE OH_JuridicalDetails_To.JuridicalAddress
               END      :: TVarChar AS JuridicalAddress_To
               
-          -- , 'Україна, 04208, м. Київ, проспект Правди, 47'::tvarchar   AS JuridicalAddress_To
+           --, 'Україна, 04208, м. Київ, проспект Правди, 47'::tvarchar   AS JuridicalAddress_To
 
            , OH_JuridicalDetails_To.OKPO AS OKPO_To
            
@@ -345,7 +345,13 @@ BEGIN
                  OH_Juridical_Basis.JuridicalAddress
              END   :: TVarChar            AS PartnerAddress_Unloading
              
-           --, 'Україна, #, м. Київ, пр. Академіка Палладіна,7-А' :: TVarChar            AS PartnerAddress_Unloading
+           , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn()
+                  THEN View_Partner_Address.CityName END            AS PartnerCity_Unloading
+
+           , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn()
+                  THEN View_Partner_Address.CityName END            AS PartnerCity_Unloading
+             
+           -- , 'Україна, #, м. Київ, пр. Академіка Палладіна,7-А' :: TVarChar            AS PartnerAddress_Unloading
              
            , CASE WHEN COALESCE (View_Partner_Address.PartnerId, 0) <> 0 
                   THEN TRIM (ObjectString_PostalCode.ValueData) 
@@ -393,7 +399,7 @@ BEGIN
            , COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_Juridical_GLNCode_To.ValueData, ObjectString_GLNCode_To.ValueData) AS GLN_To
            --, '9863577638028':: TVarChar  AS GLN_To
 
-           , COALESCE(ObjectString_Unit_KATOTTG_To.ValueData, '')  AS KATOTTG_Unloading
+           , COALESCE(ObjectString_Partner_KATOTTG_to.ValueData, '')  AS KATOTTG_Unloading
            
            --, 'UA80000000000093317' :: TVarChar  AS KATOTTG_Unloading
              
@@ -453,8 +459,12 @@ BEGIN
            , COALESCE (ObjectString_Unit_Address_from.ValueData, OH_JuridicalDetails_From.JuridicalAddress) AS Address_Unit
            
            , COALESCE(ObjectString_Unit_GLN_from.ValueData, ObjectString_GLNCode_From.ValueData, ObjectString_Juridical_GLNCode_From.ValueData)  AS GLN_Unit
+           --, '9864232631453'::TVarChar AS GLN_Unit
+
            , Object_From.ValueData AS Name_Unit
            , COALESCE(ObjectString_Unit_KATOTTG_Unit.ValueData, '')  AS KATOTTG_Unit
+           
+           --, 'UA51100270010076757'::TVarChar AS KATOTTG_Unit
 
            , OH_JuridicalDetails_From.OKPO AS OKPO_From
 
@@ -521,9 +531,13 @@ BEGIN
            , ''::TVArChar                       AS CarTrailerBrandName
            , tmpTransportGoods.CarTrailerModelName
            , tmpTransportGoods.PersonalDriverName
+           --, 'Гуменний Володимир Антонович'::TVarChar AS PersonalDriverName
            , COALESCE (ObjectString_DriverCertificate_external.ValueData, ObjectString_DriverCertificate.ValueData) :: TVarChar AS DriverCertificate
+           --, 'ВХО320611'::TVarChar AS DriverCertificate
            , COALESCE (ObjectString_DriverINN_external.ValueData, ObjectString_DriverINN.ValueData) :: TVarChar AS DriverINN
+           --, '3234715572'::TVarChar AS DriverINN
            , COALESCE (ObjectString_DriverGLN_external.ValueData, ObjectString_DriverGLN.ValueData) :: TVarChar AS GLN_Driver
+           --, '9864232596745'::TVarChar AS GLN_Driver
            
            , CASE WHEN TRIM (COALESCE (tmpTransportGoods.MemberName1, '')) = '' THEN tmpTransportGoods.PersonalDriverName ELSE tmpTransportGoods.MemberName1 END :: TVarChar AS MemberName1
            , tmpTransportGoods.MemberName2
@@ -695,9 +709,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Unit_KATOTTG_Unit
                                    ON ObjectString_Unit_KATOTTG_Unit.ObjectId = MovementLinkObject_From.ObjectId
                                   AND ObjectString_Unit_KATOTTG_Unit.DescId = zc_ObjectString_Unit_KATOTTG()
-            LEFT JOIN ObjectString AS ObjectString_Unit_KATOTTG_to
-                                   ON ObjectString_Unit_KATOTTG_to.ObjectId = MovementLinkObject_To.ObjectId
-                                  AND ObjectString_Unit_KATOTTG_to.DescId = zc_ObjectString_Unit_KATOTTG()
+            LEFT JOIN ObjectString AS ObjectString_Partner_KATOTTG_to
+                                   ON ObjectString_Partner_KATOTTG_to.ObjectId = MovementLinkObject_To.ObjectId
+                                  AND ObjectString_Partner_KATOTTG_to.DescId = zc_ObjectString_Partner_KATOTTG()
 
             LEFT JOIN ObjectString AS ObjectString_ToAddress
                                    ON ObjectString_ToAddress.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)

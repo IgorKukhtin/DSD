@@ -822,11 +822,12 @@ end;
 procedure TMainInventoryForm.InfoCDSPostError(DataSet: TDataSet;
   E: EDatabaseError; var Action: TDataAction);
 var GoodsId, Id : Integer;
-    AmountUser, AmountUserOld : Currency;
+    Amount, AmountUser, AmountUserOld : Currency;
     Params : TdsdParams;
 begin
   Id := DataSet.FieldByName('Id').AsInteger;
   GoodsId := DataSet.FieldByName('GoodsId').AsInteger;
+  Amount := DataSet.FieldByName('Amount').AsCurrency;
   AmountUser := DataSet.FieldByName('AmountUser').AsCurrency;
   AmountUserOld := DataSet.FieldByName('AmountUser').OldValue;
   DataSet.Cancel;
@@ -860,7 +861,7 @@ begin
         begin
           Params := TdsdParams.Create(Self, TdsdParam);
           try
-            Params.AddParam('Amount', TFieldType.ftFloat, ptInput, AmountUser);
+            Params.AddParam('Amount', TFieldType.ftFloat, ptInput, Amount + (AmountUser - AmountUserOld));
             Params.AddParam('AmountUser', TFieldType.ftFloat, ptInput, AmountUser);
             SQLite_Update(InventoryDate_Table, Id, Params);
           finally
