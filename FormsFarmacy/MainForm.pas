@@ -1030,6 +1030,8 @@ type
     N380: TMenuItem;
     actReport_GoodsSaleChechUser: TdsdOpenForm;
     N381: TMenuItem;
+    actReport_PriceList_BestPrice: TdsdOpenForm;
+    N382: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
     procedure actExportSalesForSuppClickExecute(Sender: TObject);
     procedure actReport_ImplementationPlanEmployeeExecute(Sender: TObject);

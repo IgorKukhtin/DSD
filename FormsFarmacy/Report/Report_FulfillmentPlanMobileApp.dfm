@@ -278,6 +278,14 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
             Options.Editing = False
             Width = 246
           end
+          object UnitCategoryName: TcxGridDBColumn
+            Caption = #1050#1072#1090#1077#1075'.'
+            DataBinding.FieldName = 'UnitCategoryName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
+          end
           object CountChech: TcxGridDBColumn
             Caption = #1042#1089#1077#1075#1086' '#1095#1077#1082#1086#1074' '#1087#1088#1086#1096#1083#1099#1081' '#1084#1077#1089#1103#1094'. '#1075#1088#1085'.'
             DataBinding.FieldName = 'CountChech'
@@ -730,6 +738,19 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
         end>
       isShowModal = False
     end
+    object actSelectCategory: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectCategory
+      StoredProcList = <
+        item
+          StoredProc = spSelectCategory
+        end>
+      Caption = #1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1082#1072#1090#1077#1075#1086#1088#1080#1103#1084' '#1072#1087#1090#1077#1082#1080
+      Hint = #1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1082#1072#1090#1077#1075#1086#1088#1080#1103#1084' '#1072#1087#1090#1077#1082#1080
+      ImageIndex = 80
+    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -823,6 +844,14 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSelectCategory'
         end>
     end
     object dxBarButton1: TdxBarButton
@@ -857,6 +886,10 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
     end
     object dxBarButton3: TdxBarButton
       Action = actReport_FulfillmentPlanMobileAppAntiTOP
+      Category = 0
+    end
+    object bbSelectCategory: TdxBarButton
+      Action = actSelectCategory
       Category = 0
     end
   end
@@ -1068,5 +1101,39 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
       end>
     Left = 128
     Top = 376
+  end
+  object spSelectCategory: TdsdStoredProc
+    StoredProcName = 'gpReport_FulfillmentPlanMobileAppCategory'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 688
+    Top = 168
   end
 end

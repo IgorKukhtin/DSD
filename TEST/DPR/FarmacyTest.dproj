@@ -4700,6 +4700,14 @@
 				<Form>Report_GoodsSaleChechUserForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PriceList_BestPriceDialog.pas">
+				<Form>Report_PriceList_BestPriceDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PriceList_BestPrice.pas">
+				<Form>Report_PriceList_BestPriceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

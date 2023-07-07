@@ -24,6 +24,7 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbOperDate TDateTime;
    
+   DECLARE vbUserWagesId Integer;
    DECLARE vbisIssuedBy Boolean;
    DECLARE vbHolidaysHospital TFloat;
    DECLARE vbMarketing TFloat;
@@ -108,7 +109,8 @@ BEGIN
       WHERE MovementItem.Id = ioId;
     ELSE
     
-      SELECT COALESCE (MIB_isIssuedBy.ValueData, FALSE)
+      SELECT MovementItem.ObjectId
+           , COALESCE (MIB_isIssuedBy.ValueData, FALSE)
            , COALESCE (MIFloat_HolidaysHospital.ValueData, 0)
            , COALESCE (MIFloat_Marketing.ValueData, 0)
            , COALESCE (MIFloat_Director.ValueData, 0)
@@ -117,7 +119,8 @@ BEGIN
            , COALESCE (MIFloat_PenaltyExam.ValueData, 0)
            , COALESCE (MIFloat_ApplicationAward.ValueData, 0)
            , COALESCE (MIF_AmountCard.ValueData, 0)
-      INTO vbisIssuedBy
+      INTO vbUserWagesId
+         , vbisIssuedBy
          , vbHolidaysHospital
          , vbMarketing
          , vbDirector
@@ -195,7 +198,13 @@ BEGIN
          NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin(), 12084491))
       THEN
         RAISE EXCEPTION 'Изменение сумм "Маркетинга" и "Нелеквидов" вам запрещено.';
-      END IF;        
+      END IF; 
+      
+      IF vbApplicationAward <> 0 AND vbApplicationAward <> COALESCE (inApplicationAward, 0) AND
+         NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())         
+      THEN
+        PERFORM gpSelect_WagesUser_ZeroApplicationAward(inMovementId := inMovementId, inUserId := vbUserWagesId, inSession := inSession);
+      END IF;
 
       
        -- сохранили свойство <Отпуск / Больничный>

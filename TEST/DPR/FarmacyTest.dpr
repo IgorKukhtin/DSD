@@ -1296,7 +1296,9 @@ uses
   Report_BanToTransferTimeGoods in '..\..\FormsFarmacy\Report\Report_BanToTransferTimeGoods.pas' {Report_BanToTransferTimeGoodsForm: TParentForm},
   Report_FulfillmentPlanMobileAppAntiTOP in '..\..\FormsFarmacy\Report\Report_FulfillmentPlanMobileAppAntiTOP.pas' {Report_FulfillmentPlanMobileAppAntiTOPForm: TParentForm},
   Report_GoodsSaleChechUserDialog in '..\..\FormsFarmacy\Report\Report_GoodsSaleChechUserDialog.pas' {Report_GoodsSaleChechUserDialogForm: TParentForm},
-  Report_GoodsSaleChechUser in '..\..\FormsFarmacy\Report\Report_GoodsSaleChechUser.pas' {Report_GoodsSaleChechUserForm: TParentForm};
+  Report_GoodsSaleChechUser in '..\..\FormsFarmacy\Report\Report_GoodsSaleChechUser.pas' {Report_GoodsSaleChechUserForm: TParentForm},
+  Report_PriceList_BestPriceDialog in '..\..\FormsFarmacy\Report\Report_PriceList_BestPriceDialog.pas' {Report_PriceList_BestPriceDialogForm: TParentForm},
+  Report_PriceList_BestPrice in '..\..\FormsFarmacy\Report\Report_PriceList_BestPrice.pas' {Report_PriceList_BestPriceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -195,7 +195,7 @@ type
     miGetJuridicalList: TMenuItem;
     lblAmount: TLabel;
     edDiscountAmount: TcxCurrencyEdit;
-    BarCode: TcxGridDBColumn;
+    MainBarCode: TcxGridDBColumn;
     MorionCode: TcxGridDBColumn; // только 2 форма
     actUpdateRemainsCDS: TdsdUpdateDataSet;
     spUpdate_Object_Price: TdsdStoredProc;
@@ -655,6 +655,7 @@ type
     spDivideGoodsLots: TdsdStoredProc;
     actReport_FulfillmentPlanMobileAppAntiTOP: TdsdOpenForm;
     N69: TMenuItem;
+    MainPriceSite: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

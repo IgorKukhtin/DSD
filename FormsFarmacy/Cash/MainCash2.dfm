@@ -11,6 +11,7 @@ inherited MainCashForm2: TMainCashForm2
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
+  ExplicitTop = -120
   ExplicitWidth = 986
   ExplicitHeight = 747
   PixelsPerInch = 96
@@ -247,7 +248,7 @@ inherited MainCashForm2: TMainCashForm2
       Height = 97
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = -1
+      ExplicitTop = 22
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnCanFocusRecord = MainGridDBTableViewCanFocusRecord
@@ -328,7 +329,7 @@ inherited MainCashForm2: TMainCashForm2
           Options.Editing = False
           Width = 62
         end
-        object BarCode: TcxGridDBColumn
+        object MainBarCode: TcxGridDBColumn
           Caption = #1064'/'#1050' '#1087#1088#1086#1080#1079#1074'.'
           DataBinding.FieldName = 'BarCode'
           HeaderAlignmentHorz = taCenter
@@ -355,6 +356,15 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
           Width = 45
+        end
+        object MainPriceSite: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072' '#1089#1072#1081#1090' / '#1087#1088#1080#1083#1086#1078'.'
+          DataBinding.FieldName = 'PriceSite'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 82
         end
         object MainColPriceNight: TcxGridDBColumn
           Caption = #1053#1086#1095#1085#1072#1103' '#1094#1077#1085#1072
@@ -2787,6 +2797,7 @@ inherited MainCashForm2: TMainCashForm2
       Align = alLeft
       Properties.ReadOnly = True
       TabOrder = 0
+      ExplicitTop = -3
       Height = 61
       Width = 348
     end

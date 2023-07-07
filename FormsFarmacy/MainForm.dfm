@@ -5523,6 +5523,17 @@
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_PriceList_BestPrice: TdsdOpenForm
+      Category = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1051#1091#1095#1096#1072#1103' '#1094#1077#1085#1072
+      FormName = 'TReport_PriceList_BestPriceForm'
+      FormNameParam.Value = 'TReport_PriceList_BestPriceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -6725,6 +6736,9 @@
       end
       object N268: TMenuItem
         Action = actCalculation_SAUA
+      end
+      object N382: TMenuItem
+        Action = actReport_PriceList_BestPrice
       end
       object N275: TMenuItem
         Action = actFinalSUAJournal

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_FulfillmentPlanMobileApp(
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , UnitCategoryId Integer, UnitCategoryCode Integer, UnitCategoryName TVarChar
              , CountChech TFloat, CountSite TFloat, CountUser Integer, ProcPlan TFloat
              , UserId Integer, UserCode Integer, UserName TVarChar
              , CountChechUser TFloat, CountMobileUser TFloat, CountShortage TFloat, QuantityMobile Integer, ProcFact TFloat
@@ -353,6 +354,9 @@ BEGIN
              Object_Unit.Id                                        AS UnitId
            , Object_Unit.ObjectCode                                AS UnitCode
            , Object_Unit.ValueData                                 AS UserName
+           , Object_UnitCategory.Id                                AS UnitCategoryId
+           , Object_UnitCategory.ObjectCode                        AS UnitCategoryCode
+           , Object_UnitCategory.ValueData                         AS UserCategoryName
            , MovPlan.CountSite 
            , MovPlan.TotalSumm 
            , MovPlan.CountUser 
@@ -393,7 +397,11 @@ BEGIN
         FROM tmpData AS MovPlan 
         
              LEFT JOIN Object AS Object_Unit ON Object_Unit.ID = MovPlan.UnitId
-             
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Category
+                                  ON ObjectLink_Unit_Category.ObjectId = MovPlan.UnitId    
+                                 AND ObjectLink_Unit_Category.DescId = zc_ObjectLink_Unit_Category()
+             LEFT JOIN Object AS Object_UnitCategory ON Object_UnitCategory.Id = ObjectLink_Unit_Category.ChildObjectId
+
              LEFT JOIN Object AS Object_User ON Object_User.Id = MovPlan.UserId
              
              LEFT JOIN tmpDataPlace ON tmpDataPlace.UserId = MovPlan.UserId
