@@ -115,6 +115,11 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
               Format = ',0.'
               Kind = skSum
               Column = DelayDay_calc
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = TotalSumm_diff_Deferment
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -211,6 +216,11 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
               Format = ',0.'
               Kind = skSum
               Column = DelayDay_calc
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = TotalSumm_diff_Deferment
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -847,6 +857,19 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1081
+            Options.Editing = False
+            Width = 80
+          end
+          object TotalSumm_diff_Deferment: TcxGridDBColumn
+            Caption = '***'#1044#1086#1083#1075' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            DataBinding.FieldName = 'TotalSumm_diff_Deferment'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1081
             Options.Editing = False
             Width = 80
           end
@@ -2411,6 +2434,14 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
         Value = Null
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

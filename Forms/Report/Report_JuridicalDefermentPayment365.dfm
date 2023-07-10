@@ -12,17 +12,17 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
     Width = 1028
     Height = 313
     TabOrder = 3
-    ExplicitWidth = 1123
+    ExplicitWidth = 1028
     ExplicitHeight = 313
     ClientRectBottom = 313
     ClientRectRight = 1028
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1123
+      ExplicitWidth = 1028
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 1028
         Height = 313
-        ExplicitWidth = 1123
+        ExplicitWidth = 1028
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -629,7 +629,7 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
   end
   inherited Panel: TPanel
     Width = 1028
-    ExplicitWidth = 1123
+    ExplicitWidth = 1028
     inherited deStart: TcxDateEdit
       Left = 59
       Properties.SaveTime = False
@@ -2292,6 +2292,14 @@ inherited Report_JuridicalDefermentPayment365Form: TReport_JuridicalDefermentPay
         Value = Null
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -114,6 +114,7 @@ type
     Summa_doc3: TcxGridDBColumn;
     Summa_doc4: TcxGridDBColumn;
     Summa_doc5: TcxGridDBColumn;
+    TotalSumm_diff_Deferment: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -2166,6 +2166,14 @@ inherited Report_JuridicalDefermentPaymentForm: TReport_JuridicalDefermentPaymen
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAccountId'
         Value = ''
         Component = MasterCDS

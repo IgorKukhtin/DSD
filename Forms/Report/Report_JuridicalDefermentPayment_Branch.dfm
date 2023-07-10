@@ -5,7 +5,7 @@ inherited Report_JuridicalDefermentPayment_BranchForm: TReport_JuridicalDefermen
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1139
-  ExplicitHeight = 432
+  ExplicitHeight = 433
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1951,6 +1951,14 @@ inherited Report_JuridicalDefermentPayment_BranchForm: TReport_JuridicalDefermen
         Value = Null
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
