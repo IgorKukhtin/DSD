@@ -94,7 +94,7 @@ END IF;
                 UNION SELECT tmp.UnitId, NULL AS isMain FROM lfSelect_Object_Unit_byGroup (8446) AS tmp -- ЦЕХ колбаса+дел-сы
                 UNION SELECT tmp.UnitId, NULL AS isMain FROM lfSelect_Object_Unit_byGroup (8454) AS tmp -- Склад специй и запчастей
 
-                UNION */SELECT tmp.UnitId, NULL AS isMain FROM lfSelect_Object_Unit_byGroup (8432) AS tmp -- 30000 - Общепроизводственные
+                UNION */SELECT tmp.UnitId, NULL AS isMain FROM lfSelect_Object_Unit_byGroup (8460 ) AS tmp -- 30000 - Общепроизводственные
                )
        -- tmpUnit AS (SELECT tmp.UnitId, NULL AS isMain FROM lfSelect_Object_Unit_byGroup (8439) AS tmp) -- 31050 - Участок мясного сырья
        -- tmpUnit AS (SELECT tmp.UnitId, NULL AS isMain FROM lfSelect_Object_Unit_byGroup (8459) AS tmp) -- 32022 - Склад Реализации
@@ -195,105 +195,6 @@ END IF;
             END :: Integer AS BranchCode
           , tmp.BranchName
      FROM (
-     -- 1.0. zc_Movement_IncomeCost
-     SELECT Movement.Id AS MovementId
-          , Movement.OperDate
-          , Movement.InvNumber
-          , MovementDesc.Code
-          , MovementDesc.ItemName AS ItemName
-          , 0  :: Integer  AS BranchCode
-          , '' :: TVarChar AS BranchName
-     FROM Movement
-          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId IN (zc_Movement_IncomeCost())
-       AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
-
-    UNION
-     -- 1.0. zc_Movement_Income
-     SELECT Movement.Id AS MovementId
-          , Movement.OperDate
-          , Movement.InvNumber
-          , MovementDesc.Code
-          , MovementDesc.ItemName AS ItemName
-          , 0  :: Integer  AS BranchCode
-          , '' :: TVarChar AS BranchName
-     FROM Movement
-          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-          INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
-                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
-          INNER JOIN Object AS Object_From ON Object_From.Id     = MLO_From.ObjectId
-                                          AND Object_From.DescId = zc_Object_Unit()
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId IN (zc_Movement_Income())
-       AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
-
-    UNION
-     -- 1.1. From: Sale + !!!NOT SendOnPrice!!!
-     SELECT Movement.Id AS MovementId
-          , Movement.OperDate
-          , Movement.InvNumber
-          , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
-          , 0  :: Integer  AS BranchCode
-          , '' :: TVarChar AS BranchName
-     FROM Movement
-          LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
-                                                  AND MLO_From.DescId = zc_MovementLinkObject_From()
-          LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
-          LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
-                                                AND MLO_To.DescId = zc_MovementLinkObject_To()
-          LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
-          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-
-          LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
-          LEFT JOIN tmpUnit AS tmpUnit_To ON tmpUnit_To.UnitId = MLO_To.ObjectId
-
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SaleAsset()) -- , zc_Movement_SendOnPrice()
-       AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = FALSE
-       --*** AND inIsSale            = TRUE
-       AND (tmpUnit_from.UnitId > 0
-         OR Movement.DescId = zc_Movement_SaleAsset()
-       --OR tmpUnit_To.UnitId > 0
-           )
-       AND inGroupId = 4 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
-       -- !!!НУЖНЫ ли ПРОДАЖИ!!!
-       AND (vbIsSale = TRUE OR Movement.DescId = zc_Movement_SaleAsset())
-
-    UNION
-     -- 1.2. From: Loss
-     SELECT Movement.Id AS MovementId
-          , Movement.OperDate
-          , Movement.InvNumber
-          , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
-          , tmpUnit_branch_from.BranchCode
-          , tmpUnit_branch_from.BranchName
-     FROM Movement
-          LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
-                                                  AND MLO_From.DescId = zc_MovementLinkObject_From()
-          LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
-          LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
-                                                AND MLO_To.DescId = zc_MovementLinkObject_To()
-          LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
-          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-
-          LEFT JOIN tmpUnit        AS tmpUnit_from        ON tmpUnit_from.UnitId        = MLO_From.ObjectId
-          LEFT JOIN tmpUnit_branch AS tmpUnit_branch_from ON tmpUnit_branch_from.UnitId = MLO_From.ObjectId
-
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId IN (zc_Movement_Loss(), zc_Movement_LossAsset())
-       AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = FALSE
-       -- AND (tmpUnit_from.UnitId > 0)
-       AND (tmpUnit_branch_from.UnitId IS NULL OR Movement.DescId = zc_Movement_LossAsset())
-       AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
-
-    UNION
      -- 1.3. To: ReturnIn
      SELECT Movement.Id AS MovementId
           , Movement.OperDate
@@ -316,69 +217,9 @@ END IF;
        AND Movement.DescId IN (zc_Movement_ReturnIn())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
-       AND (tmpUnit_To.UnitId > 0)
-       AND inGroupId = 4 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
-       -- !!!НУЖНЫ ли ВОЗВРАТЫ!!!
-       AND vbIsReturnIn = TRUE
+       AND tmpUnit_To.UnitId > 0
+       AND 1=0
 
-    UNION
-     -- 1.4. From: ReturnOut
-     SELECT Movement.Id AS MovementId
-          , Movement.OperDate
-          , Movement.InvNumber
-          , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
-          , 0  :: Integer  AS BranchCode
-          , '' :: TVarChar AS BranchName
-     FROM Movement
-          LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
-                                                  AND MLO_From.DescId = zc_MovementLinkObject_From()
-          LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
-          LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
-                                                AND MLO_To.DescId = zc_MovementLinkObject_To()
-          LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
-          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-
-          LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId IN (zc_Movement_ReturnOut())
-       AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = FALSE
-       AND (tmpUnit_from.UnitId > 0)
-       AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
-
-     -- !!!Internal - PACK!!!
-    UNION
-     -- 1.5. Send + ProductionUnion
-     SELECT Movement.Id AS MovementId
-          , Movement.OperDate
-          , Movement.InvNumber
-          , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
-          , 0  :: Integer  AS BranchCode
-          , '' :: TVarChar AS BranchName
-     FROM Movement
-          LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
-                                                  AND MLO_From.DescId = zc_MovementLinkObject_From()
-          LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
-          LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
-                                                AND MLO_To.DescId = zc_MovementLinkObject_To()
-          LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
-
-          LEFT JOIN tmpUnit_pack AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
-          LEFT JOIN tmpUnit_pack AS tmpUnit_To ON tmpUnit_To.UnitId = MLO_To.ObjectId
-
-          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
-       AND inIsBefoHistoryCost = FALSE
-       AND (tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS NULL)
-     --AND ((tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS NULL AND Movement.DescId = zc_Movement_Send())
-     --  OR (tmpUnit_from.UnitId > 0 AND Movement.DescId = zc_Movement_ProductionUnion()))
-       AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
-
-     -- !!!Internal!!!
     UNION
      -- 2.1. Send + ProductionUnion + ProductionSeparate
      SELECT Movement.Id AS MovementId
@@ -405,9 +246,7 @@ END IF;
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
-       -- AND inIsBefoHistoryCost = TRUE -- !!!***
-       -- AND tmpUnit_pack_from.UnitId IS NULL AND tmpUnit_pack_To.UnitId IS NULL -- !!!***
-       AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+       AND (tmpUnit_from.UnitId IS not NULL or  tmpUnit_To.UnitId IS not NULL)
 
     UNION
      -- 2.2. !!!Internal - SendOnPrice!!!
@@ -429,12 +268,12 @@ END IF;
 
           LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
           LEFT JOIN tmpUnit AS tmpUnit_To ON tmpUnit_To.UnitId = MLO_To.ObjectId
+
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_SendOnPrice())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       -- AND inIsBefoHistoryCost = TRUE -- !!!***
-       --***** AND (tmpUnit_from.UnitId > 0 OR tmpUnit_To.UnitId > 0)
-       AND inGroupId <= 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
+
+       AND (tmpUnit_from.UnitId > 0 OR tmpUnit_To.UnitId > 0)
 
     UNION
      -- 3. !!!Inventory!!!
@@ -443,8 +282,8 @@ END IF;
           , Movement.InvNumber
           , MovementDesc.Code
           , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
-          , tmpUnit_branch.BranchCode
-          , tmpUnit_branch.BranchName
+          , 0  :: Integer  AS BranchCode
+          , '' :: TVarChar AS BranchName
      FROM Movement
           LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                   AND MLO_From.DescId = zc_MovementLinkObject_From()
@@ -455,142 +294,12 @@ END IF;
 
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
-          LEFT  JOIN tmpUnit_branch ON tmpUnit_branch.UnitId = MLO_From.ObjectId
+          LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
 
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.DescId IN (zc_Movement_Inventory())
-    -- AND inIsBefoHistoryCost = FALSE
-       AND (inGroupId < 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
-         OR (inGroupId = 0 AND tmpUnit_branch.UnitId IS NULL)
-         OR (inGroupId > 0 AND tmpUnit_branch.UnitId IS NOT NULL)
-           )
-       AND inGroupId <> 4
-
-
-     -- !!!BRANCH!!!
-    UNION
-     -- 4.1. From: Sale + SendOnPrice
-     SELECT Movement.Id AS MovementId
-          , Movement.OperDate
-          , Movement.InvNumber
-          , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
-          , tmpUnit_branch.BranchCode
-          , tmpUnit_branch.BranchName
-     FROM Movement
-          LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
-                                                  AND MLO_From.DescId = zc_MovementLinkObject_From()
-          LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
-          LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
-                                                AND MLO_To.DescId = zc_MovementLinkObject_To()
-          LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
-          INNER JOIN tmpUnit_branch ON tmpUnit_branch.UnitId = MLO_From.ObjectId
-          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
-       AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = FALSE
-       --*** AND (inIsSale           = TRUE OR Movement.DescId = zc_Movement_SendOnPrice())
-       AND inGroupId <> 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
-       AND inGroupId <> 4
-       -- !!!НУЖНЫ ли ПРОДАЖИ!!!
-       AND (vbIsSale = TRUE OR Movement.DescId = zc_Movement_SendOnPrice())
-
-    UNION
-     -- 4.2. From: Loss
-     SELECT Movement.Id AS MovementId
-          , Movement.OperDate
-          , Movement.InvNumber
-          , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
-          , tmpUnit_branch.BranchCode
-          , tmpUnit_branch.BranchName
-     FROM Movement
-          LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
-                                                  AND MLO_From.DescId = zc_MovementLinkObject_From()
-          LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
-          LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
-                                                AND MLO_To.DescId = zc_MovementLinkObject_To()
-          LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
-          INNER JOIN tmpUnit_branch ON tmpUnit_branch.UnitId = MLO_From.ObjectId
-          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId IN (zc_Movement_Loss())
-       AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = FALSE
-       AND inGroupId <> 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
-       AND inGroupId <> 4
-
-    UNION
-     -- 4.3. To: ReturnIn
-     SELECT Movement.Id AS MovementId
-          , Movement.OperDate
-          , Movement.InvNumber
-          , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
-          , tmpUnit_branch.BranchCode
-          , tmpUnit_branch.BranchName
-     FROM Movement
-          LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
-                                                  AND MLO_From.DescId = zc_MovementLinkObject_From()
-          LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
-          LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
-                                                AND MLO_To.DescId = zc_MovementLinkObject_To()
-          LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
-          INNER JOIN tmpUnit_branch ON tmpUnit_branch.UnitId = MLO_To.ObjectId
-          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId IN (zc_Movement_ReturnIn())
-       AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND inIsBefoHistoryCost = FALSE -- *****?????
-       AND inGroupId <> 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
-       AND inGroupId <> 4
-       -- !!!НУЖНЫ ли ВОЗВРАТЫ!!!
-       AND vbIsReturnIn = TRUE
-
-    UNION
-     -- 4.4. To: Peresort
-     SELECT Movement.Id AS MovementId
-          , Movement.OperDate
-          , Movement.InvNumber
-          , MovementDesc.Code
-          , (MovementDesc.ItemName || ' ' || COALESCE (Object_From.ValueData, '') || ' ' || COALESCE (Object_To.ValueData, '')) ::TVarChar AS ItemName
-          , tmpUnit_branch_from.BranchCode
-          , tmpUnit_branch_from.BranchName
-     FROM Movement
-          LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
-                                                  AND MLO_From.DescId = zc_MovementLinkObject_From()
-          LEFT JOIN Object AS Object_From ON Object_From.Id = MLO_From.ObjectId
-          LEFT JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = Movement.Id
-                                                AND MLO_To.DescId = zc_MovementLinkObject_To()
-          LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
-          INNER JOIN tmpUnit_branch AS tmpUnit_branch_from ON tmpUnit_branch_from.UnitId = MLO_From.ObjectId
-          INNER JOIN tmpUnit_branch AS tmpUnit_branch_to ON tmpUnit_branch_to.UnitId = MLO_To.ObjectId
-          LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId IN (zc_Movement_ProductionUnion())
-       AND Movement.StatusId = zc_Enum_Status_Complete()
-       -- AND inIsBefoHistoryCost = TRUE -- *****
-       AND inGroupId <> 0 -- -1:Все 0+4:ф.Днепр 1:ф.Киев 2+3:остальные филиалы
-       AND inGroupId <> 4
-
-/*
-     SELECT Movement.Id AS MovementId
-          , Movement.OperDate
-          , Movement.InvNumber
-          , MovementDesc.Code
-          , MovementDesc.ItemName AS ItemName
-     FROM Movement
-          JOIN MovementLinkMovement on MovementLinkMovement.MovementChildId = Movement.Id AND MovementLinkMovement.Descid = zc_MovementLinkMovement_Production()
-          JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-        --JOIN Movement AS Movement2 ON Movement2.Id       = MovementLinkMovement.MovementId 
-        --                          AND Movement2.StatusId = zc_Enum_Status_UnComplete() 
-
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_SendOnPrice())
-       AND Movement.StatusId = zc_Enum_Status_Complete()
-*/
+       AND tmpUnit_from.UnitId > 0
 
     ) AS tmp
     -- INNER JOIN tmpMovContainer ON tmpMovContainer.MovementId = tmp.MovementId
@@ -640,4 +349,4 @@ create table dba._pgMovementReComlete
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= -1)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2019', inEndDate:= '30.06.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= -1)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2023', inEndDate:= '30.06.2023', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2023', inEndDate:= '31.06.2023', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
