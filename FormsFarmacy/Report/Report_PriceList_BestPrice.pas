@@ -1,4 +1,4 @@
-unit Report_FulfillmentPlanMobileApp;
+unit Report_PriceList_BestPrice;
 
 interface
 
@@ -28,11 +28,10 @@ uses
   cxGridBandedTableView, cxGridDBBandedTableView, cxDBEdit;
 
 type
-  TReport_FulfillmentPlanMobileAppForm = class(TAncestorReportForm)
+  TReport_PriceList_BestPriceForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
-    ceUnit: TcxButtonEdit;
-    rdUnit: TRefreshDispatcher;
-    GuidesUnit: TdsdGuides;
+    ceJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
     dxBarButton1: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
@@ -45,38 +44,14 @@ type
     bbPrint: TdxBarButton;
     actRefreshJuridical: TdsdDataSetRefresh;
     spUpdate_Price_MCSIsClose: TdsdStoredProc;
+    ContractName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
     bbMoneyBoxSun: TdxBarButton;
-    UnitName: TcxGridDBColumn;
-    ProcPlan: TcxGridDBColumn;
-    CountChech: TcxGridDBColumn;
-    CountSite: TcxGridDBColumn;
-    CountUser: TcxGridDBColumn;
-    ProcFact: TcxGridDBColumn;
-    CountChechUser: TcxGridDBColumn;
-    CountMobileUser: TcxGridDBColumn;
-    UserName: TcxGridDBColumn;
-    PenaltiMobApp: TcxGridDBColumn;
-    QuantityMobile: TcxGridDBColumn;
-    isShowPlanEmployeeUser: TcxGridDBColumn;
-    spUpdate_SetShowPlanMobileAppUser: TdsdStoredProc;
-    actUpdateDataSet: TdsdUpdateDataSet;
-    spUpdate_ShowPlanMobileAppUser: TdsdStoredProc;
-    mactUpdate_ShowPlanMobileAppUser: TMultiAction;
-    actUpdate_ShowPlanMobileAppUser: TdsdExecStoredProc;
-    dxBarButton2: TdxBarButton;
-    actInsertUpdate_EmployeeSchedule_UserCount: TdsdExecStoredProc;
-    spInsertUpdate_EmployeeSchedule_UserCount: TdsdStoredProc;
-    FormParams: TdsdFormParams;
-    actExecuteDialogUserCount: TExecuteDialog;
-    bbUpdate_ShowPlanMobileAppUser: TdxBarButton;
-    CountShortage: TcxGridDBColumn;
-    Color_Calc: TcxGridDBColumn;
-    actReport_FulfillmentPlanMobileAppAntiTOP: TdsdOpenForm;
-    dxBarButton3: TdxBarButton;
-    UnitCategoryName: TcxGridDBColumn;
-    spSelectCategory: TdsdStoredProc;
-    actSelectCategory: TdsdExecStoredProc;
-    bbSelectCategory: TdxBarButton;
+    cxLabel4: TcxLabel;
+    PriceMin: TcxGridDBColumn;
+    edProcent: TcxCurrencyEdit;
   private
     { Private declarations }
   public
@@ -84,7 +59,7 @@ type
   end;
 
 var
-  Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppForm;
+  Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm;
 
 implementation
 
@@ -92,5 +67,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_FulfillmentPlanMobileAppForm)
+  RegisterClass(TReport_PriceList_BestPriceForm)
 end.

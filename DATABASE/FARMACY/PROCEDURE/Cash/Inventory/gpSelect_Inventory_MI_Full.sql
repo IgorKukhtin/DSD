@@ -267,4 +267,5 @@ ALTER FUNCTION gpSelect_Inventory_MI_Full (Integer, TDateTime, TVarChar) OWNER T
 
 -- тест
 
--- select * from gpSelect_Inventory_MI_Full(inUnitId := 377610 , inOperDate := ('05.07.2023')::TDateTime ,  inSession := '3');
+-- 
+select * from gpSelect_Inventory_MI_Full(inUnitId := 377610 , inOperDate := ('05.07.2023')::TDateTime ,  inSession := '3');

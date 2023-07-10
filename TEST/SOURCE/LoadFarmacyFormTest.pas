@@ -1182,12 +1182,17 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsSaleChechUserForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceList_BestPriceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceList_BestPriceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceList_BestPriceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PriceList_BestPriceDialogForm');
+
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsSaleChechUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsSaleChechUserForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsSaleChechUserDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsSaleChechUserDialogForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BanToTransferTimeGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BanToTransferTimeGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BanToTransferTimeGoodsForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaymentHelsiForm'));
@@ -1195,10 +1200,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FulfillmentPlanMobileAppUserForm');
-
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FulfillmentPlanMobileAppForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppDialogForm'));
+ { TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FulfillmentPlanMobileAppDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppAntiTOPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FulfillmentPlanMobileAppAntiTOPForm');

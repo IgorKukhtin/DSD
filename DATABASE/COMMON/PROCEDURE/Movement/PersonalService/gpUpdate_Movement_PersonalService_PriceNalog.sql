@@ -34,7 +34,11 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_DayPriceNalog(), tmp.Id, tmp.DayPriceNalog)
            , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_SummMinus(), tmp.Id, tmp.SummMinus)
      FROM (WITH
-           tmpMI AS (SELECT tmp.* FROM gpSelect_MovementItem_PersonalService(inMovementId, FALSE, FALSE, inSession) AS tmp)
+           tmpMI AS (SELECT tmp.* 
+                          , ROW_NUMBER() OVER (PARTITION BY tmp.MemberId_Personal ORDER BY tmp.MemberId_Personal, tmp.isMain DESC, tmp.SummService DESC) AS Ord
+                     FROM gpSelect_MovementItem_PersonalService(inMovementId, FALSE, FALSE, inSession) AS tmp
+                     )
+
          , tmpPersonal AS (SELECT tmpMI.Id 
                                 , tmpMI.PersonalId
                                 , tmpMI.SummNalog
@@ -54,6 +58,7 @@ BEGIN
                                 LEFT JOIN ObjectDate AS ObjectDate_DateOut
                                                      ON ObjectDate_DateOut.ObjectId = tmpMI.PersonalId
                                                     AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_Out()
+                           WHERE tmpMI.Ord = 1
                            )
            SELECT tmpPersonal.*
                 , (DATE_PART ('DAY', tmpPersonal.DateEnd :: TIMESTAMP - tmpPersonal.DateStart :: TIMESTAMP) + 1) ::TFloat AS DayPriceNalog

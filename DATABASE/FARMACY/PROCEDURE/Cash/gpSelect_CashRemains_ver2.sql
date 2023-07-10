@@ -58,7 +58,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                isSpecial boolean,
                
                PromoBonusPrice TFloat, isAsinoMain boolean, isAsinoPresent boolean,
-               PriceView TFloat
+               PriceView TFloat, PriceSite TFloat
               )
 AS
 $BODY$
@@ -813,6 +813,7 @@ BEGIN
                                              , MAX(COALESCE(ObjectFloat_MaxPrice.ValueData, 0))::TFloat  AS MaxPrice 
                                              , MAX(ObjectFloat_DiscountProcent.ValueData)::TFloat        AS DiscountProcent 
                                              , COALESCE (ObjectBoolean_StealthBonuses.ValueData, False)  AS isStealthBonuses 
+                                             , COALESCE (ObjectBoolean_DiscountSite.ValueData, False)    AS isDiscountSite
                                           FROM Object AS Object_BarCode
                                               INNER JOIN ObjectLink AS ObjectLink_BarCode_Goods
                                                                     ON ObjectLink_BarCode_Goods.ObjectId = Object_BarCode.Id
@@ -838,6 +839,11 @@ BEGIN
                                               LEFT JOIN ObjectBoolean AS ObjectBoolean_StealthBonuses
                                                                       ON ObjectBoolean_StealthBonuses.ObjectId = Object_BarCode.Id
                                                                      AND ObjectBoolean_StealthBonuses.DescId = zc_ObjectBoolean_BarCode_StealthBonuses()
+
+                                              LEFT JOIN ObjectBoolean AS ObjectBoolean_DiscountSite
+                                                                      ON ObjectBoolean_DiscountSite.ObjectId = Object_BarCode.Id
+                                                                     AND ObjectBoolean_DiscountSite.DescId = zc_ObjectBoolean_BarCode_DiscountSite()
+                                                                     AND ObjectBoolean_DiscountSite.ValueData = True
                                                                    
                                           WHERE Object_BarCode.DescId = zc_Object_BarCode()
                                             AND Object_BarCode.isErased = False
@@ -845,7 +851,8 @@ BEGIN
                                                  , Object_Object.Id
                                                  , Object_Object.ValueData
                                                  , COALESCE(ObjectBoolean_GoodsForProject.ValueData, False)
-                                                 , COALESCE (ObjectBoolean_StealthBonuses.ValueData, False))
+                                                 , COALESCE (ObjectBoolean_StealthBonuses.ValueData, False)
+                                                 , COALESCE (ObjectBoolean_DiscountSite.ValueData, False))
                  , tmpGoodsUKTZED AS (SELECT Object_Goods_Juridical.GoodsMainId
                                            , REPLACE(REPLACE(REPLACE(Object_Goods_Juridical.UKTZED, ' ', ''), '.', ''), Chr(160), '')::TVarChar AS UKTZED
                                            , ROW_NUMBER() OVER (PARTITION BY Object_Goods_Juridical.GoodsMainId
@@ -881,7 +888,8 @@ BEGIN
                                             WHERE ObjectLink_GoodsDivisionLock_Unit.DescId        = zc_ObjectLink_GoodsDivisionLock_Unit()
                                               AND ObjectLink_GoodsDivisionLock_Unit.ChildObjectId = vbUnitId
                                             )
-                 
+                 , tmpForSiteMobile AS (SELECT p.Id, p.Price_unit_sale, p.price_unit_sale_1, p.Price_unit_sale_3, p.Price_unit_sale_6
+                                        FROM gpSelect_GoodsOnUnit_ForSiteMobile (vbUnitId::Text, '', zfCalc_UserSite()) AS p)
 							 
         -- Результат
         SELECT
@@ -1201,6 +1209,16 @@ BEGIN
                              CashSessionSnapShot.Price) , 
                              CASE WHEN tmpGoodsSP.GoodsId IS NULL OR tmpGoodsSP.isElectronicPrescript = True OR COALESCE (tmpGoodsSP.PriceSP, 0) = 0 THEN FALSE ELSE TRUE END OR
                              COALESCE(tmpGoodsDiscount.GoodsDiscountId, 0) <> 0)  AS PriceView
+                             
+           , CASE WHEN CashSessionSnapShot.PartionDateKindId = zc_Enum_PartionDateKind_1()
+                  THEN tmpForSiteMobile.Price_unit_sale_1
+                  WHEN CashSessionSnapShot.PartionDateKindId = zc_Enum_PartionDateKind_3()
+                  THEN tmpForSiteMobile.Price_unit_sale_3
+                  WHEN CashSessionSnapShot.PartionDateKindId = zc_Enum_PartionDateKind_6()
+                  THEN tmpForSiteMobile.Price_unit_sale_6
+                  WHEN COALESCE(CashSessionSnapShot.PartionDateKindId, 0) IN (0, zc_Enum_PartionDateKind_Good())
+                  THEN tmpForSiteMobile.Price_unit_sale
+             END :: TFloat AS PriceSite
           
          FROM
             tmpCashSessionSnapShot AS CashSessionSnapShot
@@ -1303,6 +1321,8 @@ BEGIN
                                            AND MI_BrandSP.DescId = zc_MILinkObject_BrandSP()
            LEFT JOIN Object AS Object_BrandSP ON Object_BrandSP.Id = COALESCE(NULLIF(tmpGoodsSP.BrandSPId, 0), MI_BrandSP.ObjectId )
            
+           LEFT JOIN tmpForSiteMobile ON tmpForSiteMobile.Id = CashSessionSnapShot.ObjectId
+           
         ORDER BY
             CashSessionSnapShot.ObjectId;
             
@@ -1366,13 +1386,16 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 -- тест
 -- тест SELECT * FROM  gpDelete_CashSession ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3');
 --
-SELECT GoodsCode 
+SELECT Id
+     , GoodsCode 
      , GoodsName
      , PartionDateKindName
      , Price
      , PricePartionDate
      , PromoBonusPrice
      , PriceView
-FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3') --where COALESCE (PromoBonusPrice, 0) <> 0
+     , PriceSite
+FROM gpSelect_CashRemains_ver2 ('{CAE90CED-6DB6-45C0-A98E-84BC0E5D9F26}', '3') 
+where PriceView <> PriceSite --and id = 15015521
 order by GoodsName
        , PartionDateKindName

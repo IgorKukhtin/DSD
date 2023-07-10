@@ -110,6 +110,7 @@ type
     CommentError: TcxGridDBColumn;
     CityFromName: TcxGridDBColumn;
     CityToName: TcxGridDBColumn;
+    spUpdate_Partner_KATOTTG: TdsdStoredProc;
   private
     { Private declarations }
   public

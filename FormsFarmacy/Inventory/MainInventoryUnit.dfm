@@ -39,10 +39,6 @@ inherited MainInventoryForm: TMainInventoryForm
       object tsStart: TcxTabSheet
         Caption = #1057#1090#1072#1088#1090#1086#1074#1072#1103' '#1089#1090#1088#1072#1085#1080#1094#1072
         ImageIndex = 0
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
       end
       object tsInventory: TcxTabSheet
         Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103' '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1077
@@ -55,7 +51,6 @@ inherited MainInventoryForm: TMainInventoryForm
           Align = alClient
           TabOrder = 0
           LookAndFeel.ScrollbarMode = sbmClassic
-          ExplicitTop = 66
           object cxGridChildDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -351,8 +346,6 @@ inherited MainInventoryForm: TMainInventoryForm
           Align = alClient
           TabOrder = 1
           LookAndFeel.ScrollbarMode = sbmClassic
-          ExplicitLeft = 1
-          ExplicitTop = 58
           object cxGridDBTableView2: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ManualDS
