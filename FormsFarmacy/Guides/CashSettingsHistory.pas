@@ -38,6 +38,7 @@ type
     FixedPercentB: TcxGridDBBandedColumn;
     FixedPercentC: TcxGridDBBandedColumn;
     FixedPercentD: TcxGridDBBandedColumn;
+    PercPlanMobileApp: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

@@ -1,10 +1,11 @@
 -- Function: gpInsertUpdate_Object_NewUser()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_NewUser (Integer, TVarChar, TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_NewUser (Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_NewUser(
  INOUT ioId                     Integer ,      -- Id
     IN inName                   TVarChar,      -- ФИО
+    IN inNameUkr                TVarChar,      -- ФИО на Украинском языке
     IN inPhone                  TVarChar,      -- Нномер телефона
     IN inPositionId             Integer ,      -- Должность
     IN inUnitId                 Integer ,      -- Подразделение
@@ -29,6 +30,7 @@ BEGIN
    END IF;
    
    inName := TRIM(inName);     
+   inNameUkr := TRIM(inNameUkr);     
    inLogin := TRIM(inLogin);     
    inPassword := TRIM(inPassword);     
    WHILE POSITION ('  ' in inName) > 0 LOOP
@@ -46,6 +48,11 @@ BEGIN
    IF COALESCE (inName, '') = ''
    THEN
      RAISE EXCEPTION 'Не заполнено <ФИО>.';
+   END IF;
+
+   IF COALESCE (inNameUkr, '') = ''
+   THEN
+     RAISE EXCEPTION 'Не заполнено <ФИО на Украинском языке>.';
    END IF;
 
    IF COALESCE (inPhone, '') = ''
@@ -90,6 +97,7 @@ BEGIN
    
    vbMember := gpInsertUpdate_Object_Member_Lite(ioId            := 0
                                                , inName          := inName
+                                               , inNameUkr       := inNameUkr
                                                , inPhone         := inPhone
                                                , inPositionID    := inPositionId
                                                , inUnitID        := inUnitId
@@ -142,7 +150,7 @@ BEGIN
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_NewUser (Integer, TVarChar, TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_NewUser (Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*

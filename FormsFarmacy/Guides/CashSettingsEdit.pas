@@ -158,6 +158,8 @@ type
     cxLabel42: TcxLabel;
     ceAntiTOPMP_SumFine: TcxCurrencyEdit;
     cxLabel43: TcxLabel;
+    ceAntiTOPMP_CountAward: TcxCurrencyEdit;
+    cxLabel44: TcxLabel;
   private
     { Private declarations }
   public

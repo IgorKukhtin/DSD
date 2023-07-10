@@ -1,28 +1,28 @@
 inherited CashSettingsHistoryForm: TCashSettingsHistoryForm
   Caption = #1048#1089#1090#1086#1088#1080#1103' '#1069#1083#1077#1084#1077#1085#1090#1072' '#1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1082#1072#1089#1089
   ClientHeight = 354
-  ClientWidth = 733
+  ClientWidth = 816
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 751
+  ExplicitWidth = 834
   ExplicitHeight = 401
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 733
+    Width = 816
     Height = 327
     ExplicitTop = 27
-    ExplicitWidth = 1169
+    ExplicitWidth = 733
     ExplicitHeight = 327
     ClientRectBottom = 327
-    ClientRectRight = 733
+    ClientRectRight = 816
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1169
+      ExplicitWidth = 733
       ExplicitHeight = 327
       inherited cxGrid: TcxGrid
-        Width = 733
+        Width = 816
         Height = 327
-        ExplicitWidth = 1169
+        ExplicitWidth = 733
         ExplicitHeight = 327
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = nil
@@ -58,6 +58,7 @@ inherited CashSettingsHistoryForm: TCashSettingsHistoryForm
               Width = 185
             end
             item
+              Caption = #1055#1083#1087#1085' '#1087#1086' '#1084#1086#1073#1080#1083#1100#1085#1086#1084#1091' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102
             end>
           object StartDate: TcxGridDBBandedColumn
             Caption = #1057' '#1076#1072#1090#1099
@@ -83,14 +84,14 @@ inherited CashSettingsHistoryForm: TCashSettingsHistoryForm
             Position.RowIndex = 0
           end
           object PenMobApp: TcxGridDBBandedColumn
-            Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1087#1083#1072#1085#1072' '#1087#1086' '#1084#1086#1073#1102' '#1087#1088#1077#1083#1086#1078'.'
+            Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1087#1083#1072#1085#1072
             DataBinding.FieldName = 'PenMobApp'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' '#1079#1072' 1% '#1085#1077#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072' '#1087#1086' '#1084#1086#1073#1080#1083#1100#1085#1086#1084#1091' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102
-            Width = 114
+            Width = 98
             Position.BandIndex = 3
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -154,6 +155,19 @@ inherited CashSettingsHistoryForm: TCashSettingsHistoryForm
             Width = 60
             Position.BandIndex = 1
             Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object PercPlanMobileApp: TcxGridDBBandedColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1086#1090' '#1095#1077#1082#1086#1074' '#1076#1083#1103' '#1087#1083#1072#1085#1072
+            DataBinding.FieldName = 'PercPlanMobileApp'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 98
+            Position.BandIndex = 3
+            Position.ColIndex = 1
             Position.RowIndex = 0
           end
         end
@@ -340,6 +354,15 @@ inherited CashSettingsHistoryForm: TCashSettingsHistoryForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MarkPlanThreshol'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PercPlanMobileApp'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PercPlanMobileApp'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

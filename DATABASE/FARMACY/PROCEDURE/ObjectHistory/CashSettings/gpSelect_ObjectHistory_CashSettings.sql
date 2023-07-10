@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_CashSettings(
 )
 RETURNS TABLE (Id Integer, StartDate TDateTime, EndDate TDateTime
              , FixedPercent TFloat, FixedPercentB TFloat, FixedPercentC TFloat, FixedPercentD TFloat
-             , PenMobApp TFloat, PrizeThreshold TFloat, MarkPlanThreshol TFloat)
+             , PenMobApp TFloat, PrizeThreshold TFloat, MarkPlanThreshol TFloat, PercPlanMobileApp TFloat)
 AS
 $BODY$
 BEGIN
@@ -49,6 +49,7 @@ BEGIN
           , ObjectHistoryFloat_CashSettings_PenMobApp.ValueData             AS PenMobApp
           , ObjectHistoryFloat_CashSettings_PrizeThreshold.ValueData        AS PrizeThreshold
           , ObjectHistoryFloat_CashSettings_MarkPlanThreshol.ValueData      AS MarkPlanThreshol
+          , ObjectHistoryFloat_CashSettings_PercPlanMobileApp.ValueData     AS PercPlanMobileApp
         FROM 
             ObjectHistory_CashSettings
 
@@ -76,6 +77,10 @@ BEGIN
             LEFT JOIN tmpObjectHistoryFloat AS ObjectHistoryFloat_CashSettings_MarkPlanThreshol
                                             ON ObjectHistoryFloat_CashSettings_MarkPlanThreshol.ObjectHistoryId = ObjectHistory_CashSettings.Id
                                            AND ObjectHistoryFloat_CashSettings_MarkPlanThreshol.DescId = zc_ObjectHistoryFloat_CashSettings_MarkPlanThreshol()
+
+            LEFT JOIN tmpObjectHistoryFloat AS ObjectHistoryFloat_CashSettings_PercPlanMobileApp
+                                            ON ObjectHistoryFloat_CashSettings_PercPlanMobileApp.ObjectHistoryId = ObjectHistory_CashSettings.Id
+                                           AND ObjectHistoryFloat_CashSettings_PercPlanMobileApp.DescId = zc_ObjectHistoryFloat_CashSettings_PercPlanMobileApp()
 
         ORDER BY ObjectHistory_CashSettings.StartDate;
 
