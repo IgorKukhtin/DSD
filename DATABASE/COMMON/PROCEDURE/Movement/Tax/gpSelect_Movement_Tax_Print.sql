@@ -264,7 +264,7 @@ order by 4*/
                              AND ObjectFloat_Price.DescId = zc_objectFloat_DocumentTaxKind_Price()
      ;
 
-     -- RAISE EXCEPTION 'Ошибка.Документ <%> .', vbOperDate_begin;
+-- IF vbUserId = 5 THEN RAISE EXCEPTION 'Ошибка.<%>', vbOperDate_begin; end if;
 
      -- очень важная проверка
      IF COALESCE (vbMovementId_Tax, 0) = 0 OR (COALESCE (vbStatusId_Tax, 0) <> zc_Enum_Status_Complete() AND vbDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Prepay())
@@ -872,7 +872,8 @@ order by 4*/
                                   THEN tmpObject_GoodsPropertyValueGroup_basis.Name
                              ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData 
                                   ELSE  /*CASE WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData ELSE Object_Goods.ValueData END*/
-                                       CASE WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_begin >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
+                                       CASE -- WHEN vbUserId = 5 THEN (vbOperDate_begin >= ObjectDate_BUH.ValueData) :: TVarChar
+                                            WHEN ObjectString_Goods_BUH.ValueData <> '' AND vbOperDate_begin >= ObjectDate_BUH.ValueData THEN Object_Goods.ValueData
                                             WHEN tmpMI.isName_new = TRUE THEN Object_Goods.ValueData
                                             WHEN ObjectString_Goods_BUH.ValueData <>'' THEN ObjectString_Goods_BUH.ValueData
                                             ELSE Object_Goods.ValueData

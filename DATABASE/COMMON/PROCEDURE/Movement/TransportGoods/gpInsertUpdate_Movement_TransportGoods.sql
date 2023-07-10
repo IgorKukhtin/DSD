@@ -65,9 +65,9 @@ BEGIN
                                SELECT Movement.Id
                                FROM tmpBarCode AS tmp
                                     INNER JOIN tmpMovement AS Movement ON Movement.Id = tmp.MovementId
-                                                          AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
+                                                        --AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
                                                           AND Movement.OperDate BETWEEN inOperDate - INTERVAL '5 DAY' AND inOperDate + INTERVAL '5 DAY'
-                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                        --AND Movement.StatusId <> zc_Enum_Status_Erased()
                               UNION
                                -- по № документа
                                SELECT Movement.Id
@@ -85,6 +85,16 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Документ с % <%> не найден.'
                       , CASE WHEN CHAR_LENGTH (inBarCode) >= 13 THEN 'Ш/К' ELSE '№' END
                       , inBarCode
+                       ;
+    END IF;
+    -- Проверка
+    IF vbMovementDescId_Transport > 0 AND NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = vbMovementId_Transport AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_TransportService()))
+    THEN
+        RAISE EXCEPTION 'Ошибка.Указан документ <%> № <%> от <%>.Необходимо просканировать документ <%>.'
+                      , (SELECT MovementDesc.ItemName FROM Movement JOIN MovementDesc ON MovementDesc.Id = Movement.DescId WHERE Movement.Id = vbMovementId_Transport)
+                      , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_Transport)
+                      , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = vbMovementId_Transport)
+                      , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Transport())
                        ;
     END IF;
     -- Проверка

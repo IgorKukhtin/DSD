@@ -579,6 +579,7 @@ BEGIN
                                                               ON CLO_Member.ContainerId = Container.Id
                                                              AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
                                                              AND CLO_Member.ObjectId    = vbMemberId_From
+                                                             AND vbMemberId_From        > 0
                                INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                               ON CLO_PartionGoods.ContainerId = Container.Id
                                                              AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()

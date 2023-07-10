@@ -14,8 +14,19 @@ BEGIN
    -- НЕТ проверки прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (Session);
    
+   
    --
    vbDescId:= (SELECT Object.DescId FROM Object WHERE Object.Id = inObjectId);
+
+
+   IF vbUserId = 5
+   THEN 
+       RAISE EXCEPTION 'Ошибка.%Нет прав удалять = <%>.'
+                          , CHR (13)
+                          , (SELECT ObjectDesc.ItemName FROM ObjectDesc WHERE ObjectDesc.Id = vbDescId)
+                           ;
+   END IF;
+
 
    -- проверка прав пользователя
    IF EXISTS (SELECT 1 FROM Object WHERE Object.Id = inObjectId AND Object.DescId = zc_Object_ArticleLoss())

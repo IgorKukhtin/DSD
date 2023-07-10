@@ -27,6 +27,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , PersonalDriverName TVarChar, PositionName TVarChar, PositionLevelName TVarChar
              , PersonalDriverMoreName TVarChar
              , PersonalName TVarChar
+             , UnitName_Personal TVarChar
+             , UnitName_PersonalMore TVarChar
              , UnitForwardingName TVarChar
              , Cost_Info TVarChar
              , UserId_ConfirmedKind Integer, UserName_ConfirmedKind TVarChar
@@ -134,8 +136,11 @@ BEGIN
            , (View_PersonalDriver.PersonalName /*|| ' ' || View_PersonalDriver.PositionName*/) :: TVarChar AS PersonalDriverName 
            , View_PersonalDriver.PositionName       :: TVarChar AS PositionName
            , View_PersonalDriver.PositionLevelName  :: TVarChar AS PositionLevelName
-           , (View_PersonalDriverMore.PersonalName || ' ' || View_PersonalDriverMore.PositionName) :: TVarChar AS PersonalDriverMoreName
+           , (View_PersonalDriverMore.PersonalName || ' ' || COALESCE (View_PersonalDriverMore.PositionName, '')  ||  COALESCE (View_PersonalDriverMore.PositionLevelName, '')) :: TVarChar AS PersonalDriverMoreName
            , (View_Personal.PersonalName || ' ' || View_Personal.PositionName) :: TVarChar AS PersonalName
+
+           , View_PersonalDriver.UnitName     AS UnitName_Personal
+           , View_PersonalDriverMore.UnitName AS UnitName_PersonalMore
 
            , Object_UnitForwarding.ValueData AS UnitForwardingName
            , tmpCost.Cost_Info ::TVarChar

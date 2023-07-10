@@ -139,7 +139,7 @@ BEGIN
    -- сохранили
    PERFORM lpUpdate_Object_Partner_Address( inId                := OL_Partner_Juridical.ObjectId
                                           , inJuridicalId       := ioId
-                                          , inShortName         := ObjectString_HouseNumber.ValueData
+                                          , inShortName         := ObjectString_ShortName.ValueData
                                           , inCode              := Object_Partner.ObjectCode
                                           , inRegionName        := Object_Region.ValueData
                                           , inProvinceName      := Object_Province.ValueData

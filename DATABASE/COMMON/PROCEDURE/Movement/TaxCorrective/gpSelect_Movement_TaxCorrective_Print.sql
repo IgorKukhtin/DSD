@@ -171,6 +171,9 @@ BEGIN
                                    ON MovementString_InvNumberRegistered_tax.MovementId = MovementLinkMovement_Child.MovementChildId
                                   AND MovementString_InvNumberRegistered_tax.DescId = zc_MovementString_InvNumberRegistered()
      ;
+     
+-- IF vbUserId = 5 THEN RAISE EXCEPTION 'Ошибка.<%>', vbOperDate_Tax; end if;
+
 /* пока убрал, т.к. проверка сумм происходит в непроведенном состоянии, надо или добавить параметр - "когда ругаться" или сделать еще одну печать-проверку
      -- очень важная проверка
      IF COALESCE (vbMovementId_TaxCorrective, 0) = 0 OR COALESCE (vbStatusId_TaxCorrective, 0) <> zc_Enum_Status_Complete()
@@ -367,7 +370,7 @@ BEGIN
                                                 AND Object_GoodsKind.DescId = zc_Object_GoodsKind()
         )
 
-   -- данные из налоговой свойство zc_MIBoolean_Goods_Name_new
+      -- данные из налоговой свойство zc_MIBoolean_Goods_Name_new
     , tmpName_new AS (SELECT DISTINCT
                              MovementItem.ObjectId           AS GoodsId
                            --, MILinkObject_GoodsKind.ObjectId AS GoodsKindId
