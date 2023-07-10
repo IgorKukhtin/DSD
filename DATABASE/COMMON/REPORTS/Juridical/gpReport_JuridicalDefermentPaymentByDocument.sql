@@ -1,12 +1,14 @@
 -- Function: gpReport_JuridicalSold()
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+-- DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPaymentByDocument(
     IN inOperDate         TDateTime , -- 
     IN inContractDate     TDateTime , -- 
     IN inJuridicalId      Integer   ,
+    IN inPartnerId        Integer   ,
     IN inAccountId        Integer   , --
     IN inContractId       Integer   , --
     IN inPaidKindId       Integer   , --
@@ -136,6 +138,7 @@ BEGIN
           AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
           AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
           AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId) = inJuridicalId
+          AND (COALESCE (ObjectLink_Partner_Juridical.ObjectId, MovementLinkObject_Partner.ObjectId) = inPartnerId OR inPartnerId = 0)
 
        UNION ALL
         SELECT 
@@ -227,6 +230,7 @@ BEGIN
               )
           AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0 OR vbIsSale = FALSE OR Movement.DescId = zc_Movement_Income())
           AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId) = inJuridicalId
+          AND (COALESCE (ObjectLink_Partner_Juridical.ObjectId, MovementLinkObject_Partner.ObjectId) = inPartnerId OR inPartnerId = 0)
         ORDER BY 2;
     
     ELSE
@@ -269,6 +273,7 @@ BEGIN
                  AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
                  AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
                  AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId) = inJuridicalId
+                 AND (COALESCE (ObjectLink_Partner_Juridical.ObjectId, MovementLinkObject_Partner.ObjectId) = inPartnerId OR inPartnerId = 0)
       
               UNION ALL
                SELECT MovementDate_OperDatePartner.ValueData :: TDateTime AS OperDate
@@ -308,6 +313,7 @@ BEGIN
                      )
                  AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0 OR vbIsSale = FALSE OR Movement.DescId = zc_Movement_Income())
                  AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId) = inJuridicalId
+                 AND (COALESCE (ObjectLink_Partner_Juridical.ObjectId, MovementLinkObject_Partner.ObjectId) = inPartnerId OR inPartnerId = 0)
             	) AS Movement;
       	 
      -- 	raise EXCEPTION 'vbNextOperDate %, % ', vbNextOperDate, vbOperDate   	 ;
@@ -366,6 +372,7 @@ BEGIN
                   AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
                   AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
                   AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId) = inJuridicalId
+                  AND (COALESCE (ObjectLink_Partner_Juridical.ObjectId, MovementLinkObject_Partner.ObjectId) = inPartnerId OR inPartnerId = 0)
 
                UNION ALL
       	        SELECT Movement.Id, tmpDesc.DescId_Contract, tmpDesc.DescId_PaidKind, MovementFloat_TotalSumm.ValueData
@@ -426,7 +433,9 @@ BEGIN
                     OR (vbIsSale = TRUE AND inPaidKindId = zc_Enum_PaidKind_SecondForm() AND Movement.DescId = zc_Movement_Income())
                       )
                   AND (MovementLinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0 OR vbIsSale = FALSE OR Movement.DescId = zc_Movement_Income())
-                  AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId) = inJuridicalId;
+                  AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_Partner.ObjectId) = inJuridicalId
+                  AND (COALESCE (ObjectLink_Partner_Juridical.ObjectId, MovementLinkObject_Partner.ObjectId) = inPartnerId OR inPartnerId = 0)
+                 ;
 
              -- ÌÓ‚˚È ÔÂËÓ‰
              vbOperDate := vbNextOperDate;
@@ -521,7 +530,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -535,4 +543,4 @@ ALTER FUNCTION gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTim
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpReport_JuridicalDefermentPaymentByDocument ('01.01.2014'::TDateTime, '01.02.2013'::TDateTime, 0, 0, 0, 0, 0, 0, inSession:= '2' :: TVarChar); 
+-- SELECT * FROM gpReport_JuridicalDefermentPaymentByDocument ('01.12.2023'::TDateTime, '01.12.2023'::TDateTime, 0, 0, 0, 0, 0, 0, 0, inSession:= '2' :: TVarChar); 
