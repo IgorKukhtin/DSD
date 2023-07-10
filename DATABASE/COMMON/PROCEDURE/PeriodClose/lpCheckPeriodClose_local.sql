@@ -26,7 +26,8 @@ BEGIN
      IF inMovementDescId IN (zc_Movement_Cash()) AND inOperDate < CURRENT_DATE
         AND (EXTRACT (HOUR FROM CURRENT_TIMESTAMP) >= 8 OR inOperDate < CURRENT_DATE - INTERVAL '1 DAY')
         AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE inUserId <> 5 AND Object_RoleAccessKey_View.UserId = inUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_Update_Cash())
-        --AND inUserId <> 5
+      --AND (inUserId <> 409393 --  Божок С.Н.
+      --  OR inOperDate < '30.06.2023')
      THEN
          RAISE EXCEPTION 'Ошибка.Для документа <%> от <%> период закрыт по <%>.(%)'
                         , (SELECT MovementDesc.ItemName FROM MovementDesc WHERE MovementDesc.Id = zc_Movement_Cash())
