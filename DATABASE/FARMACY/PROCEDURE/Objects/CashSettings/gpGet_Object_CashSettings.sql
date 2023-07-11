@@ -58,7 +58,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isEliminateColdSUN2 Boolean, isEliminateColdSUN3 Boolean, isEliminateColdSUN4 Boolean, isEliminateColdSUA Boolean
              , isOnlyColdSUN Boolean, isOnlyColdSUN2 Boolean, isOnlyColdSUN3 Boolean, isOnlyColdSUN4 Boolean, isOnlyColdSUA Boolean
              , isCancelBansSUN Boolean
-             , AntiTOPMP_Count Integer, AntiTOPMP_CountFine Integer, CountAward Integer, AntiTOPMP_SumFine TFloat
+             , AntiTOPMP_Count Integer, AntiTOPMP_CountFine Integer, CountAward Integer, AntiTOPMP_SumFine TFloat, MinProcAward TFloat
              ) AS
 $BODY$
 BEGIN
@@ -134,7 +134,7 @@ BEGIN
         , ObjectFloat_CashSettings_AntiTOPMP_CountFine.ValueData::Integer          AS AntiTOPMP_CountFine
         , ObjectFloat_CashSettings_AntiTOPMP_CountAward.ValueData::Integer         AS AntiTOPMP_CountAward
         , ObjectFloat_CashSettings_AntiTOPMP_SumFine.ValueData                     AS AntiTOPMP_SumFine
-
+        , ObjectFloat_CashSettings_AntiTOPMP_MinProcAward.ValueData                AS AntiTOPMP_MinProcAward
 
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
@@ -344,6 +344,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_SumFine
                               ON ObjectFloat_CashSettings_AntiTOPMP_SumFine.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_AntiTOPMP_SumFine.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_SumFine()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_MinProcAward
+                              ON ObjectFloat_CashSettings_AntiTOPMP_MinProcAward.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_AntiTOPMP_MinProcAward.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_MinProcAward()
 
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;

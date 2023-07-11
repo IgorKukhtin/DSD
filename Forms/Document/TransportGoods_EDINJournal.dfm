@@ -339,6 +339,14 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object PersonalDriverItemName: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100', '#1090#1088#1091#1076#1086#1091#1089#1090#1088#1086#1081#1089#1090#1074#1086
+            DataBinding.FieldName = 'PersonalDriverItemName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
           object PersonalDriverName: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'PersonalDriverName'

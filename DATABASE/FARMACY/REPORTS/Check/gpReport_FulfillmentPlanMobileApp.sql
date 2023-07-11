@@ -1,6 +1,6 @@
 -- Function: gpReport_FulfillmentPlanMobileApp()
 
-DROP FUNCTION IF EXISTS gpReport_FulfillmentPlanMobileApp (TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_FulfillmentPlanMobileApp_Ol (TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_FulfillmentPlanMobileApp(
     IN inOperDate     TDateTime , --
@@ -25,6 +25,7 @@ $BODY$
    DECLARE vbAntiTOPMP_Count Integer;
    DECLARE vbAntiTOPMP_CountFine Integer;
    DECLARE vbAntiTOPMP_SumFine TFloat;
+   DECLARE vbAntiTOPMP_SumAward TFloat;
    DECLARE vbPercPlanMobileApp TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -46,8 +47,9 @@ BEGIN
 
    SELECT ObjectFloat_CashSettings_AntiTOPMP_Count.ValueData::Integer              AS AntiTOPMP_Count
         , ObjectFloat_CashSettings_AntiTOPMP_CountFine.ValueData::Integer          AS AntiTOPMP_CountFine
+        , ObjectFloat_CashSettings_AntiTOPMP_CountAward.ValueData                  AS AntiTOPMP_CountAward
         , ObjectFloat_CashSettings_AntiTOPMP_SumFine.ValueData                     AS AntiTOPMP_SumFine
-   INTO vbAntiTOPMP_Count , vbAntiTOPMP_CountFine , vbAntiTOPMP_SumFine
+   INTO vbAntiTOPMP_Count , vbAntiTOPMP_CountFine, vbAntiTOPMP_SumAward, vbAntiTOPMP_SumFine
    FROM Object AS Object_CashSettings
 
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_Count
@@ -56,6 +58,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_CountFine
                               ON ObjectFloat_CashSettings_AntiTOPMP_CountFine.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_AntiTOPMP_CountFine.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_CountFine()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_CountAward
+                              ON ObjectFloat_CashSettings_AntiTOPMP_CountAward.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_AntiTOPMP_CountAward.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_CountAward()
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_SumFine
                               ON ObjectFloat_CashSettings_AntiTOPMP_SumFine.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_AntiTOPMP_SumFine.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_SumFine()
@@ -311,33 +316,49 @@ BEGIN
                              , MovPlan.CountSite                                     AS TotalSumm
                              , tmpESCount.CountUser                                  AS CountUser
                              , Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
-                               COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 1)::TFloat AS ProcPlan
+                               COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2)::TFloat AS ProcPlan
                              , 1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
                                COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1)             AS ProcPlanFull
                              , tmpMovFact.UserId
                              , tmpMovFact.CountChech                                 AS CountChechUser
                              , tmpMovFact.CountMobile                                AS CountMobileUser
                              
-                             , CASE WHEN (Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
-                                         COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 1) > 
-                                         Round(1.0 * tmpMovFact.CountMobile / 
-                                         NullIf(tmpMovFact.CountChech, 0) * 100, 1))
-                                    THEN Round(tmpMovFact.CountChech * Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
-                                         COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 1) / 100 - tmpMovFact.CountMobile, 2) END::TFloat AS CountShortage
+                             , CASE WHEN Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
+                                         COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2) > 
+                                         Round(CASE WHEN date_trunc('MONTH', inOperDate) < '01.07.2023' 
+                                                    THEN 1.0 * tmpMovFact.CountMobile / NullIf(tmpMovFact.CountChech, 0) * 100
+                                                    ELSE 1.0 * tmpMovFact.CountMobile / NullIf(MovPlan.CountChech, 0) * 100                                       
+                                                    END, 2)
+                                    THEN Round(CASE WHEN date_trunc('MONTH', inOperDate) < '01.07.2023' 
+                                                    THEN tmpMovFact.CountChech * Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
+                                                         COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2) / 100 - 
+                                                         tmpMovFact.CountMobile
+                                                    ELSE MovPlan.CountSite / COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1)
+                                                         - COALESCE(tmpMovFact.CountMobile, 0)
+                                                    END, 2) 
+                                    END::TFloat                                      AS CountShortage
                                 
                              , tmpMovFact.QuantityMobile                             AS QuantityMobile
-                             , Round(1.0 * tmpMovFact.CountMobile / 
-                               NullIf(tmpMovFact.CountChech, 0) * 100, 1)::TFloat    AS ProcFact
+                             
+                             , Round(CASE WHEN date_trunc('MONTH', inOperDate) < '01.07.2023' 
+                                       THEN 1.0 * tmpMovFact.CountMobile / NullIf(tmpMovFact.CountChech, 0) * 100
+                                       ELSE 1.0 * tmpMovFact.CountMobile / NullIf(MovPlan.CountChech, 0) * 100                                       
+                                       END, 2)::TFloat                                                     AS ProcFact
+                               
                              , date_part('day', vbDateStart - tmpUser.DateIn)::INTEGER <= 30           AS isNewUser
                              , CASE WHEN Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
-                                               COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 1) - 
-                                         Round(1.0 * tmpMovFact.CountMobile / 
-                                               NullIf(tmpMovFact.CountChech, 0) * 100, 1) > 0
+                                               COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2) - 
+                                         Round(CASE WHEN date_trunc('MONTH', inOperDate) < '01.07.2023' 
+                                                    THEN 1.0 * tmpMovFact.CountMobile / NullIf(tmpMovFact.CountChech, 0) * 100
+                                                    ELSE 1.0 * tmpMovFact.CountMobile / NullIf(MovPlan.CountChech, 0) * 100                                       
+                                                    END, 2) > 0
                                     THEN Round((Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
-                                                COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 1) -
-                                                Round(1.0 * tmpMovFact.CountMobile / 
-                                               NullIf(tmpMovFact.CountChech, 0) * 100, 1)) * vbPenMobApp, 2)                              
-                                    ELSE 0 END::TFLoat                               AS PenaltiMobApp
+                                              COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2) -
+                                              Round(CASE WHEN date_trunc('MONTH', inOperDate) < '01.07.2023' 
+                                                         THEN 1.0 * tmpMovFact.CountMobile / NullIf(tmpMovFact.CountChech, 0) * 100
+                                                         ELSE 1.0 * tmpMovFact.CountMobile / NullIf(MovPlan.CountChech, 0) * 100                                       
+                                                         END, 2)) * vbPenMobApp, 2)                              
+                                  ELSE 0 END::TFLoat                               AS PenaltiMobApp
                              , COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE):: Boolean         AS isShowPlanMobileAppUser
                              , COALESCE (tmpESVacation.UserId, 0) > 0                                            AS isVacation
 
@@ -409,8 +430,10 @@ BEGIN
            , MovPlan.CountChechUser
            , MovPlan.CountMobileUser
            
-           , MovPlan.CountShortage
-              
+           , CASE WHEN NOT MovPlan.isNewUser AND NOT MovPlan.isVacation
+                  THEN MovPlan.CountShortage                        
+                  ELSE 0 END::TFLoat                               AS CountShortage
+
            , MovPlan.QuantityMobile 
            , MovPlan.ProcFact
            , CASE WHEN NOT MovPlan.isNewUser AND NOT MovPlan.isVacation

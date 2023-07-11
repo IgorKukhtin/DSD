@@ -487,6 +487,9 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
       end>
   end
   inherited ActionList: TActionList
+    inherited actRefresh: TdsdDataSetRefresh
+      BeforeAction = actGetVisible
+    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -750,6 +753,48 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
       Caption = #1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1082#1072#1090#1077#1075#1086#1088#1080#1103#1084' '#1072#1087#1090#1077#1082#1080
       Hint = #1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1082#1072#1090#1077#1075#1086#1088#1080#1103#1084' '#1072#1087#1090#1077#1082#1080
       ImageIndex = 80
+    end
+    object actGetVisible: TdsdSetVisibleAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actExecGetVisible
+      Caption = 'actGetVisible'
+      SetVisibleParams = <
+        item
+          Component = CountChechUser
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'CountChechUserVisible'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = CountSite
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'CountSiteVisible'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end
+        item
+          Component = PenaltiMobApp
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'PenaltiMobAppVisible'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end>
+    end
+    object actExecGetVisible: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetVisible
+      StoredProcList = <
+        item
+          StoredProc = spGetVisible
+        end>
+      Caption = 'actExecGetVisible'
     end
   end
   inherited MasterDS: TDataSource
@@ -1098,6 +1143,24 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
         Name = 'UserCount'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountChechUserVisible'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountSiteVisible'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PenaltiMobAppVisible'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 376
@@ -1134,6 +1197,47 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
       end>
     PackSize = 1
     Left = 688
+    Top = 168
+  end
+  object spGetVisible: TdsdStoredProc
+    StoredProcName = 'gpGet_FulfillmentPlanMobileApp'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VisibleFielda'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CountChechUserVisible'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VisibleFielda'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CountSiteVisible'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VisibleFielda'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PenaltiMobAppVisible'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 536
     Top = 168
   end
 end

@@ -342,7 +342,7 @@ BEGIN
                   END
                 ) 
                ELSE 
-                 OH_Juridical_Basis.JuridicalAddress
+                 COALESCE(ObjectString_Unit_AddressEDIN_To.ValueData, OH_Juridical_Basis.JuridicalAddress)
              END   :: TVarChar            AS PartnerAddress_Unloading
              
            , CASE WHEN vbMovementDescId <> zc_Movement_ReturnIn()
@@ -456,7 +456,7 @@ BEGIN
            , COALESCE(ObjectString_GLNCode_From.ValueData, ObjectString_Juridical_GLNCode_From.ValueData)  AS GLN_from
            
            
-           , COALESCE (ObjectString_Unit_Address_from.ValueData, OH_JuridicalDetails_From.JuridicalAddress) AS Address_Unit
+           , COALESCE (ObjectString_Unit_AddressEDIN_Unit.ValueData, ObjectString_Unit_Address_from.ValueData, OH_JuridicalDetails_From.JuridicalAddress) AS Address_Unit
            
            , COALESCE(ObjectString_Unit_GLN_from.ValueData, ObjectString_GLNCode_From.ValueData, ObjectString_Juridical_GLNCode_From.ValueData)  AS GLN_Unit
            --, '9864232631453'::TVarChar AS GLN_Unit
@@ -712,6 +712,15 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Partner_KATOTTG_to
                                    ON ObjectString_Partner_KATOTTG_to.ObjectId = MovementLinkObject_To.ObjectId
                                   AND ObjectString_Partner_KATOTTG_to.DescId = zc_ObjectString_Partner_KATOTTG()
+
+            LEFT JOIN ObjectString AS ObjectString_Unit_AddressEDIN_Unit
+                                   ON ObjectString_Unit_AddressEDIN_Unit.ObjectId = MovementLinkObject_From.ObjectId
+                                  AND ObjectString_Unit_AddressEDIN_Unit.DescId = zc_ObjectString_Unit_AddressEDIN()
+                                  AND COALESCE(ObjectString_Unit_AddressEDIN_Unit.ValueData, '') <> ''
+            LEFT JOIN ObjectString AS ObjectString_Unit_AddressEDIN_To
+                                   ON ObjectString_Unit_AddressEDIN_To.ObjectId = MovementLinkObject_To.ObjectId
+                                  AND ObjectString_Unit_AddressEDIN_To.DescId = zc_ObjectString_Unit_AddressEDIN()
+                                  AND COALESCE(ObjectString_Unit_AddressEDIN_To.ValueData, '') <> ''
 
             LEFT JOIN ObjectString AS ObjectString_ToAddress
                                    ON ObjectString_ToAddress.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
