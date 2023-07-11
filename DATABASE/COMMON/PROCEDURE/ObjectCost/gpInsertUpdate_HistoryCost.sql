@@ -207,7 +207,7 @@ end if;
                                       OR MAX (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN Container_Summ.Id ELSE 0 END) > 0
                                  )
      , tmpContainer_zavod AS (SELECT Container.*, COALESCE (Object_Unit.Id, 0) AS UnitId
-                                   , CASE WHEN 1 = 0 /*ObjectLink_Unit_HistoryCost.ChildObjectId > 0*/ THEN TRUE ELSE FALSE END AS isHistoryCost_ReturnIn
+                                   , CASE WHEN 1 = 1 AND ObjectLink_Unit_HistoryCost.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isHistoryCost_ReturnIn
                               FROM Container
                                    LEFT JOIN _tmpContainer_branch ON _tmpContainer_branch.ContainerId = Container.Id
                                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Account

@@ -268,6 +268,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_UnitTo_HistoryCost
                                ON ObjectLink_UnitTo_HistoryCost.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_UnitTo_HistoryCost.DescId = zc_ObjectLink_Unit_HistoryCost()
+                            --AND 1=0
                             --AND Movement.OperDate >= '01.01.2022'
                             --AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= '01.01.2022'
 
