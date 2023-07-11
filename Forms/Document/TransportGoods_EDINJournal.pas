@@ -111,6 +111,7 @@ type
     CityFromName: TcxGridDBColumn;
     CityToName: TcxGridDBColumn;
     spUpdate_Partner_KATOTTG: TdsdStoredProc;
+    PersonalDriverItemName: TcxGridDBColumn;
   private
     { Private declarations }
   public

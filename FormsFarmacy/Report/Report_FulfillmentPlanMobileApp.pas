@@ -77,6 +77,9 @@ type
     spSelectCategory: TdsdStoredProc;
     actSelectCategory: TdsdExecStoredProc;
     bbSelectCategory: TdxBarButton;
+    spGetVisible: TdsdStoredProc;
+    actGetVisible: TdsdSetVisibleAction;
+    actExecGetVisible: TdsdExecStoredProc;
   private
     { Private declarations }
   public

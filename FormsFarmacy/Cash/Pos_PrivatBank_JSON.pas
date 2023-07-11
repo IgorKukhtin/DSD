@@ -5,7 +5,7 @@ unit Pos_PrivatBank_JSON;
 interface
 
 uses Winapi.Windows, Winapi.ActiveX, System.Variants, System.SysUtils, System.Win.ComObj,
-     System.Classes, PosInterface, IdTCPClient, IdThreadComponent, Vcl.Forms, Vcl.Dialogs,
+     System.Classes, PosInterface, IdTCPClient, IdThreadComponent, IdGlobal, Vcl.Forms,
      {$IFDEF DELPHI103RIO} System.JSON {$ELSE} Data.DBXJSON {$ENDIF};
 
 type
@@ -126,7 +126,11 @@ var JSONObject: TJSONObject; JSONPair: TJSONPair;
     msgFromServer : string;
 begin
   // ... read message from server
-  msgFromServer := FIdTCPClient.IOHandler.ReadLn();
+  Add_PosLog('Проверка буфера.');
+  if not FIdTCPClient.IOHandler.CheckForDataOnSource then Exit;
+
+  Add_PosLog('Читаем.');
+  msgFromServer := FIdTCPClient.IOHandler.ReadLn(#0, IndyTextEncoding_UTF8);
 
   if msgFromServer = '' then
   begin
@@ -174,11 +178,12 @@ begin
     JSONObject.AddPair('method', 'CheckConnection');
     JSONObject.AddPair('step', TJSONNumber.Create(0));
 
-    JsonToSend := TStringStream.Create(JSONObject.ToString, TEncoding.UTF8);
+    JsonToSend := TStringStream.Create(JSONObject.ToString + #0, TEncoding.UTF8);
     try
       try
         FIdTCPClient.Host := FHost;
         FIdTCPClient.Port := FPort;
+        FIdTCPClient.ConnectTimeout := 2000;
         FIdTCPClient.Connect;
 
         Add_PosLog(JsonToSend.DataString);
@@ -218,7 +223,7 @@ begin
     JSONObject.AddPair('step', TJSONNumber.Create(0));
     JSONObject.AddPair('params', JSONParams);
 
-    JsonToSend := TStringStream.Create(JSONObject.ToString, TEncoding.UTF8);
+    JsonToSend := TStringStream.Create(JSONObject.ToString + #0, TEncoding.UTF8);
     try
       try
 

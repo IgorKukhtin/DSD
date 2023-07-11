@@ -55,6 +55,10 @@ type
     PenaltiMobApp: TcxGridDBColumn;
     dxBarButton2: TdxBarButton;
     CountShortage: TcxGridDBColumn;
+    spGetVisible: TdsdStoredProc;
+    actExecGetVisible: TdsdExecStoredProc;
+    actGetVisible: TdsdSetVisibleAction;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

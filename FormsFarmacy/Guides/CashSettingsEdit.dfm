@@ -768,7 +768,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1087#1083#1072#1085#1086#1074
       ImageIndex = 2
       object ceAntiTOPMP_Count: TcxCurrencyEdit
-        Left = 402
+        Left = 410
         Top = 51
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0;-0; ;'
@@ -781,7 +781,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Caption = #1040#1085#1090#1080' '#1058#1054#1055' '#1084#1086#1073'. '#1087#1088#1080#1083'. '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '#1076#1083#1103' '#1086#1090#1086#1073#1088#1072#1078#1077#1085#1080#1103
       end
       object ceAntiTOPMP_CountFine: TcxCurrencyEdit
-        Left = 402
+        Left = 410
         Top = 74
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0;-0; ;'
@@ -794,7 +794,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Caption = #1040#1085#1090#1080' '#1058#1054#1055' '#1084#1086#1073'. '#1087#1088#1080#1083'. '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '#1076#1083#1103' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1096#1090#1088#1072#1092#1072
       end
       object ceAntiTOPMP_SumFine: TcxCurrencyEdit
-        Left = 402
+        Left = 410
         Top = 120
         Properties.DecimalPlaces = 2
         Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -807,7 +807,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Caption = #1040#1085#1090#1080' '#1058#1054#1055' '#1084#1086#1073'. '#1087#1088#1080#1083'. '#1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' / '#1055#1088#1077#1084#1080#1080
       end
       object ceAntiTOPMP_CountAward: TcxCurrencyEdit
-        Left = 402
+        Left = 410
         Top = 97
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0;-0; ;'
@@ -818,6 +818,21 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Left = 18
         Top = 98
         Caption = #1040#1085#1090#1080' '#1058#1054#1055' '#1084#1086#1073'. '#1087#1088#1080#1083'. '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '#1076#1083#1103' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1088#1077#1084#1080#1080
+      end
+      object ceAntiTOPMP_MinProcAward: TcxCurrencyEdit
+        Left = 410
+        Top = 144
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00;-,0.00; ;'
+        TabOrder = 8
+        Width = 121
+      end
+      object cxLabel45: TcxLabel
+        Left = 18
+        Top = 145
+        Caption = 
+          #1040#1085#1090#1080' '#1058#1054#1055' '#1084#1086#1073'. '#1087#1088#1080#1083'. '#1052#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072' '#1076#1083#1103' '#1087#1088#1077 +
+          #1084#1080#1080
       end
     end
   end
@@ -1411,6 +1426,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAntiTOPMP_MinProcAward'
+        Value = Null
+        Component = ceAntiTOPMP_MinProcAward
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 696
@@ -1853,6 +1876,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Name = 'AntiTOPMP_SumFine'
         Value = Null
         Component = ceAntiTOPMP_SumFine
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AntiTOPMP_MinProcAward'
+        Value = Null
+        Component = ceAntiTOPMP_MinProcAward
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
