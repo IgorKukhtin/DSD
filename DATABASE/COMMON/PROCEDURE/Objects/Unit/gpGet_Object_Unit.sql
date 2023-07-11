@@ -154,7 +154,11 @@ BEGIN
 
            , Object_City.Id                 AS CityId
            , Object_City.ValueData          AS CityName
-           , (COALESCE (Object_Region.ValueData,'') ||', '||COALESCE (Object_Province.ValueData,'')||', '||COALESCE (Object_CityKind.ValueData,'') ||' '||COALESCE (Object_City.ValueData,'') ) ::TVarChar AS CityName_full
+           , ( CASE WHEN COALESCE (Object_Region.ValueData,'')   <> '' THEN COALESCE (Object_Region.ValueData,'') ||' מבכ., ' ELSE ''  END
+              ||CASE WHEN COALESCE (Object_Province.ValueData,'') <> '' THEN COALESCE (Object_Province.ValueData,'') ||' נאימם, ' ELSE ''  END
+              ||CASE WHEN COALESCE (Object_CityKind.ValueData,'') <> '' THEN COALESCE (Object_CityKind.ValueData,'') ||' ' ELSE ''  END
+              ||COALESCE (Object_City.ValueData,'')
+             ) ::TVarChar AS CityName_full
 
            , Object_CityKind.Id             AS CityKindId
            , Object_CityKind.ValueData      AS CityKindName
