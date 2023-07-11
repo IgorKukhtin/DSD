@@ -196,7 +196,9 @@ uses
   GoogleOTPRegistration in '..\..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
   StorageSQLite in '..\..\SOURCE\StorageSQLite.pas',
   PriorityPause in '..\..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
-  UAECMRXML in '..\..\SOURCE\EDI\UAECMRXML.pas';
+  UAECMRXML in '..\..\SOURCE\EDI\UAECMRXML.pas',
+  EUSignCP in '..\..\SOURCE\EUSignCP\EUSignCP.pas',
+  EUSignCPOwnUI in '..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
