@@ -22,6 +22,7 @@ type
     FShowInfo : TThreadProcedure;
     FEndPayPosTerm : TThreadProcedure;
     FMsgDescription : string;
+    FStepThread: Integer;
 
     procedure Execute; override;
   public
@@ -79,19 +80,39 @@ procedure TPosTermThread.Execute;
 begin
   if Terminated then Exit;
   if not Assigned(FPosTerm) then Exit;
+  FStepThread := 0;
 
   while not Terminated do
   begin
     Sleep(500);
 
-//    if FPosTerm.CheckConnection then
-//    begin
-//      if (FSalerCash > 0) then
-//      begin
-//        if FRefund then FPosTerm.Refund(FSalerCash)
-//        else FPosTerm.Payment(FSalerCash);
-//      end;
-//    end;
+    if FPosTerm.ProcessType = pptThread then
+    begin
+
+      if FPosTerm.ProcessState = ppsWaiting then Continue;
+      if FPosTerm.ProcessState = ppsError then Break;
+
+      if FStepThread = 0 then
+      begin
+        FPosTerm.CheckConnection;
+        Inc(FStepThread);
+      end else if FStepThread = 1 then
+      begin
+        FPosTerm.CheckConnection;
+        Inc(FStepThread);
+      end else if FStepThread = 2 then Break;
+
+    end else
+    begin
+      if FPosTerm.CheckConnection then
+      begin
+        if (FSalerCash > 0) then
+        begin
+          if FRefund then FPosTerm.Refund(FSalerCash)
+          else FPosTerm.Payment(FSalerCash);
+        end;
+      end;
+    end;
   end;
 
   if Assigned(FEndPayPosTerm) then FEndPayPosTerm;

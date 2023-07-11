@@ -4,9 +4,9 @@ interface
 
 function GetIniFile(out AIniFileName: String):boolean;
 
-function GetValue(const ASection,AParamName,ADefault: String): String;
-function GetValueInt(const ASection,AParamName: String; ADefault : Integer): Integer;
-function GetValueBool(const ASection,AParamName: String; ADefault : Boolean): Boolean;
+function GetValue(const ASection, AParamName, ADefault: String): String;
+function GetValueInt(const ASection, AParamName: String; ADefault : Integer): Integer;
+function GetValueBool(const ASection, AParamName: String; ADefault : Boolean): Boolean;
 
 //возвраащет тип кассового аппарата;
 function iniCashType:String;
@@ -152,7 +152,7 @@ Begin
   result := True;
 End;
 
-function GetValue(const ASection,AParamName,ADefault: String): String;
+function GetValue(const ASection, AParamName, ADefault: String): String;
 var
   ini: TiniFile;
   IniFileName : String;
@@ -163,7 +163,12 @@ Begin
     exit;
   End;
   ini := TiniFile.Create(IniFileName);
-  Result := ini.ReadString(ASection,AParamName,ADefault);
+  Result := ini.ReadString(ASection,AParamName,'');
+  if (Result = '') and (ADefault <> '') then
+  begin
+    Result := ADefault;
+    ini.WriteString(ASection, AParamName, Result)
+  end;
   ini.Free;
 End;
 
@@ -178,7 +183,12 @@ Begin
     exit;
   End;
   ini := TiniFile.Create(IniFileName);
-  Result := ini.ReadInteger(ASection,AParamName,ADefault);
+  Result := ini.ReadInteger(ASection,AParamName,0);
+  if (Result = 0) and (ADefault <> 0) then
+  begin
+    Result := ADefault;
+    ini.WriteInteger(ASection, AParamName, Result)
+  end;
   ini.Free;
 End;
 

@@ -1,19 +1,20 @@
 -- Function: gpInsertUpdate_ObjectHistory_CashSettings ()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_CashSettings (Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_CashSettings (Integer, Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_CashSettings(
- INOUT ioId               Integer,    -- ключ объекта <Элемент истории Общие настройки касс>
-    IN inCashSettingsId   Integer,    -- Общие настройки касс
-    IN inStartDate        TDateTime,  -- Дата действия прайса
-    IN inFixedPercent     TFloat,     -- Фиксированный процент выполнения плана	
-    IN inFixedPercentB    TFloat,     -- Фиксированный процент выполнения плана категория B	
-    IN inFixedPercentC    TFloat,     -- Фиксированный процент выполнения плана категория C	
-    IN inFixedPercentD    TFloat,     -- Фиксированный процент выполнения плана категория D	
-    IN inPenMobApp        TFloat,     -- Сумма штрафа за 1% невыполнения плана по мобильному приложению
-    IN inPrizeThreshold   TFloat,     -- Корректировка порога по премии при выполнении плана маркетинга
-    IN inMarkPlanThreshol TFloat,     -- Пороги по маркет плану за вычетом премии
-    IN inSession          TVarChar    -- сессия пользователя
+ INOUT ioId                  Integer,    -- ключ объекта <Элемент истории Общие настройки касс>
+    IN inCashSettingsId      Integer,    -- Общие настройки касс
+    IN inStartDate           TDateTime,  -- Дата действия прайса
+    IN inFixedPercent        TFloat,     -- Фиксированный процент выполнения плана	
+    IN inFixedPercentB       TFloat,     -- Фиксированный процент выполнения плана категория B	
+    IN inFixedPercentC       TFloat,     -- Фиксированный процент выполнения плана категория C	
+    IN inFixedPercentD       TFloat,     -- Фиксированный процент выполнения плана категория D	
+    IN inPenMobApp           TFloat,     -- Сумма штрафа за 1% невыполнения плана по мобильному приложению
+    IN inPrizeThreshold      TFloat,     -- Корректировка порога по премии при выполнении плана маркетинга
+    IN inMarkPlanThreshol    TFloat,     -- Пороги по маркет плану за вычетом премии
+    IN inPercPlanMobileApp   TFloat,     -- Процент от чеков для плана по мобильному приложению
+    IN inSession             TVarChar    -- сессия пользователя
 )
 AS
 $BODY$
@@ -50,6 +51,9 @@ BEGIN
 
    -- Пороги по маркет плану за вычетом премии
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_CashSettings_MarkPlanThreshol(), ioId, inMarkPlanThreshol);
+
+   -- Пороги по маркет плану за вычетом премии
+   PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_CashSettings_PercPlanMobileApp(), ioId, inPercPlanMobileApp);
         
 END;
 $BODY$

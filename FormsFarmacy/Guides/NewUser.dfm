@@ -3,7 +3,7 @@ object NewUserForm: TNewUserForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1057#1086#1079#1076#1072#1085#1080#1077' '#1085#1086#1074#1086#1075#1086' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
-  ClientHeight = 409
+  ClientHeight = 477
   ClientWidth = 363
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,12 +20,12 @@ object NewUserForm: TNewUserForm
   TextHeight = 13
   object cxLabel2: TcxLabel
     Left = 21
-    Top = 75
+    Top = 124
     Caption = #1053#1086#1084#1077#1088' '#1090#1077#1083#1077#1092#1086#1085#1072
   end
   object edPhone: TcxTextEdit
     Left = 21
-    Top = 94
+    Top = 147
     TabOrder = 2
     Width = 321
   end
@@ -42,7 +42,7 @@ object NewUserForm: TNewUserForm
   end
   object ceUnit: TcxButtonEdit
     Left = 22
-    Top = 212
+    Top = 261
     Properties.Buttons = <
       item
         Default = True
@@ -54,12 +54,12 @@ object NewUserForm: TNewUserForm
   end
   object cxLabel12: TcxLabel
     Left = 21
-    Top = 189
+    Top = 238
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cePosition: TcxButtonEdit
     Left = 21
-    Top = 149
+    Top = 198
     Properties.Buttons = <
       item
         Default = True
@@ -72,34 +72,34 @@ object NewUserForm: TNewUserForm
   end
   object cxLabel11: TcxLabel
     Left = 21
-    Top = 130
+    Top = 179
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
   end
   object edLogin: TcxTextEdit
     Left = 22
-    Top = 265
+    Top = 314
     TabOrder = 5
     Width = 321
   end
   object cxLabel3: TcxLabel
     Left = 22
-    Top = 246
+    Top = 295
     Caption = #1051#1086#1075#1080#1085
   end
   object edPassword: TcxTextEdit
     Left = 21
-    Top = 321
+    Top = 370
     TabOrder = 6
     Width = 321
   end
   object cxLabel4: TcxLabel
     Left = 21
-    Top = 302
+    Top = 351
     Caption = #1055#1072#1088#1086#1083#1100
   end
   object cxButton2: TcxButton
     Left = 224
-    Top = 363
+    Top = 412
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -110,7 +110,7 @@ object NewUserForm: TNewUserForm
   end
   object cxButton1: TcxButton
     Left = 62
-    Top = 363
+    Top = 412
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -132,9 +132,20 @@ object NewUserForm: TNewUserForm
     TabOrder = 15
     Width = 82
   end
+  object edNameUkr: TcxTextEdit
+    Left = 21
+    Top = 89
+    TabOrder = 16
+    Width = 321
+  end
+  object cxLabel5: TcxLabel
+    Left = 21
+    Top = 70
+    Caption = #1060#1048#1054' '#1085#1072' '#1059#1082#1088#1072#1080#1085#1089#1082#1086#1084' '#1103#1079#1099#1082#1077
+  end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 276
-    Top = 135
+    Top = 128
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -187,8 +198,8 @@ object NewUserForm: TNewUserForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 183
+    Left = 120
+    Top = 256
   end
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
@@ -216,8 +227,8 @@ object NewUserForm: TNewUserForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 127
-    Top = 136
+    Left = 119
+    Top = 193
   end
   object ActionList: TActionList
     Left = 128
@@ -294,6 +305,13 @@ object NewUserForm: TNewUserForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'NameUkr'
+        Value = Null
+        Component = edNameUkr
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Phone'
         Value = Null
         Component = edPhone
@@ -346,7 +364,7 @@ object NewUserForm: TNewUserForm
       end>
     PackSize = 1
     Left = 272
-    Top = 192
+    Top = 185
   end
   object HeaderExitName: THeaderExit
     ExitList = <
@@ -355,7 +373,7 @@ object NewUserForm: TNewUserForm
       end>
     Action = actExitName
     Left = 128
-    Top = 248
+    Top = 313
   end
   object spGet_ExitName: TdsdStoredProc
     StoredProcName = 'gpGet_Object_User_ExitName'
@@ -394,7 +412,7 @@ object NewUserForm: TNewUserForm
       end>
     PackSize = 1
     Left = 272
-    Top = 248
+    Top = 241
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_NewUser'
@@ -413,6 +431,14 @@ object NewUserForm: TNewUserForm
         Name = 'inName'
         Value = 0.000000000000000000
         Component = edName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNameUkr'
+        Value = Null
+        Component = edNameUkr
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -509,6 +535,6 @@ object NewUserForm: TNewUserForm
       end>
     PackSize = 1
     Left = 274
-    Top = 304
+    Top = 297
   end
 end

@@ -795,7 +795,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
       end
       object ceAntiTOPMP_SumFine: TcxCurrencyEdit
         Left = 402
-        Top = 99
+        Top = 120
         Properties.DecimalPlaces = 2
         Properties.DisplayFormat = ',0.00;-,0.00; ;'
         TabOrder = 4
@@ -803,8 +803,21 @@ object CashSettingsEditForm: TCashSettingsEditForm
       end
       object cxLabel43: TcxLabel
         Left = 18
-        Top = 100
-        Caption = #1040#1085#1090#1080' '#1058#1054#1055' '#1084#1086#1073'. '#1087#1088#1080#1083'. '#1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
+        Top = 121
+        Caption = #1040#1085#1090#1080' '#1058#1054#1055' '#1084#1086#1073'. '#1087#1088#1080#1083'. '#1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' / '#1055#1088#1077#1084#1080#1080
+      end
+      object ceAntiTOPMP_CountAward: TcxCurrencyEdit
+        Left = 402
+        Top = 97
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0;-0; ;'
+        TabOrder = 6
+        Width = 121
+      end
+      object cxLabel44: TcxLabel
+        Left = 18
+        Top = 98
+        Caption = #1040#1085#1090#1080' '#1058#1054#1055' '#1084#1086#1073'. '#1087#1088#1080#1083'. '#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '#1076#1083#1103' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1088#1077#1084#1080#1080
       end
     end
   end
@@ -1385,6 +1398,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAntiTOPMP_CountAward'
+        Value = Null
+        Component = ceAntiTOPMP_CountAward
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAntiTOPMP_SumFine'
         Value = Null
         Component = ceAntiTOPMP_SumFine
@@ -1821,6 +1841,12 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Name = 'AntiTOPMP_CountFine'
         Value = Null
         Component = ceAntiTOPMP_CountFine
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AntiTOPMP_CountAward'
+        Value = Null
+        Component = ceAntiTOPMP_CountAward
         MultiSelectSeparator = ','
       end
       item

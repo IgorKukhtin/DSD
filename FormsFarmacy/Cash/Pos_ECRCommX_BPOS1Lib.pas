@@ -19,6 +19,7 @@ type
     function GetMsgDescriptionProc: TMsgDescriptionProc;
     function GetLastPosError : string;
     function GetProcessType : TPosProcessType;
+    function GetProcessState : TPosProcessState;
   protected
     function WaitPosResponsePrivat() : Integer;
     function CheckConnection : Boolean;
@@ -59,6 +60,11 @@ end;
 function TPos_ECRCommX_BPOS1Lib.GetProcessType : TPosProcessType;
 begin
   Result := pptProcess;
+end;
+
+function TPos_ECRCommX_BPOS1Lib.GetProcessState : TPosProcessState;
+begin
+  Result := ppsUndefined;
 end;
 
 procedure TPos_ECRCommX_BPOS1Lib.AfterConstruction;

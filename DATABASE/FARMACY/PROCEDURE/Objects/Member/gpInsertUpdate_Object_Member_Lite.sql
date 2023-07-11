@@ -1,11 +1,12 @@
 -- Function: gpInsertUpdate_Object_Member_Lite()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member_Lite (Integer, TVarChar, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member_Lite (Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member_Lite(
  INOUT ioId                  Integer   ,    -- ключ объекта <Физические лица> 
     IN inName                TVarChar  ,    -- Название объекта <
+    IN inNameUkr             TVarChar,      -- ФИО на Украинском языке
 
     IN inPhone               TVarChar  , 
 
@@ -41,6 +42,8 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Member(), vbCode_calc, inName, inAccessKeyId:= NULL);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_NameUkr(), ioId, inNameUkr);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Phone(), ioId, inPhone);
 

@@ -58,7 +58,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isEliminateColdSUN2 Boolean, isEliminateColdSUN3 Boolean, isEliminateColdSUN4 Boolean, isEliminateColdSUA Boolean
              , isOnlyColdSUN Boolean, isOnlyColdSUN2 Boolean, isOnlyColdSUN3 Boolean, isOnlyColdSUN4 Boolean, isOnlyColdSUA Boolean
              , isCancelBansSUN Boolean
-             , AntiTOPMP_Count Integer, AntiTOPMP_CountFine Integer, AntiTOPMP_SumFine TFloat
+             , AntiTOPMP_Count Integer, AntiTOPMP_CountFine Integer, CountAward Integer, AntiTOPMP_SumFine TFloat
              ) AS
 $BODY$
 BEGIN
@@ -132,6 +132,7 @@ BEGIN
         
         , ObjectFloat_CashSettings_AntiTOPMP_Count.ValueData::Integer              AS AntiTOPMP_Count
         , ObjectFloat_CashSettings_AntiTOPMP_CountFine.ValueData::Integer          AS AntiTOPMP_CountFine
+        , ObjectFloat_CashSettings_AntiTOPMP_CountAward.ValueData::Integer         AS AntiTOPMP_CountAward
         , ObjectFloat_CashSettings_AntiTOPMP_SumFine.ValueData                     AS AntiTOPMP_SumFine
 
 
@@ -337,6 +338,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_CountFine
                               ON ObjectFloat_CashSettings_AntiTOPMP_CountFine.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_AntiTOPMP_CountFine.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_CountFine()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_CountAward
+                              ON ObjectFloat_CashSettings_AntiTOPMP_CountAward.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_AntiTOPMP_CountAward.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_CountAward()
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_SumFine
                               ON ObjectFloat_CashSettings_AntiTOPMP_SumFine.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_AntiTOPMP_SumFine.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_SumFine()

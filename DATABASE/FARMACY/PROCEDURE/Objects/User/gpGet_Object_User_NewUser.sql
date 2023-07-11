@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_User_NewUser(
 )
 RETURNS TABLE (Id Integer
              , Name TVarChar
+             , NameUkr TVarChar
              , Phone TVarChar
              , PositionId Integer
              , PositionName TVarChar
@@ -30,6 +31,7 @@ BEGIN
    RETURN QUERY 
    SELECT 0
         , ''::TVarChar                   AS Name
+        , ''::TVarChar                   AS NameUkr
         , ''::TVarChar                   AS Phone
         , Object_Position.Id             AS PositionId
         , Object_Position.ValueData      AS PositionName
