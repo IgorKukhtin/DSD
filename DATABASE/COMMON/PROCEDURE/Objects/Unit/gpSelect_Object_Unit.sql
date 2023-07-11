@@ -20,7 +20,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RouteId Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
                AreaId Integer, AreaName TVarChar,
-               CityId Integer, CityName TVarChar,
+               CityId Integer, CityName TVarChar
+               CityKindId Integer, CityKindName TVarChar, 
+               RegionId Integer, RegionName TVarChar,
+               ProvinceId Integer, ProvinceName TVarChar,
                PersonalHeadId Integer, PersonalHeadCode Integer, PersonalHeadName TVarChar, UnitName_Head TVarChar, BranchName_Head TVarChar,
                PartnerCode Integer, PartnerName TVarChar,
                UnitId_HistoryCost Integer, UnitCode_HistoryCost Integer, UnitName_HistoryCost TVarChar,
@@ -34,7 +37,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Address TVarChar,
                Comment TVarChar,
                isPersonalService Boolean, PersonalServiceDate TDateTime,
-               GLN TVarChar, KATOTTG TVarChar
+               GLN TVarChar, KATOTTG TVarChar,
+               AddressEDIN TVarChar
                
 ) AS
 $BODY$
@@ -93,6 +97,10 @@ BEGIN
                               WHERE ObjectLink_Partner_Unit.DescId = zc_ObjectLink_Partner_Unit()
                               GROUP BY ObjectLink_Partner_Unit.ChildObjectId
                              )
+       
+       , tmpCity AS (SELECT tmp.*
+                     FROM gpSelect_Object_City(inSession) AS tmp
+                    )
        -- 
        SELECT 
              Object_Unit_View.Id     
@@ -138,7 +146,14 @@ BEGIN
            , Object_Area.ValueData          AS AreaName
 
            , Object_City.Id                 AS CityId
-           , Object_City.ValueData          AS CityName
+           , Object_City.Name               AS CityName
+
+           , Object_City.CityKindId
+           , Object_City.CityKindName
+           , Object_City.RegionId
+           , Object_City.RegionName        
+           , Object_City.ProvinceId
+           , Object_City.ProvinceName
            
            , Object_PersonalHead.PersonalId    AS PersonalHeadId
            , Object_PersonalHead.PersonalCode  AS PersonalHeadCode
@@ -172,8 +187,9 @@ BEGIN
            , COALESCE (ObjectBoolean_PersonalService.ValueData, FALSE)  ::Boolean   AS isPersonalService
            , COALESCE (ObjectDate_PersonalService.ValueData, Null)      ::TDateTime AS PersonalServiceDate
            
-           , ObjectString_Unit_GLN.ValueData      :: TVarChar AS GLN
-           , ObjectString_Unit_KATOTTG.ValueData  :: TVarChar AS KATOTTG
+           , ObjectString_Unit_GLN.ValueData         :: TVarChar AS GLN
+           , ObjectString_Unit_KATOTTG.ValueData     :: TVarChar AS KATOTTG
+           , ObjectString_Unit_AddressEDIN.ValueData :: TVarChar AS AddressEDIN
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
@@ -192,6 +208,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Unit_KATOTTG
                                    ON ObjectString_Unit_KATOTTG.ObjectId = Object_Unit_View.Id 
                                   AND ObjectString_Unit_KATOTTG.DescId = zc_ObjectString_Unit_KATOTTG()
+            LEFT JOIN ObjectString AS ObjectString_Unit_AddressEDIN
+                                   ON ObjectString_Unit_AddressEDIN.ObjectId = Object_Unit_View.Id 
+                                  AND ObjectString_Unit_AddressEDIN.DescId = zc_ObjectString_Unit_AddressEDIN()
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_HistoryCost
                                  ON ObjectLink_Unit_HistoryCost.ObjectId = Object_Unit_View.Id
@@ -223,7 +242,8 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Unit_City
                                  ON ObjectLink_Unit_City.ObjectId = Object_Unit_View.Id 
                                 AND ObjectLink_Unit_City.DescId = zc_ObjectLink_Unit_City()
-            LEFT JOIN Object AS Object_City ON Object_City.Id = ObjectLink_Unit_City.ChildObjectId
+            --LEFT JOIN Object AS Object_City ON Object_City.Id = ObjectLink_Unit_City.ChildObjectId
+            LEFT JOIN tmpCity AS Object_City ON Object_City.Id = ObjectLink_Unit_City.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_PersonalHead
                                  ON ObjectLink_Unit_PersonalHead.ObjectId = Object_Unit_View.Id 
@@ -268,6 +288,7 @@ BEGIN
                                 AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
             LEFT JOIN Object AS Object_SheetWorkTime ON Object_SheetWorkTime.Id = ObjectLink_Unit_SheetWorkTime.ChildObjectId
 
+            
        -- WHERE vbAccessKeyAll = TRUE
        WHERE (Object_Unit_View.BranchId = vbObjectId_Constraint
               OR (Object_Unit_View.BranchId > 0 AND vbIsBranch_Kharkov = FALSE)
@@ -330,6 +351,12 @@ BEGIN
 
            , CAST (0 as Integer)    AS CityId
            , CAST ('' as TVarChar)  AS CityName
+           , CAST (0 as Integer)    AS CityKindId
+           , CAST ('' as TVarChar)  AS CityKindName
+           , CAST (0 as Integer)    AS RegionId
+           , CAST ('' as TVarChar)  AS RegionName
+           , CAST (0 as Integer)    AS ProvinceId
+           , CAST ('' as TVarChar)  AS ProvinceName
 
            , CAST (0 as Integer)    AS PersonalHeadId
            , CAST (0 as Integer)    AS PersonalHeadCode
@@ -363,6 +390,7 @@ BEGIN
 
            , CAST ('' as TVarChar)  AS GLN
            , CAST ('' as TVarChar)  AS KATOTTG
+           , CAST ('' as TVarChar)  AS AddressEDIN
        FROM Object as Object_Partner
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_Partner.Id
@@ -419,7 +447,14 @@ BEGIN
 
            , CAST (0 as Integer)    AS CityId
            , CAST ('' as TVarChar)  AS CityName
-
+           
+           , CAST (0 as Integer)    AS CityKindId
+           , CAST ('' as TVarChar)  AS CityKindName
+           , CAST (0 as Integer)    AS RegionId
+           , CAST ('' as TVarChar)  AS RegionName
+           , CAST (0 as Integer)    AS ProvinceId
+           , CAST ('' as TVarChar)  AS ProvinceName
+           
            , CAST (0 as Integer)    AS PersonalHeadId
            , CAST (0 as Integer)    AS PersonalHeadCode
            , CAST ('' as TVarChar)  AS PersonalHeadName
@@ -450,6 +485,7 @@ BEGIN
            , Null      ::TDateTime  AS PersonalServiceDate
            , CAST ('' as TVarChar)  AS GLN
            , CAST ('' as TVarChar)  AS KATOTTG
+           , CAST ('' as TVarChar)  AS AddressEDIN
       ;
 
 END;
@@ -461,6 +497,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.07.23         * AddressEDIN
  28.06.23         *
  14.03.23         *
  03.10.22         * isPartionGP

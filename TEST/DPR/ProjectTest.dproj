@@ -628,10 +628,6 @@
 				<Form>SendTicketFuelJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Units.pas">
-				<Form>UnitForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Goods.pas">
 				<Form>GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5038,6 +5034,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MemberGLNEdit.pas">
 				<Form>MemberGLNEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Units.pas">
+				<Form>UnitForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

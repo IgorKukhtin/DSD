@@ -67,6 +67,46 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 70
           end
+          object AddressEDIN: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089' '#1076#1083#1103' EDIN'
+            DataBinding.FieldName = 'AddressEDIN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 95
+          end
+          object Address: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089
+            DataBinding.FieldName = 'Address'
+            Width = 70
+          end
+          object CityName: TcxGridDBColumn
+            Caption = #1043#1086#1088#1086#1076
+            DataBinding.FieldName = 'CityName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object CityKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076
+            DataBinding.FieldName = 'CityKindName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 105
+          end
+          object RegionName: TcxGridDBColumn
+            Caption = #1054#1073#1083#1072#1089#1090#1100
+            DataBinding.FieldName = 'RegionName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 153
+          end
+          object ProvinceName: TcxGridDBColumn
+            Caption = #1056#1072#1081#1086#1085
+            DataBinding.FieldName = 'ProvinceName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
+          end
           object BranchName: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
@@ -272,18 +312,17 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 56
-    Top = 40
+    Top = 88
   end
   inherited MasterCDS: TClientDataSet
-    Top = 40
+    Top = 72
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Unit'
-    Top = 40
+    Top = 72
   end
   inherited BarManager: TdxBarManager
-    Top = 40
+    Top = 72
     DockControlHeights = (
       0
       0

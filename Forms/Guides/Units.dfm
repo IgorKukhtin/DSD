@@ -379,6 +379,27 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 100
       end
+      object CityKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076
+        DataBinding.FieldName = 'CityKindName'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 105
+      end
+      object RegionName: TcxGridDBColumn
+        Caption = #1054#1073#1083#1072#1089#1090#1100
+        DataBinding.FieldName = 'RegionName'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 153
+      end
+      object ProvinceName: TcxGridDBColumn
+        Caption = #1056#1072#1081#1086#1085
+        DataBinding.FieldName = 'ProvinceName'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 113
+      end
       object KATOTTG: TcxGridDBColumn
         Caption = #1050#1040#1058#1054#1058#1058#1043
         DataBinding.FieldName = 'KATOTTG'

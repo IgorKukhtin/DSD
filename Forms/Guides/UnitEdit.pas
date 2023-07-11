@@ -97,6 +97,8 @@ type
     cxLabel21: TcxLabel;
     edCity: TcxButtonEdit;
     GuidesCity: TdsdGuides;
+    cxLabel23: TcxLabel;
+    edAddressEDIN: TcxTextEdit;
   private
     { Private declarations }
   public

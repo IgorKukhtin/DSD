@@ -36,6 +36,9 @@ type
     bbProtocol: TdxBarButton;
     KATOTTG: TcxGridDBColumn;
     GLN: TcxGridDBColumn;
+    AddressEDIN: TcxGridDBColumn;
+    CityName: TcxGridDBColumn;
+    Address: TcxGridDBColumn;
   private
     { Private declarations }
   public

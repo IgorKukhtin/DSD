@@ -19,7 +19,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RouteId Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
                AreaId Integer, AreaName TVarChar,
-               CityId Integer, CityName TVarChar,
+               CityId Integer, CityName TVarChar, CityName_full TVarChar,
+               CityKindId Integer, CityKindName TVarChar, 
+               RegionId Integer, RegionName TVarChar,
+               ProvinceId Integer, ProvinceName TVarChar,
                PersonalHeadId Integer, PersonalHeadName TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                isErased boolean, isLeaf boolean,
@@ -81,6 +84,14 @@ BEGIN
 
            , CAST (0 as Integer)    AS CityId
            , CAST ('' as TVarChar)  AS CityName
+           , CAST ('' as TVarChar)  AS CityName_full
+
+           , CAST (0 as Integer)    AS CityKindId
+           , CAST ('' as TVarChar)  AS CityKindName
+           , CAST (0 as Integer)    AS RegionId
+           , CAST ('' as TVarChar)  AS RegionName
+           , CAST (0 as Integer)    AS ProvinceId
+           , CAST ('' as TVarChar)  AS ProvinceName
 
            , CAST (0 as Integer)    AS PersonalHeadId
            , CAST ('' as TVarChar)  AS PersonalHeadName
@@ -143,9 +154,17 @@ BEGIN
 
            , Object_City.Id                 AS CityId
            , Object_City.ValueData          AS CityName
+           , (COALESCE (Object_Region.ValueData,'') ||', '||COALESCE (Object_Province.ValueData,'')||', '||COALESCE (Object_CityKind.ValueData,'') ||' '||COALESCE (Object_City.ValueData,'') ) ::TVarChar AS CityName_full
 
-           , Object_PersonalHead.Id        AS PersonalHeadId
-           , Object_PersonalHead.ValueData AS PersonalHeadName
+           , Object_CityKind.Id             AS CityKindId
+           , Object_CityKind.ValueData      AS CityKindName
+           , Object_Region.Id               AS RegionId
+           , Object_Region.ValueData        AS RegionName        
+           , Object_Province.Id             AS ProvinceId
+           , Object_Province.ValueData      AS ProvinceName
+
+           , Object_PersonalHead.Id         AS PersonalHeadId
+           , Object_PersonalHead.ValueData  AS PersonalHeadName
 
            , Object_SheetWorkTime.Id        AS SheetWorkTimeId 
            , Object_SheetWorkTime.ValueData AS SheetWorkTimeName
@@ -212,6 +231,22 @@ BEGIN
                                 AND ObjectLink_Unit_City.DescId = zc_ObjectLink_Unit_City()
             LEFT JOIN Object AS Object_City ON Object_City.Id = ObjectLink_Unit_City.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_City_CityKind
+                                 ON ObjectLink_City_CityKind.ObjectId = Object_City.Id
+                                AND ObjectLink_City_CityKind.DescId = zc_ObjectLink_City_CityKind()
+            LEFT JOIN Object AS Object_CityKind ON Object_CityKind.Id = ObjectLink_City_CityKind.ChildObjectId
+          
+            LEFT JOIN ObjectLink AS ObjectLink_City_Region 
+                                 ON ObjectLink_City_Region.ObjectId = Object_City.Id
+                                AND ObjectLink_City_Region.DescId = zc_ObjectLink_City_Region()
+            LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_City_Region.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_City_Province
+                                 ON ObjectLink_City_Province.ObjectId = Object_City.Id
+                                AND ObjectLink_City_Province.DescId = zc_ObjectLink_City_Province()
+            LEFT JOIN Object AS Object_Province ON Object_Province.Id = ObjectLink_City_Province.ChildObjectId
+
+
             LEFT JOIN ObjectLink AS ObjectLink_Unit_PersonalHead
                                  ON ObjectLink_Unit_PersonalHead.ObjectId = Object_Unit_View.Id 
                                 AND ObjectLink_Unit_PersonalHead.DescId   = zc_ObjectLink_Unit_PersonalHead()
@@ -252,6 +287,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.07.23         *
  28.06.23         *
  14.03.23         * Avance
  27.07.22         * isCountCount
@@ -272,4 +308,4 @@ $BODY$
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpGet_Object_Unit (1, zfCalc_UserAdmin())
+-- select * from gpGet_Object_Unit(inId := 8382 ,  inSession := '9457');

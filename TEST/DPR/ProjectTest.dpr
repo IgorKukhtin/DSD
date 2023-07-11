@@ -246,7 +246,6 @@ uses
   CashOperation in '..\..\Forms\Document\CashOperation.pas' {CashOperationForm: TParentForm},
   SendTicketFuel in '..\..\Forms\Document\SendTicketFuel.pas' {SendTicketFuelForm: TParentForm},
   SendTicketFuelJournal in '..\..\Forms\Document\SendTicketFuelJournal.pas' {SendTicketFuelJournalForm: TParentForm},
-  Units in '..\..\Forms\Guides\Units.pas' {UnitForm: TParentForm},
   Goods in '..\..\Forms\Guides\Goods.pas' {GoodsForm: TParentForm},
   BankAccountJournal in '..\..\Forms\Document\BankAccountJournal.pas' {BankAccountJournalForm: TParentForm},
   ClientBankLoad in '..\..\SOURCE\COMPONENT\ClientBankLoad.pas',
@@ -1445,7 +1444,8 @@ uses
   Report_JuridicalDefermentPaymentMovement in '..\..\Forms\Report\Report_JuridicalDefermentPaymentMovement.pas' {Report_JuridicalDefermentPaymentMovementForm: TParentForm},
   MemberHolidayEdit in '..\..\Forms\Document\MemberHolidayEdit.pas' {MemberHolidayEditForm: TParentForm},
   PriceNalogDialog in '..\..\Forms\Document\PriceNalogDialog.pas' {PriceNalogDialogForm: TParentForm},
-  MemberGLNEdit in '..\..\Forms\Guides\MemberGLNEdit.pas' {MemberGLNEditForm: TParentForm};
+  MemberGLNEdit in '..\..\Forms\Guides\MemberGLNEdit.pas' {MemberGLNEditForm: TParentForm},
+  Units in '..\..\Forms\Guides\Units.pas' {UnitForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

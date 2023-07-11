@@ -6,7 +6,8 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
@@ -31,7 +32,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inCityId                  Integer   , -- город
     IN inPersonalHeadId          Integer   , -- Руководитель подразделения
     IN inSheetWorkTimeId         Integer   , -- Режим работы (Шаблон табеля р.вр.)
-    IN inAddress                 TVarChar  , -- Адрес
+    IN inAddress                 TVarChar  , -- Адрес 
+    IN inAddressEDIN             TVarChar  , -- Адрес для EDIN
     IN inComment                 TVarChar  , -- Примечание
     IN inGLN                     TVarChar  ,
     IN inKATOTTG                 TVarChar  ,
@@ -131,7 +133,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_GLN(), ioId, inGLN);
    -- Сохранили <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_KATOTTG(), ioId, inKATOTTG);
-   
+   -- Сохранили <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_AddressEDIN(), ioId, inAddressEDIN);
+      
    -- Если добавляли подразделение
    IF vbOldId <> ioId THEN
       -- Установить свойство лист\папка у себя
@@ -181,6 +185,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.07.23         * inAddressEDIN
  28.06.23         *
  11.05.23         *
  14.03.23         * inisAvance

@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 562
+  ClientHeight = 606
   ClientWidth = 507
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 112
-    Top = 534
+    Top = 576
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 306
-    Top = 534
+    Top = 576
     Width = 75
     Height = 25
     Action = FormClose
@@ -295,18 +295,18 @@
   end
   object edAddress: TcxTextEdit
     Left = 40
-    Top = 409
+    Top = 407
     TabOrder = 35
     Width = 209
   end
   object cxLabel17: TcxLabel
     Left = 40
-    Top = 482
+    Top = 524
     Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
   end
   object ceSheetWorkTime: TcxButtonEdit
     Left = 40
-    Top = 502
+    Top = 544
     Properties.Buttons = <
       item
         Default = True
@@ -325,32 +325,32 @@
   end
   object cxLabel18: TcxLabel
     Left = 280
-    Top = 484
+    Top = 526
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 280
-    Top = 502
+    Top = 544
     TabOrder = 40
     Width = 209
   end
   object cbCountCount: TcxCheckBox
-    Left = 265
-    Top = 437
+    Left = 272
+    Top = 482
     Caption = #1059#1095#1077#1090' '#1073#1072#1090#1086#1085#1086#1074
     TabOrder = 41
     Width = 93
   end
   object cbPartionGP: TcxCheckBox
-    Left = 265
-    Top = 464
+    Left = 272
+    Top = 506
     Caption = #1055#1072#1088#1090#1080#1080' '#1076#1083#1103' '#1043#1055' '#1080' '#1058#1091#1096#1077#1085#1082#1080
     TabOrder = 42
     Width = 162
   end
   object cbAvance: TcxCheckBox
-    Left = 366
-    Top = 437
+    Left = 371
+    Top = 483
     Caption = #1053#1072#1095'. '#1072#1074#1072#1085#1089#1072' '#1072#1074#1090#1086#1084#1072#1090'.'
     TabOrder = 43
     Width = 133
@@ -384,7 +384,7 @@
   end
   object edCity: TcxButtonEdit
     Left = 40
-    Top = 454
+    Top = 452
     Properties.Buttons = <
       item
         Default = True
@@ -392,6 +392,17 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 49
+    Width = 449
+  end
+  object cxLabel23: TcxLabel
+    Left = 40
+    Top = 479
+    Caption = #1040#1076#1088#1077#1089' '#1076#1083#1103' EDIN'
+  end
+  object edAddressEDIN: TcxTextEdit
+    Left = 40
+    Top = 497
+    TabOrder = 51
     Width = 209
   end
   object ActionList: TActionList
@@ -607,6 +618,14 @@
         Name = 'inAddress'
         Value = Null
         Component = edAddress
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAddressEDIN'
+        Value = Null
+        Component = edAddressEDIN
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -942,7 +961,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CityName'
+        Name = 'CityName_full'
         Value = Null
         Component = GuidesCity
         ComponentItem = 'TextValue'
@@ -1401,7 +1420,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 127
-    Top = 484
+    Top = 526
   end
   object GuidesCity: TdsdGuides
     KeyField = 'Id'
@@ -1430,7 +1449,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 115
-    Top = 440
+    Left = 179
+    Top = 432
   end
 end
