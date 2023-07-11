@@ -12,6 +12,7 @@ type
   published
     procedure ProcedureLoad; override;
     procedure UpdateMainProgram;
+    procedure UpdateMidas;
     procedure UpdateMain64Program;
     procedure UpdateDll;
     procedure UpdateScale;
@@ -82,10 +83,16 @@ begin
   SaveFile(ExtractFileDir(ParamStr(0)) + '\FarmacyInventory.exe');
 end;
 
-procedure TUpdaterTest.UpdateMainProgram;
+procedure TUpdaterTest.UpdateMidas;
 begin
   if FileExists(ExtractFileDir(ParamStr(0)) + '\midas.dll')
   then SaveFile(ExtractFileDir(ParamStr(0)) + '\midas.dll');
+end;
+
+procedure TUpdaterTest.UpdateMainProgram;
+begin
+  //if FileExists(ExtractFileDir(ParamStr(0)) + '\midas.dll')
+  //then SaveFile(ExtractFileDir(ParamStr(0)) + '\midas.dll');
   if FileExists(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe')
   then SaveFile(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe');
   SaveFile(ExtractFileDir(ParamStr(0)) + '\' + gc_ProgramName);
