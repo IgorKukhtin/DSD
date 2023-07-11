@@ -1444,7 +1444,8 @@ uses
   Report_JuridicalDefermentPaymentMovementDialog in '..\..\Forms\Report\Report_JuridicalDefermentPaymentMovementDialog.pas' {Report_JuridicalDefermentPaymentMovementDialogForm: TParentForm},
   Report_JuridicalDefermentPaymentMovement in '..\..\Forms\Report\Report_JuridicalDefermentPaymentMovement.pas' {Report_JuridicalDefermentPaymentMovementForm: TParentForm},
   MemberHolidayEdit in '..\..\Forms\Document\MemberHolidayEdit.pas' {MemberHolidayEditForm: TParentForm},
-  PriceNalogDialog in '..\..\Forms\Document\PriceNalogDialog.pas' {PriceNalogDialogForm: TParentForm};
+  PriceNalogDialog in '..\..\Forms\Document\PriceNalogDialog.pas' {PriceNalogDialogForm: TParentForm},
+  MemberGLNEdit in '..\..\Forms\Guides\MemberGLNEdit.pas' {MemberGLNEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

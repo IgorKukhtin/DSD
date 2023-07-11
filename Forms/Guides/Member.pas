@@ -154,6 +154,8 @@ type
     macUpdate_GLN: TMultiAction;
     bbUpdate_GLN: TdxBarButton;
     GLN: TcxGridDBColumn;
+    actRefreshedit: TdsdDataSetRefresh;
+    actUpdateActionGLN: TdsdInsertUpdateAction;
   private
     { Private declarations }
   public

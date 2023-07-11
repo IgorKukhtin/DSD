@@ -1120,6 +1120,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_KATOTTG() RETURNS Integer AS $BO
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Unit_KATOTTG', zc_object_Unit(), 'КАТОТТГ' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_KATOTTG');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_AddressEDIN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_AddressEDIN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Unit_AddressEDIN', zc_object_Unit(), 'Адрес для EDIN' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_AddressEDIN');
+
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_Contract_OrderSumm() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Contract_OrderSumm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
@@ -1568,6 +1573,7 @@ INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 11.07.23         * zc_ObjectString_Unit_AddressEDIN
  06.07.23                                                                                                         * zc_ObjectString_Partner_KATOTTG 
  10.05.23         * zc_ObjectString_Member_GLN
                     zc_ObjectString_MemberExternal_GLN

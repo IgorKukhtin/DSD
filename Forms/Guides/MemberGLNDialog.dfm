@@ -3,8 +3,8 @@
   Top = 0
   BorderStyle = bsDialog
   Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088
-  ClientHeight = 212
-  ClientWidth = 269
+  ClientHeight = 203
+  ClientWidth = 275
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -105,6 +105,7 @@
         Name = 'Code'
         Value = Null
         Component = ceCode
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -112,9 +113,76 @@
         Value = Null
         Component = edName
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 223
     Top = 103
+  end
+  object m: TActionList
+    Left = 175
+    Top = 6
+    object dsdDataSetRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProcList = <>
+      Caption = 'Ok'
+    end
+    object dsdFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'dsdFormClose'
+    end
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Member_GLNDialog'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = 0.000000000000000000
+        Component = ceCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Name'
+        Value = ''
+        Component = edName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GLN'
+        Value = ''
+        Component = edGLN
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 127
+    Top = 72
   end
 end

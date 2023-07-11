@@ -19,7 +19,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  dsdAction, Vcl.ActnList;
 
 type
   TMemberGLNDialogForm = class(TParentForm)
@@ -34,6 +35,11 @@ type
     ceCode: TcxCurrencyEdit;
     cxLabel1: TcxLabel;
     edName: TcxTextEdit;
+    m: TActionList;
+    dsdDataSetRefresh: TdsdDataSetRefresh;
+    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    dsdFormClose: TdsdFormClose;
+    spGet: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@ object MemberForm: TMemberForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   ClientHeight = 458
-  ClientWidth = 777
+  ClientWidth = 1001
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,18 +15,20 @@ object MemberForm: TMemberForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 777
+    Width = 1001
     Height = 432
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 777
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -554,8 +556,8 @@ object MemberForm: TMemberForm
     Caption = #1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1089#1077#1084':'
   end
   object edBank: TcxButtonEdit
-    Left = 340
-    Top = 76
+    Left = 804
+    Top = 140
     Properties.Buttons = <
       item
         Default = True
@@ -860,7 +862,7 @@ object MemberForm: TMemberForm
       Category = 0
     end
     object bbUpdate_GLN: TdxBarButton
-      Action = macUpdate_GLN
+      Action = actUpdateActionGLN
       Category = 0
     end
   end
@@ -868,6 +870,19 @@ object MemberForm: TMemberForm
     Images = dmMain.ImageList
     Left = 288
     Top = 160
+    object actRefreshedit: TdsdDataSetRefresh
+      Category = 'GLN'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = True
+    end
     object actDoLoad: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -884,6 +899,30 @@ object MemberForm: TMemberForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
+    end
+    object actUpdateActionGLN: TdsdInsertUpdateAction
+      Category = 'GLN'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ImageIndex = 77
+      FormName = 'TMemberGLNEditForm'
+      FormNameParam.Value = 'TMemberGLNEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object macStartLoad: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -1310,6 +1349,14 @@ object MemberForm: TMemberForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'inGLN'
           Value = Null
           Component = FormParams
@@ -1327,12 +1374,7 @@ object MemberForm: TMemberForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Name'
           Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Name'
-          DataType = ftString
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1590,6 +1632,15 @@ object MemberForm: TMemberForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsNotCompensation'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'IsNotCompensation'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inINN'
         Value = Null
         Component = ClientDataSet
@@ -1708,6 +1759,14 @@ object MemberForm: TMemberForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitMobileId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'UnitMobileId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

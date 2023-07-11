@@ -23,8 +23,13 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Не определено физ.лицо.';
    END IF;
 
-   --
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Member_GLN(), inMemberId, inGLN);
+   --  
+   
+   PERFORM lpInsertUpdate_ObjectString (CASE WHEN (SELECT a.DescId FROM Object AS a WHERE a.Id = inMemberId) = zc_Object_Member()
+                                             THEN zc_ObjectString_Member_GLN()
+                                             ELSE zc_ObjectString_MemberExternal_GLN() END
+                                      , inMemberId
+                                      , inGLN);
   
    -- Cохранили протокол
    PERFORM lpInsert_ObjectProtocol (inMemberId, vbUserId);

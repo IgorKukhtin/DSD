@@ -279,7 +279,7 @@ object MemberExternalForm: TMemberExternalForm
       Category = 0
     end
     object bbUpdate_GLN: TdxBarButton
-      Action = macUpdate_GLN
+      Action = actUpdateActionGLN
       Category = 0
     end
   end
@@ -538,6 +538,29 @@ object MemberExternalForm: TMemberExternalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' GLN '#1092#1080#1079'.'#1083#1080#1094#1072
       ImageIndex = 77
+    end
+    object actUpdateActionGLN: TdsdInsertUpdateAction
+      Category = 'GLN'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ImageIndex = 77
+      FormName = 'TMemberGLNEditForm'
+      FormNameParam.Value = 'TMemberGLNEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
   end
   object spSelect: TdsdStoredProc

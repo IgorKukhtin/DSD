@@ -68,6 +68,7 @@ type
     FormParams: TdsdFormParams;
     bbUpdate_GLN: TdxBarButton;
     GLN: TcxGridDBColumn;
+    actUpdateActionGLN: TdsdInsertUpdateAction;
   private
     { Private declarations }
   public
