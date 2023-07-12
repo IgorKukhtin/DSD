@@ -379,6 +379,13 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 100
       end
+      object AddressEDIN: TcxGridDBColumn
+        Caption = #1040#1076#1088#1077#1089' '#1076#1083#1103' EDIN'
+        DataBinding.FieldName = 'AddressEDIN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 95
+      end
       object CityKindName: TcxGridDBColumn
         Caption = #1042#1080#1076
         DataBinding.FieldName = 'CityKindName'
