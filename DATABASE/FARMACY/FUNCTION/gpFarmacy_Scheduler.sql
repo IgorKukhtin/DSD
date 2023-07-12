@@ -200,7 +200,7 @@ BEGIN
              , COALESCE(FP.UnitId, PMA.UnitId) AS UnitId
              , COALESCE(FP.PenaltiMobApp, 0)   AS PenaltiMobApp
              , COALESCE(FP.AntiTOPMP_Place, 0) AS AntiTOPMP_Place
-        FROM gpReport_FulfillmentPlanMobileApp(inOperDate := CURRENT_DATE , inUnitId := 0 , inUserId := 0 ,  inSession := inSession) AS FP
+        FROM gpReport_FulfillmentPlanMobileAppAntiTOP(inOperDate := CURRENT_DATE,  inSession := inSession) AS FP
 
              FULL JOIN ImplementationPlan AS PMA ON PMA.UserId = FP.UserId
              

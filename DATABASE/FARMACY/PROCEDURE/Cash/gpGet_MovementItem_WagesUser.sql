@@ -30,7 +30,6 @@ $BODY$
     DECLARE vbMovementMaxId Integer;
     DECLARE vbAntiTOPMP_Count Integer;
     DECLARE vbAntiTOPMP_CountFine Integer;
-    DECLARE vbAntiTOPMP_SumFine TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Sale());
@@ -45,7 +44,7 @@ BEGIN
     
     IF vbUserId = 3
     THEN
-      vbUserId  := 5294897;
+      vbUserId  := 17470117;
     END IF;
 
     IF EXISTS(SELECT 1 FROM Movement WHERE Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_Wages())
@@ -61,8 +60,7 @@ BEGIN
 
    SELECT ObjectFloat_CashSettings_AntiTOPMP_Count.ValueData::Integer              AS AntiTOPMP_Count
         , ObjectFloat_CashSettings_AntiTOPMP_CountFine.ValueData::Integer          AS AntiTOPMP_CountFine
-        , ObjectFloat_CashSettings_AntiTOPMP_SumFine.ValueData                     AS AntiTOPMP_SumFine
-   INTO vbAntiTOPMP_Count , vbAntiTOPMP_CountFine , vbAntiTOPMP_SumFine
+   INTO vbAntiTOPMP_Count , vbAntiTOPMP_CountFine
    FROM Object AS Object_CashSettings
 
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_Count
@@ -291,9 +289,9 @@ BEGIN
                          AND tmpImplementationPlan.AntiTOPMP_Place > 0
                          AND vbAntiTOPMP_CountFine >= tmpImplementationPlan.AntiTOPMP_Place
                          AND COALESCE (MIFloat_ApplicationAward.ValueData, 0) = 0
-                         AND COALESCE (vbAntiTOPMP_SumFine, 0) > 0
-                        THEN - vbAntiTOPMP_SumFine
-                        ELSE 0 END)::TFloat           AS ApplicationAward
+                         AND COALESCE (tmpImplementationPlan.PenaltiMobApp, 0) <> 0
+                        THEN tmpImplementationPlan.PenaltiMobApp
+                        ELSE 0 END)::TFloat                     AS ApplicationAward
                  , MIF_AmountCard.ValueData                     AS AmountCard
                  , (MIAmount.Amount +
                     COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
@@ -312,8 +310,8 @@ BEGIN
                          AND tmpImplementationPlan.AntiTOPMP_Place > 0
                          AND vbAntiTOPMP_CountFine >= tmpImplementationPlan.AntiTOPMP_Place
                          AND COALESCE (MIFloat_ApplicationAward.ValueData, 0) = 0
-                         AND COALESCE (vbAntiTOPMP_SumFine, 0) > 0
-                        THEN - vbAntiTOPMP_SumFine
+                         AND COALESCE (tmpImplementationPlan.PenaltiMobApp, 0) <> 0
+                        THEN tmpImplementationPlan.PenaltiMobApp
                         ELSE 0 END)::TFloat AS AmountHand
 
 
@@ -361,8 +359,8 @@ BEGIN
                         THEN 'Прил: '||zfConvert_FloatToString(COALESCE(Round(CASE WHEN tmpImplementationPlan.AntiTOPMP_Place > 0
                                                                                      AND vbAntiTOPMP_CountFine >= tmpImplementationPlan.AntiTOPMP_Place
                                                                                      AND COALESCE (MIFloat_ApplicationAward.ValueData, 0) = 0
-                                                                                     AND COALESCE (vbAntiTOPMP_SumFine, 0) > 0
-                                                                                    THEN - vbAntiTOPMP_SumFine
+                                                                                     AND COALESCE (tmpImplementationPlan.PenaltiMobApp, 0) <> 0
+                                                                                    THEN tmpImplementationPlan.PenaltiMobApp
                                                                                     ELSE 0 END, 2), 0)) ELSE '' END||
                    /*CASE WHEN COALESCE (tmpImplementationPlan.AntiTOPMP_Place, 0) <> 0 
                          AND COALESCE (ObjectBoolean_ShowPlanMobileAppUser.ValueData, FALSE) = TRUE 
@@ -474,4 +472,4 @@ $BODY$
 */
 -- 
 
-select * from gpGet_MovementItem_WagesUser(inOperDate := ('14.06.2023')::TDateTime ,  inSession := '3');
+select * from gpGet_MovementItem_WagesUser(inOperDate := ('12.07.2023')::TDateTime ,  inSession := '3');

@@ -123,38 +123,54 @@ end;
 
 procedure TPos_PrivatBank_JSON.IdThreadComponentRun(Sender: TIdThreadComponent);
 var JSONObject: TJSONObject; JSONPair: TJSONPair;
-    msgFromServer : string;
+    msgFromServer : string; Buffer: TIdBytes;
 begin
   // ... read message from server
-  Add_PosLog('Проверка буфера.');
   if not FIdTCPClient.IOHandler.CheckForDataOnSource then Exit;
+  msgFromServer := '';
 
   Add_PosLog('Читаем.');
-  msgFromServer := FIdTCPClient.IOHandler.ReadLn(#0, IndyTextEncoding_UTF8);
+  try
+    try
+      SetLength(Buffer, FIdTCPClient.IOHandler.InputBuffer.Size);
+      FIdTCPClient.IOHandler.ReadBytes(Buffer, FIdTCPClient.IOHandler.InputBuffer.Size, False);
+      msgFromServer := TEncoding.UTF8.GetString(Buffer);
+    finally
+      SetLength(Buffer, 0);
+    end;
+  except on E:Exception do FLastPosError := e.Message;
+  end;
 
-  if msgFromServer = '' then
+  if FLastPosError <> '' then
+  begin
+    FProcessState := ppsError;
+    Add_PosLog(FLastPosError);
+    Exit;
+  end;
+
+  if msgFromServer <> '' then
   begin
     Add_PosLog(msgFromServer);
 
     try
       try
-          JSONObject := TJSONObject.ParseJSONValue(msgFromServer) as TJSONObject;
-          try
-            JSONPair := JSONObject.Get('error');
-            if (JSONPair <> nil) and (JSONPair.Value = 'false')  then
-            begin
-              if LowerCase(JSONObject.Get('method').Value) = LowerCase('CheckConnection') then FProcessState := ppsOkConnection;
-              if LowerCase(JSONObject.Get('method').Value) = LowerCase('Purchase') then FProcessState := ppsOkPayment;
-              if LowerCase(JSONObject.Get('method').Value) = LowerCase('Refund') then FProcessState := ppsOkRefund;
-            end else
-            begin
-              FLastPosError := 'Ошибка: ';
-              JSONPair := JSONObject.Get('errorDescription');
-              if JSONPair <> nil  then FLastPosError := ' ' + JSONPair.Value;
-            end;
-          finally
-            JSONObject.Free;
+        JSONObject := TJSONObject.ParseJSONValue(msgFromServer) as TJSONObject;
+        try
+          JSONPair := JSONObject.Get('error');
+          if (JSONPair <> nil) and (JSONPair.Value = 'false')  then
+          begin
+            if LowerCase(JSONObject.Get('method').Value) = LowerCase('CheckConnection') then FProcessState := ppsOkConnection;
+            if LowerCase(JSONObject.Get('method').Value) = LowerCase('Purchase') then FProcessState := ppsOkPayment;
+            if LowerCase(JSONObject.Get('method').Value) = LowerCase('Refund') then FProcessState := ppsOkRefund;
+          end else
+          begin
+            FLastPosError := 'Ошибка: ';
+            JSONPair := JSONObject.Get('errorDescription');
+            if JSONPair <> nil  then FLastPosError := ' ' + JSONPair.Value;
           end;
+        finally
+          JSONObject.Free;
+        end;
       except on E:Exception do FLastPosError := e.Message;
       end;
     finally
@@ -171,7 +187,7 @@ function TPos_PrivatBank_JSON.CheckConnection : Boolean;
 begin
 
   if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Проверка связи с терминалом');
-//  FProcessState := ppsError;
+  FProcessState := ppsError;
 
   try
     JSONObject := TJSONObject.Create;
@@ -210,7 +226,7 @@ function TPos_PrivatBank_JSON.DoPayment(ASumma : Currency; ARefund : Boolean) : 
       JsonToSend: TStringStream;
 begin
 
-//  FProcessState := ppsError;
+  FProcessState := ppsError;
   try
     JSONParams := TJSONObject.Create;
     JSONParams.AddPair('amount', TJSONString.Create(FormatCurr('0.00', ASumma)));

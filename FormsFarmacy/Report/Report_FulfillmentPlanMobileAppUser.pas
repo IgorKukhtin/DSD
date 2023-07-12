@@ -59,6 +59,8 @@ type
     actExecGetVisible: TdsdExecStoredProc;
     actGetVisible: TdsdSetVisibleAction;
     FormParams: TdsdFormParams;
+    CountMobileAll: TcxGridDBColumn;
+    QuantityMobile: TcxGridDBColumn;
   private
     { Private declarations }
   public

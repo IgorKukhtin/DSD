@@ -58,7 +58,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isEliminateColdSUN2 Boolean, isEliminateColdSUN3 Boolean, isEliminateColdSUN4 Boolean, isEliminateColdSUA Boolean
              , isOnlyColdSUN Boolean, isOnlyColdSUN2 Boolean, isOnlyColdSUN3 Boolean, isOnlyColdSUN4 Boolean, isOnlyColdSUA Boolean
              , isCancelBansSUN Boolean
-             , AntiTOPMP_Count Integer, AntiTOPMP_CountFine Integer, CountAward Integer, AntiTOPMP_SumFine TFloat, MinProcAward TFloat
+             , AntiTOPMP_Count Integer, AntiTOPMP_CountFine Integer, AntiTOPMP_CountAward Integer, AntiTOPMP_SumFine TFloat, AntiTOPMP_MinProcAward TFloat
              ) AS
 $BODY$
 BEGIN

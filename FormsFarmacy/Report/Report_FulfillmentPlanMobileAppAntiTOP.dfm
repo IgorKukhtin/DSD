@@ -1,28 +1,28 @@
 inherited Report_FulfillmentPlanMobileAppAntiTOPForm: TReport_FulfillmentPlanMobileAppAntiTOPForm
   Caption = #1040#1085#1090#1080#1058#1054#1055' '#1087#1086' '#1087#1083#1072#1085#1091' '#1087#1088#1086#1076#1072#1078' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
   ClientHeight = 599
-  ClientWidth = 935
+  ClientWidth = 1001
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 953
+  ExplicitWidth = 1019
   ExplicitHeight = 646
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 935
+    Width = 1001
     Height = 540
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 935
     ExplicitHeight = 540
     ClientRectBottom = 540
-    ClientRectRight = 935
+    ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 935
       ExplicitHeight = 540
       inherited cxGrid: TcxGrid
-        Width = 935
+        Width = 1001
         Height = 540
         ExplicitWidth = 935
         ExplicitHeight = 540
@@ -258,6 +258,11 @@ inherited Report_FulfillmentPlanMobileAppAntiTOPForm: TReport_FulfillmentPlanMob
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = CountShortage
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = CountMobileAll
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -293,7 +298,7 @@ inherited Report_FulfillmentPlanMobileAppAntiTOPForm: TReport_FulfillmentPlanMob
             Width = 204
           end
           object QuantityMobile: TcxGridDBColumn
-            Caption = #1055#1088#1080#1083#1086#1078'. '#1095#1077#1082#1086#1074
+            Caption = #1055#1088#1080#1083#1086#1078'. '#1095#1077#1082#1086#1074'. '#1096#1090'.'
             DataBinding.FieldName = 'QuantityMobile'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '0; ;'
@@ -301,6 +306,15 @@ inherited Report_FulfillmentPlanMobileAppAntiTOPForm: TReport_FulfillmentPlanMob
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 59
+          end
+          object CountMobileAll: TcxGridDBColumn
+            Caption = #1055#1088#1080#1083#1086#1078'. '#1074#1089#1077' '#1095#1077#1082#1080'. '#1075#1088#1085
+            DataBinding.FieldName = 'CountMobileAll'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object ProcPlan: TcxGridDBColumn
             Caption = #1055#1083#1072#1085' '#1085#1072' '#1072#1087#1090#1077#1082#1091' '#1087#1086' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1091', %'
@@ -335,7 +349,7 @@ inherited Report_FulfillmentPlanMobileAppAntiTOPForm: TReport_FulfillmentPlanMob
             Width = 94
           end
           object PenaltiMobApp: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072' / '#1087#1088#1077#1084#1080#1080
             DataBinding.FieldName = 'PenaltiMobApp'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ; '
@@ -360,7 +374,7 @@ inherited Report_FulfillmentPlanMobileAppAntiTOPForm: TReport_FulfillmentPlanMob
     end
   end
   inherited Panel: TPanel
-    Width = 935
+    Width = 1001
     Height = 33
     ExplicitWidth = 935
     ExplicitHeight = 33

@@ -80,6 +80,7 @@ type
     spGetVisible: TdsdStoredProc;
     actGetVisible: TdsdSetVisibleAction;
     actExecGetVisible: TdsdExecStoredProc;
+    CountMobileAll: TcxGridDBColumn;
   private
     { Private declarations }
   public
