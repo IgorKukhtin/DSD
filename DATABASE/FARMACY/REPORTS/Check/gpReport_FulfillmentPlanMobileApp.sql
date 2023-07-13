@@ -444,7 +444,7 @@ BEGIN
                                                                      MovPlan.QuantityMobile DESC, 
                                                                      MovPlan.CountMobileAll DESC)::Integer AS Place
                                   FROM tmpData AS MovPlan 
-                                  WHERE MovPlan.isNewUser = False AND MovPlan.isVacation = False AND MovPlan.isShowPlanMobileAppUser = TRUE
+                                  WHERE MovPlan.isNewUser = False AND MovPlan.isShowPlanMobileAppUser = TRUE
                                     AND MovPlan.ProcFact >= COALESCE(vbAntiTOPMP_MinProcAward, 0)
                                     ),
             tmpSumAwardProcFact AS (SELECT MovPlan.ProcFact 
@@ -498,7 +498,7 @@ BEGIN
                        NOT EXISTS(SELECT * FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_Count)) AND
                        COALESCE(MovPlan.PenaltiMobApp, 0) > 0
                   THEN tmpDataPlace.Place
-                  WHEN not MovPlan.isNewUser AND NOT MovPlan.isVacation AND MovPlan.isShowPlanMobileAppUser AND 
+                  WHEN not MovPlan.isNewUser AND MovPlan.isShowPlanMobileAppUser AND 
                        COALESCE(inUnitId, 0) = 0 AND COALESCE (inUserId, 0) = 0 AND 
                        (tmpSumAwardTop.SumPlace <= (SELECT MIN(tmpSumAwardTop.SumPlace) FROM tmpSumAwardTop WHERE tmpSumAwardTop.SumPlace >= vbAntiTOPMP_CountAward) OR
                        NOT EXISTS(SELECT * FROM tmpSumAwardTop WHERE tmpSumAwardTop.SumPlace >= vbAntiTOPMP_CountAward))
