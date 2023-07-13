@@ -115,9 +115,12 @@ end;
 
 procedure TPos_PrivatBank_JSON.BeforeDestruction;
 begin
-  if FidThreadComponent.Active then FidThreadComponent.Active := False;
-  FreeAndNil(FIdTCPClient);
-  FreeAndNil(FIdThreadComponent);
+  try
+    if FidThreadComponent.Active then FidThreadComponent.Active := False;
+    FreeAndNil(FIdTCPClient);
+    FreeAndNil(FIdThreadComponent);
+  except on E:Exception do Add_PosLog('Ошибка закрытия обработки: ' + e.Message);
+  end;
   inherited BeforeDestruction;
 end;
 
@@ -157,21 +160,21 @@ begin
         JSONObject := TJSONObject.ParseJSONValue(msgFromServer) as TJSONObject;
         try
           JSONPair := JSONObject.Get('error');
-          if (JSONPair <> nil) and (JSONPair.Value = 'false')  then
+          if (JSONPair <> nil) and (JSONPair.JsonValue.Value = 'false')  then
           begin
-            if LowerCase(JSONObject.Get('method').Value) = LowerCase('CheckConnection') then FProcessState := ppsOkConnection;
-            if LowerCase(JSONObject.Get('method').Value) = LowerCase('Purchase') then FProcessState := ppsOkPayment;
-            if LowerCase(JSONObject.Get('method').Value) = LowerCase('Refund') then FProcessState := ppsOkRefund;
+            if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('CheckConnection') then FProcessState := ppsOkConnection;
+            if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('Purchase') then FProcessState := ppsOkPayment;
+            if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('Refund') then FProcessState := ppsOkRefund;
           end else
           begin
             FLastPosError := 'Ошибка: ';
             JSONPair := JSONObject.Get('errorDescription');
-            if JSONPair <> nil  then FLastPosError := ' ' + JSONPair.Value;
+            if JSONPair <> nil  then FLastPosError := ' ' + JSONPair.JsonValue.Value;
           end;
         finally
           JSONObject.Free;
         end;
-      except on E:Exception do FLastPosError := e.Message;
+      except on E:Exception do FLastPosError := 'Ошибка обработки ответа: ' + e.Message;
       end;
     finally
       if FLastPosError <> '' then Add_PosLog(FLastPosError);

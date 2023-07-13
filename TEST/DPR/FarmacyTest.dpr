@@ -1298,7 +1298,8 @@ uses
   Report_GoodsSaleChechUserDialog in '..\..\FormsFarmacy\Report\Report_GoodsSaleChechUserDialog.pas' {Report_GoodsSaleChechUserDialogForm: TParentForm},
   Report_GoodsSaleChechUser in '..\..\FormsFarmacy\Report\Report_GoodsSaleChechUser.pas' {Report_GoodsSaleChechUserForm: TParentForm},
   Report_PriceList_BestPriceDialog in '..\..\FormsFarmacy\Report\Report_PriceList_BestPriceDialog.pas' {Report_PriceList_BestPriceDialogForm: TParentForm},
-  Report_PriceList_BestPrice in '..\..\FormsFarmacy\Report\Report_PriceList_BestPrice.pas' {Report_PriceList_BestPriceForm: TParentForm};
+  Report_PriceList_BestPrice in '..\..\FormsFarmacy\Report\Report_PriceList_BestPrice.pas' {Report_PriceList_BestPriceForm: TParentForm},
+  JuridicalPriceChoice in '..\..\FormsFarmacy\Guides\JuridicalPriceChoice.pas' {JuridicalPriceChoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
