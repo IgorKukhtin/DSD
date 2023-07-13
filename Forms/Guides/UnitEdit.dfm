@@ -967,6 +967,13 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AddressEDIN'
+        Value = Null
+        Component = edAddressEDIN
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 192
