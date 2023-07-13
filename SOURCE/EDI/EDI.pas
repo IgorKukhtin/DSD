@@ -6288,7 +6288,7 @@ begin
       ShowError('Не определен GLN для Пункта розвантаження.');
       Exit;
     end;
-    if not GetIdentifiers(HeaderDataSet.FieldByName('GLN_Unloading').asString, HeaderDataSet.FieldByName('GLN_Unloading').asString) then Exit;
+    if not GetIdentifiers(HeaderDataSet.FieldByName('GLN_From').asString, HeaderDataSet.FieldByName('GLN_Unloading').asString) then Exit;
   end;
 
   // Сформируем XML
