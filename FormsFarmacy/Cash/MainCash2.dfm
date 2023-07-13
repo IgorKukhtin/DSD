@@ -11,7 +11,6 @@ inherited MainCashForm2: TMainCashForm2
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitTop = -120
   ExplicitWidth = 986
   ExplicitHeight = 747
   PixelsPerInch = 96
@@ -248,7 +247,6 @@ inherited MainCashForm2: TMainCashForm2
       Height = 97
       Align = alClient
       TabOrder = 0
-      ExplicitTop = 22
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnCanFocusRecord = MainGridDBTableViewCanFocusRecord
@@ -2797,12 +2795,11 @@ inherited MainCashForm2: TMainCashForm2
       Align = alLeft
       Properties.ReadOnly = True
       TabOrder = 0
-      ExplicitTop = -3
       Height = 61
       Width = 348
     end
     object edName_inn_ua: TcxTextEdit
-      Left = 344
+      Left = 349
       Top = 0
       TabStop = False
       Anchors = [akLeft, akTop, akRight]
@@ -2830,8 +2827,8 @@ inherited MainCashForm2: TMainCashForm2
       Width = 431
     end
     object edCommentPosition: TcxTextEdit
-      Left = 355
-      Top = 48
+      Left = 349
+      Top = 42
       TabStop = False
       Anchors = [akLeft, akTop, akRight]
       Properties.AutoSelect = False

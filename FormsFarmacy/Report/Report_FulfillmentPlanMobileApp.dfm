@@ -262,6 +262,11 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = CountShortage
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = CountMobileAll
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -353,8 +358,18 @@ inherited Report_FulfillmentPlanMobileAppForm: TReport_FulfillmentPlanMobileAppF
             Options.Editing = False
             Width = 88
           end
+          object CountMobileAll: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1095#1077#1082'. '#1087#1086' '#1087#1088#1080#1083#1086#1078' '#1090#1077#1082'. '#1084#1077#1089#1103#1094'. '#1075#1088#1085'.'
+            DataBinding.FieldName = 'CountMobileAll'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
           object QuantityMobile: TcxGridDBColumn
-            Caption = #1055#1088#1080#1083#1086#1078'. '#1095#1077#1082#1086#1074
+            Caption = #1055#1088#1080#1083#1086#1078'. '#1095#1077#1082#1086#1074'. '#1096#1090'.'
             DataBinding.FieldName = 'QuantityMobile'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '0; ;'

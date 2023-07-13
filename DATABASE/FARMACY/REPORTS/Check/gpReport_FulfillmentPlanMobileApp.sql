@@ -1,6 +1,6 @@
 -- Function: gpReport_FulfillmentPlanMobileApp()
 
-DROP FUNCTION IF EXISTS gpReport_FulfillmentPlanMobileApp_Ol (TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_FulfillmentPlanMobileApp (TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_FulfillmentPlanMobileApp(
     IN inOperDate     TDateTime , --
@@ -12,9 +12,10 @@ RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar
              , UnitCategoryId Integer, UnitCategoryCode Integer, UnitCategoryName TVarChar
              , CountChech TFloat, CountSite TFloat, CountUser Integer, ProcPlan TFloat
              , UserId Integer, UserCode Integer, UserName TVarChar
-             , CountChechUser TFloat, CountMobileUser TFloat, CountShortage TFloat, QuantityMobile Integer, ProcFact TFloat
+             , CountChechUser TFloat, CountMobileUser TFloat, CountMobileAll TFloat, CountShortage TFloat, QuantityMobile Integer, ProcFact TFloat
              , PenaltiMobApp TFloat, isShowPlanMobileAppUser Boolean
-             , AntiTOPMP_Place Integer, SumPlace Integer, Place Integer, Color_Calc Integer
+             , AntiTOPMP_Place Integer, SumPlace Integer, Place Integer, SumPlaceAward Integer, PlaceAward Integer
+             , Color_Calc Integer
              , isNewUser Boolean, isVacation Boolean
               )
 AS
@@ -25,7 +26,8 @@ $BODY$
    DECLARE vbAntiTOPMP_Count Integer;
    DECLARE vbAntiTOPMP_CountFine Integer;
    DECLARE vbAntiTOPMP_SumFine TFloat;
-   DECLARE vbAntiTOPMP_SumAward TFloat;
+   DECLARE vbAntiTOPMP_CountAward TFloat;
+   DECLARE vbAntiTOPMP_MinProcAward TFloat;
    DECLARE vbPercPlanMobileApp TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -49,7 +51,8 @@ BEGIN
         , ObjectFloat_CashSettings_AntiTOPMP_CountFine.ValueData::Integer          AS AntiTOPMP_CountFine
         , ObjectFloat_CashSettings_AntiTOPMP_CountAward.ValueData                  AS AntiTOPMP_CountAward
         , ObjectFloat_CashSettings_AntiTOPMP_SumFine.ValueData                     AS AntiTOPMP_SumFine
-   INTO vbAntiTOPMP_Count , vbAntiTOPMP_CountFine, vbAntiTOPMP_SumAward, vbAntiTOPMP_SumFine
+        , ObjectFloat_CashSettings_AntiTOPMP_MinProcAward.ValueData                AS AntiTOPMP_MinProcAward
+   INTO vbAntiTOPMP_Count , vbAntiTOPMP_CountFine, vbAntiTOPMP_CountAward, vbAntiTOPMP_SumFine, vbAntiTOPMP_MinProcAward
    FROM Object AS Object_CashSettings
 
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_Count
@@ -64,6 +67,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_SumFine
                               ON ObjectFloat_CashSettings_AntiTOPMP_SumFine.ObjectId = Object_CashSettings.Id 
                              AND ObjectFloat_CashSettings_AntiTOPMP_SumFine.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_SumFine()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_AntiTOPMP_MinProcAward
+                              ON ObjectFloat_CashSettings_AntiTOPMP_MinProcAward.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_AntiTOPMP_MinProcAward.DescId = zc_ObjectFloat_CashSettings_AntiTOPMP_MinProcAward()
 
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;
@@ -127,6 +133,8 @@ BEGIN
             COALESCE(MovementString_InvNumberOrder.ValueData, '') <> '') AND
             COALESCE(MovementBoolean_MobileApplication.ValueData, False) = FALSE AS isSite
           , COALESCE(MovementBoolean_MobileApplication.ValueData, False)         AS isMobileApplication
+          , COALESCE(MovementBoolean_MobileFirstOrder.ValueData, False)          AS isMobileFirstOrder
+          , MovementLinkObject_UserReferals.ObjectId                             AS UserMobileId 
      FROM tmpMovAll AS Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
                                        ON MovementLinkObject_CheckSourceKind.MovementId = Movement.Id
@@ -139,6 +147,15 @@ BEGIN
                                     ON MovementBoolean_MobileApplication.MovementId = Movement.Id
                                    AND MovementBoolean_MobileApplication.DescId = zc_MovementBoolean_MobileApplication()
 
+          LEFT JOIN MovementBoolean AS MovementBoolean_MobileFirstOrder
+                                    ON MovementBoolean_MobileFirstOrder.MovementId = Movement.Id
+                                   AND MovementBoolean_MobileFirstOrder.DescId = zc_MovementBoolean_MobileFirstOrder()
+                                   
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_UserReferals
+                                       ON MovementLinkObject_UserReferals.MovementId = Movement.Id
+                                      AND MovementLinkObject_UserReferals.DescId = zc_MovementLinkObject_UserReferals()
+                                      AND COALESCE (MovementLinkObject_UserReferals.ObjectId, 0) <> 0
+
           LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                   ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                  AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
@@ -146,7 +163,7 @@ BEGIN
         
      ANALYSE tmpMov;
      
-     -- raise notice 'Value 22: %', CLOCK_TIMESTAMP();
+     -- raise notice 'Value 22: % %', CLOCK_TIMESTAMP(), (SELECT Count(*) FROM tmpMov WHERE date_trunc('MONTH', tmpMov.OperDate) >= '01.07.2023' AND tmpMov.isMobileFirstOrder = True);
 
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpESCount'))
      THEN
@@ -260,7 +277,7 @@ BEGIN
      ANALYSE tmpMovementProtocol;
      
      -- raise notice 'Value 5: %', CLOCK_TIMESTAMP(); 
-     
+
      -- Результат
      RETURN QUERY
        WITH tmpUser AS (SELECT MIMaster.ObjectId                                                                     AS UserId
@@ -294,21 +311,28 @@ BEGIN
                            GROUP BY Movement.UnitId
                            ),
             tmpMovFact AS (SELECT tmpEmployeeSchedule.UnitId
-                                , tmpMovementProtocol.UserId
-                                , SUM(CASE WHEN Movement.isMobileApplication = FALSE
-                                            AND Movement.isSite = False THEN Movement.TotalSumm ELSE 0 END)::TFloat      AS CountChech
-                                , SUM(CASE WHEN Movement.isMobileApplication THEN Movement.TotalSumm ELSE 0 END)::TFloat AS CountMobile
-                                , SUM(CASE WHEN Movement.isMobileApplication THEN 1 ELSE 0 END)::Integer                 AS QuantityMobile
+                                , COALESCE(Movement.UserMobileId, tmpMovementProtocol.UserId)                           AS UserId
+                                , SUM(CASE WHEN Movement.isMobileApplication = FALSE AND Movement.isSite = False OR 
+                                                date_trunc('MONTH', inOperDate) >= '01.07.2023'
+                                           THEN Movement.TotalSumm ELSE 0 END)::TFloat     AS CountChech
+                                , SUM(CASE WHEN Movement.isMobileApplication AND date_trunc('MONTH', inOperDate) < '01.07.2023' OR
+                                                Movement.isMobileFirstOrder 
+                                           THEN Movement.TotalSumm ELSE 0 END)::TFloat AS CountMobile
+                                , SUM(CASE WHEN Movement.isMobileApplication
+                                           THEN Movement.TotalSumm ELSE 0 END)::TFloat AS CountMobileAll
+                                , SUM(CASE WHEN Movement.isMobileApplication AND date_trunc('MONTH', inOperDate) < '01.07.2023' OR
+                                                Movement.isMobileFirstOrder 
+                                           THEN 1 ELSE 0 END)::Integer                 AS QuantityMobile
                            FROM tmpMov AS Movement
                            
                                 INNER JOIN tmpMovementProtocol ON tmpMovementProtocol.MovementId = Movement.Id
                                                               AND tmpMovementProtocol.Ord = 1 
                                                               
-                                INNER JOIN tmpEmployeeSchedule ON tmpEmployeeSchedule.UserId = tmpMovementProtocol.UserId
+                                INNER JOIN tmpEmployeeSchedule ON tmpEmployeeSchedule.UserId = COALESCE(Movement.UserMobileId, tmpMovementProtocol.UserId)
                            
                            WHERE Movement.OperDate >= date_trunc('MONTH', inOperDate)
                            GROUP BY tmpEmployeeSchedule.UnitId
-                                  , tmpMovementProtocol.UserId
+                                  , COALESCE(Movement.UserMobileId, tmpMovementProtocol.UserId) 
                            ),
             tmpData AS (SELECT       
                                MovPlan.UnitId
@@ -317,11 +341,10 @@ BEGIN
                              , tmpESCount.CountUser                                  AS CountUser
                              , Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
                                COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2)::TFloat AS ProcPlan
-                             , 1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
-                               COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1)             AS ProcPlanFull
                              , tmpMovFact.UserId
                              , tmpMovFact.CountChech                                 AS CountChechUser
                              , tmpMovFact.CountMobile                                AS CountMobileUser
+                             , tmpMovFact.CountMobileAll
                              
                              , CASE WHEN Round(1.0 * MovPlan.CountSite / MovPlan.CountChech * 100 /
                                          COALESCE(NULLIF(COALESCE(tmpESCount.CountUser, 0), 0), 1), 2) > 
@@ -388,29 +411,56 @@ BEGIN
                                                       WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member())),
             tmpDataPlace AS (SELECT MovPlan.UserId
                                   , MovPlan.ProcFact 
-                                  , MovPlan.ProcPlanFull
                                   , MovPlan.QuantityMobile
+                                  , MovPlan.CountMobileAll
                                   , ROW_NUMBER() OVER (ORDER BY MovPlan.ProcFact, 
-                                                                MovPlan.ProcPlanFull, 
-                                                                MovPlan.QuantityMobile)::Integer AS Place
+                                                                MovPlan.QuantityMobile, 
+                                                                MovPlan.CountMobileAll)::Integer AS Place
 
                              FROM tmpData AS MovPlan 
                              WHERE MovPlan.isNewUser = False AND MovPlan.isVacation = False AND MovPlan.isShowPlanMobileAppUser = TRUE
-                               AND COALESCE(MovPlan.PenaltiMobApp, 0) > 0),
+                               AND COALESCE(MovPlan.PenaltiMobApp, 0) > 0
+                             ),
             tmpSumProcFact AS (SELECT MovPlan.ProcFact 
-                                    , MovPlan.ProcPlanFull
                                     , MovPlan.QuantityMobile
+                                    , MovPlan.CountMobileAll
                                     , COUNT(*)          AS CountUser
                                FROM tmpDataPlace AS MovPlan 
                                GROUP BY MovPlan.ProcFact
-                                      , MovPlan.ProcPlanFull
-                                      , MovPlan.QuantityMobile),
+                                      , MovPlan.QuantityMobile
+                                      , MovPlan.CountMobileAll),
             tmpSumTop AS (SELECT MovPlan.ProcFact
-                               , MovPlan.ProcPlanFull
                                , MovPlan.QuantityMobile
-                               , ROW_NUMBER() OVER (ORDER BY MovPlan.ProcFact, MovPlan.ProcPlanFull, MovPlan.QuantityMobile)::Integer             AS Place
-                               , SUM(MovPlan.CountUser) OVER (ORDER BY MovPlan.ProcFact, MovPlan.ProcPlanFull, MovPlan.QuantityMobile)::Integer   AS SumPlace
-                          FROM tmpSumProcFact AS MovPlan)
+                               , MovPlan.CountMobileAll
+                               , ROW_NUMBER() OVER (ORDER BY MovPlan.ProcFact, MovPlan.QuantityMobile, MovPlan.CountMobileAll)::Integer             AS Place
+                               , SUM(MovPlan.CountUser) OVER (ORDER BY MovPlan.ProcFact, MovPlan.QuantityMobile, MovPlan.CountMobileAll)::Integer   AS SumPlace
+                          FROM tmpSumProcFact AS MovPlan),
+
+            tmpDataAwardPlace AS (SELECT MovPlan.UserId
+                                       , MovPlan.ProcFact 
+                                       , MovPlan.QuantityMobile
+                                       , MovPlan.CountMobileAll
+                                       , ROW_NUMBER() OVER (ORDER BY MovPlan.ProcFact DESC, 
+                                                                     MovPlan.QuantityMobile DESC, 
+                                                                     MovPlan.CountMobileAll DESC)::Integer AS Place
+                                  FROM tmpData AS MovPlan 
+                                  WHERE MovPlan.isNewUser = False AND MovPlan.isShowPlanMobileAppUser = TRUE
+                                    AND MovPlan.ProcFact >= COALESCE(vbAntiTOPMP_MinProcAward, 0)
+                                    ),
+            tmpSumAwardProcFact AS (SELECT MovPlan.ProcFact 
+                                         , MovPlan.QuantityMobile
+                                         , MovPlan.CountMobileAll
+                                         , COUNT(*)          AS CountUser
+                                    FROM tmpDataAwardPlace AS MovPlan 
+                                    GROUP BY MovPlan.ProcFact
+                                           , MovPlan.QuantityMobile
+                                           , MovPlan.CountMobileAll),
+            tmpSumAwardTop AS (SELECT MovPlan.ProcFact
+                                    , MovPlan.QuantityMobile
+                                    , MovPlan.CountMobileAll
+                                    , ROW_NUMBER() OVER (ORDER BY MovPlan.ProcFact DESC, MovPlan.QuantityMobile DESC, MovPlan.CountMobileAll DESC)::Integer             AS Place
+                                    , SUM(MovPlan.CountUser) OVER (ORDER BY MovPlan.ProcFact DESC, MovPlan.QuantityMobile DESC, MovPlan.CountMobileAll DESC)::Integer   AS SumPlace
+                               FROM tmpSumAwardProcFact AS MovPlan)
             
 
          SELECT       
@@ -429,6 +479,7 @@ BEGIN
            , Object_User.ValueData                                 AS UserName
            , MovPlan.CountChechUser
            , MovPlan.CountMobileUser
+           , MovPlan.CountMobileAll
            
            , CASE WHEN NOT MovPlan.isNewUser AND NOT MovPlan.isVacation
                   THEN MovPlan.CountShortage                        
@@ -446,17 +497,31 @@ BEGIN
                        tmpSumTop.SumPlace <= (SELECT MIN(tmpSumTop.SumPlace) FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_Count) OR
                        NOT EXISTS(SELECT * FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_Count)) AND
                        COALESCE(MovPlan.PenaltiMobApp, 0) > 0
-                  THEN tmpDataPlace.Place END                             AS AntiTOPMP_Place
+                  THEN tmpDataPlace.Place
+                  WHEN not MovPlan.isNewUser AND MovPlan.isShowPlanMobileAppUser AND 
+                       COALESCE(inUnitId, 0) = 0 AND COALESCE (inUserId, 0) = 0 AND 
+                       (tmpSumAwardTop.SumPlace <= (SELECT MIN(tmpSumAwardTop.SumPlace) FROM tmpSumAwardTop WHERE tmpSumAwardTop.SumPlace >= vbAntiTOPMP_CountAward) OR
+                       NOT EXISTS(SELECT * FROM tmpSumAwardTop WHERE tmpSumAwardTop.SumPlace >= vbAntiTOPMP_CountAward))
+                  THEN tmpDataAwardPlace.Place END                              AS AntiTOPMP_Place
                   
            , tmpSumTop.SumPlace
            , tmpDataPlace.Place
+           , tmpSumAwardTop.SumPlace
+           , tmpDataAwardPlace.Place
            , CASE WHEN not MovPlan.isNewUser AND NOT MovPlan.isVacation AND MovPlan.isShowPlanMobileAppUser AND 
-                       tmpSumTop.SumPlace <= (SELECT MIN(tmpSumTop.SumPlace) FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_CountFine)
+                       (tmpSumTop.SumPlace <= (SELECT MIN(tmpSumTop.SumPlace) FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_CountFine) OR
+                       NOT EXISTS(SELECT * FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_CountFine))
                   THEN zfCalc_Color (255, 69, 0)
                   WHEN not MovPlan.isNewUser AND NOT MovPlan.isVacation AND MovPlan.isShowPlanMobileAppUser AND 
                        COALESCE(inUnitId, 0) = 0 AND COALESCE (inUserId, 0) = 0 AND           
-                       tmpSumTop.SumPlace <= (SELECT MIN(tmpSumTop.SumPlace) FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_Count)
+                       (tmpSumTop.SumPlace <= (SELECT MIN(tmpSumTop.SumPlace) FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_Count) OR
+                       NOT EXISTS(SELECT * FROM tmpSumTop WHERE tmpSumTop.SumPlace >= vbAntiTOPMP_Count))
                   THEN zfCalc_Color (255, 165, 0)
+                  WHEN not MovPlan.isNewUser AND NOT MovPlan.isVacation AND MovPlan.isShowPlanMobileAppUser AND 
+                       COALESCE(inUnitId, 0) = 0 AND COALESCE (inUserId, 0) = 0 AND           
+                       (tmpSumAwardTop.SumPlace <= (SELECT MIN(tmpSumAwardTop.SumPlace) FROM tmpSumAwardTop WHERE tmpSumAwardTop.SumPlace >= vbAntiTOPMP_CountAward) OR
+                       NOT EXISTS(SELECT * FROM tmpSumAwardTop WHERE tmpSumAwardTop.SumPlace >= vbAntiTOPMP_CountAward))
+                  THEN zfCalc_Color (173, 255, 47)
                   ELSE zc_Color_White()
              END  AS Color_Calc
            , MovPlan.isNewUser                   AS isNewUser
@@ -474,9 +539,15 @@ BEGIN
              
              LEFT JOIN tmpDataPlace ON tmpDataPlace.UserId = MovPlan.UserId
              
-             LEFT JOIN tmpSumTop ON tmpSumTop.ProcFact       = MovPlan.ProcFact
-                                AND tmpSumTop.ProcPlanFull   = MovPlan.ProcPlanFull  
-                                AND tmpSumTop.QuantityMobile = MovPlan.QuantityMobile  
+             LEFT JOIN tmpSumTop ON tmpSumTop.ProcFact        = MovPlan.ProcFact
+                                AND tmpSumTop.QuantityMobile  = MovPlan.QuantityMobile  
+                                AND tmpSumTop.CountMobileAll  = MovPlan.CountMobileAll  
+
+             LEFT JOIN tmpDataAwardPlace ON tmpDataAwardPlace.UserId = MovPlan.UserId
+             
+             LEFT JOIN tmpSumAwardTop ON tmpSumAwardTop.ProcFact        = MovPlan.ProcFact
+                                     AND tmpSumAwardTop.QuantityMobile  = MovPlan.QuantityMobile  
+                                     AND tmpSumAwardTop.CountMobileAll  = MovPlan.CountMobileAll  
                                                                 
         ORDER BY Object_Unit.ValueData , Object_User.ValueData
         ;

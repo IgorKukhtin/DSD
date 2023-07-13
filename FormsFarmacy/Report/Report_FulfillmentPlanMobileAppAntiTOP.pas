@@ -55,6 +55,7 @@ type
     AntiTOPMP_Place: TcxGridDBColumn;
     Color_Calc: TcxGridDBColumn;
     isBold: TcxGridDBColumn;
+    CountMobileAll: TcxGridDBColumn;
   private
     { Private declarations }
   public

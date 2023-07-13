@@ -6142,6 +6142,7 @@ function TdsdEDINAction.GetIdentifiers(AGLN, AQuery : String): Boolean;
   var IdHTTP: TCustomIdHTTP;
       S, Params: String;
       jsonArray: TJSONArray;
+      List : TStringList;
 begin
   inherited;
   Result := False;
@@ -6167,9 +6168,17 @@ begin
     Params := '?gln=' + AGLN + '&query=' + AQuery; // + '&katottg_required=true';
 
     try
+      List := TStringList.Create;
+      try
+        List.Add(TIdURI.URLEncode(FHostParam.Value + '/api/oas/identifiers' + Params));
+        List.SaveToFile('GetKATOTTG.txt');
+      finally
+        List.Free;
+      end;
+
       S := IdHTTP.Get(TIdURI.URLEncode(FHostParam.Value + '/api/oas/identifiers' + Params));
     except on E:EIdHTTPProtocolException  do
-                ShowError('Ошибка: ' + e.ErrorMessage);
+                ShowError('Ошибка поиска КАТОТТГ места выгрузки: ' + e.ErrorMessage);
     end;
 
     if IdHTTP.ResponseCode = 200 then

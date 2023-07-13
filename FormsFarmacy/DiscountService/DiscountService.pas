@@ -490,6 +490,20 @@ begin
   //открючаем реакции
   GoodsId := CheckCDS.FieldByName('GoodsId').asInteger;
 
+  if not gisTwoPackages then
+  begin
+
+    if CheckCDS.FieldByName('Amount').AsInteger <> 1 then
+    begin
+        ShowMessage ('Товар по дисконтным проектам можно отпускать по 1 упаковке.' + #10+ #13
+        + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+        + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+         //ошибка
+        lMsg:='Error';
+        exit;
+    end;
+  end;
+
   try
     if lDiscountExternalId > 0 then
       if gService = 'CardService' then
@@ -891,7 +905,20 @@ begin
                 lMsg:='Error';
                 exit;
               end;
-            end else FAmountPackages := 0;
+            end else
+            begin
+              FAmountPackages := 0;
+
+              if CheckCDS.FieldByName('Amount').AsInteger <> 1 then
+              begin
+                  ShowMessage ('Товар по дисконтным проектам можно отпускать по 1 упаковке.' + #10+ #13
+                  + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+                  + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+                   //ошибка
+                  lMsg:='Error';
+                  exit;
+              end;
+            end;
 
             try
 
@@ -1626,6 +1653,19 @@ begin
           exit;
       end;
 
+      if not gisTwoPackages then
+      begin
+
+         if CheckCDS.FieldByName('Amount').AsInteger <> 1 then
+         begin
+            ShowMessage ('Товар по дисконтным проектам можно отпускать по 1 упаковке.' + #10+ #13
+            + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
+            + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+             //ошибка
+            lMsg:='Error';
+            exit;
+         end;
+      end;
 
       //если Штрих-код нашелся и программа ЗАРАДИ ЖИТТЯ
       if (BarCode_find <> '') and (gService = 'CardService') then

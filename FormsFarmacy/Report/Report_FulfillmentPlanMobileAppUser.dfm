@@ -261,6 +261,15 @@ inherited Report_FulfillmentPlanMobileAppUserForm: TReport_FulfillmentPlanMobile
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = CountShortage
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = CountMobileAll
+            end
+            item
+              Kind = skSum
+              Column = QuantityMobile
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -345,17 +354,6 @@ inherited Report_FulfillmentPlanMobileAppUserForm: TReport_FulfillmentPlanMobile
             Options.Editing = False
             Width = 88
           end
-          object CountShortage: TcxGridDBColumn
-            Caption = #1053#1077#1086#1073#1093'. '#1089#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1080#1083'. '#1076#1083#1103' '#1076#1086#1089#1090#1080#1078#1077#1085#1080#1103' '#1087#1083#1072#1085#1072'.'
-            DataBinding.FieldName = 'CountShortage'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1077#1086#1073#1093#1086#1076#1080#1084#1072#1103' '#1089#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102' '#1076#1083#1103' '#1076#1086#1089#1090#1080#1078#1077#1085#1080#1103' '#1087#1083#1072#1085#1072
-            Options.Editing = False
-            Width = 101
-          end
           object ProcFact: TcxGridDBColumn
             Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1086' '#1089#1086#1090#1088#1091#1076#1085'. ,%'
             DataBinding.FieldName = 'ProcFact'
@@ -366,6 +364,36 @@ inherited Report_FulfillmentPlanMobileAppUserForm: TReport_FulfillmentPlanMobile
             Options.Editing = False
             Styles.Content = dmMain.cxRemainsContentStyle
             Width = 76
+          end
+          object QuantityMobile: TcxGridDBColumn
+            Caption = #1055#1088#1080#1083#1086#1078'. '#1095#1077#1082#1086#1074'. '#1096#1090'.'
+            DataBinding.FieldName = 'QuantityMobile'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object CountMobileAll: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1095#1077#1082'. '#1087#1086' '#1087#1088#1080#1083#1086#1078' '#1090#1077#1082'. '#1084#1077#1089#1103#1094'. '#1075#1088#1085'.'
+            DataBinding.FieldName = 'CountMobileAll'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object CountShortage: TcxGridDBColumn
+            Caption = #1053#1077#1086#1073#1093'. '#1089#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1080#1083'. '#1076#1083#1103' '#1076#1086#1089#1090#1080#1078#1077#1085#1080#1103' '#1087#1083#1072#1085#1072'.'
+            DataBinding.FieldName = 'CountShortage'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077#1086#1073#1093#1086#1076#1080#1084#1072#1103' '#1089#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1102' '#1076#1083#1103' '#1076#1086#1089#1090#1080#1078#1077#1085#1080#1103' '#1087#1083#1072#1085#1072
+            Options.Editing = False
+            Width = 101
           end
           object PenaltiMobApp: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072'  ('#1080#1085#1092#1086#1088#1084#1072#1094#1080#1086#1085#1085#1099#1081')'

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_FulfillmentPlanMobileAppUser(
 RETURNS TABLE (UnitId Integer, UnitCode Integer, UnitName TVarChar
              , CountChech TFloat, CountSite TFloat, CountUser Integer, ProcPlan TFloat
              , UserId Integer, UserCode Integer, UserName TVarChar
-             , CountChechUser TFloat, CountMobileUser TFloat, CountShortage TFloat, QuantityMobile Integer, ProcFact TFloat
+             , CountChechUser TFloat, CountMobileUser TFloat, CountMobileAll TFloat, CountShortage TFloat, QuantityMobile Integer, ProcFact TFloat
              , PenaltiMobApp TFloat
               )
 AS
@@ -22,7 +22,7 @@ BEGIN
 
      IF inSession = '3'
      THEN
-       vbUserId := 19450290;
+       vbUserId := 5294897;
      END IF;
      
           -- Результат
@@ -39,6 +39,7 @@ BEGIN
           , FulfillmentPlanMobile.UserName 
           , FulfillmentPlanMobile.CountChechUser 
           , FulfillmentPlanMobile.CountMobileUser
+          , FulfillmentPlanMobile.CountMobileAll
           , FulfillmentPlanMobile.CountShortage
           , FulfillmentPlanMobile.QuantityMobile 
           , FulfillmentPlanMobile.ProcFact
