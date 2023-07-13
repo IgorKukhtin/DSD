@@ -338,6 +338,14 @@ object CityForm: TCityForm
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Name_full'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name_full'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -469,10 +477,13 @@ object CityForm: TCityForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 48
     Top = 216
   end
