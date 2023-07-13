@@ -6194,13 +6194,19 @@ begin
           HeaderDataSet.Edit;
           HeaderDataSet.FieldByName('KATOTTG_Unloading').asString := FResultParam.Value;
           HeaderDataSet.Post;
-          FResultParam.Value := '';
           Result := True;
-        end else Result := True; //ShowError('Ошибка поиска КАТОТТГ места выгрузки: Не знполнено в данных базы EDI');
+        end else
+        begin
+          FErrorParam.Value := 'Ошибка поиска КАТОТТГ места выгрузки: Не знполнено в данных базы EDI';
+          if Assigned(FUpdateError) then FUpdateError.Execute;
+          Result := True;
+        end;
       end else ShowError('Ошибка поиска КАТОТТГ места выгрузки: Количество запмсей по gln места выгрузки более одной.');
     end;
   finally
     IdHTTP.Free;
+    FResultParam.Value := '';
+    FErrorParam.Value := '';
   end;
 end;
 
