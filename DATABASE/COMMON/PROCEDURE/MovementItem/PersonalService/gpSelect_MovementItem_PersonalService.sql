@@ -519,6 +519,7 @@ BEGIN
                           ELSE COALESCE (MIFloat_SummCard.ValueData, 0)
                              + COALESCE (MIFloat_SummCardSecond.ValueData, 0)
                              + COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
+                             + COALESCE (MIFloat_SummAvCardSecond.ValueData, 0)
                       END
               ) :: TFloat AS AmountCash
               -- Остаток к выдаче (из кассы) грн
@@ -528,11 +529,12 @@ BEGIN
                           ELSE COALESCE (MIFloat_SummCard.ValueData, 0)
                              + COALESCE (MIFloat_SummCardSecond.ValueData, 0)
                              + COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
+                             + COALESCE (MIFloat_SummAvCardSecond.ValueData, 0)
                              + COALESCE (tmpMIContainer_pay.Amount_avance_all, 0)
                              + COALESCE (tmpMIContainer_pay.Amount_service, 0)
                       END
               ) :: TFloat AS AmountCash_rem
-              -- Остаток к выдаче (из кассы) грн
+              -- выдадано из кассы
             , (COALESCE (tmpMIContainer_pay.Amount_avance_all, 0) + COALESCE (tmpMIContainer_pay.Amount_service, 0)) :: TFloat AS AmountCash_pay
 
             , MIFloat_SummService.ValueData           AS SummService
@@ -905,7 +907,7 @@ BEGIN
                                                 AND tmpMI_SummCardSecondRecalc.PositionId = tmpAll.PositionId
       ;
 
-END;
+ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
