@@ -5585,8 +5585,8 @@ begin
        (HeaderDataSet.FieldByName('GLN_Unloading').asString = '') or
        (HeaderDataSet.FieldByName('GLN_Unit').asString = '') or
        (HeaderDataSet.FieldByName('GLN_Driver').asString = '') or
-       (HeaderDataSet.FieldByName('KATOTTG_Unit').asString = '') or
-       (HeaderDataSet.FieldByName('KATOTTG_Unloading').asString = '') then
+       (HeaderDataSet.FieldByName('KATOTTG_Unit').asString = '') {or
+       (HeaderDataSet.FieldByName('KATOTTG_Unloading').asString = '')} then
        ShowError('Не заполнено:' +
                  IfThen(HeaderDataSet.FieldByName('GLN_car').asString = '', ' GLN для Перевізника;', '') +
                  IfThen(HeaderDataSet.FieldByName('GLN_from').asString = '', ' GLN для Замовника;', '') +
@@ -5594,8 +5594,8 @@ begin
                  IfThen(HeaderDataSet.FieldByName('GLN_Unit').asString = '', ' GLN для Пункт навантаження;', '') +
                  IfThen(HeaderDataSet.FieldByName('GLN_Unloading').asString = '', ' GLN для Пункта розвантаження;', '') +
                  IfThen(HeaderDataSet.FieldByName('GLN_Driver').asString = '', ' GLN для Водія;', '') +
-                 IfThen(HeaderDataSet.FieldByName('KATOTTG_Unit').asString = '', ' КАТОТТГ Пункта навантаження;', '') +
-                 IfThen(HeaderDataSet.FieldByName('KATOTTG_Unloading').asString = '', ' КАТОТТГ Пункта розвантаження;', ''));
+                 IfThen(HeaderDataSet.FieldByName('KATOTTG_Unit').asString = '', ' КАТОТТГ Пункта навантаження;', '') {+
+                 IfThen(HeaderDataSet.FieldByName('KATOTTG_Unloading').asString = '', ' КАТОТТГ Пункта розвантаження;', '')});
 
     // Создать XML
     UAECMR := UAECMRXML.NewUAECMR;
@@ -6196,7 +6196,7 @@ begin
           HeaderDataSet.Post;
           FResultParam.Value := '';
           Result := True;
-        end else ShowError('Ошибка поиска КАТОТТГ места выгрузки: нет знполнено в данных в базе EDI');
+        end else Result := True; //ShowError('Ошибка поиска КАТОТТГ места выгрузки: Не знполнено в данных базы EDI');
       end else ShowError('Ошибка поиска КАТОТТГ места выгрузки: Количество запмсей по gln места выгрузки более одной.');
     end;
   finally
