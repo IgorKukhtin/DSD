@@ -6196,8 +6196,8 @@ begin
           HeaderDataSet.Post;
           FResultParam.Value := '';
           Result := True;
-        end;
-      end;
+        end else ShowError('Ошибка поиска КАТОТТГ места выгрузки: нет знполнено в данных в базе EDI');
+      end else ShowError('Ошибка поиска КАТОТТГ места выгрузки: Количество запмсей по gln места выгрузки более одной.');
     end;
   finally
     IdHTTP.Free;

@@ -3,30 +3,32 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
     #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1058#1086#1074#1072#1088#1085#1086'-'#1090#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1088#1072#1073#1086#1090#1072' '#1089'  e-'#1058#1058 +
     #1053'>'
   ClientHeight = 531
-  ClientWidth = 972
+  ClientWidth = 977
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 988
-  ExplicitHeight = 570
+  ExplicitWidth = 995
+  ExplicitHeight = 578
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 972
-    Height = 474
+    Top = 61
+    Width = 977
+    Height = 470
     TabOrder = 3
-    ExplicitWidth = 972
-    ExplicitHeight = 474
-    ClientRectBottom = 474
-    ClientRectRight = 972
+    ExplicitTop = 61
+    ExplicitWidth = 977
+    ExplicitHeight = 470
+    ClientRectBottom = 470
+    ClientRectRight = 977
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 972
-      ExplicitHeight = 474
+      ExplicitWidth = 977
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 972
-        Height = 474
-        ExplicitWidth = 972
-        ExplicitHeight = 474
+        Width = 977
+        Height = 470
+        ExplicitWidth = 977
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -653,13 +655,21 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
             Options.Editing = False
             Width = 91
           end
+          object Address_Unit: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089#1072' '#1055#1091#1085#1082#1090' '#1079#1072#1074#1072#1085#1090#1072#1078#1077#1085#1085#1103
+            DataBinding.FieldName = 'Address_Unit'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 181
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 972
-    ExplicitWidth = 972
+    Width = 977
+    ExplicitWidth = 977
     inherited deStart: TcxDateEdit
       EditValue = 44927d
     end
@@ -961,14 +971,13 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
           Action = actGet_DefaultEDIN
         end
         item
-          Action = actDialog_TTN
-        end
-        item
           Action = actExecSelect_eTTN_Send
         end
         item
           Action = actSendETTN
         end>
+      QuestionBeforeExecute = #1054#1090#1087#1088#1072#1074#1080#1090#1100' e-'#1058#1058#1053'?'
+      InfoAfterExecute = #1042#1110#1087#1086#1083#1085#1077#1085#1086
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' e-'#1058#1058#1053
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' e-'#1058#1058#1053
       ImageIndex = 85
@@ -1275,7 +1284,7 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
     DockControlHeights = (
       0
       0
-      26
+      30
       0)
     inherited Bar: TdxBar
       ItemLinks = <
