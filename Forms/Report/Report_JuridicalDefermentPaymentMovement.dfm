@@ -857,7 +857,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1077#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1081
+            HeaderHint = #1042#1089#1077
             Options.Editing = False
             Width = 80
           end
