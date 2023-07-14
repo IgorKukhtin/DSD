@@ -188,7 +188,7 @@ BEGIN
                                             AND MILinkObject_PayrollType.DescId = zc_MILinkObject_PayrollType()
                                             AND MILinkObject_PayrollType.ObjectId = zc_Enum_PayrollType_WorkVacation()
 
-      WHERE Movement.OperDate = date_trunc('MONTH', inOperDate) - INTERVAL '1 MONTH'
+      WHERE Movement.OperDate = date_trunc('MONTH', inOperDate)
         AND Movement.DescId = zc_Movement_EmployeeSchedule()
         AND Movement.StatusId <> zc_Enum_Status_Erased()
      GROUP BY MovementItemMaster.ObjectId;

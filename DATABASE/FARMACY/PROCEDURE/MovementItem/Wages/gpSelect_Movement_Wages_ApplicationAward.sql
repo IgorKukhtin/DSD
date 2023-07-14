@@ -24,7 +24,7 @@ BEGIN
       WITH tmpApplicationAward AS (SELECT PlanMobileAppAntiTOP.UserId
                                         , PlanMobileAppAntiTOP.PenaltiMobApp
                                    FROM gpReport_FulfillmentPlanMobileAppAntiTOP(DATE_TRUNC ('MONTH', inOperDate), inSession) AS PlanMobileAppAntiTOP
-                                   WHERE PlanMobileAppAntiTOP.PenaltiMobApp < 0),
+                                   WHERE PlanMobileAppAntiTOP.PenaltiMobApp <> 0),
            tmpMovementWages AS (SELECT Movement.Id
                                 FROM Movement
                                 WHERE Movement.OperDate = DATE_TRUNC ('MONTH', inOperDate)

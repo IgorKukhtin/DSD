@@ -1046,6 +1046,10 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     TextEdit = edFilter
     DataSet = ClientDataSet
     Column = colGoodsName
+    ColumnList = <
+      item
+        Column = colGoodsName
+      end>
     CheckBoxList = <>
     Left = 568
     Top = 200

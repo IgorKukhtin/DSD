@@ -201,7 +201,7 @@ function TCashCloseSaleInsuranceCompaniesDialogForm.PutCheckToCash(SalerCash, Sa
   PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String; out AZReport : Integer;
   APOSTerminalCode: Integer = 0; isFiscal: Boolean = True): Boolean;
 var
-  str_log_xml: String;
+  str_log_xml, cTextCheck: String;
   Disc, nSumAll: Currency;
   I, PosDisc: Integer;
   pPosTerm: IPos;
@@ -230,6 +230,7 @@ var
 { ------------------------------------------------------------------------------ }
 begin
   ACheckNumber := '';
+  cTextCheck := '';
   AZReport := 0;
   try
     try
@@ -342,6 +343,7 @@ begin
 
           if not PayPosTerminal(pPosTerm, SalerCash - SalerCashAdd) then
             exit;
+          cTextCheck := pPosTerm.TextCheck;
         finally
           if pPosTerm <> Nil then
             pPosTerm := Nil;
@@ -407,6 +409,7 @@ begin
           begin
             if Result then
               Result := Cash.SubTotal(True, True, 0, 0);
+            if cTextCheck <> '' then Cash.PrintFiscalText(cTextCheck);
             if Result then
               Result := Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
             if Result then

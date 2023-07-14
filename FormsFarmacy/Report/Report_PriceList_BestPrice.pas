@@ -29,9 +29,6 @@ uses
 
 type
   TReport_PriceList_BestPriceForm = class(TAncestorReportForm)
-    cxLabel3: TcxLabel;
-    ceJuridical: TcxButtonEdit;
-    GuidesJuridical: TdsdGuides;
     dxBarButton1: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
@@ -50,8 +47,12 @@ type
     Price: TcxGridDBColumn;
     bbMoneyBoxSun: TdxBarButton;
     cxLabel4: TcxLabel;
-    PriceMin: TcxGridDBColumn;
+    PriceMax: TcxGridDBColumn;
     edProcent: TcxCurrencyEdit;
+    actJuridicalPriceChoice: TOpenChoiceForm;
+    FormParams: TdsdFormParams;
+    DatePriceMax: TcxGridDBColumn;
+    PercChange: TcxGridDBColumn;
   private
     { Private declarations }
   public

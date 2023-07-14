@@ -21,10 +21,13 @@ type
     FPOSTerminalCode : integer;
     FInvoiceNumber: String;
     FProcessState: TPosProcessState;
+    FRadBufer: String;
+    FTextCheck: String;
 
     procedure SetMsgDescriptionProc(Value: TMsgDescriptionProc);
     function GetMsgDescriptionProc: TMsgDescriptionProc;
     function GetLastPosError : string;
+    function GetTextCheck : string;
     function GetProcessType : TPosProcessType;
     function GetProcessState : TPosProcessState;
     procedure IdThreadComponentRun(Sender: TIdThreadComponent);
@@ -71,6 +74,8 @@ constructor TPos_PrivatBank_JSON.Create(APOSTerminalCode : Integer);
 begin
   inherited Create;
   FPOSTerminalCode := APOSTerminalCode;
+  FRadBufer := '';
+  FTextCheck := '';
 end;
 
 procedure TPos_PrivatBank_JSON.SetMsgDescriptionProc(Value: TMsgDescriptionProc);
@@ -86,6 +91,11 @@ end;
 function TPos_PrivatBank_JSON.GetLastPosError : string;
 begin
   Result := FLastPosError;
+end;
+
+function TPos_PrivatBank_JSON.GetTextCheck : string;
+begin
+  Result := FTextCheck;
 end;
 
 function TPos_PrivatBank_JSON.GetProcessType : TPosProcessType;
@@ -125,19 +135,29 @@ begin
 end;
 
 procedure TPos_PrivatBank_JSON.IdThreadComponentRun(Sender: TIdThreadComponent);
-var JSONObject: TJSONObject; JSONPair: TJSONPair;
-    msgFromServer : string; Buffer: TIdBytes;
+var JSONObject, JSONParams: TJSONObject;
+    Buffer: TIdBytes; S: String;
+
+   function GetMasked_Pan(APan, AReceipt: TJSONPair) : string;
+   begin
+     Result := '';
+     if (APan = nil) or (AReceipt = nil) then Exit;
+     if Pos(Copy(APan.JsonValue.Value, 1, 4), AReceipt.JsonValue.Value) > 0 then
+       Result := Copy(AReceipt.JsonValue.Value,
+                      Pos(Copy(APan.JsonValue.Value, 1, 4), AReceipt.JsonValue.Value), 16);
+
+   end;
+
 begin
   // ... read message from server
   if not FIdTCPClient.IOHandler.CheckForDataOnSource then Exit;
-  msgFromServer := '';
 
   Add_PosLog('Читаем.');
   try
     try
       SetLength(Buffer, FIdTCPClient.IOHandler.InputBuffer.Size);
       FIdTCPClient.IOHandler.ReadBytes(Buffer, FIdTCPClient.IOHandler.InputBuffer.Size, False);
-      msgFromServer := TEncoding.UTF8.GetString(Buffer);
+      FRadBufer:= FRadBufer + TEncoding.UTF8.GetString(Buffer);
     finally
       SetLength(Buffer, 0);
     end;
@@ -151,25 +171,69 @@ begin
     Exit;
   end;
 
-  if msgFromServer <> '' then
+  if Pos(#0, FRadBufer) > 0 then
   begin
-    Add_PosLog(msgFromServer);
+    S := Copy(FRadBufer, 1, Pos(#0, FRadBufer) - 1);
+    FRadBufer := Copy(FRadBufer, Length(S) + 2,  Length(FRadBufer));
+    Add_PosLog(S);
 
     try
       try
-        JSONObject := TJSONObject.ParseJSONValue(msgFromServer) as TJSONObject;
+        JSONObject := TJSONObject.ParseJSONValue(S) as TJSONObject;
         try
-          JSONPair := JSONObject.Get('error');
-          if (JSONPair <> nil) and (JSONPair.JsonValue.Value = 'false')  then
+          if (JSONObject.Get('error') <> nil) and (JSONObject.Get('error').JsonValue.Value = 'false')  then
           begin
-            if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('CheckConnection') then FProcessState := ppsOkConnection;
-            if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('Purchase') then FProcessState := ppsOkPayment;
-            if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('Refund') then FProcessState := ppsOkRefund;
+            if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('CheckConnection') then
+              FProcessState := ppsOkConnection
+            else if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('Purchase') then
+              FProcessState := ppsOkPayment
+            else if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('Refund') then
+              FProcessState := ppsOkRefund
+            else FProcessState := ppsError;
+
+            FTextCheck := '';
+
+            if (LowerCase(JSONObject.Get('method').JsonValue.Value) <> LowerCase('Purchase')) and
+               (LowerCase(JSONObject.Get('method').JsonValue.Value) <> LowerCase('Refund')) then Exit;
+            JSONParams := JSONObject.Get('params').JsonValue as TJSONObject;
+            if JSONParams = nil then Exit;
+
+            FTextCheck := '            Карта';
+            FTextCheck := FTextCheck + #13'Термінал ';
+            if (JSONParams.Get('merchant') <> nil) then
+              FTextCheck := FTextCheck + JSONParams.Get('merchant').JsonValue.Value;
+            if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('Purchase') then
+              FTextCheck := FTextCheck + #13'            Продаж';
+            if LowerCase(JSONObject.Get('method').JsonValue.Value) = LowerCase('Refund') then
+              FTextCheck := FTextCheck + #13'            Повернення';
+            FTextCheck := FTextCheck + #13'Сума ';
+            if (JSONParams.Get('amount') <> nil) then
+              FTextCheck := FTextCheck + JSONParams.Get('amount').JsonValue.Value;
+            FTextCheck := FTextCheck + #13'ЕПЗ ';
+            if (JSONParams.Get('pan') <> nil) then
+              FTextCheck := FTextCheck + GetMasked_Pan(JSONParams.Get('pan'), JSONParams.Get('receipt'));
+            FTextCheck := FTextCheck + #13'Платіжна система ';
+            if (JSONParams.Get('paymentSystem') <> nil) then
+              FTextCheck := FTextCheck + JSONParams.Get('paymentSystem').JsonValue.Value;
+            FTextCheck := FTextCheck + #13'Код авторізації ';
+            if (JSONParams.Get('approvalCode') <> nil) then
+              FTextCheck := FTextCheck + JSONParams.Get('approvalCode').JsonValue.Value;
+            FTextCheck := FTextCheck + #13'PRN ';
+            if (JSONParams.Get('rrn') <> nil) then
+              FTextCheck := FTextCheck + JSONParams.Get('rrn').JsonValue.Value;
+            FTextCheck := FTextCheck + #13'Чек ';
+            if (JSONParams.Get('invoiceNumber') <> nil) then
+              FTextCheck := FTextCheck + JSONParams.Get('invoiceNumber').JsonValue.Value;
+            if (JSONParams.Get('date') <> nil) then
+              FTextCheck := FTextCheck + ' ' + JSONParams.Get('date').JsonValue.Value;
+            if (JSONParams.Get('time') <> nil) then
+              FTextCheck := FTextCheck + ' ' + JSONParams.Get('time').JsonValue.Value;
+
           end else
           begin
             FLastPosError := 'Ошибка: ';
-            JSONPair := JSONObject.Get('errorDescription');
-            if JSONPair <> nil  then FLastPosError := ' ' + JSONPair.JsonValue.Value;
+            if JSONObject.Get('errorDescription') <> nil  then
+              FLastPosError := ' ' + JSONObject.Get('errorDescription').JsonValue.Value;
           end;
         finally
           JSONObject.Free;
@@ -190,7 +254,6 @@ function TPos_PrivatBank_JSON.CheckConnection : Boolean;
 begin
 
   if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Проверка связи с терминалом');
-  FProcessState := ppsError;
 
   try
     JSONObject := TJSONObject.Create;
@@ -202,7 +265,7 @@ begin
       try
         FIdTCPClient.Host := FHost;
         FIdTCPClient.Port := FPort;
-        FIdTCPClient.ConnectTimeout := 2000;
+        FIdTCPClient.ConnectTimeout := 4000;
         FIdTCPClient.Connect;
 
         Add_PosLog(JsonToSend.DataString);
@@ -221,7 +284,11 @@ begin
   except on E:Exception do FLastPosError := 'Ошибка проверки связи : ' + e.Message;
   end;
 
-  if FLastPosError <> '' then Add_PosLog(FLastPosError);
+  if FLastPosError <> '' then
+  begin
+    FProcessState := ppsError;
+    Add_PosLog(FLastPosError);
+  end;
 end;
 
 function TPos_PrivatBank_JSON.DoPayment(ASumma : Currency; ARefund : Boolean) : Boolean;
@@ -229,7 +296,6 @@ function TPos_PrivatBank_JSON.DoPayment(ASumma : Currency; ARefund : Boolean) : 
       JsonToSend: TStringStream;
 begin
 
-  FProcessState := ppsError;
   try
     JSONParams := TJSONObject.Create;
     JSONParams.AddPair('amount', TJSONString.Create(FormatCurr('0.00', ASumma)));
@@ -262,20 +328,26 @@ begin
   except on E:Exception do FLastPosError := 'Ошибка выполнения оплаты (возврата) : ' + e.Message;
   end;
 
-  if FLastPosError <> '' then Add_PosLog(FLastPosError);
+  if FLastPosError <> '' then
+  begin
+    FProcessState := ppsError;
+    Add_PosLog(FLastPosError);
+  end;
 end;
 
 function TPos_PrivatBank_JSON.Payment(ASumma : Currency) : Boolean;
 begin
 
-  if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Выполнение оплаты');
+  if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Выполнение оплаты сумма ' + FormatCurr('0.00', ASumma));
+  Add_PosLog('Выполнение оплаты сумма ' + FormatCurr('0.00', ASumma));
 
   Result := DoPayment(ASumma, False);
 end;
 
 function TPos_PrivatBank_JSON.Refund(ASumma : Currency) : Boolean;
 begin
-  if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Выполнение возврата');
+  if Assigned(FMsgDescriptionProc) then FMsgDescriptionProc('Выполнение возврата сумма ' + FormatCurr('0.00', ASumma));
+  Add_PosLog('Выполнение возврата сумма ' + FormatCurr('0.00', ASumma));
 
   Result := DoPayment(ASumma, True);
 end;

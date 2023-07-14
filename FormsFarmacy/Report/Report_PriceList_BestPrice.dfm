@@ -231,10 +231,10 @@ inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 401
+            Width = 292
           end
           object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1085#1072' '#1082#1086#1085#1077#1081' '#1087#1077#1088#1080#1086#1076#1072
+            Caption = #1062#1077#1085#1072' '#1085#1072' '#1082#1086#1085#1077#1094' '#1087#1077#1088#1080#1086#1076#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -242,17 +242,35 @@ inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 110
+            Width = 96
           end
-          object PriceMin: TcxGridDBColumn
-            Caption = #1052#1080#1085' '#1094#1077#1085#1072' '#1074' '#1087#1077#1088#1080#1086#1076#1077
-            DataBinding.FieldName = 'PriceMin'
+          object PriceMax: TcxGridDBColumn
+            Caption = #1052#1072#1082#1089'. '#1094#1077#1085#1072' '#1074' '#1087#1077#1088#1080#1086#1076#1077
+            DataBinding.FieldName = 'PriceMax'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 97
+            Width = 79
+          end
+          object PercChange: TcxGridDBColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1080#1079#1084'.'
+            DataBinding.FieldName = 'PercChange'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object DatePriceMax: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1084#1080#1085'. '#1094#1077#1085#1099
+            DataBinding.FieldName = 'DatePriceMax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
           end
         end
       end
@@ -283,41 +301,50 @@ inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
       Top = 5
       ExplicitTop = 5
     end
-    object cxLabel3: TcxLabel
-      Left = 409
-      Top = 5
-      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
-    end
-    object ceJuridical: TcxButtonEdit
-      Left = 485
-      Top = 4
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-      Properties.ReadOnly = True
-      Properties.UseNullString = True
-      TabOrder = 5
-      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-      Width = 241
-    end
     object cxLabel4: TcxLabel
-      Left = 737
+      Left = 433
       Top = 5
       Caption = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '
     end
     object edProcent: TcxCurrencyEdit
-      Left = 824
+      Left = 520
       Top = 4
       EditValue = 10.000000000000000000
       Properties.DisplayFormat = ',0.00;-,0.00'
-      TabOrder = 7
+      TabOrder = 5
       Width = 74
     end
   end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Top'
+          'Left'
+          'Width'
+          'Height')
+      end
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = edProcent
+        Properties.Strings = (
+          'Value')
+      end>
+  end
   inherited ActionList: TActionList
+    inherited actRefresh: TdsdDataSetRefresh
+      BeforeAction = actJuridicalPriceChoice
+    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -412,16 +439,12 @@ inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
         item
           Name = 'JuridicalId'
           Value = ''
-          Component = GuidesJuridical
-          ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
           Value = ''
-          Component = GuidesJuridical
-          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -469,8 +492,6 @@ inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
         item
           Name = 'UnitName'
           Value = ''
-          Component = GuidesJuridical
-          ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -481,6 +502,26 @@ inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actJuridicalPriceChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actJuridicalPriceChoice'
+      FormName = 'TJuridicalPriceChoiceForm'
+      FormNameParam.Value = 'TJuridicalPriceChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'JuridicalList'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'JuridicalList'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -511,10 +552,11 @@ inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalId'
+        Name = 'inJuridicalList'
         Value = Null
-        Component = GuidesJuridical
-        ComponentItem = 'Key'
+        Component = FormParams
+        ComponentItem = 'JuridicalList'
+        DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -605,38 +647,9 @@ inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
       item
       end
       item
-        Component = GuidesJuridical
       end>
     Left = 432
     Top = 216
-  end
-  object GuidesJuridical: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceJuridical
-    FormNameParam.Value = 'TJuridical_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesJuridical
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesJuridical
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 344
   end
   object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'
@@ -646,15 +659,11 @@ inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
       item
         Name = 'UnitId'
         Value = ''
-        Component = GuidesJuridical
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = ''
-        Component = GuidesJuridical
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -670,8 +679,6 @@ inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
       item
         Name = 'inUnitId'
         Value = Null
-        Component = GuidesJuridical
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -695,5 +702,16 @@ inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
     PackSize = 1
     Left = 688
     Top = 240
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'JuridicalList'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    Left = 208
+    Top = 264
   end
 end

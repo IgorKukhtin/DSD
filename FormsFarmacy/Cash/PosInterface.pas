@@ -12,6 +12,7 @@ type
       procedure SetMsgDescriptionProc(Value: TMsgDescriptionProc);
       function GetMsgDescriptionProc: TMsgDescriptionProc;
       function GetLastPosError : string;
+      function GetTextCheck : string;
       function GetProcessType : TPosProcessType;
       function GetProcessState : TPosProcessState;
 
@@ -23,8 +24,10 @@ type
       property LastPosError : String read GetLastPosError;
       property ProcessType : TPosProcessType read GetProcessType;
       property ProcessState : TPosProcessState read GetProcessState;
+      property TextCheck : String read GetTextCheck;
    end;
 
 implementation
 
 end.
+
