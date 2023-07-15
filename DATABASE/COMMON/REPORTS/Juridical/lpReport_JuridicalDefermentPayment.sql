@@ -290,7 +290,7 @@ BEGIN
 
             , Object_Branch_personal.ValueData       AS BranchName_personal
             , Object_Branch_personal_trade.ValueData AS BranchName_personal_trade
-            , RESULT.ContainerId
+            , CASE WHEN RESULT.ContainerId > 0 THEN RESULT.ContainerId ELSE RESULT.ContainerId_max END AS ContainerId
 
            FROM (SELECT RESULT_all.AccountId
                       , RESULT_all.ContractId
@@ -313,6 +313,7 @@ BEGIN
                       , CLO_Branch.ObjectId    AS BranchId
                       , ObjectLink_Juridical_JuridicalGroup.ChildObjectId AS JuridicalGroupId
                       , CASE WHEN vbIsContainer = TRUE THEN RESULT_all.ContainerId ELSE 0 END AS ContainerId
+                      , MAX (RESULT_all.ContainerId) AS ContainerId_max
                  FROM
                 (SELECT Container.Id           AS ContainerId
                       , Container.ObjectId     AS AccountId
