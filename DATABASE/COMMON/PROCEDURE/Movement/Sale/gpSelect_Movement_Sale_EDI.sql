@@ -1115,5 +1115,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId:= 16505428, inSession:= '1329039'); -- FETCH ALL "<unnamed portal 1>";
-
-select * from gpSelect_Movement_Sale_EDI(inMovementId := 22315922 ,  inSession := '14610');
