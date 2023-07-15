@@ -371,8 +371,8 @@ BEGIN
            (SELECT tmpAll.ReceiptId_parent
                  , tmpAll.ReceiptId
                  , tmpAll.ReceiptId_calc
-                 , tmpAll.Amount_in_calc
-                 , tmpAll.Amount_in_calc_two
+                 , MAX (tmpAll.Amount_in_calc)     AS Amount_in_calc
+                 , MAX (tmpAll.Amount_in_calc_two) AS Amount_in_calc_two
                  , tmpAll.GoodsId
                  , tmpAll.GoodsKindId
                  , tmpAll.GoodsKindId_complete
@@ -394,8 +394,8 @@ BEGIN
             GROUP BY tmpAll.ReceiptId_parent
                    , tmpAll.ReceiptId
                    , tmpAll.ReceiptId_calc
-                   , tmpAll.Amount_in_calc
-                   , tmpAll.Amount_in_calc_two
+                 --, tmpAll.Amount_in_calc
+                 --, tmpAll.Amount_in_calc_two
                    , tmpAll.GoodsId
                    , tmpAll.GoodsKindId
                    , tmpAll.GoodsKindId_complete
