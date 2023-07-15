@@ -282,7 +282,7 @@ BEGIN
 
              , 0 AS UnitId_Item
              , CASE WHEN _tmp.isAsset = TRUE THEN _tmp.StorageId ELSE 0 END AS StorageId_Item
-             
+
              , _tmp.isPartionCount
              , _tmp.isPartionSumm
 
@@ -462,7 +462,7 @@ BEGIN
 
                           WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_30102()) -- Тушенка
                            AND MILinkObject_GoodsKind.ObjectId <> zc_GoodsKind_Basis()
-                           AND vbUnitId_To <> 2790412 -- ЦЕХ Тушенка -- 8006902 -- ЦЕХ упаковки Тушенки 
+                           AND vbUnitId_To <> 2790412 -- ЦЕХ Тушенка -- 8006902 -- ЦЕХ упаковки Тушенки
                                THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
 
                           WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
@@ -498,7 +498,7 @@ BEGIN
 
                    , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)     AS isPartionCount
                    , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)      AS isPartionSumm
-                   
+
                    , COALESCE (_tmpItem_pr.isAsset, FALSE) AS isAsset_master
 
               -- FROM Movement
@@ -568,7 +568,7 @@ BEGIN
                                , Container.Amount  AS Amount_container
                                , SUM (Container.Amount) OVER (PARTITION BY tmpMI.GoodsId ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()), Container.Id) AS AmountSUM
                                  -- !!!Надо отловить ПОСЛЕДНИЙ!!!
-                               , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) DESC, Container.Id DESC) AS Ord       
+                               , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) DESC, Container.Id DESC) AS Ord
                                  --
                                , CLO_PartionGoods.ObjectId AS PartionGoodsId
                           FROM tmpMI_summ AS tmpMI
@@ -586,28 +586,89 @@ BEGIN
                                LEFT JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                                        AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
                          )
-    , tmpContainer AS (SELECT DD.ContainerId
-                            , DD.GoodsId
-                            , DD.PartionGoodsId
-                            , CASE WHEN DD.Amount - DD.AmountSUM > 0 AND DD.Ord <> 1
-                                        THEN DD.Amount_container
-                                   ELSE DD.Amount - DD.AmountSUM + DD.Amount_container
-                              END AS Amount
-                       FROM (SELECT * FROM tmpContainer_all) AS DD
-                       WHERE DD.Amount - (DD.AmountSUM - DD.Amount_container) > 0
-                      )
-  -- распределяем "пропорционально"
+      -- итого кол-во разбили по партиям
+    , tmpContainer_partion AS (SELECT DD.ContainerId
+                                    , DD.GoodsId
+                                    , DD.PartionGoodsId
+                                    , CASE WHEN DD.Amount - DD.AmountSUM > 0 AND DD.Ord <> 1
+                                                THEN DD.Amount_container
+                                           ELSE DD.Amount - DD.AmountSUM + DD.Amount_container
+                                      END AS Amount
+                               FROM (SELECT * FROM tmpContainer_all) AS DD
+                               WHERE DD.Amount - (DD.AmountSUM - DD.Amount_container) > 0
+                              )
+      -- получили накопительные суммы
+    , tmpContainer_sum AS (SELECT tmpContainer.ContainerId
+                                , tmpContainer.GoodsId
+                                , tmpContainer.PartionGoodsId
+                                , tmpContainer.Amount
+                                  -- сортировка по ContainerId
+                                , SUM (tmpContainer.Amount) OVER (PARTITION BY tmpContainer.GoodsId ORDER BY tmpContainer.ContainerId ASC) AS AmountSUM
+                           FROM tmpContainer_partion AS tmpContainer
+                          )
+      -- получили № п/п, чтоб сформировать накопительные периоды
+    , tmpContainer_NUMBER AS (SELECT tmpContainer.ContainerId
+                                   , tmpContainer.GoodsId
+                                   , tmpContainer.PartionGoodsId
+                                   , tmpContainer.Amount
+                                   , tmpContainer.AmountSUM
+                                     -- макс кол-во будет с № п/п = 1
+                                   , ROW_NUMBER() OVER (PARTITION BY tmpContainer.GoodsId ORDER BY tmpContainer.AmountSUM DESC) AS Ord
+                              FROM tmpContainer_sum AS tmpContainer
+                             )
+      -- накопительные периоды
+    , tmpContainer_group AS (SELECT tmpContainer.ContainerId
+                                  , tmpContainer.GoodsId
+                                  , tmpContainer.PartionGoodsId
+                                  , tmpContainer.Amount
+                                  , tmpContainer.AmountSUM
+                                  , tmpContainer.Ord
+                                    -- с минимального
+                                  , COALESCE (tmpContainer_old.Amount, 0) AS Amount_min
+                                    -- увеличим последнее кол-во, если партий не хватит, что б все упало на этот ContainerId (хотя оно и так упалов запросе tmpContainer_partion)
+                                  , CASE WHEN tmpContainer.Ord = 1 THEN tmpContainer.AmountSUM * 1000 ELSE tmpContainer.Amount END AS Amount_max
+                              FROM tmpContainer_NUMBER AS tmpContainer
+                                   LEFT JOIN tmpContainer_NUMBER AS tmpContainer_old
+                                                                 ON tmpContainer_old.GoodsId = tmpContainer.GoodsId
+                                                                AND tmpContainer_old.Ord     = tmpContainer.Ord + 1
+                             )
+      -- накопительные MI
+    , tmpMI_group AS (SELECT tmpMI.MovementItemId
+                           , tmpMI.GoodsId
+                           , tmpMI.OperCount
+                             -- сортировка по MovementItemId
+                           , SUM (tmpMI.OperCount) OVER (PARTITION BY tmpMI.GoodsId ORDER BY tmpMI.MovementItemId ASC) AS AmountSUM
+                      FROM tmpMI
+                     )
+
+      -- партии прикрутили к MI
+    , tmpContainer AS (SELECT tmpMI_group.MovementItemId
+                            , tmpMI_group.GoodsId
+                              -- подставили из MI
+                            , tmpMI_group.OperCount AS Amount
+                              -- 
+                            , tmpContainer_group.ContainerId
+                            , tmpContainer_group.PartionGoodsId
+
+                      FROM tmpMI_group
+                           LEFT JOIN tmpContainer_group ON tmpContainer_group.GoodsId = tmpMI_group.GoodsId
+                                                       AND tmpMI_group.AmountSUM > tmpContainer_group.Amount_min AND tmpMI_group.AmountSUM <= tmpContainer_group.Amount_max
+                     )
+
+  -- распределяем ???"пропорционально"???
 , tmpContainer_res AS (SELECT tmpContainer.ContainerId
                             , tmpMI.GoodsId
                             , tmpMI.MovementItemId
                             , tmpContainer.PartionGoodsId
-                              -- 
-                            , tmpContainer.Amount * tmpMI.OperCount / tmpMI_summ.OperCount AS Amount
+                              --
+                          --, tmpContainer.Amount * tmpMI.OperCount / tmpMI_summ.OperCount AS Amount
+                            , tmpContainer.Amount
                        FROM tmpMI
                             -- итого
                             INNER JOIN tmpMI_summ ON tmpMI_summ.GoodsId = tmpMI.GoodsId
                             -- партии
-                            INNER JOIN tmpContainer ON tmpContainer.GoodsId = tmpMI.GoodsId
+                            INNER JOIN tmpContainer ON tmpContainer.GoodsId        = tmpMI.GoodsId
+                                                   AND tmpContainer.MovementItemId = tmpMI.MovementItemId
                        WHERE tmpMI_summ.OperCount > 0
                       )
         SELECT _tmp.MovementItemId_Parent
@@ -649,8 +710,13 @@ BEGIN
        ;
 
 
+--IF inMovementId = 25588338
+--THEN
+--    RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmpItemChild where _tmpItemChild.MovementItemId = 262115174);
+--end if;
+
      -- формируются Партии товара для Child(расход)-элементы, ЕСЛИ надо ...
-      UPDATE _tmpItemChild SET PartionGoodsId = CASE WHEN vbOperDate >= zc_DateStart_PartionGoods()
+     UPDATE _tmpItemChild SET PartionGoodsId = CASE WHEN vbOperDate >= zc_DateStart_PartionGoods()
                                                      AND vbAccountDirectionId_From = zc_Enum_AccountDirection_20200() -- Запасы + на складах
                                                      AND (_tmpItemChild.isPartionCount = TRUE OR _tmpItemChild.isPartionSumm = TRUE)
                                                         THEN lpInsertFind_Object_PartionGoods (_tmpItemChild.PartionGoods)
@@ -819,14 +885,14 @@ BEGIN
                                                    THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem_pr.PartionGoodsDate
                                                                                         , inGoodsKindId_complete := _tmpItem_pr.GoodsKindId_complete
                                                                                          )
-                                               -- 
+                                               --
                                                WHEN _tmpItem_pr.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
                                                                                          , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                          , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
                                                                                           )
                                                    THEN 0
 
-                                               -- 
+                                               --
                                                WHEN (_tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                   OR _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                   OR _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
@@ -839,7 +905,7 @@ BEGIN
                                                                                          , inOperDate      := _tmpItem_pr.PartionGoodsDate
                                                                                          , inPrice         := NULL
                                                                                           )
-                                               -- 
+                                               --
                                                WHEN (_tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                   OR _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                   OR _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
@@ -1446,7 +1512,7 @@ END IF;
                                 , inDescId     := zc_Movement_ProductionUnion()
                                 , inUserId     := inUserId
                                  );
-                                 
+
      -- кроме Админа
      IF inUserId <> zfCalc_UserAdmin() :: Integer
      THEN
