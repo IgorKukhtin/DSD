@@ -43,7 +43,7 @@ BEGIN
 
  
      -- с ЦЕХа Упаковки и с Базы ГП на Распределительный комплекс.
-     IF inUserId <> 5 THEN
+     IF inUserId <> 5 OR 1=1 THEN
      IF      -- 1.1.
              (EXISTS (SELECT 1
                       FROM MovementLinkObject AS MLO
