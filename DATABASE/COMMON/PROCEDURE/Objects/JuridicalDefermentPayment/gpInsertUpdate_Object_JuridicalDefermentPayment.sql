@@ -708,7 +708,7 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_JuridicalDefermentPayment (inStartDate:= '11.12.2021', inEndDate:= CURRENT_DATE, inSession:= '9457');
+-- SELECT * FROM gpInsertUpdate_Object_JuridicalDefermentPayment (inStartDate:= '01.01.2023', inEndDate:= CURRENT_DATE, inSession:= '9457');
 
 /*
   DELETE FROM ObjectLink WHERE ObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_JuridicalDefermentPayment());
