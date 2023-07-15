@@ -30,13 +30,6 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
-    edJuridical: TcxButtonEdit;
-    cxLabel3: TcxLabel;
-    GuidesJuridical: TdsdGuides;
-    ActionList: TActionList;
-    actRefresh: TdsdDataSetRefresh;
-    actGet_UserUnit: TdsdExecStoredProc;
-    actRefreshStart: TdsdDataSetRefresh;
     deEnd: TcxDateEdit;
     cxLabel2: TcxLabel;
     deStart: TcxDateEdit;

@@ -1448,7 +1448,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TextValue'
+        Name = 'Name_full'
         Value = ''
         Component = GuidesCity
         ComponentItem = 'TextValue'

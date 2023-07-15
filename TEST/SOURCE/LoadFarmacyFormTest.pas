@@ -1197,7 +1197,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PaymentHelsiForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PaymentHelsiForm');
-}
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FulfillmentPlanMobileAppUserForm');
 
@@ -1207,7 +1207,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_FulfillmentPlanMobileAppDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FulfillmentPlanMobileAppAntiTOPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FulfillmentPlanMobileAppAntiTOPForm');
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_TabletkiRecreateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_TabletkiRecreateForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_TabletkiRecreateDialogForm'));
@@ -2268,7 +2268,11 @@ begin
    TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
    TdsdFormStorageFactory.GetStorage.Load('TJuridicalEditForm');
 
-    {
+   {
+   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalPriceChoiceForm'));
+   TdsdFormStorageFactory.GetStorage.Load('TJuridicalPriceChoiceForm');
+
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalCorporateForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridicalCorporateForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ObjectForm'));

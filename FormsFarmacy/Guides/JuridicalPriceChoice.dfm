@@ -3,7 +3,7 @@ object JuridicalPriceChoiceForm: TJuridicalPriceChoiceForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080'>'
   ClientHeight = 357
-  ClientWidth = 564
+  ClientWidth = 500
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object JuridicalPriceChoiceForm: TJuridicalPriceChoiceForm
   object cxGrid: TcxGrid
     Left = 2
     Top = 26
-    Width = 562
+    Width = 498
     Height = 331
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 562
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -39,48 +40,32 @@ object JuridicalPriceChoiceForm: TJuridicalPriceChoiceForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
+      OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object isSelect: TcxGridDBColumn
+        Caption = #1042#1110#1073#1088'.'
+        DataBinding.FieldName = 'isSelect'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 51
+      end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 34
+        Width = 43
       end
       object clName: TcxGridDBColumn
-        Caption = #1051#1086#1075#1080#1085
+        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 129
-      end
-      object clMemberName: TcxGridDBColumn
-        Caption = #1060#1048#1054
-        DataBinding.FieldName = 'MemberName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 114
-      end
-      object UnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 132
-      end
-      object PositionName: TcxGridDBColumn
-        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-        DataBinding.FieldName = 'PositionName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
+        Width = 368
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -106,14 +91,14 @@ object JuridicalPriceChoiceForm: TJuridicalPriceChoiceForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 16
+    Left = 40
     Top = 200
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 24
-    Top = 128
+    Left = 40
+    Top = 112
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -138,7 +123,7 @@ object JuridicalPriceChoiceForm: TJuridicalPriceChoiceForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -15
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -281,8 +266,8 @@ object JuridicalPriceChoiceForm: TJuridicalPriceChoiceForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 312
-    Top = 160
+    Left = 344
+    Top = 120
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -313,6 +298,7 @@ object JuridicalPriceChoiceForm: TJuridicalPriceChoiceForm
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actDataToJson
       Params = <
         item
           Name = 'Key'
@@ -338,36 +324,45 @@ object JuridicalPriceChoiceForm: TJuridicalPriceChoiceForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitName'
+          Name = 'JuridicalList'
           Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'UnitName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PositionName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PositionName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MemberName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'MemberName'
-          DataType = ftString
+          Component = FormParams
+          ComponentItem = 'JuridicalList'
+          DataType = ftWideString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
     end
+    object actDataToJson: TdsdDataToJsonAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      View = cxGridDBTableView
+      JsonParam.Value = Null
+      JsonParam.Component = FormParams
+      JsonParam.ComponentItem = 'JuridicalList'
+      JsonParam.DataType = ftWideString
+      JsonParam.MultiSelectSeparator = ','
+      PairParams = <
+        item
+          FieldName = 'Id'
+          PairName = 'Id'
+          DataType = ftInteger
+        end
+        item
+          FieldName = 'isSelect'
+          PairName = 'isSelect'
+          DataType = ftBoolean
+        end>
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      Caption = 'actDataToJson'
+    end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_JuridicalPriceChoice'
+    StoredProcName = 'gpSelect_PriceList_Juridical'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -375,7 +370,7 @@ object JuridicalPriceChoiceForm: TJuridicalPriceChoiceForm
       end>
     Params = <>
     PackSize = 1
-    Left = 88
+    Left = 96
     Top = 104
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
@@ -397,15 +392,29 @@ object JuridicalPriceChoiceForm: TJuridicalPriceChoiceForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 136
     Top = 224
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272
     Top = 216
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'JuridicalList'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    Left = 40
+    Top = 272
   end
 end

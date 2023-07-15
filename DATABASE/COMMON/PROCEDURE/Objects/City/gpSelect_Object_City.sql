@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_City(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_City(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_full TVarChar
              , CityKindId Integer, CityKindCode Integer, CityKindName TVarChar 
              , RegionId Integer, RegionCode Integer, RegionName TVarChar
              , ProvinceId Integer, ProvinceCode Integer, ProvinceName TVarChar
@@ -19,7 +19,13 @@ $BODY$BEGIN
    SELECT
           Object_City.Id         AS Id
         , Object_City.ObjectCode AS Code
-        , Object_City.ValueData  AS Name
+        , Object_City.ValueData  AS Name  
+        
+        , ( CASE WHEN COALESCE (Object_Region.ValueData,'')   <> '' THEN COALESCE (Object_Region.ValueData,'') ||' обл., ' ELSE ''  END
+              ||CASE WHEN COALESCE (Object_Province.ValueData,'') <> '' THEN COALESCE (Object_Province.ValueData,'') ||' район, ' ELSE ''  END
+              ||CASE WHEN COALESCE (Object_CityKind.ValueData,'') <> '' THEN COALESCE (Object_CityKind.ValueData,'') ||' ' ELSE ''  END
+              ||COALESCE (Object_City.ValueData,'')
+             ) ::TVarChar AS Name_full
 
         , Object_CityKind.Id          AS CityKindId
         , Object_CityKind.ObjectCode  AS CityKindCode

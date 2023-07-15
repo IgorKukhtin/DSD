@@ -11175,7 +11175,7 @@ function TMainCashForm2.PutCheckToCash(SalerCash, SalerCashAdd: Currency;
   PaidType: TPaidType; var AZReport : Integer; var AFiscalNumber, ACheckNumber: String;
   APOSTerminalCode: Integer = 0; isFiscal: Boolean = True): Boolean;
 var
-  str_log_xml, cResult: String;
+  str_log_xml, cResult, cTextCheck: String;
   Disc, nSumAll: Currency;
   I, PosDisc: Integer;
   pPosTerm: IPos;
@@ -11248,6 +11248,7 @@ var
 begin
   Result := False;
   ACheckNumber := '';
+  cTextCheck := '';
   AZReport := 0;
   FErrorRRO := False;
   try
@@ -11433,6 +11434,7 @@ begin
 
           if not PayPosTerminal(pPosTerm, MainCashForm.ASalerCash) then
             exit;
+          cTextCheck := pPosTerm.TextCheck;
         finally
           if pPosTerm <> Nil then
             pPosTerm := Nil;
@@ -11514,6 +11516,7 @@ begin
           begin
             if Result then
               Result := Cash.SubTotal(True, True, 0, 0);
+            if cTextCheck <> '' then Cash.PrintFiscalText(cTextCheck);
             if Result then
               Result := Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
             if Result and (FormParams.ParamByName('LoyaltySignID').Value <> 0)

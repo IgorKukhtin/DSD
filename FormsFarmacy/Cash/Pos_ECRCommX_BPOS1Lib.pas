@@ -18,6 +18,7 @@ type
     procedure SetMsgDescriptionProc(Value: TMsgDescriptionProc);
     function GetMsgDescriptionProc: TMsgDescriptionProc;
     function GetLastPosError : string;
+    function GetTextCheck : string;
     function GetProcessType : TPosProcessType;
     function GetProcessState : TPosProcessState;
   protected
@@ -55,6 +56,11 @@ end;
 function TPos_ECRCommX_BPOS1Lib.GetLastPosError : string;
 begin
   Result := FLastPosError;
+end;
+
+function TPos_ECRCommX_BPOS1Lib.GetTextCheck : string;
+begin
+  Result := '';
 end;
 
 function TPos_ECRCommX_BPOS1Lib.GetProcessType : TPosProcessType;

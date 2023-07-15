@@ -50,12 +50,12 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     spSelect: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clMemberName: TcxGridDBColumn;
     cxSplitter: TcxSplitter;
-    UnitName: TcxGridDBColumn;
-    PositionName: TcxGridDBColumn;
+    isSelect: TcxGridDBColumn;
     bbProtocolOpen: TdxBarButton;
     bbProtocolRole: TdxBarButton;
+    actDataToJson: TdsdDataToJsonAction;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

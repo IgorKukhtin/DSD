@@ -98,6 +98,10 @@ begin
         nProcessStateNaxt := ppsOkConnection;
       end else if nProcessStateNaxt = FPosTerm.ProcessState then
       begin
+        if FSalerCash <= 0 then
+        begin
+          Break;
+        end else
         if FRefund then
         begin
           FPosTerm.Refund(FSalerCash);
@@ -112,7 +116,6 @@ begin
         FPeyResult := True;
         Break;
       end else Break;
-
     end else
     begin
       if FPosTerm.CheckConnection then

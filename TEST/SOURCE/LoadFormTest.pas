@@ -3768,6 +3768,7 @@ end;
 
 procedure TLoadFormTest.LoadAddressFormTest;
 begin
+{
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerAddressForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerAddressForm');
@@ -3787,7 +3788,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCityKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCityKindEditForm');
-
+    }
   // населенный пункт
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCityForm');
