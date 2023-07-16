@@ -1061,10 +1061,10 @@
   object GuidesCarType: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCarType
-    FormNameParam.Value = 'TCarModelForm'
+    FormNameParam.Value = 'TCarTypeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCarModelForm'
+    FormName = 'TCarTypeForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
