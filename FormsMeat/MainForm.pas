@@ -1438,6 +1438,10 @@ type
     miReport_Remains_Partion: TMenuItem;
     actReport_JuridicalDefermentPaymentMovement: TdsdOpenForm;
     miReport_DefermentPaymentMovement: TMenuItem;
+    actCarType: TdsdOpenForm;
+    actBodyType: TdsdOpenForm;
+    miCarType: TMenuItem;
+    miBodyType: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

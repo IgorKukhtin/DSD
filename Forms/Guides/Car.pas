@@ -81,6 +81,9 @@ type
     macUpdate_isIrna_list: TMultiAction;
     macUpdate_isIrna: TMultiAction;
     bbUpdate_isIrna: TdxBarButton;
+    CarTypeName: TcxGridDBColumn;
+    BodyTypeName: TcxGridDBColumn;
+    EngineNum: TcxGridDBColumn;
   private
     { Private declarations }
   public

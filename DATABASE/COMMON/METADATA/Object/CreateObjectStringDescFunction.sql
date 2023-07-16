@@ -93,6 +93,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Car_VIN() RETURNS Integer AS $BODY$BE
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Car_VIN', zc_Object_Car(), ' 	VIN-код' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Car_VIN');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Car_EngineNum() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Car_EngineNum'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Car_EngineNum', zc_Object_Car(), 'Номер двигателя' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Car_EngineNum');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_CarExternal_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CarExternal_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
@@ -1573,6 +1577,7 @@ INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 17.07.23         * zc_ObjectString_Car_EngineNum
  11.07.23         * zc_ObjectString_Unit_AddressEDIN
  06.07.23                                                                                                         * zc_ObjectString_Partner_KATOTTG 
  10.05.23         * zc_ObjectString_Member_GLN

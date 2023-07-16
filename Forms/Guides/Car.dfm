@@ -68,7 +68,23 @@ object CarForm: TCarForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 120
+        Width = 80
+      end
+      object CarTypeName: TcxGridDBColumn
+        Caption = #1052#1086#1076#1077#1083#1100' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+        DataBinding.FieldName = 'CarTypeName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 85
+      end
+      object BodyTypeName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1082#1091#1079#1086#1074#1072
+        DataBinding.FieldName = 'BodyTypeName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 67
       end
       object Name: TcxGridDBColumn
         Caption = #1043#1086#1089'.'#1085#1086#1084#1077#1088
@@ -228,6 +244,14 @@ object CarForm: TCarForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 92
+      end
+      object EngineNum: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1076#1074#1080#1075#1072#1090#1077#1083#1103
+        DataBinding.FieldName = 'EngineNum'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
