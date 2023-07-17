@@ -9,7 +9,8 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, 
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(
@@ -18,8 +19,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(
       IN inName                     TVarChar,    -- наименование 
       IN inRegistrationCertificate  TVarChar,    -- Техпаспорт
       IN inVIN                      TVarChar,    -- VIN код
+      IN inEngineNum                TVarChar,    -- Номер двигателя
       IN inComment                  TVarChar,    -- Примечание
       IN inCarModelId               Integer,     -- Марка автомобиля
+      IN inCarTypeId                Integer,     -- Модель автомобиля
+      IN inBodyTypeId               Integer,     -- Тип кузова
       IN inUnitId                   Integer,     -- Подразделение
       IN inPersonalDriverId         Integer,     -- Сотрудник (водитель)
       IN inFuelMasterId             Integer,     -- Вид топлива (основной)
@@ -65,9 +69,16 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Car_Comment(), ioId, inComment);
    -- сохранили св-во <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Car_VIN(), ioId, inVIN);
+   -- сохранили св-во <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Car_EngineNum(), ioId, inEngineNum);
    
-   -- сохранили связь с <Модель авто>
+   -- сохранили связь с <Марка автомобиля>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_CarModel(), ioId, inCarModelId);
+   -- сохранили связь с <Модель авто>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_CarType(), ioId, inCarTypeId);
+   -- сохранили связь с <Тип кузова>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_BodyType(), ioId, inBodyTypeId);
+
    -- сохранили связь с <подразделением>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_Unit(), ioId, inUnitId);
    -- сохранили связь с <Сотрудник (водитель)>
@@ -108,6 +119,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.07.23         *
  07.12.21         * del inAssetId
  01.11.21         *
  05.10.21         *

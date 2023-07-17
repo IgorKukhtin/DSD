@@ -45,25 +45,25 @@ type
     ceCarModel: TcxButtonEdit;
     cxLabel7: TcxLabel;
     ceUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     cxLabel3: TcxLabel;
     cePersonalDriver: TcxButtonEdit;
-    PersonalGuides: TdsdGuides;
+    GuidesPersonal: TdsdGuides;
     cxLabel4: TcxLabel;
     ceFuelMaster: TcxButtonEdit;
-    FuelMasterGuides: TdsdGuides;
+    GuidesFuelMaster: TdsdGuides;
     cxLabel6: TcxLabel;
     ceFuelChild: TcxButtonEdit;
     FuelChildGuides: TdsdGuides;
-    CarModelGuides: TdsdGuides;
+    GuidesCarModel: TdsdGuides;
     cxLabel8: TcxLabel;
     ceJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
+    GuidesJuridical: TdsdGuides;
     cxLabel9: TcxLabel;
     ceComment: TcxTextEdit;
     cxLabel10: TcxLabel;
     ceAsset: TcxButtonEdit;
-    AssetGuides: TdsdGuides;
+    GuidesAsset: TdsdGuides;
     edKoeffHoursWork: TcxCurrencyEdit;
     cxLabel33: TcxLabel;
     cxLabel11: TcxLabel;
@@ -80,6 +80,14 @@ type
     edYear: TcxCurrencyEdit;
     cxLabel17: TcxLabel;
     edVIN: TcxTextEdit;
+    cxLabel18: TcxLabel;
+    edEngineNum: TcxTextEdit;
+    cxLabel19: TcxLabel;
+    edCarType: TcxButtonEdit;
+    GuidesCarType: TdsdGuides;
+    cxLabel20: TcxLabel;
+    edBodyType: TcxButtonEdit;
+    GuidesBodyType: TdsdGuides;
   private
     { Private declarations }
   public

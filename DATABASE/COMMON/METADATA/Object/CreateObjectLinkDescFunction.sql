@@ -88,6 +88,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Car_Asset() RETURNS Integer AS $BODY$BE
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Car_Asset', 'Связь Машины с Основные средства', zc_Object_Car(), zc_Object_Asset() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Car_Asset');
 
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Car_CarType() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Car_CarType'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Car_CarType', 'Связь Машины с Модель автомобиля', zc_Object_Car(), zc_Object_CarType() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Car_CarType');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Car_BodyType() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Car_BodyType'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Car_BodyType', 'Связь Машины с Тип кузова', zc_Object_Car(), zc_Object_BodyType() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Car_BodyType');
+
+
 --
 CREATE OR REPLACE FUNCTION zc_ObjectLink_CarExternal_CarModel() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_CarExternal_CarModel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)

@@ -1445,7 +1445,11 @@ uses
   MemberHolidayEdit in '..\..\Forms\Document\MemberHolidayEdit.pas' {MemberHolidayEditForm: TParentForm},
   PriceNalogDialog in '..\..\Forms\Document\PriceNalogDialog.pas' {PriceNalogDialogForm: TParentForm},
   MemberGLNEdit in '..\..\Forms\Guides\MemberGLNEdit.pas' {MemberGLNEditForm: TParentForm},
-  Units in '..\..\Forms\Guides\Units.pas' {UnitForm: TParentForm};
+  Units in '..\..\Forms\Guides\Units.pas' {UnitForm: TParentForm},
+  CarTypeEdit in '..\..\Forms\Guides\CarTypeEdit.pas' {CarTypeEditForm: TParentForm},
+  CarType in '..\..\Forms\Guides\CarType.pas' {CarTypeForm: TParentForm},
+  BodyTypeEdit in '..\..\Forms\Guides\BodyTypeEdit.pas' {BodyTypeEditForm: TParentForm},
+  BodyType in '..\..\Forms\Guides\BodyType.pas' {BodyTypeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

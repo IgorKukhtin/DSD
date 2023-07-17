@@ -10,9 +10,11 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , KoeffHoursWork TFloat, PartnerMin TFloat
              , Length TFloat, Width TFloat, Height TFloat
              , Weight TFloat, Year TFloat
-             , VIN TVarChar
+             , VIN TVarChar, EngineNum TVarChar
              , RegistrationCertificate TVarChar, Comment TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
+             , CarTypeId Integer, CarTypeCode Integer, CarTypeName TVarChar
+             , BodyTypeId Integer, BodyTypeCode Integer, BodyTypeName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PersonalDriverId Integer, PersonalDriverCode Integer, PersonalDriverName TVarChar
              , FuelMasterId Integer, FuelMasterCode Integer, FuelMasterName TVarChar
@@ -44,7 +46,8 @@ BEGIN
            , CAST (0 AS TFloat)     AS Height
            , CAST (0 AS TFloat)     AS Weight
            , CAST (0 AS TFloat)     AS Year
-           , CAST ('' as TVarChar)  AS VIN
+           , CAST ('' as TVarChar)  AS VIN 
+           , CAST ('' as TVarChar)  AS EngineNum
 
            , CAST ('' as TVarChar)  AS RegistrationCertificate
            , CAST ('' as TVarChar)  AS Comment
@@ -52,7 +55,15 @@ BEGIN
            , CAST (0 as Integer)    AS CarModelId
            , CAST (0 as Integer)    AS CarModelCode
            , CAST ('' as TVarChar)  AS CarModelName
-          
+ 
+           , CAST (0 as Integer)    AS CarTypeId
+           , CAST (0 as Integer)    AS CarTypeCode
+           , CAST ('' as TVarChar)  AS CarTypeName
+           
+           , CAST (0 as Integer)    AS BodyTypeId
+           , CAST (0 as Integer)    AS BodyTypeCode
+           , CAST ('' as TVarChar)  AS BodyTypeName
+                    
            , CAST (0 as Integer)    AS UnitId
            , CAST (0 as Integer)    AS UnitCode
            , CAST ('' as TVarChar)  AS UnitName
@@ -98,13 +109,22 @@ BEGIN
            , COALESCE (ObjectFloat_Weight.ValueData,0)         :: TFloat  AS Weight
            , COALESCE (ObjectFloat_Year.ValueData,0)           :: TFloat  AS Year
 
-           , ObjectString_VIN.ValueData    :: TVarChar AS VIN
+           , ObjectString_VIN.ValueData       :: TVarChar AS VIN 
+           , ObjectString_EngineNum.ValueData :: TVarChar AS EngineNum
            , RegistrationCertificate.ValueData         AS RegistrationCertificate
            , ObjectString_Comment.ValueData            AS Comment
            
            , Object_CarModel.Id         AS CarModelId
            , Object_CarModel.ObjectCode AS CarModelCode
            , Object_CarModel.ValueData  AS CarModelName
+
+           , Object_CarType.Id          AS CarTypeId
+           , Object_CarType.ObjectCode  AS CarTypeCode
+           , Object_CarType.ValueData   AS CarTypeName
+
+           , Object_BodyType.Id         AS BodyTypeId
+           , Object_BodyType.ObjectCode AS BodyTypeCode
+           , Object_BodyType.ValueData  AS BodyTypeName
          
            , Object_Unit.Id          AS UnitId
            , Object_Unit.ObjectCode  AS UnitCode
@@ -144,6 +164,10 @@ BEGIN
                                    ON ObjectString_VIN.ObjectId = Object_Car.Id
                                   AND ObjectString_VIN.DescId = zc_ObjectString_Car_VIN()
 
+            LEFT JOIN ObjectString AS ObjectString_EngineNum
+                                   ON ObjectString_EngineNum.ObjectId = Object_Car.Id
+                                  AND ObjectString_EngineNum.DescId = zc_ObjectString_Car_EngineNum()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_KoeffHoursWork
                                   ON ObjectFloat_KoeffHoursWork.ObjectId = Object_Car.Id
                                  AND ObjectFloat_KoeffHoursWork.DescId = zc_ObjectFloat_Car_KoeffHoursWork()
@@ -172,6 +196,16 @@ BEGIN
                                  ON Car_CarModel.ObjectId = Object_Car.Id
                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+
+            LEFT JOIN ObjectLink AS Car_CarType
+                                 ON Car_CarType.ObjectId = Object_Car.Id
+                                AND Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = Car_CarType.ChildObjectId
+
+            LEFT JOIN ObjectLink AS Car_BodyType
+                                 ON Car_BodyType.ObjectId = Object_Car.Id
+                                AND Car_BodyType.DescId = zc_ObjectLink_Car_BodyType()
+            LEFT JOIN Object AS Object_BodyType ON Object_BodyType.Id = Car_BodyType.ChildObjectId
             
             LEFT JOIN ObjectLink AS ObjectLink_Car_Unit
                                  ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
@@ -216,6 +250,7 @@ ALTER FUNCTION gpGet_Object_Car (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.07.23         *
  07.12.21         *
  02.11.21         *
  01.11.21         * Weight

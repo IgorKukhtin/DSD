@@ -4408,12 +4408,21 @@ end;
 
 procedure TLoadFormTest.LoadCarFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBodyTypeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBodyTypeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBodyTypeEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBodyTypeEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarTypeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCarTypeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarTypeEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCarTypeEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCarForm');
-  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCarEditForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCar_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCar_ObjectForm');
 end;
