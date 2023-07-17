@@ -64,7 +64,7 @@ BEGIN
            , zfCalc_PartionMovementName (Movement_Transport.DescId, MovementDesc.ItemName, Movement_Transport.InvNumber, Movement_Transport.OperDate) AS InvNumber_Transport_Full
            
            , Object_Car.ValueData             AS CarName
-           , Object_CarModel.ValueData        AS CarModelName
+           , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
            , View_PersonalDriver.PersonalName AS PersonalDriverName
            
            , MovementFloat_TotalCountTare.ValueData  ::TFloat AS TotalCountTare
@@ -116,10 +116,16 @@ BEGIN
                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
-                                                           AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel 
+                                 ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
+            
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
