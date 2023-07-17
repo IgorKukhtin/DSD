@@ -77,7 +77,7 @@ BEGIN
            , Object_Car.Id               AS CarId
            , Object_Car.ObjectCode       AS CarCode
            , Object_Car.ValueData        AS CarName
-           , Object_CarModel.ValueData   AS CarModelName
+           , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
            , COALESCE (ObjectDate_Release.ValueData,CAST (CURRENT_DATE as TDateTime)) AS Release
            , ObjectString_InvNumber.ValueData      AS InvNumber
            , ObjectString_SerialNumber.ValueData   AS SerialNumber
@@ -113,7 +113,12 @@ BEGIN
                                  ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                 AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
-  
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId =  Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
+              
             LEFT JOIN ObjectDate AS ObjectDate_Release
                                  ON ObjectDate_Release.ObjectId = MovementItem.ObjectId
                                 AND ObjectDate_Release.DescId = zc_ObjectDate_Asset_Release()
@@ -152,4 +157,4 @@ $BODY$
  16.03.20         *
 */
 
--- SELECT * FROM gpSelect_Movement_LossAsset_Print (inMovementId := 570596, inMovementId_Weighing:= 0, inSession:= '5');
+-- SELECT * FROM gpSelect_Movement_LossAsset_Print (inMovementId := 570596, inisItem:= false, inSession:= '5');

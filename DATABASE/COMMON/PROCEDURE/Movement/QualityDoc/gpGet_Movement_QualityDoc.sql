@@ -208,7 +208,7 @@ BEGIN
            , Object_Car.Id                    AS CarId
            , Object_Car.ValueData             AS CarName
            , Object_CarModel.Id               AS CarModelId
-           , Object_CarModel.ValueData        AS CarModelName
+           , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
 
            , Object_From.Id           AS FromId
            , Object_From.ValueData    AS FromName
@@ -250,6 +250,11 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId =  Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
 
             LEFT JOIN tmpQualityDoc ON 1 = 1
             LEFT JOIN tmpQualityDoc_old ON 1 = 1
