@@ -602,7 +602,7 @@ object CarForm: TCarForm
           Name = 'CarModelName'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'CarModelName'
+          ComponentItem = 'CarModelName_full'
           DataType = ftString
           MultiSelectSeparator = ','
         end

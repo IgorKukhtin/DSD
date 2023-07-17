@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar
              , Weight TFloat, Year TFloat
              , VIN TVarChar, EngineNum TVarChar
              , RegistrationCertificate TVarChar, Comment TVarChar
-             , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar  
+             , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar, CarModelName_full TVarChar 
              , CarTypeId Integer, CarTypeCode Integer, CarTypeName TVarChar
              , BodyTypeId Integer, BodyTypeCode Integer, BodyTypeName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -67,6 +67,7 @@ BEGIN
            , Object_CarModel.Id         AS CarModelId
            , Object_CarModel.ObjectCode AS CarModelCode
            , Object_CarModel.ValueData  AS CarModelName 
+           , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName_full
 
            , Object_CarType.Id          AS CarTypeId
            , Object_CarType.ObjectCode  AS CarTypeCode
@@ -240,4 +241,5 @@ $BODY$
 UPDATE Object SET AccessKeyId = COALESCE (Object_Branch.AccessKeyId, zc_Enum_Process_AccessKey_TrasportDnepr()) FROM ObjectLink LEFT JOIN ObjectLink AS ObjectLink2 ON ObjectLink2.ObjectId = ObjectLink.ChildObjectId AND ObjectLink2.DescId = zc_ObjectLink_Unit_Branch() LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink2.ChildObjectId WHERE ObjectLink.ObjectId = Object.Id AND ObjectLink.DescId = zc_ObjectLink_Car_Unit() AND Object.DescId = zc_Object_Car();
 */
 -- тест
--- SELECT * FROM gpSelect_Object_Car (false , zfCalc_UserAdmin())
+-- 
+SELECT * FROM gpSelect_Object_Car (false , zfCalc_UserAdmin())
