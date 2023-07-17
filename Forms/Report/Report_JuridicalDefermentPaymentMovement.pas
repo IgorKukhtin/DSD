@@ -115,6 +115,9 @@ type
     Summa_doc4: TcxGridDBColumn;
     Summa_doc5: TcxGridDBColumn;
     TotalSumm_diff_Deferment: TcxGridDBColumn;
+    actPrint2: TdsdPrintAction;
+    bbPrint2: TdxBarButton;
+    DayCount_condition: TcxGridDBColumn;
   private
     { Private declarations }
   public

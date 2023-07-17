@@ -370,6 +370,14 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             Options.Editing = False
             Width = 120
           end
+          object PartnerTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1058#1058
+            DataBinding.FieldName = 'PartnerTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object OKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
@@ -880,6 +888,12 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 120
+          end
+          object DayCount_condition: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1076#1085#1077#1081' '#1086#1090#1089#1088#1086#1095#1082#1080
+            DataBinding.FieldName = 'DayCount_condition'
+            Visible = False
+            Width = 70
           end
         end
       end
@@ -1547,6 +1561,101 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint2: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1088#1086#1089#1088#1086#1095#1082#1072' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      Hint = #1055#1088#1086#1089#1088#1086#1095#1082#1072' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      ImageIndex = 15
+      DataSets = <
+        item
+          UserName = 'frDataSet'
+          IndexFieldNames = 'PersonalTradeName_Partner;ToName'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'OperDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountId'
+          Value = ''
+          Component = GuidesAccount
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = GuidesAccount
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindId'
+          Value = ''
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchId'
+          Value = ''
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalGroupId'
+          Value = ''
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalGroupName'
+          Value = ''
+          Component = GuidesJuridicalGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DescName'
+          Value = 'zc_Movement_Sale'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080' c '#1086#1090#1089#1088#1086#1095#1082#1086#1081' ('#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080' c '#1086#1090#1089#1088#1086#1095#1082#1086#1081' ('#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -2235,6 +2344,10 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
         end
         item
           Visible = True
+          ItemName = 'bbPrint2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2341,6 +2454,10 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
     end
     object bbOpenReportForm: TdxBarButton
       Action = actOpenReportForm
+      Category = 0
+    end
+    object bbPrint2: TdxBarButton
+      Action = actPrint2
       Category = 0
     end
   end

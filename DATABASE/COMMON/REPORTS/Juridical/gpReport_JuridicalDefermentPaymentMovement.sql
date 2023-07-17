@@ -40,7 +40,7 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , OperDate_pay    TDateTime
              , MovementDescName TVarChar
              , InvNumber       TVarChar
-             , ToId Integer, ToName TVarChar
+             , ToId Integer, ToName TVarChar , PartnerTagName TVarChar
                -- нет просрочки на эту сумму
              , Summa_doc       TFloat
                -- просрочки на эту сумму - 1 неделя
@@ -59,6 +59,7 @@ RETURNS TABLE (AccountId Integer, AccountName TVarChar, JuridicalId Integer, Jur
              , TotalSumm_diff           TFloat
              , TotalSumm_diff_Deferment TFloat
                --
+             , DayCount_condition Integer
              , DelayDay_calc   Integer
              , ContainerId     Integer
                --
@@ -1261,7 +1262,8 @@ BEGIN
                          END  ::TDateTime AS OperDate_pay
                          -- вся сумма накладной
                         , (tmpContainerData.Amount + tmpContainerData.Amount1 + tmpContainerData.Amount2 + tmpContainerData.Amount3 + tmpContainerData.Amount4 + tmpContainerData.Amount5) ::TFloat AS TotalSumm
-
+                        , tmpReport.DayCount 
+                        , COALESCE (Object_PartnerTag.ValueData,'')  AS PartnerTagName
                  FROM tmpReport
                       LEFT JOIN tmpLastPayment_all AS tmpLastPayment
                                                    ON tmpLastPayment.JuridicalId = tmpReport.JuridicalId
@@ -1297,6 +1299,11 @@ BEGIN
                                                    ON MovementLinkObject_Partner.MovementId = tmpContainerData.MovementId
                                                   AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_To()
                       LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_To.ObjectId)
+
+                      LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
+                                           ON ObjectLink_Partner_PartnerTag.ObjectId = Object_To.Id
+                                          AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
+                      LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
                 )
 
    ---
@@ -1343,6 +1350,7 @@ BEGIN
         , CASE WHEN tmpReport.MovementId = -1 THEN 'Нет подбора' ELSE tmpReport.InvNumber END ::TVarChar
         , tmpReport.ToId             ::Integer
         , tmpReport.ToName           ::TVarChar
+        , tmpReport.PartnerTagName   ::TVarChar
 
           -- нет просрочки на эту сумму
         , tmpReport.Summa_doc ::TFloat
@@ -1365,6 +1373,7 @@ BEGIN
           --  долг по накладной
         , (COALESCE (tmpReport.Summa_doc_1, 0) + COALESCE (tmpReport.Summa_doc_2, 0) + COALESCE (tmpReport.Summa_doc_3, 0) + COALESCE (tmpReport.Summa_doc_4, 0) + COALESCE (tmpReport.Summa_doc_5, 0)) ::TFloat AS TotalSumm_diff_Deferment
 
+        , tmpReport.DayCount ::Integer AS DayCount_condition
         , DATE_PART ('DAY', inOperDate:: TIMESTAMP -  tmpReport.OperDate_pay :: TIMESTAMP) ::Integer AS DelayDay_calc
 
         , tmpReport.ContainerId :: Integer
