@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_CarExternal(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , RegistrationCertificate TVarChar, Comment TVarChar
-             , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
+             , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar 
+             , CarTypeId Integer, CarTypeCode Integer, CarTypeName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , Length TFloat, Width TFloat, Height TFloat
              , Weight TFloat, Year TFloat
@@ -35,7 +36,11 @@ BEGIN
            , CAST (0 as Integer)    AS CarModelId
            , CAST (0 as Integer)    AS CarModelCode
            , CAST ('' as TVarChar)  AS CarModelName
-          
+
+           , CAST (0 as Integer)    AS CarTypeId
+           , CAST (0 as Integer)    AS CarTypeCode
+           , CAST ('' as TVarChar)  AS CarTypeName
+
            , CAST (0 as Integer)    AS JuridicalId
            , CAST (0 as Integer)    AS JuridicalCode
            , CAST ('' as TVarChar)  AS JuridicalName
@@ -62,6 +67,10 @@ BEGIN
            , Object_CarModel.Id         AS CarModelId
            , Object_CarModel.ObjectCode AS CarModelCode
            , Object_CarModel.ValueData  AS CarModelName
+
+           , Object_CarType.Id          AS CarTypeId
+           , Object_CarType.ObjectCode  AS CarTypeCode
+           , Object_CarType.ValueData   AS CarTypeName
          
            , Object_Juridical.Id          AS JuridicalId
            , Object_Juridical.ObjectCode  AS JuridicalCode
@@ -93,6 +102,11 @@ BEGIN
                                  ON CarExternal_CarModel.ObjectId = Object_CarExternal.Id
                                 AND CarExternal_CarModel.DescId = zc_ObjectLink_CarExternal_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = CarExternal_CarModel.ChildObjectId
+
+            LEFT JOIN ObjectLink AS CarExternal_CarType
+                                 ON CarExternal_CarType.ObjectId = Object_CarExternal.Id
+                                AND CarExternal_CarType.DescId = zc_ObjectLink_CarExternal_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = CarExternal_CarType.ChildObjectId
             
             LEFT JOIN ObjectLink AS ObjectLink_CarExternal_Juridical 
                                  ON ObjectLink_CarExternal_Juridical.ObjectId = Object_CarExternal.Id

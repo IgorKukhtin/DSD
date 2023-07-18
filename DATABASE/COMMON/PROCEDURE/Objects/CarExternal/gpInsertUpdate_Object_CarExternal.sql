@@ -2,6 +2,7 @@
 
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar,TVarChar,Integer,Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,Integer,Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,Integer,Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CarExternal(
    INOUT ioId                       Integer, 
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CarExternal(
       IN inVIN                      TVarChar,    -- VIN код
       IN inComment                  TVarChar  ,    -- Примечание
       IN inCarModelId               Integer, 
+      IN inCarTypeId                Integer,     -- Модель автомобиля
       IN inJuridicalId              Integer,
       IN inLength                   TFloat ,     -- 
       IN inWidth                    TFloat ,     -- 
@@ -36,7 +38,8 @@ BEGIN
                                             , inRegistrationCertificate := inRegistrationCertificate
                                             , inVIN         := inVIN
                                             , inComment     := inComment
-                                            , inCarModelId  := inCarModelId
+                                            , inCarModelId  := inCarModelId 
+                                            , inCarTypeId   := inCarTypeId
                                             , inJuridicalId := inJuridicalId
                                             , inLength      := inLength
                                             , inWidth       := inWidth 

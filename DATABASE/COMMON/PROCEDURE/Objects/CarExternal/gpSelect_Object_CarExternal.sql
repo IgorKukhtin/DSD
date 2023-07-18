@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar
              , VIN TVarChar
              , RegistrationCertificate TVarChar, Comment TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
+             , CarTypeId Integer, CarTypeCode Integer, CarTypeName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , isErased boolean
              ) AS
@@ -47,7 +48,11 @@ BEGIN
            , Object_CarModel.Id           AS CarModelId
            , Object_CarModel.ObjectCode   AS CarModelCode
            , Object_CarModel.ValueData    AS CarModelName
-         
+
+           , Object_CarType.Id            AS CarTypeId
+           , Object_CarType.ObjectCode    AS CarTypeCode
+           , Object_CarType.ValueData     AS CarTypeName
+
            , Object_Juridical.Id          AS JuridicalId
            , Object_Juridical.ObjectCode  AS JuridicalCode
            , Object_Juridical.ValueData   AS JuridicalName           
@@ -70,6 +75,11 @@ BEGIN
                                  ON CarExternal_CarModel.ObjectId = Object_CarExternal.Id
                                 AND CarExternal_CarModel.DescId = zc_ObjectLink_CarExternal_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = CarExternal_CarModel.ChildObjectId
+
+            LEFT JOIN ObjectLink AS CarExternal_CarType
+                                 ON CarExternal_CarType.ObjectId = Object_CarExternal.Id
+                                AND CarExternal_CarType.DescId = zc_ObjectLink_CarExternal_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = CarExternal_CarType.ChildObjectId
             
             LEFT JOIN ObjectLink AS ObjectLink_CarExternal_Juridical 
                                  ON ObjectLink_CarExternal_Juridical.ObjectId = Object_CarExternal.Id

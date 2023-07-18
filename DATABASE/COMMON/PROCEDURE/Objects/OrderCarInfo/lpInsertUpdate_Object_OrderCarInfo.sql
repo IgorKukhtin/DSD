@@ -1,4 +1,4 @@
--- Function: lpInsertUpdate_Object_CarExternal ()
+-- Function: lpInsertUpdate_Object_OrderCarInfo ()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_OrderCarInfo (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_OrderCarInfo (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
