@@ -186,7 +186,7 @@ BEGIN
              , Movement_Transport.InvNumber              AS InvNumber_Transport
              , Movement_Transport.OperDate               AS OperDate_Transport
              , Object_Car.ValueData                      AS CarName
-             , Object_CarModel.ValueData                 AS CarModelName
+             , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
              , COALESCE(Object_Member.ValueData, View_PersonalDriver.PersonalName) AS PersonalDriverName
 
              
@@ -501,6 +501,11 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id

@@ -101,7 +101,8 @@ BEGIN
              , Movement_Transport.InvNumber          AS InvNumber_Transport
              , Movement_Transport.OperDate           AS OperDate_Transport
              , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRunPlan.ValueData) AS TDateTime) AS StartRunPlan
-             , (COALESCE (Object_Car.ValueData, '') || ' ' || COALESCE (Object_CarModel.ValueData, '')) :: TVarChar AS CarName
+             , (COALESCE (Object_Car.ValueData, '') || ' ' || COALESCE (Object_CarModel.ValueData, '')|| COALESCE (' ' || Object_CarType.ValueData, '')) :: TVarChar AS CarName  
+
              , Object_Route.ValueData           AS RouteName
              , Object_PersonalDriver.ValueData  AS PersonalDriverName
 
@@ -360,9 +361,16 @@ BEGIN
 
             LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = COALESCE (MovementLinkObject_PersonalDriver.ObjectId, CASE WHEN Movement_Transport.DescId = zc_Movement_TransportService() THEN MI_Transport.ObjectId END)
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = COALESCE (MILinkObject_Car.ObjectId, MovementLinkObject_Car.ObjectId)
+
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
+
             LEFT JOIN Object AS Object_Route ON Object_Route.Id = COALESCE (MILinkObject_Route.ObjectId, CASE WHEN Movement_Transport.DescId = zc_Movement_Transport() THEN MI_Transport.ObjectId END)
 
             LEFT JOIN MovementBoolean AS MovementBoolean_EdiOrdspr

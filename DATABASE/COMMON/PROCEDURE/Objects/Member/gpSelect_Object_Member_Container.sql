@@ -67,7 +67,7 @@ BEGIN
             , View_InfoMoney.InfoMoneyName_all
             , Object_Branch.ObjectCode AS BranchCode
             , Object_Branch.ValueData  AS BranchName
-            , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
+            , (COALESCE (Object_CarModel.ValueData, '')|| COALESCE (' ' || Object_CarType.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
             , CASE WHEN tmpContainer.Amount > 0 THEN tmpContainer.Amount ELSE 0 END ::TFloat AS AmountDebet
             , CASE WHEN tmpContainer.Amount < 0 THEN -1 * tmpContainer.Amount ELSE 0 END ::TFloat AS AmountKredit
             , tmpContainer.Amount ::TFloat AS Amount
@@ -77,9 +77,15 @@ BEGIN
             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpContainer.BranchId
             FULL JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpContainer.InfoMoneyId
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpContainer.CarId
+
             LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
                                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
       ;
   
 END;

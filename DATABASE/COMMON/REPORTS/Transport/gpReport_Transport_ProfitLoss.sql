@@ -368,7 +368,7 @@ BEGIN
             , COALESCE (Movement.OperDate, CAST (NULL as TDateTime)) AS OperDate
             , COALESCE (MovementDesc.ItemName, '') :: TVarChar       AS MovementDescName
             , COALESCE (Object_Fuel.ValueData, Object_FuelMaster.ValueData)    :: TVarChar         AS FuelName
-            , Object_CarModel.ValueData        AS CarModelName
+            , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
             , Object_Car.ValueData             AS CarName
           --, tmpUnion.ContainerId :: TVarChar AS CarName
            
@@ -423,6 +423,12 @@ BEGIN
                  LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                             AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
                  LEFT JOIN Object                 AS Object_CarModel ON Object_CarModel.Id           = ObjectLink_Car_CarModel.ChildObjectId
+
+                 LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                      ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                                     AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+                 LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
+
                  LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss ON View_ProfitLoss.ProfitLossId = tmpUnion.ProfitLossId
                  LEFT JOIN Object_Account_View    AS View_Account    ON View_Account.AccountId       = tmpUnion.ProfitLossId
                  LEFT JOIN Object                 AS Object_Business ON Object_Business.Id           = tmpUnion.BusinessId                               
@@ -437,7 +443,7 @@ BEGIN
               , Object_Unit_View.BranchName
               , Object_Route.ValueData 
               , Object_PersonalDriver.ValueData
-              , Object_CarModel.ValueData
+              , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') )
               , Object_Business.ValueData 
               , COALESCE (View_ProfitLoss.ProfitLossGroupName, View_Account.AccountGroupName)
               , COALESCE (View_ProfitLoss.ProfitLossDirectionName, View_Account.AccountDirectionName)

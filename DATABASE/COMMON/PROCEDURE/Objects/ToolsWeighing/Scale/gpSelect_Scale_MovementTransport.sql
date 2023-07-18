@@ -74,7 +74,7 @@ BEGIN
 
              , Object_Route.ValueData           AS RouteName
              , Object_Car.ValueData             AS CarName
-             , Object_CarModel.ValueData        AS CarModelName
+             , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
              , Object_PersonalDriver.ValueData  AS PersonalDriverName
              , Object_Personal.ValueData        AS PersonalName
              , Object_UnitForwarding.ValueData  AS UnitForwardingName
@@ -127,9 +127,16 @@ BEGIN
 
             LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = COALESCE (MovementLinkObject_PersonalDriver.ObjectId, CASE WHEN Movement.DescId = zc_Movement_TransportService() THEN MovementItem.ObjectId END)
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = COALESCE (MILinkObject_Car.ObjectId, MovementLinkObject_Car.ObjectId)
+
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
+
             LEFT JOIN Object AS Object_Route ON Object_Route.Id = COALESCE (MILinkObject_Route.ObjectId, CASE WHEN Movement.DescId = zc_Movement_Transport() THEN MovementItem.ObjectId END)
 
 --       WHERE (Object_Route.Id = vbRouteId OR vbRouteId = 0)
