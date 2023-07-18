@@ -393,13 +393,13 @@ BEGIN
                                                    || View_Partner_Address.ProvinceName || ' ð-í '  ELSE '' END)
                   ELSE ParseAddress_To.CountrySubDivisionName END :: TVarChar                 AS CountrySubDivisionName_To  
              
-           , zfCalc_GLNCodeRetail (inGLNCode               := ObjectString_GLNCode_To.ValueData
+           /*, zfCalc_GLNCodeRetail (inGLNCode               := ObjectString_GLNCode_To.ValueData
                                  , inGLNCodeRetail_partner := ObjectString_GLNCodeRetail_To.ValueData
                                  , inGLNCodeRetail         := ObjectString_Retail_GLNCode_To.ValueData
                                  , inGLNCodeJuridical      := ObjectString_Juridical_GLNCode_To.ValueData
                                   ) AS  GLN_Unloading
-                                                                      
-           --COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_GLNCode_To.ValueData, ObjectString_Juridical_GLNCode_To.ValueData) AS GLN_Unloading
+                                                       */               
+           , COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_GLNCode_To.ValueData, ObjectString_Juridical_GLNCode_To.ValueData) AS GLN_Unloading
            --, '9863576637923':: TVarChar  AS GLN_Unloading
 
 

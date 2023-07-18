@@ -168,11 +168,12 @@ BEGIN
                   ELSE COALESCE(ObjectString_Juridical_GLNCode_To.ValueData)  END):: TVarChar              AS GLN_car
            , COALESCE(ObjectString_GLNCode_From.ValueData, ObjectString_Juridical_GLNCode_From.ValueData)  AS GLN_from
            , COALESCE(ObjectString_Unit_GLN_from.ValueData, ObjectString_GLNCode_From.ValueData, ObjectString_Juridical_GLNCode_From.ValueData)  AS GLN_Unit
-           , zfCalc_GLNCodeRetail (inGLNCode               := ObjectString_GLNCode_To.ValueData
+           /*, zfCalc_GLNCodeRetail (inGLNCode               := ObjectString_GLNCode_To.ValueData
                                  , inGLNCodeRetail_partner := ObjectString_GLNCodeRetail_To.ValueData
                                  , inGLNCodeRetail         := ObjectString_Retail_GLNCode_To.ValueData
                                  , inGLNCodeJuridical      := ObjectString_Juridical_GLNCode_To.ValueData
-                                  ) AS  GLN_Unloading
+                                  ) AS  GLN_Unloading*/
+           , COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_GLNCode_To.ValueData, ObjectString_Juridical_GLNCode_To.ValueData) AS GLN_Unloading
            , zfCalc_GLNCodeJuridical (inGLNCode                  := ObjectString_GLNCode_To.ValueData
                                     , inGLNCodeJuridical_partner := ObjectString_GLNCodeJuridical_To.ValueData
                                     , inGLNCodeJuridical         := ObjectString_Juridical_GLNCode_To.ValueData
