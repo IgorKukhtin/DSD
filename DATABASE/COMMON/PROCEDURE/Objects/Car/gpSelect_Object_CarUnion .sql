@@ -125,7 +125,7 @@ BEGIN
              Object_CarExternal.Id          AS Id
            , Object_CarExternal.ObjectCode  AS Code
            , Object_CarExternal.ValueData   AS Name
-           , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_CarExternal.ValueData, '')) :: TVarChar AS NameAll
+           , (COALESCE (Object_CarModel.ValueData, '')|| COALESCE (' ' || Object_CarType.ValueData, '') || ' ' || COALESCE (Object_CarExternal.ValueData, '')) :: TVarChar AS NameAll
            
            , RegistrationCertificate.ValueData  AS RegistrationCertificate
            , ObjectString_Comment.ValueData     AS Comment

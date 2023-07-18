@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar
              , Weight TFloat, Year TFloat
              , VIN TVarChar
              , RegistrationCertificate TVarChar, Comment TVarChar
-             , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
+             , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar , CarModelName_full TVarChar
              , CarTypeId Integer, CarTypeCode Integer, CarTypeName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , isErased boolean
@@ -48,6 +48,7 @@ BEGIN
            , Object_CarModel.Id           AS CarModelId
            , Object_CarModel.ObjectCode   AS CarModelCode
            , Object_CarModel.ValueData    AS CarModelName
+           , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName_full
 
            , Object_CarType.Id            AS CarTypeId
            , Object_CarType.ObjectCode    AS CarTypeCode
