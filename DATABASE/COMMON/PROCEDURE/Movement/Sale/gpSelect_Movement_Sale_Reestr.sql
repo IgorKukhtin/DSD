@@ -168,7 +168,7 @@ BEGIN
            , Movement_Transport.InvNumber              AS InvNumber_Transport
            , Movement_Transport.OperDate               AS OperDate_Transport
            , Object_Car.ValueData                      AS CarName
-           , Object_CarModel.ValueData                 AS CarModelName
+           , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
            , View_PersonalDriver.PersonalName          AS PersonalDriverName
  
            , COALESCE (MovementBoolean_Print.ValueData, FALSE) AS isPrinted
@@ -186,7 +186,9 @@ BEGIN
            , Object_Status_reestr.ValueData             AS StatusName_reestr
 
            , Object_Car_reestr.ValueData                AS CarName_reestr
-           , Object_CarModel_reestr.ValueData           AS CarModelName
+           --, Object_CarModel_reestr.ValueData           AS CarModelName_reestr
+           , (COALESCE (Object_CarModel_reestr.ValueData,'') || COALESCE (' ' || Object_CarType_reestr.ValueData, '') ) ::TVarChar AS CarModelName_reestr
+           
            , Object_PersonalDriver_reestr.PersonalName  AS PersonalDriverName_reestr
            , Object_Member_reestr.ValueData             AS MemberName_reestr
 
@@ -362,7 +364,12 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
-            
+ 
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
+           
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
@@ -403,6 +410,11 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel_reestr ON ObjectLink_Car_CarModel_reestr.ObjectId = Object_Car_reestr.Id
                                                                   AND ObjectLink_Car_CarModel_reestr.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel_reestr ON Object_CarModel_reestr.Id = ObjectLink_Car_CarModel_reestr.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType_reestr
+                                 ON ObjectLink_Car_CarType_reestr.ObjectId = Object_Car_reestr.Id
+                                AND ObjectLink_Car_CarType_reestr.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType_reestr ON Object_CarType_reestr.Id = ObjectLink_Car_CarType_reestr.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MLO_PersonalDriver_reestr
                                          ON MLO_PersonalDriver_reestr.MovementId = Movement_reestr.Id

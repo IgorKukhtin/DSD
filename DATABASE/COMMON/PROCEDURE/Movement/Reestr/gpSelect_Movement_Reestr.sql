@@ -51,7 +51,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Member_RemakeScan     TVarChar
              , Member_Remake        TVarChar
              , Member_Econom        TVarChar
-             , Member_Scan           TVarChar
+             , Member_Buh           TVarChar
              , Member_TransferIn    TVarChar
              , Member_TransferOut   TVarChar
              , Member_Double        TVarChar
@@ -98,7 +98,7 @@ BEGIN
            , MovementDate_Update.ValueData     AS UpdateDate
 
            , Object_Car.ValueData              AS CarName
-           , Object_CarModel.ValueData         AS CarModelName
+           , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
            , Object_PersonalDriver.ValueData   AS PersonalDriverName
            , Object_Member.ValueData           AS MemberName
 
@@ -198,6 +198,11 @@ BEGIN
                                  ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                 AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
@@ -420,4 +425,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Reestr (inStartDate:= '20.10.2016', inEndDate:= '25.10.2016', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Movement_Reestr (inStartDate:= '20.10.2023', inEndDate:= '21.10.2023', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

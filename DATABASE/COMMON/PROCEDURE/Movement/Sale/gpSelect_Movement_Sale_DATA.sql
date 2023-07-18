@@ -791,7 +791,7 @@ end if;
            , Movement_Transport.OperDate               AS OperDate_Transport
            , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
            , Object_Car.ValueData                      AS CarName
-           , Object_CarModel.ValueData                 AS CarModelName
+           , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
            , Object_PersonalDriver.ValueData           AS PersonalDriverName
            , Object_PersonalDriver_TTN.ValueData       AS PersonalDriverName_TTN
            , Object_Personal_4_TTN.ValueData           AS PersonalName_4_TTN
@@ -1102,6 +1102,11 @@ end if;
             LEFT JOIN tmpCar AS Object_Car ON Object_Car.MovementId = Movement_Transport.Id
 
             LEFT JOIN tmpCarModel AS Object_CarModel ON Object_CarModel.CarId = Object_Car.Id
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
 
             LEFT JOIN tmpPersonalDriver AS Object_PersonalDriver ON Object_PersonalDriver.MovementId =  Movement_Transport.Id
 
