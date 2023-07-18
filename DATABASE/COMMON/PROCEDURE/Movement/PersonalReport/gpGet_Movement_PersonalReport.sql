@@ -98,7 +98,8 @@ BEGIN
            , Object_MoneyPlace.Id               AS MoneyPlaceId
            , Object_MoneyPlace.ValueData        AS MoneyPlaceName
            , Object_Car.Id                      AS CarId
-           , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
+           --, (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
+           , (COALESCE (Object_CarModel.ValueData, '') || COALESCE (' ' || Object_CarType.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
 
            , Movement_Invoice.Id                AS MovementId_Invoice
            , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, COALESCE(MovementString_InvNumberPartner_Invoice.ValueData,'') || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
@@ -151,6 +152,11 @@ BEGIN
                                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId =  Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
+            
        WHERE Movement.Id =  inMovementId_Value;
 
    END IF;
@@ -193,7 +199,7 @@ BEGIN
            , Object_MoneyPlace.Id               AS MoneyPlaceId
            , Object_MoneyPlace.ValueData        AS MoneyPlaceName
            , Object_Car.Id                      AS CarId
-           , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
+           , (COALESCE (Object_CarModel.ValueData, '') || COALESCE (' ' || Object_CarType.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
 
            , Movement_Invoice.Id                AS MovementId_Invoice
            , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, COALESCE(MovementString_InvNumberPartner_Invoice.ValueData,'') || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
@@ -244,6 +250,11 @@ BEGIN
             LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
                                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId =  Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
 
        WHERE Movement.Id =  inMovementId;
 

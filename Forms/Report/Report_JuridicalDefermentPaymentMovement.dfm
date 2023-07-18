@@ -1577,7 +1577,7 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
       DataSets = <
         item
           UserName = 'frDataSet'
-          IndexFieldNames = 'PersonalTradeName_Partner;ToName'
+          IndexFieldNames = 'PersonalName;ToName'
           GridView = cxGridDBTableView
         end>
       Params = <

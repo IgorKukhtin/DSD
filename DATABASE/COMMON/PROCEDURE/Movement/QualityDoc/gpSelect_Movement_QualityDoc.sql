@@ -62,7 +62,7 @@ BEGIN
            , MovementDate_OperDateOut.ValueData AS OperDateOut
 
            , Object_Car.ValueData             AS CarName
-           , Object_CarModel.ValueData        AS CarModelName
+           , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
 
            , Movement_Quality.Id                   AS MovementId_Quality
            , Movement_Quality.InvNumber            AS InvNumber_Quality
@@ -111,6 +111,10 @@ BEGIN
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId =  Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                            ON MovementLinkMovement_Master.MovementId = Movement.Id 
@@ -196,3 +200,4 @@ ALTER FUNCTION gpSelect_Movement_QualityDoc (TDateTime, TDateTime, Integer, Bool
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_QualityDoc (inStartDate:= '01.05.2015', inEndDate:= '31.05.2015', inIsErased:=false , inSession:= zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Movement_QualityDoc (inStartDate:= '01.05.2015', inEndDate:= '31.05.2015', inJuridicalBasisId:=0, inIsErased:=false , inSession:= zfCalc_UserAdmin())
