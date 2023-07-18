@@ -1666,8 +1666,8 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
-      Hint = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
+      Caption = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
       ImageIndex = 16
       DataSets = <
         item
@@ -2340,11 +2340,15 @@ inherited Report_JuridicalDefermentPaymentMovementForm: TReport_JuridicalDeferme
         end
         item
           Visible = True
-          ItemName = 'bbPribt'
+          ItemName = 'bbPrint2'
         end
         item
           Visible = True
-          ItemName = 'bbPrint2'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPribt'
         end
         item
           Visible = True
