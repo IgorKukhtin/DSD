@@ -1472,11 +1472,15 @@ CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_Goods_BUH() RETURNS Integer AS 
 CREATE OR REPLACE FUNCTION zc_Enum_ImportType_PeresortAsset() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_PeresortAsset' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_PeresortAsset() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_PeresortAsset' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+--Загрузка Пересорт  "загрузка оборудование ОС"
+CREATE OR REPLACE FUNCTION zc_Enum_ImportType_PeresortEquipment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportType_PeresortEquipment' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_ImportSetting_PeresortEquipment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ImportSetting_PeresortEquipment' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 18.07.23         * Загрузка Пересорт  "загрузка оборудование ОС"
  19.05.23         * Загрузка Пересорт  "загрузка ОС" 
  26.04.23         * Загрузка новых названий  Товаров
  24.04.23         * загрузка 

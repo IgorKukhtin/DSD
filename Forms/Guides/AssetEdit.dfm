@@ -750,8 +750,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 176
-    Top = 362
+    Left = 200
+    Top = 338
   end
   object GuidesCar: TdsdGuides
     KeyField = 'Id'
