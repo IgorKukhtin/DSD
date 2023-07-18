@@ -52,28 +52,36 @@ object CarExternalForm: TCarExternalForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 52
+        Width = 47
       end
       object CarModelName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
         DataBinding.FieldName = 'CarModelName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 120
+        Width = 107
+      end
+      object CarTypeName: TcxGridDBColumn
+        Caption = #1052#1086#1076#1077#1083#1100' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+        DataBinding.FieldName = 'CarTypeName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 93
       end
       object Name: TcxGridDBColumn
         Caption = #1043#1086#1089'.'#1085#1086#1084#1077#1088
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 69
       end
       object RegistrationCertificate: TcxGridDBColumn
         Caption = #1058#1077#1093#1087#1072#1089#1087#1086#1088#1090
         DataBinding.FieldName = 'RegistrationCertificate'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 70
       end
       object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1089#1090#1086#1088#1086#1085#1085#1077#1077')'
@@ -90,7 +98,7 @@ object CarExternalForm: TCarExternalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 120
+        Width = 104
       end
       object Length: TcxGridDBColumn
         Caption = #1044#1083#1080#1085#1072', '#1084#1084
@@ -100,7 +108,7 @@ object CarExternalForm: TCarExternalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1083#1080#1085#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103', '#1084#1084
-        Width = 57
+        Width = 50
       end
       object Width: TcxGridDBColumn
         Caption = #1064#1080#1088#1080#1085#1072', '#1084#1084
@@ -110,7 +118,7 @@ object CarExternalForm: TCarExternalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1064#1080#1088#1080#1085#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103', '#1084#1084
-        Width = 58
+        Width = 50
       end
       object Height: TcxGridDBColumn
         Caption = #1042#1099#1089#1086#1090#1072', '#1084#1084
@@ -120,7 +128,7 @@ object CarExternalForm: TCarExternalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1042#1099#1089#1086#1090#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103', '#1084#1084
-        Width = 57
+        Width = 50
       end
       object Weight: TcxGridDBColumn
         Caption = #1042#1077#1089', '#1082#1075
@@ -130,7 +138,7 @@ object CarExternalForm: TCarExternalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1054#1073#1097#1080#1081' '#1074#1077#1089' '#1072#1074#1090#1086', '#1082#1075
-        Width = 75
+        Width = 65
       end
       object Year: TcxGridDBColumn
         Caption = #1043#1086#1076' '#1074#1099#1087#1091#1089#1082#1072
@@ -139,14 +147,14 @@ object CarExternalForm: TCarExternalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 52
       end
       object VIN: TcxGridDBColumn
         Caption = 'VIN '#1082#1086#1076
         DataBinding.FieldName = 'VIN'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 92
+        Width = 80
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
