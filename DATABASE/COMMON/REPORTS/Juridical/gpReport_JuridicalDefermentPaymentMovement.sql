@@ -1263,7 +1263,6 @@ BEGIN
                          -- вся сумма накладной
                         , (tmpContainerData.Amount + tmpContainerData.Amount1 + tmpContainerData.Amount2 + tmpContainerData.Amount3 + tmpContainerData.Amount4 + tmpContainerData.Amount5) ::TFloat AS TotalSumm
                         , tmpReport.DayCount 
-                        , COALESCE (Object_PartnerTag.ValueData,'')  AS PartnerTagName
                  FROM tmpReport
                       LEFT JOIN tmpLastPayment_all AS tmpLastPayment
                                                    ON tmpLastPayment.JuridicalId = tmpReport.JuridicalId
@@ -1300,10 +1299,6 @@ BEGIN
                                                   AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_To()
                       LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_To.ObjectId)
 
-                      LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
-                                           ON ObjectLink_Partner_PartnerTag.ObjectId = Object_To.Id
-                                          AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
-                      LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
                 )
 
    ---
@@ -1348,9 +1343,11 @@ BEGIN
         , tmpReport.OperDate_pay    ::TDateTime
         , tmpReport.MovementDescName ::TVarChar
         , CASE WHEN tmpReport.MovementId = -1 THEN 'Нет подбора' ELSE tmpReport.InvNumber END ::TVarChar
-        , tmpReport.ToId             ::Integer
-        , tmpReport.ToName           ::TVarChar
-        , tmpReport.PartnerTagName   ::TVarChar
+
+
+        , CASE WHEN tmpReport.ToId > 0 THEN tmpReport.ToId   ELSE tmpReport.PartnerId   END ::Integer  AS ToId
+        , CASE WHEN tmpReport.ToId > 0 THEN tmpReport.ToName ELSE tmpReport.PartnerName END ::TVarChar AS ToName
+        , Object_PartnerTag.ValueData AS PartnerTagName
 
           -- нет просрочки на эту сумму
         , tmpReport.Summa_doc ::TFloat
@@ -1421,7 +1418,7 @@ BEGIN
                       --  долг по накладной
                      AND COALESCE (tmpData.Summa_doc_0, 0) <= 0
                      --
-                     AND vbUserId <> 5
+                     --AND vbUserId <> 5
 
                    GROUP BY tmpData.JuridicalId
                           , tmpData.PartnerId
@@ -1443,6 +1440,11 @@ BEGIN
       AND tmpReport.Ord = 1
          ) OR*/
 
+        LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
+                             ON ObjectLink_Partner_PartnerTag.ObjectId = CASE WHEN tmpReport.ToId > 0 THEN tmpReport.ToId ELSE tmpReport.PartnerId END
+                            AND ObjectLink_Partner_PartnerTag.DescId   = zc_ObjectLink_Partner_PartnerTag()
+        LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
+
    WHERE -- просрочка на эту сумму - 1 неделя
          tmpReport.Summa_doc_1 > 0
       --  просрочка на эту сумму - 2 неделя
@@ -1456,7 +1458,7 @@ BEGIN
       --  долг по накладной
       OR tmpReport.Summa_doc_0 > 0
       --
-      OR vbUserId = 5
+      --OR vbUserId = 5
    ;
 
 END;

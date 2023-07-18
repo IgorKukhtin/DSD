@@ -26,7 +26,8 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
 
      -- Проверка
-     IF inAmount < 0 THEN
+     IF inAmount < 0 AND 1=0
+     THEN
         RAISE EXCEPTION 'Ошибка.Для <%> сумма выплаты <%> не может быть отрицательной.', lfGet_Object_ValueData (inPersonalId), zfConvert_FloatToString (inAmount);
      END IF;
 
@@ -40,7 +41,7 @@ BEGIN
                                                      , inInfoMoneyId        := inInfoMoneyId
                                                      , inUnitId             := inUnitId
                                                      , inPositionId         := inPositionId
-                                                     , inIsCalculated       := inIsCalculated
+                                                     , inIsCalculated       := CASE WHEN inAmount < 0 THEN TRUE ELSE inIsCalculated END
                                                      , inUserId             := vbUserId
                                                       );
      -- вернули <Остаток к выплате>
