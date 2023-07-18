@@ -703,7 +703,8 @@ BEGIN
                                                       , zc_ObjectString_MemberSP_Passport())
                           )
     -- информация из партий
-    , tmpMIC AS (SELECT MovementItemContainer.ContainerId
+    , tmpMIC AS (SELECT MovementItemContainer.OperDate
+                     , MovementItemContainer.ContainerId
                      , (-MovementItemContainer.Amount)::TFloat AS Amount
                      , MovementItemContainer.MovementId
                      , tmp.UnitId
@@ -724,7 +725,9 @@ BEGIN
                            , MAX (ObjectFloat_NDSKind_NDS.ValueData)     AS NDS
                            , STRING_AGG (DISTINCT Object_From.ValueData, ';') AS JuridicalName_in
                            , STRING_AGG (DISTINCT '№ '||Movement_Income.InvNumber||' от '||Movement_Income.OperDate::Date , ';') AS InvNumber_in
-                           , MAX (CASE WHEN MovementLinkObject_NDSKind.ObjectId = zc_Enum_NDSKind_Common() THEN zc_Enum_NDSKind_Medical() ELSE MovementLinkObject_NDSKind.ObjectId END) AS NDSKindId
+                           , MAX (CASE WHEN MovementLinkObject_NDSKind.ObjectId = zc_Enum_NDSKind_Common()
+                                       THEN zc_Enum_NDSKind_Medical() 
+                                       ELSE MovementLinkObject_NDSKind.ObjectId END) AS NDSKindId
                       FROM tmpMIC
                            LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
                                                                ON CLI_MI.ContainerId = tmpMIC.ContainerId
@@ -742,6 +745,8 @@ BEGIN
                            LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
                                                         ON MovementLinkObject_NDSKind.MovementId = MI_Income.MovementId
                                                        AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                                                       AND (COALESCE (MovementLinkObject_NDSKind.ObjectId, 0) <> 13937605 OR
+                                                            tmpMIC.OperDate < '01.07.2023')
                            LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                                  ON ObjectFloat_NDSKind_NDS.ObjectId = CASE WHEN MovementLinkObject_NDSKind.ObjectId = zc_Enum_NDSKind_Common() THEN zc_Enum_NDSKind_Medical() ELSE MovementLinkObject_NDSKind.ObjectId END
                                                 AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
@@ -1120,8 +1125,6 @@ $BODY$
 
 -- select * from gpReport_Sale_SP(inStartDate := ('01.08.2022')::TDateTime , inEndDate := ('12.08.2022')::TDateTime , inJuridicalId := 2886776 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 9 ,  inSession := '3');
 
-select * from gpReport_Sale_SP(inStartDate := ('24.02.2023')::TDateTime , inEndDate := ('24.02.2023')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 0 ,  inSession := '3');
 
+select * from gpReport_Sale_SP(inStartDate := ('01.07.2023')::TDateTime , inEndDate := ('15.07.2023')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 13937605 ,  inSession := '3');
 
-
-select * from gpReport_Sale_SP(inStartDate := ('01.02.2023')::TDateTime , inEndDate := ('02.03.2023')::TDateTime , inJuridicalId := 6608394 , inUnitId := 0 , inHospitalId := 3751525 , inGroupMemberSPId := 0 , inPercentSP := 0 , inisGroupMemberSP := 'False' , inNDSKindId := 9 ,  inSession := '3');

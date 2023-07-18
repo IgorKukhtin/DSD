@@ -76,7 +76,7 @@ BEGIN
                                  AND MB_RoundingTo50.DescId = zc_MovementBoolean_RoundingTo50()
     WHERE Movement.Id = inMovementId;
 
-    IF inMovementId = 24249552 
+    IF inMovementId in (24249552, 32732548) 
     THEN
        vbRoundingTo10 := False;
        vbRoundingDown := False; 

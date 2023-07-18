@@ -8,7 +8,7 @@ uses
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   Vcl.ExtCtrls, Vcl.StdCtrls, cxButtons, cxGroupBox, cxRadioGroup, cxLabel,
   cxTextEdit, cxCurrencyEdit, Vcl.ActnList, dsdAction, cxClasses,
-  cxPropertiesStore, dsdAddOn, dsdDB, dxSkinsCore,
+  cxPropertiesStore, dsdAddOn, dsdDB, dxSkinsCore, TypInfo,
   dxSkinsDefaultPainters, PosInterface, Vcl.ComCtrls, cxProgressBar;
 
 type
@@ -59,6 +59,24 @@ implementation
 
 {$R *.dfm}
 
+procedure Add_PosLog(AMessage: String);
+  var F: TextFile;
+begin
+  try
+    AssignFile(F,ChangeFileExt(Application.ExeName,'_PosJSON.log'));
+    if not fileExists(ChangeFileExt(Application.ExeName,'_PosJSON.log')) then
+    begin
+      Rewrite(F);
+    end
+    else
+      Append(F);
+    //
+    try  Writeln(F, DateTimeToStr(Now) + ': ' + AMessage);
+    finally CloseFile(F);
+    end;
+  except
+  end;
+end;
   {TPosTermThread}
 
 constructor TPosTermThread.Create;
@@ -76,11 +94,10 @@ begin
 end;
 
 procedure TPosTermThread.Execute;
-  var nProcessStateNaxt: TPosProcessState;
 begin
   if Terminated then Exit;
   if not Assigned(FPosTerm) then Exit;
-  nProcessStateNaxt := ppsUndefined;
+  Add_PosLog('+++++++++++ Старт потока');
 
   while not Terminated do
   begin
@@ -90,13 +107,13 @@ begin
     begin
 
       if FPosTerm.ProcessState = ppsWaiting then Continue;
+      Add_PosLog('--> ' + GetEnumName(TypeInfo(TPosProcessState), Ord(FPosTerm.ProcessState)));
       if FPosTerm.ProcessState = ppsError then Break;
 
-      if nProcessStateNaxt = ppsUndefined then
+      if FPosTerm.ProcessState = ppsUndefined then
       begin
         FPosTerm.CheckConnection;
-        nProcessStateNaxt := ppsOkConnection;
-      end else if nProcessStateNaxt = FPosTerm.ProcessState then
+      end else if FPosTerm.ProcessState = ppsOkConnection then
       begin
         if FSalerCash <= 0 then
         begin
@@ -105,13 +122,11 @@ begin
         if FRefund then
         begin
           FPosTerm.Refund(FSalerCash);
-          nProcessStateNaxt := ppsOkRefund;
         end else
         begin
           FPosTerm.Payment(FSalerCash);
-          nProcessStateNaxt := ppsOkPayment;
         end;
-      end else if nProcessStateNaxt = FPosTerm.ProcessState then
+      end else if (FPosTerm.ProcessState = ppsOkPayment) or (FPosTerm.ProcessState = ppsOkRefund) then
       begin
         FPeyResult := True;
         Break;
@@ -129,6 +144,8 @@ begin
       Break;
     end;
   end;
+
+  Add_PosLog('-------- Финиш потока');
 
   if Assigned(FEndPayPosTerm) then FEndPayPosTerm;
 end;

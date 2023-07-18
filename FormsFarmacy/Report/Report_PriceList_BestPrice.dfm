@@ -23,6 +23,8 @@ inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
       inherited cxGrid: TcxGrid
         Width = 908
         Height = 421
+        ExplicitLeft = -224
+        ExplicitTop = 720
         ExplicitWidth = 908
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -244,9 +246,9 @@ inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
             Options.Editing = False
             Width = 96
           end
-          object PriceMax: TcxGridDBColumn
-            Caption = #1052#1072#1082#1089'. '#1094#1077#1085#1072' '#1074' '#1087#1077#1088#1080#1086#1076#1077
-            DataBinding.FieldName = 'PriceMax'
+          object PriceMin: TcxGridDBColumn
+            Caption = #1052#1080#1085'. '#1094#1077#1085#1072' '#1074' '#1087#1077#1088#1080#1086#1076#1077
+            DataBinding.FieldName = 'PriceMin'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
@@ -258,15 +260,16 @@ inherited Report_PriceList_BestPriceForm: TReport_PriceList_BestPriceForm
             Caption = #1055#1088#1086#1094#1077#1085#1090' '#1080#1079#1084'.'
             DataBinding.FieldName = 'PercChange'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 68
           end
-          object DatePriceMax: TcxGridDBColumn
+          object DatePriceMin: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1084#1080#1085'. '#1094#1077#1085#1099
-            DataBinding.FieldName = 'DatePriceMax'
+            DataBinding.FieldName = 'DatePriceMin'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

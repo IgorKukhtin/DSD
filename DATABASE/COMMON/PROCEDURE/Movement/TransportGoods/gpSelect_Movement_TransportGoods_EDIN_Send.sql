@@ -393,10 +393,22 @@ BEGIN
                                                    || View_Partner_Address.ProvinceName || ' ð-í '  ELSE '' END)
                   ELSE ParseAddress_To.CountrySubDivisionName END :: TVarChar                 AS CountrySubDivisionName_To  
              
+           /*, zfCalc_GLNCodeRetail (inGLNCode               := ObjectString_GLNCode_To.ValueData
+                                 , inGLNCodeRetail_partner := ObjectString_GLNCodeRetail_To.ValueData
+                                 , inGLNCodeRetail         := ObjectString_Retail_GLNCode_To.ValueData
+                                 , inGLNCodeJuridical      := ObjectString_Juridical_GLNCode_To.ValueData
+                                  ) AS  GLN_Unloading
+                                                       */               
            , COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_GLNCode_To.ValueData, ObjectString_Juridical_GLNCode_To.ValueData) AS GLN_Unloading
            --, '9863576637923':: TVarChar  AS GLN_Unloading
 
-           , COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_Juridical_GLNCode_To.ValueData, ObjectString_GLNCode_To.ValueData) AS GLN_To
+
+           , zfCalc_GLNCodeJuridical (inGLNCode                  := ObjectString_GLNCode_To.ValueData
+                                    , inGLNCodeJuridical_partner := ObjectString_GLNCodeJuridical_To.ValueData
+                                    , inGLNCodeJuridical         := ObjectString_Juridical_GLNCode_To.ValueData
+                                     ) AS GLN_To
+                                     
+           --, COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_Juridical_GLNCode_To.ValueData, ObjectString_GLNCode_To.ValueData) AS GLN_To
            --, '9863577638028':: TVarChar  AS GLN_To
 
            , COALESCE(ObjectString_Partner_KATOTTG_to.ValueData, '')  AS KATOTTG_Unloading
@@ -760,6 +772,14 @@ BEGIN
                                    ON ObjectString_GLNCode_To.ObjectId = View_Partner_Address.PartnerId
                                   AND ObjectString_GLNCode_To.DescId = zc_ObjectString_Partner_GLNCode()
                                   AND COALESCE(ObjectString_GLNCode_To.ValueData) <> ''
+            LEFT JOIN ObjectString AS ObjectString_GLNCodeJuridical_To
+                                   ON ObjectString_GLNCodeJuridical_To.ObjectId = View_Partner_Address.PartnerId
+                                  AND ObjectString_GLNCodeJuridical_To.DescId = zc_ObjectString_Partner_GLNCodeJuridical()
+                                  AND COALESCE(ObjectString_GLNCodeJuridical_To.ValueData, '') <> ''
+            LEFT JOIN ObjectString AS ObjectString_GLNCodeRetail_To
+                                   ON ObjectString_GLNCodeRetail_To.ObjectId = View_Partner_Address.PartnerId
+                                  AND ObjectString_GLNCodeRetail_To.DescId = zc_ObjectString_Partner_GLNCodeRetail()
+                                  AND COALESCE(ObjectString_GLNCodeRetail_To.ValueData, '') <> ''
 
             LEFT JOIN ObjectString AS ObjectString_FromAddress
                                    ON ObjectString_FromAddress.ObjectId = Object_From.Id
@@ -822,6 +842,13 @@ BEGIN
                                   AND ObjectString_Juridical_GLNCode_To.DescId = zc_ObjectString_Juridical_GLNCode()
                                   AND COALESCE(ObjectString_Juridical_GLNCode_To.ValueData) <> ''
             LEFT JOIN zfSelect_ParseAddress (inAddress := OH_JuridicalDetails_To.JuridicalAddress) AS ParseAddress_To ON 1 = 1
+
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail_To
+                                 ON ObjectLink_Juridical_Retail_To.ObjectId = ObjectString_Juridical_GLNCode_To.ObjectId
+                                AND ObjectLink_Juridical_Retail_To.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN ObjectString AS ObjectString_Retail_GLNCode_To
+                                   ON ObjectString_Retail_GLNCode_To.ObjectId = ObjectLink_Juridical_Retail_To.ChildObjectId
+                                  AND ObjectString_Retail_GLNCode_To.DescId = zc_ObjectString_Retail_GLNCode()
 
             LEFT JOIN t3
                    AS OH_JuridicalDetails_car

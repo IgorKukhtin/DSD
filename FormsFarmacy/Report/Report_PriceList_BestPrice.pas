@@ -47,11 +47,11 @@ type
     Price: TcxGridDBColumn;
     bbMoneyBoxSun: TdxBarButton;
     cxLabel4: TcxLabel;
-    PriceMax: TcxGridDBColumn;
+    PriceMin: TcxGridDBColumn;
     edProcent: TcxCurrencyEdit;
     actJuridicalPriceChoice: TOpenChoiceForm;
     FormParams: TdsdFormParams;
-    DatePriceMax: TcxGridDBColumn;
+    DatePriceMin: TcxGridDBColumn;
     PercChange: TcxGridDBColumn;
   private
     { Private declarations }

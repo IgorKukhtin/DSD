@@ -121,8 +121,9 @@ BEGIN
 
          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = _tmpResult.GoodsId 
            
-    WHERE _tmpResult.PriceMax <= _tmpResult.Price * (100 + inProcent) / 100
+    WHERE _tmpResult.PriceMax <= round(_tmpResult.Price * (100 + inProcent) / 100, 2)
       AND _tmpResult.Price > 0
+      AND _tmpResult.PriceMax <> _tmpResult.Price
     ORDER BY  Object_Goods.ObjectCode;    
     
 
@@ -139,4 +140,3 @@ $BODY$
 */
 
 select * from gpReport_PriceList_BestPrice(inStartDate := ('01.06.2023')::TDateTime , inEndDate := ('07.07.2023')::TDateTime , inJuridicalList := '[{"id":59610,"isselect":"True"},{"id":59611,"isselect":"True"},{"id":59612,"isselect":"True"},{"id":183317,"isselect":"False"},{"id":183319,"isselect":"False"},{"id":183321,"isselect":"False"},{"id":183325,"isselect":"False"},{"id":183331,"isselect":"False"},{"id":183332,"isselect":"False"},{"id":183340,"isselect":"False"},{"id":183343,"isselect":"False"},{"id":183344,"isselect":"False"},{"id":183345,"isselect":"False"},{"id":183349,"isselect":"False"},{"id":183351,"isselect":"False"},{"id":183353,"isselect":"False"},{"id":410822,"isselect":"False"},{"id":800577,"isselect":"False"},{"id":829191,"isselect":"False"},{"id":2304062,"isselect":"False"},{"id":3403870,"isselect":"False"},{"id":4783099,"isselect":"False"},{"id":5000875,"isselect":"False"},{"id":6530478,"isselect":"False"},{"id":6916162,"isselect":"False"},{"id":9008423,"isselect":"False"},{"id":9526799,"isselect":"False"},{"id":9624250,"isselect":"False"},{"id":11310208,"isselect":"False"},{"id":12225793,"isselect":"False"},{"id":14374718,"isselect":"False"},{"id":15033411,"isselect":"False"},{"id":15379290,"isselect":"False"},{"id":15702720,"isselect":"False"},{"id":17434172,"isselect":"False"},{"id":18915010,"isselect":"False"},{"id":18926945,"isselect":"False"},{"id":19672350,"isselect":"False"},{"id":20972477,"isselect":"False"},{"id":21067339,"isselect":"False"},{"id":22128896,"isselect":"False"}]' , inProcent := 10 ,  inSession := '3');
-
