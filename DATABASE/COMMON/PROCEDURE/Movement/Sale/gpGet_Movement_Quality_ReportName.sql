@@ -34,6 +34,7 @@ BEGIN
                                       AND MI.DescId = zc_MI_Master()
                                       AND MI.isErased = FALSE
                                     --AND MI.ObjectId IN (6048195, 417105, 2617313)
+                                    --and inMovementId <> 25604278 
                                    );
 
        --

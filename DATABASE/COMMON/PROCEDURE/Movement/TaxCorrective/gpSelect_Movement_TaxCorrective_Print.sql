@@ -121,7 +121,9 @@ BEGIN
           -- налоговая
           , MovementLinkMovement_Child.MovementChildId AS MovementId_tax
 
-          , CASE WHEN MovementDate_DateRegistered_tax.ValueData > Movement_TaxCorrective.OperDate AND MovementString_InvNumberRegistered_tax.ValueData <> ''
+          , CASE WHEN (MovementDate_DateRegistered_tax.ValueData > Movement_TaxCorrective.OperDate OR MovementDate_DateRegistered_tax.ValueData > '01.07.2023')
+                  AND MovementString_InvNumberRegistered_tax.ValueData <> ''
+                      -- AND 1=0
                       THEN MovementDate_DateRegistered_tax.ValueData
                  ELSE Movement_Tax.OperDate
             END AS OperDate_Tax
