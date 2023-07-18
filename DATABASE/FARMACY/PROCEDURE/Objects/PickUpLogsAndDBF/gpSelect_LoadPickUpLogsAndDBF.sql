@@ -54,9 +54,10 @@ BEGIN
       outUsername := 'logdbf';
       outPassword := '63CxUbbUGfYh';
       outFileList := 'FarmacyCash.log;FarmacyCash_RRO.log;FarmacyCashServise.log;default.log;FarmacyCashServise_Status.log;'||
+                     'FarmacyCashServise_SQLite.log;FarmacyCash_SQLite.log;FarmacyCash_PosJSON.log;'||                     
                      'FarmacyCash_DiscontLog.xml;FarmacyCash_log.xml;'||
                      'FarmacyCashBody.dbf;FarmacyCashDiff.dbf;FarmacyCashHead.dbf;'||
-                     'FarmacyCashServise_SQLite.log;FarmacyCashSQLite.db';
+                     'FarmacyCashSQLite.db';
                      
       SELECT COALESCE(ObjectBoolean_GetArchive.ValueData, False)
       INTO outisGetArchive 

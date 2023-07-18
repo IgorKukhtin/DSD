@@ -155,9 +155,8 @@ begin
   Add_PosLog('Читаем.');
   try
     try
-      SetLength(Buffer, FIdTCPClient.IOHandler.InputBuffer.Size);
-      FIdTCPClient.IOHandler.ReadBytes(Buffer, FIdTCPClient.IOHandler.InputBuffer.Size, False);
-      FRadBufer:= FRadBufer + TEncoding.UTF8.GetString(Buffer);
+      FIdTCPClient.IOHandler.ReadBytes(Buffer, -1, false);
+      FRadBufer:= FRadBufer + IdGlobal.BytesToString(Buffer);
     finally
       SetLength(Buffer, 0);
     end;

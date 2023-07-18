@@ -168,8 +168,15 @@ BEGIN
                   ELSE COALESCE(ObjectString_Juridical_GLNCode_To.ValueData)  END):: TVarChar              AS GLN_car
            , COALESCE(ObjectString_GLNCode_From.ValueData, ObjectString_Juridical_GLNCode_From.ValueData)  AS GLN_from
            , COALESCE(ObjectString_Unit_GLN_from.ValueData, ObjectString_GLNCode_From.ValueData, ObjectString_Juridical_GLNCode_From.ValueData)  AS GLN_Unit
-           , COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_GLNCode_To.ValueData, ObjectString_Juridical_GLNCode_To.ValueData) AS GLN_Unloading
-           , COALESCE(ObjectString_Unit_GLN_to.ValueData, ObjectString_Juridical_GLNCode_To.ValueData, ObjectString_GLNCode_To.ValueData) AS GLN_To
+           , zfCalc_GLNCodeRetail (inGLNCode               := ObjectString_GLNCode_To.ValueData
+                                 , inGLNCodeRetail_partner := ObjectString_GLNCodeRetail_To.ValueData
+                                 , inGLNCodeRetail         := ObjectString_Retail_GLNCode_To.ValueData
+                                 , inGLNCodeJuridical      := ObjectString_Juridical_GLNCode_To.ValueData
+                                  ) AS  GLN_Unloading
+           , zfCalc_GLNCodeJuridical (inGLNCode                  := ObjectString_GLNCode_To.ValueData
+                                    , inGLNCodeJuridical_partner := ObjectString_GLNCodeJuridical_To.ValueData
+                                    , inGLNCodeJuridical         := ObjectString_Juridical_GLNCode_To.ValueData
+                                     ) AS GLN_To
            , COALESCE (ObjectString_DriverGLN_external.ValueData, ObjectString_DriverGLN.ValueData) :: TVarChar AS GLN_Driver
            
            , COALESCE (OH_JuridicalDetails_car.OKPO, CASE WHEN Movement_Sale.DescId <> zc_Movement_ReturnIn() 
@@ -464,6 +471,13 @@ BEGIN
                                   END
                       AND ObjectString_Juridical_GLNCode_To.DescId = zc_ObjectString_Juridical_GLNCode()
 
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail_To
+                                 ON ObjectLink_Juridical_Retail_To.ObjectId = ObjectString_Juridical_GLNCode_To.ObjectId
+                                AND ObjectLink_Juridical_Retail_To.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN ObjectString AS ObjectString_Retail_GLNCode_To
+                                   ON ObjectString_Retail_GLNCode_To.ObjectId = ObjectLink_Juridical_Retail_To.ChildObjectId
+                                  AND ObjectString_Retail_GLNCode_To.DescId = zc_ObjectString_Retail_GLNCode()
+
 
             LEFT JOIN ObjectString AS ObjectString_GLNCode_From
                                    ON ObjectString_GLNCode_From.ObjectId = View_Partner_AddressFrom.PartnerId
@@ -473,6 +487,15 @@ BEGIN
                                    ON ObjectString_GLNCode_To.ObjectId = View_Partner_Address.PartnerId
                                   AND ObjectString_GLNCode_To.DescId = zc_ObjectString_Partner_GLNCode()
                                   AND COALESCE(ObjectString_GLNCode_To.ValueData, '') <> ''
+            LEFT JOIN ObjectString AS ObjectString_GLNCodeJuridical_To
+                                   ON ObjectString_GLNCodeJuridical_To.ObjectId = View_Partner_Address.PartnerId
+                                  AND ObjectString_GLNCodeJuridical_To.DescId = zc_ObjectString_Partner_GLNCodeJuridical()
+                                  AND COALESCE(ObjectString_GLNCodeJuridical_To.ValueData, '') <> ''
+            LEFT JOIN ObjectString AS ObjectString_GLNCodeRetail_To
+                                   ON ObjectString_GLNCodeRetail_To.ObjectId = View_Partner_Address.PartnerId
+                                  AND ObjectString_GLNCodeRetail_To.DescId = zc_ObjectString_Partner_GLNCodeRetail()
+                                  AND COALESCE(ObjectString_GLNCodeRetail_To.ValueData, '') <> ''
+
                                   
             LEFT JOIN ObjectString AS ObjectString_Unit_GLN_from
                                    ON ObjectString_Unit_GLN_from.ObjectId = MovementLinkObject_From.ObjectId
