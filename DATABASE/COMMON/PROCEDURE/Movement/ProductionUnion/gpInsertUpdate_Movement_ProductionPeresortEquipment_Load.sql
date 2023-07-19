@@ -102,7 +102,7 @@ BEGIN
     vbGoodsId_child:= (SELECT Object.Id
                        FROM Object
                        WHERE Object.objectCode = inGoodsCode_child
-                         AND Object.DescId = zc_Object_Goods()
+                         AND Object.DescId = zc_Object_Asset()  --zc_Object_Goods()
                        LIMIT 1 --
                       );
  
