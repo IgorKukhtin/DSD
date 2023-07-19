@@ -105,11 +105,12 @@ BEGIN
        ;
 
      --
-     CREATE TEMP TABLE _tmpGoodsByGoodsKind_NormPack (GoodsId Integer, GoodsKindId Integer, NormPack TFloat ) ON COMMIT DROP;
-     INSERT INTO _tmpGoodsByGoodsKind_NormPack (GoodsId, GoodsKindId, NormPack)
+     CREATE TEMP TABLE _tmpGoodsByGoodsKind_NormPack (GoodsId Integer, GoodsKindId Integer, NormPack TFloat, NormInDays TFloat) ON COMMIT DROP;
+     INSERT INTO _tmpGoodsByGoodsKind_NormPack (GoodsId, GoodsKindId, NormPack, NormInDays)
           SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId         AS GoodsId
                , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId     AS GoodsKindId
                , ObjectFloat_NormPack.ValueData                          AS NormPack
+               , COALESCE (ObjectFloat_NormInDays.ValueData,0) ::TFloat  AS NormInDays
           FROM Object AS Object_GoodsByGoodsKind
                INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                      ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId          = Object_GoodsByGoodsKind.Id
@@ -120,11 +121,15 @@ BEGIN
                                     AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
                                     AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId > 0
 
-               INNER JOIN ObjectFloat AS ObjectFloat_NormPack
-                                      ON ObjectFloat_NormPack.ObjectId = Object_GoodsByGoodsKind.Id
-                                     AND ObjectFloat_NormPack.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormPack()
-                                     AND COALESCE (ObjectFloat_NormPack.ValueData,0) <> 0
+               LEFT JOIN ObjectFloat AS ObjectFloat_NormPack
+                                     ON ObjectFloat_NormPack.ObjectId = Object_GoodsByGoodsKind.Id
+                                    AND ObjectFloat_NormPack.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormPack()
+                                    AND COALESCE (ObjectFloat_NormPack.ValueData,0) <> 0
 
+               LEFT JOIN ObjectFloat AS ObjectFloat_NormInDays
+                                     ON ObjectFloat_NormInDays.ObjectId = Object_GoodsByGoodsKind.Id
+                                    AND ObjectFloat_NormInDays.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormInDays() 
+                                    AND COALESCE (ObjectFloat_NormInDays.ValueData,0) <> 0
           WHERE Object_GoodsByGoodsKind.DescId   = zc_Object_GoodsByGoodsKind()
             AND Object_GoodsByGoodsKind.isErased = FALSE
          ;
@@ -216,6 +221,7 @@ BEGIN
                                        , GoodsKindName_packTo      TVarChar
                                        , GoodsId_complete Integer, GoodsKindId_complete Integer
                                        , NormPack TFloat, HourPack_calc TFloat
+                                       , NormInDays TFloat
                                         ) ON COMMIT DROP;
 
     INSERT INTO _tmpResult_Child (Id, ContainerId, KeyId
@@ -240,7 +246,7 @@ BEGIN
                                 , ReceiptId, ReceiptCode, ReceiptName, ReceiptId_basis, ReceiptCode_basis, ReceiptName_basis, isErased
                                 , GoodsCode_packTo, GoodsName_packTo, GoodsKindName_packTo
                                 , GoodsId_complete, GoodsKindId_complete
-                                , NormPack, HourPack_calc
+                                , NormPack, HourPack_calc, NormInDays
                                  )
 
             WITH -- заменяем товары на "Главный Товар в планировании прихода с упаковки"
@@ -439,8 +445,8 @@ BEGIN
                              + COALESCE (_Result_Child.AmountPackNext,0)
                              + COALESCE (_Result_Child.AmountPackNextSecond,0)) / _tmpGoodsByGoodsKind_NormPack.NormPack
                          ELSE 0
-                    END  AS NUMERIC (16,2)) ::TFloat AS HourPack_calc  -- расчет сколько врмени надо на весь план
-
+                    END  AS NUMERIC (16,2))  ::TFloat AS HourPack_calc  -- расчет сколько врмени надо на весь план
+            , _tmpGoodsByGoodsKind_NormPack.NormInDays ::TFloat
        FROM (SELECT _Result_Child.Id
                   , _Result_Child.ContainerId
                   , _Result_Child.KeyId
@@ -1111,6 +1117,7 @@ BEGIN
             , _tmpResult_Detail.AmountPackNext_calc       :: TFloat AS AmountPackNext_calc_dt
             , _tmpResult_Detail.AmountPackNextSecond_calc :: TFloat AS AmountPackNextSecond_calc_dt
 
+            , _tmpGoodsByGoodsKind_NormPack.NormInDays ::TFloat
        FROM _Result_Master
            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                          ON MIBoolean_Calculated.MovementItemId = _Result_Master.Id
@@ -1150,6 +1157,9 @@ BEGIN
                            JOIN _tmpResult_Detail ON _tmpResult_Detail.ParentId = _Result_Child.Id
                       GROUP BY _Result_Child.KeyId
                      ) AS _tmpResult_Detail ON _tmpResult_Detail.KeyId = _Result_Master.KeyId
+
+           LEFT JOIN _tmpGoodsByGoodsKind_NormPack ON _tmpGoodsByGoodsKind_NormPack.GoodsId     = _Result_Master.GoodsId
+                                                  AND _tmpGoodsByGoodsKind_NormPack.GoodsKindId = _Result_Master.GoodsKindId
        ;
        RETURN NEXT Cursor1;
 
@@ -1281,7 +1291,8 @@ BEGIN
             , (COALESCE (_Result_Child.AmountPartnerTotal,0) - COALESCE (_Result_Child.AmountPartnerOldTotal,0)) :: TFloat AS AmountPartnerTotal_diff
 
             , _Result_Child.NormPack      ::TFloat
-            , _Result_Child.HourPack_calc ::TFloat
+            , _Result_Child.HourPack_calc ::TFloat 
+            , _Result_Child.NormInDays    ::TFloat
        FROM _tmpResult_Child AS _Result_Child
            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                          ON MIBoolean_Calculated.MovementItemId = _Result_Child.Id
@@ -1472,6 +1483,7 @@ BEGIN
                          ELSE 0
                     END  AS NUMERIC (16,2)) ::TFloat AS HourPack_calc  -- расчет сколько врмени надо на весь план
 
+            , _tmpGoodsByGoodsKind_NormPack.NormInDays ::TFloat
        FROM _Result_ChildTotal
             LEFT JOIN _tmpGoodsByGoodsKind_NormPack ON _tmpGoodsByGoodsKind_NormPack.GoodsId     = _Result_ChildTotal.GoodsId
                                                    AND _tmpGoodsByGoodsKind_NormPack.GoodsKindId = _Result_ChildTotal.GoodsKindId
@@ -1610,7 +1622,8 @@ BEGIN
 
             , _Result_Child.GoodsCode_packTo
             , _Result_Child.GoodsName_packTo
-            , _Result_Child.GoodsKindName_packTo
+            , _Result_Child.GoodsKindName_packTo  
+            , _Result_Child.NormInDays          ::TFloat
 
             -- из мастера
             , 0  :: TFloat   AS Remains_Master
@@ -1749,6 +1762,7 @@ BEGIN
             , 0              AS GoodsCode_packTo
             , '' :: Tvarchar AS GoodsName_packTo
             , '' :: Tvarchar AS GoodsKindName_packTo
+            , 0  ::TFloat    AS NormInDays
 
             , _Result_Master.Remains          AS Remains_Master
             , _Result_Master.Remains_CEH      AS Remains_CEH_Master
@@ -1771,6 +1785,7 @@ ALTER FUNCTION gpSelect_MI_OrderInternalPackRemains (Integer, Boolean, Boolean, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.07.23         *
  03.12.20         *
  29.05.18         * Cursor4
  17.11.17         *

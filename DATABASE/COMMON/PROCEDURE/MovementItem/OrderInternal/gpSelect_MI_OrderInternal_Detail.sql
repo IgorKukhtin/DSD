@@ -33,6 +33,8 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , AmountPackNextSecond_diff      TFloat
              , AmountPackNext_calc_diff       TFloat
              , AmountPackNextSecond_calc_diff TFloat
+             
+             , NormInDays TFloat
 
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -173,6 +175,26 @@ BEGIN
 
                       )
 
+
+   , tmpGoodsByGoodsKind AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId         AS GoodsId
+                                  , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId     AS GoodsKindId
+                                  , COALESCE (ObjectFloat_NormInDays.ValueData,0) ::TFloat  AS NormInDays
+                             FROM Object AS Object_GoodsByGoodsKind
+                                  INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                        ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId          = Object_GoodsByGoodsKind.Id
+                                                       AND ObjectLink_GoodsByGoodsKind_Goods.DescId            = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                        ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = Object_GoodsByGoodsKind.Id
+                                                       AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+
+                                  INNER JOIN ObjectFloat AS ObjectFloat_NormInDays
+                                                         ON ObjectFloat_NormInDays.ObjectId = Object_GoodsByGoodsKind.Id
+                                                        AND ObjectFloat_NormInDays.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormInDays() 
+                                                        AND COALESCE (ObjectFloat_NormInDays.ValueData,0) <> 0
+                             WHERE Object_GoodsByGoodsKind.DescId   = zc_Object_GoodsByGoodsKind()
+                               AND Object_GoodsByGoodsKind.isErased = FALSE
+                              )
+
        ------
        SELECT
              MI_Detail.MovementItemId                    AS Id
@@ -212,7 +234,9 @@ BEGIN
            , (COALESCE (MI_Detail.AmountPackNext, 0)            - COALESCE (tmpMI_detail_old.AmountPackNext,            MI_Detail.AmountPackNext, 0))            ::TFloat AS AmountPackNext_diff
            , (COALESCE (MI_Detail.AmountPackNextSecond, 0)      - COALESCE (tmpMI_detail_old.AmountPackNextSecond,      MI_Detail.AmountPackNextSecond, 0))      ::TFloat AS AmountPackNextSecond_diff
            , (COALESCE (MI_Detail.AmountPackNext_calc, 0)       - COALESCE (tmpMI_detail_old.AmountPackNext_calc,       MI_Detail.AmountPackNext_calc, 0))       ::TFloat AS AmountPackNext_calc_diff
-           , (COALESCE (MI_Detail.AmountPackNextSecond_calc, 0) - COALESCE (tmpMI_detail_old.AmountPackNextSecond_calc, MI_Detail.AmountPackNextSecond_calc, 0)) ::TFloat AS AmountPackNextSecond_calc_diff
+           , (COALESCE (MI_Detail.AmountPackNextSecond_calc, 0) - COALESCE (tmpMI_detail_old.AmountPackNextSecond_calc, MI_Detail.AmountPackNextSecond_calc, 0)) ::TFloat AS AmountPackNextSecond_calc_diff 
+           
+           , tmpGoodsByGoodsKind.NormInDays ::TFloat
 
            , Object_Insert.ValueData AS InsertName
            , Object_Update.ValueData AS UpdateName
@@ -235,7 +259,10 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = MI_Master.GoodsKindId_complete
             LEFT JOIN Object AS Object_Goods_basis ON Object_Goods_basis.Id = MI_Master.GoodsId_basis
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_Master.GoodsId
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MI_Master.GoodsKindId
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MI_Master.GoodsKindId  
+
+            LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = MI_Master.GoodsId
+                                         AND tmpGoodsByGoodsKind.GoodsKindId = MI_Master.GoodsKindId
        ;
 
 END;

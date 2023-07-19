@@ -1,24 +1,25 @@
--- Function: gpInsertUpdate_Movement_ProductionPeresortEquipment_Load()
+-- Function: gpInsertUpdate_Movement_ProductionPeresortCar_Load()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProductionPeresortEquipment_Load(TDateTime, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,TVarChar
-                                                                               , TDateTime, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProductionPeresortCar_Load(TDateTime, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,TVarChar
+                                                                         , TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProductionPeresortEquipment_Load(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProductionPeresortCar_Load(
     IN inOperDate            TDateTime, --
     IN inGoodsCode_child     Integer  , -- 
     IN inGoodsCode           Integer  , 
     IN inGoodsName           TVarChar , --  
     IN inInvNumber           TVarChar,
-    IN inMakerName           TVarChar,
-    IN inSerialNumber        TVarChar,
-    IN inModel               TVarChar,
+    IN inBodyTypeName        TVarChar,  --6
+    IN inCarModelName        TVarChar,
+    IN inCarTypeName         TVarChar,  --8
     IN inPassportNumber      TVarChar,
-    IN inRelease             TDateTime, --10
-    IN inKW                  TFloat,
-    IN inUnitName            TVarChar,
+    IN inRelease             TFloat, --10
+    IN inCarName             TVarChar,
+    IN inEngineNum           TVarChar,  --12
+    IN inVIN                 TVarChar,
+    IN inUnitName            TVarChar,  --14
     IN inUnitName_Storage    TVarChar,
-    IN inAreaUnitName        TVarChar,
-    IN inRoom                TVarChar,
+    IN inAreaUnitName        TVarChar,  --16
     IN inBranchName          TVarChar,
     IN inFromName            TVarChar,
     IN inToName              TVarChar , -- 
@@ -34,10 +35,13 @@ $BODY$
    DECLARE vbFromId Integer;
    DECLARE vbToId Integer;
    DECLARE vbStorageId Integer;
-   DECLARE vbUnitId_Storage Integer;
+   DECLARE vbUnitId_Storage Integer; 
    DECLARE vbUnitId Integer;
    DECLARE vbAreaUnitId Integer;
-   DECLARE vbMakerId Integer;
+   DECLARE vbBodyTypeId Integer;
+   DECLARE vbCarTypeId Integer;
+   DECLARE vbCarId Integer;
+   DECLARE vbCarModelId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProductionUnion());
@@ -99,7 +103,6 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Значение Кому = <%> не найдено.%Загрузка остановлена.', TRIM (inToName), CHR(13);
     END IF;
 
-
     -- Найти Id Подразд. партия
     vbUnitId:= (SELECT Object.Id
                 FROM Object
@@ -129,7 +132,7 @@ BEGIN
     vbGoodsId_child:= (SELECT Object.Id
                        FROM Object
                        WHERE Object.objectCode = inGoodsCode_child
-                         AND Object.DescId = zc_Object_Asset()  --zc_Object_Goods()
+                         AND Object.DescId IN (zc_Object_Asset())  --zc_Object_Goods()
                        LIMIT 1 --
                       );
  
@@ -139,39 +142,100 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. ОС с кодом <%> не найдено в справочнике.%Загрузка остановлена.', inGoodsCode_child, CHR(13);
     END IF;
 
-
-    vbMakerId:= (SELECT Object.Id
-                  FROM Object
-                  WHERE TRIM (Object.ValueData) ILIKE TRIM (inMakerName)
-                    AND Object.DescId IN (zc_Object_Maker())
-                  LIMIT 1 --
-                 );
-    -- Если производителя нет, то создаем
-    IF COALESCE (vbMakerId, 0) = 0
+    vbCarModelId:= (SELECT Object.Id
+                   FROM Object
+                   WHERE TRIM (Object.ValueData) ILIKE TRIM (inCarModelName)
+                     AND Object.DescId IN (zc_Object_CarModel())
+                   LIMIT 1 --
+                  );
+    -- Если нет, то создаем
+    IF COALESCE (vbCarModelId, 0) = 0
     THEN
         -- создаем <Производителя>
-       vbMakerId := (SELECT tmp.ioId
-                     FROM gpInsertUpdate_Object_Maker (ioId      := 0    :: Integer
-                                                     , inCode    := 0    :: Integer
-                                                     , inName    := TRIM (inMakerName) ::TVarChar  
-                                                     , inCountryId := NULL ::TVarChar
-                                                     , inSession := inSession             :: TVarChar
-                                                      ) AS tmp);
+       vbCarModelId := (SELECT tmp.ioId
+                      FROM gpInsertUpdate_Object_CarModel (ioId      := 0    :: Integer
+                                                        , inCode    := 0    :: Integer
+                                                        , inName    := TRIM (inCarModelName) ::TVarChar  
+                                                        , inSession := inSession            :: TVarChar
+                                                         ) AS tmp);
+    END IF;
+
+    vbCarTypeId:= (SELECT Object.Id
+                   FROM Object
+                   WHERE TRIM (Object.ValueData) ILIKE TRIM (inCarTypeName)
+                     AND Object.DescId IN (zc_Object_CarType())
+                   LIMIT 1 --
+                  );
+    -- Если нет, то создаем
+    IF COALESCE (vbCarTypeId, 0) = 0
+    THEN
+        -- создаем <Производителя>
+       vbCarTypeId := (SELECT tmp.ioId
+                      FROM gpInsertUpdate_Object_CarType (ioId      := 0    :: Integer
+                                                        , inCode    := 0    :: Integer
+                                                        , inName    := TRIM (inCarTypeName) ::TVarChar  
+                                                        , inSession := inSession            :: TVarChar
+                                                         ) AS tmp);
     END IF;
     
+    vbBodyTypeId:= (SELECT Object.Id
+                    FROM Object
+                    WHERE TRIM (Object.ValueData) ILIKE TRIM (inBodyTypeName)
+                      AND Object.DescId IN (zc_Object_BodyType())
+                    LIMIT 1 --
+                   );
+    -- Если нет, то создаем
+    IF COALESCE (vbBodyTypeId, 0) = 0
+    THEN
+        -- создаем <Производителя>
+       vbBodyTypeId := (SELECT tmp.ioId
+                        FROM gpInsertUpdate_Object_BodyType (ioId      := 0    :: Integer
+                                                           , inCode    := 0    :: Integer
+                                                           , inName    := TRIM (inBodyTypeName) ::TVarChar  
+                                                           , inSession := inSession             :: TVarChar
+                                                            ) AS tmp);
+    END IF;
+
+    
+    --
+    vbCarId:= (SELECT Object.Id
+               FROM Object
+               WHERE TRIM (Object.ValueData) ILIKE TRIM (inCarName)
+                 AND Object.DescId IN (zc_Object_Car())
+               LIMIT 1 --
+              );
+    -- Если нет, то ошибка
+    IF COALESCE (vbCarId, 0) = 0
+    THEN
+        RAISE EXCEPTION 'Ошибка. Авто % для ОС <%> не найдено в справочнике.%Загрузка остановлена.', TRIM (inCarName), TRIM (inGoodsName),  chr(13);
+    END IF;
  
      -- Найти Id товара
     vbGoodsId:= (SELECT Object.Id
                  FROM Object
                  WHERE Object.ObjectCode = inGoodsCode
-                   AND Object.DescId = zc_Object_Asset()  --zc_Object_Goods()
+                   AND Object.DescId IN (zc_Object_Asset())
                  LIMIT 1 --
                 );
+    
+    -- Если такого товара нет, то пробуем найти по Инвентарный номер
+    IF COALESCE (vbGoodsId, 0) = 0 
+    THEN 
+        vbGoodsId:= (SELECT Object.Id
+                     FROM Object 
+                         INNER JOIN ObjectString AS ObjectString_InvNumber
+                                 ON ObjectString_InvNumber.ObjectId = Object.Id
+                                AND ObjectString_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
+                                AND TRIM (ObjectString_InvNumber.ValueData) = TRIM (inInvNumber)
+                     WHERE Object.DescId IN (zc_Object_Asset())
+                     LIMIT 1 --
+                    );
+    END IF;
  
     -- Если такого товара нет, то выдать сообщение об ошибке и прервать выполнение загрузки
     IF COALESCE (vbGoodsId, 0) = 0
     THEN
-        RAISE EXCEPTION 'Ошибка. ОС % с кодом <%> не найдено в справочнике.%Загрузка остановлена.', TRIM (inGoodsName), inGoodsCode, chr(13);
+        RAISE EXCEPTION 'Ошибка. ОС % с кодом <%>  инв.№ <%> не найдено в справочнике.%Загрузка остановлена.', TRIM (inGoodsName), inGoodsCode,inInvNumber,  chr(13);
     END IF;
 
 
@@ -179,26 +243,55 @@ BEGIN
     PERFORM gpInsertUpdate_Object_Asset(ioId             := vbGoodsId                                       ::Integer       -- ключ объекта < Основные средства>
                                       , inCode           := tmp.Code                                        ::Integer       -- Код объекта 
                                       , inName           := tmp.Name                                        ::TVarChar      -- Название объекта 
-                                      , inRelease        := COALESCE (tmp.Release, inRelease)               ::TDateTime     -- Дата выпуска
+                                      , inRelease        := COALESCE (tmp.Release, ('01.01.'||inRelease) ::TDateTime )  ::TDateTime     -- Дата выпуска
                                       , inInvNumber      := COALESCE (tmp.InvNumber, inInvNumber)           ::TVarChar      -- Инвентарный номер
                                       , inFullName       := tmp.FullName                                    ::TVarChar      -- Полное название ОС
-                                      , inSerialNumber   := COALESCE (tmp.SerialNumber, inSerialNumber)     ::TVarChar      -- Заводской номер
+                                      , inSerialNumber   := tmp.SerialNumber                                ::TVarChar      -- Заводской номер
                                       , inPassportNumber := COALESCE (tmp.PassportNumber, inPassportNumber) ::TVarChar      -- Номер паспорта
                                       , inComment        := tmp.Comment                                     ::TVarChar      -- Примечание
                                       , inAssetGroupId   := tmp.AssetGroupId                                ::Integer       -- ссылка на группу основных средств
                                       , inJuridicalId    := tmp.JuridicalId                                 ::Integer       -- ссылка на Юридические лица
-                                      , inMakerId        := COALESCE (tmp.MakerId, vbMakerId)               ::Integer       -- ссылка на Производитель (ОС)
-                                      , inCarId          := tmp.CarId                                       ::Integer       -- ссылка на авто
+                                      , inMakerId        := tmp.MakerId                                     ::Integer       -- ссылка на Производитель (ОС)
+                                      , inCarId          := COALESCE (tmp.CarId, vbCarId)                   ::Integer       -- ссылка на авто
                                       , inAssetTypeId    := tmp.AssetTypeId                                 ::Integer       -- Тип ОС
                                       , inPeriodUse      := tmp.PeriodUse                                   ::TFloat        -- период эксплуатации
                                       , inProduction     := tmp.Production                                  ::TFloat        -- Производительность, кг
-                                      , inKW             := COALESCE (tmp.Kw, inKW)                         ::TFloat        -- Потребляемая Мощность KW 
+                                      , inKW             := tmp.Kw                                          ::TFloat        -- Потребляемая Мощность KW 
                                       , inisDocGoods     := tmp.isDocGoods                                  ::Boolean       -- 
                                       , inSession        := inSession                                       ::TVarChar
                                       )
     FROM gpSelect_Object_Asset (inSession) AS tmp
     WHERE tmp.Id = vbGoodsId;  
     
+    -- обновляем Авто данными из файла
+    PERFORM gpInsertUpdate_Object_Car(ioId                     := vbCarId                                  ::Integer     -- ид                                                
+                                    , incode                   := tmp.Code                                 ::Integer     -- код автомобиля                                    
+                                    , inName                   := tmp.Name                                 ::TVarChar    -- наименование                                      
+                                    , inRegistrationCertificate:= tmp.RegistrationCertificate              ::TVarChar    -- Техпаспорт                                        
+                                    , inVIN                    := COALESCE (tmp.VIN, inVIN)                ::TVarChar    -- VIN код                                           
+                                    , inEngineNum              := COALESCE (tmp.EngineNum, inEngineNum)    ::TVarChar    -- Номер двигателя                                   
+                                    , inComment                := tmp.Comment                              ::TVarChar    -- Примечание                                        
+                                    , inCarModelId             := COALESCE (tmp.CarModelId, vbCarModelId)  ::Integer     -- Марка автомобиля                                  
+                                    , inCarTypeId              := COALESCE (tmp.CarTypeId, vbCarTypeId)    ::Integer     -- Модель автомобиля                                 
+                                    , inBodyTypeId             := COALESCE (tmp.BodyTypeId, vbBodyTypeId)  ::Integer     -- Тип кузова                                        
+                                    , inUnitId                 := COALESCE (tmp.UnitId, vbUnitId)          ::Integer     -- Подразделение                                     
+                                    , inPersonalDriverId       := tmp.PersonalDriverId                     ::Integer     -- Сотрудник (водитель)                              
+                                    , inFuelMasterId           := tmp.FuelMasterId                         ::Integer     -- Вид топлива (основной)                            
+                                    , inFuelChildId            := tmp.FuelChildId                          ::Integer     -- Вид топлива (дополнительный)                      
+                                    , inJuridicalId            := tmp.JuridicalId                          ::Integer     -- Юридическое лицо(стороннее)                       
+                                    --, inAssetId                := COALESCE (tmp.AssetId, vbGoodsId)        ::Integer     -- Основные средства                               
+                                    , inKoeffHoursWork         := tmp.KoeffHoursWork                       ::TFloat      -- коэфф. для модели Рабочее время из путевого листа 
+                                    , inPartnerMin             := tmp.PartnerMin                           ::TFloat      -- Кол-во минут на ТТ                                
+                                    , inLength                 := tmp.Length                               ::TFloat      --                                                   
+                                    , inWidth                  := tmp.Width                                ::TFloat      --                                                   
+                                    , inHeight                 := tmp.Height                               ::TFloat      --                                                   
+                                    , inWeight                 := tmp.Weight                               ::TFloat      --                                                   
+                                    , inYear                   := COALESCE (tmp.Year, inRelease)           ::TFloat      --                                                   
+                                    , inSession                := inSession                                ::TVarChar    -- Пользователь                                      
+                                    )
+    FROM gpSelect_Object_Car (FALSE, inSession) AS tmp
+    WHERE tmp.Id = vbCarId; 
+
     
     -- Найди Ид Подразделения (Место хранение)
     vbUnitId_Storage := (SELECT Object.Id
@@ -340,7 +433,7 @@ BEGIN
                                                 , inStorageId_child        := Null            ::Integer   -- Место хранения
                                                 , inPartNumber             := inSerialNumber  ::TVarChar  -- № по тех паспорту
                                                 , inPartNumber_child       := Null            ::TVarChar  -- № по тех паспорту 
-                                                , inModel                  := inModel         ::TVarChar  -- Model
+                                                , inModel                  := inCarModelName  ::TVarChar  -- Model
                                                 , inModel_child            := Null            ::TVarChar  -- Model
                                                 , inUserId                 := vbUserId
                                                  );

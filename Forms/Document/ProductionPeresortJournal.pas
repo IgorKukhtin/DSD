@@ -63,6 +63,11 @@ type
     actDoLoadEquipment: TExecuteImportSettingsAction;
     macLoadExcelEquipment: TMultiAction;
     bbLoadExcelEquipment: TdxBarButton;
+    spGetImportSettingCar: TdsdStoredProc;
+    actDoLoadCar: TExecuteImportSettingsAction;
+    actGetImportSettingCar: TdsdExecStoredProc;
+    macLoadExcelCar: TMultiAction;
+    bbLoadExcelCar: TdxBarButton;
   private
     { Private declarations }
   public
