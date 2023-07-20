@@ -29,8 +29,16 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , AssetToGroupName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , StorageName TVarChar
+             , UnitName_Storage     TVarChar
+             , BranchName_Storage   TVarChar
+             , AreaUnitName_Storage TVarChar
+             , Room_Storage         TVarChar
+             , Address_Storage      TVarChar
              , UnitCode Integer, UnitName TVarChar
-             , CarName TVarChar
+             , CarName TVarChar, EngineNum TVarChar
+             , CarModelCode Integer, CarModelName TVarChar 
+             , CarTypeCode Integer, CarTypeName TVarChar
+             , BodyTypeCode Integer, BodyTypeName TVarChar
 
              , CountStart TFloat
              , CountStart_Weight TFloat
@@ -338,12 +346,12 @@ BEGIN
         , Object_Location.ObjectCode     AS LocationCode
         , CAST (COALESCE(Object_Location.ValueData,'') AS TVarChar)     AS LocationName
 
-        , Object_GoodsGroup.Id           AS GoodsGroupId
-        , Object_GoodsGroup.ValueData    AS GoodsGroupName
+        , Object_GoodsGroup.Id                               AS GoodsGroupId
+        , Object_GoodsGroup.ValueData                        AS GoodsGroupName
         , ObjectString_Goods_GroupNameFull.ValueData         AS GoodsGroupNameFull
-        , ObjectDesc_Goods.ItemName      AS GoodsDescName
+        , ObjectDesc_Goods.ItemName                          AS GoodsDescName
         , CAST (COALESCE(Object_Goods.Id, 0) AS Integer)     AS GoodsId
-        , Object_Goods.ObjectCode        AS GoodsCode
+        , Object_Goods.ObjectCode                            AS GoodsCode
         , CAST (COALESCE(Object_Goods.ValueData, '') AS TVarChar)        AS GoodsName
         , CAST (COALESCE(Object_GoodsKind.Id, 0) AS Integer)             AS GoodsKindId
         , CAST (COALESCE(Object_GoodsKind.ValueData, '') AS TVarChar)    AS GoodsKindName
@@ -352,7 +360,7 @@ BEGIN
         , ObjectFloat_Weight.ValueData   AS Weight
 
         , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)              AS PartionGoodsId
-        , COALESCE (ObjectString_Asset_InvNumber.ValueData, '') :: TVarChar AS PartionGoodsName
+        , COALESCE (ObjectString_Asset_InvNumber.ValueData, '')  :: TVarChar AS PartionGoodsName
         , COALESCE(ObjectDate_PartionGoods_Value.ValueData,Null) ::TDateTime AS PartionGoodsDate   --дата ввода в эксплуатацию
         , zfCalc_PartionMovementName (Movement_PartionGoods.DescId, MovementDesc_PartionGoods.ItemName, Movement_PartionGoods.InvNumber, Movement_PartionGoods.OperDate) AS MovementPartionGoods_InvNumber
 
@@ -363,11 +371,25 @@ BEGIN
         , Object_Partner.ObjectCode      AS PartnerCode
         , Object_Partner.ValueData       AS PartnerName
 
-        , Object_Storage.ValueData       AS StorageName
+        , Object_Storage.ValueData                 AS StorageName 
+        , Object_Unit_Storage.ValueData            AS UnitName_Storage
+        , Object_Branch_Storage.ValueData          AS BranchName_Storage
+        , Object_AreaUnit_Storage.ValueData        AS AreaUnitName_Storage
+        , ObjectString_Storage_Room.ValueData      AS Room_Storage
+        , ObjectString_Storage_Address.ValueData   AS Address_Storage
+        
+        
         , Object_Unit.ObjectCode         AS UnitCode
         , Object_Unit.ValueData          AS UnitName
 
-        , Object_Car.ValueData           AS CarName  --гос номер авто 
+        , Object_Car.ValueData           AS CarName  --гос номер авто
+        , ObjectString_EngineNum.ValueData :: TVarChar AS EngineNum
+        , Object_CarModel.ObjectCode AS CarModelCode
+        , Object_CarModel.ValueData  AS CarModelName 
+        , Object_CarType.ObjectCode  AS CarTypeCode
+        , Object_CarType.ValueData   AS CarTypeName
+        , Object_BodyType.ObjectCode AS BodyTypeCode
+        , Object_BodyType.ValueData  AS BodyTypeName 
         
         , CAST (tmpMIContainer_group.CountStart          AS TFloat) AS CountStart
         , CAST (tmpMIContainer_group.CountStart * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END          AS TFloat) AS CountStart_Weight
@@ -754,9 +776,9 @@ BEGIN
                                                         AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-        LEFT JOIN ObjectString AS ObjectString_Asset_InvNumber ON ObjectString_Asset_InvNumber.ObjectId = Object_Goods.Id
-                                                              AND ObjectString_Asset_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
-
+        LEFT JOIN ObjectString AS ObjectString_Asset_InvNumber
+                               ON ObjectString_Asset_InvNumber.ObjectId = Object_Goods.Id
+                              AND ObjectString_Asset_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
 
         LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
@@ -764,18 +786,37 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
-       LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
-       LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmpMIContainer_group.AssetToId
+        LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
+        LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmpMIContainer_group.AssetToId
 
-       LEFT JOIN ObjectLink AS ObjectLink_AssetTo_GoodsGroup
+        LEFT JOIN ObjectLink AS ObjectLink_AssetTo_GoodsGroup
                             ON ObjectLink_AssetTo_GoodsGroup.ObjectId = Object_AssetTo.Id
                            AND ObjectLink_AssetTo_GoodsGroup.DescId = zc_ObjectLink_Asset_AssetGroup()
-       LEFT JOIN Object AS Object_AssetToGroup ON Object_AssetToGroup.Id = ObjectLink_AssetTo_GoodsGroup.ChildObjectId
+        LEFT JOIN Object AS Object_AssetToGroup ON Object_AssetToGroup.Id = ObjectLink_AssetTo_GoodsGroup.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Asset_Car
                               ON ObjectLink_Asset_Car.ObjectId = Object_Goods.Id
                              AND ObjectLink_Asset_Car.DescId = zc_ObjectLink_Asset_Car()
          LEFT JOIN Object AS Object_Car ON Object_Car.Id = ObjectLink_Asset_Car.ChildObjectId
+
+         LEFT JOIN ObjectLink AS Car_CarModel
+                              ON Car_CarModel.ObjectId = Object_Car.Id
+                             AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+         LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+
+         LEFT JOIN ObjectLink AS Car_CarType
+                              ON Car_CarType.ObjectId = Object_Car.Id
+                             AND Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+         LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = Car_CarType.ChildObjectId
+
+         LEFT JOIN ObjectLink AS Car_BodyType
+                              ON Car_BodyType.ObjectId = Object_Car.Id
+                             AND Car_BodyType.DescId = zc_ObjectLink_Car_BodyType()
+         LEFT JOIN Object AS Object_BodyType ON Object_BodyType.Id = Car_BodyType.ChildObjectId
+
+         LEFT JOIN ObjectString AS ObjectString_EngineNum
+                                ON ObjectString_EngineNum.ObjectId = Object_Car.Id
+                               AND ObjectString_EngineNum.DescId = zc_ObjectString_Car_EngineNum()
 
          LEFT JOIN ObjectLink AS ObjectLink_Goods
                               ON ObjectLink_Goods.ObjectId = tmpMIContainer_group.PartionGoodsId
@@ -788,6 +829,28 @@ BEGIN
                               ON ObjectLink_Storage.ObjectId = tmpMIContainer_group.PartionGoodsId
                              AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
          LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId
+         
+         LEFT JOIN ObjectString AS ObjectString_Storage_Address
+                                ON ObjectString_Storage_Address.ObjectId = Object_Storage.Id 
+                               AND ObjectString_Storage_Address.DescId = zc_ObjectString_Storage_Address()
+         LEFT JOIN ObjectString AS ObjectString_Storage_Room
+                                ON ObjectString_Storage_Room.ObjectId = Object_Storage.Id 
+                               AND ObjectString_Storage_Room.DescId = zc_ObjectString_Storage_Room()
+         LEFT JOIN ObjectLink AS ObjectLink_Storage_AreaUnit
+                              ON ObjectLink_Storage_AreaUnit.ObjectId = Object_Storage.Id 
+                             AND ObjectLink_Storage_AreaUnit.DescId = zc_ObjectLink_Storage_AreaUnit()
+         LEFT JOIN Object AS Object_AreaUnit_Storage ON Object_AreaUnit_Storage.Id = ObjectLink_Storage_AreaUnit.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Storage_Unit
+                              ON ObjectLink_Storage_Unit.ObjectId = Object_Storage.Id 
+                             AND ObjectLink_Storage_Unit.DescId = zc_ObjectLink_Storage_Unit()
+         LEFT JOIN Object AS Object_Unit_Storage ON Object_Unit_Storage.Id = ObjectLink_Storage_Unit.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                              ON ObjectLink_Unit_Branch.ObjectId = Object_Unit_Storage.Id
+                             AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+         LEFT JOIN Object AS Object_Branch_Storage ON Object_Branch_Storage.Id = ObjectLink_Unit_Branch.ChildObjectId
+
 
          LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
                               ON ObjectDate_PartionGoods_Value.ObjectId = tmpMIContainer_group.PartionGoodsId
