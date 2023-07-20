@@ -20,7 +20,7 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
         Top = 27
         Width = 885
         Height = 254
-        ExplicitTop = 27
+        ExplicitTop = 29
         ExplicitWidth = 885
         ExplicitHeight = 254
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -85,6 +85,11 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = colDeferredSendIn
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = TPAmount
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -202,6 +207,17 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             HeaderHint = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088
             Options.Editing = False
             Width = 73
+          end
+          object TPAmount: TcxGridDBColumn
+            Caption = #1054#1090#1083#1086#1078#1077#1085#1086' '#1074' '#1090#1077#1093'. '#1087#1077#1088'.'
+            DataBinding.FieldName = 'TPAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
           end
           object colDeferredSend: TcxGridDBColumn
             Caption = #1054#1090#1083'. '#1074' '#1087#1077#1088#1077#1084#1077#1097'.'

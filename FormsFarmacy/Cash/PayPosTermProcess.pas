@@ -215,8 +215,16 @@ end;
 
 procedure TPayPosTermProcessForm.EndPayPosTerm;
 begin
-  if Assigned(FPosTermThread) and FPosTermThread.FPeyResult then ModalResult := mrOk
-  else ModalResult := mrCancel;
+  if Assigned(FPosTermThread) and FPosTermThread.FPeyResult then
+  begin
+    Add_PosLog('Успешное завершение оплаты');
+    ModalResult := mrOk
+  end else
+  begin
+    if Assigned(FPosTermThread) then Add_PosLog('Ошибка завершения оплаты: ' + FPosTermThread.GetLastPosError)
+    else Add_PosLog('Ошибка завершения оплаты: Потока нет');
+    ModalResult := mrCancel;
+  end;
 end;
 
 function PayPosTerminal(PosTerm: IPos;  ASalerCash : currency; ARefund : boolean = False) : Boolean;

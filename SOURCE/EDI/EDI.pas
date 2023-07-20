@@ -6206,7 +6206,6 @@ begin
   finally
     IdHTTP.Free;
     FResultParam.Value := '';
-    FErrorParam.Value := '';
   end;
 end;
 
@@ -6353,6 +6352,7 @@ end;
 
 function TdsdEDINAction.LocalExecute: Boolean;
 begin
+  FErrorParam.Value := '';
 
   case FEDINActions of
     edinSendETTN : Result := DoSendETTN;

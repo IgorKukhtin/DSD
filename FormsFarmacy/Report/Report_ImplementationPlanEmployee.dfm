@@ -159,6 +159,14 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           item
             OnGetText = cxImplementationPlanEmployeeDBBandedTableView1TcxGridDBDataControllerTcxDataSummaryFooterSummaryItems4GetText
             Column = colAmount
+          end
+          item
+            Kind = skSum
+            Column = colBonusPercentSum
+          end
+          item
+            Kind = skSum
+            Column = colBonusPercentAddSum
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsData.Deleting = False
@@ -344,6 +352,22 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Width = 62
           Position.BandIndex = 0
           Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object colBonusPercentSum: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'BonusPercentSum'
+          Visible = False
+          VisibleForCustomization = False
+          Position.BandIndex = 1
+          Position.ColIndex = 8
+          Position.RowIndex = 0
+        end
+        object colBonusPercentAddSum: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'BonusPercentAddSum'
+          Visible = False
+          VisibleForCustomization = False
+          Position.BandIndex = 1
+          Position.ColIndex = 9
           Position.RowIndex = 0
         end
       end
@@ -1042,7 +1066,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     Left = 456
     Top = 328
   end
-  object dsdFieldFilter1: TdsdFieldFilter
+  object FieldFilter: TdsdFieldFilter
     TextEdit = edFilter
     DataSet = ClientDataSet
     Column = colGoodsName
@@ -1098,6 +1122,27 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
         Name = 'inBonusAmountTab'
         Value = Null
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBonusPercentSum'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBonusPercentAddSum'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNewUser'
+        Value = Null
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

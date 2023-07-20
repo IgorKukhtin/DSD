@@ -57,6 +57,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
     { Private declarations }
   public

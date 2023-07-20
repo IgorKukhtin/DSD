@@ -62,6 +62,8 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     ExternalJuridical: TcxGridDBColumn;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
     { Private declarations }
   public

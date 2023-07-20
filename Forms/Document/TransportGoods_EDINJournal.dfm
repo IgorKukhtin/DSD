@@ -1777,6 +1777,15 @@ inherited TransportGoods_EDINJournalForm: TTransportGoods_EDINJournalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCommentError'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CommentError'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 313

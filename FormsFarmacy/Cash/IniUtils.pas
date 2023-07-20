@@ -428,7 +428,7 @@ end;
 //возвращает хост POS-терминала
 function iniPosHost(ACode : integer):String;
 begin
-  Result := GetValue('TSoldWithCompMainForm', 'PosHost' + IntToStr(ACode), '192.168.1.101');
+  Result := GetValue('TSoldWithCompMainForm', 'PosHost' + IntToStr(ACode), '192.168.1.121');
 end;
 
 //возвращает порт POS-терминала

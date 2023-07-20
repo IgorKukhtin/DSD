@@ -32,7 +32,7 @@ BEGIN
                               , DE.UserName
                               , DE.Password
                          FROM gpSelect_Object_DiscountExternalTools( inSession := inSession) AS DE
-                         WHERE DE.DiscountExternalId IN (SELECT Id FROM gpSelect_Object_DiscountExternal( inSession := '3') WHERE service = 'CardService')
+                         WHERE DE.DiscountExternalId IN (SELECT Id FROM gpSelect_Object_DiscountExternal(inIsErased := False, inSession := '3') WHERE service = 'CardService')
                            AND COALESCE(DE.UnitId, 0) > 0)
         -- Результат
         

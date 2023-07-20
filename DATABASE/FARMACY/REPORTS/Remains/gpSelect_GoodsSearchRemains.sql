@@ -37,6 +37,7 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , DeferredSendIn TFloat
              , PriceSite TFloat
              , DateChangeSite TDateTime
+             , TPAmount TFloat
              , Color_calc Integer
              )
 AS
@@ -629,6 +630,31 @@ BEGIN
                                                                     AND Object_BarCode.isErased = False
                                                                     AND Object_Object.isErased = False)
                          )
+         -- ќтложенные технические переучеты
+      , tmpMovementTP AS (SELECT MovementItemMaster.ObjectId              AS GoodsId
+                               , MovementLinkObject_Unit.ObjectId         AS UnitId
+                               , SUM(-MovementItemMaster.Amount)::TFloat  AS Amount
+                          FROM Movement AS Movement
+
+                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                             ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                               
+                               INNER JOIN MovementItem AS MovementItemMaster
+                                                       ON MovementItemMaster.MovementId = Movement.Id
+                                                      AND MovementItemMaster.DescId     = zc_MI_Master()
+                                                      AND MovementItemMaster.isErased   = FALSE
+                                                      AND MovementItemMaster.Amount     < 0
+                                                         
+                               INNER JOIN MovementItemBoolean AS MIBoolean_Deferred
+                                                              ON MIBoolean_Deferred.MovementItemId = MovementItemMaster.Id
+                                                             AND MIBoolean_Deferred.DescId         = zc_MIBoolean_Deferred()
+                                                             AND MIBoolean_Deferred.ValueData      = TRUE
+                                                               
+                          WHERE Movement.DescId = zc_Movement_TechnicalRediscount()
+                            AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                          GROUP BY MovementItemMaster.ObjectId
+                                 , MovementLinkObject_Unit.ObjectId) 
 
 
         --–≈«”Ћ№“ј“
@@ -664,6 +690,7 @@ BEGIN
              , tmpDeferredSendIn.Amount:: TFloat AS DeferredSendIn
              , tmpPrice_Site.Price                      AS PriceSite
              , tmpPrice_Site.DateChange                 AS DateChangeSite
+             , Reserve_TP.Amount                        AS TPAmount
              , CASE WHEN vbisAdmin AND COALESCE (tmpData.Amount,0) < (COALESCE (containerCheck.DailyCheck,0) + COALESCE (containerSale.DailySale,0)) THEN zc_Color_Red()
                     WHEN vbisAdmin AND COALESCE (tmpData.Amount,0) > (COALESCE (containerCheck.DailyCheck,0) + COALESCE (containerSale.DailySale,0)) * 3 THEN zc_Color_Greenl()
                     ELSE zc_Color_White() END      AS Color_calc
@@ -699,6 +726,9 @@ BEGIN
 
             LEFT JOIN tmpPrice_Site ON tmpPrice_Site.GoodsId = tmpGoods.Id
 
+            LEFT OUTER JOIN tmpMovementTP AS Reserve_TP ON Reserve_TP.GoodsId = tmpGoods.Id
+                                                       AND Reserve_TP.UnitId = Object_Unit.UnitId
+
           WHERE COALESCE(tmpData.Amount,0)<>0 OR COALESCE(tmpIncome.AmountIncome,0)<>0 OR COALESCE(tmpDeferredSend.Amount,0)<>0 OR COALESCE(tmpDeferredSendIn.Amount,0)<>0
           ORDER BY Object_Unit.UnitName
                  , tmpGoodsParams.GoodsGroupName
@@ -727,5 +757,4 @@ $BODY$
 -- SELECT * FROM gpSelect_GoodsSearchRemains ('4282', 'глюкоз', inSession := '3')
 -- select * from gpSelect_GoodsSearchRemains(inCodeSearch := '' , inGoodsSearch := 'маска защит' ,  inSession := '3'); 36584
 
-
-select * from gpSelect_GoodsSearchRemains(inCodeSearch := '' , inGoodsSearch := 'хьюмер' , inisRetail := 'False' ,  inSession := '3');
+select * from gpSelect_GoodsSearchRemains(inCodeSearch := '14660' , inGoodsSearch := '' , inisRetail := 'False' ,  inSession := '3');

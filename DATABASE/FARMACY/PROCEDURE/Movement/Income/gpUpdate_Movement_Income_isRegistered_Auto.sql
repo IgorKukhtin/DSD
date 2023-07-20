@@ -35,7 +35,7 @@ BEGIN
                INNER JOIN ObjectLink AS ObjectLink_BarCode_Object
                                      ON ObjectLink_BarCode_Object.ObjectId = Object_BarCode.Id
                                     AND ObjectLink_BarCode_Object.DescId = zc_ObjectLink_BarCode_Object()
-                                    AND ObjectLink_BarCode_Object.ChildObjectId  in (SELECT Id FROM gpSelect_Object_DiscountExternal( inSession := '3') WHERE service = 'CardService')
+                                    AND ObjectLink_BarCode_Object.ChildObjectId  in (SELECT Id FROM gpSelect_Object_DiscountExternal(inIsErased := False, inSession := '3') WHERE service = 'CardService')
           WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
             AND Movement.DescId   = zc_Movement_Income()
             AND Movement.StatusId = zc_Enum_Status_Complete()

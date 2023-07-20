@@ -107,7 +107,7 @@ type
     actConsider: TAction;
     edFilter: TcxTextEdit;
     cxLabel2: TcxLabel;
-    dsdFieldFilter1: TdsdFieldFilter;
+    FieldFilter: TdsdFieldFilter;
     cbHighlightStrings: TcxCheckBox;
     cbFilter1: TcxCheckBox;
     cbFilter2: TcxCheckBox;
@@ -116,14 +116,16 @@ type
     AmountPlanAward: TcxGridDBBandedColumn;
     cxGridDBColumn8: TcxGridDBColumn;
     spGetTotal: TdsdStoredProc;
-    cdsResultTotalExecutionLine: TCurrencyField;
-    cdsResultTotalExecutionAllLine: TCurrencyField;
-    cdsResultAwarding: TStringField;
-    cdsResultTotal: TCurrencyField;
     colisisFixedPercent: TcxGridDBBandedColumn;
     colAddBonusPercent: TcxGridDBBandedColumn;
     cxGridDBTableView2Column1: TcxGridDBColumn;
+    colBonusPercentSum: TcxGridDBBandedColumn;
+    colBonusPercentAddSum: TcxGridDBBandedColumn;
+    cdsResultTotalExecutionLine: TCurrencyField;
     cdsResultTotalExecutionFixed: TCurrencyField;
+    cdsResultTotalExecutionAllLine: TCurrencyField;
+    cdsResultAwarding: TStringField;
+    cdsResultTotal: TCurrencyField;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cdsListBandsAfterOpen(DataSet: TDataSet);
     procedure ClientDataSetCalcFields(DataSet: TDataSet);
@@ -401,7 +403,7 @@ begin
     Field.DataSet := ClientDataSet;
   end;
 
-  for I := 1 to 8 do
+  for I := 1 to 10 do
   begin
     Field := TCurrencyField.Create(Self);
     Field.FieldKind := fkCalculated;
@@ -414,6 +416,8 @@ begin
       6 : Field.FieldName := 'AmountTheFineTab';
       7 : Field.FieldName := 'BonusAmountTab';
       8 : Field.FieldName := 'AddBonusPercent';
+      9 : Field.FieldName := 'BonusPercentSum';
+      10 : Field.FieldName := 'BonusPercentAddSum';
     end;
     Field.Name := 'cds' + Field.FieldName;
     Field.DataSet := ClientDataSet;
@@ -455,7 +459,7 @@ begin
   if not ClientDataSet.Active then Exit;
 
   if FCountYes <> 0 then
-    Dataset['TotalExecutionLine '] := (ClientDataSet.RecordCount - FCountO) / FCountYes * 100 + FCountFixedPercent * FFixedPercent
+    Dataset['TotalExecutionLine'] := (ClientDataSet.RecordCount - FCountO) / FCountYes * 100 + FCountFixedPercent * FFixedPercent
   else Dataset['TotalExecutionLine'] := 0;
 
   if FCountFixed <> 0 then
@@ -472,6 +476,11 @@ begin
   spGetTotal.ParamByName('inTotalExecutionFixed').Value := Dataset['TotalExecutionFixed'];
   spGetTotal.ParamByName('inAmountTheFineTab').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[1];
   spGetTotal.ParamByName('inBonusAmountTab').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[0];
+  spGetTotal.ParamByName('inBonusPercentSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[5];
+  spGetTotal.ParamByName('inBonusPercentAddSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[6];
+  spGetTotal.ParamByName('inisNewUser').Value := cdsUnit.FieldByName('isNewUser').AsBoolean;
+
+
   spGetTotal.ParamByName('outTotal').Value := 0;
   try
     spGetTotal.Execute;
@@ -610,6 +619,9 @@ begin
     spGetTotal.ParamByName('inTotalExecutionFixed').Value := cdsResult.FieldByName('TotalExecutionFixed').AsCurrency;
     spGetTotal.ParamByName('inAmountTheFineTab').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[0];
     spGetTotal.ParamByName('inBonusAmountTab').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[1];
+    spGetTotal.ParamByName('inBonusPercentSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[5];
+    spGetTotal.ParamByName('inBonusPercentAddSum').Value := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[6];
+    spGetTotal.ParamByName('inisNewUser').Value := cdsUnit.FieldByName('isNewUser').AsBoolean;
     spGetTotal.ParamByName('outTotal').Value := 0;
     try
       spGetTotal.Execute;
@@ -794,6 +806,28 @@ begin
         Dataset['BonusAmountTab'] := RoundTo(Dataset['AmountPlanAward' + FUnit.Strings[FUnitCalck]] * Dataset['Price' + FUnit.Strings[FUnitCalck]] * 0.03, -2)
       else Dataset['BonusAmountTab'] := 0;
     end else Dataset['BonusAmountTab'] := nSum;
+
+    nSum := 0;
+    if (Dataset['Amount'] >= Dataset['AmountPlanAwardTab']) and (Dataset['AmountPlanAwardTab'] > 0) and
+       (Dataset['AddBonusPercent' + FUnit.Strings[FUnitCalck]] > 0) then
+    begin
+      if cdsUnitCategory.Locate('UnitCategoryCode', FUnitCategoryID, []) then
+        nSum := Dataset['Amount'] * Dataset['Price' + FUnit.Strings[FUnitCalck]] *
+        (Dataset['AddBonusPercent' + FUnit.Strings[FUnitCalck]]) / 100;
+    end;
+
+    Dataset['BonusPercentSum'] := nSum;
+
+    nSum := 0;
+    if (Dataset['Amount'] >= Dataset['AmountPlanAwardTab']) and (Dataset['AmountPlanAwardTab'] > 0) and
+       (Dataset['AddBonusPercent' + FUnit.Strings[FUnitCalck]] > 0) then
+    begin
+      if cdsUnitCategory.Locate('UnitCategoryCode', FUnitCategoryID, []) then
+        nSum := Dataset['Amount'] * Dataset['Price' + FUnit.Strings[FUnitCalck]] *
+        (Dataset['AddBonusPercent' + FUnit.Strings[FUnitCalck]] + Dataset['AddBonusPercentAdd']) / 100;
+    end;
+
+    Dataset['BonusPercentAddSum'] := nSum;
 
     Dataset['isFixedPercent'] := Dataset['isFixedPercent' + FUnit.Strings[FUnitCalck]];
 

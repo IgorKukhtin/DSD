@@ -156,7 +156,7 @@ begin
   try
     try
       FIdTCPClient.IOHandler.ReadBytes(Buffer, -1, false);
-      FRadBufer:= FRadBufer + IdGlobal.BytesToString(Buffer);
+      FRadBufer:= FRadBufer + IdGlobal.BytesToString(Buffer, IndyTextEncoding_UTF8);
     finally
       SetLength(Buffer, 0);
     end;

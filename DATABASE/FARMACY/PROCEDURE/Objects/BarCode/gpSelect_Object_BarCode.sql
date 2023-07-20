@@ -1,8 +1,9 @@
 -- Function: gpSelect_Object_BarCode()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_BarCode(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_BarCode(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_BarCode(
+    IN inIsErased      Boolean   ,    -- ѕоказать все
     IN inSession     TVarChar       -- сесси€ пользовател€
 )
 RETURNS TABLE (Id Integer, Code Integer, BarCodeName TVarChar,
@@ -70,7 +71,8 @@ BEGIN
                                    ON ObjectBoolean_StealthBonuses.ObjectId = Object_BarCode.Id
                                   AND ObjectBoolean_StealthBonuses.DescId = zc_ObjectBoolean_BarCode_StealthBonuses()
 
-       WHERE Object_BarCode.DescId = zc_Object_BarCode();
+       WHERE Object_BarCode.DescId = zc_Object_BarCode()
+         AND (Object_BarCode.isErased = False OR inIsErased = True);
   
 END;
 $BODY$
@@ -88,4 +90,4 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Object_BarCode ('3')
+SELECT * FROM gpSelect_Object_BarCode (False, '3')

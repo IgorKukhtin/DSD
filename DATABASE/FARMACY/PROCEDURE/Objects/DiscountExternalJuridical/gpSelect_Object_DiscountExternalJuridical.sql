@@ -1,8 +1,9 @@
 -- Function: gpSelect_Object_DiscountExternalJuridical()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_DiscountExternalJuridical (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_DiscountExternalJuridical (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_DiscountExternalJuridical(
+    IN inIsErased      Boolean   ,    -- ѕоказать все
     IN inSession       TVarChar       -- сесси€ пользовател€
 )
 RETURNS TABLE (Id Integer, Code Integer
@@ -46,7 +47,8 @@ BEGIN
                                     ON ObjectString_ExternalJuridical.ObjectId = Object_DiscountExternalJuridical.Id 
                                    AND ObjectString_ExternalJuridical.DescId = zc_ObjectString_DiscountExternalJuridical_ExternalJuridical()
 
-        WHERE Object_DiscountExternalJuridical.DescId = zc_Object_DiscountExternalJuridical();
+        WHERE Object_DiscountExternalJuridical.DescId = zc_Object_DiscountExternalJuridical()
+          AND (Object_DiscountExternalJuridical.isErased = False OR inIsErased = True);
   
 END;
 $BODY$
@@ -60,4 +62,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_DiscountExternalJuridical ('2')
+-- SELECT * FROM gpSelect_Object_DiscountExternalJuridical (False, '2')
