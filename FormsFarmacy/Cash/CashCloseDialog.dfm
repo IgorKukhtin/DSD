@@ -159,21 +159,27 @@ inherited CashCloseDialogForm: TCashCloseDialogForm
       Width = 177
     end
   end
+  object cbNoPayPos: TcxCheckBox [9]
+    Left = 424
+    Top = 119
+    Caption = #1053#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1073#1072#1085#1082#1086#1074#1089#1082#1080#1081' '#1090#1077#1088#1084#1080#1085#1072#1083
+    TabOrder = 9
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
-    Left = 491
-    Top = 120
+    Left = 291
+    Top = 128
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 456
-    Top = 120
+    Left = 256
+    Top = 128
   end
   inherited ActionList: TActionList
-    Left = 527
-    Top = 119
+    Left = 327
+    Top = 127
   end
   inherited FormParams: TdsdFormParams
-    Left = 568
-    Top = 120
+    Left = 368
+    Top = 128
   end
 end

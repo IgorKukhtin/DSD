@@ -922,7 +922,7 @@ type
     // Пробивает чек через ЭККА
     function PutCheckToCash(SalerCash, SalerCashAdd: Currency;
       PaidType: TPaidType; var AZReport : Integer; var AFiscalNumber, ACheckNumber: String;
-      APOSTerminalCode: Integer = 0; isFiscal: Boolean = True): Boolean;
+      APOSTerminalCode: Integer = 0; isFiscal: Boolean = True; isNoPayPos: Boolean = False): Boolean;
     // подключение к локальной базе данных
     function InitLocalStorage: Boolean;
     procedure LoadFromLocalStorage;
@@ -3602,7 +3602,7 @@ procedure TMainCashForm2.actPutCheckToCashExecute(Sender: TObject);
 var
   UID, CheckNumber, ConfirmationCode, S, S1, cResult: String;
   lMsg: String;
-  isPromoForSale, isYes, isDiscountCommit: Boolean;
+  isPromoForSale, isYes, isDiscountCommit, isNoPayPos: Boolean;
   dsdSave: TdsdStoredProc;
   nBankPOSTerminal: Integer;
   nPOSTerminalCode: Integer;
@@ -3622,6 +3622,7 @@ begin
     exit;
   TimerDroppedDown.Enabled := True;
   CheckOldId := 0;
+  isNoPayPos := False;
 
   try
     Add_Log('Start PutCheckToCash');
@@ -4144,7 +4145,7 @@ begin
     begin // если с Shift, то считаем, что дали без сдачи
       Add_Log('Спросили сумму и тип оплаты');
       if not CashCloseDialogExecute(FTotalSumm, ASalerCash, ASalerCashAdd,
-        PaidType, nBankPOSTerminal, nPOSTerminalCode) then
+        PaidType, nBankPOSTerminal, nPOSTerminalCode, isNoPayPos) then
       Begin
         if Self.ActiveControl <> edAmount then
           Self.ActiveControl := MainGrid;
@@ -4255,7 +4256,7 @@ begin
 
       Add_Log('Печать чека');
       if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.ASalerCashAdd,
-        MainCashForm.PaidType, ZReport, FFiscalNumber, CheckNumber, nPOSTerminalCode) then
+        MainCashForm.PaidType, ZReport, FFiscalNumber, CheckNumber, nPOSTerminalCode, True, isNoPayPos) then
       Begin
         Add_Log('Печать чека завершена');
 
@@ -11173,7 +11174,7 @@ end;
 
 function TMainCashForm2.PutCheckToCash(SalerCash, SalerCashAdd: Currency;
   PaidType: TPaidType; var AZReport : Integer; var AFiscalNumber, ACheckNumber: String;
-  APOSTerminalCode: Integer = 0; isFiscal: Boolean = True): Boolean;
+  APOSTerminalCode: Integer = 0; isFiscal: Boolean = True; isNoPayPos: Boolean = False): Boolean;
 var
   str_log_xml, cResult, cTextCheck: String;
   Disc, nSumAll: Currency;
@@ -11413,7 +11414,7 @@ begin
 
       // Подключились к POS-терминалу
       if (PaidType <> ptMoney) and (APOSTerminalCode <> 0) and
-        (iniPosType(APOSTerminalCode) <> '') then
+        (iniPosType(APOSTerminalCode) <> '') and not isNoPayPos then
       begin
         try
           Add_Log('Подключение к POS терминалу');
@@ -11433,8 +11434,12 @@ begin
           end;
 
           if not PayPosTerminal(pPosTerm, MainCashForm.ASalerCash) then
+          begin
+            Add_Log('Ошибка оплаты POS терминалом');
             exit;
+          end;
           cTextCheck := pPosTerm.TextCheck;
+          Add_Log('Успешно оплатили POS терминалом');
         finally
           if pPosTerm <> Nil then
             pPosTerm := Nil;

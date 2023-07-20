@@ -962,6 +962,18 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Properties.Strings = (
           'Key'
           'TextValue')
+      end
+      item
+        Component = GuidesBranch
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesPersonalServiceList
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
   end
   inherited ActionList: TActionList
@@ -2427,7 +2439,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         item
           Name = 'PersonalId'
           Value = Null
-          Component = PersonalGuides
+          Component = GuidesPersonal
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2435,7 +2447,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         item
           Name = 'PersonalName'
           Value = Null
-          Component = PersonalGuides
+          Component = GuidesPersonal
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -2444,7 +2456,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         item
           Name = 'PersonalServiceListId'
           Value = Null
-          Component = PersonalServiceListGuides
+          Component = GuidesPersonalServiceList
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2452,7 +2464,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         item
           Name = 'PersonalServiceListName'
           Value = Null
-          Component = PersonalServiceListGuides
+          Component = GuidesPersonalServiceList
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -2593,6 +2605,352 @@ inherited Report_PersonalForm: TReport_PersonalForm
         end>
       isShowModal = False
     end
+    object actOpenReportForm_ServiceSumm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+      ImageIndex = 24
+      FormName = 'TReport_Personal_ServiceSummForm'
+      FormNameParam.Value = 'TReport_Personal_ServiceSummForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 43466d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 43466d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inServiceDate'
+          Value = 43466d
+          Component = deServiceDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisServiceDate'
+          Value = False
+          Component = cbServiceDate
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisMember'
+          Value = False
+          Component = cbMember
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAccountId'
+          Value = ''
+          Component = GuidesAccount
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAccountName'
+          Value = ''
+          Component = GuidesAccount
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBranchId'
+          Value = ''
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfoMoneyId'
+          Value = ''
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfoMoneyGroupId'
+          Value = ''
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfoMoneyDestinationId'
+          Value = ''
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalServiceListId'
+          Value = ''
+          Component = GuidesPersonalServiceList
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBranchName'
+          Value = ''
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfoMoneyName'
+          Value = ''
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfoMoneyGroupName'
+          Value = ''
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfoMoneyDestinationName'
+          Value = ''
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalServiceListName'
+          Value = ''
+          Component = GuidesPersonalServiceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenReportForm_MoneySumm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1086#1087#1083#1072#1090#1099
+      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1086#1087#1083#1072#1090#1099
+      ImageIndex = 25
+      FormName = 'TReport_Personal_MoneySummForm'
+      FormNameParam.Value = 'TReport_Personal_MoneySummForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inServiceDate'
+          Value = Null
+          Component = deServiceDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisServiceDate'
+          Value = ''
+          Component = cbServiceDate
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisMember'
+          Value = Null
+          Component = cbMember
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAccountId'
+          Value = Null
+          Component = GuidesAccount
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inAccountName'
+          Value = Null
+          Component = GuidesAccount
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBranchId'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfoMoneyId'
+          Value = ''
+          Component = GuidesInfoMoney
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfoMoneyGroupId'
+          Value = ''
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfoMoneyDestinationId'
+          Value = Null
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalServiceListId'
+          Value = Null
+          Component = GuidesPersonalServiceList
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalId'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'PersonalId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBranchName'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfoMoneyName'
+          Value = Null
+          Component = GuidesInfoMoney
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfoMoneyGroupName'
+          Value = Null
+          Component = GuidesInfoMoneyGroup
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInfoMoneyDestinationName'
+          Value = Null
+          Component = GuidesInfoMoneyDestination
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalServiceListName'
+          Value = Null
+          Component = GuidesPersonalServiceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPersonalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 184
@@ -2688,7 +3046,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
       item
         Name = 'inPersonalServiceListId'
         Value = Null
-        Component = PersonalServiceListGuides
+        Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2696,7 +3054,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
       item
         Name = 'inPersonalId'
         Value = Null
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2736,11 +3094,23 @@ inherited Report_PersonalForm: TReport_PersonalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportForm_ServiceSumm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportForm_MoneySumm'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -2771,6 +3141,14 @@ inherited Report_PersonalForm: TReport_PersonalForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbOpenReportForm_MoneySumm: TdxBarButton
+      Action = actOpenReportForm_MoneySumm
+      Category = 0
+    end
+    object bbOpenReportForm_ServiceSumm: TdxBarButton
+      Action = actOpenReportForm_ServiceSumm
       Category = 0
     end
   end
@@ -2823,10 +3201,10 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = GuidesInfoMoney
       end
       item
-        Component = PersonalServiceListGuides
+        Component = GuidesPersonalServiceList
       end
       item
-        Component = PersonalGuides
+        Component = GuidesPersonal
       end>
     Left = 416
     Top = 212
@@ -3169,7 +3547,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Left = 432
     Top = 65533
   end
-  object PersonalServiceListGuides: TdsdGuides
+  object GuidesPersonalServiceList: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonalServiceList
     FormNameParam.Value = 'TPersonalServiceListForm'
@@ -3181,7 +3559,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
       item
         Name = 'Key'
         Value = ''
-        Component = PersonalServiceListGuides
+        Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3190,7 +3568,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PersonalServiceListGuides
+        Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3199,7 +3577,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     Left = 120
     Top = 37
   end
-  object PersonalGuides: TdsdGuides
+  object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonal
     FormNameParam.Value = 'TPersonal_ObjectForm'
@@ -3211,7 +3589,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
       item
         Name = 'Key'
         Value = ''
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -3220,7 +3598,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PersonalGuides
+        Component = GuidesPersonal
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

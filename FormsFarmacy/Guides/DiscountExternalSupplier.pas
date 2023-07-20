@@ -63,6 +63,8 @@ type
     bbProtocolOpenForm: TdxBarButton;
     dxBarButton1: TdxBarButton;
     Service: TcxGridDBColumn;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
     { Private declarations }
   public

@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1089#1090#1086#1088#1086#1085#1085#1080#1077')>'
-  ClientHeight = 391
-  ClientWidth = 357
+  ClientHeight = 437
+  ClientWidth = 341
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@
     Caption = #1043#1086#1089'. '#1085#1086#1084#1077#1088
   end
   object cxButton1: TcxButton
-    Left = 48
-    Top = 355
+    Left = 49
+    Top = 397
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 222
-    Top = 355
+    Left = 223
+    Top = 397
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -90,13 +90,13 @@
     Width = 273
   end
   object cxLabel8: TcxLabel
-    Left = 32
-    Top = 173
+    Left = 33
+    Top = 215
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'('#1089#1090#1086#1088#1086#1085#1085#1077#1077')'
   end
   object ceJuridical: TcxButtonEdit
-    Left = 32
-    Top = 189
+    Left = 33
+    Top = 231
     Properties.Buttons = <
       item
         Default = True
@@ -107,19 +107,19 @@
     Width = 273
   end
   object cxLabel9: TcxLabel
-    Left = 32
-    Top = 215
+    Left = 33
+    Top = 257
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit
-    Left = 32
-    Top = 232
+    Left = 33
+    Top = 274
     TabOrder = 13
     Width = 273
   end
   object edLength: TcxCurrencyEdit
-    Left = 32
-    Top = 275
+    Left = 33
+    Top = 317
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
@@ -128,18 +128,18 @@
     Width = 60
   end
   object cxLabel12: TcxLabel
-    Left = 32
-    Top = 261
+    Left = 33
+    Top = 303
     Caption = #1044#1083#1080#1085#1072', '#1084#1084
   end
   object cxLabel13: TcxLabel
-    Left = 170
-    Top = 261
+    Left = 171
+    Top = 303
     Caption = #1042#1099#1089#1086#1090#1072', '#1084#1084
   end
   object edWidth: TcxCurrencyEdit
-    Left = 101
-    Top = 275
+    Left = 102
+    Top = 317
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
@@ -148,13 +148,13 @@
     Width = 60
   end
   object cxLabel14: TcxLabel
-    Left = 101
-    Top = 261
+    Left = 102
+    Top = 303
     Caption = #1064#1080#1088#1080#1085#1072', '#1084#1084
   end
   object edHeight: TcxCurrencyEdit
-    Left = 170
-    Top = 275
+    Left = 171
+    Top = 317
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
@@ -163,13 +163,13 @@
     Width = 60
   end
   object cxLabel15: TcxLabel
-    Left = 240
-    Top = 261
+    Left = 241
+    Top = 303
     Caption = #1042#1077#1089', '#1082#1075
   end
   object edWeight: TcxCurrencyEdit
-    Left = 240
-    Top = 275
+    Left = 241
+    Top = 317
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
@@ -178,13 +178,13 @@
     Width = 65
   end
   object cxLabel16: TcxLabel
-    Left = 240
-    Top = 301
+    Left = 241
+    Top = 343
     Caption = #1043#1086#1076' '#1074#1099#1087#1091#1089#1082#1072
   end
   object edYear: TcxCurrencyEdit
-    Left = 240
-    Top = 318
+    Left = 241
+    Top = 360
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
@@ -193,15 +193,32 @@
     Width = 65
   end
   object cxLabel17: TcxLabel
-    Left = 32
-    Top = 301
+    Left = 33
+    Top = 343
     Caption = 'VIN '#1082#1086#1076
   end
   object edVIN: TcxTextEdit
-    Left = 32
-    Top = 318
+    Left = 33
+    Top = 360
     TabOrder = 25
     Width = 198
+  end
+  object cxLabel19: TcxLabel
+    Left = 32
+    Top = 168
+    Caption = #1052#1086#1076#1077#1083#1100' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+  end
+  object edCarType: TcxButtonEdit
+    Left = 32
+    Top = 187
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 27
+    Width = 273
   end
   object ActionList: TActionList
     Left = 240
@@ -291,6 +308,14 @@
         Name = 'inCarModelId'
         Value = ''
         Component = CarModelGuides
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCarTypeId'
+        Value = Null
+        Component = GuidesCarType
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -468,6 +493,21 @@
         Component = edVIN
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CarTypeId'
+        Value = Null
+        Component = GuidesCarType
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CarTypeName'
+        Value = Null
+        Component = GuidesCarType
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 65528
@@ -549,7 +589,37 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    Left = 176
+    Top = 222
+  end
+  object GuidesCarType: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCarType
+    FormNameParam.Value = 'TCarTypeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCarTypeForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCarType
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCarType
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 175
-    Top = 180
+    Top = 167
   end
 end

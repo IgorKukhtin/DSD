@@ -45,7 +45,7 @@ BEGIN
            
            , Object_CarModel.Id         AS CarModelId
            , Object_CarModel.ObjectCode AS CarModelCode
-           , Object_CarModel.ValueData  AS CarModelName
+           , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
          
            , Object_Unit.Id          AS UnitId
            , Object_Unit.ObjectCode  AS UnitCode
@@ -84,6 +84,11 @@ BEGIN
             LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
                                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
             
             LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
                                                        AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
@@ -120,14 +125,14 @@ BEGIN
              Object_CarExternal.Id          AS Id
            , Object_CarExternal.ObjectCode  AS Code
            , Object_CarExternal.ValueData   AS Name
-           , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_CarExternal.ValueData, '')) :: TVarChar AS NameAll
+           , (COALESCE (Object_CarModel.ValueData, '')|| COALESCE (' ' || Object_CarType.ValueData, '') || ' ' || COALESCE (Object_CarExternal.ValueData, '')) :: TVarChar AS NameAll
            
            , RegistrationCertificate.ValueData  AS RegistrationCertificate
            , ObjectString_Comment.ValueData     AS Comment
            
            , Object_CarModel.Id           AS CarModelId
            , Object_CarModel.ObjectCode   AS CarModelCode
-           , Object_CarModel.ValueData    AS CarModelName
+           , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
 
 
            , CAST (0 as Integer)    AS UnitId
@@ -169,6 +174,11 @@ BEGIN
                                 AND CarExternal_CarModel.DescId = zc_ObjectLink_CarExternal_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = CarExternal_CarModel.ChildObjectId
             
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId = Object_CarExternal.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_CarExternal_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_CarExternal_Juridical 
                                  ON ObjectLink_CarExternal_Juridical.ObjectId = Object_CarExternal.Id
                                 AND ObjectLink_CarExternal_Juridical.DescId = zc_ObjectLink_CarExternal_Juridical()

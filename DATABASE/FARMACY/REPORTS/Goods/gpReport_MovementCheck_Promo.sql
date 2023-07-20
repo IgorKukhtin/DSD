@@ -56,76 +56,71 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
     vbUserId:= lpGetUserBySession (inSession);
- 
-    RETURN QUERY
-      WITH
-          -- Id строк Маркетинговых контрактов inMakerId
-     /*     tmpMIPromo AS (SELECT DISTINCT MI_Goods.Id AS MI_Id
-                            FROM Movement
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
-                                                            ON MovementLinkObject_Maker.MovementId = Movement.Id
-                                                           AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
-                                                           AND MovementLinkObject_Maker.ObjectId = inMakerId 
-                              INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
-                                                                 AND MI_Goods.DescId = zc_MI_Master()
-                                                                 AND MI_Goods.isErased = FALSE
-                            WHERE Movement.StatusId = zc_Enum_Status_Complete()
-                              AND Movement.DescId = zc_Movement_Promo()
-                             )
-       -- Товары из Маркетинговых контрактов
-       ,*/  tmpGoodsPromo AS (SELECT DISTINCT
-                                   MI_Goods.ObjectId  AS GoodsId        -- здесь товар
-                                 , MovementDate_StartPromo.ValueData  AS StartDate_Promo
-                                 , MovementDate_EndPromo.ValueData    AS EndDate_Promo 
-                                 , MIFloat_Price.ValueData            AS Price
-                                 , COALESCE (MIBoolean_Checked.ValueData, FALSE)                                           ::Boolean  AS isChecked
-                                 , CASE WHEN COALESCE (MIBoolean_Checked.ValueData, FALSE) = TRUE THEN FALSE ELSE TRUE END ::Boolean  AS isReport
-                            FROM Movement
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
-                                                            ON MovementLinkObject_Maker.MovementId = Movement.Id
-                                                           AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
-                                                           AND MovementLinkObject_Maker.ObjectId = inMakerId
-                              INNER JOIN MovementDate AS MovementDate_StartPromo
-                                                      ON MovementDate_StartPromo.MovementId = Movement.Id
-                                                     AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
-                              INNER JOIN MovementDate AS MovementDate_EndPromo
-                                                      ON MovementDate_EndPromo.MovementId = Movement.Id
-                                                     AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
-                              INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
-                                                                 AND MI_Goods.DescId = zc_MI_Master()
-                                                                 AND MI_Goods.isErased = FALSE
-                              LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                          ON MIFloat_Price.MovementItemId = MI_Goods.Id
-                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                              LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
-                                                            ON MIBoolean_Checked.MovementItemId = MI_Goods.Id
-                                                           AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
-                            WHERE Movement.StatusId = zc_Enum_Status_Complete()
-                              AND Movement.DescId = zc_Movement_Promo()
-                       )
+    
+    -- raise notice 'Value 1: %', CLOCK_TIMESTAMP();
+    
+    CREATE TEMP TABLE tmpGoods_All ON COMMIT DROP AS
+    WITH
+          -- Товары из Маркетинговых контрактов
+          tmpGoodsPromo AS (SELECT DISTINCT
+                               MI_Goods.ObjectId  AS GoodsId        -- здесь товар
+                             , MovementDate_StartPromo.ValueData  AS StartDate_Promo
+                             , MovementDate_EndPromo.ValueData    AS EndDate_Promo 
+                             , MIFloat_Price.ValueData            AS Price
+                             , COALESCE (MIBoolean_Checked.ValueData, FALSE)                                           ::Boolean  AS isChecked
+                             , CASE WHEN COALESCE (MIBoolean_Checked.ValueData, FALSE) = TRUE THEN FALSE ELSE TRUE END ::Boolean  AS isReport
+                        FROM Movement
+                          INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
+                                                        ON MovementLinkObject_Maker.MovementId = Movement.Id
+                                                       AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
+                                                       AND MovementLinkObject_Maker.ObjectId = inMakerId
+                          INNER JOIN MovementDate AS MovementDate_StartPromo
+                                                  ON MovementDate_StartPromo.MovementId = Movement.Id
+                                                 AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                          INNER JOIN MovementDate AS MovementDate_EndPromo
+                                                  ON MovementDate_EndPromo.MovementId = Movement.Id
+                                                 AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                          INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
+                                                             AND MI_Goods.DescId = zc_MI_Master()
+                                                             AND MI_Goods.isErased = FALSE
+                          LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                      ON MIFloat_Price.MovementItemId = MI_Goods.Id
+                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                          LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
+                                                        ON MIBoolean_Checked.MovementItemId = MI_Goods.Id
+                                                       AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
+                        WHERE Movement.StatusId = zc_Enum_Status_Complete()
+                          AND Movement.DescId = zc_Movement_Promo()
+                   )
         -- товары промо
-   ,  tmpGoods_All AS (SELECT ObjectLink_Child_R.ChildObjectId  AS GoodsId        -- здесь товар
-                            , tmpGoodsPromo.StartDate_Promo
-                            , tmpGoodsPromo.EndDate_Promo 
-                            , tmpGoodsPromo.Price               AS PriceSIP
-                            , tmpGoodsPromo.isChecked
-                            , tmpGoodsPromo.isReport
-                       FROM tmpGoodsPromo
-                               -- !!!
-                              INNER JOIN ObjectLink AS ObjectLink_Child
-                                                    ON ObjectLink_Child.ChildObjectId = tmpGoodsPromo.GoodsId 
-                                                   AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                              INNER JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                      AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                              INNER JOIN ObjectLink AS ObjectLink_Main_R ON ObjectLink_Main_R.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                        AND ObjectLink_Main_R.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                              INNER JOIN ObjectLink AS ObjectLink_Child_R ON ObjectLink_Child_R.ObjectId = ObjectLink_Main_R.ObjectId
-                                                                         AND ObjectLink_Child_R.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                        WHERE  ObjectLink_Child_R.ChildObjectId<>0
-                      ) 
-    ,   tmpGoods AS (SELECT DISTINCT tmpGoods_All.GoodsId FROM tmpGoods_All)
+     SELECT ObjectLink_Child_R.ChildObjectId  AS GoodsId        -- здесь товар
+          , tmpGoodsPromo.StartDate_Promo
+          , tmpGoodsPromo.EndDate_Promo 
+          , tmpGoodsPromo.Price               AS PriceSIP
+          , tmpGoodsPromo.isChecked
+          , tmpGoodsPromo.isReport
+     FROM tmpGoodsPromo
+             -- !!!
+            INNER JOIN ObjectLink AS ObjectLink_Child
+                                  ON ObjectLink_Child.ChildObjectId = tmpGoodsPromo.GoodsId 
+                                 AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+            INNER JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                    AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+            INNER JOIN ObjectLink AS ObjectLink_Main_R ON ObjectLink_Main_R.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                      AND ObjectLink_Main_R.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+            INNER JOIN ObjectLink AS ObjectLink_Child_R ON ObjectLink_Child_R.ObjectId = ObjectLink_Main_R.ObjectId
+                                                       AND ObjectLink_Child_R.DescId   = zc_ObjectLink_LinkGoods_Goods()
+      WHERE  ObjectLink_Child_R.ChildObjectId<>0;
+                        
+    ANALYSE tmpGoods_All;
+                           
+     -- raise notice 'Value 2: %', CLOCK_TIMESTAMP();
 
-    ,   tmpListGodsMarket AS (SELECT tmpGoods_All.GoodsId
+    CREATE TEMP TABLE tmpMIContainer ON COMMIT DROP AS
+      WITH
+        tmpGoods AS (SELECT DISTINCT tmpGoods_All.GoodsId FROM tmpGoods_All)
+
+      , tmpListGodsMarket AS (SELECT tmpGoods_All.GoodsId
                                    , tmpGoods_All.StartDate_Promo 
                                    , tmpGoods_All.EndDate_Promo
                                    , tmpGoods_All.PriceSIP 
@@ -145,108 +140,114 @@ BEGIN
                               )
 
      -- выбираем все чеки с товарами маркетингового контракта
-   ,   tmpMIContainer AS (SELECT MIContainer.MovementId  AS MovementId_Check
-                              , COALESCE (MIContainer.AnalyzerId,0)  AS MovementItemId_Income
-                              , COALESCE (MIContainer.WhereObjectId_analyzer,0) AS UnitId
-                              , MIContainer.ObjectId_analyzer AS GoodsId
-                              , tmpListGodsMarket.PriceSIP 
-                              , tmpListGodsMarket.isChecked
-                              , tmpListGodsMarket.isReport
-                              , MIContainer.MovementDescId
+     SELECT MIContainer.MovementId  AS MovementId_Check
+          , COALESCE (MIContainer.AnalyzerId,0)  AS MovementItemId_Income
+          , COALESCE (MIContainer.WhereObjectId_analyzer,0) AS UnitId
+          , MIContainer.ObjectId_analyzer AS GoodsId
+          , tmpListGodsMarket.PriceSIP 
+          , tmpListGodsMarket.isChecked
+          , tmpListGodsMarket.isReport
+          , MIContainer.MovementDescId
 
-                              , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
-                              
-                              , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0 AND COALESCE (tmpListGodsMarket.GoodsId,0) <> 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount
-                              , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0)  = 0 AND COALESCE (tmpListGodsMarket.GoodsId,0) <> 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount2
-                              , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0 AND COALESCE (tmpListGodsMarket.GoodsId,0)  = 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount3
-                              , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0)  = 0 AND COALESCE (tmpListGodsMarket.GoodsId,0)  = 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount4
-                              
-                              , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS TotalAmount
-                         FROM MovementItemContainer AS MIContainer
-                            --INNER JOIN tmpMIPromo ON tmpMIPromo.MI_Id = MIContainer.ObjectIntId_analyzer
-                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
-                             LEFT JOIN tmpListGodsMarket ON tmpListGodsMarket.GoodsId = MIContainer.ObjectId_Analyzer
-                                                        AND tmpListGodsMarket.StartDate_Promo <= MIContainer.OperDate
-                                                        AND tmpListGodsMarket.EndDate_Promo >= MIContainer.OperDate
-                         WHERE MIContainer.DescId = zc_MIContainer_Count()
-                           AND MIContainer.MovementDescId = zc_Movement_Check()
-                           AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
-                          -- AND MIContainer.OperDate >= '03.10.2016' AND MIContainer.OperDate < '01.12.2016'
-                          -- AND COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0 
-                           AND COALESCE (inMakerId, 0) <> 0
-                         GROUP BY MIContainer.MovementId
-                                , COALESCE (MIContainer.WhereObjectId_analyzer,0)
-                                , COALESCE (MIContainer.AnalyzerId,0)
-                                , MIContainer.ObjectId_analyzer 
-                                , tmpListGodsMarket.PriceSIP
-                                , tmpListGodsMarket.isChecked
-                                , tmpListGodsMarket.isReport
-                                , MIContainer.MovementDescId
-                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
-                         UNION ALL
-                         SELECT MIContainer.MovementId  AS MovementId_Check
-                              , COALESCE (MI_Income_find.Id, MI_Income.Id) AS MovementItemId_Income
-                              , COALESCE (MovementLinkObject_Unit.ObjectId,0) AS UnitId
-                              , MovementItem.ObjectId           AS GoodsId
-                              , tmpListGodsMarket.PriceSIP 
-                              , tmpListGodsMarket.isChecked
-                              , tmpListGodsMarket.isReport
-                              , MIContainer.MovementDescId
-                              
-                              , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIFloat_Price.ValueData,0)) AS SummaSale
-                              
-                              , SUM (CASE WHEN tmpListGodsMarket.StartDate <= MIContainer.OperDate AND tmpListGodsMarket.EndDate >= MIContainer.OperDate AND COALESCE (tmpListGodsMarket.GoodsId,0) <> 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount
-                              , SUM (CASE WHEN NOT (tmpListGodsMarket.StartDate <= MIContainer.OperDate AND tmpListGodsMarket.EndDate >= MIContainer.OperDate) AND COALESCE (tmpListGodsMarket.GoodsId,0) <> 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount2
-                              , SUM (CASE WHEN tmpListGodsMarket.StartDate <= MIContainer.OperDate AND tmpListGodsMarket.EndDate >= MIContainer.OperDate AND COALESCE (tmpListGodsMarket.GoodsId,0)  = 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount3
-                              , SUM (CASE WHEN NOT (tmpListGodsMarket.StartDate <= MIContainer.OperDate AND tmpListGodsMarket.EndDate >= MIContainer.OperDate) AND COALESCE (tmpListGodsMarket.GoodsId,0)  = 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount4
-                              
-                              , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS TotalAmount
-                         FROM MovementItemContainer AS MIContainer
-                            --INNER JOIN tmpMIPromo ON tmpMIPromo.MI_Id = MIContainer.ObjectIntId_analyzer
-                             INNER JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
-                             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                           ON MovementLinkObject_Unit.MovementId = MIContainer.MovementId
-                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                             LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
-                             LEFT JOIN tmpListGodsMarket ON tmpListGodsMarket.GoodsId = MovementItem.ObjectId
-                                                        AND tmpListGodsMarket.StartDate_Promo <= MIContainer.OperDate
-                                                        AND tmpListGodsMarket.EndDate_Promo >= MIContainer.OperDate
-                                                        
-                             LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
-                                                           ON ContainerLinkObject_MovementItem.Containerid = MIContainer.ContainerId
-                                                          AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                             LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
-                             -- элемент прихода
-                             LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
-                             -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-                             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                                         ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
-                                                        AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                             -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                             LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
-                                                        
-                         WHERE MIContainer.DescId = zc_MIContainer_Count()
-                           AND MIContainer.MovementDescId = zc_Movement_Sale()
-                           AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
-                          -- AND MIContainer.OperDate >= '03.10.2016' AND MIContainer.OperDate < '01.12.2016'
-                          -- AND COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0 
-                           AND COALESCE (inMakerId, 0) <> 0
-                         GROUP BY MIContainer.MovementId
-                                , COALESCE (MI_Income_find.Id, MI_Income.Id)
-                                , COALESCE (MovementLinkObject_Unit.ObjectId,0)
-                                , MovementItem.ObjectId
-                                , tmpListGodsMarket.PriceSIP
-                                , tmpListGodsMarket.isChecked
-                                , tmpListGodsMarket.isReport
-                                , MIContainer.MovementDescId
-                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
-                         )
-  
-       -- находим поставщика
-       , tmpData_all AS (SELECT tmp.MovementId_Check
+          , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
+                                    
+          , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0 AND COALESCE (tmpListGodsMarket.GoodsId,0) <> 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount
+          , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0)  = 0 AND COALESCE (tmpListGodsMarket.GoodsId,0) <> 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount2
+          , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0 AND COALESCE (tmpListGodsMarket.GoodsId,0)  = 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount3
+          , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0)  = 0 AND COALESCE (tmpListGodsMarket.GoodsId,0)  = 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount4
+                                    
+          , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS TotalAmount
+     FROM MovementItemContainer AS MIContainer
+        --INNER JOIN tmpMIPromo ON tmpMIPromo.MI_Id = MIContainer.ObjectIntId_analyzer
+         INNER JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
+         LEFT JOIN tmpListGodsMarket ON tmpListGodsMarket.GoodsId = MIContainer.ObjectId_Analyzer
+                                    AND tmpListGodsMarket.StartDate_Promo <= MIContainer.OperDate
+                                    AND tmpListGodsMarket.EndDate_Promo >= MIContainer.OperDate
+     WHERE MIContainer.DescId = zc_MIContainer_Count()
+       AND MIContainer.MovementDescId = zc_Movement_Check()
+       AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
+      -- AND MIContainer.OperDate >= '03.10.2016' AND MIContainer.OperDate < '01.12.2016'
+      -- AND COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0 
+       AND COALESCE (inMakerId, 0) <> 0
+     GROUP BY MIContainer.MovementId
+            , COALESCE (MIContainer.WhereObjectId_analyzer,0)
+            , COALESCE (MIContainer.AnalyzerId,0)
+            , MIContainer.ObjectId_analyzer 
+            , tmpListGodsMarket.PriceSIP
+            , tmpListGodsMarket.isChecked
+            , tmpListGodsMarket.isReport
+            , MIContainer.MovementDescId
+     HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
+     UNION ALL
+     SELECT MIContainer.MovementId  AS MovementId_Check
+          , COALESCE (MI_Income_find.Id, MI_Income.Id) AS MovementItemId_Income
+          , COALESCE (MovementLinkObject_Unit.ObjectId,0) AS UnitId
+          , MovementItem.ObjectId           AS GoodsId
+          , tmpListGodsMarket.PriceSIP 
+          , tmpListGodsMarket.isChecked
+          , tmpListGodsMarket.isReport
+          , MIContainer.MovementDescId
+                                    
+          , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIFloat_Price.ValueData,0)) AS SummaSale
+                                    
+          , SUM (CASE WHEN tmpListGodsMarket.StartDate <= MIContainer.OperDate AND tmpListGodsMarket.EndDate >= MIContainer.OperDate AND COALESCE (tmpListGodsMarket.GoodsId,0) <> 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount
+          , SUM (CASE WHEN NOT (tmpListGodsMarket.StartDate <= MIContainer.OperDate AND tmpListGodsMarket.EndDate >= MIContainer.OperDate) AND COALESCE (tmpListGodsMarket.GoodsId,0) <> 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount2
+          , SUM (CASE WHEN tmpListGodsMarket.StartDate <= MIContainer.OperDate AND tmpListGodsMarket.EndDate >= MIContainer.OperDate AND COALESCE (tmpListGodsMarket.GoodsId,0)  = 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount3
+          , SUM (CASE WHEN NOT (tmpListGodsMarket.StartDate <= MIContainer.OperDate AND tmpListGodsMarket.EndDate >= MIContainer.OperDate) AND COALESCE (tmpListGodsMarket.GoodsId,0)  = 0 THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END ) AS Amount4
+                                    
+          , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS TotalAmount
+     FROM MovementItemContainer AS MIContainer
+        --INNER JOIN tmpMIPromo ON tmpMIPromo.MI_Id = MIContainer.ObjectIntId_analyzer
+         INNER JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
+         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                       ON MovementLinkObject_Unit.MovementId = MIContainer.MovementId
+                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+         LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
+         INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+         LEFT JOIN tmpListGodsMarket ON tmpListGodsMarket.GoodsId = MovementItem.ObjectId
+                                    AND tmpListGodsMarket.StartDate_Promo <= MIContainer.OperDate
+                                    AND tmpListGodsMarket.EndDate_Promo >= MIContainer.OperDate
+                                                              
+         LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                       ON ContainerLinkObject_MovementItem.Containerid = MIContainer.ContainerId
+                                      AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+         LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+         -- элемент прихода
+         LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+         -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+         LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                     ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                    AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+         -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+         LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                              
+     WHERE MIContainer.DescId = zc_MIContainer_Count()
+       AND MIContainer.MovementDescId = zc_Movement_Sale()
+       AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
+      -- AND MIContainer.OperDate >= '03.10.2016' AND MIContainer.OperDate < '01.12.2016'
+      -- AND COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0 
+       AND COALESCE (inMakerId, 0) <> 0
+     GROUP BY MIContainer.MovementId
+            , COALESCE (MI_Income_find.Id, MI_Income.Id)
+            , COALESCE (MovementLinkObject_Unit.ObjectId,0)
+            , MovementItem.ObjectId
+            , tmpListGodsMarket.PriceSIP
+            , tmpListGodsMarket.isChecked
+            , tmpListGodsMarket.isReport
+            , MIContainer.MovementDescId
+     HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0;
+                         
+  ANALYSE tmpMIContainer;
+                         
+     -- raise notice 'Value 3: %', CLOCK_TIMESTAMP();
+ 
+ 
+  RETURN QUERY
+      WITH
+        -- находим поставщика
+         tmpData_all AS (SELECT tmp.MovementId_Check
                               , tmp.UnitId 
                               , tmp.MovementItemId_Income
                               , tmp.GoodsId
@@ -487,6 +488,9 @@ BEGIN
         LEFT JOIN Object AS Object_GoodsGroupPromo ON Object_GoodsGroupPromo.Id = ObjectLink_Goods_GoodsGroupPromo.ChildObjectId
      ;
 
+
+    -- raise notice 'Value 20: %', CLOCK_TIMESTAMP();
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -512,4 +516,5 @@ $BODY$
 --select * from gpReport_MovementCheck_Promo(inMakerId := 2336655 , inStartDate := ('01.11.2016')::TDateTime , inEndDate := ('30.11.2016')::TDateTime ,  inSession := '3');
 -- select * from gpReport_MovementCheck_Promo(2336605 , '01.01.2019', '31.01.2019', '3') 
 
-select * from gpReport_MovementCheck_Promo(inMakerId := 15451717 , inStartDate := ('01.06.2022')::TDateTime , inEndDate := ('01.06.2022')::TDateTime ,  inSession := '3');
+
+select * from gpReport_MovementCheck_Promo(inMakerId := 2336609 , inStartDate := ('05.06.2023')::TDateTime , inEndDate := ('11.06.2023')::TDateTime ,  inSession := '3');

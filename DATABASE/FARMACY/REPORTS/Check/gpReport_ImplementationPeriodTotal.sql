@@ -1,7 +1,8 @@
 -- Function: gpReport_ImplementationPeriodTotal
 
 --DROP FUNCTION IF EXISTS gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ImplementationPeriodTotal (
        IN inUnitId Integer,
@@ -10,6 +11,9 @@ CREATE OR REPLACE FUNCTION gpReport_ImplementationPeriodTotal (
        IN inTotalExecutionFixed TFloat,
        IN inAmountTheFineTab TFloat,
        IN inBonusAmountTab TFloat,
+       IN inBonusPercentSum TFloat,
+       IN inBonusPercentAddSum TFloat,
+       IN inisNewUser Boolean,
       OUT outTotal TFloat,
        IN inSession       TVarChar    -- сессия пользователя
        )
@@ -17,6 +21,7 @@ RETURNS TFloat
 AS
 $BODY$
   DECLARE vbScaleCalcMarketingPlanID integer;
+  DECLARE vbisAdmin Boolean;
 BEGIN
 
   vbScaleCalcMarketingPlanID := COALESCE((SELECT ObjectLink_UnitCategory_ScaleCalcMarketingPlan.ChildObjectId AS ScaleCalcMarketingPlanID
@@ -32,6 +37,10 @@ BEGIN
 
                                            WHERE Object_UnitCategory.DescId = zc_Object_UnitCategory()
                                              AND ObjectLink_Unit_Category.ObjectId = inUnitId), 0);
+
+    vbisAdmin := EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE ObjectLink_UserRole_View.UserId = inSession::Integer 
+                                                                   AND ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin()) 
+                 OR inSession::Integer = 298786;
               
   outTotal := zfCalc_MarketingPlan_Scale (vbScaleCalcMarketingPlanID
                                         , inOperDate
@@ -39,12 +48,16 @@ BEGIN
                                         , inTotalExecutionLine
                                         , inTotalExecutionFixed
                                         , inAmountTheFineTab
-                                        , inBonusAmountTab); 
+                                        , inBonusAmountTab
+                                        , inBonusPercentSum
+                                        , inBonusPercentAddSum
+                                        , inisNewUser
+                                        , vbisAdmin); 
 
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;
-ALTER FUNCTION gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -54,4 +67,4 @@ ALTER FUNCTION gpReport_ImplementationPeriodTotal (Integer, TDateTime, TFloat, T
 */
 
 -- тест 
-SELECT * FROM gpReport_ImplementationPeriodTotal (183292  , '01.06.2021', 10, 10, 20, '3')
+SELECT * FROM gpReport_ImplementationPeriodTotal (183292  , '01.06.2021', 10, 10, 20, 0, 0, 0, FALSE, '3')

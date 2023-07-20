@@ -37,7 +37,7 @@ BEGIN
                               , ObjectString_URL.ValueData       AS URL
                               , ObjectString_Service.ValueData   AS Service
                               , ObjectString_Port.ValueData      AS Port
-                         FROM gpSelect_Object_DiscountExternalTools( inSession := inSession) AS DE
+                         FROM gpSelect_Object_DiscountExternalTools(inSession := inSession) AS DE
                               LEFT JOIN ObjectString AS ObjectString_URL
                                                      ON ObjectString_URL.ObjectId =DE.DiscountExternalId 
                                                     AND ObjectString_URL.DescId = zc_ObjectString_DiscountExternal_URL()
@@ -47,7 +47,7 @@ BEGIN
                               LEFT JOIN ObjectString AS ObjectString_Port
                                                      ON ObjectString_Port.ObjectId = DE.DiscountExternalId 
                                                     AND ObjectString_Port.DescId = zc_ObjectString_DiscountExternal_Port()
-                         WHERE DE.DiscountExternalId IN (SELECT Id FROM gpSelect_Object_DiscountExternal(inSession := inSession) AS D WHERE D.service = 'CardService' AND D.isErased = False)
+                         WHERE DE.DiscountExternalId IN (SELECT Id FROM gpSelect_Object_DiscountExternal(inIsErased := False, inSession := inSession) AS D WHERE D.service = 'CardService' AND D.isErased = False)
                            AND COALESCE(DE.UnitId, 0) > 0
                            AND DE.isErased = False)
         -- Результат

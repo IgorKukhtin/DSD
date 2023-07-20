@@ -92,7 +92,8 @@ BEGIN
                                                                      , inName        := inCar
                                                                      , inRegistrationCertificate := '' ::TVarChar
                                                                      , inComment     := '' ::TVarChar
-                                                                     , inCarModelId  := 0
+                                                                     , inCarModelId  := 0 
+                                                                     , inCarTypeId   := 0
                                                                      , inJuridicalId := 0
                                                                      , inUserId      := vbUserId
                                                                        );

@@ -805,7 +805,7 @@ BEGIN
              , ViewObject_Unit.BranchName
              , ViewObject_Unit.Name             AS UnitName_car
              , STRING_AGG (Object_Unit_route.ValueData, ';') :: TVarChar AS UnitName_route
-             , Object_CarModel.ValueData        AS CarModelName
+             , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
              , Object_Car.ValueData             AS CarName
              --, View_PersonalDriver.PersonalName AS PersonalDriverName 
              , View_PersonalDriver.PersonalName       :: TVarChar AS PersonalDriverName 
@@ -878,6 +878,12 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                             AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
              LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                  ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                                 AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+             LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
+
              LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = tmpFuel.PersonalDriverId
              LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpFuel.RouteId
              LEFT JOIN Object AS Object_RouteKind ON Object_RouteKind.Id = tmpFuel.RouteKindId
@@ -936,7 +942,7 @@ BEGIN
         GROUP BY tmpFuel.MovementId
                , tmpFuel.InvNumber
                , tmpFuel.OperDate
-               , Object_CarModel.ValueData
+               , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') )
                , Object_Car.ValueData
                , View_PersonalDriver.PersonalName 
                , View_PersonalDriver.PositionName

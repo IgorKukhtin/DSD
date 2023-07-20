@@ -100,7 +100,7 @@ BEGIN
             , Object_Account_View.AccountId       AS AccountId
             , Object_Account_View.AccountName_All AS AccountName
             , Object_Car.Id                       AS CarId
-            , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName
+            , (COALESCE (Object_CarModel.ValueData, '')|| COALESCE (' ' || Object_CarType.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarName 
             , CASE WHEN tmpContainer.Amount > 0 THEN tmpContainer.Amount ELSE 0 END                    ::TFloat AS AmountDebet
             , CASE WHEN tmpContainer.Amount < 0 THEN -1 * tmpContainer.Amount ELSE 0 END               ::TFloat AS AmountKredit
             , tmpContainer.Amount                                                                      ::TFloat AS Amount
@@ -118,6 +118,12 @@ BEGIN
                                  ON Car_CarModel.ObjectId = Object_Car.Id
                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
+
       UNION
        SELECT Object_Member.Id
             , Object_Member.ObjectCode         AS Code

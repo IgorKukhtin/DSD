@@ -371,7 +371,8 @@ BEGIN
                           SELECT Object_Member.DescId         AS ObjectDescId
                                , Object_Member.Id             AS PartnerId
                                , Object_Member.ObjectCode     AS PartnerCode
-                               , TRIM (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Member.ValueData, '')) AS PartnerName
+                               , TRIM (COALESCE (Object_CarModel.ValueData, '')|| COALESCE (' ' || Object_CarType.ValueData, '')  || ' ' || COALESCE (Object_Member.ValueData, '')) AS PartnerName
+                               
                                , COALESCE (Object_PersonalDriver.ObjectCode, Object_Unit.ObjectCode)  AS UnitCode
                                , COALESCE (Object_PersonalDriver.ValueData,  Object_Unit.ValueData)   AS UnitName
                           FROM Object AS Object_Member
@@ -384,6 +385,12 @@ BEGIN
                                                     ON Car_CarModel.ObjectId = Object_Member.Id
                                                    AND Car_CarModel.DescId   = zc_ObjectLink_Car_CarModel()
                                LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+
+                               LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                                    ON ObjectLink_Car_CarType.ObjectId = Object_Member.Id
+                                                   AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+                               LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
+
                                LEFT JOIN ObjectLink AS ObjectLink_Car_PersonalDriver
                                                     ON ObjectLink_Car_PersonalDriver.ObjectId = Object_Member.Id
                                                    AND ObjectLink_Car_PersonalDriver.DescId   = zc_ObjectLink_Car_PersonalDriver()

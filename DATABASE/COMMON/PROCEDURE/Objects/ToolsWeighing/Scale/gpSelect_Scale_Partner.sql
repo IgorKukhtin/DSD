@@ -212,7 +212,7 @@ BEGIN
              , tmpCar AS (SELECT Object_Car.Id         AS CarId
                                , Object_Car.DescId     AS DescId
                                , Object_Car.ObjectCode AS CarCode
-                               , TRIM (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, ''))  AS CarName
+                               , TRIM (COALESCE (Object_CarModel.ValueData, '')|| COALESCE (' ' || Object_CarType.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, ''))  AS CarName
                                , Object_PersonalDriver.ObjectCode   AS PersonalDriverCode
                                , Object_PersonalDriver.ValueData    AS PersonalDriverName
                           FROM Object AS Object_Car
@@ -220,6 +220,11 @@ BEGIN
                                                     ON Car_CarModel.ObjectId = Object_Car.Id
                                                    AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
                                LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+
+                               LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                                    ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                                                   AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+                               LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
 
                                /*LEFT JOIN ObjectLink AS ObjectLink_Car_Unit
                                                     ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id

@@ -63,6 +63,8 @@ type
     DiscountWithVAT: TcxGridDBColumn;
     DiscountWithoutVAT: TcxGridDBColumn;
     isStealthBonuses: TcxGridDBColumn;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
     { Private declarations }
   public

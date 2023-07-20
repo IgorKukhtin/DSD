@@ -3,27 +3,27 @@ inherited SaleForm: TSaleForm
   ClientHeight = 658
   ClientWidth = 1360
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1378
-  ExplicitHeight = 705
+  ExplicitWidth = 1376
+  ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 168
+    Top = 167
     Width = 1360
-    Height = 490
-    ExplicitTop = 168
-    ExplicitWidth = 1362
-    ExplicitHeight = 490
-    ClientRectBottom = 490
+    Height = 491
+    ExplicitTop = 167
+    ExplicitWidth = 1360
+    ExplicitHeight = 491
+    ClientRectBottom = 491
     ClientRectRight = 1360
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1362
-      ExplicitHeight = 466
+      ExplicitWidth = 1360
+      ExplicitHeight = 467
       inherited cxGrid: TcxGrid
         Width = 1360
-        Height = 466
-        ExplicitWidth = 1362
-        ExplicitHeight = 466
+        Height = 467
+        ExplicitWidth = 1360
+        ExplicitHeight = 467
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -583,7 +583,7 @@ inherited SaleForm: TSaleForm
     Width = 1360
     Height = 141
     TabOrder = 3
-    ExplicitWidth = 1362
+    ExplicitWidth = 1360
     ExplicitHeight = 141
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -3015,7 +3015,9 @@ inherited SaleForm: TSaleForm
       Token.Value = ''
       Token.DataType = ftString
       Token.MultiSelectSeparator = ','
-      EDIDocType = ediTTN
+      Result.Value = ''
+      Result.DataType = ftString
+      Result.MultiSelectSeparator = ','
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
@@ -3091,7 +3093,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      27
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

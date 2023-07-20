@@ -381,7 +381,8 @@ BEGIN
             , ('№ <' || tmpMovementTransport.InvNumber || '>' || ' от <' || DATE (tmpMovementTransport.OperDate) :: TVarChar || '>') :: TVarChar AS Transport_InvNumber
             , Object_PersonalDriver.Id        AS PersonalDriverId
             , Object_PersonalDriver.ValueData AS PersonalDriverName
-            , (COALESCE (Object_Car.ValueData, '') || ' ' || COALESCE (Object_CarModel.ValueData, '')) :: TVarChar AS CarName
+            , (COALESCE (Object_Car.ValueData, '')  || ' ' || COALESCE (Object_CarModel.ValueData, '') || COALESCE (' ' || Object_CarType.ValueData, '')) :: TVarChar AS CarName  
+
             , Object_Route.ValueData          AS RouteName
 
             , Object_SubjectDoc.Id            AS SubjectDocId
@@ -408,9 +409,16 @@ BEGIN
 
             LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = tmpMovementTransport.PersonalDriverId
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpMovementTransport.CarId
+
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                 ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
+
             LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMovementTransport.RouteId
 
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = tmpMovement.SubjectDocId

@@ -2,6 +2,7 @@
 
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar,TVarChar,Integer,Integer,Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,Integer,Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_CarExternal (Integer, Integer, TVarChar, TVarChar, TVarChar,TVarChar,Integer,Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_CarExternal(
    INOUT ioId                       Integer, 
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_CarExternal(
       IN inVIN                      TVarChar,    -- VIN код
       IN inComment                  TVarChar  ,    -- Примечание
       IN inCarModelId               Integer, 
+      IN inCarTypeId                Integer,     -- Модель автомобиля
       IN inJuridicalId              Integer,
       IN inLength                   TFloat ,     -- 
       IN inWidth                    TFloat ,     -- 
@@ -45,6 +47,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_CarExternal_Comment(), ioId, inComment);
    -- сохранили связь с <Модель авто>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_CarExternal_CarModel(), ioId, inCarModelId);
+   -- сохранили связь с <Модель авто>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_CarExternal_CarType(), ioId, inCarTypeId);
    -- сохранили связь с <юр.лицом>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_CarExternal_Juridical(), ioId, inJuridicalId);
 

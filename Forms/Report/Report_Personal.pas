@@ -97,10 +97,10 @@ type
     SummNalog: TcxGridDBColumn;
     cxLabel8: TcxLabel;
     cePersonalServiceList: TcxButtonEdit;
-    PersonalServiceListGuides: TdsdGuides;
+    GuidesPersonalServiceList: TdsdGuides;
     cxLabel9: TcxLabel;
     cePersonal: TcxButtonEdit;
-    PersonalGuides: TdsdGuides;
+    GuidesPersonal: TdsdGuides;
     MoneySummCard: TcxGridDBColumn;
     MoneySummCardSecond: TcxGridDBColumn;
     MoneySummCash: TcxGridDBColumn;
@@ -109,6 +109,10 @@ type
     SummHoliday_inf: TcxGridDBColumn;
     cbMember: TcxCheckBox;
     actRefMember: TdsdDataSetRefresh;
+    actOpenReportForm_MoneySumm: TdsdOpenForm;
+    bbOpenReportForm_MoneySumm: TdxBarButton;
+    actOpenReportForm_ServiceSumm: TdsdOpenForm;
+    bbOpenReportForm_ServiceSumm: TdxBarButton;
   private
     { Private declarations }
   public

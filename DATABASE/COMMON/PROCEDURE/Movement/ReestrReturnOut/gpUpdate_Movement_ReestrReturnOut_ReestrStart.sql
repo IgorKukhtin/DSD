@@ -86,12 +86,13 @@ BEGIN
                  IF COALESCE (outCarId,0) = 0 
                     THEN 
                         -- не нашли Сохраняем в авто(сторонние)
-                        outCarId := lpInsertUpdate_Object_CarExternal (ioId	    := 0
+                        outCarId := lpInsertUpdate_Object_CarExternal (ioId	         := 0
                                                                      , inCode        := lfGet_ObjectCode(0, zc_Object_CarExternal())
                                                                      , inName        := inCar
                                                                      , inRegistrationCertificate := '' ::TVarChar
                                                                      , inComment     := '' ::TVarChar
                                                                      , inCarModelId  := 0
+                                                                     , inCarTypeId   := 0
                                                                      , inJuridicalId := 0
                                                                      , inUserId      := vbUserId
                                                                        );

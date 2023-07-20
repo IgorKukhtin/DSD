@@ -147,7 +147,7 @@ object DiscountExternal_ObjectForm: TDiscountExternal_ObjectForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -15
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -410,7 +410,14 @@ object DiscountExternal_ObjectForm: TDiscountExternal_ObjectForm
       item
         DataSet = MasterCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inIsErased'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 40
     Top = 208
@@ -450,10 +457,13 @@ object DiscountExternal_ObjectForm: TDiscountExternal_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    PropertiesCellList = <>
     Left = 368
     Top = 128
   end

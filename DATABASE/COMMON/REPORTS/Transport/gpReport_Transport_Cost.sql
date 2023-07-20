@@ -859,7 +859,7 @@ BEGIN
        SELECT COALESCE (tmpUnion.Invnumber, '') :: TVarChar          AS Invnumber
             , COALESCE (tmpUnion.OperDate, CAST (NULL as TDateTime)) AS OperDate
             , COALESCE (tmpUnion.MovementDescName, '') :: TVarChar       AS MovementDescName
-            , Object_CarModel.ValueData        AS CarModelName
+            , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
             , Object_Car.ValueData             AS CarName
            
             , Object_Route.ValueData           AS RouteName
@@ -984,6 +984,11 @@ BEGIN
                                       ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                      AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
                  LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+
+                 LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                                      ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                                     AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+                 LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
 
                  LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpUnion.PartnerId_Sale
                  LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpUnion.GoodsId

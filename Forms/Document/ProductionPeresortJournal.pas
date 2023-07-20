@@ -57,7 +57,17 @@ type
     actGetImportSettingAsset: TdsdExecStoredProc;
     actDoLoadAsset: TExecuteImportSettingsAction;
     macLoadExcelAsset: TMultiAction;
-    bb: TdxBarButton;
+    bbLoadExcelAsset: TdxBarButton;
+    spGetImportSettingEquipment: TdsdStoredProc;
+    actGetImportSettingEquipment: TdsdExecStoredProc;
+    actDoLoadEquipment: TExecuteImportSettingsAction;
+    macLoadExcelEquipment: TMultiAction;
+    bbLoadExcelEquipment: TdxBarButton;
+    spGetImportSettingCar: TdsdStoredProc;
+    actDoLoadCar: TExecuteImportSettingsAction;
+    actGetImportSettingCar: TdsdExecStoredProc;
+    macLoadExcelCar: TMultiAction;
+    bbLoadExcelCar: TdxBarButton;
   private
     { Private declarations }
   public

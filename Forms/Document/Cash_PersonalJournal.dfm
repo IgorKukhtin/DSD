@@ -4,9 +4,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitTop = -161
   ExplicitWidth = 981
-  ExplicitHeight = 714
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -434,8 +432,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
     Top = 144
   end
   inherited MasterCDS: TClientDataSet
-    Left = 24
-    Top = 104
+    Top = 168
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Cash_Personal'

@@ -1,8 +1,9 @@
 -- Function: gpSelect_Object_DiscountExternalSupplier()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_DiscountExternalSupplier (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_DiscountExternalSupplier (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_DiscountExternalSupplier(
+    IN inIsErased      Boolean   ,    -- ѕоказать все
     IN inSession       TVarChar       -- сесси€ пользовател€
 )
 RETURNS TABLE (Id Integer, Code Integer
@@ -53,7 +54,8 @@ BEGIN
                                    ON ObjectFloat_SupplierID.ObjectId = Object_DiscountExternalSupplier.Id 
                                   AND ObjectFloat_SupplierID.DescId = zc_ObjectFloat_DiscountExternalSupplier_SupplierID()
 
-        WHERE Object_DiscountExternalSupplier.DescId = zc_Object_DiscountExternalSupplier();
+        WHERE Object_DiscountExternalSupplier.DescId = zc_Object_DiscountExternalSupplier()
+          AND (Object_DiscountExternalSupplier.isErased = False OR inIsErased = True);
   
 END;
 $BODY$
@@ -67,4 +69,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_DiscountExternalSupplier ('3')
+-- SELECT * FROM gpSelect_Object_DiscountExternalSupplier (False, '3')

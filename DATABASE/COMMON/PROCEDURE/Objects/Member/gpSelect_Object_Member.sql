@@ -164,9 +164,9 @@ end if;
          , COALESCE(ObjectFloat_Limit.ValueData, 0) ::TFloat       AS LimitMoney
          , COALESCE(ObjectFloat_LimitDistance.ValueData, 0) ::TFloat   AS LimitDistance
 
-         , (COALESCE (Object_CarModel.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarNameAll
+         , (COALESCE (Object_CarModel.ValueData, '')|| COALESCE (' ' || Object_CarType.ValueData, '') || ' ' || COALESCE (Object_Car.ValueData, '')) :: TVarChar AS CarNameAll
          , Object_Car.ValueData       AS CarName
-         , Object_CarModel.ValueData  AS CarModelName
+         , (COALESCE (Object_CarModel.ValueData,'') || COALESCE (' ' || Object_CarType.ValueData, '') ) ::TVarChar AS CarModelName
 
          , Object_Branch.ObjectCode   AS BranchCode
          , Object_Branch.ValueData    AS BranchName
@@ -451,6 +451,11 @@ end if;
          LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
                                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
          LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
+                              ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
+                             AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
+         LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Member_Bank
                               ON ObjectLink_Member_Bank.ObjectId = Object_Member.Id

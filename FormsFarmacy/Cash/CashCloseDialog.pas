@@ -9,7 +9,7 @@ uses
   Vcl.ExtCtrls, Vcl.StdCtrls, cxButtons, cxGroupBox, cxRadioGroup, cxLabel,
   cxTextEdit, cxCurrencyEdit, Vcl.ActnList, dsdAction, cxClasses,
   cxPropertiesStore, dsdAddOn, CashInterface, AncestorBase, dsdDB, dxSkinsCore,
-  dxSkinsDefaultPainters, System.Actions;
+  dxSkinsDefaultPainters, System.Actions, cxCheckBox;
 
 type
   TCashCloseDialogForm = class(TAncestorDialogForm)
@@ -22,6 +22,7 @@ type
     rgPaidType: TcxRadioGroup;
     cxGroupBox2: TcxGroupBox;
     edSalerCashAdd: TcxCurrencyEdit;
+    cbNoPayPos: TcxCheckBox;
     procedure edSalerCashPropertiesChange(Sender: TObject);
     procedure ParentFormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -38,8 +39,9 @@ type
 
 var
   CashCloseDialogForm: TCashCloseDialogForm;
+
 function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash, ASalerCashAdd: Currency; var APaidType: TPaidType;
-                                var ABankPOSTerminal, APOSTerminalCode : integer):Boolean;
+                                var ABankPOSTerminal, APOSTerminalCode : integer; var AisNoPayPos : Boolean):Boolean;
 
 implementation
 
@@ -48,7 +50,7 @@ implementation
 uses DataModul, Math, ChoiceBankPOSTerminal;
 
 function CashCloseDialogExecute(ASummaTotal: Currency; Var ASalerCash, ASalerCashAdd: Currency; var APaidType: TPaidType;
-                                var ABankPOSTerminal, APOSTerminalCode : integer):Boolean;
+                                var ABankPOSTerminal, APOSTerminalCode : integer; var AisNoPayPos : Boolean):Boolean;
 Begin
   if NOT assigned(CashCloseDialogForm) then
     CashCloseDialogForm := TCashCloseDialogForm.Create(Application);
@@ -63,6 +65,7 @@ Begin
       FBankPOSTerminal:=0;
       FPOSTerminalCode:= 0;
       ActiveControl := edSalerCash;
+      cbNoPayPos.Checked := False;
       edSalerCash.SelectAll;
       Result := True;
       while Result do
@@ -82,6 +85,7 @@ Begin
         APaidType := TPaidType(rgPaidType.ItemIndex);
         ABankPOSTerminal := FBankPOSTerminal;
         APOSTerminalCode := FPOSTerminalCode;
+        AisNoPayPos := cbNoPayPos.Checked;
       End;
     Except ON E: Exception DO
       MessageDlg(E.Message,mtError,[mbOk],0);

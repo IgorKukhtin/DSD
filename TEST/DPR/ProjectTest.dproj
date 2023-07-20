@@ -5056,6 +5056,14 @@
 				<Form>BodyTypeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Personal_MoneySumm.pas">
+				<Form>Report_Personal_MoneySummForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Personal_ServiceSumm.pas">
+				<Form>Report_Personal_ServiceSummForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

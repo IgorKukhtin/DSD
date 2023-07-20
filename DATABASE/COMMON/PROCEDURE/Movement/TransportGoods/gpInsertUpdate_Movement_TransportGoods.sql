@@ -134,6 +134,7 @@ BEGIN
                                                     , inRegistrationCertificate := COALESCE(RegistrationCertificate.ValueData, '')
                                                     , inComment                 := COALESCE(ObjectString_Comment.ValueData, '')
                                                     , inCarModelId              := inCarModelId
+                                                    , inCarTypeId               := ObjectLink_CarType.ChildObjectId ::Integer
                                                     , inJuridicalId             := inCarJuridicalId
                                                     , inUserId                  := vbUserId
                                                      )
@@ -145,9 +146,11 @@ BEGIN
                                               AND RegistrationCertificate.DescId = zc_ObjectString_CarExternal_RegistrationCertificate()
                         LEFT JOIN ObjectString AS ObjectString_Comment
                                                ON ObjectString_Comment.ObjectId = Object.Id
-                                              AND ObjectString_Comment.DescId = zc_ObjectString_CarExternal_Comment();
+                                              AND ObjectString_Comment.DescId = zc_ObjectString_CarExternal_Comment()
 
-
+                        LEFT JOIN ObjectLink AS ObjectLink_CarType
+                                             ON ObjectLink_CarType.ObjectId = Object.Id
+                                            AND ObjectLink_CarType.DescId = zc_ObjectLink_Car_CarType();
      END IF;
 
 

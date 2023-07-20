@@ -61,6 +61,9 @@ type
     edYear: TcxCurrencyEdit;
     cxLabel17: TcxLabel;
     edVIN: TcxTextEdit;
+    cxLabel19: TcxLabel;
+    edCarType: TcxButtonEdit;
+    GuidesCarType: TdsdGuides;
   private
     { Private declarations }
   public
