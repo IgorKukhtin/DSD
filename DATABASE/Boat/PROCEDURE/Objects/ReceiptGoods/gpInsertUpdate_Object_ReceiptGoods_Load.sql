@@ -729,7 +729,7 @@ end if;
 
             -- еще сохранили связь с <Группой товара>
             IF vbGoodsGroupId > 0 THEN PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroup(), vbGoodsId, vbGoodsGroupId); END IF;
-            
+
             -- еще сохранили связь с <ProdColor>
             IF vbProdColorId > 0 THEN PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_ProdColor(), vbGoodsId, vbProdColorId); END IF;
 
@@ -1030,6 +1030,65 @@ end if;
 
            -- еще это св-во
            -- PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptGoodsChild_NPP(), vbReceiptGoodsChildId, inNPP :: Integer);
+
+           IF EXISTS (SELECT 1 from gpSelect_Object_ProdColorPattern (inColorPatternId:= (SELECT gpSelect.ColorPatternId FROM gpSelect_Object_ProdColorPattern (inColorPatternId:= 0, inIsErased:= FALSE, inIsShowAll:= FALSE, inSession:= inSession) AS gpSelect WHERE gpSelect.Id = vbProdColorPatternId)
+                                                                    , inIsErased      := FALSE
+                                                                    , inIsShowAll     := FALSE
+                                                                    , inSession       := inSession
+                                                                     ) AS gpSelect
+                      WHERE gpSelect.Id                 = vbProdColorPatternId
+                        AND gpSelect.ProdColorGroupName ILIKE 'Upholstery'
+                     )
+           THEN
+               --
+               PERFORM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                 := 0
+                                                              , inComment            := ''
+                                                              , inNPP                := 0
+                                                              , inReceiptGoodsId     := vbReceiptGoodsId     ::Integer
+                                                              , inObjectId           := 0
+                                                              , inProdColorPatternId := (SELECT gpSelect.Id
+                                                                                         FROM gpSelect_Object_ProdColorPattern (inColorPatternId:= (SELECT gpSelect.ColorPatternId from gpSelect_Object_ProdColorPattern (inColorPatternId:= 0, inIsErased:= FALSE, inIsShowAll:= FALSE, inSession:= inSession) AS gpSelect WHERE gpSelect.Id = vbProdColorPatternId)
+                                                                                                                              , inIsErased      := FALSE
+                                                                                                                              , inIsShowAll     := FALSE
+                                                                                                                              , inSession       := inSession
+                                                                                                                               ) AS gpSelect
+                                                                                         WHERE gpSelect.ProdColorGroupName ILIKE 'Stitching Naht'
+                                                                                        )
+                                                              , inMaterialOptionsId  := 0
+                                                              , inReceiptLevelId_top := 0
+                                                              , inReceiptLevelId     := 0
+                                                              , inGoodsChildId       := 0
+                                                              , ioValue              := '0'
+                                                              , ioValue_service      :='0'
+                                                              , ioForCount           := 0
+                                                              , inIsEnabled          := TRUE
+                                                              , inSession            := inSession
+                                                               );
+               --
+               PERFORM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                 := 0
+                                                              , inComment            := ''
+                                                              , inNPP                := 0
+                                                              , inReceiptGoodsId     := vbReceiptGoodsId
+                                                              , inObjectId           := 0
+                                                              , inProdColorPatternId := (SELECT gpSelect.Id
+                                                                                         FROM gpSelect_Object_ProdColorPattern (inColorPatternId:= (SELECT gpSelect.ColorPatternId from gpSelect_Object_ProdColorPattern (inColorPatternId:= 0, inIsErased:= FALSE, inIsShowAll:= FALSE, inSession:= inSession) AS gpSelect WHERE gpSelect.Id = vbProdColorPatternId)
+                                                                                                                              , inIsErased      := FALSE
+                                                                                                                              , inIsShowAll     := FALSE
+                                                                                                                              , inSession       := inSession
+                                                                                                                               ) AS gpSelect
+                                                                                         WHERE gpSelect.ProdColorGroupName ILIKE 'Stitching Logo'
+                                                                                        )
+                                                              , inMaterialOptionsId  := 0
+                                                              , inReceiptLevelId_top := 0
+                                                              , inReceiptLevelId     := 0
+                                                              , inGoodsChildId       := 0
+                                                              , ioValue              := '0'
+                                                              , ioValue_service      :='0'
+                                                              , ioForCount           := 0
+                                                              , inIsEnabled          := TRUE
+                                                              , inSession            := inSession
+                                                               );
+           END IF;
 
        END IF;
      END IF;

@@ -919,7 +919,8 @@ BEGIN
                                                                                    WHEN ObjectString_Comment.ValueData ILIKE 'Kreslo'
                                                                                    THEN
                                                                                         'AGL-' || Object_Model.ValueData
-                                                                                      ||   '-' || tmpColor_1.Article_goods
+                                                                                      ||   '-' || COALESCE (tmpColor_1.Article_goods, '')
+--                                                                                    ||   '-' || (SELECT COUNT(*) FROM tmpColor WHERE tmpColor.GoodsId_parent_old = tmpGoods.GoodsId_parent_old) :: TVarChar
                                                                                       ||   '-' || LOWER (LEFT (tmpColor_2.ProdColorName, 3))
                                                                                       ||   '-' || LOWER (LEFT (tmpColor_3.ProdColorName, 3))
 

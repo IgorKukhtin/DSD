@@ -277,7 +277,7 @@ BEGIN
      vbSummMVAT:= (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem);
      
      -- 1.2. распределяем скидки: vbSummTaxMVAT_1
-     UPDATE _tmpItem SET OperSumm = _tmpItem.OperSumm - vbSummTaxMVAT_1 * _tmpItem.OperSumm / vbSummMVAT;
+     UPDATE _tmpItem SET OperSumm = CASE WHEN vbSummMVAT > 0 THEN _tmpItem.OperSumm - vbSummTaxMVAT_1 * _tmpItem.OperSumm / vbSummMVAT ELSE 0 END;
      -- 1.3. корректируем на "погрешность округления"
      UPDATE _tmpItem SET OperSumm = _tmpItem.OperSumm                              -- корректируем эту сумму на...
                                   - (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem) -- итоговая новая сумма
@@ -293,7 +293,7 @@ BEGIN
      vbSummMVAT:= (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem);
 
      -- 2.3. распределяем скидки: vbSummTaxMVAT_2
-     UPDATE _tmpItem SET OperSumm = _tmpItem.OperSumm - vbSummTaxMVAT_2 * _tmpItem.OperSumm / vbSummMVAT;
+     UPDATE _tmpItem SET OperSumm = CASE WHEN vbSummMVAT > 0 THEN _tmpItem.OperSumm - vbSummTaxMVAT_2 * _tmpItem.OperSumm / vbSummMVAT ELSE 0 END;
      -- 2.4. корректируем на "погрешность округления"
      UPDATE _tmpItem SET OperSumm = _tmpItem.OperSumm                              -- корректируем эту сумму на...
                                   - (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem) -- итоговая новая сумма
@@ -305,7 +305,7 @@ BEGIN
      vbSummMVAT:= (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem);
 
      -- 3.2. распределяем Сумма расходы минус .....
-     UPDATE _tmpItem SET OperSumm_cost = (vbTotalSumm_cost - (vbTotalSummTaxMVAT - vbSummTaxMVAT_2)) * _tmpItem.OperSumm / vbSummMVAT;
+     UPDATE _tmpItem SET OperSumm_cost = CASE WHEN vbSummMVAT > 0 THEN (vbTotalSumm_cost - (vbTotalSummTaxMVAT - vbSummTaxMVAT_2)) * _tmpItem.OperSumm / vbSummMVAT ELSE 0 END;
      -- 3.3. корректируем на "погрешность округления"
      UPDATE _tmpItem SET OperSumm_cost = _tmpItem.OperSumm_cost                                      -- корректируем эту сумму на...
                                        - (SELECT SUM (_tmpItem.OperSumm_cost) FROM _tmpItem)         -- итоговая новая сумма
@@ -316,7 +316,7 @@ BEGIN
      -- 4.1. опять нашли - Сумма вх. без НДС, с учетом скидки ...
      vbSummMVAT:= (SELECT SUM (_tmpItem.OperSumm) FROM _tmpItem);
      -- 4.2. распределяем Сумма НДС .....
-     UPDATE _tmpItem SET OperSumm_VAT = zfCalc_SummVATDiscountTax ((SELECT SUM (_tmpItem.OperSumm + _tmpItem.OperSumm_cost) FROM _tmpItem), 0, vbVATPercent) * _tmpItem.OperSumm / vbSummMVAT;
+     UPDATE _tmpItem SET OperSumm_VAT = CASE WHEN vbSummMVAT > 0 THEN zfCalc_SummVATDiscountTax ((SELECT SUM (_tmpItem.OperSumm + _tmpItem.OperSumm_cost) FROM _tmpItem), 0, vbVATPercent) * _tmpItem.OperSumm / vbSummMVAT ELSE 0 END;
      -- 4.3. корректируем на "погрешность округления"
      UPDATE _tmpItem SET OperSumm_VAT = _tmpItem.OperSumm_VAT                                                                              -- корректируем эту сумму на...
                                       - (SELECT SUM (_tmpItem.OperSumm_VAT) FROM _tmpItem)                                                 -- итоговая новая сумма
