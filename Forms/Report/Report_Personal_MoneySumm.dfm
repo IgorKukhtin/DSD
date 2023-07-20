@@ -1,282 +1,78 @@
-inherited Report_PersonalForm: TReport_PersonalForm
-  Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1079'/'#1087'>'
-  ClientHeight = 555
-  ClientWidth = 901
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 917
-  ExplicitHeight = 594
+inherited Report_Personal_MoneySummForm: TReport_Personal_MoneySummForm
+  Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1079'/'#1087'> - '#1044#1077#1090#1072#1083#1100#1085#1086' '#1086#1087#1083#1072#1090#1099
+  ClientHeight = 472
+  ClientWidth = 1014
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 1030
+  ExplicitHeight = 511
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 111
-    Width = 901
-    Height = 444
+    Width = 1014
+    Height = 361
     TabOrder = 3
     ExplicitTop = 111
-    ExplicitWidth = 901
-    ExplicitHeight = 444
-    ClientRectBottom = 444
-    ClientRectRight = 901
+    ExplicitWidth = 1014
+    ExplicitHeight = 361
+    ClientRectBottom = 361
+    ClientRectRight = 1014
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 901
-      ExplicitHeight = 444
+      ExplicitWidth = 1014
+      ExplicitHeight = 361
       inherited cxGrid: TcxGrid
-        Width = 901
-        Height = 444
-        ExplicitWidth = 901
-        ExplicitHeight = 444
+        Width = 1014
+        Height = 361
+        ExplicitWidth = 1014
+        ExplicitHeight = 361
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = StartAmount
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = EndAmount
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = DebetSumm
+              Column = Amount
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = KreditSumm
+              Column = MoneySumm_inf
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = StartAmountD
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = StartAmountK
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = ServiceSumm
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = MoneySumm
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = EndAmountD
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = EndAmountK
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = IncomeSumm
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummTransportAdd
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummTransportAddLong
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummTransportTaxi
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummPhone
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummNalog
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = MoneySummCard
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = MoneySummCardSecond
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = MoneySummCash
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummNalogRet
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = ServiceSumm_inf
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = ServiceSumm_dif
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummHoliday_inf
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummFine
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummHosp
+              Column = TotalSummToPay_Service
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = StartAmount
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = EndAmount
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = DebetSumm
+              Column = Amount
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = KreditSumm
+              Column = MoneySumm_inf
             end
             item
               Format = ',0.00##'
               Kind = skSum
-              Column = StartAmountD
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = StartAmountK
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = ServiceSumm
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = MoneySumm
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = EndAmountD
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = EndAmountK
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = IncomeSumm
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummTransportAdd
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummTransportAddLong
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummTransportTaxi
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummPhone
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummNalog
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = MoneySummCard
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = MoneySummCardSecond
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = MoneySummCash
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummNalogRet
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = ServiceSumm_inf
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = ServiceSumm_dif
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummHoliday_inf
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummFine
-            end
-            item
-              Format = ',0.00##'
-              Kind = skSum
-              Column = SummHosp
+              Column = TotalSummToPay_Service
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -288,107 +84,136 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object BusinessName: TcxGridDBColumn
-            Caption = #1041#1080#1079#1085#1077#1089
-            DataBinding.FieldName = 'BusinessName'
+          object MoneySumm_inf: TcxGridDBColumn
+            Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086' '#1048#1090#1086#1075#1086' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'MoneySumm_inf'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 109
+          end
+          object MovementDescName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'MovementDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object StatusCode: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 77
+          end
+          object InvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
-          object PersonalServiceListCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1074#1077#1076'-'#1089#1090#1100
-            DataBinding.FieldName = 'PersonalServiceListCode'
+          object CashName: TcxGridDBColumn
+            Caption = #1050#1072#1089#1089#1072
+            DataBinding.FieldName = 'CashName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 45
+            Options.Editing = False
+            Width = 70
           end
           object PersonalServiceListName: TcxGridDBColumn
             Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
             DataBinding.FieldName = 'PersonalServiceListName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object BranchName: TcxGridDBColumn
-            Caption = #1060#1080#1083#1080#1072#1083
-            DataBinding.FieldName = 'BranchName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 93
-          end
-          object UnitCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
-            DataBinding.FieldName = 'UnitCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
-          object UnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 148
-          end
-          object PersonalCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1089#1086#1090#1088'.'
-            DataBinding.FieldName = 'PersonalCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
-          object ProfitLossDirectionName: TcxGridDBColumn
-            Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'ProfitLossDirectionName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077' ('#1087#1086#1076#1088#1072#1079#1076'.)'
-            Options.Editing = False
-            Width = 96
-          end
-          object PersonalName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
-            DataBinding.FieldName = 'PersonalName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 138
-          end
-          object PositionCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1076#1086#1083#1078#1085'.'
-            DataBinding.FieldName = 'PositionCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
-          object PositionName: TcxGridDBColumn
-            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-            DataBinding.FieldName = 'PositionName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 110
+            Width = 150
           end
           object ServiceDate: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
             DataBinding.FieldName = 'ServiceDate'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'mmmm yyyy'
-            Properties.SaveTime = False
-            Properties.ShowTime = False
+            FooterAlignmentHorz = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 97
+            Width = 100
+          end
+          object Amount: TcxGridDBColumn
+            Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086' ('#1092#1072#1082#1090')'
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object TotalSummToPay_Service: TcxGridDBColumn
+            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080')'
+            DataBinding.FieldName = 'TotalSummToPay_Service'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 106
+          end
+          object MemberName: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1095#1077#1088#1077#1079' '#1082#1086#1075#1086')'
+            DataBinding.FieldName = 'MemberName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object InvNumber_Service: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. ('#1074#1077#1076#1086#1084#1086#1089#1090#1100')'
+            DataBinding.FieldName = 'InvNumber_Service'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object OperDate_Service: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1074#1077#1076#1086#1084#1086#1089#1090#1100')'
+            DataBinding.FieldName = 'OperDate_Service'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object ServiceDate_Service: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' ('#1074#1077#1076#1086#1084#1086#1089#1090#1100')'
+            DataBinding.FieldName = 'ServiceDate_Service'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -421,6 +246,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
+            FooterAlignmentHorz = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -429,317 +255,34 @@ inherited Report_PersonalForm: TReport_PersonalForm
           object InfoMoneyName_all: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object Comment_Service: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1074#1077#1076#1086#1084#1086#1089#1090#1100')'
+            DataBinding.FieldName = 'Comment_Service'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
+            Width = 120
           end
-          object StartAmount: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' '#1082' '#1074#1099#1087#1083'.'
-            DataBinding.FieldName = 'StartAmount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object StartAmountD: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
-            DataBinding.FieldName = 'StartAmountD'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object StartAmountK: TcxGridDBColumn
-            Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
-            DataBinding.FieldName = 'StartAmountK'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object ServiceSumm: TcxGridDBColumn
-            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
-            DataBinding.FieldName = 'ServiceSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object ServiceSumm_inf: TcxGridDBColumn
-            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086' ('#1080#1085#1092'.)'
-            DataBinding.FieldName = 'ServiceSumm_inf'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1053#1072#1095#1080#1089#1083#1077#1085#1086' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
-            Options.Editing = False
-            Width = 80
-          end
-          object ServiceSumm_dif: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'.'
-            DataBinding.FieldName = 'ServiceSumm_dif'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1085#1072#1095#1080#1089#1083#1077#1085#1086' '#1086#1090' '#1085#1072#1095#1080#1089#1083#1077#1085#1086' ('#1080#1085#1092'.)'
-            Options.Editing = False
-            Width = 45
-          end
-          object SummHoliday_inf: TcxGridDBColumn
-            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077' ('#1080#1085#1092'.)'
-            DataBinding.FieldName = 'SummHoliday_inf'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
-          object IncomeSumm: TcxGridDBColumn
-            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1043#1057#1052
-            DataBinding.FieldName = 'IncomeSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object SummNalog: TcxGridDBColumn
-            Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055
-            DataBinding.FieldName = 'SummNalog'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object SummNalogRet: TcxGridDBColumn
-            Caption = #1053#1072#1083#1086#1075#1080' - '#1074#1086#1079#1084#1077#1097#1077#1085#1080#1077' '#1082' '#1047#1055
-            DataBinding.FieldName = 'SummNalogRet'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object SummTransportAdd: TcxGridDBColumn
-            Caption = #1050#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
-            DataBinding.FieldName = 'SummTransportAdd'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object SummTransportAddLong: TcxGridDBColumn
-            Caption = #1044#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
-            DataBinding.FieldName = 'SummTransportAddLong'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object SummTransportTaxi: TcxGridDBColumn
-            Caption = #1058#1072#1082#1089#1080' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
-            DataBinding.FieldName = 'SummTransportTaxi'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object SummPhone: TcxGridDBColumn
-            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1052#1086#1073'.'#1089#1074#1103#1079#1100
-            DataBinding.FieldName = 'SummPhone'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object MoneySumm: TcxGridDBColumn
-            Caption = #1042#1099#1087#1083#1072#1095#1077#1085#1086' '#1048#1090#1086#1075#1086
-            DataBinding.FieldName = 'MoneySumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object MoneySummCard: TcxGridDBColumn
-            Caption = #1042#1099#1087#1083'. '#1082#1072#1088#1090#1072' '#1041#1053' - 1'#1092'.'
-            DataBinding.FieldName = 'MoneySummCard'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object MoneySummCardSecond: TcxGridDBColumn
-            Caption = #1042#1099#1087#1083'. '#1082#1072#1088#1090#1072' '#1041#1053' - 2'#1092'.'
-            DataBinding.FieldName = 'MoneySummCardSecond'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object MoneySummCash: TcxGridDBColumn
-            Caption = #1042#1099#1087#1083'. '#1082#1072#1089#1089#1072
-            DataBinding.FieldName = 'MoneySummCash'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object SummFine: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
-            DataBinding.FieldName = 'SummFine'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object SummHosp: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1086#1075#1086
-            DataBinding.FieldName = 'SummHosp'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 95
-          end
-          object DebetSumm: TcxGridDBColumn
-            Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
-            DataBinding.FieldName = 'DebetSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object KreditSumm: TcxGridDBColumn
-            Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090
-            DataBinding.FieldName = 'KreditSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object EndAmount: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1076#1086#1083#1075' '#1082' '#1074#1099#1087#1083'.'
-            DataBinding.FieldName = 'EndAmount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Properties.EditFormat = ',0.00##;-,0.00##'
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object EndAmountD: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1044#1077#1073#1077#1090')'
-            DataBinding.FieldName = 'EndAmountD'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object EndAmountK: TcxGridDBColumn
-            Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
-            DataBinding.FieldName = 'EndAmountK'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object AccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090
-            DataBinding.FieldName = 'AccountName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
+            Width = 200
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 901
+    Width = 1014
     Height = 85
-    ExplicitWidth = 901
+    ExplicitWidth = 1014
     ExplicitHeight = 85
     inherited deStart: TcxDateEdit
       Left = 60
@@ -959,18 +502,6 @@ inherited Report_PersonalForm: TReport_PersonalForm
       end
       item
         Component = GuidesInfoMoney
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesBranch
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GuidesPersonalServiceList
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -2605,363 +2136,77 @@ inherited Report_PersonalForm: TReport_PersonalForm
         end>
       isShowModal = False
     end
-    object actOpenReportForm_ServiceSumm: TdsdOpenForm
+    object macOpenDocument: TMultiAction
       Category = 'DSDLib'
-      TabSheet = tsMain
       MoveParams = <>
-      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
-      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
-      ImageIndex = 24
-      FormName = 'TReport_Personal_ServiceSummForm'
-      FormNameParam.Value = 'TReport_Personal_ServiceSummForm'
+      ActionList = <
+        item
+          Action = actMovementForm
+        end
+        item
+          Action = actOpenForm
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1103
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1103
+      ImageIndex = 28
+    end
+    object actOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actOpenForm'
+      FormName = 'NULL'
+      FormNameParam.Value = ''
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'inStartDate'
-          Value = 43466d
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inEndDate'
-          Value = 43466d
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inServiceDate'
-          Value = 43466d
-          Component = deServiceDate
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inisServiceDate'
-          Value = False
-          Component = cbServiceDate
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inisMember'
-          Value = False
-          Component = cbMember
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inAccountId'
-          Value = ''
-          Component = GuidesAccount
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inAccountName'
-          Value = ''
-          Component = GuidesAccount
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBranchId'
-          Value = ''
-          Component = GuidesBranch
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfoMoneyId'
-          Value = ''
-          Component = GuidesInfoMoney
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfoMoneyGroupId'
-          Value = ''
-          Component = GuidesInfoMoneyGroup
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfoMoneyDestinationId'
-          Value = ''
-          Component = GuidesInfoMoneyDestination
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPersonalServiceListId'
-          Value = ''
-          Component = GuidesPersonalServiceList
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPersonalId'
-          Value = Null
+          Name = 'inOperDate'
+          Value = 42086d
           Component = MasterCDS
-          ComponentItem = 'PersonalId'
-          ParamType = ptInput
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inBranchName'
-          Value = ''
-          Component = GuidesBranch
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfoMoneyName'
-          Value = ''
-          Component = GuidesInfoMoney
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfoMoneyGroupName'
-          Value = ''
-          Component = GuidesInfoMoneyGroup
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfoMoneyDestinationName'
-          Value = ''
-          Component = GuidesInfoMoneyDestination
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPersonalServiceListName'
-          Value = ''
-          Component = GuidesPersonalServiceList
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPersonalName'
-          Value = Null
+          Name = 'Id'
+          Value = '0'
           Component = MasterCDS
-          ComponentItem = 'PersonalName'
-          DataType = ftString
-          ParamType = ptInput
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = 0.000000000000000000
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
-    object actOpenReportForm_MoneySumm: TdsdOpenForm
+    object actMovementForm: TdsdExecStoredProc
       Category = 'DSDLib'
-      TabSheet = tsMain
       MoveParams = <>
-      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1086#1087#1083#1072#1090#1099
-      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1086#1087#1083#1072#1090#1099
-      ImageIndex = 25
-      FormName = 'TReport_Personal_MoneySummForm'
-      FormNameParam.Value = 'TReport_Personal_MoneySummForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementForm
+      StoredProcList = <
         item
-          Name = 'inStartDate'
-          Value = Null
-          Component = deStart
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inEndDate'
-          Value = Null
-          Component = deEnd
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inServiceDate'
-          Value = Null
-          Component = deServiceDate
-          DataType = ftDateTime
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inisServiceDate'
-          Value = ''
-          Component = cbServiceDate
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inisMember'
-          Value = Null
-          Component = cbMember
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inAccountId'
-          Value = Null
-          Component = GuidesAccount
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inAccountName'
-          Value = Null
-          Component = GuidesAccount
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBranchId'
-          Value = Null
-          Component = GuidesBranch
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfoMoneyId'
-          Value = ''
-          Component = GuidesInfoMoney
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfoMoneyGroupId'
-          Value = ''
-          Component = GuidesInfoMoneyGroup
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfoMoneyDestinationId'
-          Value = Null
-          Component = GuidesInfoMoneyDestination
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPersonalServiceListId'
-          Value = Null
-          Component = GuidesPersonalServiceList
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPersonalId'
-          Value = '0'
-          Component = MasterCDS
-          ComponentItem = 'PersonalId'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBranchName'
-          Value = Null
-          Component = GuidesBranch
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfoMoneyName'
-          Value = Null
-          Component = GuidesInfoMoney
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfoMoneyGroupName'
-          Value = Null
-          Component = GuidesInfoMoneyGroup
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inInfoMoneyDestinationName'
-          Value = Null
-          Component = GuidesInfoMoneyDestination
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPersonalServiceListName'
-          Value = Null
-          Component = GuidesPersonalServiceList
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPersonalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PersonalName'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
+          StoredProc = getMovementForm
         end>
-      isShowModal = False
+      Caption = 'actMovementForm'
     end
   end
   inherited MasterDS: TDataSource
     Top = 184
   end
-  inherited MasterCDS: TClientDataSet
-    IndexFieldNames = 'PersonalName'
-    Left = 56
-    Top = 224
-  end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Personal'
+    StoredProcName = 'gpReport_Personal_MoneySumm'
     Params = <
       item
         Name = 'inStartDate'
@@ -3078,10 +2323,6 @@ inherited Report_PersonalForm: TReport_PersonalForm
         end
         item
           Visible = True
-          ItemName = 'bbExecuteDialog'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -3098,23 +2339,11 @@ inherited Report_PersonalForm: TReport_PersonalForm
         end
         item
           Visible = True
-          ItemName = 'bbOpenReportForm_ServiceSumm'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenReportForm_MoneySumm'
+          ItemName = 'bb'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintReal'
         end
         item
           Visible = True
@@ -3143,25 +2372,19 @@ inherited Report_PersonalForm: TReport_PersonalForm
       Action = ExecuteDialog
       Category = 0
     end
-    object bbOpenReportForm_MoneySumm: TdxBarButton
-      Action = actOpenReportForm_MoneySumm
-      Category = 0
-    end
-    object bbOpenReportForm_ServiceSumm: TdxBarButton
-      Action = actOpenReportForm_ServiceSumm
+    object bb: TdxBarButton
+      Action = macOpenDocument
       Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColumnAddOnList = <
       item
-        Column = DebetSumm
         Action = IncomeJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
       end
       item
-        Column = KreditSumm
         Action = ReturnOutJournal
         onExitColumn.Active = False
         onExitColumn.AfterEmptyValue = False
@@ -3449,69 +2672,162 @@ inherited Report_PersonalForm: TReport_PersonalForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'IncomeDesc'
+        Name = 'inStartDate'
         Value = Null
-        DataType = ftString
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReturnOutDesc'
+        Name = 'inEndDate'
         Value = Null
-        DataType = ftString
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SaleDesc'
+        Name = 'inServiceDate'
         Value = Null
-        DataType = ftString
+        Component = deServiceDate
+        DataType = ftDateTime
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReturnInDesc'
+        Name = 'inisServiceDate'
         Value = Null
-        DataType = ftString
+        Component = cbServiceDate
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MoneyDesc'
+        Name = 'inisMember'
         Value = Null
-        DataType = ftString
+        Component = cbMember
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ServiceDesc'
+        Name = 'inAccountId'
         Value = Null
-        DataType = ftString
+        Component = GuidesAccount
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SendDebtDesc'
+        Name = 'inBranchId'
         Value = Null
-        DataType = ftString
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OtherDesc'
+        Name = 'inInfoMoneyId'
         Value = Null
-        DataType = ftString
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SaleRealDesc'
+        Name = 'inInfoMoneyGroupId'
         Value = Null
-        DataType = ftString
+        Component = GuidesInfoMoneyGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReturnInRealDesc'
+        Name = 'inInfoMoneyDestinationId'
         Value = Null
-        DataType = ftString
+        Component = GuidesInfoMoneyDestination
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TransferDebtDesc'
+        Name = 'inPersonalServiceListId'
         Value = Null
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountName'
+        Value = Null
+        Component = GuidesAccount
+        ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchName'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyGroupName'
+        Value = Null
+        Component = GuidesInfoMoneyGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyDestinationName'
+        Value = Null
+        Component = GuidesInfoMoneyDestination
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalServiceListName'
+        Value = Null
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalName'
+        Value = Null
+        Component = GuidesPersonal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 240
@@ -3606,5 +2922,30 @@ inherited Report_PersonalForm: TReport_PersonalForm
       end>
     Left = 488
     Top = 5
+  end
+  object getMovementForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_PersonalForm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 232
   end
 end

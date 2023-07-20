@@ -2402,13 +2402,14 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPaymentMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPaymentMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPaymentMovementDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPaymentMovementDialogForm');
   exit;
 
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashPersonal_toPayForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashPersonal_toPayForm');
   exit;
@@ -2956,13 +2957,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WeighingDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WeighingDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalDialogForm');
-  exit;
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Personal_ServiceSummForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Personal_ServiceSummForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Personal_MoneySummForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Personal_MoneySummForm');
+  exit;
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MemberForm');
   exit;

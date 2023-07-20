@@ -1,4 +1,4 @@
-unit Report_Personal;
+unit Report_Personal_MoneySumm;
 
 interface
 
@@ -27,13 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TReport_PersonalForm = class(TAncestorReportForm)
-    AccountName: TcxGridDBColumn;
-    InfoMoneyGroupName: TcxGridDBColumn;
-    InfoMoneyDestinationName: TcxGridDBColumn;
-    StartAmount: TcxGridDBColumn;
-    EndAmount: TcxGridDBColumn;
-    InfoMoneyName: TcxGridDBColumn;
+  TReport_Personal_MoneySummForm = class(TAncestorReportForm)
     dsdPrintAction: TdsdPrintAction;
     bbPrint: TdxBarButton;
     cxLabel3: TcxLabel;
@@ -48,9 +42,6 @@ type
     cxLabel6: TcxLabel;
     edAccount: TcxButtonEdit;
     GuidesAccount: TdsdGuides;
-    InfoMoneyCode: TcxGridDBColumn;
-    DebetSumm: TcxGridDBColumn;
-    KreditSumm: TcxGridDBColumn;
     SaleJournal: TdsdOpenForm;
     ReturnInJournal: TdsdOpenForm;
     IncomeJournal: TdsdOpenForm;
@@ -69,50 +60,28 @@ type
     ceBranch: TcxButtonEdit;
     cxLabel7: TcxLabel;
     GuidesBranch: TdsdGuides;
-    BranchName: TcxGridDBColumn;
-    ServiceDate: TcxGridDBColumn;
     cbServiceDate: TcxCheckBox;
     deServiceDate: TcxDateEdit;
-    StartAmountD: TcxGridDBColumn;
-    StartAmountK: TcxGridDBColumn;
-    EndAmountD: TcxGridDBColumn;
-    EndAmountK: TcxGridDBColumn;
-    MoneySumm: TcxGridDBColumn;
-    ServiceSumm: TcxGridDBColumn;
-    InfoMoneyName_all: TcxGridDBColumn;
-    PersonalCode: TcxGridDBColumn;
-    UnitCode: TcxGridDBColumn;
-    UnitName: TcxGridDBColumn;
-    PositionCode: TcxGridDBColumn;
-    PositionName: TcxGridDBColumn;
-    PersonalServiceListCode: TcxGridDBColumn;
-    PersonalServiceListName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    IncomeSumm: TcxGridDBColumn;
-    SummTransportAdd: TcxGridDBColumn;
-    SummTransportAddLong: TcxGridDBColumn;
-    SummTransportTaxi: TcxGridDBColumn;
-    SummPhone: TcxGridDBColumn;
-    SummNalog: TcxGridDBColumn;
     cxLabel8: TcxLabel;
     cePersonalServiceList: TcxButtonEdit;
     GuidesPersonalServiceList: TdsdGuides;
     cxLabel9: TcxLabel;
     cePersonal: TcxButtonEdit;
     GuidesPersonal: TdsdGuides;
-    MoneySummCard: TcxGridDBColumn;
-    MoneySummCardSecond: TcxGridDBColumn;
-    MoneySummCash: TcxGridDBColumn;
-    SummNalogRet: TcxGridDBColumn;
-    BusinessName: TcxGridDBColumn;
-    SummHoliday_inf: TcxGridDBColumn;
     cbMember: TcxCheckBox;
     actRefMember: TdsdDataSetRefresh;
-    actOpenReportForm_MoneySumm: TdsdOpenForm;
-    bbOpenReportForm_MoneySumm: TdxBarButton;
-    actOpenReportForm_ServiceSumm: TdsdOpenForm;
-    bbOpenReportForm_ServiceSumm: TdxBarButton;
+    StatusCode: TcxGridDBColumn;
+    actMovementForm: TdsdExecStoredProc;
+    actOpenForm: TdsdOpenForm;
+    macOpenDocument: TMultiAction;
+    getMovementForm: TdsdStoredProc;
+    bb: TdxBarButton;
+    MovementDescName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    MoneySumm_inf: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -126,6 +95,6 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_PersonalForm)
+  RegisterClass(TReport_Personal_MoneySummForm)
 
 end.
