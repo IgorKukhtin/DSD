@@ -6352,6 +6352,7 @@ end;
 
 function TdsdEDINAction.LocalExecute: Boolean;
 begin
+  FErrorParam.Value := '';
 
   case FEDINActions of
     edinSendETTN : Result := DoSendETTN;
