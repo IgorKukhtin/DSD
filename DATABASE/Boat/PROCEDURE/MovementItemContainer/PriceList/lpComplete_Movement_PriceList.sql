@@ -15,13 +15,13 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не выбран Поставщик.';
     END IF;
 
-    -- 1.
+    -- 1. дописали Link_Partner + EKPrice
     PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Partner(), MovementItem.ObjectId, (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Partner()))
+          , lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_EKPrice(), MovementItem.ObjectId, MovementItem.Amount)
     FROM MovementItem
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId     = zc_MI_Master()
       AND MovementItem.isErased   = FALSE;
-    
 
     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
     PERFORM lpComplete_Movement (inMovementId := inMovementId

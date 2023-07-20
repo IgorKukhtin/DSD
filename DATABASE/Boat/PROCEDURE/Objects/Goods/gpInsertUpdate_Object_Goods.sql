@@ -56,6 +56,9 @@ $BODY$
    DECLARE vbGroupNameFull TVarChar;
    DECLARE vbIsInsert Boolean;
    DECLARE vbInfoMoneyId Integer;
+
+   DECLARE vbObjectName TVarChar;
+   DECLARE vbFieldName TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
@@ -89,16 +92,42 @@ BEGIN
    -- !!! проверка уникальности <ArticleNr>
    IF inArticle <> ''
    THEN
-       PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Article(), inArticle, vbUserId);
+       -- PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Article(), inArticle, vbUserId);
+       --
+       IF EXISTS (SELECT 1 FROM ObjectString AS OS JOIN Object ON Object.Id = ObjectId AND Object.isErased = FALSE WHERE OS.DescId = zc_ObjectString_Article() AND OS.ValueData = inArticle AND OS.ObjectId <> COALESCE (ioId, 0))
+       THEN
+           --
+           SELECT ObjectDesc.ItemName, ObjectStringDesc.ItemName
+                  INTO vbObjectName, vbFieldName
+           FROM ObjectString
+                LEFT JOIN Object           ON Object.Id          = ObjectString.ObjectId
+                LEFT JOIN ObjectDesc       ON ObjectDesc.Id       = Object.DescId
+                LEFT JOIN ObjectStringDesc ON ObjectStringDesc.Id = ObjectString.DescId
+           WHERE ObjectString.DescId = zc_ObjectString_Article() AND ObjectString.ValueData = inArticle AND ObjectString.ObjectId <> COALESCE (ioId, 0);
+    
+           --
+           RAISE EXCEPTION 'Значение <%> не уникально%цвет <%> для поля <%>%в справочнике <%>.(%)', inArticle, CHR (13), lfGet_Object_ValueData_sh (inProdColorId), vbFieldName, CHR (13), vbObjectName, ioId;
+
+       END IF;
+
    END IF;
 
+
+   -- проверка <Kreslo>
+   /*IF TRIM (COALESCE (inComment, '')) ILIKE 'Kreslo'
+   THEN
+       --RAISE EXCEPTION 'Ошибка.Значение <Название> должно быть установлено.';
+       RAISE EXCEPTION 'Ошибка.Для значения <Kreslo> такое Название = <%> Code = <%> Article = <%> EAN = <%> Group = <%>'
+                     , inName, inCode, inArticle, inEAN, lfGet_Object_ValueData_sh (inGoodsGroupId)
+                      ;
+   END IF;*/
 
    -- проверка <inName>
    IF TRIM (COALESCE (inName, '')) = ''
    THEN
        --RAISE EXCEPTION 'Ошибка.Значение <Название> должно быть установлено.';
-       RAISE EXCEPTION 'Ошибка.Значение <Название> должно быть установлено. Code = <%> Article = <%> EAN = <%> Group = <%>'
-                     , inCode, inArticle, inEAN, lfGet_Object_ValueData_sh (inGoodsGroupId)
+       RAISE EXCEPTION 'Ошибка.Значение <Название> должно быть установлено. Code = <%> Article = <%> EAN = <%> Group = <%> Comment = <%>'
+                     , inCode, inArticle, inEAN, lfGet_Object_ValueData_sh (inGoodsGroupId), inComment
                       ;
    END IF;
 

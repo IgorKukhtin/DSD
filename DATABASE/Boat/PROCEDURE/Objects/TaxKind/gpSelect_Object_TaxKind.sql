@@ -21,8 +21,8 @@ $BODY$BEGIN
       , ObjectString_TaxKind_Code.ValueData :: TVarChar AS Code_str
       , Object_TaxKind.ValueData    AS Name
       
-      , ObjectFloat_TaxKind_Value.ValueData  AS Value
       , ObjectString_Enum.ValueData          AS Enum
+      , ObjectFloat_TaxKind_Value.ValueData  AS Value
       
       , ObjectString_TaxKind_Info.ValueData    AS Info
       , ObjectString_TaxKind_Comment.ValueData AS Comment

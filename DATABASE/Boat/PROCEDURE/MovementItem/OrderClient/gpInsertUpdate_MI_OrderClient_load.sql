@@ -77,6 +77,22 @@ BEGIN
 -- RAISE EXCEPTION 'Ошибка.<%   %>.', inValue1,  vbProdOptionsId;
 
 
+     -- замена - экран
+     inValue2:= zfCalc_Text_replace (inValue2, '&amp;', '&');
+
+
+     -- замена - кривой Id_site
+     IF inValue1 ILIKE 'b330_doa_' AND inValue2 = 'Dual Battery System' THEN inValue1:= 'b330_doa_3'; END IF;
+     IF inValue1 ILIKE 'b330_doa_' AND inValue2 = 'Digital Sonar'       THEN inValue1:= 'b330_doa_4'; END IF;
+
+
+     -- замена - вместо Boat Cover + Light Grey ЕСТЬ Boat Cover + Grey?
+     IF inValue2 ILIKE 'Boat Cover' AND inValue4 ILIKE 'Light Grey'
+     THEN
+         inValue4:= 'Grey';
+     END IF;
+
+
      -- замена
      IF inValue3 ILIKE 'null' THEN inValue3:= ''; END IF;
      -- замена
@@ -1248,45 +1264,99 @@ END IF;
                                                               WHEN inTitle7 ILIKE 'code' THEN inValue7
                                                          END;*/
 
-                          -- Создаем
-                          vbGoodsId:= gpInsertUpdate_Object_Goods
-                                                 (ioId                     := 0
-                                                , inCode                   := -1
-                                                , inName                   := -- MaterialOptions = BELUGA
-                                                                              CASE WHEN inTitle2 ILIKE 'material_title' THEN inValue2
-                                                                                   WHEN inTitle3 ILIKE 'material_title' THEN inValue3
-                                                                              END
-                                                , inArticle                := -- Article = BEL-3302
-                                                                              CASE WHEN inTitle5 ILIKE 'code' THEN inValue5
-                                                                                   WHEN inTitle6 ILIKE 'code' THEN inValue6
-                                                                                   WHEN inTitle7 ILIKE 'code' THEN inValue7
-                                                                              END
-                                                , inArticleVergl           := ''
-                                                , inEAN                    := ''
-                                                , inASIN                   := ''
-                                                , inMatchCode              := ''
-                                                , inFeeNumber              := ''
-                                                , inComment                := ''
-                                                , inIsArc                  := FALSE
-                                                , inFeet                   := 0
-                                                , inMetres                 := 0
-                                                , inAmountMin              := 0
-                                                , inAmountRefer            := 0
-                                                , inEKPrice                := 0
-                                                , inEmpfPrice              := 0
-                                                , inGoodsGroupId           := 2865 -- Fabric
-                                                , inMeasureId              := 2761 --- шт
-                                                , inGoodsTagId             := NULL
-                                                , inGoodsTypeId            := NULL
-                                                , inGoodsSizeId            := NULL
-                                                , inProdColorId            := vbProdColorId -- Pure white
-                                                , inPartnerId              := NULL
-                                                , inUnitId                 := NULL
-                                                , inDiscountPartnerId      := NULL
-                                                , inTaxKindId              := zc_Enum_TaxKind_Basis()
-                                                , inEngineId               := NULL
-                                                , inSession                := inSession
-                                                 );
+                          -- Если Артикул есть но цвет не установлен
+                          IF 1 = (SELECT COUNT(*)
+                                  FROM Object AS Object_Goods 
+                                       JOIN ObjectString AS ObjectString_Article
+                                                         ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                                        AND ObjectString_Article.DescId   = zc_ObjectString_Article()
+                                                        AND ObjectString_Article.ValueData ILIKE CASE WHEN inTitle5 ILIKE 'code' THEN inValue5
+                                                                                                      WHEN inTitle6 ILIKE 'code' THEN inValue6
+                                                                                                      WHEN inTitle7 ILIKE 'code' THEN inValue7
+                                                                                                 END
+                                       LEFT JOIN ObjectLink AS OL_ProdColor
+                                                            ON OL_ProdColor.ObjectId = Object_Goods.Id
+                                                           AND OL_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
+                                                           -- с таким Цветом
+                                                           -- AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
+                                  WHERE Object_Goods.DescId   = zc_Object_Goods()
+                                    AND Object_Goods.isErased = FALSE
+                                    -- пустой цвет
+                                    AND OL_ProdColor.ChildObjectId IS NULL
+                                 )
+                          THEN
+                              -- нашли Комплектующее через Article
+                              vbGoodsId:= (SELECT Object_Goods.Id
+                                           FROM Object AS Object_Goods 
+                                                JOIN ObjectString AS ObjectString_Article
+                                                                  ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                                                 AND ObjectString_Article.DescId   = zc_ObjectString_Article()
+                                                                 AND ObjectString_Article.ValueData ILIKE CASE WHEN inTitle5 ILIKE 'code' THEN inValue5
+                                                                                                               WHEN inTitle6 ILIKE 'code' THEN inValue6
+                                                                                                               WHEN inTitle7 ILIKE 'code' THEN inValue7
+                                                                                                          END
+                                                LEFT JOIN ObjectLink AS OL_ProdColor
+                                                                     ON OL_ProdColor.ObjectId = Object_Goods.Id
+                                                                    AND OL_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
+                                                                    -- с таким Цветом
+                                                                    -- AND OL_ProdColor.ChildObjectId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
+                                           WHERE Object_Goods.DescId   = zc_Object_Goods()
+                                             AND Object_Goods.isErased = FALSE
+                                             -- пустой цвет
+                                             AND OL_ProdColor.ChildObjectId IS NULL
+                                          );
+
+                              --
+                              IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE)
+                              THEN 
+                                  RAISE EXCEPTION 'Ошибка.Не найдено название цвета = <%> Необходимо сначала его добавить в справочник.', vbColor_title;
+                              ELSE
+                                  -- установили Цвет
+                                  PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_ProdColor(), vbGoodsId, (SELECT MIN (Object.Id) FROM Object WHERE Object.DescId = zc_Object_ProdColor() AND Object.ValueData ILIKE vbColor_title AND Object.isErased = FALSE));
+
+                              END IF;
+
+                          ELSE
+                              -- Создаем
+                              vbGoodsId:= gpInsertUpdate_Object_Goods
+                                                     (ioId                     := 0
+                                                    , inCode                   := -1
+                                                    , inName                   := -- MaterialOptions = BELUGA
+                                                                                  CASE WHEN inTitle2 ILIKE 'material_title' THEN inValue2
+                                                                                       WHEN inTitle3 ILIKE 'material_title' THEN inValue3
+                                                                                  END
+                                                    , inArticle                := -- Article = BEL-3302
+                                                                                  CASE WHEN inTitle5 ILIKE 'code' THEN inValue5
+                                                                                       WHEN inTitle6 ILIKE 'code' THEN inValue6
+                                                                                       WHEN inTitle7 ILIKE 'code' THEN inValue7
+                                                                                  END
+                                                    , inArticleVergl           := ''
+                                                    , inEAN                    := ''
+                                                    , inASIN                   := ''
+                                                    , inMatchCode              := ''
+                                                    , inFeeNumber              := ''
+                                                    , inComment                := ''
+                                                    , inIsArc                  := FALSE
+                                                    , inFeet                   := 0
+                                                    , inMetres                 := 0
+                                                    , inAmountMin              := 0
+                                                    , inAmountRefer            := 0
+                                                    , inEKPrice                := 0
+                                                    , inEmpfPrice              := 0
+                                                    , inGoodsGroupId           := 2865 -- Fabric
+                                                    , inMeasureId              := 2761 --- шт
+                                                    , inGoodsTagId             := NULL
+                                                    , inGoodsTypeId            := NULL
+                                                    , inGoodsSizeId            := NULL
+                                                    , inProdColorId            := vbProdColorId -- Pure white
+                                                    , inPartnerId              := NULL
+                                                    , inUnitId                 := NULL
+                                                    , inDiscountPartnerId      := NULL
+                                                    , inTaxKindId              := zc_Enum_TaxKind_Basis()
+                                                    , inEngineId               := NULL
+                                                    , inSession                := inSession
+                                                     );
+                          END IF;
                       END IF;
 
                       -- 2.3. Проверка - была раньше
