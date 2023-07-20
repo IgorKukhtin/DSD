@@ -26,7 +26,6 @@ object JuridicalPriceChoiceForm: TJuridicalPriceChoiceForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 562
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -45,7 +44,7 @@ object JuridicalPriceChoiceForm: TJuridicalPriceChoiceForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object isSelect: TcxGridDBColumn
-        Caption = #1042#1110#1073#1088'.'
+        Caption = #1042#1099#1073#1088'.'
         DataBinding.FieldName = 'isSelect'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

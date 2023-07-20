@@ -367,7 +367,7 @@ BEGIN
                                                         AND ContainerPD.Amount > 0
                                                         AND ContainerPD.DescId = zc_Container_CountPartionDate()
                                                         
-                                     LEFT JOIN gpSelect_Object_DiscountExternalSupplier(inSession := inSession) AS DiscountExternalSupplier
+                                     LEFT JOIN gpSelect_Object_DiscountExternalSupplier(inIsErased := False, inSession := inSession) AS DiscountExternalSupplier
                                                                                                                 ON DiscountExternalSupplier.isErased = False
                                                                                                                AND DiscountExternalSupplier.DiscountExternalId =  GoodsDiscount.DiscountExternalId
                                                                                                                AND DiscountExternalSupplier.JuridicalId = MovementLinkObject_From.ObjectId

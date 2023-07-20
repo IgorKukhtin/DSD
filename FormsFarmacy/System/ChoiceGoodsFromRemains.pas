@@ -73,6 +73,7 @@ type
     DateChange: TcxGridDBColumn;
     DateChangeSite: TcxGridDBColumn;
     colPrice: TcxGridDBColumn;
+    TPAmount: TcxGridDBColumn;
   private
     { Private declarations }
   public

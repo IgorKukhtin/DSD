@@ -1,8 +1,9 @@
 -- Function: gpSelect_Object_DiscountExternal()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_DiscountExternal (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_DiscountExternal (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_DiscountExternal(
+    IN inIsErased      Boolean   ,    -- ѕоказать все
     IN inSession       TVarChar       -- сесси€ пользовател€
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -70,6 +71,7 @@ BEGIN
                               ON ObjectBoolean_TwoPackages.ObjectId = Object_DiscountExternal.Id 
                              AND ObjectBoolean_TwoPackages.DescId = zc_ObjectBoolean_DiscountExternal_TwoPackages()
    WHERE Object_DiscountExternal.DescId = zc_Object_DiscountExternal()
+     AND (Object_DiscountExternal.isErased = False OR inIsErased = True)
      AND (vbUnitId = 0
        OR COALESCE (ObjectString_URL.ValueData, '') = ''
        OR Object_DiscountExternal.Id IN (SELECT ObjectLink_DiscountExternal.ChildObjectId
@@ -98,4 +100,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Object_DiscountExternal ('3')
 
-select * from gpSelect_Object_DiscountExternal( inSession := '3991136');
+select * from gpSelect_Object_DiscountExternal(False,  inSession := '3991136');

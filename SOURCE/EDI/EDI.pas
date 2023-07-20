@@ -6206,7 +6206,6 @@ begin
   finally
     IdHTTP.Free;
     FResultParam.Value := '';
-    FErrorParam.Value := '';
   end;
 end;
 

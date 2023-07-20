@@ -1,8 +1,9 @@
 -- Function: gpSelect_Object_DiscountCard()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_DiscountCard (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_DiscountCard (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_DiscountCard(
+    IN inIsErased      Boolean   ,    -- ѕоказать все
     IN inSession       TVarChar       -- сесси€ пользовател€
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -30,6 +31,7 @@ BEGIN
       LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
 
    WHERE Object_DiscountCard.DescId = zc_Object_DiscountCard()
+     AND (Object_DiscountCard.isErased = False OR inIsErased = True)
   ;
   
 END;
@@ -44,4 +46,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_DiscountCard ('2')
+-- SELECT * FROM gpSelect_Object_DiscountCard (False, '2')

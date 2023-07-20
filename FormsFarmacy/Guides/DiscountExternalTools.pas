@@ -69,6 +69,8 @@ type
     dxBarButton1: TdxBarButton;
     Token: TcxGridDBColumn;
     isNotUseAPI: TcxGridDBColumn;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_DiscountExternalTools()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_DiscountExternalTools (TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_DiscountExternalTools (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_DiscountExternalTools (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_DiscountExternalTools(
+    IN inIsErased      Boolean   ,    -- ѕоказать все
     IN inSession       TVarChar       -- сесси€ пользовател€
 )
 RETURNS TABLE (Id Integer, Code Integer
@@ -76,7 +78,8 @@ BEGIN
                                      ON ObjectBoolean_NotUseAPI.ObjectId = Object_DiscountExternalTools.Id 
                                     AND ObjectBoolean_NotUseAPI.DescId = zc_ObjectBoolean_DiscountExternalTools_NotUseAPI()
 
-        WHERE Object_DiscountExternalTools.DescId = zc_Object_DiscountExternalTools();
+        WHERE Object_DiscountExternalTools.DescId = zc_Object_DiscountExternalTools()
+          AND (Object_DiscountExternalTools.isErased = False OR inIsErased = True);
   
 END;
 $BODY$
@@ -91,4 +94,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_DiscountExternalTools ('3')
+-- SELECT * FROM gpSelect_Object_DiscountExternalTools (False, '3')

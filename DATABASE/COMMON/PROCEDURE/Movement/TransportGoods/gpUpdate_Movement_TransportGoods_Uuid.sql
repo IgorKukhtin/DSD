@@ -1,10 +1,12 @@
 -- Function: gpUpdate_Movement_TransportGoods_Uuid ()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_TransportGoods_Uuid (Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_Movement_TransportGoods_Uuid (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_TransportGoods_Uuid (Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_TransportGoods_Uuid(
     IN inMovementId               Integer   , --
     IN inUuid                     TVarChar  , -- Ідентифікатор документа, у «Електронної товарно-транспортної накладної» (е-ТТН)
+    IN inCommentError             TVarChar  , -- Текст ошибки при обработке (е-ТТН)
     IN inSession                  TVarChar    -- сессия пользователя
 
 )                              
@@ -19,7 +21,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Uuid(), inMovementId, inUuid);
 
      -- очистили Текст ошибки
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentError(), inMovementId, '');
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentError(), inMovementId, inCommentError);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);

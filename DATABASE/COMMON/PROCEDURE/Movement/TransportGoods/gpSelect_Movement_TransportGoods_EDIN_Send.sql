@@ -464,8 +464,14 @@ BEGIN
                                        THEN CASE WHEN View_Partner_AddressFrom.RegionName <> '' THEN ', ' ELSE '' END ||
                                                    View_Partner_AddressFrom.ProvinceName || ' ð-í '  ELSE '' END)
                   ELSE ParseAddress_From.CountrySubDivisionName END :: TVarChar        AS CountrySubDivisionName_From  
+
+           , zfCalc_GLNCodeCorporate (inGLNCode                  := ObjectString_GLNCode_To.ValueData
+                                    , inGLNCodeCorporate_partner := ObjectString_GLNCodeCorporate_To.ValueData
+                                    , inGLNCodeCorporate_retail  := ObjectString_Retail_GLNCodeCorporate_To.ValueData
+                                    , inGLNCodeCorporate_main    := ObjectString_Juridical_GLNCode_From.ValueData
+                                     )  AS GLN_from
                           
-           , COALESCE(ObjectString_GLNCode_From.ValueData, ObjectString_Juridical_GLNCode_From.ValueData)  AS GLN_from
+           --, COALESCE(ObjectString_GLNCode_From.ValueData, ObjectString_Juridical_GLNCode_From.ValueData)  AS GLN_from
            
            
            , COALESCE (ObjectString_Unit_AddressEDIN_Unit.ValueData, ObjectString_Unit_Address_from.ValueData, OH_JuridicalDetails_From.JuridicalAddress) AS Address_Unit
@@ -776,6 +782,10 @@ BEGIN
                                    ON ObjectString_GLNCodeJuridical_To.ObjectId = View_Partner_Address.PartnerId
                                   AND ObjectString_GLNCodeJuridical_To.DescId = zc_ObjectString_Partner_GLNCodeJuridical()
                                   AND COALESCE(ObjectString_GLNCodeJuridical_To.ValueData, '') <> ''
+            LEFT JOIN ObjectString AS ObjectString_GLNCodeCorporate_To
+                                   ON ObjectString_GLNCodeCorporate_To.ObjectId = View_Partner_Address.PartnerId
+                                  AND ObjectString_GLNCodeCorporate_To.DescId = zc_ObjectString_Partner_GLNCodeCorporate()
+                                  AND COALESCE(ObjectString_GLNCodeJuridical_To.ValueData, '') <> ''
             LEFT JOIN ObjectString AS ObjectString_GLNCodeRetail_To
                                    ON ObjectString_GLNCodeRetail_To.ObjectId = View_Partner_Address.PartnerId
                                   AND ObjectString_GLNCodeRetail_To.DescId = zc_ObjectString_Partner_GLNCodeRetail()
@@ -849,6 +859,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Retail_GLNCode_To
                                    ON ObjectString_Retail_GLNCode_To.ObjectId = ObjectLink_Juridical_Retail_To.ChildObjectId
                                   AND ObjectString_Retail_GLNCode_To.DescId = zc_ObjectString_Retail_GLNCode()
+            LEFT JOIN ObjectString AS ObjectString_Retail_GLNCodeCorporate_To
+                                   ON ObjectString_Retail_GLNCodeCorporate_To.ObjectId = ObjectLink_Juridical_Retail_To.ChildObjectId
+                                  AND ObjectString_Retail_GLNCodeCorporate_To.DescId = zc_ObjectString_Retail_GLNCodeCorporate()
 
             LEFT JOIN t3
                    AS OH_JuridicalDetails_car

@@ -166,7 +166,15 @@ BEGIN
              CASE WHEN Movement_Sale.DescId <> zc_Movement_ReturnIn() 
                   THEN COALESCE(ObjectString_Juridical_GLNCode_From.ValueData)  
                   ELSE COALESCE(ObjectString_Juridical_GLNCode_To.ValueData)  END):: TVarChar              AS GLN_car
-           , COALESCE(ObjectString_GLNCode_From.ValueData, ObjectString_Juridical_GLNCode_From.ValueData)  AS GLN_from
+                  
+                  
+           , zfCalc_GLNCodeCorporate (inGLNCode                  := ObjectString_GLNCode_To.ValueData
+                                    , inGLNCodeCorporate_partner := ObjectString_GLNCodeCorporate_To.ValueData
+                                    , inGLNCodeCorporate_retail  := ObjectString_Retail_GLNCodeCorporate_To.ValueData
+                                    , inGLNCodeCorporate_main    := ObjectString_Juridical_GLNCode_From.ValueData
+                                     )  AS GLN_from
+                                               
+           --, COALESCE(ObjectString_GLNCode_From.ValueData, ObjectString_Juridical_GLNCode_From.ValueData)  AS GLN_from
            , COALESCE(ObjectString_Unit_GLN_from.ValueData, ObjectString_GLNCode_From.ValueData, ObjectString_Juridical_GLNCode_From.ValueData)  AS GLN_Unit
            /*, zfCalc_GLNCodeRetail (inGLNCode               := ObjectString_GLNCode_To.ValueData
                                  , inGLNCodeRetail_partner := ObjectString_GLNCodeRetail_To.ValueData
@@ -478,6 +486,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Retail_GLNCode_To
                                    ON ObjectString_Retail_GLNCode_To.ObjectId = ObjectLink_Juridical_Retail_To.ChildObjectId
                                   AND ObjectString_Retail_GLNCode_To.DescId = zc_ObjectString_Retail_GLNCode()
+            LEFT JOIN ObjectString AS ObjectString_Retail_GLNCodeCorporate_To
+                                   ON ObjectString_Retail_GLNCodeCorporate_To.ObjectId = ObjectLink_Juridical_Retail_To.ChildObjectId
+                                  AND ObjectString_Retail_GLNCodeCorporate_To.DescId = zc_ObjectString_Retail_GLNCodeCorporate()
 
 
             LEFT JOIN ObjectString AS ObjectString_GLNCode_From
@@ -491,6 +502,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_GLNCodeJuridical_To
                                    ON ObjectString_GLNCodeJuridical_To.ObjectId = View_Partner_Address.PartnerId
                                   AND ObjectString_GLNCodeJuridical_To.DescId = zc_ObjectString_Partner_GLNCodeJuridical()
+                                  AND COALESCE(ObjectString_GLNCodeJuridical_To.ValueData, '') <> ''
+            LEFT JOIN ObjectString AS ObjectString_GLNCodeCorporate_To
+                                   ON ObjectString_GLNCodeCorporate_To.ObjectId = View_Partner_Address.PartnerId
+                                  AND ObjectString_GLNCodeCorporate_To.DescId = zc_ObjectString_Partner_GLNCodeCorporate()
                                   AND COALESCE(ObjectString_GLNCodeJuridical_To.ValueData, '') <> ''
             LEFT JOIN ObjectString AS ObjectString_GLNCodeRetail_To
                                    ON ObjectString_GLNCodeRetail_To.ObjectId = View_Partner_Address.PartnerId
@@ -637,5 +652,4 @@ $BODY$
 -- тест
 -- 
 
-SELECT * FROM gpSelect_Movement_TransportGoods_EDIN (inStartDate:= '31.01.2022', inEndDate:= '31.01.2022', inIsErased:=false, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin()) 
-where isSend_eTTN = True
+SELECT * FROM gpSelect_Movement_TransportGoods_EDIN (inStartDate:= '01.07.2023', inEndDate:= '20.07.2023', inIsErased:=false, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin()) 
