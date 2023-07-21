@@ -20,6 +20,11 @@ RETURNS TABLE (Id Integer, ItemName TVarChar, GoodsId Integer, GoodsCode Integer
              , InvNumber TVarChar, SerialNumber TVarChar, PassportNumber TVarChar
              , PeriodUse TFloat 
              , StorageId Integer, StorageName TVarChar
+             , UnitName_Storage     TVarChar
+             , BranchName_Storage   TVarChar
+             , AreaUnitName_Storage TVarChar
+             , Room_Storage         TVarChar
+             , Address_Storage      TVarChar
               )
 AS
 $BODY$
@@ -108,7 +113,12 @@ BEGIN
            , ObjectFloat_PeriodUse.ValueData  AS PeriodUse
 
            , Object_Storage.Id                  AS StorageId
-           , Object_Storage.ValueData ::TVarChar AS StorageName
+           , Object_Storage.ValueData ::TVarChar AS StorageName 
+           , Object_Unit_Storage.ValueData            AS UnitName_Storage
+           , Object_Branch_Storage.ValueData          AS BranchName_Storage
+           , Object_AreaUnit_Storage.ValueData        AS AreaUnitName_Storage
+           , ObjectString_Storage_Room.ValueData      AS Room_Storage
+           , ObjectString_Storage_Address.ValueData   AS Address_Storage
        FROM tmpMI_Goods
             LEFT JOIN tmpRemains ON tmpRemains.MovementItemId = tmpMI_Goods.MovementItemId
 
@@ -116,6 +126,28 @@ BEGIN
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
              
             LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = tmpMI_Goods.StorageId
+
+            LEFT JOIN ObjectString AS ObjectString_Storage_Address
+                                   ON ObjectString_Storage_Address.ObjectId = Object_Storage.Id 
+                                  AND ObjectString_Storage_Address.DescId = zc_ObjectString_Storage_Address()
+            LEFT JOIN ObjectString AS ObjectString_Storage_Room
+                                   ON ObjectString_Storage_Room.ObjectId = Object_Storage.Id 
+                                  AND ObjectString_Storage_Room.DescId = zc_ObjectString_Storage_Room()
+            LEFT JOIN ObjectLink AS ObjectLink_Storage_AreaUnit
+                                 ON ObjectLink_Storage_AreaUnit.ObjectId = Object_Storage.Id 
+                                AND ObjectLink_Storage_AreaUnit.DescId = zc_ObjectLink_Storage_AreaUnit()
+            LEFT JOIN Object AS Object_AreaUnit_Storage ON Object_AreaUnit_Storage.Id = ObjectLink_Storage_AreaUnit.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Storage_Unit
+                                 ON ObjectLink_Storage_Unit.ObjectId = Object_Storage.Id 
+                                AND ObjectLink_Storage_Unit.DescId = zc_ObjectLink_Storage_Unit()
+            LEFT JOIN Object AS Object_Unit_Storage ON Object_Unit_Storage.Id = ObjectLink_Storage_Unit.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                 ON ObjectLink_Unit_Branch.ObjectId = Object_Unit_Storage.Id
+                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN Object AS Object_Branch_Storage ON Object_Branch_Storage.Id = ObjectLink_Unit_Branch.ChildObjectId
+
             
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI_Goods.GoodsId

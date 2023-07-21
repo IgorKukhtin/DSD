@@ -12,6 +12,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, PartNumber TVarChar
              , OperDate TDateTime, Price TFloat
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , StorageId Integer, StorageName TVarChar
+             , UnitName_Storage     TVarChar
+             , BranchName_Storage   TVarChar
+             , AreaUnitName_Storage TVarChar
+             , Room_Storage         TVarChar
+             , Address_Storage      TVarChar
              , UnitId Integer, UnitName TVarChar 
              , BranchId Integer, BranchName TVarChar
              , PartionModelId Integer, PartionModelName TVarChar 
@@ -125,8 +130,13 @@ BEGIN
            , Object_Goods.ObjectCode         AS GoodsCode
            , Object_Goods.ValueData          AS GoodsName
 
-           , Object_Storage.Id               AS StorageId
-           , Object_Storage.ValueData        AS StorageName
+           , Object_Storage.Id                        AS StorageId
+           , Object_Storage.ValueData                 AS StorageName
+           , Object_Unit_Storage.ValueData            AS UnitName_Storage
+           , Object_Branch_Storage.ValueData          AS BranchName_Storage
+           , Object_AreaUnit_Storage.ValueData        AS AreaUnitName_Storage
+           , ObjectString_Storage_Room.ValueData      AS Room_Storage
+           , ObjectString_Storage_Address.ValueData   AS Address_Storage
 
            , Object_Unit.Id                  AS UnitId
            , Object_Unit.ValueData           AS UnitName
@@ -172,6 +182,28 @@ BEGIN
                                ON ObjectLink_Storage.ObjectId = tmpContainer_Count.PartionGoodsId
                               AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
           LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Storage_Address
+                                 ON ObjectString_Storage_Address.ObjectId = Object_Storage.Id 
+                                AND ObjectString_Storage_Address.DescId = zc_ObjectString_Storage_Address()
+          LEFT JOIN ObjectString AS ObjectString_Storage_Room
+                                 ON ObjectString_Storage_Room.ObjectId = Object_Storage.Id 
+                                AND ObjectString_Storage_Room.DescId = zc_ObjectString_Storage_Room()
+          LEFT JOIN ObjectLink AS ObjectLink_Storage_AreaUnit
+                               ON ObjectLink_Storage_AreaUnit.ObjectId = Object_Storage.Id 
+                              AND ObjectLink_Storage_AreaUnit.DescId = zc_ObjectLink_Storage_AreaUnit()
+          LEFT JOIN Object AS Object_AreaUnit_Storage ON Object_AreaUnit_Storage.Id = ObjectLink_Storage_AreaUnit.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Storage_Unit
+                               ON ObjectLink_Storage_Unit.ObjectId = Object_Storage.Id 
+                              AND ObjectLink_Storage_Unit.DescId = zc_ObjectLink_Storage_Unit()
+          LEFT JOIN Object AS Object_Unit_Storage ON Object_Unit_Storage.Id = ObjectLink_Storage_Unit.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                               ON ObjectLink_Unit_Branch.ObjectId = Object_Unit_Storage.Id
+                              AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+          LEFT JOIN Object AS Object_Branch_Storage ON Object_Branch_Storage.Id = ObjectLink_Unit_Branch.ChildObjectId
+
           -- модель
           LEFT JOIN ObjectLink AS ObjectLink_PartionModel
                                ON ObjectLink_PartionModel.ObjectId = tmpContainer_Count.PartionGoodsId		        
