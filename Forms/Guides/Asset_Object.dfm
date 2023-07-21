@@ -193,6 +193,53 @@ object Asset_ObjectForm: TAsset_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object StorageName: TcxGridDBColumn
+        Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
+        DataBinding.FieldName = 'StorageName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object UnitName_Storage: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+        DataBinding.FieldName = 'UnitName_Storage'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 126
+      end
+      object BranchName_Storage: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083' ('#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+        DataBinding.FieldName = 'BranchName_Storage'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 76
+      end
+      object AreaUnitName_Storage: TcxGridDBColumn
+        Caption = #1059#1095#1072#1089#1090#1086#1082' ('#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+        DataBinding.FieldName = 'AreaUnitName_Storage'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 81
+      end
+      object Room_Storage: TcxGridDBColumn
+        Caption = #1050#1072#1073#1080#1085#1077#1090' ('#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+        DataBinding.FieldName = 'Room_Storage'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 72
+      end
+      object Address_Storage: TcxGridDBColumn
+        Caption = #1040#1076#1088#1077#1089' ('#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+        DataBinding.FieldName = 'Address_Storage'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 127
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -592,6 +639,62 @@ object Asset_ObjectForm: TAsset_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'PeriodUse'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StorageId'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageIName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'StorageName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName_Storage'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitName_Storage'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName_Storage'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BranchName_Storage'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AreaUnitName_Storage'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'AreaUnitName_Storage'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Room_Storage'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Room_Storage'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Address_Storage'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Address_Storage'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

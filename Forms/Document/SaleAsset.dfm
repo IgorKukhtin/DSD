@@ -2,9 +2,8 @@ inherited SaleAssetForm: TSaleAssetForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' ('#1054#1057')>'
   ClientHeight = 668
   ClientWidth = 1079
-  ExplicitLeft = -296
   ExplicitWidth = 1095
-  ExplicitHeight = 703
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -222,6 +221,53 @@ inherited SaleAssetForm: TSaleAssetForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 105
+          end
+          object StorageName: TcxGridDBColumn
+            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1087#1072#1088#1090#1080#1103' '#1058#1052#1062')'
+            DataBinding.FieldName = 'StorageName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object UnitName_Storage: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'UnitName_Storage'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 126
+          end
+          object BranchName_Storage: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083' ('#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'BranchName_Storage'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
+          object AreaUnitName_Storage: TcxGridDBColumn
+            Caption = #1059#1095#1072#1089#1090#1086#1082' ('#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'AreaUnitName_Storage'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
+          object Room_Storage: TcxGridDBColumn
+            Caption = #1050#1072#1073#1080#1085#1077#1090' ('#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'Room_Storage'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 72
+          end
+          object Address_Storage: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089' ('#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'Address_Storage'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 127
           end
         end
       end
@@ -718,7 +764,7 @@ inherited SaleAssetForm: TSaleAssetForm
       GuiParams = <
         item
           Name = 'inStartDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
@@ -726,7 +772,7 @@ inherited SaleAssetForm: TSaleAssetForm
         end
         item
           Name = 'inEndDate'
-          Value = 'NULL'
+          Value = Null
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
@@ -860,7 +906,7 @@ inherited SaleAssetForm: TSaleAssetForm
         end
         item
           Name = 'Release'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Release'
           DataType = ftDateTime
@@ -896,6 +942,60 @@ inherited SaleAssetForm: TSaleAssetForm
           Component = MasterCDS
           ComponentItem = 'PeriodUse'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StorageName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName_Storage'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName_Storage'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName_Storage'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchName_Storage'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AreaUnitName_Storage'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AreaUnitName_Storage'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Room_Storage'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Room_Storage'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Address_Storage'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Address_Storage'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1151,7 +1251,7 @@ inherited SaleAssetForm: TSaleAssetForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1167,7 +1267,7 @@ inherited SaleAssetForm: TSaleAssetForm
       end
       item
         Name = 'OperDatePartner'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDatePartner
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -1359,7 +1459,7 @@ inherited SaleAssetForm: TSaleAssetForm
       end
       item
         Name = 'inOperDatePartner'
-        Value = 'NULL'
+        Value = Null
         Component = edOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
@@ -1532,43 +1632,11 @@ inherited SaleAssetForm: TSaleAssetForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_SaleAsset_SetErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_SaleAsset_SetUnErased'
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = False
-        Component = MasterCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
     Left = 718
     Top = 464
   end
@@ -1672,7 +1740,7 @@ inherited SaleAssetForm: TSaleAssetForm
       end
       item
         Name = 'inAmount'
-        Value = '0'
+        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

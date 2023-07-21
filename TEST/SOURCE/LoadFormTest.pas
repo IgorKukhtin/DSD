@@ -3711,11 +3711,11 @@ end;
 
 procedure TLoadFormTest.LoadAssetFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAsset_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAsset_ObjectForm');
   //exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAsset_DocGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAsset_DocGoodsForm');
 

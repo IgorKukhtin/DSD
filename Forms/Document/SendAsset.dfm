@@ -1074,6 +1074,51 @@ inherited SendAssetForm: TSendAssetForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName_Storage'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName_Storage'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName_Storage'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchName_Storage'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AreaUnitName_Storage'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AreaUnitName_Storage'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Room_Storage'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Room_Storage'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Address_Storage'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Address_Storage'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end

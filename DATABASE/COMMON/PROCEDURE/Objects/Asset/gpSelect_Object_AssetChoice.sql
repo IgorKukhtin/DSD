@@ -12,6 +12,12 @@ RETURNS TABLE (ContainerId Integer, ItemName TVarChar, Id Integer, Code Integer,
              , MakerId Integer, MakerCode Integer, MakerName TVarChar
              , CarId Integer, CarCode Integer, CarName TVarChar, CarModelName TVarChar
              , AssetTypeId Integer, AssetTypeCode Integer, AssetTypeName TVarChar
+             , StorageId Integer, StorageName TVarChar
+             , UnitName_Storage     TVarChar
+             , BranchName_Storage   TVarChar
+             , AreaUnitName_Storage TVarChar
+             , Room_Storage         TVarChar
+             , Address_Storage      TVarChar
              , Release TDateTime
              , InvNumber TVarChar, FullName TVarChar, SerialNumber TVarChar, PassportNumber TVarChar, Comment TVarChar
              , PeriodUse TFloat, Production TFloat, KW TFloat
@@ -36,6 +42,7 @@ BEGIN
    , tmpRemains AS (SELECT Container.Id           AS ContainerId
                          , Container.DescId       AS ContainerDescId
                          , tmpAsset.AssetId       AS AssetId
+                         , CLO_PartionGoods.ObjectId AS PartionGoodsId
                          , SUM (Container.Amount) AS Amount
                     FROM tmpAsset
                          INNER JOIN Container ON Container.ObjectId = tmpAsset.AssetId
@@ -47,13 +54,15 @@ BEGIN
                                                        AND (CLO_Unit.ObjectId = inUnitId OR inUnitId = 0)
                          LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = Container.Id
                                                                      AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
-                         LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
-                                                                          AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                         LEFT JOIN ContainerLinkObject AS CLO_PartionGoods 
+                                                       ON CLO_PartionGoods.ContainerId = Container.Id
+                                                      AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                          LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
                     WHERE (Object_PartionGoods.ObjectCode > 0 OR CLO_AssetTo.ObjectId > 0 OR tmpAsset.DescId = zc_Object_Asset())
                     GROUP BY Container.Id
                            , Container.DescId
                            , tmpAsset.AssetId
+                           , CLO_PartionGoods.ObjectId
                    )
 
     SELECT tmpRemains.ContainerId :: Integer
@@ -82,6 +91,14 @@ BEGIN
          , Object_AssetType.Id             AS AssetTypeId
          , Object_AssetType.ObjectCode     AS AssetTypeCode
          , Object_AssetType.ValueData      AS AssetTypeName
+
+         , Object_Storage.Id                        AS StorageId
+         , Object_Storage.ValueData ::TVarChar      AS StorageName 
+         , Object_Unit_Storage.ValueData            AS UnitName_Storage
+         , Object_Branch_Storage.ValueData          AS BranchName_Storage
+         , Object_AreaUnit_Storage.ValueData        AS AreaUnitName_Storage
+         , ObjectString_Storage_Room.ValueData      AS Room_Storage
+         , ObjectString_Storage_Address.ValueData   AS Address_Storage
 
          , COALESCE (ObjectDate_Release.ValueData, CAST (CURRENT_DATE as TDateTime)) AS Release
          
@@ -178,6 +195,33 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_DocGoods
                                   ON ObjectBoolean_DocGoods.ObjectId = Object_Asset.Id
                                  AND ObjectBoolean_DocGoods.DescId = zc_ObjectBoolean_Asset_DocGoods()
+          --
+          LEFT JOIN ObjectLink AS ObjectLink_Storage
+                               ON ObjectLink_Storage.ObjectId = tmpRemains.PartionGoodsId
+                              AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+          LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Storage_Address
+                                 ON ObjectString_Storage_Address.ObjectId = Object_Storage.Id 
+                                AND ObjectString_Storage_Address.DescId = zc_ObjectString_Storage_Address()
+          LEFT JOIN ObjectString AS ObjectString_Storage_Room
+                                 ON ObjectString_Storage_Room.ObjectId = Object_Storage.Id 
+                                AND ObjectString_Storage_Room.DescId = zc_ObjectString_Storage_Room()
+          LEFT JOIN ObjectLink AS ObjectLink_Storage_AreaUnit
+                               ON ObjectLink_Storage_AreaUnit.ObjectId = Object_Storage.Id 
+                              AND ObjectLink_Storage_AreaUnit.DescId = zc_ObjectLink_Storage_AreaUnit()
+          LEFT JOIN Object AS Object_AreaUnit_Storage ON Object_AreaUnit_Storage.Id = ObjectLink_Storage_AreaUnit.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Storage_Unit
+                               ON ObjectLink_Storage_Unit.ObjectId = Object_Storage.Id 
+                              AND ObjectLink_Storage_Unit.DescId = zc_ObjectLink_Storage_Unit()
+          LEFT JOIN Object AS Object_Unit_Storage ON Object_Unit_Storage.Id = ObjectLink_Storage_Unit.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                               ON ObjectLink_Unit_Branch.ObjectId = Object_Unit_Storage.Id
+                              AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+          LEFT JOIN Object AS Object_Branch_Storage ON Object_Branch_Storage.Id = ObjectLink_Unit_Branch.ChildObjectId
+
        ;  
 
 END;

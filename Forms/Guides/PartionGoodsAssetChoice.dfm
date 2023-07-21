@@ -105,14 +105,6 @@ inherited PartionGoodsAssetChoiceForm: TPartionGoodsAssetChoiceForm
             HeaderGlyphAlignmentVert = vaTop
             Width = 60
           end
-          object StorageName: TcxGridDBColumn
-            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
-            DataBinding.FieldName = 'StorageName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -124,8 +116,55 @@ inherited PartionGoodsAssetChoiceForm: TPartionGoodsAssetChoiceForm
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaBottom
+            HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object StorageName: TcxGridDBColumn
+            Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'StorageName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object UnitName_Storage: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'UnitName_Storage'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 126
+          end
+          object BranchName_Storage: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083' ('#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'BranchName_Storage'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
+          object AreaUnitName_Storage: TcxGridDBColumn
+            Caption = #1059#1095#1072#1089#1090#1086#1082' ('#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'AreaUnitName_Storage'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
+          object Room_Storage: TcxGridDBColumn
+            Caption = #1050#1072#1073#1080#1085#1077#1090' ('#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'Room_Storage'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 72
+          end
+          object Address_Storage: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089' ('#1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'Address_Storage'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 127
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -272,6 +311,14 @@ inherited PartionGoodsAssetChoiceForm: TPartionGoodsAssetChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'StorageId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'StorageId'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'StorageName'
           Value = Null
           Component = MasterCDS
@@ -356,6 +403,46 @@ inherited PartionGoodsAssetChoiceForm: TPartionGoodsAssetChoiceForm
           ComponentItem = 'PartionModelName'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName_Storage'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName_Storage'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName_Storage'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchName_Storage'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AreaUnitName_Storage'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AreaUnitName_Storage'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Room_Storage'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Room_Storage'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Address_Storage'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Address_Storage'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
     end
     object actShowAll: TBooleanStoredProcAction
@@ -416,8 +503,8 @@ inherited PartionGoodsAssetChoiceForm: TPartionGoodsAssetChoiceForm
     Top = 82
   end
   inherited BarManager: TdxBarManager
-    Left = 168
-    Top = 82
+    Left = 152
+    Top = 66
     DockControlHeights = (
       0
       0
@@ -466,6 +553,10 @@ inherited PartionGoodsAssetChoiceForm: TPartionGoodsAssetChoiceForm
       Action = actShowAll
       Category = 0
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 600
+    Top = 120
   end
   inherited PopupMenu: TPopupMenu
     Left = 160
@@ -578,7 +669,7 @@ inherited PartionGoodsAssetChoiceForm: TPartionGoodsAssetChoiceForm
       item
         Component = GoodsGuides
       end>
-    Left = 512
-    Top = 328
+    Left = 712
+    Top = 120
   end
 end

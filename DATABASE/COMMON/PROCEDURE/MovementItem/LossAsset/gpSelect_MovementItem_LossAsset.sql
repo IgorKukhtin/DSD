@@ -112,8 +112,8 @@ BEGIN
            , ObjectString_PassportNumber.ValueData AS PassportNumber
            , ObjectFloat_PeriodUse.ValueData  AS PeriodUse
 
-           , Object_Storage.Id                  AS StorageId
-           , Object_Storage.ValueData ::TVarChar AS StorageName 
+           , Object_Storage.Id                        AS StorageId
+           , Object_Storage.ValueData ::TVarChar      AS StorageName 
            , Object_Unit_Storage.ValueData            AS UnitName_Storage
            , Object_Branch_Storage.ValueData          AS BranchName_Storage
            , Object_AreaUnit_Storage.ValueData        AS AreaUnitName_Storage

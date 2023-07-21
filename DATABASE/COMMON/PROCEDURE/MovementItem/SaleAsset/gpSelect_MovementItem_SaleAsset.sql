@@ -20,7 +20,13 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , CarId Integer, CarCode Integer, CarName TVarChar, CarModelName TVarChar
              , Release TDateTime
              , InvNumber TVarChar, SerialNumber TVarChar, PassportNumber TVarChar
-             , PeriodUse TFloat
+             , PeriodUse TFloat 
+             , StorageId Integer, StorageName TVarChar
+             , UnitName_Storage     TVarChar
+             , BranchName_Storage   TVarChar
+             , AreaUnitName_Storage TVarChar
+             , Room_Storage         TVarChar
+             , Address_Storage      TVarChar
               )
 AS
 $BODY$
@@ -54,9 +60,14 @@ BEGIN
 
                                  LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                                              ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
+                                                            AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId() 
                                    )
 
+          , tmpPartionGoods AS (SELECT CLO_PartionGoods.*
+                                FROM ContainerLinkObject AS CLO_PartionGoods
+                                WHERE CLO_PartionGoods.ContainerId IN (SELECT DISTINCT tmpMI_Goods.ContainerId FROM tmpMI_Goods)
+                                  AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                )
           , tmpRemains AS (SELECT tmpMI_Goods.MovementItemId
                                 , SUM (Container.Amount) AS Amount
                            FROM tmpMI_Goods
@@ -105,6 +116,14 @@ BEGIN
            , ObjectString_SerialNumber.ValueData   AS SerialNumber
            , ObjectString_PassportNumber.ValueData AS PassportNumber
            , ObjectFloat_PeriodUse.ValueData       AS PeriodUse
+
+           , Object_Storage.Id                        AS StorageId
+           , Object_Storage.ValueData ::TVarChar      AS StorageName 
+           , Object_Unit_Storage.ValueData            AS UnitName_Storage
+           , Object_Branch_Storage.ValueData          AS BranchName_Storage
+           , Object_AreaUnit_Storage.ValueData        AS AreaUnitName_Storage
+           , ObjectString_Storage_Room.ValueData      AS Room_Storage
+           , ObjectString_Storage_Address.ValueData   AS Address_Storage
 
        FROM tmpMI_Goods
             LEFT JOIN tmpRemains ON tmpRemains.MovementItemId = tmpMI_Goods.MovementItemId
@@ -163,6 +182,37 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = tmpMI_Goods.MovementItemId
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+            LEFT JOIN tmpPartionGoods AS CLO_PartionGoods
+                                      ON CLO_PartionGoods.ContainerId = tmpMI_Goods.ContainerId
+                                     AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                                          
+            LEFT JOIN ObjectLink AS ObjectLink_Storage
+                                 ON ObjectLink_Storage.ObjectId = CLO_PartionGoods.ObjectId
+                                AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
+            LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Storage_Address
+                                   ON ObjectString_Storage_Address.ObjectId = Object_Storage.Id 
+                                  AND ObjectString_Storage_Address.DescId = zc_ObjectString_Storage_Address()
+            LEFT JOIN ObjectString AS ObjectString_Storage_Room
+                                   ON ObjectString_Storage_Room.ObjectId = Object_Storage.Id 
+                                  AND ObjectString_Storage_Room.DescId = zc_ObjectString_Storage_Room()
+            LEFT JOIN ObjectLink AS ObjectLink_Storage_AreaUnit
+                                 ON ObjectLink_Storage_AreaUnit.ObjectId = Object_Storage.Id 
+                                AND ObjectLink_Storage_AreaUnit.DescId = zc_ObjectLink_Storage_AreaUnit()
+            LEFT JOIN Object AS Object_AreaUnit_Storage ON Object_AreaUnit_Storage.Id = ObjectLink_Storage_AreaUnit.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Storage_Unit
+                                 ON ObjectLink_Storage_Unit.ObjectId = Object_Storage.Id 
+                                AND ObjectLink_Storage_Unit.DescId = zc_ObjectLink_Storage_Unit()
+            LEFT JOIN Object AS Object_Unit_Storage ON Object_Unit_Storage.Id = ObjectLink_Storage_Unit.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                 ON ObjectLink_Unit_Branch.ObjectId = Object_Unit_Storage.Id
+                                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN Object AS Object_Branch_Storage ON Object_Branch_Storage.Id = ObjectLink_Unit_Branch.ChildObjectId
+
             ;
 
 END;
@@ -173,6 +223,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.07.23         *
  18.06.20         *
 */
 
