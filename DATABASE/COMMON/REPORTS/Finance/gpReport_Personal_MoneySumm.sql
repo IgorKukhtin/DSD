@@ -17,24 +17,19 @@ CREATE OR REPLACE FUNCTION gpReport_Personal_MoneySumm(
     IN inPersonalId       Integer,    -- Фио сотрудника
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, MovementDescName TVarChar
+RETURNS TABLE (Id Integer, MovementItemId Integer, InvNumber TVarChar, MovementDescName TVarChar
              , OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , CashId Integer, CashName TVarChar
              
              , MoneySumm_inf   TFloat
-              
-             , Amount TFloat 
+             , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
+             , PersonalServiceListCode Integer, PersonalServiceListName TVarChar
+             , UnitCode Integer, UnitName TVarChar
+             , PositionCode Integer, PositionName TVarChar
+             , BranchName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , AccountName TVarChar
              , ServiceDate TDateTime
-             , Comment TVarChar
-             , BankAccountId Integer, BankAccountName TVarChar
-             , MemberId Integer, MemberName TVarChar
-             , InvNumber_Service TVarChar, OperDate_Service TDateTime
-             , ServiceDate_Service TDateTime
-             , Comment_Service TVarChar
-             , PersonalServiceListName TVarChar
-             , TotalSummToPay_Service TFloat
-             , InfoMoneyGroupName TVarChar
-             , InfoMoneyDestinationName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
               )
 AS
 $BODY$
@@ -89,6 +84,14 @@ BEGIN
                      )
 
    , tmpContainer AS (SELECT CLO_Personal.ContainerId         AS ContainerId
+                           , CLO_Personal.ObjectId            AS PersonalId
+                           , CLO_InfoMoney.ObjectId           AS InfoMoneyId
+                           , CLO_Unit.ObjectId                AS UnitId
+                           , CLO_Position.ObjectId            AS PositionId
+                           , CLO_PersonalServiceList.ObjectId AS PersonalServiceListId
+                           , CLO_Branch.ObjectId              AS BranchId 
+                           , Container.ObjectId               AS AccountId
+                           , ObjectDate_Service.ValueData     AS ServiceDate
                       FROM ContainerLinkObject AS CLO_Personal
                            INNER JOIN Container ON Container.Id = CLO_Personal.ContainerId AND Container.DescId = zc_Container_Summ()
                            INNER JOIN ContainerLinkObject AS CLO_InfoMoney
@@ -127,121 +130,89 @@ BEGIN
                         FROM tmpContainer
                              INNER JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                             AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate 
+                                                             AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                        WHERE MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount())  
                        )
 
    , tmpMovement AS (SELECT MIContainer.MovementId
-                          , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySumm
+                          , MIContainer.MovementDescId
+                          , MIContainer.MovementItemId
+                          , tmpContainer.PersonalId
+                          , tmpContainer.InfoMoneyId
+                          , tmpContainer.AccountId
+                          , tmpContainer.UnitId
+                          , tmpContainer.PositionId
+                          , tmpContainer.PersonalServiceListId
+                          , tmpContainer.BranchId
+                          , tmpContainer.ServiceDate
+                          , SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN MIContainer.Amount ELSE 0 END) AS MoneySumm
                      FROM tmpContainer
                           LEFT JOIN tmpMIContainer AS MIContainer
                                                    ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                   AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                      GROUP BY MIContainer.MovementId
-                     HAVING 0 <> SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END)
+                            , MIContainer.MovementDescId
+                            , MIContainer.MovementItemId
+                            , tmpContainer.PersonalId
+                            , tmpContainer.InfoMoneyId
+                            , tmpContainer.AccountId
+                            , tmpContainer.UnitId
+                            , tmpContainer.PositionId
+                            , tmpContainer.PersonalServiceListId
+                            , tmpContainer.BranchId
+                            , tmpContainer.ServiceDate
+                     HAVING 0 <> SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN MIContainer.Amount ELSE 0 END)
                     )
 
    , tmpInfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
 
      SELECT
-             Movement.Id                                AS Id
-           , Movement.InvNumber                         AS InvNumber   
-           , MovementDesc.ItemName     ::TVarChar       AS MovementDescName
-           , Movement.OperDate                          AS OperDate
-           , Object_Status.ObjectCode                   AS StatusCode
-           , Object_Status.ValueData                    AS StatusName
-          
-           , tmpMovement.MoneySumm   ::TFloat AS MoneySumm_inf
+             Movement.Id                          AS Id
+           , tmpMovement.MovementItemId           AS MovementItemId
+           , Movement.InvNumber                   AS InvNumber   
+           , MovementDesc.ItemName     ::TVarChar AS MovementDescName
+           , Movement.OperDate                    AS OperDate
+           , Object_Status.ObjectCode             AS StatusCode
+           , Object_Status.ValueData              AS StatusName
+           , Object_Cash.Id                       AS CashId
+           , Object_Cash.ValueData                AS CashName
 
-           , (-1 * MovementItem.Amount) :: TFloat AS Amount
-  
-           , MIDate_ServiceDate.ValueData      AS ServiceDate
-           , MIString_Comment.ValueData        AS Comment
-           , Object_Cash.Id                    AS CashId
-           , Object_Cash.ValueData             AS CashName
+           , tmpMovement.MoneySumm                   ::TFloat AS MoneySumm_inf
 
-           , Object_Member.Id                  AS MemberId
-           , Object_Member.ValueData           AS MemberName
+           , Object_Personal.Id                               AS PersonalId
+           , Object_Personal.ObjectCode                       AS PersonalCode
+           , Object_Personal.ValueData                        AS PersonalName
+           , Object_PersonalServiceList.ObjectCode            AS PersonalServiceListCode
+           , Object_PersonalServiceList.ValueData             AS PersonalServiceListName
+           , Object_Unit.ObjectCode                           AS UnitCode
+           , Object_Unit.ValueData                            AS UnitName
+           , Object_Position.ObjectCode                       AS PositionCode
+           , Object_Position.ValueData                        AS PositionName
+           , Object_Branch.ValueData                          AS BranchName
+           , Object_InfoMoney_View.InfoMoneyGroupName         AS InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName   AS InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyCode              AS InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyName              AS InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all          AS InfoMoneyName_all
+           , Object_Account_View.AccountName_all              AS AccountName
+           , tmpMovement.ServiceDate                          AS ServiceDate
 
-           , Movement_PersonalService.InvNumber         AS InvNumber_Service
-           , Movement_PersonalService.OperDate          AS OperDate_Service
-           , MovementDate_ServiceDate_Service.ValueData AS ServiceDate_Service
-           , MovementString_Comment_Service.ValueData   AS Comment_Service
-           , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
-           , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0)
-            - COALESCE (MovementFloat_TotalSummCard.ValueData, 0)
-            - COALESCE (MovementFloat_TotalSummCardSecond.ValueData, 0)
-            - COALESCE (MovementFloat_TotalSummCardSecondCash.ValueData, 0)
-             ) :: TFloat AS TotalSummToPay_Service
-
-           , View_InfoMoney.InfoMoneyGroupName
-           , View_InfoMoney.InfoMoneyDestinationName
-           , View_InfoMoney.InfoMoneyCode
-           , View_InfoMoney.InfoMoneyName
-           , View_InfoMoney.InfoMoneyName_all           
-           
-        
      FROM tmpMovement
           LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
           LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
  
-          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
-                                 AND MovementItem.DescId = zc_MI_Master()
-                                 --AND (MovementItem.ObjectId = inCashId OR COALESCE (inCashId, 0) = 0)
+          LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = tmpMovement.PersonalServiceListId
+          LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpMovement.PersonalId
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMovement.UnitId
+          LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpMovement.PositionId
+          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpMovement.BranchId
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpMovement.InfoMoneyId
+          LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpMovement.AccountId
+
+          LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
+                                AND MovementItem.DescId = zc_MI_Master()
           LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
-
-          LEFT JOIN MovementItemDate AS MIDate_ServiceDate
-                                     ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
-                                    AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
-                                                                         
-          LEFT JOIN MovementItemString AS MIString_Comment
-                                       ON MIString_Comment.MovementItemId = MovementItem.Id
-                                      AND MIString_Comment.DescId = zc_MIString_Comment()
-      
-          LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
-                                           ON MILinkObject_Member.MovementItemId = MovementItem.Id
-                                          AND MILinkObject_Member.DescId = zc_MILinkObject_Member()
-          LEFT JOIN Object AS Object_Member ON Object_Member.Id = MILinkObject_Member.ObjectId
-
-          LEFT JOIN Movement AS Movement_PersonalService
-                             ON Movement_PersonalService.Id = Movement.ParentId
-                            AND Movement_PersonalService.StatusId = zc_Enum_Status_Complete()
-
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                                       ON MovementLinkObject_PersonalServiceList.MovementId = Movement_PersonalService.Id
-                                      AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
-          LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
-
-          LEFT JOIN MovementFloat AS MovementFloat_TotalSummToPay
-                                  ON MovementFloat_TotalSummToPay.MovementId =  Movement_PersonalService.Id
-                                 AND MovementFloat_TotalSummToPay.DescId = zc_MovementFloat_TotalSummToPay()
-          LEFT JOIN MovementFloat AS MovementFloat_TotalSummCard
-                                  ON MovementFloat_TotalSummCard.MovementId =  Movement_PersonalService.Id
-                                 AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()
-          LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecond
-                                  ON MovementFloat_TotalSummCardSecond.MovementId =  Movement_PersonalService.Id
-                                 AND MovementFloat_TotalSummCardSecond.DescId = zc_MovementFloat_TotalSummCardSecond()
-          LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecondCash
-                                  ON MovementFloat_TotalSummCardSecondCash.MovementId = Movement_PersonalService.Id
-                                 AND MovementFloat_TotalSummCardSecondCash.DescId = zc_MovementFloat_TotalSummCardSecondCash()
-                                 
-          LEFT JOIN MovementDate AS MovementDate_ServiceDate_Service
-                                 ON MovementDate_ServiceDate_Service.MovementId = Movement_PersonalService.Id
-                                AND MovementDate_ServiceDate_Service.DescId = zc_MovementDate_ServiceDate()
-          LEFT JOIN MovementString AS MovementString_Comment_Service
-                                   ON MovementString_Comment_Service.MovementId = Movement_PersonalService.Id
-                                  AND MovementString_Comment_Service.DescId = zc_MovementString_Comment()
-
-          LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                           ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                          AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-          LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
-
-
-
-
-
-
      ;
 
 
