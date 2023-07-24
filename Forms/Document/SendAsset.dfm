@@ -258,6 +258,7 @@ inherited SendAssetForm: TSendAssetForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
@@ -544,6 +545,30 @@ inherited SendAssetForm: TSendAssetForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'StorageName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchName_Storage'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AreaUnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AreaUnitName_Storage'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Room'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Room_Storage'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
