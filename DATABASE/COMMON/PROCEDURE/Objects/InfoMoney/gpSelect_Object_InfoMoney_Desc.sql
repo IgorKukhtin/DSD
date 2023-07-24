@@ -53,12 +53,14 @@ BEGIN
                                                                 AND ContainerLinkObject_InfoMoney.ObjectId > 0
                                   INNER JOIN Container ON Container.Id = ContainerLinkObject.ContainerId
                                                       AND Container.DescId = zc_Container_Summ()
+                             WHERE vbUserId <> 14599 -- Коротченко Т.Н.
                              GROUP BY ContainerLinkObject_InfoMoney.ObjectId
+
                             UNION
                              SELECT Object_InfoMoney_View.InfoMoneyId
                              FROM Object_InfoMoney_View
-                             WHERE Object_InfoMoney_View.InfoMoneyGroupId = vbInfoMoneyGroupId
-                               AND Object_InfoMoney_View.InfoMoneyCode <> 30401 -- Доходы + услуги предоставленные
+                             WHERE Object_InfoMoney_View.InfoMoneyCode <> 30401 -- Доходы + услуги предоставленные
+                                OR vbUserId = 14599 -- Коротченко Т.Н.
                             )
           , tmpLevel AS (SELECT InfoMoneyId FROM lfSelect_Object_InfoMoney_Level (vbUserId))
           , tmpInfoMoney AS (SELECT * FROM gpSelect_Object_InfoMoney (inSession))

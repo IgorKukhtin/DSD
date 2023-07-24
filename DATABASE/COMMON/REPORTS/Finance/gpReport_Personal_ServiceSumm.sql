@@ -56,6 +56,7 @@ BEGIN
 
      -- !!! права пользователей !!!
      IF EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId)
+        AND vbUserId <> 14599 -- Коротченко Т.Н.
      THEN
          inBranchId:= (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId);
      END IF;
