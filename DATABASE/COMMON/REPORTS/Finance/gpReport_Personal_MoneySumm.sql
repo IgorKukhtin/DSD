@@ -55,6 +55,7 @@ BEGIN
 
      -- !!! права пользователей !!!
      IF EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId)
+        AND vbUserId <> 14599 -- Коротченко Т.Н.
      THEN
          inBranchId:= (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId);
      END IF;
@@ -175,7 +176,7 @@ BEGIN
            , Object_Status.ObjectCode             AS StatusCode
            , Object_Status.ValueData              AS StatusName
            , Object_Cash.Id                       AS CashId
-           , Object_Cash.ValueData                AS CashName
+           , (Object_Cash.ValueData || ' * ' || Object_Currency.ValueData) :: TVarChar AS CashName
 
            , tmpMovement.MoneySumm                   ::TFloat AS MoneySumm_inf
 
@@ -213,6 +214,10 @@ BEGIN
           LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                 AND MovementItem.DescId = zc_MI_Master()
           LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                           ON MILinkObject_Currency.MovementItemId = tmpMovement.MovementItemId
+                                          AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
+          LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = COALESCE (MILinkObject_Currency.ObjectId, zc_Enum_Currency_Basis())
      ;
 
 
@@ -231,5 +236,3 @@ $BODY$
 -- 
 -- select * from gpReport_Personal_MoneySumm (inStartDate := ('01.06.2023')::TDateTime , inEndDate := ('30.06.2023')::TDateTime , inServiceDate := ('27.06.2023')::TDateTime , inisServiceDate := 'TRUE' , inisMember := 'False', inAccountId := 0 , inBranchId := 301310 , inInfoMoneyId := 273733 , inInfoMoneyGroupId := 0 , inInfoMoneyDestinationId := 0 , inPersonalServiceListId := 0 , inPersonalId := 633146 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
 -- select * from gpReport_Personal_MoneySumm(inStartDate := ('01.06.2023')::TDateTime , inEndDate := ('30.06.2023')::TDateTime , inServiceDate := ('27.06.2023')::TDateTime , inisServiceDate := 'False' , inisMember := 'False' , inAccountId := 0 , inBranchId := 8374 , inInfoMoneyId := 273733 , inInfoMoneyGroupId := 0 , inInfoMoneyDestinationId := 0 , inPersonalServiceListId := 0 , inPersonalId := 9224419 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
-
---select * from object where id = 633146

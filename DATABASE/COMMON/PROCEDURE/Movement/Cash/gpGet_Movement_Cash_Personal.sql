@@ -82,7 +82,8 @@ BEGIN
            , MIString_Comment.ValueData        AS Comment
 
            , Object_Cash.Id                    AS CashId
-           , Object_Cash.ValueData             AS CashName
+           , (Object_Cash.ValueData || CASE WHEN Object_Currency.Id <> zc_Enum_Currency_Basis() THEN ' * ' || Object_Currency.ValueData ELSE '' END) :: TVarChar AS CashName
+
            , Object_PersonalServiceList.ValueData AS PersonalServiceListName
            , Object_PersonalServiceList.Id     AS PersonalServiceListId
 
@@ -105,20 +106,29 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
+                                             ON MILinkObject_Currency.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
 
             LEFT JOIN Movement AS MovementPersonalService 
                                ON MovementPersonalService.Id = Movement.ParentId
                               AND MovementPersonalService.DescId IN (zc_Movement_PersonalService(), zc_Movement_PersonalTransport())
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                                         ON MovementLinkObject_PersonalServiceList.MovementId = MovementPersonalService.Id
+                                         ON MovementLinkObject_PersonalServiceList.MovementId = COALESCE (MovementPersonalService.Id, Movement.Id)
                                         AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
-            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = COALESCE (MovementLinkObject_PersonalServiceList.ObjectId, MILinkObject_MoneyPlace.ObjectId)
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
                                              ON MILinkObject_Member.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Member.DescId = zc_MILinkObject_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = MILinkObject_Member.ObjectId
+
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
@@ -132,7 +142,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpGet_Movement_Cash_Personal (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

@@ -100,31 +100,6 @@ BEGIN
     END IF;
 
 
-    -- Найти Id Подразд. партия
-    vbUnitId:= (SELECT Object.Id
-                FROM Object
-                WHERE TRIM (Object.ValueData) ILIKE TRIM (inUnitName)
-                  AND Object.DescId IN (zc_Object_Unit())
-                LIMIT 1 --
-               );
-
-    -- вторая попытка
-    IF COALESCE (vbUnitId, 0) = 0
-    THEN
-        vbUnitId:= (SELECT Object.Id
-                    FROM Object
-                    WHERE TRIM (zfCalc_Text_replace (Object.ValueData, CHR (39), '`')) ILIKE TRIM (inUnitName)
-                      AND Object.DescId IN (zc_Object_Unit())
-                    LIMIT 1 --
-                   );
-    END IF;
-    -- Если нет такого элемента, то выдать сообщение об ошибке и прервать выполнение загрузки
-    IF COALESCE (vbUnitId, 0) = 0
-    THEN
-        RAISE EXCEPTION 'Ошибка.Значение Подразделение (партия ТМЦ) = <%> не найдено.%Загрузка остановлена.', TRIM (inUnitName), CHR(13);
-    END IF;
-
-
     -- Найти Id OC расход
     vbGoodsId_child:= (SELECT Object.Id
                        FROM Object
@@ -168,10 +143,38 @@ BEGIN
                  LIMIT 1 --
                 );
  
-    -- Если такого товара нет, то выдать сообщение об ошибке и прервать выполнение загрузки
+    -- Если такого ОС нет, то выдать сообщение об ошибке и прервать выполнение загрузки
     IF COALESCE (vbGoodsId, 0) = 0
     THEN
         RAISE EXCEPTION 'Ошибка. ОС % с кодом <%> не найдено в справочнике.%Загрузка остановлена.', TRIM (inGoodsName), inGoodsCode, chr(13);
+    END IF;
+
+    -- Не должно меняться значение "Инвентарный номер"
+    IF NOT EXISTS (SELECT 1 FROM ObjectString AS OS WHERE OS.ObjectId = vbGoodsId AND OS.DescId = zc_ObjectString_Asset_InvNumber() AND OS.ValueData = inInvNumber)
+       AND EXISTS (SELECT 1 FROM ObjectString AS OS WHERE OS.ObjectId = vbGoodsId AND OS.DescId = zc_ObjectString_Asset_InvNumber() AND OS.ValueData <> '')
+    THEN
+        RAISE EXCEPTION 'Ошибка.Для ОС <%> с кодом <%> %нельзя изменить Инвентарный номер с <%> на <%>.%Загрузка остановлена.'
+                      , TRIM (inGoodsName)
+                      , inGoodsCode
+                      , CHR(13)
+                      , (SELECT OS.ValueData FROM ObjectString AS OS WHERE OS.ObjectId = vbGoodsId AND OS.DescId = zc_ObjectString_Asset_InvNumber())
+                      , inInvNumber
+                      , CHR(13)
+                       ;
+    END IF;
+
+    -- Не должно меняться значение "Дата выпуска"
+    IF NOT EXISTS (SELECT 1 FROM ObjectDate AS OD WHERE OD.ObjectId = vbGoodsId AND OD.DescId = zc_ObjectDate_Asset_Release() AND OD.ValueData = inRelease)
+       AND EXISTS (SELECT 1 FROM ObjectDate AS OD WHERE OD.ObjectId = vbGoodsId AND OD.DescId = zc_ObjectDate_Asset_Release() AND OD.ValueData > zc_DateStart())
+    THEN
+        RAISE EXCEPTION 'Ошибка.Для ОС <%> с кодом <%> %нельзя изменить Дата выпуска с <%> на <%>.%Загрузка остановлена.'
+                      , TRIM (inGoodsName)
+                      , inGoodsCode
+                      , CHR(13)
+                      , (SELECT OD.ValueData FROM ObjectDate AS OD WHERE OD.ObjectId = vbGoodsId AND OD.DescId = zc_ObjectDate_Asset_Release())
+                      , inRelease
+                      , CHR(13)
+                       ;
     END IF;
 
 
@@ -179,23 +182,23 @@ BEGIN
     PERFORM gpInsertUpdate_Object_Asset(ioId             := vbGoodsId                                       ::Integer       -- ключ объекта < Основные средства>
                                       , inCode           := tmp.Code                                        ::Integer       -- Код объекта 
                                       , inName           := tmp.Name                                        ::TVarChar      -- Название объекта 
-                                      , inRelease        := COALESCE (tmp.Release, inRelease)               ::TDateTime     -- Дата выпуска
-                                      , inInvNumber      := COALESCE (tmp.InvNumber, inInvNumber)           ::TVarChar      -- Инвентарный номер
+                                      , inRelease        := CASE WHEN inRelease > zc_DateStart() THEN inRelease ELSE tmp.Release END -- Дата выпуска
+                                      , inInvNumber      := CASE WHEN inInvNumber <> '' THEN inInvNumber ELSE tmp.InvNumber END -- Инвентарный номер
                                       , inFullName       := tmp.FullName                                    ::TVarChar      -- Полное название ОС
-                                      , inSerialNumber   := COALESCE (tmp.SerialNumber, inSerialNumber)     ::TVarChar      -- Заводской номер
-                                      , inPassportNumber := COALESCE (tmp.PassportNumber, inPassportNumber) ::TVarChar      -- Номер паспорта
+                                      , inSerialNumber   := CASE WHEN inSerialNumber <> '' THEN inSerialNumber ELSE tmp.SerialNumber END   -- Заводской номер
+                                      , inPassportNumber := CASE WHEN inPassportNumber <> '' THEN inPassportNumber ELSE tmp.PassportNumber END -- Номер паспорта
                                       , inComment        := tmp.Comment                                     ::TVarChar      -- Примечание
                                       , inAssetGroupId   := tmp.AssetGroupId                                ::Integer       -- ссылка на группу основных средств
                                       , inJuridicalId    := tmp.JuridicalId                                 ::Integer       -- ссылка на Юридические лица
-                                      , inMakerId        := COALESCE (tmp.MakerId, vbMakerId)               ::Integer       -- ссылка на Производитель (ОС)
+                                      , inMakerId        := CASE WHEN vbMakerId > 0 THEN vbMakerId ELSE tmp.MakerId END     -- ссылка на Производитель (ОС)
                                       , inCarId          := tmp.CarId                                       ::Integer       -- ссылка на авто
                                       , inAssetTypeId    := tmp.AssetTypeId                                 ::Integer       -- Тип ОС
                                       , inPeriodUse      := tmp.PeriodUse                                   ::TFloat        -- период эксплуатации
                                       , inProduction     := tmp.Production                                  ::TFloat        -- Производительность, кг
-                                      , inKW             := COALESCE (tmp.Kw, inKW)                         ::TFloat        -- Потребляемая Мощность KW 
+                                      , inKW             := CASE WHEN inKW > 0 THEN inKW ELSE tmp.Kw END    ::TFloat        -- Потребляемая Мощность KW 
                                       , inisDocGoods     := tmp.isDocGoods                                  ::Boolean       -- 
                                       , inSession        := inSession                                       ::TVarChar
-                                      )
+                                       )
     FROM gpSelect_Object_Asset (inSession) AS tmp
     WHERE tmp.Id = vbGoodsId;  
     

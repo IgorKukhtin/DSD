@@ -62,6 +62,7 @@ BEGIN
 
      -- !!! права пользователей !!!
      IF EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId)
+        AND vbUserId <> 14599 -- Коротченко Т.Н.
      THEN
          inBranchId:= (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId);
      END IF;
@@ -162,6 +163,7 @@ BEGIN
                                 WHERE ObjectLink_User_Member.ObjectId = vbUserId
                                   AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
                                )
+            OR vbUserId = 14599 
                    ;
 
      -- Результат
@@ -536,6 +538,7 @@ BEGIN
                                                   , 593890 -- Премии АП
                                                    )
             OR vbUserId <> 2573318 -- Любарський Георгій Олегович
+            OR vbUserId <> 14599 
            )
      ;
 
