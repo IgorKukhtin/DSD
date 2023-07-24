@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION gpReport_Personal_ServiceSumm(
     IN inPersonalId       Integer,    -- Фио сотрудника
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, MovementDescName TVarChar
+RETURNS TABLE (Id Integer, MovementItemId Integer, InvNumber TVarChar, MovementDescName TVarChar
              , OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , ServiceSumm_inf TFloat 
               
@@ -169,7 +169,8 @@ BEGIN
    , tmpInfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
 
      SELECT
-             Movement.Id                                AS Id
+             Movement.Id                                AS Id 
+           , tmpMovement.MovementItemId                 AS MovementItemId  
            , Movement.InvNumber                         AS InvNumber   
            , MovementDesc.ItemName     ::TVarChar       AS MovementDescName
            , Movement.OperDate                          AS OperDate

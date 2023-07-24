@@ -6,7 +6,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 998
-  ExplicitHeight = 603
+  ExplicitHeight = 604
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,8 +23,8 @@ inherited CashJournalUserForm: TCashJournalUserForm
       inherited cxGrid: TcxGrid
         Width = 982
         Height = 508
-        ExplicitLeft = 445
-        ExplicitTop = 16
+        ExplicitLeft = 184
+        ExplicitTop = -3
         ExplicitWidth = 982
         ExplicitHeight = 508
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1036,8 +1036,8 @@ inherited CashJournalUserForm: TCashJournalUserForm
     Top = 96
   end
   inherited MasterCDS: TClientDataSet
-    Left = 24
-    Top = 104
+    Left = 40
+    Top = 160
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Cash'
