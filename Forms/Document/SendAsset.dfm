@@ -258,7 +258,6 @@ inherited SendAssetForm: TSendAssetForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
@@ -292,6 +291,7 @@ inherited SendAssetForm: TSendAssetForm
             DataBinding.FieldName = 'Room_Storage'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 72
           end
           object Address_Storage: TcxGridDBColumn
