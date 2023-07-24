@@ -293,6 +293,10 @@ type
     macInsertUpDate_bySend: TMultiAction;
     actRefreshMI_Master: TdsdDataSetRefresh;
     bbInsertUpDate_bySend: TdxBarButton;
+    actReport_Goods_master: TdsdOpenForm;
+    actReport_Goods_child: TdsdOpenForm;
+    bbReport_Goods_master: TdxBarButton;
+    bbReport_Goods_child: TdxBarButton;
   private
   public
   end;
