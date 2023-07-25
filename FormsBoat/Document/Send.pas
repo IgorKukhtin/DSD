@@ -260,6 +260,7 @@ type
     edOrderClient: TcxButtonEdit;
     GuidesOrderClient: TdsdGuides;
     dxBarSeparator2: TdxBarSeparator;
+    isReceiptGoods: TcxGridDBColumn;
   private
   public
   end;
