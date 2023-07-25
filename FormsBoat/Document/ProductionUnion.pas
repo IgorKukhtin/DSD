@@ -297,6 +297,13 @@ type
     actReport_Goods_child: TdsdOpenForm;
     bbReport_Goods_master: TdxBarButton;
     bbReport_Goods_child: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
+    cxLabel7: TcxLabel;
+    edInvNumberInvoice: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edVATPercent: TcxCurrencyEdit;
   private
   public
   end;

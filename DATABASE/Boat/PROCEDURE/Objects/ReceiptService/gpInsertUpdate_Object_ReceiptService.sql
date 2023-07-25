@@ -1,6 +1,7 @@
 -- 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptService (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptService (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptService (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptService(
  INOUT ioId           Integer,       -- Ключ объекта < >
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptService(
     IN inArticle      TVarChar,      -- 
     IN inComment      TVarChar,      -- Краткое название
     IN inTaxKindId    Integer ,      -- НДС
+    IN inPartnerId    Integer ,      -- Поставщик услуг
     IN inEKPrice      TFloat  ,      -- Вх. цена без ндс
     IN inSalePrice    TFloat  ,      -- Цена продажи без ндс
     IN inSession      TVarChar       -- сессия пользователя
@@ -49,7 +51,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ReceiptService_SalePrice(), ioId, inSalePrice);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptService_TaxKind(), ioId, inTaxKindId);
-
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptService_Partner(), ioId, inPartnerId);
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
@@ -71,6 +74,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+24.07.23          * Partner
 22.12.20          *
 11.12.20          *
 */

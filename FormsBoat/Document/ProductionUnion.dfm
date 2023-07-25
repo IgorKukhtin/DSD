@@ -26,6 +26,7 @@ object ProductionUnionForm: TProductionUnionForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = -1
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -117,23 +118,23 @@ object ProductionUnionForm: TProductionUnionForm
       Width = 170
     end
     object cxLabel16: TcxLabel
-      Left = 442
+      Left = 700
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 442
+      Left = 700
       Top = 63
       TabOrder = 11
-      Width = 250
+      Width = 216
     end
     object cxLabel12: TcxLabel
-      Left = 700
+      Left = 924
       Top = 5
       Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
     end
     object edInsertDate: TcxDateEdit
-      Left = 700
+      Left = 924
       Top = 23
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -144,12 +145,12 @@ object ProductionUnionForm: TProductionUnionForm
       Width = 146
     end
     object cxLabel13: TcxLabel
-      Left = 700
+      Left = 924
       Top = 45
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
     end
     object edInsertName: TcxButtonEdit
-      Left = 700
+      Left = 924
       Top = 63
       Properties.Buttons = <
         item
@@ -177,6 +178,50 @@ object ProductionUnionForm: TProductionUnionForm
       Properties.ReadOnly = True
       TabOrder = 17
       Width = 250
+    end
+    object cxLabel6: TcxLabel
+      Left = 700
+      Top = 5
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1091#1089#1083#1091#1075
+    end
+    object edPartner: TcxButtonEdit
+      Left = 700
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 19
+      Width = 216
+    end
+    object cxLabel7: TcxLabel
+      Left = 442
+      Top = 45
+      Caption = #1053#1086#1084#1077#1088' '#1057#1095#1077#1090#1072
+    end
+    object edInvNumberInvoice: TcxTextEdit
+      Left = 442
+      Top = 63
+      TabOrder = 21
+      Width = 167
+    end
+    object cxLabel8: TcxLabel
+      Left = 624
+      Top = 45
+      Caption = '% '#1053#1044#1057
+    end
+    object edVATPercent: TcxCurrencyEdit
+      Left = 624
+      Top = 63
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = True
+      TabOrder = 23
+      Width = 68
     end
   end
   object cxPageControl: TcxPageControl
@@ -5225,5 +5270,46 @@ object ProductionUnionForm: TProductionUnionForm
     PackSize = 1
     Left = 358
     Top = 159
+  end
+  object GuidesPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TPartnerForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartnerForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 767
+    Top = 9
   end
 end

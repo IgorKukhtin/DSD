@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ReceiptService(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Article TVarChar
              , Comment TVarChar
-             , TaxKindId Integer, TaxKindName TVarChar
+             , TaxKindId Integer, TaxKindName TVarChar 
+             , PartnerId Integer, PartnerName TVarChar
              , EKPrice TFloat, SalePrice TFloat) 
 AS
 $BODY$
@@ -28,6 +29,10 @@ BEGIN
            , '' :: TVarChar           AS Comment
            , Object_TaxKind.Id        AS TaxKindId
            , Object_TaxKind.ValueData AS TaxKindName
+
+           , 0                        AS PartnerId
+           , '' :: TVarChar           AS PartnerName
+
            , 0  :: TFloat             AS EKPrice
            , 0  :: TFloat             AS SalePrice
        FROM Object AS Object_TaxKind
@@ -44,6 +49,10 @@ BEGIN
 
            , Object_TaxKind.Id                                     AS TaxKindId
            , Object_TaxKind.ValueData                              AS TaxKindName
+
+           , Object_Partner.Id                                     AS PartnerId
+           , Object_Partner.ValueData                              AS PartnerName
+
            , COALESCE (ObjectFloat_EKPrice.ValueData,0)   ::TFloat AS EKPrice
            , COALESCE (ObjectFloat_SalePrice.ValueData,0) ::TFloat AS SalePrice
            
@@ -68,6 +77,10 @@ BEGIN
                                AND ObjectLink_TaxKind.DescId = zc_ObjectLink_ReceiptService_TaxKind()
            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Partner
+                                ON ObjectLink_Partner.ObjectId = Object_ReceiptService.Id
+                               AND ObjectLink_Partner.DescId = zc_ObjectLink_ReceiptService_Partner()
+           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner.ChildObjectId
        WHERE Object_ReceiptService.Id = inId;
    END IF;
 
@@ -79,6 +92,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+24.07.23          * Partner
 11.12.20          *
 */
 

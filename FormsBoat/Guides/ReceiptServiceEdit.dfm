@@ -2,7 +2,7 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080'>'
-  ClientHeight = 285
+  ClientHeight = 331
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 248
+    Top = 300
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 248
+    Top = 300
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -62,12 +62,12 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 196
+    Top = 248
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 10
-    Top = 214
+    Top = 266
     TabOrder = 7
     Width = 269
   end
@@ -84,12 +84,12 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
   end
   object cxLabel17: TcxLabel
     Left = 10
-    Top = 99
+    Top = 151
     Caption = #1058#1080#1087' '#1053#1044#1057
   end
   object edTaxKind: TcxButtonEdit
     Left = 10
-    Top = 118
+    Top = 170
     Properties.Buttons = <
       item
         Default = True
@@ -101,13 +101,13 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
   end
   object cxLabel15: TcxLabel
     Left = 10
-    Top = 149
+    Top = 201
     Hint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
     Caption = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
   end
   object edEKPrice: TcxCurrencyEdit
     Left = 10
-    Top = 166
+    Top = 218
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 13
@@ -115,7 +115,7 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
   end
   object edSalePrice: TcxCurrencyEdit
     Left = 154
-    Top = 166
+    Top = 218
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 14
@@ -123,9 +123,26 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
   end
   object cxLabel4: TcxLabel
     Left = 154
-    Top = 149
+    Top = 201
     Hint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
     Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
+  end
+  object edPartner: TcxButtonEdit
+    Left = 10
+    Top = 123
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 16
+    Width = 269
+  end
+  object cxLabel5: TcxLabel
+    Left = 8
+    Top = 100
+    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1091#1089#1083#1091#1075
   end
   object ActionList: TActionList
     Left = 240
@@ -212,6 +229,14 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inEKPrice'
         Value = Null
         Component = edEKPrice
@@ -240,7 +265,7 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
         MultiSelectSeparator = ','
       end>
     Left = 168
-    Top = 216
+    Top = 268
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ReceiptService'
@@ -311,6 +336,21 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 176
@@ -328,12 +368,12 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 240
-    Top = 64
+    Left = 216
+    Top = 56
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 96
-    Top = 192
+    Top = 244
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
@@ -360,6 +400,48 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
         MultiSelectSeparator = ','
       end>
     Left = 111
-    Top = 100
+    Top = 152
+  end
+  object GuidesPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    FormNameParam.Value = 'TPartnerForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartnerForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindId'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindName'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 103
+    Top = 97
   end
 end
