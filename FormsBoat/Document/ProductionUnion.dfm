@@ -3792,7 +3792,7 @@ object ProductionUnionForm: TProductionUnionForm
         item
           Name = 'UnitGroupId'
           Value = ''
-          Component = GuidesFrom
+          Component = GuidesTo
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3800,7 +3800,7 @@ object ProductionUnionForm: TProductionUnionForm
         item
           Name = 'UnitGroupName'
           Value = ''
-          Component = GuidesFrom
+          Component = GuidesTo
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -3869,7 +3869,7 @@ object ProductionUnionForm: TProductionUnionForm
         item
           Name = 'UnitGroupId'
           Value = ''
-          Component = GuidesTo
+          Component = GuidesFrom
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -3877,7 +3877,7 @@ object ProductionUnionForm: TProductionUnionForm
         item
           Name = 'UnitGroupName'
           Value = ''
-          Component = GuidesTo
+          Component = GuidesFrom
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
