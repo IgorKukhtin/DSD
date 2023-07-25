@@ -28,7 +28,7 @@ BEGIN
            , '' :: TVarChar           AS Article
            , '' :: TVarChar           AS Comment
            , Object_TaxKind.Id        AS TaxKindId
-           , Object_TaxKind.ValueData AS TaxKindName
+           , (Object_TaxKind.ValueData || ' ' || zfConvert_FloatToString (ObjectFloat_TaxKind_Value.ValueData) ||'%') :: TVarChar AS TaxKindName
 
            , 0                        AS PartnerId
            , '' :: TVarChar           AS PartnerName
@@ -36,8 +36,12 @@ BEGIN
            , 0  :: TFloat             AS EKPrice
            , 0  :: TFloat             AS SalePrice
        FROM Object AS Object_TaxKind
-       WHERE Object_TaxKind.Id = zc_Enum_TaxKind_Basis()
+           LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                 ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
+                                AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
+       WHERE Object_TaxKind.Id = zc_Enum_TaxKind_WithVAT()
       ;
+
    ELSE
        RETURN QUERY
        SELECT
@@ -48,7 +52,7 @@ BEGIN
            , COALESCE (ObjectString_Comment.ValueData, NULL) :: TVarChar AS Comment
 
            , Object_TaxKind.Id                                     AS TaxKindId
-           , Object_TaxKind.ValueData                              AS TaxKindName
+           , (Object_TaxKind.ValueData || ' ' || zfConvert_FloatToString (ObjectFloat_TaxKind_Value.ValueData) ||'%') :: TVarChar AS TaxKindName
 
            , Object_Partner.Id                                     AS PartnerId
            , Object_Partner.ValueData                              AS PartnerName
@@ -72,15 +76,22 @@ BEGIN
                                  ON ObjectFloat_SalePrice.ObjectId = Object_ReceiptService.Id
                                 AND ObjectFloat_SalePrice.DescId = zc_ObjectFloat_ReceiptService_SalePrice()
 
-           LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                                ON ObjectLink_TaxKind.ObjectId = Object_ReceiptService.Id
-                               AND ObjectLink_TaxKind.DescId = zc_ObjectLink_ReceiptService_TaxKind()
-           LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
-
            LEFT JOIN ObjectLink AS ObjectLink_Partner
                                 ON ObjectLink_Partner.ObjectId = Object_ReceiptService.Id
                                AND ObjectLink_Partner.DescId = zc_ObjectLink_ReceiptService_Partner()
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                ON ObjectLink_TaxKind.ObjectId = Object_Partner.Id
+                               AND ObjectLink_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
+
+           LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = COALESCE (ObjectLink_TaxKind.ChildObjectId, zc_Enum_TaxKind_WithVAT())
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                 ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
+                                AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+
+
        WHERE Object_ReceiptService.Id = inId;
    END IF;
 
