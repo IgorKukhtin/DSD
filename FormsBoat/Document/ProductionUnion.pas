@@ -293,6 +293,17 @@ type
     macInsertUpDate_bySend: TMultiAction;
     actRefreshMI_Master: TdsdDataSetRefresh;
     bbInsertUpDate_bySend: TdxBarButton;
+    actReport_Goods_master: TdsdOpenForm;
+    actReport_Goods_child: TdsdOpenForm;
+    bbReport_Goods_master: TdxBarButton;
+    bbReport_Goods_child: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
+    cxLabel7: TcxLabel;
+    edInvNumberInvoice: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edVATPercent: TcxCurrencyEdit;
   private
   public
   end;

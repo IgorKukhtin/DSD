@@ -67,6 +67,14 @@ object ReceiptServiceForm: TReceiptServiceForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 209
       end
+      object PartnerName: TcxGridDBColumn
+        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1091#1089#1083#1091#1075
+        DataBinding.FieldName = 'PartnerName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 103
+      end
       object TaxKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1053#1044#1057
         DataBinding.FieldName = 'TaxKindName'

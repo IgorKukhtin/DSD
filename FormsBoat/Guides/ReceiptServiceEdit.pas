@@ -49,6 +49,9 @@ type
     edEKPrice: TcxCurrencyEdit;
     edSalePrice: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public

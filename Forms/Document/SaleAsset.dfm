@@ -259,6 +259,7 @@ inherited SaleAssetForm: TSaleAssetForm
             DataBinding.FieldName = 'Room_Storage'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 72
           end
           object Address_Storage: TcxGridDBColumn

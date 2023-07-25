@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProductionUnion(Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProductionUnion(Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProductionUnion(Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProductionUnion(
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProductionUnion(
     IN inOperDate            TDateTime , -- Дата документа
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
+    IN inInvNumberInvoice    TVarChar  , -- номер счета
     IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -28,7 +30,8 @@ BEGIN
                                                   , inInvNumber
                                                   , inOperDate
                                                   , inFromId
-                                                  , inToId
+                                                  , inToId  
+                                                  , inInvNumberInvoice
                                                   , inComment
                                                   , vbUserId);
 
@@ -39,6 +42,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.07.23         *
  12.07.21         *
 */
 

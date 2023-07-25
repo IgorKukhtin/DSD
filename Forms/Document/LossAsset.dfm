@@ -223,6 +223,7 @@ inherited LossAssetForm: TLossAssetForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -279,6 +280,7 @@ inherited LossAssetForm: TLossAssetForm
             DataBinding.FieldName = 'Room_Storage'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 72
           end
           object Address_Storage: TcxGridDBColumn

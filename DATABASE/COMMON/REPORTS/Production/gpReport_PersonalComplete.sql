@@ -198,7 +198,7 @@ BEGIN
         -- Результат
         SELECT  tmp.InvNumber ::TVarChar
               , tmp.OperDate
-              , tmp.OperDate AS MonthDate
+              , DATE_TRUNC ('MONTH', tmp.OperDate):: TDateTime AS MonthDate
               , Movement_parent.OperDate  AS OperDate_parent
               , Movement_parent.InvNumber AS InvNumber_parent
               , tmp.UnitId

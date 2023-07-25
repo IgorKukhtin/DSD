@@ -64,6 +64,7 @@ type
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
     spInsertUpdate: TdsdStoredProc;
+    PartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

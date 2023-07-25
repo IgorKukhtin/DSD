@@ -12,10 +12,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnion(
 RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
              , OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , InvNumberInvoice TVarChar
              , TotalCount TFloat
              , TotalCountChild TFloat
+             , VATPercent TFloat
+             , TotalSummMVAT TFloat 
+             , TotalSummPVAT TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar
-             , ToId Integer, ToCode Integer, ToName TVarChar
+             , ToId Integer, ToCode Integer, ToName TVarChar 
+             , PartnerId Integer, PartnerName TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -69,22 +74,30 @@ BEGIN
              , Movement_ProductionUnion.OperDate
              , Object_Status.ObjectCode                   AS StatusCode
              , Object_Status.ValueData                    AS StatusName
+             
+             , MovementString_InvNumberInvoice.ValueData  AS InvNumberInvoice
 
              , MovementFloat_TotalCount.ValueData         AS TotalCount
              , MovementFloat_TotalCountChild.ValueData    AS TotalCountChild
+
+             , MovementFloat_VATPercent.ValueData         AS VATPercent
+             , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
+             , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
 
              , Object_From.Id                             AS FromId
              , Object_From.ObjectCode                     AS FromCode
              , Object_From.ValueData                      AS FromName
              , Object_To.Id                               AS ToId
              , Object_To.ObjectCode                       AS ToCode
-             , Object_To.ValueData                        AS ToName
+             , Object_To.ValueData                        AS ToName 
+             , Object_Partner.Id                          AS PartnerId
+             , Object_Partner.ValueData                   AS PartnerName
              , MovementString_Comment.ValueData :: TVarChar AS Comment
 
-             , Object_Insert.ValueData              AS InsertName
-             , MovementDate_Insert.ValueData        AS InsertDate
-             , Object_Update.ValueData              AS UpdateName
-             , MovementDate_Update.ValueData        AS UpdateDate
+             , Object_Insert.ValueData                    AS InsertName
+             , MovementDate_Insert.ValueData              AS InsertDate
+             , Object_Update.ValueData                    AS UpdateName
+             , MovementDate_Update.ValueData              AS UpdateDate
 
              , Movement_Parent.Id                         AS MovementId_parent
              , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
@@ -106,9 +119,25 @@ BEGIN
                                 ON MovementFloat_TotalCountChild.MovementId = Movement_ProductionUnion.Id
                                AND MovementFloat_TotalCountChild.DescId = zc_MovementFloat_TotalCountChild()
 
+        LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                ON MovementFloat_VATPercent.MovementId = Movement_ProductionUnion.Id
+                               AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
+        LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                ON MovementFloat_TotalSummMVAT.MovementId = Movement_ProductionUnion.Id
+                               AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+
+        LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                ON MovementFloat_TotalSummPVAT.MovementId = Movement_ProductionUnion.Id
+                               AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+
         LEFT JOIN MovementString AS MovementString_Comment
                                  ON MovementString_Comment.MovementId = Movement_ProductionUnion.Id
                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+        LEFT JOIN MovementString AS MovementString_InvNumberInvoice
+                                 ON MovementString_InvNumberInvoice.MovementId = Movement_ProductionUnion.Id
+                                AND MovementString_InvNumberInvoice.DescId = zc_MovementString_InvNumberInvoice()
 
         LEFT JOIN MovementDate AS MovementDate_Insert
                                ON MovementDate_Insert.MovementId = Movement_ProductionUnion.Id
@@ -139,7 +168,11 @@ BEGIN
                                      ON MovementLinkObject_Product_parent.MovementId = Movement_Parent.Id
                                     AND MovementLinkObject_Product_parent.DescId = zc_MovementLinkObject_Product()
         LEFT JOIN Object AS Object_Product_parent ON Object_Product_parent.Id = MovementLinkObject_Product_parent.ObjectId
-                                                                
+
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                     ON MovementLinkObject_Partner.MovementId = Movement_ProductionUnion.Id
+                                    AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+        LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId                                                                
        ;
 
 END;
@@ -149,6 +182,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.07.23         *
  12.07.21         *
 */
 

@@ -356,6 +356,30 @@ object Storage_ObjectForm: TStorage_ObjectForm
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BranchName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AreaUnitName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'AreaUnitName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Room'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Room'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

@@ -77,11 +77,15 @@ type
     actOpenForm: TdsdOpenForm;
     macOpenDocument: TMultiAction;
     getMovementForm: TdsdStoredProc;
-    bb: TdxBarButton;
+    bbOpenDocument: TdxBarButton;
     MovementDescName: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     ServiceSumm_inf: TcxGridDBColumn;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    MovementItemProtocolOpenForm: TdsdOpenForm;
+    bbMovementItemProtocolOpen: TdxBarButton;
+    bbMovementProtocolOpen: TdxBarButton;
   private
     { Private declarations }
   public

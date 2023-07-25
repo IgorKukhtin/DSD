@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProductionUnion (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProductionUnion (Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProductionUnion (Integer, Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProductionUnion(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -9,7 +10,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProductionUnion(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inFromId              Integer   , -- От кого
-    IN inToId                Integer   , -- Кому
+    IN inToId                Integer   , -- Кому   
+    IN inInvNumberInvoice    TVarChar  , -- номер счета
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- сессия пользователя
 )
@@ -40,7 +42,10 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
      -- сохранили связь с <Кому >
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
- 
+
+
+     -- сохранили <Примечание>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberInvoice(), ioId, inInvNumberInvoice);
      -- сохранили <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 

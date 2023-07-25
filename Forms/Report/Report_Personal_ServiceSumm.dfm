@@ -56,6 +56,8 @@ inherited Report_Personal_ServiceSummForm: TReport_Personal_ServiceSummForm
           object ServiceSumm_inf: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1086
             DataBinding.FieldName = 'ServiceSumm_inf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 109
@@ -2165,6 +2167,66 @@ inherited Report_Personal_ServiceSummForm: TReport_Personal_ServiceSummForm
         end>
       Caption = 'actMovementForm'
     end
+    object MovementItemProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object MovementProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 184
@@ -2303,11 +2365,23 @@ inherited Report_Personal_ServiceSummForm: TReport_Personal_ServiceSummForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbOpenDocument'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocolOpen'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocolOpen'
         end
         item
           Visible = True
@@ -2336,8 +2410,16 @@ inherited Report_Personal_ServiceSummForm: TReport_Personal_ServiceSummForm
       Action = ExecuteDialog
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbOpenDocument: TdxBarButton
       Action = macOpenDocument
+      Category = 0
+    end
+    object bbMovementItemProtocolOpen: TdxBarButton
+      Action = MovementItemProtocolOpenForm
+      Category = 0
+    end
+    object bbMovementProtocolOpen: TdxBarButton
+      Action = MovementProtocolOpenForm
       Category = 0
     end
   end

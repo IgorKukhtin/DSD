@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , StatusCode Integer, StatusName TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
+             , VATPercent TFloat
              , Comment TVarChar
              , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
              , MovementId_parent Integer
@@ -38,7 +39,8 @@ BEGIN
              , 0                         AS FromId
              , CAST ('' AS TVarChar)     AS FromName
              , 0                         AS ToId
-             , CAST ('' AS TVarChar)     AS ToName
+             , CAST ('' AS TVarChar)     AS ToName 
+             , 0 ::TFloat                AS VATPercent
 
              , CAST ('' AS TVarChar)     AS Comment
 
@@ -66,7 +68,8 @@ BEGIN
           , Object_From.Id                 AS FromId
           , Object_From.ValueData          AS FromName
           , Object_To.Id                   AS ToId
-          , Object_To.ValueData            AS ToName
+          , Object_To.ValueData            AS ToName 
+          , MovementFloat_VATPercent.ValueData         AS VATPercent
 
           , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
 
@@ -79,6 +82,10 @@ BEGIN
         FROM Movement AS Movement_ProductionUnion
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_ProductionUnion.StatusId
 
+            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                    ON MovementFloat_VATPercent.MovementId = Movement_ProductionUnion.Id
+                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement_ProductionUnion.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -88,6 +95,11 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement_ProductionUnion.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement_ProductionUnion.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement_ProductionUnion.Id
@@ -116,6 +128,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.07.23         *
  12.07.21         *
 */
 

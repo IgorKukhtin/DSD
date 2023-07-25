@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptService(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Article TVarChar
              , Comment TVarChar
-             , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
+             , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat 
+             , PartnerId Integer, PartnerName TVarChar
              , EKPrice TFloat, EKPriceWVAT TFloat
              , SalePrice TFloat, SalePriceWVAT TFloat
              , InsertName TVarChar
@@ -32,7 +33,11 @@ BEGIN
 
            , Object_TaxKind.Id                      AS TaxKindId
            , Object_TaxKind.ValueData               AS TaxKindName
-           , ObjectFloat_TaxKind_Value.ValueData    AS TaxKind_Value
+           , ObjectFloat_TaxKind_Value.ValueData    AS TaxKind_Value 
+           
+           , Object_Partner.Id                      AS PartnerId
+           , Object_Partner.ValueData               AS PartnerName
+           
            --цена Вх. цена без ндс
            , COALESCE (ObjectFloat_EKPrice.ValueData,0)   ::TFloat AS EKPrice
            --цена Вх. цена с ндс
@@ -69,6 +74,11 @@ BEGIN
                                AND ObjectLink_TaxKind.DescId = zc_ObjectLink_ReceiptService_TaxKind()
            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Partner
+                                ON ObjectLink_Partner.ObjectId = Object_ReceiptService.Id
+                               AND ObjectLink_Partner.DescId = zc_ObjectLink_ReceiptService_Partner()
+           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner.ChildObjectId
+
            LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                  ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
                                 AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
@@ -93,6 +103,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+24.07.23          * Partner
 11.12.20          *
 */
 
