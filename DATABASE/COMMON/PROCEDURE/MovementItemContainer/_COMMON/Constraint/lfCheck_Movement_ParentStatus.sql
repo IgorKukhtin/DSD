@@ -19,7 +19,15 @@ BEGIN
      -- проверка при изменении <Child> на Проведен/Распроведен - если <Master> Удален, то <Ошибка>
      IF inNewStatusId <> zc_Enum_Status_Erased()
      THEN
-         IF EXISTS (SELECT Movement.Id FROM Movement JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId AND Movement_Parent.StatusId = zc_Enum_Status_Erased() WHERE Movement.Id = inMovementId AND Movement.DescId NOT IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction(), zc_Movement_TransportGoods(), zc_Movement_QualityDoc()))
+         IF EXISTS (SELECT Movement.Id
+                    FROM Movement
+                         JOIN Movement AS Movement_Parent
+                                       ON Movement_Parent.Id       = Movement.ParentId
+                                      AND Movement_Parent.StatusId = zc_Enum_Status_Erased()
+                                      AND Movement_Parent.DescId   <> zc_Movement_WeighingPartner()
+                    WHERE Movement.Id = inMovementId
+                      AND Movement.DescId NOT IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction(), zc_Movement_TransportGoods(), zc_Movement_QualityDoc())
+                   )
          THEN
              -- находим параметры <Master> документа
              SELECT Movement.Id, Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName
@@ -41,7 +49,15 @@ BEGIN
      -- проверка при изменении <Child> на Удален - если <Master> Проведен, то <Ошибка>
      IF inNewStatusId = zc_Enum_Status_Erased()
      THEN
-         IF EXISTS (SELECT Movement.Id FROM Movement JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId AND Movement_Parent.StatusId = zc_Enum_Status_Complete() WHERE Movement.Id = inMovementId AND Movement.DescId NOT IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction(), zc_Movement_TransportGoods(), zc_Movement_QualityDoc()))
+         IF EXISTS (SELECT Movement.Id
+                    FROM Movement
+                         JOIN Movement AS Movement_Parent
+                                       ON Movement_Parent.Id = Movement.ParentId
+                                      AND Movement_Parent.StatusId = zc_Enum_Status_Complete()
+                                      AND Movement_Parent.DescId   <> zc_Movement_WeighingPartner()
+                    WHERE Movement.Id = inMovementId
+                      AND Movement.DescId NOT IN (zc_Movement_WeighingPartner(), zc_Movement_WeighingProduction(), zc_Movement_TransportGoods(), zc_Movement_QualityDoc())
+                   )
          THEN
              -- находим параметры <Master> документа
              SELECT Movement.Id, Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName

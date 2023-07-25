@@ -15,7 +15,12 @@ $BODY$
 BEGIN
 
      -- проверка - связанные документы Изменять нельзя
-     IF EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND ParentId IS NOT NULL)
+     IF EXISTS (SELECT 1
+                FROM Movement
+                     JOIN Movement AS Movement_parent ON Movement_parent.Id     = Movement.ParentId
+                                                     AND Movement_parent.DescId <> zc_Movement_WeighingPartner()
+                WHERE Movement.Id = inMovementId AND Movement.ParentId IS NOT NULL
+               )
      THEN
          -- находим параметры "главного" документа
          SELECT Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName
@@ -34,7 +39,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lfCheck_Movement_Parent (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
